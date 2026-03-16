@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxograma Operacional — Monofloor</title>
+<style>
+:root{--bg:#f8f7f4;--surface:#fff;--border:#e2e0d8;--text:#1a1a18;--muted:#6b6a64;--purple:#534AB7;--purple-light:#EEEDFE;--purple-dark:#3C3489;--teal:#1D9E75;--teal-light:#E1F5EE;--amber:#BA7517;--amber-light:#FAEEDA;--coral:#D85A30;--coral-light:#FAECE7;--red:#E24B4A;--red-light:#FCEBEB;--gray:#888780;--gray-light:#F1EFE8;--blue:#185FA5;--blue-light:#E6F1FB;--green:#3B6D11;--green-light:#EAF3DE}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 32px;position:sticky;top:0;z-index:100}
+.header h1{font-size:18px;font-weight:600}
+.header p{font-size:12px;color:var(--muted);margin-top:2px}
+.tabs{display:flex;gap:4px;padding:12px 32px 0;border-bottom:1px solid var(--border);background:var(--bg)}
+.tab{padding:8px 18px;border-radius:6px 6px 0 0;cursor:pointer;border:1px solid transparent;border-bottom:none;font-size:13px;color:var(--muted)}
+.tab:hover{background:var(--surface);color:var(--text)}
+.tab.active{background:var(--surface);font-weight:500;border-color:var(--border);color:var(--text)}
+.tab-panel{display:none;padding:32px;max-width:1100px;margin:0 auto}
+.tab-panel.active{display:block}
+.kpi-row{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.kpi{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.kpi-val{font-size:28px;font-weight:700;line-height:1}
+.kpi-label{font-size:11px;color:var(--muted);margin-top:4px}
+.kpi-sub{font-size:10px;margin-top:2px;font-weight:500}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;border-radius:3px}
+.panel{border-radius:10px;padding:16px 20px;margin-bottom:16px;border:1.5px solid}
+.panel-title{font-size:13px;font-weight:600;margin-bottom:12px}
+.panel-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.panel-item:last-child{border-bottom:none}
+.badge-num{font-size:22px;font-weight:800;padding:4px 12px;border-radius:8px;background:white;border:2px solid currentColor;align-self:center;min-width:60px;text-align:center}
+.item-body{flex:1}
+.item-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.item-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.item-impact{font-size:11px;font-weight:500;margin-top:4px}
+.esforco{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;display:inline-block;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:24px}
+th{background:var(--gray-light);padding:8px 12px;text-align:left;font-size:11px;font-weight:600;border:1px solid var(--border)}
+td{padding:8px 12px;border:1px solid var(--border)}
+tr:nth-child(even){background:var(--bg)}
+.ok{color:var(--teal);font-weight:700}
+.no{color:var(--red);font-weight:700}
+.warn-t{color:var(--amber);font-weight:700}
+h2{font-size:15px;font-weight:600;margin-bottom:16px}
+.flow-block{border-radius:8px;border:1.5px solid;padding:12px 16px;margin-bottom:10px}
+.flow-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;opacity:.7;margin-bottom:4px}
+.flow-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.flow-phases{font-size:11px;color:var(--muted);line-height:1.7}
+.arrow{text-align:center;font-size:18px;color:var(--muted);margin:4px 0}
+.sync-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;margin:8px 0;font-size:11px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Fluxograma Operacional — Monofloor</h1>
+  <p>Diagnóstico baseado em leitura ao vivo do Pipefy · Março/2026 · vitormonofloor/Monofloor_Files</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('overview',this)">Visão Geral</div>
+  <div class="tab" onclick="showTab('fluxo',this)">Fluxo Completo</div>
+  <div class="tab" onclick="showTab('gargalos',this)">Gargalos</div>
+  <div class="tab" onclick="showTab('melhorias',this)">Melhorias</div>
+  <div class="tab" onclick="showTab('matriz',this)">Matriz de Gaps</div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="tab-panel active" id="tab-overview">
+  <h2>Situação atual — dados reais do Pipefy</h2>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val" style="color:var(--red)">264</div><div class="kpi-label">Amostras presas em "Solicitar Coleta" (CORES)</div><div class="kpi-sub" style="color:var(--red)">🔴 97% do pipe OEC parado</div><div class="progress-bar"><div class="progress-fill" style="width:97%;background:var(--red)"></div></div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--red)">40</div><div class="kpi-label">Cards em Agend. VT Aferição (OE)</div><div class="kpi-sub" style="color:var(--red)">🔴 Maior gargalo do pipe principal</div><div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--red)"></div></div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--amber)">28</div><div class="kpi-label">Aguardando liberação (OE)</div><div class="kpi-sub" style="color:var(--amber)">⚠️ Bloqueio OEC→OEI</div><div class="progress-bar"><div class="progress-fill" style="width:55%;background:var(--amber)"></div></div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--amber)">10</div><div class="kpi-label">Obras pausadas (OE)</div><div class="kpi-sub" style="color:var(--amber)">⚠️ Sem campo de motivo</div><div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--amber)"></div></div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--blue)">346</div><div class="kpi-label">Clientes finalizados (histórico)</div><div class="kpi-sub" style="color:var(--blue)">📊 Acumulado total</div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--blue)"></div></div></div>
+  </div>
+
+  <h2>Pipes mapeados</h2>
+  <table>
+    <thead><tr><th>Pipe</th><th>Código</th><th>Fases</th><th>Cards ativos</th><th>Histórico</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><strong>OPERAÇÕES</strong></td><td>OE</td><td>50</td><td>~150</td><td>346</td><td class="ok">✓ Ativo</td></tr>
+      <tr><td><strong>CORES</strong></td><td>OEC</td><td>10</td><td>9 ativos + 264 presos</td><td>73</td><td class="no">🔴 Gargalo crítico</td></tr>
+      <tr><td><strong>PRODUÇÃO - MATERIAL EXTRA</strong></td><td>OEI</td><td>4</td><td>0</td><td>324</td><td class="warn-t">⚠️ Inativo</td></tr>
+      <tr><td><strong>PROJETOS</strong></td><td>OECT</td><td>6</td><td>22</td><td>365</td><td class="warn-t">⚠️ Parcial</td></tr>
+      <tr><td><strong>LOGÍSTICA (OEL)</strong></td><td>OEL</td><td>—</td><td>—</td><td>—</td><td class="no">✗ Não existe (embutido no OE)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Pontos de sincronização</h2>
+  <div class="sync-bar" style="background:var(--coral-light);border:1px solid var(--coral)">⚠️ <strong>OECT-017 → OE início</strong> — PROJETOS "Liberado p/ Operações" → OE "EM CONTRATO" — Transição manual, sem automação</div>
+  <div class="sync-bar" style="background:var(--red-light);border:1px solid var(--red)">🔴 <strong>OEC-011 → OEI-001</strong> — CORES "Concluído" → OE "Aguardando Liberação" — BLOQUEADO: 264 amostras presas em "Solicitar Coleta"</div>
+  <div class="sync-bar" style="background:var(--gray-light);border:1px solid var(--gray)">✗ <strong>OEI-004 → OE-029</strong> — PRODUÇÃO "Concluído" → OE "Inf. Logísticas" — Pipe inativo, produção gerenciada dentro do OE</div>
+  <div class="sync-bar" style="background:var(--green-light);border:1px solid var(--teal)">✓ <strong>OE-025/027 → OE-028</strong> — Equipe definida → dados ao cliente — Mesmo pipe, funciona</div>
+  <div class="sync-bar" style="background:var(--green-light);border:1px solid var(--teal)">✓ <strong>OE-035 → OE-037</strong> — Conferência aprovada → início execução — Mesmo pipe, funciona</div>
+</div>
+
+<!-- FLUXO -->
+<div class="tab-panel" id="tab-fluxo">
+  <h2>Fluxo completo — da proposta aceita ao encerramento</h2>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px">
+    <div style="flex:1;min-width:200px">
+      <div class="flow-block" style="background:var(--coral-light);border-color:var(--coral)">
+        <div class="flow-label" style="color:var(--coral)">OECT — Contratos (paralelo)</div>
+        <div class="flow-name" style="color:#712B13">Pipe: PROJETOS</div>
+        <div class="flow-phases">Definição do consultor (8) → Revisão aferição (7) → Negociando aditivo (4) → Assinando aditivo (1) → Revisão final (2) → <strong>Liberado p/ Operações (365)</strong></div>
+      </div>
+      <div class="arrow">↓ OECT-017 ⚠️ Manual</div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div class="flow-block" style="background:var(--teal-light);border-color:var(--teal)">
+        <div class="flow-label" style="color:var(--teal)">OEC — Cores (paralelo)</div>
+        <div class="flow-name" style="color:#085041">Pipe: CORES</div>
+        <div class="flow-phases">Caixa de entrada (0) → Prod. personalizadas SP (1) → Dist. catálogo SP (6) → Entrega (2) → <strong style="color:var(--red)">🔴 Solicitar Coleta (264)</strong> → Concluído (73)</div>
+      </div>
+      <div class="arrow">↓ OEC-011 🔴 Bloqueado</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:8px">OE — Pipe principal (50 fases)</h2>
+  <div class="flow-block" style="background:var(--purple-light);border-color:var(--purple)">
+    <div class="flow-label" style="color:var(--purple)">Bloco 1–2 — Pré-operação</div>
+    <div class="flow-phases">ENTRADA (10) → EM CONTRATO (8) → 1º CONTATO OP. (9)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--red-light);border-color:var(--red)">
+    <div class="flow-label" style="color:var(--red)">🔴 Bloco 3 — Aferição (SLA: X−60 dias)</div>
+    <div class="flow-phases"><strong>AGEND. VT AFERIÇÃO (40 🔴)</strong> → RESULTADO VT AFERIÇÃO (9)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--purple-light);border-color:var(--purple)">
+    <div class="flow-label" style="color:var(--purple)">Bloco 4 — Projetos e Confirmações</div>
+    <div class="flow-phases">PROJETOS 1ª REVISÃO (4) → CONFIRMAÇÕES OP 1 (13) → VT ACOMPANHAMENTO (1) → REVISÃO FINAL OP (7)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--amber-light);border-color:var(--amber)">
+    <div class="flow-label" style="color:var(--amber)">⚠️ Bloco 5 — Liberação (OEC-011 → OEI-001)</div>
+    <div class="flow-phases"><strong>AGUARDANDO LIBERAÇÃO (28 ⚠️)</strong> → INDÚSTRIA EM PRODUÇÃO (10)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--blue-light);border-color:var(--blue)">
+    <div class="flow-label" style="color:var(--blue)">Bloco 6 — Entrada em Obra (SLA: X−10/X−7 dias)</div>
+    <div class="flow-phases">AGEND. VT ENTRADA (6) → RESULTADO VT (2) → FINANCEIRO REVISÃO (1) → EQUIPE EXECUÇÃO (2)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--purple-light);border-color:var(--purple)">
+    <div class="flow-label" style="color:var(--purple)">Bloco 7 — Logística e Execução (OEL embutido)</div>
+    <div class="flow-phases">INF. LOGÍSTICAS (2) → EM ENTREGA (8) → MATERIAL ENTREGUE (9) → <strong>OBRA EM EXECUÇÃO (20)</strong> → <strong style="color:var(--amber)">OBRA PAUSADA (10 ⚠️)</strong> → OBRA CONCLUÍDA (1)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--blue-light);border-color:var(--blue)">
+    <div class="flow-label" style="color:var(--blue)">Bloco 8 — Coleta e Encerramento</div>
+    <div class="flow-phases">LOGÍSTICA COLETAR (3) → EM COLETA (15) → CLIENTE FINALIZADO (346)</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="flow-block" style="background:var(--gray-light);border-color:var(--gray);opacity:.7">
+    <div class="flow-label" style="color:var(--gray)">Bloco 9 — Pós-vendas (15 fases zeradas ⚠️)</div>
+    <div class="flow-phases">PÓS VENDAS ACIONADO (2) → [15 fases estruturadas com 0 cards — subutilizadas]</div>
+  </div>
+</div>
+
+<!-- GARGALOS -->
+<div class="tab-panel" id="tab-gargalos">
+  <h2>🔴 Gargalos críticos — bloqueiam o fluxo</h2>
+  <div class="panel" style="background:var(--red-light);border-color:var(--red)">
+    <div class="panel-title" style="color:var(--red)">Críticos — resolução imediata</div>
+    <div class="panel-item">
+      <div class="badge-num" style="color:var(--red)">264</div>
+      <div class="item-body">
+        <div class="item-title">G1 — "SOLICITAR COLETA" no pipe CORES (OEC)</div>
+        <div class="item-desc">97% do pipe de amostras está preso nessa fase. As amostras físicas são enviadas ao cliente mas nunca são recolhidas de volta. O ciclo OEC nunca fecha — sem fechar OEC-011, a produção na indústria (OEI-001) não é liberada e a cor não é aprovada oficialmente.</div>
+        <div class="item-impact" style="color:var(--red)">Impacto: → 28 cards bloqueados em "Aguardando Liberação" no OE · SLA X−35 dias em risco · Cadeia OEC→OEI→OE travada</div>
+      </div>
+    </div>
+    <div class="panel-item">
+      <div class="badge-num" style="color:var(--red)">40</div>
+      <div class="item-body">
+        <div class="item-title">G2 — "AGEND. VT AFERIÇÃO/ORIENTAÇÃO" no pipe OE</div>
+        <div class="item-desc">Maior concentração de cards em uma única fase do fluxo principal. SLA X−60 dias provavelmente violado em vários projetos. Capacidade de agenda de visitas técnicas pode ser o gargalo real.</div>
+        <div class="item-impact" style="color:var(--red)">Impacto: SLA X−60 dias em risco · Atraso em cascata · Projetos podem perder a data de obra</div>
+      </div>
+    </div>
+    <div class="panel-item">
+      <div class="badge-num" style="color:var(--red)">28</div>
+      <div class="item-body">
+        <div class="item-title">G3 — "AGUARDANDO LIBERAÇÃO" no pipe OE</div>
+        <div class="item-desc">Ponto OEC-011→OEI-001 represado. 28 projetos aguardam cor definida e/ou material confirmado. É o reflexo direto do G1 — resolver G1 desbloqueará G3 parcialmente.</div>
+        <div class="item-impact" style="color:var(--red)">Causa raiz: G1 · Resolver G1 primeiro</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>⚠️ Alertas secundários</h2>
+  <div class="panel" style="background:var(--amber-light);border-color:var(--amber)">
+    <div class="panel-title" style="color:var(--amber)">Monitorar</div>
+    <div class="panel-item">
+      <div class="badge-num" style="color:var(--amber)">10</div>
+      <div class="item-body">
+        <div class="item-title">G4 — "OBRA PAUSADA" — motivos não mapeados</div>
+        <div class="item-desc">10 obras paralisadas sem campo de motivo no Pipefy. Impossível analisar causa raiz sistematicamente. SLA de execução (X + dias) comprometido.</div>
+      </div>
+    </div>
+    <div class="panel-item">
+      <div class="badge-num" style="color:var(--amber)">15</div>
+      <div class="item-body">
+        <div class="item-title">G5 — "LOGÍSTICA EM COLETA" — sem SLA definido</div>
+        <div class="item-desc">15 cards aguardando coleta de material pós-obra sem visibilidade de tempo médio de espera nem SLA definido.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>⬜ Gaps estruturais</h2>
+  <div class="panel" style="background:var(--gray-light);border-color:var(--gray)">
+    <div class="panel-title" style="color:var(--gray)">Decisão necessária</div>
+    <div class="panel-item"><div class="item-body"><div class="item-title">Gap A — OEL sem pipe próprio</div><div class="item-desc">Logística embutida no OE como fases. Ocorrências de entrega e impactos no cronograma ficam misturados com o fluxo operacional, dificultando gestão independente.</div></div></div>
+    <div class="panel-item"><div class="item-body"><div class="item-title">Gap B — 15 fases de pós-venda zeradas</div><div class="item-desc">Estrutura existe no Pipefy (fases 36–50 do OE) mas sem uso. Pós-venda ocorre via WhatsApp/Telegram sem registro sistêmico.</div></div></div>
+    <div class="panel-item"><div class="item-body"><div class="item-title">Gap C — Sem automações entre pipes</div><div class="item-desc">7 pontos de sincronização são todos manuais. Risco de perda de dados e atraso nas transições entre PROJETOS→OE, CORES→OEI, OEI→OE.</div></div></div>
+  </div>
+</div>
+
+<!-- MELHORIAS -->
+<div class="tab-panel" id="tab-melhorias">
+  <h2>✅ Plano de melhorias — ordenado por impacto</h2>
+  <div class="panel" style="background:var(--green-light);border-color:var(--teal)">
+    <div class="panel-title" style="color:var(--teal)">Alto impacto — implementar agora</div>
+    <div class="panel-item">
+      <div class="item-body">
+        <div class="item-title" style="color:var(--teal)">M1 — Criar SLA e responsável para coleta de amostras (CORES)</div>
+        <div class="item-desc">Definir responsável pela coleta das 264 amostras. Criar SLA (ex: 30 dias após escolha) com alerta automático no Pipefy. Desbloquearia G1, G3 e reduziria G2.</div>
+        <div><span class="esforco" style="background:var(--green-light);color:var(--green)">Esforço: Baixo</span></div>
+      </div>
+    </div>
+    <div class="panel-item">
+      <div class="item-body">
+        <div class="item-title" style="color:var(--teal)">M2 — Automação PROJETOS → OE (OECT-017 → OE início)</div>
+        <div class="item-desc">Quando card chega em "Liberado para Operações", criar automaticamente card em "EM CONTRATO" no OE com campos preenchidos. Elimina transição manual e risco de perda de dados.</div>
+        <div><span class="esforco" style="background:var(--amber-light);color:var(--amber)">Esforço: Médio</span></div>
+      </div>
+    </div>
+    <div class="panel-item">
+      <div class="item-body">
+        <div class="item-title" style="color:var(--teal)">M3 — Triar 40 cards em AGEND. VT AFERIÇÃO</div>
+        <div class="item-desc">Verificar quais violaram SLA X−60 dias, quais têm data de obra definida, priorizar por urgência. Avaliar capacidade de consultores para VT.</div>
+        <div><span class="esforco" style="background:var(--green-light);color:var(--green)">Esforço: Baixo</span></div>
+      </div>
+    </div>
+    <div class="panel-item">
+      <div class="item-body">
+        <div class="item-title" style="color:var(--teal)">M4 — Campo "Motivo da pausa" em OBRA PAUSADA</div>
+        <div class="item-desc">Adicionar campo obrigatório: motivo (cliente/externo/empresa/material), data prevista de retorno, responsável. Habilita análise de causa raiz.</div>
+        <div><span class="esforco" style="background:var(--green-light);color:var(--green)">Esforço: Baixo</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="background:var(--blue-light);border-color:var(--blue)">
+    <div class="panel-title" style="color:var(--blue)">Médio prazo — estrutural</div>
+    <div class="panel-item"><div class="item-body"><div class="item-title" style="color:var(--blue)">M5 — Ativar fases de pós-venda (fases 36–50 do OE)</div><div class="item-desc">Definir protocolo, responsável e SLA. Migrar ocorrências de WhatsApp/Telegram para registro oficial. Mede NPS, tempo de resolução e recorrência.</div><div><span class="esforco" style="background:var(--amber-light);color:var(--amber)">Esforço: Médio</span></div></div></div>
+    <div class="panel-item"><div class="item-body"><div class="item-title" style="color:var(--blue)">M6 — Automação OEC→OEI→OE (cor→produção→liberação)</div><div class="item-desc">Quando CORES fecha em "Concluído", atualizar cor no OE e mover card de "Aguardando Liberação" para "Indústria Em Produção". Resolve G3 automaticamente.</div><div><span class="esforco" style="background:var(--coral-light);color:var(--coral)">Esforço: Alto</span></div></div></div>
+    <div class="panel-item"><div class="item-body"><div class="item-title" style="color:var(--blue)">M7 — Definir destino do pipe PRODUÇÃO - MATERIAL EXTRA</div><div class="item-desc">0 ativos, 324 histórico. Decidir: arquivar (se produção foi absorvida pelo OE) ou reativar com SLA e responsável definido.</div><div><span class="esforco" style="background:var(--green-light);color:var(--green)">Esforço: Baixo</span></div></div></div>
+  </div>
+
+  <div class="panel" style="background:var(--gray-light);border-color:var(--gray)">
+    <div class="panel-title" style="color:var(--gray)">Longo prazo — evolução</div>
+    <div class="panel-item"><div class="item-body"><div class="item-title">M8 — Pipe OEL separado para logística</div><div class="item-desc">Extrair fases logísticas do OE para pipe dedicado. Gestão independente de ocorrências, SLAs de transporte e impacto no cronograma.</div><div><span class="esforco" style="background:var(--coral-light);color:var(--coral)">Esforço: Alto</span></div></div></div>
+    <div class="panel-item"><div class="item-body"><div class="item-title">M9 — Database central (ID único por obra)</div><div class="item-desc">Database no Pipefy com um registro por obra. Todos os pipes (OE, OEC, OEI, OECT) referenciam o mesmo Database. Elimina duplicidade de endereço, etiquetas, consultor.</div><div><span class="esforco" style="background:var(--coral-light);color:var(--coral)">Esforço: Alto</span></div></div></div>
+  </div>
+</div>
+
+<!-- MATRIZ -->
+<div class="tab-panel" id="tab-matriz">
+  <h2>Matriz de Gaps — Fluxograma ideal vs. Pipefy real</h2>
+  <table>
+    <thead><tr><th>Fluxo</th><th>Existe no Pipefy?</th><th>Como está</th><th>Gap principal</th><th>Criticidade</th></tr></thead>
+    <tbody>
+      <tr><td><strong>OE — Operações</strong></td><td class="ok">✓ Pipe dedicado</td><td>50 fases, bem estruturado</td><td>Fases PÓS zeradas; OEL embutido</td><td class="warn-t">⚠️ Médio</td></tr>
+      <tr><td><strong>OEC — Cores</strong></td><td class="ok">✓ Pipe dedicado</td><td>10 fases, 264 presos em coleta</td><td>Sem SLA de coleta; 97% parado</td><td class="no">🔴 Crítico</td></tr>
+      <tr><td><strong>OEI — Indústria</strong></td><td class="warn-t">⚠️ Inativo</td><td>0 cards ativos, 324 histórico</td><td>Produção dentro do OE, pipe sem uso</td><td class="warn-t">⚠️ Médio</td></tr>
+      <tr><td><strong>OEL — Logística</strong></td><td class="no">✗ Não existe</td><td>Embutido no OE como fases</td><td>Sem gestão independente</td><td class="warn-t">⚠️ Médio</td></tr>
+      <tr><td><strong>OECT — Contratos</strong></td><td class="warn-t">⚠️ Parcial (PROJETOS)</td><td>6 fases de revisões/aditivos</td><td>Fluxo contratual completo fora do Pipefy</td><td class="warn-t">⚠️ Médio</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Campos compartilhados — oportunidade de Database</h2>
+  <table>
+    <thead><tr><th>Campo</th><th>OE</th><th>OEC</th><th>OEI</th><th>OECT</th><th>Risco</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Endereço</strong></td><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td><td class="no">—</td><td>Digitado 3x manualmente</td></tr>
+      <tr><td><strong>Etiquetas</strong></td><td class="ok">✓</td><td class="no">—</td><td class="ok">✓</td><td class="ok">✓</td><td>Inconsistência entre pipes</td></tr>
+      <tr><td><strong>Nome do projeto</strong></td><td class="no">—</td><td class="no">—</td><td class="ok">✓</td><td class="ok">✓</td><td>Campo ausente no OE</td></tr>
+      <tr><td><strong>Número OS</strong></td><td class="ok">✓</td><td class="no">—</td><td class="ok">✓</td><td class="no">—</td><td>Sem vínculo entre pipes</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
