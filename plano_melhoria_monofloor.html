@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monofloor — Plano de Melhoria Operacional 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0F0F0D;
+  --bg2: #161614;
+  --bg3: #1E1E1B;
+  --bg4: #272724;
+  --line: #2E2E2A;
+  --line2: #3A3A35;
+  --text: #E8E6DF;
+  --text2: #9A9890;
+  --text3: #5A5855;
+  --gold: #C9A96E;
+  --gold2: #8B7340;
+  --gold-bg: rgba(201,169,110,0.08);
+  --red: #E24B4A;
+  --red-bg: rgba(226,75,74,0.1);
+  --amber: #EF9F27;
+  --amber-bg: rgba(239,159,39,0.1);
+  --green: #3DBE7A;
+  --green-bg: rgba(61,190,122,0.1);
+  --blue: #5B9BD5;
+  --blue-bg: rgba(91,155,213,0.1);
+  --radius: 6px;
+  --radius-lg: 10px;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.doc-header {
+  border-bottom: 1px solid var(--line);
+  padding: 2.5rem 3rem 2rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.doc-logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text);
+  letter-spacing: .05em;
+}
+.doc-logo span { color: var(--gold); }
+.doc-meta {
+  font-size: 12px;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  text-align: right;
+  line-height: 1.8;
+}
+
+/* ── TAB NAV ── */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0 3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text3);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: .875rem 1.25rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+  letter-spacing: .02em;
+  margin-bottom: -1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 500; }
+.tab-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+.badge-r { background: var(--red-bg); color: var(--red); }
+.badge-a { background: var(--amber-bg); color: var(--amber); }
+.badge-g { background: var(--green-bg); color: var(--green); }
+.badge-b { background: var(--blue-bg); color: var(--blue); }
+.badge-gold { background: var(--gold-bg); color: var(--gold); }
+
+/* ── VIEWS ── */
+.view { display: none; padding: 3rem; max-width: 1100px; margin: 0 auto; }
+.view.active { display: block; animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: translateY(0); } }
+
+/* ── TYPOGRAPHY ── */
+h1.page-title {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  color: var(--text);
+  margin-bottom: .4rem;
+  line-height: 1.2;
+}
+h1.page-title em { color: var(--gold); font-style: italic; }
+
+.page-subtitle {
+  font-size: 15px;
+  color: var(--text2);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+h2.sec-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+h3.subsec {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  color: var(--text);
+  margin-bottom: .75rem;
+  margin-top: 1.75rem;
+}
+
+/* ── INSIGHT BOX ── */
+.insight {
+  border-left: 3px solid var(--gold);
+  background: var(--gold-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  margin-bottom: 2rem;
+  font-size: 14.5px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.insight strong { color: var(--text); font-weight: 500; }
+
+.alert-box {
+  border-left: 3px solid var(--red);
+  background: var(--red-bg);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  margin-bottom: 2rem;
+  font-size: 14.5px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.alert-box strong { color: var(--text); font-weight: 500; }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 2rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 2rem; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 2rem; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .doc-header { padding: 1.5rem; }
+  .tab-nav { padding: 0 1rem; }
+  .view { padding: 1.5rem; }
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: border-color .15s;
+}
+.card:hover { border-color: var(--line2); }
+
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: .5rem;
+  line-height: 1.3;
+}
+.card-body {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.card.c-red { border-color: rgba(226,75,74,.2); }
+.card.c-red .card-label { color: var(--red); }
+.card.c-amber { border-color: rgba(239,159,39,.2); }
+.card.c-amber .card-label { color: var(--amber); }
+.card.c-green { border-color: rgba(61,190,122,.2); }
+.card.c-green .card-label { color: var(--green); }
+.card.c-gold { border-color: rgba(201,169,110,.2); }
+.card.c-gold .card-label { color: var(--gold); }
+
+/* ── STAT STRIP ── */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+.stat-item {
+  background: var(--bg2);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+}
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--text);
+  display: block;
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+.stat-val.red { color: var(--red); }
+.stat-val.amber { color: var(--amber); }
+.stat-val.green { color: var(--green); }
+.stat-val.gold { color: var(--gold); }
+.stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  letter-spacing: .05em;
+}
+
+/* ── VSM ── */
+.vsm-container { margin-bottom: 2rem; }
+.vsm-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+.vsm-flow {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  margin-bottom: .5rem;
+}
+.vsm-step {
+  padding: .875rem .75rem;
+  border-radius: var(--radius);
+  position: relative;
+}
+.vsm-step-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.vsm-step-sub {
+  font-size: 10.5px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.vsm-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: .03em;
+  display: inline-block;
+}
+.vsm-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--line2);
+  font-size: 16px;
+  padding-top: 1.25rem;
+}
+.vsm-step.waste-high { background: rgba(226,75,74,.07); border: 1px solid rgba(226,75,74,.15); }
+.vsm-step.waste-med  { background: rgba(239,159,39,.07); border: 1px solid rgba(239,159,39,.15); }
+.vsm-step.value      { background: rgba(61,190,122,.07); border: 1px solid rgba(61,190,122,.15); }
+.vsm-step.future     { background: rgba(201,169,110,.06); border: 1px solid rgba(201,169,110,.15); }
+
+/* ── ACTION PLAN TABLE ── */
+.action-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+.action-table th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .5rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.action-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  font-size: 13.5px;
+}
+.action-table tr:last-child td { border-bottom: none; }
+.action-table tr { transition: background .1s; }
+.action-table tr:hover td { background: var(--bg2); }
+
+.action-num {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--text3);
+  font-style: italic;
+  min-width: 32px;
+}
+.action-title { font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.action-sub { font-size: 12px; color: var(--text3); line-height: 1.5; }
+.action-met { font-family: var(--font-mono); font-size: 11px; color: var(--text3); }
+.action-prazo { font-weight: 500; font-size: 13px; }
+.urgency-pill {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── RHYTHM GRID ── */
+.rhythm-container { display: flex; flex-direction: column; gap: 0; margin-bottom: 2rem; }
+.rhythm-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.rhythm-row:last-child { border-bottom: none; }
+.rhythm-freq {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 500;
+  padding-top: 2px;
+  letter-spacing: .05em;
+}
+.rhythm-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.rhythm-item {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: .75rem 1rem;
+  min-width: 180px;
+  cursor: default;
+}
+.rhythm-item-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.rhythm-item-who { font-size: 11px; color: var(--text3); }
+.rhythm-item-tag { margin-top: 5px; }
+.ri-new { background: var(--gold-bg); color: var(--gold); }
+.ri-exists { background: var(--bg3); color: var(--text3); }
+
+/* ── GAP MAP ── */
+.gap-section { margin-bottom: 1.5rem; }
+.gap-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.gap-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.gap-title-text { font-family: var(--font-display); font-size: 1rem; color: var(--text); }
+.gap-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  margin-left: auto;
+}
+.gap-list { list-style: none; display: flex; flex-direction: column; gap: 1px; }
+.gap-item-li {
+  font-size: 13px;
+  color: var(--text2);
+  padding: .6rem 1rem;
+  background: var(--bg2);
+  border-radius: 4px;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.gap-item-li::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.gap-ok .gap-item-li::before { background: var(--green); }
+.gap-adj .gap-item-li::before { background: var(--amber); }
+.gap-miss .gap-item-li::before { background: var(--red); }
+
+/* ── URGENCY MATRIX ── */
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 2rem;
+  min-height: 320px;
+}
+.matrix-cell {
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.matrix-cell::before {
+  content: attr(data-label);
+  font-family: var(--font-display);
+  font-size: 3rem;
+  position: absolute;
+  right: .75rem;
+  top: .25rem;
+  opacity: .04;
+  color: var(--text);
+  font-style: italic;
+  pointer-events: none;
+}
+.matrix-q1 { background: rgba(226,75,74,.05); border-color: rgba(226,75,74,.2); }
+.matrix-q2 { background: rgba(239,159,39,.05); border-color: rgba(239,159,39,.2); }
+.matrix-q3 { background: rgba(201,169,110,.05); border-color: rgba(201,169,110,.15); }
+.matrix-q4 { background: var(--bg2); }
+.matrix-q-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: .625rem;
+}
+.matrix-q1 .matrix-q-label { color: var(--red); }
+.matrix-q2 .matrix-q-label { color: var(--amber); }
+.matrix-q3 .matrix-q-label { color: var(--gold); }
+.matrix-q4 .matrix-q-label { color: var(--text3); }
+.matrix-item {
+  font-size: 12.5px;
+  color: var(--text2);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  line-height: 1.4;
+}
+.matrix-item:last-child { border-bottom: none; }
+.matrix-item strong { color: var(--text); font-weight: 500; }
+
+/* ── AXIS LABELS ── */
+.matrix-axes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: .5rem;
+}
+.axis-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  text-align: center;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* ── FINAL CTA ── */
+.cta-box {
+  background: linear-gradient(135deg, rgba(201,169,110,.06) 0%, rgba(201,169,110,.02) 100%);
+  border: 1px solid rgba(201,169,110,.2);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.5rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: .5rem;
+}
+.cta-sub { font-size: 14px; color: var(--text2); line-height: 1.7; max-width: 520px; margin: 0 auto 1.5rem; }
+.cta-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+.cta-step {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.cta-step-n {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--gold);
+  font-style: italic;
+  display: block;
+  margin-bottom: .25rem;
+}
+.cta-step-t { font-weight: 500; color: var(--text); font-size: 13px; margin-bottom: .25rem; }
+.cta-step-d { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+/* ── PROGRESS INDICATOR (fase a fase) ── */
+.phase-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+.phase-segment {
+  flex: 1;
+  padding: .875rem 1rem;
+  border-radius: var(--radius);
+  text-align: center;
+  position: relative;
+}
+.phase-n {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-style: italic;
+  display: block;
+  margin-bottom: 2px;
+}
+.phase-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); letter-spacing: .04em; }
+.phase-time { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.ph1 { background: var(--red-bg); border: 1px solid rgba(226,75,74,.2); }
+.ph1 .phase-n { color: var(--red); }
+.ph2 { background: var(--amber-bg); border: 1px solid rgba(239,159,39,.2); }
+.ph2 .phase-n { color: var(--amber); }
+.ph3 { background: var(--green-bg); border: 1px solid rgba(61,190,122,.2); }
+.ph3 .phase-n { color: var(--green); }
+.ph4 { background: var(--blue-bg); border: 1px solid rgba(91,155,213,.2); }
+.ph4 .phase-n { color: var(--blue); }
+
+/* ── OPS CARDS ── */
+.ops-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 2rem;
+}
+.ops-item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem 1.25rem;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  transition: border-color .15s;
+}
+.ops-item:hover { border-color: var(--line2); }
+.ops-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gold);
+  padding-top: 2px;
+}
+.ops-name { font-weight: 500; color: var(--text); font-size: 13.5px; margin-bottom: 3px; }
+.ops-desc { font-size: 12px; color: var(--text3); line-height: 1.5; margin-bottom: 8px; }
+.ops-actions { display: flex; flex-wrap: wrap; gap: 4px; }
+.ops-action {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--text2);
+  border: 1px solid var(--line);
+}
+.ops-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  align-self: start;
+  margin-top: 2px;
+}
+.s-crit { background: var(--red-bg); color: var(--red); }
+.s-adj  { background: var(--amber-bg); color: var(--amber); }
+.s-ok   { background: var(--green-bg); color: var(--green); }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+
+/* ── FOOTER ── */
+.doc-footer {
+  border-top: 1px solid var(--line);
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4rem;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: .875rem;
+  color: var(--text3);
+  letter-spacing: .05em;
+}
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* ── NUMBERED LIST ── */
+.n-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+.n-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.n-num {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  color: var(--text3);
+  font-style: italic;
+  line-height: 1.4;
+}
+.n-text { font-size: 13.5px; color: var(--text2); line-height: 1.6; }
+.n-text strong { color: var(--text); font-weight: 500; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="doc-header">
+  <div>
+    <div class="doc-logo">mono<span>floor</span></div>
+    <div style="font-size:12px;color:var(--text3);margin-top:4px;font-family:var(--font-mono);letter-spacing:.04em">PREMIUM UNIQUE SURFACES™ · @semjuntas</div>
+  </div>
+  <div class="doc-meta">
+    Plano de Melhoria Operacional 2026<br>
+    SGQ-MNF-PLAN-001 · v1.0<br>
+    Gerente de Qualidade: Vitor Gomes<br>
+    Março / 2026
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('diag')">Diagnóstico</button>
+  <button class="tab-btn" onclick="showTab('vsm')">Fluxo de Valor</button>
+  <button class="tab-btn" onclick="showTab('ops')">Operações <span class="tab-badge badge-r">crítico</span></button>
+  <button class="tab-btn" onclick="showTab('posvendas')">Pós-venda <span class="tab-badge badge-r">inexistente</span></button>
+  <button class="tab-btn" onclick="showTab('cadencia')">Cadência</button>
+  <button class="tab-btn" onclick="showTab('plano')">Plano de Ação</button>
+  <button class="tab-btn" onclick="showTab('inicio')">Por onde começar <span class="tab-badge badge-gold">leia por último</span></button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 — DIAGNÓSTICO
+══════════════════════════════════════════════ -->
+<section id="tab-diag" class="view active">
+  <h1 class="page-title">O diagnóstico <em>honesto</em> da operação</h1>
+  <p class="page-subtitle">Com base nas respostas coletadas e no mapeamento ao vivo do Pipefy de março/2026. O quadro é claro — e pode ser resolvido.</p>
+
+  <div class="stat-strip">
+    <div class="stat-item">
+      <span class="stat-val red">264</span>
+      <span class="stat-label">cards parados · G1</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val amber">50+</span>
+      <span class="stat-label">projetos/mês</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val red">0</span>
+      <span class="stat-label">NPS coletados</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-val red">0</span>
+      <span class="stat-label">reuniões recorrentes</span>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    <strong>Padrão identificado: operação reativa em escala.</strong> A monofloor entrega 50+ projetos por mês com infraestrutura de gestão que foi desenhada para 10. O Pipefy existe mas é consultado, não gerencia. O WhatsApp informa mas não registra. A obra termina mas não gera aprendizado. Esse modelo funciona até um certo volume — e você já está sentindo o teto.
+  </div>
+
+  <h2 class="sec-title">O que as respostas revelam</h2>
+  <div class="grid-2">
+    <div class="card c-red">
+      <div class="card-label">Gestão de prazos — manual</div>
+      <div class="card-title">Visibilidade zero em tempo real</div>
+      <div class="card-body">Quando alguém abre o Pipefy, o problema já existe há dias. Não há alerta, não há semáforo, não há responsável automático. A gestão é reativa por design — não por escolha.</div>
+    </div>
+    <div class="card c-red">
+      <div class="card-label">Pós-entrega — inexistente</div>
+      <div class="card-title">Ciclo de aprendizado zerado</div>
+      <div class="card-body">A obra fecha, o projeto some. Não há NPS, não há ritual de encerramento, não há registro do que funcionou ou falhou. Cada nova obra começa do zero — os mesmos erros se repetem em escala.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="card-label">Comunicação — WhatsApp por projeto</div>
+      <div class="card-title">Informação que não sobrevive à obra</div>
+      <div class="card-body">O histórico completo de cada projeto vive num grupo que fecha quando a obra acaba. Decisões, ajustes, problemas — tudo se perde. Nada alimenta melhoria futura ou base de conhecimento.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="card-label">Sem reunião recorrente</div>
+      <div class="card-title">Gestão por incêndio</div>
+      <div class="card-body">Sem cadência formal, a qualidade acontece quando alguém grita. O gerente não gerencia processos — apaga fogo. Com 50 projetos simultâneos, isso cria uma pressão que não escala.</div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">A causa raiz de tudo</h2>
+  <div class="insight">
+    <strong>Não existem loops de feedback.</strong> A operação da monofloor é uma linha reta: proposta → execução → entrega. Sem o loop de retorno — o aprendizado que volta para o início e melhora o próximo projeto — cada ciclo começa igualmente vulnerável. Os três setores declarados como críticos (operações, logística, pós-venda) têm exatamente o mesmo problema raiz: <strong>o ciclo não fecha</strong>. A solução não é uma ferramenta nova. É uma mudança de arquitetura de gestão.
+  </div>
+
+  <h2 class="sec-title">O que já funciona bem</h2>
+  <div class="grid-3">
+    <div class="card c-green">
+      <div class="card-label">Processos documentados</div>
+      <div class="card-title">5 fluxos mapeados</div>
+      <div class="card-body">OE, OEC, OEI, OEL, OECT — estrutura invejável para uma empresa do tamanho da monofloor. Poucas empresas têm isso.</div>
+    </div>
+    <div class="card c-green">
+      <div class="card-label">SLAs definidos</div>
+      <div class="card-title">PP:001 em vigor</div>
+      <div class="card-body">Os prazos existem e estão documentados. O problema não é a ausência de regras — é a ausência de enforcement automático.</div>
+    </div>
+    <div class="card c-green">
+      <div class="card-label">Pipefy rodando</div>
+      <div class="card-title">Sistema central ativo</div>
+      <div class="card-body">A infraestrutura existe. Não é preciso trocar de sistema — é preciso usar o que já existe de forma mais inteligente.</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>Ponto de alavancagem:</strong> a monofloor já fez a parte difícil — documentar processos e implantar um sistema. A maioria das empresas no mesmo estágio ainda está no Excel. O trabalho agora é fechar os loops e criar automação sobre uma base que já existe.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 — VSM
+══════════════════════════════════════════════ -->
+<section id="tab-vsm" class="view">
+  <h1 class="page-title">Fluxo de valor — <em>onde o tempo some</em></h1>
+  <p class="page-subtitle">O VSM (Value Stream Map) é a ferramenta Lean que mostra onde o tempo é gasto vs. onde ele gera valor real. Vermelho = desperdício puro. Amarelo = necessário mas pode ser reduzido. Verde = gera valor.</p>
+
+  <h2 class="sec-title">Estado atual — como a operação funciona hoje</h2>
+  <div class="vsm-container">
+    <div class="vsm-flow" style="grid-template-columns: repeat(6, 1fr);">
+      <div class="vsm-step value">
+        <div class="vsm-step-name">OECT</div>
+        <div class="vsm-step-sub">Contrato</div>
+        <span class="vsm-tag" style="background:var(--green-bg);color:var(--green)">Gera valor</span>
+      </div>
+      <div class="vsm-step waste-high">
+        <div class="vsm-step-name">OEC</div>
+        <div class="vsm-step-sub">Cores/amostras</div>
+        <span class="vsm-tag" style="background:var(--red-bg);color:var(--red)">264 parados</span>
+      </div>
+      <div class="vsm-step waste-med">
+        <div class="vsm-step-name">OEI</div>
+        <div class="vsm-step-sub">Indústria</div>
+        <span class="vsm-tag" style="background:var(--amber-bg);color:var(--amber)">Rastreio manual</span>
+      </div>
+      <div class="vsm-step waste-high">
+        <div class="vsm-step-name">OEL</div>
+        <div class="vsm-step-sub">Logística</div>
+        <span class="vsm-tag" style="background:var(--red-bg);color:var(--red)">Alta variação</span>
+      </div>
+      <div class="vsm-step waste-med">
+        <div class="vsm-step-name">OE</div>
+        <div class="vsm-step-sub">Execução</div>
+        <span class="vsm-tag" style="background:var(--amber-bg);color:var(--amber)">Pausas sem motivo</span>
+      </div>
+      <div class="vsm-step waste-high">
+        <div class="vsm-step-name">Pós-entrega</div>
+        <div class="vsm-step-sub">—</div>
+        <span class="vsm-tag" style="background:var(--red-bg);color:var(--red)">Não existe</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">Estado futuro — como deve funcionar</h2>
+  <div class="vsm-container">
+    <div class="vsm-flow" style="grid-template-columns: repeat(6, 1fr);">
+      <div class="vsm-step future">
+        <div class="vsm-step-name">OECT</div>
+        <div class="vsm-step-sub">Gate automático</div>
+        <span class="vsm-tag" style="background:var(--gold-bg);color:var(--gold)">Poka-Yoke ativo</span>
+      </div>
+      <div class="vsm-step future">
+        <div class="vsm-step-name">OEC</div>
+        <div class="vsm-step-sub">SLA D+7 automático</div>
+        <span class="vsm-tag" style="background:var(--gold-bg);color:var(--gold)">G1 ≤ 30 cards</span>
+      </div>
+      <div class="vsm-step future">
+        <div class="vsm-step-name">OEI</div>
+        <div class="vsm-step-sub">NF vinculada auto</div>
+        <span class="vsm-tag" style="background:var(--gold-bg);color:var(--gold)">100% rastreado</span>
+      </div>
+      <div class="vsm-step future">
+        <div class="vsm-step-name">OEL</div>
+        <div class="vsm-step-sub">Protocolo OEL-006</div>
+        <span class="vsm-tag" style="background:var(--gold-bg);color:var(--gold)">Em melhoria</span>
+      </div>
+      <div class="vsm-step future">
+        <div class="vsm-step-name">OE</div>
+        <div class="vsm-step-sub">Checklist digital</div>
+        <span class="vsm-tag" style="background:var(--gold-bg);color:var(--gold)">Pausa com motivo</span>
+      </div>
+      <div class="vsm-step future">
+        <div class="vsm-step-name">Pós-entrega</div>
+        <div class="vsm-step-sub">NPS D+1 auto</div>
+        <span class="vsm-tag" style="background:var(--gold-bg);color:var(--gold)">Ciclo fechado</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>O maior ganho não está em nenhuma etapa do meio.</strong> Está na criação do pós-entrega — que hoje é um campo vazio. Quando esse loop fecha, todos os problemas das etapas anteriores começam a ter causa raiz identificada, dado histórico e solução acumulada. É o investimento com maior retorno em inteligência operacional.
+  </div>
+
+  <h2 class="sec-title">Os 8 desperdícios Lean identificados na monofloor</h2>
+  <div class="grid-2">
+    <div class="card c-red">
+      <div class="card-label">Espera</div>
+      <div class="card-title">264 cards em "Solicitar Coleta"</div>
+      <div class="card-body">O maior desperdício da operação. Cliente aprovado, cor definida, produção aguardando — e o card fica parado por falta de responsável e SLA de coleta.</div>
+    </div>
+    <div class="card c-red">
+      <div class="card-label">Processamento excessivo</div>
+      <div class="card-title">Monitoramento manual do Pipefy</div>
+      <div class="card-body">Abrir o sistema fase a fase para identificar o que está atrasado é um trabalho que o sistema deveria fazer automaticamente. Cada hora de monitoramento manual é uma hora que não resolve problema.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="card-label">Retrabalho</div>
+      <div class="card-title">Divergência de cor e material</div>
+      <div class="card-body">Sem vinculação obrigatória da amostra aprovada ao pedido de produção, divergências de cor chegam em obra. Custo: R$500+/cor + prazo perdido + tensão com cliente.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="card-label">Estoque desnecessário</div>
+      <div class="card-title">Amostras não coletadas</div>
+      <div class="card-body">Material produzido e não coletado acumula como inventário parado. O G1 com 264 cards representa custo de material que poderia estar circulando.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="card-label">Defeitos / erros</div>
+      <div class="card-title">Pausas sem motivo registrado</div>
+      <div class="card-body">Sem o campo "Motivo da Pausa" obrigatório, a causa de 10 obras paradas é desconhecida. Impossível prevenir o que não se consegue medir.</div>
+    </div>
+    <div class="card c-amber">
+      <div class="card-label">Conhecimento não utilizado</div>
+      <div class="card-title">Histórico que morre no WhatsApp</div>
+      <div class="card-body">Cada obra acumula decisões, adaptações e soluções que somem quando o grupo fecha. 50 obras por mês = 50 oportunidades de aprendizado perdidas mensalmente.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 — OPERAÇÕES
+══════════════════════════════════════════════ -->
+<section id="tab-ops" class="view">
+  <h1 class="page-title">Operações — <em>o motor que precisa de ajuste</em></h1>
+  <p class="page-subtitle">Os 5 fluxos operacionais existem e estão documentados. O problema não é falta de processo — é falta de enforcement automático e fechamento de loop. Aqui está o diagnóstico e o plano de ação por fluxo.</p>
+
+  <h2 class="sec-title">Status por fluxo</h2>
+  <div class="ops-flow">
+    <div class="ops-item">
+      <div class="ops-code">OECT</div>
+      <div>
+        <div class="ops-name">Contratos — da proposta à assinatura</div>
+        <div class="ops-desc">Gate obrigatório antes de qualquer operação. Validação de CPF, assinatura digital, criação de grupos. Já funciona como bloqueio formal.</div>
+        <div class="ops-actions">
+          <span class="ops-action">Validação CPF automática</span>
+          <span class="ops-action">Gate OECT-017 ativo</span>
+          <span class="ops-action">Assinatura digital</span>
+        </div>
+      </div>
+      <span class="ops-status s-ok">Funciona</span>
+    </div>
+    <div class="ops-item">
+      <div class="ops-code">OEC</div>
+      <div>
+        <div class="ops-name">Cores e amostras — o maior gargalo da empresa</div>
+        <div class="ops-desc">264 cards parados em "Solicitar Coleta". Sem responsável fixo, sem SLA de coleta, sem alerta automático. A cor é condição de início de obra — esse gargalo impacta diretamente o cronograma de execução.</div>
+        <div class="ops-actions">
+          <span class="ops-action" style="background:var(--red-bg);border-color:rgba(226,75,74,.2);color:var(--red)">Criar SLA D+7 para coleta</span>
+          <span class="ops-action" style="background:var(--red-bg);border-color:rgba(226,75,74,.2);color:var(--red)">Definir responsável fixo</span>
+          <span class="ops-action" style="background:var(--red-bg);border-color:rgba(226,75,74,.2);color:var(--red)">Alerta automático Pipefy</span>
+          <span class="ops-action" style="background:var(--red-bg);border-color:rgba(226,75,74,.2);color:var(--red)">Foto obrigatória frente/verso</span>
+        </div>
+      </div>
+      <span class="ops-status s-crit">Crítico</span>
+    </div>
+    <div class="ops-item">
+      <div class="ops-code">OEI</div>
+      <div>
+        <div class="ops-name">Indústria — produção, NF e despacho</div>
+        <div class="ops-desc">Rastreio ainda manual. NFs nem sempre vinculadas ao card de origem. Tipo CIF/FOB registrado mas sem validação obrigatória de placa, motorista e sequência de rota em carga compartilhada.</div>
+        <div class="ops-actions">
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">NF obrigatória antes de avançar</span>
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">Validação placa/motorista</span>
+        </div>
+      </div>
+      <span class="ops-status s-adj">Ajuste</span>
+    </div>
+    <div class="ops-item">
+      <div class="ops-code">OEL</div>
+      <div>
+        <div class="ops-name">Logística — ocorrências e variação de entrega</div>
+        <div class="ops-desc">Alta variabilidade em carga compartilhada. Protocolo OEL-006 existe para carga comprometida mas sem gatilho automático. Impacto no cronograma de obra quando o material chega fora do prazo.</div>
+        <div class="ops-actions">
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">Protocolo OEL-006 automático</span>
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">SLA de rastreio ativo</span>
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">Alerta D-2 antes da obra</span>
+        </div>
+      </div>
+      <span class="ops-status s-adj">Ajuste</span>
+    </div>
+    <div class="ops-item">
+      <div class="ops-code">OE</div>
+      <div>
+        <div class="ops-name">Execução — o coração da operação</div>
+        <div class="ops-desc">50 fases mapeadas no Pipefy. Artesãos recebem instruções via Telegram por obra. Principal fraqueza: obras pausadas sem motivo registrado (10 cards em G4) impossibilitam análise de causa raiz e prevenção.</div>
+        <div class="ops-actions">
+          <span class="ops-action" style="background:var(--red-bg);border-color:rgba(226,75,74,.2);color:var(--red)">Campo motivo pausa OBRIGATÓRIO</span>
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">Checklist digital artesão</span>
+          <span class="ops-action" style="background:var(--amber-bg);border-color:rgba(239,159,39,.2);color:var(--amber)">Conferência pré-obra formal</span>
+        </div>
+      </div>
+      <span class="ops-status s-adj">Ajuste</span>
+    </div>
+  </div>
+
+  <h2 class="sec-title">Plano de ação — Operações</h2>
+  <table class="action-table">
+    <thead>
+      <tr>
+        <th>#</th><th>Ação</th><th>Fluxo</th><th>Metodologia</th><th>Prazo</th><th>Urgência</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="action-num">1</td>
+        <td>
+          <div class="action-title">Campo "Motivo da Pausa" obrigatório no Pipefy</div>
+          <div class="action-sub">Configuração nativa, 30 minutos. Bloqueia avanço do card sem motivo preenchido.</div>
+        </td>
+        <td><span class="action-met">OE</span></td>
+        <td><span class="action-met">Poka-Yoke</span></td>
+        <td class="action-prazo" style="color:var(--red)">Hoje</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Imediato</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">2</td>
+        <td>
+          <div class="action-title">Alerta automático G1 — SLA D+7 para coleta</div>
+          <div class="action-sub">Card em "Solicitar Coleta" há 7 dias dispara notificação para responsável fixo de coleta.</div>
+        </td>
+        <td><span class="action-met">OEC</span></td>
+        <td><span class="action-met">Poka-Yoke</span></td>
+        <td class="action-prazo" style="color:var(--red)">1 semana</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Imediato</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">3</td>
+        <td>
+          <div class="action-title">Definir responsável fixo de coleta de amostras</div>
+          <div class="action-sub">Hoje ninguém é "dono" do G1. Nomear uma pessoa com SLA e KPI atribuído resolve 60% do problema.</div>
+        </td>
+        <td><span class="action-met">OEC</span></td>
+        <td><span class="action-met">RACI</span></td>
+        <td class="action-prazo" style="color:var(--red)">Esta semana</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Imediato</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">4</td>
+        <td>
+          <div class="action-title">NF obrigatória antes de avançar fases OEI</div>
+          <div class="action-sub">Gate Pipefy: sem NF vinculada, o card não avança para rastreio/despacho.</div>
+        </td>
+        <td><span class="action-met">OEI</span></td>
+        <td><span class="action-met">Poka-Yoke</span></td>
+        <td class="action-prazo" style="color:var(--amber)">2 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Curto prazo</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">5</td>
+        <td>
+          <div class="action-title">Checklist digital de conferência pré-obra para artesãos</div>
+          <div class="action-sub">Formulário no Pipefy (ou Telegram bot) que o artesão preenche ao chegar em obra — substrato, material, acesso.</div>
+        </td>
+        <td><span class="action-met">OE</span></td>
+        <td><span class="action-met">5S + Checklist</span></td>
+        <td class="action-prazo" style="color:var(--amber)">3 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Curto prazo</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">6</td>
+        <td>
+          <div class="action-title">Protocolo OEL-006 com gatilho automático</div>
+          <div class="action-sub">Carga comprometida aciona automaticamente investigação logística + aviso ao operador de obra.</div>
+        </td>
+        <td><span class="action-met">OEL</span></td>
+        <td><span class="action-met">FMEA</span></td>
+        <td class="action-prazo" style="color:var(--blue)">2 meses</td>
+        <td><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">Médio prazo</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 — PÓS-VENDA
+══════════════════════════════════════════════ -->
+<section id="tab-posvendas" class="view">
+  <h1 class="page-title">Pós-venda — <em>o setor que não existe</em></h1>
+  <p class="page-subtitle">A obra entrega o piso mais sofisticado do mercado e encerra sem nenhum ritual. Sem NPS, sem follow-up, sem lição aprendida. É o maior desperdício estratégico da monofloor — e o de mais fácil resolução.</p>
+
+  <div class="alert-box">
+    <strong>O problema com "a obra fecha e o próximo começa":</strong> com 50+ projetos por mês, a monofloor tem uma das maiores bases de clientes premium do Brasil. Cada um desses clientes é um potencial embaixador da marca, uma fonte de indicação, uma possibilidade de recompra. Sem nenhum toque pós-entrega, esse ativo se dissolve silenciosamente.
+  </div>
+
+  <h2 class="sec-title">O que precisa existir — ritual de encerramento</h2>
+  <div class="grid-3">
+    <div class="card c-gold">
+      <div class="card-label">Passo 1 — Na última visita</div>
+      <div class="card-title">Foto de encerramento + aprovação formal</div>
+      <div class="card-body">Artesão responsável fotografa o piso finalizado com iluminação adequada. Cliente assina (ou confirma via WhatsApp) que aprova a entrega. Isso vira registro no Pipefy e protege juridicamente.</div>
+    </div>
+    <div class="card c-gold">
+      <div class="card-label">Passo 2 — D+1 após entrega</div>
+      <div class="card-title">NPS automático via WhatsApp Business</div>
+      <div class="card-body">Mensagem automatizada 24h após a confirmação de entrega: "Como foi a sua experiência com a monofloor?" + link NPS de 1 pergunta. Taxa de resposta estimada: 40-60% com envio imediato pós-obra.</div>
+    </div>
+    <div class="card c-gold">
+      <div class="card-label">Passo 3 — D+7 interno</div>
+      <div class="card-title">Lição aprendida no Pipefy</div>
+      <div class="card-body">Campo estruturado preenchido pelo operador: o que foi diferente nessa obra? Houve problema de material? De substrato? Alguma adaptação feita? Acumula base de conhecimento que melhora o próximo projeto.</div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">Estrutura do NPS monofloor</h2>
+  <div class="grid-2">
+    <div>
+      <div class="insight" style="margin-bottom:1rem">
+        <strong>Pergunta única (padrão NPS):</strong> "Em uma escala de 0 a 10, o quanto você recomendaria a monofloor para um amigo ou arquiteto?" — Seguida de: "O que mais te impressionou no processo?"
+      </div>
+      <ul class="n-list">
+        <li class="n-item">
+          <span class="n-num">1</span>
+          <span class="n-text"><strong>Promotores (9-10):</strong> solicitar indicação ativa — pedir nome de um arquiteto que poderia se interessar. Taxa de conversão por indicação é 3x maior.</span>
+        </li>
+        <li class="n-item">
+          <span class="n-num">2</span>
+          <span class="n-text"><strong>Neutros (7-8):</strong> perguntar o que faltou. Identificar quick wins que elevam para promotor.</span>
+        </li>
+        <li class="n-item">
+          <span class="n-num">3</span>
+          <span class="n-text"><strong>Detratores (0-6):</strong> acionar gerente de qualidade imediatamente. Investigação técnica + contato em até 24h.</span>
+        </li>
+      </ul>
+    </div>
+    <div class="card c-gold" style="align-self:start">
+      <div class="card-label">KPIs de pós-venda</div>
+      <div class="card-title">O que medir a partir do mês 1</div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;margin-top:.75rem">
+        <div style="padding:.5rem .75rem;background:var(--bg3);border-radius:var(--radius);font-size:12px;line-height:1.5">
+          <div style="color:var(--text);font-weight:500;margin-bottom:2px">NPS mensal</div>
+          <div style="color:var(--text3)">Meta: ≥ 70 em 6 meses</div>
+        </div>
+        <div style="padding:.5rem .75rem;background:var(--bg3);border-radius:var(--radius);font-size:12px;line-height:1.5">
+          <div style="color:var(--text);font-weight:500;margin-bottom:2px">Taxa de resposta NPS</div>
+          <div style="color:var(--text3)">Meta: ≥ 40% das obras</div>
+        </div>
+        <div style="padding:.5rem .75rem;background:var(--bg3);border-radius:var(--radius);font-size:12px;line-height:1.5">
+          <div style="color:var(--text);font-weight:500;margin-bottom:2px">Taxa de indicação por promotor</div>
+          <div style="color:var(--text3)">Meta: 1 indicação/10 promotores</div>
+        </div>
+        <div style="padding:.5rem .75rem;background:var(--bg3);border-radius:var(--radius);font-size:12px;line-height:1.5">
+          <div style="color:var(--text);font-weight:500;margin-bottom:2px">% obras com lição aprendida</div>
+          <div style="color:var(--text3)">Meta: 100% em 90 dias</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">Plano de ação — pós-venda</h2>
+  <table class="action-table">
+    <thead>
+      <tr><th>#</th><th>Ação</th><th>Metodologia</th><th>Prazo</th><th>Urgência</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="action-num">7</td>
+        <td>
+          <div class="action-title">Ritual de encerramento de obra — passo a passo</div>
+          <div class="action-sub">Foto de entrega + confirmação do cliente + card Pipefy movido para "Encerrado" pelo artesão responsável. 10 minutos no final de cada obra.</div>
+        </td>
+        <td><span class="action-met">VOC + Lean</span></td>
+        <td class="action-prazo" style="color:var(--red)">2 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Urgente</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">8</td>
+        <td>
+          <div class="action-title">NPS automatizado D+1 via WhatsApp Business</div>
+          <div class="action-sub">Trigger no Pipefy quando card muda para "Entregue" → mensagem automática para o cliente com link NPS.</div>
+        </td>
+        <td><span class="action-met">VOC + PDCA</span></td>
+        <td class="action-prazo" style="color:var(--amber)">6 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Curto prazo</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">9</td>
+        <td>
+          <div class="action-title">Campo "Lição Aprendida" obrigatório no encerramento</div>
+          <div class="action-sub">Operador preenche antes de mover card para "Arquivo". Campos: problema encontrado, solução adotada, o que evitar na próxima obra.</div>
+        </td>
+        <td><span class="action-met">Kaizen</span></td>
+        <td class="action-prazo" style="color:var(--amber)">3 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Curto prazo</span></td>
+      </tr>
+      <tr>
+        <td class="action-num">10</td>
+        <td>
+          <div class="action-title">Revisão mensal de NPS com Ishikawa para detratores</div>
+          <div class="action-sub">Cada nota ≤ 6 gera investigação estruturada com análise de causa raiz — alimenta o PDCA da qualidade.</div>
+        </td>
+        <td><span class="action-met">Ishikawa + PDCA</span></td>
+        <td class="action-prazo" style="color:var(--blue)">Mês 2</td>
+        <td><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">Médio prazo</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 5 — CADÊNCIA
+══════════════════════════════════════════════ -->
+<section id="tab-cadencia" class="view">
+  <h1 class="page-title">Cadência operacional — <em>o sistema nervoso da empresa</em></h1>
+  <p class="page-subtitle">Sem cadência, a gestão é por urgência. A cadência transforma reatividade em previsibilidade. Aqui está o calendário operacional completo — o que precisa existir e ainda não existe.</p>
+
+  <div class="insight">
+    <strong>A monofloor hoje gerencia por incêndio.</strong> As discussões surgem conforme os problemas aparecem — o que significa que quando o problema é percebido, ele já impactou prazo, cliente e custo. Uma cadência recorrente cria um "sistema imunológico" para a operação: o problema é capturado no check diário, discutido na War Room semanal e resolvido antes de virar crise.
+  </div>
+
+  <h2 class="sec-title">Calendário operacional — o que criar</h2>
+  <div class="rhythm-container">
+    <div class="rhythm-row">
+      <div class="rhythm-freq">DIÁRIO</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Check de gargalos — 10 min</div>
+          <div class="rhythm-item-who">Gerente de Qualidade · manhã</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Criar · prioritário</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">View SLA crítica</div>
+          <div class="rhythm-item-who">Pipefy · automático</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Criar · prioritário</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rhythm-row">
+      <div class="rhythm-freq">SEMANAL</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item" style="border-color:rgba(201,169,110,.2)">
+          <div class="rhythm-item-title">War Room — 45 min</div>
+          <div class="rhythm-item-who">Operações + Qualidade · segunda</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Criar · MAIS URGENTE</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Revisão de KPIs</div>
+          <div class="rhythm-item-who">Gerente de Qualidade · sexta</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Criar</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Update semanal ao cliente</div>
+          <div class="rhythm-item-who">Operador · por obra ativa</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Criar</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rhythm-row">
+      <div class="rhythm-freq">POR OBRA</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item" style="border-color:rgba(201,169,110,.2)">
+          <div class="rhythm-item-title">Ritual de encerramento</div>
+          <div class="rhythm-item-who">Operador + Artesão · na entrega</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">Criar · urgente</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">NPS D+1</div>
+          <div class="rhythm-item-who">WhatsApp · automático</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Criar</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Lição aprendida</div>
+          <div class="rhythm-item-who">Operador · D+7</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">Criar</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rhythm-row">
+      <div class="rhythm-freq">MENSAL</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Revisão BSC + KPIs</div>
+          <div class="rhythm-item-who">Qualidade + Diretoria</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">Criar · fase 2</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Kaizen event</div>
+          <div class="rhythm-item-who">Equipe multidisciplinar</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">Criar · fase 2</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Investigação técnica de SLA</div>
+          <div class="rhythm-item-who">Escalonamento existente</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--green-bg);color:var(--green)">Já existe</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rhythm-row">
+      <div class="rhythm-freq">SEMESTRAL</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Revisão completa do SGQ</div>
+          <div class="rhythm-item-who">Diretoria</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">Criar · fase 3</span></div>
+        </div>
+        <div class="rhythm-item">
+          <div class="rhythm-item-title">Auditoria dos fluxos</div>
+          <div class="rhythm-item-who">Ger. Qualidade</div>
+          <div class="rhythm-item-tag"><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">Criar · fase 4</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">Como estruturar a War Room semanal</h2>
+  <div class="grid-2">
+    <div>
+      <ul class="n-list">
+        <li class="n-item">
+          <span class="n-num">1</span>
+          <span class="n-text"><strong>Abertura — 5 min:</strong> Ver Pipefy view de semáforo. Quantos cards em SLA crítica? Houve novo gargalo desde a última semana?</span>
+        </li>
+        <li class="n-item">
+          <span class="n-num">2</span>
+          <span class="n-text"><strong>Gargalos ativos — 15 min:</strong> Revisar G1, G2, G3, G4 por número. Cada responsável reporta: o que fiz, o que travou, o que preciso.</span>
+        </li>
+        <li class="n-item">
+          <span class="n-num">3</span>
+          <span class="n-text"><strong>Obras críticas — 15 min:</strong> Quais obras têm X em menos de 14 dias? O material chegou? A amostra foi aprovada? A equipe está confirmada?</span>
+        </li>
+        <li class="n-item">
+          <span class="n-num">4</span>
+          <span class="n-text"><strong>Decisões e ações — 10 min:</strong> Cada decisão tomada gera uma linha no Pipefy (ou planilha da War Room) com: ação, responsável, prazo.</span>
+        </li>
+      </ul>
+    </div>
+    <div class="card c-gold">
+      <div class="card-label">Regras da War Room</div>
+      <div class="card-title">O que transforma reunião em resultado</div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;margin-top:.75rem">
+        <div style="font-size:12.5px;color:var(--text2);padding-bottom:7px;border-bottom:1px solid var(--line)">Toda ação tem dono e prazo — sem dono, não é ação</div>
+        <div style="font-size:12.5px;color:var(--text2);padding-bottom:7px;border-bottom:1px solid var(--line)">Sem dados, sem discussão — trazer número do Pipefy</div>
+        <div style="font-size:12.5px;color:var(--text2);padding-bottom:7px;border-bottom:1px solid var(--line)">Começar sempre pelas obras mais próximas de X</div>
+        <div style="font-size:12.5px;color:var(--text2);padding-bottom:7px;border-bottom:1px solid var(--line)">45 min máximo — se passar, decidir o que fica pra depois</div>
+        <div style="font-size:12.5px;color:var(--text2)">Ata de 5 linhas no Pipefy ou grupo Telegram — registro obrigatório</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 6 — PLANO DE AÇÃO COMPLETO
+══════════════════════════════════════════════ -->
+<section id="tab-plano" class="view">
+  <h1 class="page-title">Plano de ação completo — <em>10 itens priorizados</em></h1>
+  <p class="page-subtitle">Ordenados por impacto × urgência × esforço. Os 3 primeiros custam zero e podem ser feitos esta semana. Cada item tem metodologia, KPI de sucesso e responsável sugerido.</p>
+
+  <div class="phase-bar">
+    <div class="phase-segment ph1">
+      <span class="phase-n">F1</span>
+      <span class="phase-label">Chão firme</span>
+      <span class="phase-time">Semana 1–2</span>
+    </div>
+    <div class="phase-segment ph2">
+      <span class="phase-n">F2</span>
+      <span class="phase-label">Ver para gerir</span>
+      <span class="phase-time">Semana 3–6</span>
+    </div>
+    <div class="phase-segment ph3">
+      <span class="phase-n">F3</span>
+      <span class="phase-label">Ouvir o cliente</span>
+      <span class="phase-time">Mês 2–3</span>
+    </div>
+    <div class="phase-segment ph4">
+      <span class="phase-n">F4</span>
+      <span class="phase-label">Construir ativos</span>
+      <span class="phase-time">Mês 3–6</span>
+    </div>
+  </div>
+
+  <table class="action-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Ação · Descrição</th>
+        <th>Metodologia</th>
+        <th>KPI de sucesso</th>
+        <th>Responsável</th>
+        <th>Prazo</th>
+        <th>Fase</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="action-num" style="color:var(--red)">1</td>
+        <td>
+          <div class="action-title">War Room semanal — 45 min toda segunda</div>
+          <div class="action-sub">A única ação que resolve tudo parcialmente. Revisão de gargalos, obras críticas, decisões com dono e prazo. Sem infraestrutura — apenas calendário recorrente.</div>
+        </td>
+        <td><span class="action-met">PDCA Check</span></td>
+        <td><span class="action-met">Toda semana acontece · ata registrada</span></td>
+        <td><span class="action-met">Ger. Qualidade</span></td>
+        <td class="action-prazo" style="color:var(--red)">Esta semana</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">F1</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--red)">2</td>
+        <td>
+          <div class="action-title">Campo "Motivo da Pausa" obrigatório no Pipefy</div>
+          <div class="action-sub">Configuração nativa de 30 minutos. Impede que obras sejam pausadas sem registro de causa. Ativa rastreabilidade imediata.</div>
+        </td>
+        <td><span class="action-met">Poka-Yoke</span></td>
+        <td><span class="action-met">100% pausas com motivo</span></td>
+        <td><span class="action-met">Operação</span></td>
+        <td class="action-prazo" style="color:var(--red)">Hoje</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">F1</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--red)">3</td>
+        <td>
+          <div class="action-title">Responsável fixo + alerta D+7 para coleta (G1)</div>
+          <div class="action-sub">Nomear uma pessoa como dona do fluxo OEC de coleta. Configurar alerta automático no Pipefy para cards parados há mais de 7 dias. Resolve diretamente os 264 cards.</div>
+        </td>
+        <td><span class="action-met">Poka-Yoke · RACI</span></td>
+        <td><span class="action-met">G1 ≤ 30 cards em 90 dias</span></td>
+        <td><span class="action-met">Ger. Qualidade</span></td>
+        <td class="action-prazo" style="color:var(--red)">1 semana</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">F1</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--red)">4</td>
+        <td>
+          <div class="action-title">Ritual de encerramento de obra</div>
+          <div class="action-sub">Checklist final de 10 minutos: foto do piso entregue, confirmação do cliente, card movido para "Encerrado". Simples — e abre a porta para NPS e lição aprendida.</div>
+        </td>
+        <td><span class="action-met">VOC · Lean</span></td>
+        <td><span class="action-met">100% obras com encerramento em 30 dias</span></td>
+        <td><span class="action-met">Operação</span></td>
+        <td class="action-prazo" style="color:var(--red)">2 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--red-bg);color:var(--red)">F1</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--amber)">5</td>
+        <td>
+          <div class="action-title">View de semáforo SLA no Pipefy</div>
+          <div class="action-sub">Dashboard de cards por status de prazo (verde/amarelo/vermelho). Cada manhã, o gerente abre uma tela e vê o estado de toda a operação em 30 segundos — sem navegar fase a fase.</div>
+        </td>
+        <td><span class="action-met">Gestão visual</span></td>
+        <td><span class="action-met">Tempo de resp. a gargalos &lt; 24h</span></td>
+        <td><span class="action-met">Ger. Qualidade + TI</span></td>
+        <td class="action-prazo" style="color:var(--amber)">3 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">F2</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--amber)">6</td>
+        <td>
+          <div class="action-title">NF obrigatória antes de avançar OEI</div>
+          <div class="action-sub">Gate Pipefy: o card não muda de fase sem NF vinculada. Elimina rastreabilidade manual de material e protege a operação de carga sem comprovante.</div>
+        </td>
+        <td><span class="action-met">Poka-Yoke</span></td>
+        <td><span class="action-met">100% NFs vinculadas</span></td>
+        <td><span class="action-met">Operação</span></td>
+        <td class="action-prazo" style="color:var(--amber)">2 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">F2</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--amber)">7</td>
+        <td>
+          <div class="action-title">Lição aprendida obrigatória no encerramento</div>
+          <div class="action-sub">Campo no Pipefy: problema encontrado, solução adotada, o que evitar. Preenchido pelo operador em 5 minutos. Com 50+ obras/mês, em 6 meses a base de conhecimento vira um ativo real.</div>
+        </td>
+        <td><span class="action-met">Kaizen</span></td>
+        <td><span class="action-met">100% obras com campo preenchido</span></td>
+        <td><span class="action-met">Operação</span></td>
+        <td class="action-prazo" style="color:var(--amber)">3 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--amber-bg);color:var(--amber)">F2</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--green)">8</td>
+        <td>
+          <div class="action-title">NPS automatizado D+1 via WhatsApp Business</div>
+          <div class="action-sub">Trigger no Pipefy → mensagem automática 24h após entrega confirmada. Uma pergunta, link simples. Alimenta o BSC (perspectiva Cliente) e identifica problemas que não chegam por outro canal.</div>
+        </td>
+        <td><span class="action-met">VOC · PDCA</span></td>
+        <td><span class="action-met">NPS ≥ 70 em 6 meses</span></td>
+        <td><span class="action-met">Ger. Qualidade</span></td>
+        <td class="action-prazo" style="color:var(--green)">6 semanas</td>
+        <td><span class="urgency-pill" style="background:var(--green-bg);color:var(--green)">F3</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--green)">9</td>
+        <td>
+          <div class="action-title">KPI Dashboard mensal para diretoria</div>
+          <div class="action-sub">Relatório consolidado: TAT-OE, COL-SLA, NPS, NF-LINK, gargalos ativos, evolução mês a mês. Apresentado na reunião mensal de revisão BSC.</div>
+        </td>
+        <td><span class="action-met">BSC</span></td>
+        <td><span class="action-met">Relatório entregue todo mês</span></td>
+        <td><span class="action-met">Ger. Qualidade</span></td>
+        <td class="action-prazo" style="color:var(--green)">2 meses</td>
+        <td><span class="urgency-pill" style="background:var(--green-bg);color:var(--green)">F3</span></td>
+      </tr>
+      <tr>
+        <td class="action-num" style="color:var(--blue)">10</td>
+        <td>
+          <div class="action-title">OKRs trimestrais 2026/2027</div>
+          <div class="action-sub">Objetivos qualitativos com Key Results mensuráveis. Exemplo: O: "Eliminar gargalo de amostras" · KR1: G1 ≤ 30 em 90 dias · KR2: responsável de coleta com SLA ativo. Liga KPIs à estratégia.</div>
+        </td>
+        <td><span class="action-met">OKR · BSC</span></td>
+        <td><span class="action-met">OKRs publicados e revisados</span></td>
+        <td><span class="action-met">Diretoria + Ger. Q.</span></td>
+        <td class="action-prazo" style="color:var(--blue)">Trim. 2</td>
+        <td><span class="urgency-pill" style="background:var(--blue-bg);color:var(--blue)">F4</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TAB 7 — POR ONDE COMEÇAR
+══════════════════════════════════════════════ -->
+<section id="tab-inicio" class="view">
+  <h1 class="page-title">Por onde <em>começar</em></h1>
+  <p class="page-subtitle">Você leu o diagnóstico, o fluxo de valor, as operações, o pós-venda, a cadência e o plano completo. Agora: a síntese. O que fazer nos próximos 7 dias para que tudo mude.</p>
+
+  <div class="insight">
+    <strong>A resposta direta:</strong> dos 10 itens do plano, 4 têm custo zero, prazo imediato e impacto desproporcional. Se você fizer apenas esses 4 nos próximos 14 dias, a operação da monofloor muda estruturalmente. Não é exagero — é o que os dados dizem.
+  </div>
+
+  <h2 class="sec-title">Matriz de urgência × impacto</h2>
+  <div class="matrix-axes">
+    <div class="axis-label">← baixo impacto</div>
+    <div class="axis-label">alto impacto →</div>
+  </div>
+  <div class="matrix-grid">
+    <div class="matrix-cell matrix-q1" data-label="I">
+      <div class="matrix-q-label">Faça agora · alto impacto, baixo esforço</div>
+      <div class="matrix-item"><strong>#1</strong> War Room semanal — marcar recorrência hoje</div>
+      <div class="matrix-item"><strong>#2</strong> Campo Motivo Pausa — 30 min no Pipefy</div>
+      <div class="matrix-item"><strong>#3</strong> Responsável fixo G1 — nomear hoje</div>
+      <div class="matrix-item"><strong>#4</strong> Ritual de encerramento — template simples</div>
+    </div>
+    <div class="matrix-cell matrix-q2" data-label="II">
+      <div class="matrix-q-label">Planeje e execute · alto impacto, esforço médio</div>
+      <div class="matrix-item"><strong>#5</strong> View semáforo Pipefy — 1 semana de config.</div>
+      <div class="matrix-item"><strong>#6</strong> Alerta D+7 OEC — automação Pipefy</div>
+      <div class="matrix-item"><strong>#8</strong> NPS automático WhatsApp — integração</div>
+      <div class="matrix-item"><strong>#9</strong> KPI Dashboard mensal</div>
+    </div>
+    <div class="matrix-cell matrix-q3" data-label="III">
+      <div class="matrix-q-label">Faça junto · baixo esforço, impacto médio</div>
+      <div class="matrix-item"><strong>#7</strong> Lição aprendida — campo no Pipefy</div>
+      <div class="matrix-item"><strong>#6</strong> NF obrigatória OEI — gate no card</div>
+    </div>
+    <div class="matrix-cell matrix-q4" data-label="IV">
+      <div class="matrix-q-label">Construção estratégica · médio prazo</div>
+      <div class="matrix-item"><strong>#9</strong> BSC com 4 perspectivas</div>
+      <div class="matrix-item"><strong>#10</strong> OKRs trimestrais</div>
+      <div class="matrix-item">FMEA formal dos 5 fluxos</div>
+      <div class="matrix-item">ISO 9001 gap analysis</div>
+    </div>
+  </div>
+
+  <h2 class="sec-title">Mapa de gaps — o estado atual em uma visão</h2>
+  <div class="grid-3">
+    <div class="gap-section">
+      <div class="gap-header">
+        <div class="gap-icon" style="background:var(--green-bg)">
+          <span style="color:var(--green);font-size:14px;font-weight:500">✓</span>
+        </div>
+        <span class="gap-title-text">Existe e funciona</span>
+        <span class="gap-count">7 itens</span>
+      </div>
+      <ul class="gap-list gap-ok">
+        <li class="gap-item-li">Fluxos OE/OEC/OEI/OEL/OECT documentados</li>
+        <li class="gap-item-li">SLAs definidos no PP:001</li>
+        <li class="gap-item-li">Pipefy como sistema central</li>
+        <li class="gap-item-li">Aplicação exclusiva por artesãos próprios</li>
+        <li class="gap-item-li">Grupos WhatsApp por projeto com cliente</li>
+        <li class="gap-item-li">Escalação técnica/administrativa mapeada</li>
+        <li class="gap-item-li">Fluxograma publicado (GitHub Pages)</li>
+      </ul>
+    </div>
+    <div class="gap-section">
+      <div class="gap-header">
+        <div class="gap-icon" style="background:var(--amber-bg)">
+          <span style="color:var(--amber);font-size:14px;font-weight:500">~</span>
+        </div>
+        <span class="gap-title-text">Existe, precisa de ajuste</span>
+        <span class="gap-count">6 itens</span>
+      </div>
+      <ul class="gap-list gap-adj">
+        <li class="gap-item-li">Pipefy: campos obrigatórios incompletos</li>
+        <li class="gap-item-li">Pipefy: sem alertas automáticos de SLA</li>
+        <li class="gap-item-li">Pipefy: sem view de semáforo unificado</li>
+        <li class="gap-item-li">WhatsApp: informação não migra para Pipefy</li>
+        <li class="gap-item-li">SLAs: sem responsável automático por fase</li>
+        <li class="gap-item-li">Escalação: sem gatilho automático por prazo</li>
+      </ul>
+    </div>
+    <div class="gap-section">
+      <div class="gap-header">
+        <div class="gap-icon" style="background:var(--red-bg)">
+          <span style="color:var(--red);font-size:14px;font-weight:500">✕</span>
+        </div>
+        <span class="gap-title-text">Não existe — criar</span>
+        <span class="gap-count">10 itens</span>
+      </div>
+      <ul class="gap-list gap-miss">
+        <li class="gap-item-li">Ritual de encerramento de obra</li>
+        <li class="gap-item-li">NPS automatizado pós-entrega</li>
+        <li class="gap-item-li">War Room semanal recorrente</li>
+        <li class="gap-item-li">KPI Dashboard em tempo real</li>
+        <li class="gap-item-li">Lição aprendida por projeto</li>
+        <li class="gap-item-li">BSC — perspectivas estratégicas</li>
+        <li class="gap-item-li">OKRs trimestrais</li>
+        <li class="gap-item-li">Checklist digital para artesãos</li>
+        <li class="gap-item-li">FMEA formal dos 5 fluxos</li>
+        <li class="gap-item-li">Update semanal ao cliente durante obra</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-title">O plano em 3 movimentos</div>
+    <p class="cta-sub">Não é preciso fazer tudo de uma vez. A monofloor já tem a base — falta o motor de melhoria. Três movimentos mudam o jogo.</p>
+    <div class="cta-steps">
+      <div class="cta-step">
+        <span class="cta-step-n">1</span>
+        <div class="cta-step-t">Feche os buracos (F1 · 2 semanas)</div>
+        <div class="cta-step-d">War Room · campo pausa · responsável G1 · ritual de encerramento. Custo zero. Impacto imediato nos 264 cards e nas obras que fecham sem aprendizado.</div>
+      </div>
+      <div class="cta-step">
+        <span class="cta-step-n">2</span>
+        <div class="cta-step-t">Crie visibilidade (F2 · mês 1-2)</div>
+        <div class="cta-step-d">Semáforo Pipefy · alertas automáticos · NF obrigatória · lição aprendida. A operação para de ser gerida na memória e começa a ser gerida em dados.</div>
+      </div>
+      <div class="cta-step">
+        <span class="cta-step-n">3</span>
+        <div class="cta-step-t">Ouça e escale (F3-4 · mês 2-6)</div>
+        <div class="cta-step-d">NPS · BSC · OKRs. O ciclo fecha: a voz do cliente alimenta a melhoria, a melhoria alimenta o crescimento, o crescimento alimenta a marca.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight" style="margin-top:2rem">
+    <strong>Um piso sem juntas é um caminho sem volta.</strong> Esse princípio vale para a operação também. Quando os loops de feedback existem — quando a obra gera aprendizado, o aprendizado melhora o processo e o processo protege a próxima obra — a operação se torna contínua. Sem interrupções. Sem buracos onde os problemas somem. <em>Sem juntas.</em>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="doc-footer">
+  <div class="footer-brand">monofloor · PREMIUM UNIQUE SURFACES™</div>
+  <div class="footer-meta">SGQ-MNF-PLAN-001 · v1.0 · Mar/2026 · Vitor Gomes</div>
+</footer>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
