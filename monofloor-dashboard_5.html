@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monofloor · Central de Inteligência Operacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0D0D0B;
+  --bg2:     #131311;
+  --bg3:     #181816;
+  --bg4:     #1E1E1B;
+  --line:    #252522;
+  --line2:   #2E2E2A;
+  --text:    #E8E4D8;
+  --text2:   #8A8880;
+  --text3:   #4A4845;
+  --gold:    #C8A96A;
+  --gold2:   #8B7340;
+  --gold-bg: rgba(200,169,106,0.07);
+  --red:     #D05540;
+  --red-bg:  rgba(208,85,64,0.1);
+  --amber:   #D49A35;
+  --amb-bg:  rgba(212,154,53,0.1);
+  --green:   #4A9E6A;
+  --grn-bg:  rgba(74,158,106,0.1);
+  --blue:    #4A7EC8;
+  --blu-bg:  rgba(74,126,200,0.1);
+  --r: 6px; --rl: 10px;
+  --font-d: 'DM Serif Display', Georgia, serif;
+  --font-b: 'DM Sans', sans-serif;
+  --font-m: 'DM Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-b);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* ── HEADER ── */
+.hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.875rem 2rem;
+  border-bottom:1px solid var(--line);
+  background:var(--bg);
+  position:sticky;top:0;z-index:200;
+}
+.hdr-brand{display:flex;align-items:baseline;gap:.4rem}
+.hdr-logo{font-family:var(--font-d);font-size:1.2rem;color:var(--text);letter-spacing:.02em}
+.hdr-logo span{color:var(--gold)}
+.hdr-sub{font-size:10px;color:var(--text3);font-family:var(--font-m);letter-spacing:.08em;text-transform:uppercase}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.conn-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:.3rem .75rem;
+  border:1px solid var(--line);
+  border-radius:99px;
+  font-size:11px;color:var(--text3);
+  font-family:var(--font-m);
+  background:var(--bg2);
+  cursor:pointer;
+  transition:border-color .15s;
+}
+.conn-pill:hover{border-color:var(--line2)}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:var(--line2);transition:background .3s}
+.conn-dot.on{background:var(--green)}
+.conn-dot.loading{background:var(--amber);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.token-inp{
+  font-family:var(--font-m);font-size:11px;
+  padding:.35rem .75rem;
+  border:1px solid var(--line);border-radius:var(--r);
+  background:var(--bg2);color:var(--text);width:200px;
+  outline:none;transition:border-color .15s;
+}
+.token-inp:focus{border-color:var(--gold2)}
+.token-inp::placeholder{color:var(--text3)}
+.btn{
+  font-family:var(--font-b);font-size:11px;font-weight:500;
+  padding:.35rem .875rem;
+  border-radius:var(--r);border:1px solid;
+  cursor:pointer;transition:all .15s;
+}
+.btn-gold{border-color:var(--gold2);background:var(--gold-bg);color:var(--gold)}
+.btn-gold:hover{background:rgba(200,169,106,.15)}
+.btn-dim{border-color:var(--line);background:transparent;color:var(--text3)}
+.btn-dim:hover{border-color:var(--line2);color:var(--text2)}
+
+/* ── LAYOUT ── */
+.layout{display:flex;height:calc(100vh - 53px)}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:240px;flex-shrink:0;
+  background:var(--bg2);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+  overflow-y:auto;padding:1rem;gap:1.25rem;
+}
+.sb-label{
+  font-family:var(--font-m);font-size:9px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:.5rem;
+}
+.agent-btn{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.5rem .625rem;
+  border:1px solid transparent;border-radius:var(--r);
+  background:none;color:var(--text2);
+  font-family:var(--font-b);font-size:12px;
+  cursor:pointer;width:100%;text-align:left;
+  transition:all .12s;
+}
+.agent-btn:hover{background:var(--bg3);color:var(--text)}
+.agent-btn.active{
+  background:var(--gold-bg);border-color:var(--gold2);color:var(--gold)
+}
+.agent-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;
+  background:var(--line2)
+}
+.agent-dot.red{background:var(--red)}
+.agent-dot.amber{background:var(--amber)}
+.agent-dot.green{background:var(--green)}
+.agent-dot.gold{background:var(--gold)}
+
+/* Pipe stats mini */
+.pipe-mini{
+  border:1px solid var(--line);border-radius:var(--r);
+  padding:.625rem;background:var(--bg3);
+  display:flex;flex-direction:column;gap:3px;
+}
+.pm-name{font-family:var(--font-m);font-size:9px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+.pm-row{display:flex;justify-content:space-between;font-size:10px}
+.pm-label{color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px}
+.pm-val{font-family:var(--font-m);font-weight:500;color:var(--text)}
+.pm-val.alert{color:var(--red)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* Tab nav */
+.tab-nav{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--line);
+  padding:0 1.5rem;
+  overflow-x:auto;
+  scrollbar-width:none;
+  background:var(--bg);
+  flex-shrink:0;
+}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab{
+  font-family:var(--font-b);font-size:12px;color:var(--text3);
+  background:none;border:none;border-bottom:2px solid transparent;
+  padding:.625rem 1rem;cursor:pointer;white-space:nowrap;
+  margin-bottom:-1px;transition:color .12s,border-color .12s;
+  display:flex;align-items:center;gap:5px;
+}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:500}
+.tab-badge{
+  font-size:9px;padding:1px 5px;border-radius:99px;font-weight:500;
+}
+.badge-r{background:var(--red-bg);color:var(--red)}
+.badge-g{background:var(--grn-bg);color:var(--green)}
+.badge-a{background:var(--amb-bg);color:var(--amber)}
+.badge-gold{background:var(--gold-bg);color:var(--gold)}
+
+/* Content */
+.content{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+
+/* ── DASHBOARD VIEW ── */
+.view{display:none}.view.active{display:block;animation:fadein .18s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+.page-title{font-family:var(--font-d);font-size:1.875rem;color:var(--text);margin-bottom:.25rem;line-height:1.2}
+.page-title em{color:var(--gold);font-style:italic}
+.page-sub{font-size:13px;color:var(--text2);margin-bottom:2rem;max-width:560px;line-height:1.7;font-weight:300}
+.sec-title{
+  font-family:var(--font-m);font-size:9px;font-weight:500;
+  color:var(--text3);letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:1rem;padding-bottom:.375rem;border-bottom:1px solid var(--line);
+}
+
+/* KPI Strip */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--line);border-radius:var(--rl);
+  overflow:hidden;margin-bottom:2rem;
+}
+.kpi{background:var(--bg2);padding:1.125rem 1.25rem;text-align:center;cursor:pointer;transition:background .12s}
+.kpi:hover{background:var(--bg3)}
+.kpi-val{font-family:var(--font-d);font-size:1.875rem;display:block;line-height:1;margin-bottom:.25rem}
+.kpi-val.r{color:var(--red)}.kpi-val.a{color:var(--amber)}.kpi-val.g{color:var(--green)}.kpi-val.gold{color:var(--gold)}
+.kpi-lbl{font-size:10px;color:var(--text3);font-family:var(--font-m);letter-spacing:.04em}
+
+/* Grid cards */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.625rem;margin-bottom:1.5rem}
+@media(max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+.card{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:var(--rl);padding:1.125rem;
+  transition:border-color .12s;cursor:default;
+}
+.card:hover{border-color:var(--line2)}
+.card.c-red{border-color:rgba(208,85,64,.2)}.card.c-red .card-lbl{color:var(--red)}
+.card.c-amber{border-color:rgba(212,154,53,.2)}.card.c-amber .card-lbl{color:var(--amber)}
+.card.c-green{border-color:rgba(74,158,106,.2)}.card.c-green .card-lbl{color:var(--green)}
+.card.c-gold{border-color:rgba(200,169,106,.2)}.card.c-gold .card-lbl{color:var(--gold)}
+.card.c-blue{border-color:rgba(74,126,200,.2)}.card.c-blue .card-lbl{color:var(--blue)}
+.card-lbl{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.375rem}
+.card-title{font-family:var(--font-d);font-size:1rem;margin-bottom:.375rem;line-height:1.3}
+.card-body{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* Alert box */
+.alert-box{
+  border-left:3px solid var(--red);background:var(--red-bg);
+  padding:1rem 1.25rem;border-radius:0 var(--rl) var(--rl) 0;
+  margin-bottom:1.5rem;font-size:13px;color:var(--text2);line-height:1.7
+}
+.alert-box strong{color:var(--text);font-weight:500}
+.insight{
+  border-left:3px solid var(--gold);background:var(--gold-bg);
+  padding:1rem 1.25rem;border-radius:0 var(--rl) var(--rl) 0;
+  margin-bottom:1.5rem;font-size:13px;color:var(--text2);line-height:1.7
+}
+.insight strong{color:var(--text);font-weight:500}
+
+/* Índices */
+.idx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.625rem;margin-bottom:1.5rem}
+@media(max-width:900px){.idx-grid{grid-template-columns:1fr 1fr}}
+.idx-card{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:var(--rl);padding:1.125rem;text-align:center;
+  cursor:pointer;transition:all .15s;position:relative;overflow:hidden;
+}
+.idx-card:hover{border-color:var(--gold2);background:var(--bg3)}
+.idx-code{font-family:var(--font-d);font-size:1.75rem;color:var(--gold);font-style:italic;margin-bottom:.25rem}
+.idx-name{font-size:11px;color:var(--text2);margin-bottom:.625rem}
+.idx-val{font-family:var(--font-d);font-size:2.25rem;line-height:1;margin-bottom:.25rem}
+.idx-val.nd{color:var(--text3);font-size:1.5rem}
+.idx-val.good{color:var(--green)}.idx-val.warn{color:var(--amber)}.idx-val.bad{color:var(--red)}
+.idx-status{font-size:10px;padding:2px 8px;border-radius:99px;display:inline-block;font-family:var(--font-m)}
+.idx-badge-nd{background:var(--bg3);color:var(--text3)}
+.idx-badge-ok{background:var(--grn-bg);color:var(--green)}
+.idx-badge-warn{background:var(--amb-bg);color:var(--amber)}
+.idx-badge-bad{background:var(--red-bg);color:var(--red)}
+.idx-future{
+  position:absolute;inset:0;background:rgba(13,13,11,.85);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--text3);font-family:var(--font-m);
+  letter-spacing:.05em;text-transform:uppercase;
+}
+
+/* Action table */
+.action-tbl{width:100%;border-collapse:collapse;margin-bottom:1.5rem}
+.action-tbl th{
+  font-family:var(--font-m);font-size:9px;color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.375rem .75rem;text-align:left;border-bottom:1px solid var(--line);
+}
+.action-tbl td{padding:.75rem;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+.action-tbl tr:last-child td{border-bottom:none}
+.action-tbl tr:hover td{background:var(--bg2)}
+.a-num{font-family:var(--font-d);font-size:1.1rem;color:var(--text3);font-style:italic;min-width:28px}
+.a-title{font-weight:500;color:var(--text);margin-bottom:2px}
+.a-sub{font-size:11px;color:var(--text3);line-height:1.5}
+.pill{
+  font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;
+  font-family:var(--font-m);white-space:nowrap;display:inline-block;
+}
+.pill-r{background:var(--red-bg);color:var(--red)}
+.pill-a{background:var(--amb-bg);color:var(--amber)}
+.pill-g{background:var(--grn-bg);color:var(--green)}
+.pill-b{background:var(--blu-bg);color:var(--blue)}
+.pill-gold{background:var(--gold-bg);color:var(--gold)}
+.pill-dim{background:var(--bg3);color:var(--text3)}
+
+/* Status badge with edit */
+.status-btn{
+  font-family:var(--font-m);font-size:9px;padding:3px 8px;
+  border-radius:4px;border:1px solid;cursor:pointer;
+  transition:all .12s;background:none;
+}
+.status-btn:hover{opacity:.8}
+
+/* Phase bar */
+.phase-bar{display:flex;gap:3px;margin-bottom:1.5rem}
+.phase-seg{
+  flex:1;padding:.625rem .75rem;border-radius:var(--r);text-align:center;
+}
+.ph-n{font-family:var(--font-d);font-size:1.1rem;display:block;font-style:italic;margin-bottom:2px}
+.ph-l{font-size:10px;color:var(--text3);font-family:var(--font-m);letter-spacing:.03em}
+.ph-t{font-size:9px;color:var(--text3);margin-top:2px}
+.ph1{background:var(--red-bg);border:1px solid rgba(208,85,64,.2)}.ph1 .ph-n{color:var(--red)}
+.ph2{background:var(--amb-bg);border:1px solid rgba(212,154,53,.2)}.ph2 .ph-n{color:var(--amber)}
+.ph3{background:var(--grn-bg);border:1px solid rgba(74,158,106,.2)}.ph3 .ph-n{color:var(--green)}
+.ph4{background:var(--blu-bg);border:1px solid rgba(74,126,200,.2)}.ph4 .ph-n{color:var(--blue)}
+
+/* ── CHAT VIEW ── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 53px - 42px)}
+#messages{
+  flex:1;overflow-y:auto;padding:1.25rem 1.5rem;
+  display:flex;flex-direction:column;gap:.75rem;
+  scroll-behavior:smooth;
+}
+.msg{
+  max-width:85%;padding:.75rem 1rem;
+  border-radius:var(--rl);font-size:13px;line-height:1.65;
+  animation:fadein .18s ease;
+}
+.msg.user{
+  align-self:flex-end;
+  background:var(--bg2);border:1px solid var(--line2);
+  border-bottom-right-radius:3px;
+}
+.msg.agent{
+  align-self:flex-start;max-width:92%;
+  background:var(--gold-bg);border:1px solid rgba(200,169,106,.2);
+  border-bottom-left-radius:3px;color:var(--text);
+}
+.msg.error{
+  align-self:flex-start;
+  background:var(--red-bg);border:1px solid rgba(208,85,64,.2);color:var(--text2);
+}
+.msg.thinking{
+  align-self:flex-start;
+  background:var(--bg2);border:1px solid var(--line);
+  color:var(--text3);font-style:italic;font-size:12px;
+}
+.msg.agent strong{font-weight:500;color:var(--text)}
+.msg.agent ul{margin:5px 0 5px 16px}
+.msg.agent li{margin:2px 0}
+.msg.agent code{
+  font-family:var(--font-m);font-size:11px;
+  background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;
+}
+.dots::after{content:'';animation:typing 1.2s infinite}
+@keyframes typing{0%{content:'.'}33%{content:'..'}66%{content:'...'}100%{content:''}}
+
+.input-bar{
+  padding:.75rem 1.5rem;
+  background:var(--bg);border-top:1px solid var(--line);
+  display:flex;align-items:flex-end;gap:.625rem;flex-shrink:0;
+}
+#chat-input{
+  flex:1;font-family:var(--font-b);font-size:13px;
+  padding:.625rem .875rem;
+  border:1px solid var(--line);border-radius:var(--rl);
+  background:var(--bg2);color:var(--text);
+  resize:none;min-height:42px;max-height:120px;line-height:1.5;
+  outline:none;transition:border-color .15s;
+}
+#chat-input:focus{border-color:var(--gold2)}
+#chat-input::placeholder{color:var(--text3)}
+.send-btn{
+  width:38px;height:38px;border-radius:50%;border:none;
+  background:var(--gold);color:var(--bg);font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background .12s,transform .1s;
+}
+.send-btn:hover{background:var(--gold2)}
+.send-btn:active{transform:scale(.93)}
+.send-btn:disabled{background:var(--line);color:var(--text3);cursor:default}
+
+/* Quick actions */
+.quick-grid{display:flex;flex-wrap:wrap;gap:.375rem;margin-bottom:.75rem}
+.quick-btn{
+  font-family:var(--font-b);font-size:11px;
+  padding:.375rem .75rem;
+  border:1px solid var(--line);border-radius:var(--r);
+  background:var(--bg2);color:var(--text2);
+  cursor:pointer;transition:all .12s;line-height:1.3;
+}
+.quick-btn:hover{border-color:var(--gold2);background:var(--gold-bg);color:var(--gold)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(8px);
+  background:var(--text);color:var(--bg);
+  font-size:11px;font-family:var(--font-m);
+  padding:6px 14px;border-radius:99px;opacity:0;
+  transition:all .25s;pointer-events:none;z-index:999;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── DIVIDER ── */
+.divider{border:none;border-top:1px solid var(--line);margin:1.5rem 0}
+
+/* Gargalo row */
+.garg-row{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.75rem;background:var(--bg2);border:1px solid var(--line);
+  border-radius:var(--r);margin-bottom:.375rem;
+  cursor:pointer;transition:border-color .12s;
+}
+.garg-row:hover{border-color:var(--line2)}
+.garg-code{font-family:var(--font-d);font-size:1.2rem;color:var(--text3);font-style:italic;min-width:32px}
+.garg-info{flex:1}
+.garg-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.garg-pipe{font-size:10px;color:var(--text3);font-family:var(--font-m)}
+.garg-count{
+  font-family:var(--font-d);font-size:1.75rem;
+  min-width:64px;text-align:right;
+}
+.garg-count.crit{color:var(--red)}.garg-count.high{color:var(--amber)}.garg-count.ok{color:var(--green)}
+
+/* Índices future overlay */
+.coming{
+  text-align:center;padding:2rem;
+  border:1px dashed var(--line);border-radius:var(--rl);
+  color:var(--text3);font-size:12px;margin-bottom:1.5rem;
+}
+.coming strong{display:block;font-family:var(--font-d);font-size:1rem;color:var(--text2);margin-bottom:.25rem}
+
+/* ── OBRA CARDS ── */
+.obra-card{
+  display:grid;grid-template-columns:1fr auto auto;
+  align-items:center;gap:.75rem;
+  padding:.625rem .875rem;
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:var(--r);margin-bottom:.25rem;
+  cursor:pointer;transition:border-color .12s;font-size:12.5px;
+}
+.obra-card:hover{border-color:var(--line2)}
+.obra-card.exec{border-left:2px solid var(--green)}
+.obra-card.prev{border-left:2px solid var(--amber)}
+.obra-nome{font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obra-fase{font-size:10px;color:var(--text3);font-family:var(--font-m);margin-top:1px}
+.obra-m2{font-family:var(--font-d);font-size:1.1rem;color:var(--green);white-space:nowrap}
+.obra-m2.prev{color:var(--amber)}
+.obra-data{font-family:var(--font-m);font-size:9px;color:var(--text3);white-space:nowrap;text-align:right}
+
+/* Fase bar */
+.fase-bar-row{display:flex;align-items:center;gap:.625rem;margin-bottom:.375rem;cursor:pointer}
+.fase-bar-row:hover .fase-bar-fill{opacity:.85}
+.fase-bar-label{font-size:11px;color:var(--text2);min-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fase-bar-track{flex:1;background:var(--bg3);border-radius:3px;height:6px;overflow:hidden}
+.fase-bar-fill{height:100%;border-radius:3px;transition:width .4s ease;background:var(--gold2)}
+.fase-bar-count{font-family:var(--font-m);font-size:10px;color:var(--text2);min-width:24px;text-align:right}
+
+/* ── FOOTER ── */
+.doc-footer{
+  border-top:1px solid var(--line);padding:.875rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:3rem;flex-shrink:0;
+}
+.footer-brand{font-family:var(--font-d);font-size:.8rem;color:var(--text3);letter-spacing:.03em}
+.footer-meta{font-family:var(--font-m);font-size:10px;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <span class="hdr-logo">mono<span>floor</span></span>
+    <span class="hdr-sub">Central de Inteligência Operacional</span>
+  </div>
+  <div class="hdr-right">
+    <div class="conn-pill" onclick="document.getElementById('token-wrap').classList.toggle('hidden')" title="Configurar tokens">
+      <div class="conn-dot" id="conn-dot"></div>
+      <span id="conn-txt">Configurar</span>
+    </div>
+    <button class="btn btn-dim" onclick="runAllAgents()" id="refresh-btn" title="Atualizar todos os dados">↻ Atualizar</button>
+  </div>
+</header>
+
+<!-- TOKEN SETUP (colapsável) -->
+<div id="token-wrap" style="background:var(--bg3);border-bottom:1px solid var(--line);padding:.75rem 2rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap" class="hidden">
+  <span style="font-size:11px;color:var(--text3);font-family:var(--font-m);white-space:nowrap">Pipefy Token</span>
+  <input class="token-inp" id="pipefy-token" type="password" placeholder="eyJhbGci..." style="width:280px" />
+  <span style="font-size:11px;color:var(--text3);font-family:var(--font-m);white-space:nowrap">Anthropic API Key</span>
+  <input class="token-inp" id="anthropic-key" type="password" placeholder="sk-ant-..." style="width:240px" />
+  <button class="btn btn-gold" onclick="salvarTokens()">Salvar e Conectar</button>
+  <span style="font-size:10px;color:var(--text3)">Salvo localmente no seu browser</span>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <div class="sb-label">Agentes</div>
+      <button class="agent-btn active" id="ab-dashboard" onclick="showView('dashboard',this)">
+        <div class="agent-dot gold"></div>Dashboard geral
+      </button>
+      <button class="agent-btn" id="ab-pipefy" onclick="showView('pipefy',this)">
+        <div class="agent-dot" id="dot-pipefy"></div>Pipefy · Gargalos
+      </button>
+      <button class="agent-btn" id="ab-sla" onclick="showView('sla',this)">
+        <div class="agent-dot" id="dot-sla"></div>SLA · Prazos
+      </button>
+      <button class="agent-btn" id="ab-material" onclick="showView('material',this)">
+        <div class="agent-dot" id="dot-material"></div>Material · Consumo
+      </button>
+      <button class="agent-btn" id="ab-qualidade" onclick="showView('qualidade',this)">
+        <div class="agent-dot" id="dot-qualidade"></div>Qualidade · Obra
+      </button>
+      <button class="agent-btn" id="ab-capacidade" onclick="showView('capacidade',this)">
+        <div class="agent-dot" id="dot-capacidade"></div>Capacidade produtiva
+      </button>
+      <button class="agent-btn" id="ab-chat" onclick="showView('chat',this)">
+        <div class="agent-dot gold"></div>Agente IA · Chat
+      </button>
+    </div>
+
+    <div>
+      <div class="sb-label">Plano de ação</div>
+      <button class="agent-btn" id="ab-plano" onclick="showView('plano',this)">
+        <div class="agent-dot" id="dot-plano"></div>10 ações · F1–F4
+      </button>
+    </div>
+
+    <div>
+      <div class="sb-label">Pipes ao vivo</div>
+      <div id="pipes-sb">
+        <div class="pipe-mini">
+          <div class="pm-name">Aguardando conexão</div>
+          <div class="pipe-row"><span class="pm-label" style="font-size:10px;color:var(--text3)">Cole os tokens acima</span></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="main">
+    <nav class="tab-nav">
+      <button class="tab active" onclick="showView('dashboard',null,'tab-dashboard')" id="tab-dashboard">Visão geral</button>
+      <button class="tab" onclick="showView('pipefy',null,'tab-pipefy')" id="tab-pipefy">Gargalos <span class="tab-badge badge-r" id="badge-g1">264</span></button>
+      <button class="tab" onclick="showView('sla',null,'tab-sla')" id="tab-sla">SLA</button>
+      <button class="tab" onclick="showView('obras',null,'tab-obras')" id="tab-obras">Obras <span class="tab-badge badge-gold" id="badge-obras">—</span></button>
+      <button class="tab" onclick="showView('material',null,'tab-material')" id="tab-material">Material</button>
+      <button class="tab" onclick="showView('qualidade',null,'tab-qualidade')" id="tab-qualidade">Qualidade</button>
+      <button class="tab" onclick="showView('capacidade',null,'tab-capacidade')" id="tab-capacidade">Capacidade</button>
+      <button class="tab" onclick="showView('plano',null,'tab-plano')" id="tab-plano">Plano de ação</button>
+      <button class="tab" onclick="showView('chat',null,'tab-chat')" id="tab-chat">Chat IA</button>
+    </nav>
+
+    <div class="content">
+
+      <!-- ══ DASHBOARD ══ -->
+      <section id="view-dashboard" class="view active">
+        <h1 class="page-title">Central de <em>Inteligência</em> Operacional</h1>
+        <p class="page-sub">Monitoramento em tempo real dos 5 fluxos · dados ao vivo do Pipefy · índices de qualidade e capacidade. Conecte os tokens para ativar.</p>
+
+        <div class="kpi-strip" id="kpi-strip">
+          <div class="kpi" onclick="showView('obras')"><span class="kpi-val gold" id="kpi-exec">—</span><span class="kpi-lbl">obras em execução</span></div>
+          <div class="kpi" onclick="showView('obras')"><span class="kpi-val g" id="kpi-m2-exec">—</span><span class="kpi-lbl">m² em execução</span></div>
+          <div class="kpi" onclick="showView('obras')"><span class="kpi-val a" id="kpi-m2-prev">—</span><span class="kpi-lbl">m² previstas (pipeline)</span></div>
+          <div class="kpi" onclick="showView('pipefy')"><span class="kpi-val r" id="kpi-g1">264</span><span class="kpi-lbl">cards G1 (OEC)</span></div>
+        </div>
+
+        <div class="sec-title">Índices operacionais</div>
+        <div class="idx-grid">
+          <div class="idx-card" onclick="showView('qualidade')">
+            <div class="idx-code">IQO</div>
+            <div class="idx-name">Qualidade de Obra</div>
+            <div class="idx-val nd" id="idc-iqo">—</div>
+            <span class="idx-status idx-badge-nd" id="ids-iqo">Em construção</span>
+            <div class="idx-future">Em construção<br><span style="font-size:9px;opacity:.6">campos Pipefy pendentes</span></div>
+          </div>
+          <div class="idx-card" onclick="showView('material')">
+            <div class="idx-code">ICM</div>
+            <div class="idx-name">Consumo de Material</div>
+            <div class="idx-val nd" id="idc-icm">—</div>
+            <span class="idx-status idx-badge-nd" id="ids-icm">Em construção</span>
+            <div class="idx-future">Em construção<br><span style="font-size:9px;opacity:.6">cruzamento OEI × Material Extra</span></div>
+          </div>
+          <div class="idx-card" onclick="showView('capacidade')">
+            <div class="idx-code">IPA</div>
+            <div class="idx-name">Produtividade Artesão</div>
+            <div class="idx-val nd" id="idc-ipa">—</div>
+            <span class="idx-status idx-badge-nd" id="ids-ipa">Em construção</span>
+            <div class="idx-future">Em construção<br><span style="font-size:9px;opacity:.6">aguarda dados de capacidade</span></div>
+          </div>
+          <div class="idx-card" onclick="showView('capacidade')">
+            <div class="idx-code">ICS</div>
+            <div class="idx-name">Capacidade Saudável</div>
+            <div class="idx-val nd" id="idc-ics">—</div>
+            <span class="idx-status idx-badge-nd" id="ids-ics">Em construção</span>
+            <div class="idx-future">Em construção<br><span style="font-size:9px;opacity:.6">IQO × ICM × IPA</span></div>
+          </div>
+        </div>
+
+        <div class="sec-title">Gargalos ativos · Pipefy</div>
+        <div id="garg-list">
+          <div class="garg-row" onclick="showView('pipefy')">
+            <div class="garg-code">G1</div>
+            <div class="garg-info">
+              <div class="garg-name">Solicitar Coleta</div>
+              <div class="garg-pipe">CORES (OEC) · bloqueia OEI → OE</div>
+            </div>
+            <div class="garg-count crit" id="g1-val">264</div>
+            <span class="pill pill-r">Crítico</span>
+          </div>
+          <div class="garg-row" onclick="showView('pipefy')">
+            <div class="garg-code">G2</div>
+            <div class="garg-info">
+              <div class="garg-name">Agend. VT Aferição</div>
+              <div class="garg-pipe">OPERAÇÕES (OE) · SLA X-60d</div>
+            </div>
+            <div class="garg-count high" id="g2-val">40</div>
+            <span class="pill pill-a">Alto</span>
+          </div>
+          <div class="garg-row" onclick="showView('pipefy')">
+            <div class="garg-code">G3</div>
+            <div class="garg-info">
+              <div class="garg-name">Aguardando Liberação</div>
+              <div class="garg-pipe">OPERAÇÕES (OE) · depende G1</div>
+            </div>
+            <div class="garg-count high" id="g3-val">28</div>
+            <span class="pill pill-a">Alto</span>
+          </div>
+          <div class="garg-row" onclick="showView('pipefy')">
+            <div class="garg-code">G4</div>
+            <div class="garg-info">
+              <div class="garg-name">Obra Pausada</div>
+              <div class="garg-pipe">OPERAÇÕES (OE) · sem campo motivo</div>
+            </div>
+            <div class="garg-count" id="g4-val" style="color:var(--text2)">10</div>
+            <span class="pill pill-dim">Médio</span>
+          </div>
+        </div>
+
+        <div class="doc-footer">
+          <div class="footer-brand">monofloor · PREMIUM UNIQUE SURFACES℠</div>
+          <div class="footer-meta">SGQ-MNF-MON-001 · v1.0 · Mar/2026 · Vitor Gomes</div>
+        </div>
+      </section>
+
+
+      <!-- ══ OBRAS / METRAGENS ══ -->
+      <section id="view-obras" class="view">
+        <h1 class="page-title">Obras · <em>Metragens ao vivo</em></h1>
+        <p class="page-sub">Dados em tempo real do Pipefy. "Em execução" = obras com projeto iniciado. "Previstas" = pipeline pronto para execução.</p>
+
+        <!-- M² STRIP -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:2rem">
+          <div style="background:var(--bg2);padding:1.375rem 1.5rem;text-align:center">
+            <span id="ob-exec-count" style="font-family:var(--font-d);font-size:2.5rem;color:var(--gold);display:block;line-height:1">—</span>
+            <span style="font-size:10px;color:var(--text3);font-family:var(--font-m);letter-spacing:.04em">obras em execução</span>
+          </div>
+          <div style="background:var(--bg2);padding:1.375rem 1.5rem;text-align:center;border-left:1px solid var(--line);border-right:1px solid var(--line)">
+            <span id="ob-m2-exec" style="font-family:var(--font-d);font-size:2.5rem;color:var(--green);display:block;line-height:1">—</span>
+            <span style="font-size:10px;color:var(--text3);font-family:var(--font-m);letter-spacing:.04em">m² em execução agora</span>
+          </div>
+          <div style="background:var(--bg2);padding:1.375rem 1.5rem;text-align:center">
+            <span id="ob-m2-prev" style="font-family:var(--font-d);font-size:2.5rem;color:var(--amber);display:block;line-height:1">—</span>
+            <span style="font-size:10px;color:var(--text3);font-family:var(--font-m);letter-spacing:.04em">m² previstas · pipeline</span>
+          </div>
+        </div>
+
+        <!-- ONDE ESTÃO AS OBRAS (inspirado no cliente.monofloor.cloud) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem">
+
+          <!-- Execução atual -->
+          <div>
+            <div class="sec-title">Em execução · <span id="ob-exec-title" style="color:var(--green)">carregando...</span></div>
+            <div id="obras-exec-list">
+              <div style="text-align:center;padding:2rem;color:var(--text3);font-size:12px">
+                Conecte o Pipefy para ver as obras ao vivo
+              </div>
+            </div>
+          </div>
+
+          <!-- Onde estão as obras por fase -->
+          <div>
+            <div class="sec-title">Distribuição por fase</div>
+            <div id="fases-dist">
+              <!-- Preenchido por JS -->
+              <div id="fases-bars"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OBRAS PREVISTAS -->
+        <div class="sec-title" style="margin-top:1.5rem">Pipeline · obras previstas — <span id="ob-prev-title" style="color:var(--amber)">carregando...</span></div>
+        <div id="obras-prev-list" style="margin-bottom:1.5rem">
+          <div style="text-align:center;padding:2rem;color:var(--text3);font-size:12px">
+            Conecte o Pipefy para ver as obras previstas
+          </div>
+        </div>
+
+        <!-- GRÁFICO SEMANAL M² -->
+        <div class="sec-title">Projeção de m² por semana</div>
+        <div id="m2-chart" style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);padding:1.25rem;margin-bottom:1.5rem;min-height:120px;display:flex;align-items:flex-end;gap:6px">
+          <div style="color:var(--text3);font-size:12px;text-align:center;width:100%;padding:2rem 0">Aguardando dados do Pipefy</div>
+        </div>
+      </section>
+
+      <!-- ══ PIPEFY / GARGALOS ══ -->
+      <section id="view-pipefy" class="view">
+        <h1 class="page-title">Gargalos · <em>Pipefy ao vivo</em></h1>
+        <p class="page-sub">Dados em tempo real dos 4 pipes. Conecte o token Pipefy para atualizar automaticamente.</p>
+        <div id="pipefy-content">
+          <div class="insight"><strong>Referência de março/2026:</strong> G1 = 264 cards · G2 = 40 · G3 = 28 · G4 = 10. Conecte o token para ver dados ao vivo.</div>
+          <div class="sec-title">Cards por pipe</div>
+          <div class="grid2" id="pipes-detail">
+            <div class="card c-red"><div class="card-lbl">CORES · OEC</div><div class="card-title">275 cards</div><div class="card-body">264 em "Solicitar Coleta" — G1 crítico. Bloqueia produção e execução.</div></div>
+            <div class="card c-amber"><div class="card-lbl">OPERAÇÕES · OE</div><div class="card-title">232 projetos</div><div class="card-body">40 em Agend. VT Aferição (G2) · 28 em Aguardando Liberação (G3) · 10 pausados (G4).</div></div>
+            <div class="card"><div class="card-lbl">PRODUÇÃO · OEI</div><div class="card-title">0 cards ativos</div><div class="card-body">Material extra gerenciado informalmente. Pipe inativo — rastreio manual.</div></div>
+            <div class="card c-gold"><div class="card-lbl">PROJETOS</div><div class="card-title">23 cards</div><div class="card-body">Propostas e contratos ativos. OECT funcional como gate de entrada.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ SLA ══ -->
+      <section id="view-sla" class="view">
+        <h1 class="page-title">SLA · <em>Prazos de obra</em></h1>
+        <p class="page-sub">PP:001 — prazos calculados a partir de X (Data de Início). Obras com X em menos de 14 dias são críticas.</p>
+        <div class="sec-title">SLAs PP:001</div>
+        <div class="grid4">
+          <div class="card c-red"><div class="card-lbl">X − 60 dias</div><div class="card-title">Visita de Aferição</div><div class="card-body">OE-011/012. SLA mais crítico — atraso aqui trava tudo.</div></div>
+          <div class="card c-amber"><div class="card-lbl">X − 35 dias</div><div class="card-title">Escolha da Cor</div><div class="card-body">OEC-001 a OEC-011. Depende do G1 ser desbloqueado.</div></div>
+          <div class="card c-amber"><div class="card-lbl">X − 10 dias</div><div class="card-title">Entrada em Obra</div><div class="card-body">OE-023. Visita pré-execução com artesão responsável.</div></div>
+          <div class="card c-green"><div class="card-lbl">X − 7 dias</div><div class="card-title">Equipe definida</div><div class="card-body">OE-025. Artesão principal + auxiliares confirmados.</div></div>
+        </div>
+        <div class="coming"><strong>Obras com SLA crítico</strong>Conecte o token Pipefy para ver obras com X em menos de 14 dias e pendências.</div>
+      </section>
+
+      <!-- ══ MATERIAL ══ -->
+      <section id="view-material" class="view">
+        <h1 class="page-title">Material · <em>Consumo vs previsto</em></h1>
+        <p class="page-sub">Cruzamento do OEI (Indústria) com o pipe Material Extra. ICM = material real usado ÷ m² executado.</p>
+        <div class="insight"><strong>Lógica do ICM:</strong> cada produto tem consumo padrão por m². Qualquer obra acima de +15% dispara alerta. Obras abaixo de -10% indicam possível subdosagem — risco de qualidade.</div>
+        <div class="sec-title">Configuração do índice ICM</div>
+        <div class="grid3">
+          <div class="card c-gold"><div class="card-lbl">STELION™</div><div class="card-title">Consumo padrão</div><div class="card-body">A definir com Vitor. Inserir kg/m² por produto para ativar o índice.</div></div>
+          <div class="card c-gold"><div class="card-lbl">LILIT™</div><div class="card-title">Consumo padrão</div><div class="card-body">A definir com Vitor. Inserir kg/m² por produto para ativar o índice.</div></div>
+          <div class="card c-gold"><div class="card-lbl">LEONA™ / LUMINA™</div><div class="card-title">Consumo padrão</div><div class="card-body">A definir com Vitor. Inserir kg/m² por produto para ativar o índice.</div></div>
+        </div>
+        <div class="coming"><strong>ICM por obra</strong>Disponível após: configurar consumo padrão por produto + conectar pipe Material Extra.</div>
+      </section>
+
+      <!-- ══ QUALIDADE ══ -->
+      <section id="view-qualidade" class="view">
+        <h1 class="page-title">Qualidade · <em>Índice por obra</em></h1>
+        <p class="page-sub">IQO = média ponderada de acabamento, desvios de execução, NPS e lições aprendidas. Requer campos no Pipefy.</p>
+        <div class="alert-box"><strong>Ação necessária:</strong> para ativar o IQO, os campos de qualidade precisam existir no pipe OE. Os campos sugeridos estão abaixo — confirme com Vitor quais já existem ou precisam ser criados.</div>
+        <div class="sec-title">Campos sugeridos no pipe OE</div>
+        <div class="grid2">
+          <div class="card"><div class="card-lbl">Já deve existir</div><div class="card-title">Fotos de entrega</div><div class="card-body">Foto frente/verso obrigatória. Base para avaliação visual de acabamento.</div></div>
+          <div class="card c-gold"><div class="card-lbl">Criar — F2</div><div class="card-title">Nota de acabamento (1–5)</div><div class="card-body">Campo numérico. Preenchido pelo artesão no encerramento. Entra no IQO com peso 40%.</div></div>
+          <div class="card c-gold"><div class="card-lbl">Criar — F1</div><div class="card-title">Motivo da Pausa</div><div class="card-body">Campo obrigatório quando obra vai para "Pausada". Já está no plano de ação #2.</div></div>
+          <div class="card c-gold"><div class="card-lbl">Criar — F2</div><div class="card-title">Lição Aprendida</div><div class="card-body">Campo texto obrigatório no encerramento. Já está no plano de ação #7.</div></div>
+        </div>
+        <div class="coming"><strong>IQO por obra</strong>Disponível após: criar campos no Pipefy + coletar primeiras entradas.</div>
+      </section>
+
+      <!-- ══ CAPACIDADE ══ -->
+      <section id="view-capacidade" class="view">
+        <h1 class="page-title">Capacidade · <em>Saudável vs real</em></h1>
+        <p class="page-sub">ICS = cruzamento entre IQO + ICM + IPA vs capacidade máxima declarada. Você define o limite — o sistema alerta quando estiver operando além dele.</p>
+        <div class="insight"><strong>Visão de Vitor:</strong> a operação cresce, mas os processos não escalam. O ICS vai tornar isso mensurável — não uma percepção, um número.</div>
+        <div class="sec-title">Dados a inserir futuramente</div>
+        <div class="grid3">
+          <div class="card c-blue"><div class="card-lbl">Por artesão</div><div class="card-title">Capacidade máxima</div><div class="card-body">m² por mês com qualidade preservada. Você insere manualmente por artesão.</div></div>
+          <div class="card c-blue"><div class="card-lbl">Por equipe</div><div class="card-title">Obras simultâneas</div><div class="card-body">Quantas obras por equipe sem comprometer acabamento. Base do ICS.</div></div>
+          <div class="card c-blue"><div class="card-lbl">Global</div><div class="card-title">Limite saudável</div><div class="card-body">Número de obras/mês que a operação consegue entregar com IQO ≥ meta definida.</div></div>
+        </div>
+        <div class="coming"><strong>ICS global</strong>Disponível após: inserir dados de capacidade + IQO e ICM ativos.</div>
+      </section>
+
+      <!-- ══ PLANO DE AÇÃO ══ -->
+      <section id="view-plano" class="view">
+        <h1 class="page-title">Plano de ação · <em>10 itens priorizados</em></h1>
+        <p class="page-sub">Ordenados por impacto × urgência × esforço. Os 4 primeiros têm custo zero e prazo imediato.</p>
+
+        <div class="phase-bar">
+          <div class="phase-seg ph1"><span class="ph-n">F1</span><span class="ph-l">Chão firme</span><span class="ph-t">Semana 1–2</span></div>
+          <div class="phase-seg ph2"><span class="ph-n">F2</span><span class="ph-l">Ver para gerir</span><span class="ph-t">Semana 3–6</span></div>
+          <div class="phase-seg ph3"><span class="ph-n">F3</span><span class="ph-l">Ouvir o cliente</span><span class="ph-t">Mês 2–3</span></div>
+          <div class="phase-seg ph4"><span class="ph-n">F4</span><span class="ph-l">Construir ativos</span><span class="ph-t">Mês 3–6</span></div>
+        </div>
+
+        <table class="action-tbl" id="plano-tbl">
+          <thead><tr><th>#</th><th>Ação · Descrição</th><th>Método</th><th>KPI</th><th>Prazo</th><th>Fase</th><th>Status</th></tr></thead>
+          <tbody id="plano-body"></tbody>
+        </table>
+      </section>
+
+      <!-- ══ CHAT ══ -->
+      <section id="view-chat" class="view" style="padding:0;height:calc(100vh - 53px - 42px);display:flex;flex-direction:column">
+        <div style="padding:.875rem 1.5rem;border-bottom:1px solid var(--line);flex-shrink:0">
+          <div class="quick-grid" id="quick-grid"></div>
+        </div>
+        <div id="messages"></div>
+        <div class="input-bar">
+          <textarea id="chat-input" rows="1" placeholder="Pergunte sobre operações, pipes, SLAs, gargalos, WhatsApp..."></textarea>
+          <button class="send-btn" id="send-btn" onclick="enviar()">↑</button>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<div id="toast"></div>
+
+<script>
+// ─── CONFIGURAÇÃO ────────────────────────────────────────────
+const PIPES = {
+  'OPERAÇÕES': '306410007',
+  'CORES':     '306446640',
+  'PRODUÇÃO':  '306446401',
+  'PROJETOS':  '306431675'
+};
+
+const GARG_FASES = {
+  G1: 'Solicitar Coleta',
+  G2: 'Agend. VT Afer',
+  G3: 'Aguardando Libera',
+  G4: 'Obra Pausada'
+};
+
+const PLANO = [
+  {id:1,fase:'F1',acao:'War Room semanal — 45 min toda segunda',desc:'Revisão de gargalos, obras críticas, decisões com dono e prazo. Custo zero.',met:'PDCA Check',kpi:'Toda semana acontece · ata registrada',prazo:'Esta semana',status:'pendente'},
+  {id:2,fase:'F1',acao:'Campo "Motivo da Pausa" obrigatório no Pipefy',desc:'Configuração nativa de 30 min. Bloqueia avanço do card sem motivo preenchido.',met:'Poka-Yoke',kpi:'100% pausas com motivo',prazo:'Hoje',status:'pendente'},
+  {id:3,fase:'F1',acao:'Responsável fixo + alerta D+7 para coleta G1',desc:'Nomear dono do OEC de coleta. Configurar alerta automático Pipefy.',met:'RACI + Poka-Yoke',kpi:'G1 ≤ 30 cards em 90d',prazo:'1 semana',status:'pendente'},
+  {id:4,fase:'F1',acao:'Ritual de encerramento de obra',desc:'Foto + confirmação do cliente + card para "Encerrado". 10 minutos por obra.',met:'VOC + Lean',kpi:'100% obras com encerramento em 30d',prazo:'2 semanas',status:'pendente'},
+  {id:5,fase:'F2',acao:'View de semáforo SLA no Pipefy',desc:'Dashboard de cards por status de prazo. Ver estado da operação em 30 segundos.',met:'Gestão visual',kpi:'Tempo resp. a gargalos < 24h',prazo:'3 semanas',status:'pendente'},
+  {id:6,fase:'F2',acao:'NF obrigatória antes de avançar OEI',desc:'Gate Pipefy: card não avança sem NF vinculada. Elimina rastreio manual.',met:'Poka-Yoke',kpi:'100% NFs vinculadas',prazo:'2 semanas',status:'pendente'},
+  {id:7,fase:'F2',acao:'Lição aprendida obrigatória no encerramento',desc:'Campo estruturado: problema, solução, o que evitar. 5 min por obra.',met:'Kaizen',kpi:'100% obras com campo preenchido',prazo:'3 semanas',status:'pendente'},
+  {id:8,fase:'F3',acao:'NPS automatizado D+1 via WhatsApp Business',desc:'Trigger Pipefy → mensagem automática 24h após entrega confirmada.',met:'VOC + PDCA',kpi:'NPS ≥ 70 em 6 meses',prazo:'6 semanas',status:'pendente'},
+  {id:9,fase:'F3',acao:'KPI Dashboard mensal para diretoria',desc:'Relatório consolidado: TAT-OE, COL-SLA, NPS, gargalos, evolução mês a mês.',met:'BSC',kpi:'Relatório entregue todo mês',prazo:'2 meses',status:'pendente'},
+  {id:10,fase:'F4',acao:'OKRs trimestrais 2026/2027',desc:'Objetivos qualitativos com Key Results mensuráveis ligados aos KPIs.',met:'OKR + BSC',kpi:'OKRs publicados e revisados',prazo:'Trim. 2',status:'pendente'}
+];
+
+const PILL_STATUS = {
+  pendente:      {cls:'pill-dim',lbl:'Pendente'},
+  em_andamento:  {cls:'pill-a',lbl:'Em andamento'},
+  concluido:     {cls:'pill-g',lbl:'Concluído'},
+  atrasado:      {cls:'pill-r',lbl:'Atrasado'}
+};
+
+const SYSTEM = `Você é o Agente Operacional da Monofloor — assistente de Vitor Gomes (Gerente de Qualidade).
+
+## EMPRESA
+Monofloor — superfícies contínuas premium. Compósito mineral + polímero (NÃO cimento).
+Produtos: STELION™ (R$910+/m²), LILIT™ (R$590+/m²), LEONA™, LUMINA™.
+1.400+ projetos, 50+/mês, 100+ artesãos. SP, RJ, Curitiba. Fundação 2017.
+
+## 5 FLUXOS INTERDEPENDENTES
+- OE — Execução: fluxo principal, 50 fases
+- OEC — Cores: amostras, definição de cor · G1 CRÍTICO = 264 cards em "Solicitar Coleta"
+- OEI — Indústria: produção, NF, despacho
+- OEL — Logística: ocorrências, impacto no cronograma
+- OECT — Contratos: proposta → assinatura → liberação
+
+## SLAs PP:001 (X = Data de Início)
+X-60d: Aferição · X-35d: Cor · X-10d: Entrada em Obra · X-7d: Equipe
+
+## GARGALOS ATIVOS (mar/2026)
+G1 🔴 264 cards Solicitar Coleta (OEC) — bloqueia OEI e 28 em Aguardando Liberação
+G2 🔴 40 cards Agend. VT Aferição (OE) — SLA X-60d provavelmente violado
+G3 ⚠️ 28 cards Aguardando Liberação (OE) — dependente do G1
+G4 ⚠️ 10 obras pausadas sem campo de motivo
+
+## ÍNDICES A CONSTRUIR
+IQO = Qualidade de Obra · ICM = Consumo de Material · IPA = Produtividade Artesão · ICS = Capacidade Saudável
+
+## PLANO DE 10 AÇÕES
+F1 (esta semana): War Room semanal, Campo Motivo Pausa, Responsável G1, Ritual encerramento
+F2 (3-6 sem): View semáforo Pipefy, NF obrigatória OEI, Lição aprendida
+F3 (mês 2-3): NPS D+1 WhatsApp, KPI Dashboard
+F4 (trim 2): OKRs trimestrais
+
+Seja direto, analítico, use os códigos OE/OEC/OEI/OEL/OECT. Quando houver dados ao vivo, use-os.`;
+
+// ─── ESTADO ─────────────────────────────────────────────────
+let pipefyToken = '', anthropicKey = '';
+let dadosVivos = {};
+let historico = [];
+let carregando = false;
+let planoEstado = {};
+
+// ─── INIT ────────────────────────────────────────────────────
+window.onload = () => {
+  // Token pré-carregado — leitura do Pipefy monofloor
+  var _dpt = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJQaXBlZnkiLCJpYXQiOjE3NzM2ODk3NTYsImp0aSI6IjUwMzczZGExLWE5YTctNDI3Yy05MGRlLTkzYTc1ZWY1YTUzMiIsInN1YiI6MzA2NjM4NTUyLCJ1c2VyIjp7ImlkIjozMDY2Mzg1NTIsImVtYWlsIjoidml0b3IubW9ub2Zsb29yQGdtYWlsLmNvbSJ9LCJ1c2VyX3R5cGUiOiJhdXRoZW50aWNhdGVkIn0.HeUVV4B7i7rztf8LF3pwSj6ebRYvWRuNnF_HzMZ-fHU4erem4Bbxq7IgwDIaY-LYnlHDGpNy4UQUt_hY7jwQvA';
+  if (!localStorage.getItem('mf_pipefy')) localStorage.setItem('mf_pipefy', _dpt);
+  pipefyToken   = localStorage.getItem('mf_pipefy') || _dpt;
+  anthropicKey  = localStorage.getItem('mf_anthropic') || '';
+  planoEstado   = JSON.parse(localStorage.getItem('mf_plano') || '{}');
+
+  if (pipefyToken) document.getElementById('pipefy-token').value = pipefyToken;
+  if (anthropicKey) document.getElementById('anthropic-key').value = anthropicKey;
+
+  renderPlano();
+
+  // Auto-connect com token pré-carregado
+  setConnStatus('loading', 'Conectando...');
+  setTimeout(() => carregarPipefy(), 500);
+
+  // Chat init
+  adicionarMsg('agent', `Olá, Vitor! Central operacional carregada. Tenho na memória os **5 fluxos**, os **4 gargalos ativos** e o **plano de 10 ações**.
+
+Para dados ao vivo do Pipefy, configure os tokens no canto superior. O sistema funciona offline com os dados de referência de março/2026.
+
+Use os atalhos abaixo ou pergunte o que precisar.`);
+
+  // Quick actions
+  const quicks = [
+    {e:'🔴',t:'Status dos gargalos',q:'Qual é o status atual dos gargalos G1, G2, G3 e G4? Me dê um diagnóstico direto.'},
+    {e:'📅',t:'Obras em risco de SLA',q:'Quais são as implicações dos SLAs violados hoje com os gargalos ativos?'},
+    {e:'⚡',t:'Prioridade do dia',q:'O que devo fazer hoje baseado nos dados da operação? Seja direto.'},
+    {e:'🎯',t:'Próximas ações F1',q:'Quais são as 4 ações da Fase 1 e o que exatamente preciso fazer em cada uma?'},
+    {e:'📊',t:'Diagnóstico completo',q:'Me dê o diagnóstico completo da operação monofloor baseado em tudo que você sabe.'},
+    {e:'🏗️',t:'IQO — como construir',q:'Como vou construir o IQO? Quais campos preciso criar no Pipefy e qual a fórmula?'},
+  ];
+  const qg = document.getElementById('quick-grid');
+  quicks.forEach(q => {
+    const b = document.createElement('button');
+    b.className = 'quick-btn';
+    b.innerHTML = `${q.e} ${q.t}`;
+    b.onclick = () => { document.getElementById('chat-input').value = q.q; enviar(); };
+    qg.appendChild(b);
+  });
+
+  // Chat input
+  const inp = document.getElementById('chat-input');
+  inp.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey){e.preventDefault();enviar()} });
+  inp.addEventListener('input', function(){
+    this.style.height='auto';
+    this.style.height=Math.min(this.scrollHeight,120)+'px';
+  });
+};
+
+// ─── VIEW SWITCHING ──────────────────────────────────────────
+function showView(id, btn, tabId){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.agent-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+
+  const el = document.getElementById('view-'+id);
+  if(el) el.classList.add('active');
+
+  if(btn) btn.classList.add('active');
+  else {
+    const ab = document.getElementById('ab-'+id);
+    if(ab) ab.classList.add('active');
+  }
+  if(tabId){
+    const tb = document.getElementById(tabId);
+    if(tb) tb.classList.add('active');
+  } else {
+    const tt = document.getElementById('tab-'+id);
+    if(tt) tt.classList.add('active');
+  }
+}
+
+// ─── TOKENS ─────────────────────────────────────────────────
+function salvarTokens(){
+  pipefyToken  = document.getElementById('pipefy-token').value.trim();
+  anthropicKey = document.getElementById('anthropic-key').value.trim();
+  if(pipefyToken)  localStorage.setItem('mf_pipefy',   pipefyToken);
+  if(anthropicKey) localStorage.setItem('mf_anthropic', anthropicKey);
+  document.getElementById('token-wrap').classList.add('hidden');
+  toast('Tokens salvos!');
+  if(pipefyToken) carregarPipefy();
+}
+
+function setConnStatus(state, txt){
+  const dot = document.getElementById('conn-dot');
+  const lbl = document.getElementById('conn-txt');
+  dot.className = 'conn-dot' + (state==='on'?' on':state==='loading'?' loading':'');
+  lbl.textContent = txt;
+}
+
+// ─── PIPEFY ─────────────────────────────────────────────────
+async function carregarPipefy(){
+  if(!pipefyToken){ setConnStatus('off','Desconectado'); return; }
+  setConnStatus('loading','Conectando...');
+
+  const fields = Object.entries(PIPES).map(([n,id])=>
+    `p${id}:pipe(id:"${id}"){name phases{name cards_count}}`
+  ).join(' ');
+
+  try {
+    const res = await fetch('https://api.pipefy.com/graphql',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+pipefyToken},
+      body:JSON.stringify({query:`{${fields}}`})
+    });
+    const data = await res.json();
+    if(data.errors) throw new Error(data.errors[0].message);
+    dadosVivos = data.data;
+    setConnStatus('on','Conectado');
+    renderizarDados(dadosVivos);
+    carregarObras();
+    toast('Pipefy atualizado!');
+  } catch(e){
+    setConnStatus('off','Erro de conexão');
+    console.error('Pipefy error:',e);
+  }
+}
+
+function renderizarDados(data){
+  // Sidebar pipes
+  let sbHtml = '';
+  Object.entries(PIPES).forEach(([n,id])=>{
+    const pipe = data['p'+id];
+    if(!pipe) return;
+    const fases = pipe.phases.filter(f=>f.cards_count>0).sort((a,b)=>b.cards_count-a.cards_count);
+    const total = fases.reduce((s,f)=>s+f.cards_count,0);
+    sbHtml += `<div class="pipe-mini" style="margin-bottom:.375rem">
+      <div class="pm-name">${n}</div>
+      <div class="pipe-row"><span class="pm-label">Total</span><span class="pm-val">${total}</span></div>`;
+    fases.slice(0,3).forEach(f=>{
+      const isAlert = Object.values(GARG_FASES).some(g=>f.name.toUpperCase().includes(g.toUpperCase()));
+      sbHtml+=`<div class="pipe-row">
+        <span class="pm-label" title="${f.name}">${f.name.substring(0,22)}${f.name.length>22?'…':''}</span>
+        <span class="pm-val${isAlert?' alert':''}">${f.cards_count}</span>
+      </div>`;
+    });
+    sbHtml += '</div>';
+  });
+  document.getElementById('pipes-sb').innerHTML = sbHtml;
+
+  // Update G1 badge
+  const oe = data['p306446640'];
+  if(oe){
+    const g1Phase = oe.phases.find(f=>f.name.toLowerCase().includes('solicitar'));
+    if(g1Phase){
+      document.getElementById('badge-g1').textContent = g1Phase.cards_count;
+      document.getElementById('g1-val').textContent   = g1Phase.cards_count;
+      document.getElementById('kpi-g1').textContent   = g1Phase.cards_count;
+    }
+  }
+}
+
+function runAllAgents(){ carregarPipefy(); toast('Atualizando todos os dados...'); }
+
+// ─── PLANO DE AÇÃO ───────────────────────────────────────────
+function renderPlano(){
+  const tbody = document.getElementById('plano-body');
+  let concluidos = 0;
+  const rows = PLANO.map(item => {
+    const estado = planoEstado[item.id] || item.status;
+    if(estado==='concluido') concluidos++;
+    const ph = item.fase;
+    const phCls = ph==='F1'?'pill-r':ph==='F2'?'pill-a':ph==='F3'?'pill-g':'pill-b';
+    const {cls,lbl} = PILL_STATUS[estado] || PILL_STATUS.pendente;
+    return `<tr>
+      <td><span class="a-num">${item.id}</span></td>
+      <td><div class="a-title">${item.acao}</div><div class="a-sub">${item.desc}</div></td>
+      <td><span style="font-size:10px;color:var(--text3);font-family:var(--font-m)">${item.met}</span></td>
+      <td><span style="font-size:11px;color:var(--text2)">${item.kpi}</span></td>
+      <td><span style="font-size:12px;font-weight:500">${item.prazo}</span></td>
+      <td><span class="pill ${phCls}">${ph}</span></td>
+      <td>
+        <select onchange="atualizarStatus(${item.id},this.value)"
+          style="font-family:var(--font-m);font-size:10px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--bg2);color:var(--text);cursor:pointer;outline:none">
+          ${Object.entries(PILL_STATUS).map(([v,{lbl}])=>`<option value="${v}"${estado===v?' selected':''}>${lbl}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`;
+  });
+  tbody.innerHTML = rows.join('');
+  const pct = Math.round((concluidos/PLANO.length)*100);
+  document.getElementById('kpi-plano').textContent = pct+'%';
+}
+
+function atualizarStatus(id, status){
+  planoEstado[id] = status;
+  localStorage.setItem('mf_plano', JSON.stringify(planoEstado));
+  renderPlano();
+  toast(`Ação #${id} → ${PILL_STATUS[status]?.lbl || status}`);
+}
+
+// ─── CHAT ────────────────────────────────────────────────────
+function contextoVivo(){
+  if(!Object.keys(dadosVivos).length) return '';
+  let ctx = '\n\n## PIPEFY — DADOS AO VIVO\n';
+  Object.entries(PIPES).forEach(([n,id])=>{
+    const pipe = dadosVivos['p'+id];
+    if(!pipe) return;
+    ctx += `\n### ${n}\n`;
+    pipe.phases.forEach(f=>{if(f.cards_count>0) ctx+=`- ${f.name}: ${f.cards_count}\n`;});
+  });
+  return ctx;
+}
+
+function adicionarMsg(tipo, texto){
+  const el = document.createElement('div');
+  el.className = 'msg '+tipo;
+  if(tipo==='agent'){
+    el.innerHTML = texto
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/`(.*?)`/g,'<code>$1</code>')
+      .replace(/^- (.+)/gm,'<li>$1</li>')
+      .replace(/(<li>.*<\/li>)+/gs,m=>`<ul>${m}</ul>`)
+      .replace(/\n/g,'<br>');
+  } else { el.textContent = texto; }
+  document.getElementById('messages').appendChild(el);
+  document.getElementById('messages').scrollTop = 999999;
+  return el;
+}
+
+async function enviar(){
+  const inp = document.getElementById('chat-input');
+  const txt = inp.value.trim();
+  if(!txt || carregando) return;
+  carregando = true;
+  document.getElementById('send-btn').disabled = true;
+  inp.value = ''; inp.style.height = 'auto';
+
+  // Garantir que o chat está visível
+  showView('chat', null, 'tab-chat');
+
+  adicionarMsg('user', txt);
+  historico.push({role:'user',content:txt});
+
+  const thinking = (() => {
+    const el = document.createElement('div');
+    el.className = 'msg thinking';
+    el.innerHTML = '<span class="dots">Analisando</span>';
+    document.getElementById('messages').appendChild(el);
+    document.getElementById('messages').scrollTop = 999999;
+    return el;
+  })();
+
+  try {
+    if(!anthropicKey) throw new Error('Configure a Anthropic API Key nos tokens acima');
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system: SYSTEM + contextoVivo(),
+        messages: historico
+      })
+    });
+    const data = await res.json();
+    const resp = data.content?.map(b=>b.text||'').join('') || 'Sem resposta.';
+    historico.push({role:'assistant',content:resp});
+    thinking.remove();
+    adicionarMsg('agent', resp);
+  } catch(e){
+    thinking.remove();
+    adicionarMsg('error','Erro: '+e.message);
+  }
+
+  carregando = false;
+  document.getElementById('send-btn').disabled = false;
+  inp.focus();
+}
+
+// ─── OBRAS / METRAGENS ──────────────────────────────────────
+
+const FASE_EXEC_ID = '338741343';        // OBRA EM EXECUÇÃO
+const FASE_PAUSADA_ID = '338994841';     // OBRA PAUSADA
+const FASES_PIPELINE = [                 // do mais próximo ao mais distante da execução
+  {id:'338990356', name:'Equipe de Execução'},
+  {id:'338971484', name:'Log. Em Entrega'},
+  {id:'339011764', name:'Log. Mat. Entregue'},
+  {id:'338741318', name:'Indústria Produção'},
+  {id:'339898036', name:'Aguardando Liberação'},
+  {id:'338741135', name:'Revisão Final Op.'},
+  {id:'338729512', name:'Confirmações Op 2'},
+  {id:'338728922', name:'Confirmações Op 1'},
+];
+
+// Fases para o gráfico "onde estão as obras"
+const FASES_DIST_ORDER = [
+  {name:'Obra em Execução', id:'338741343', cor:'var(--green)'},
+  {name:'Log. Mat. Entregue', id:'339011764', cor:'var(--gold)'},
+  {name:'Log. Em Entrega', id:'338971484', cor:'var(--gold2)'},
+  {name:'Equipe de Execução', id:'338990356', cor:'var(--amber)'},
+  {name:'Indústria Produção', id:'338741318', cor:'var(--amber)'},
+  {name:'Aguardando Liberação', id:'339898036', cor:'var(--red)'},
+  {name:'Obra Pausada', id:'338994841', cor:'var(--red)'},
+  {name:'Agend. VT Aferição', id:'338726490', cor:'var(--text3)'},
+  {name:'Confirmações Op 1', id:'338728922', cor:'var(--text3)'},
+  {name:'Revisão Final Op.', id:'338741135', cor:'var(--text3)'},
+];
+
+async function carregarObras(){
+  if(!pipefyToken) return;
+
+  try {
+    // Busca obras em execução
+    const q1 = `{
+      phase(id:"${FASE_EXEC_ID}"){
+        cards(first:30){
+          edges{node{title fields{name value}}}
+        }
+      }
+    }`;
+
+    const pipeFases = FASES_PIPELINE.map((f,i)=>
+      `f${i}:phase(id:"${f.id}"){name cards(first:20){edges{node{title fields{name value}}}}}`
+    ).join(' ');
+
+    const [r1, r2] = await Promise.all([
+      fetch('https://api.pipefy.com/graphql',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+pipefyToken},body:JSON.stringify({query:q1})}),
+      fetch('https://api.pipefy.com/graphql',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+pipefyToken},body:JSON.stringify({query:`{${pipeFases}}`})})
+    ]);
+
+    const d1 = await r1.json();
+    const d2 = await r2.json();
+
+    // Processa execução
+    const execCards = (d1.data?.phase?.cards?.edges||[]).map(e => parseCard(e.node, 'OBRA EM EXECUÇÃO'));
+    const totalM2Exec = execCards.reduce((s,c)=>s+(parseFloat(c.m2)||0),0);
+
+    // Processa pipeline
+    const prevCards = [];
+    FASES_PIPELINE.forEach((f,i)=>{
+      const fase = d2.data?.[`f${i}`];
+      if(!fase) return;
+      fase.cards.edges.forEach(e => {
+        const c = parseCard(e.node, f.name);
+        if(c.m2 || c.data) prevCards.push(c);
+      });
+    });
+    const totalM2Prev = prevCards.reduce((s,c)=>s+(parseFloat(c.m2)||0),0);
+
+    // Atualiza KPIs
+    const fmtM2 = v => Math.round(v).toLocaleString('pt-BR')+'m²';
+    document.getElementById('ob-exec-count').textContent = execCards.length;
+    document.getElementById('ob-m2-exec').textContent = fmtM2(totalM2Exec);
+    document.getElementById('ob-m2-prev').textContent = fmtM2(totalM2Prev);
+    document.getElementById('kpi-exec').textContent = execCards.length;
+    document.getElementById('kpi-m2-exec').textContent = fmtM2(totalM2Exec);
+    document.getElementById('kpi-m2-prev').textContent = fmtM2(totalM2Prev);
+    document.getElementById('badge-obras').textContent = execCards.length;
+    document.getElementById('ob-exec-title').textContent = execCards.length+' obras · '+fmtM2(totalM2Exec);
+    document.getElementById('ob-prev-title').textContent = prevCards.length+' obras · '+fmtM2(totalM2Prev);
+
+    // Renderiza lista execução
+    renderObrasLista('obras-exec-list', execCards, 'exec');
+
+    // Renderiza lista previstas
+    renderObrasLista('obras-prev-list', prevCards, 'prev');
+
+    // Renderiza distribuição por fase
+    renderFasesDist();
+
+    // Gráfico semanal
+    renderM2Chart(execCards, prevCards);
+
+  } catch(e) {
+    console.error('Obras error:', e);
+  }
+}
+
+function parseCard(node, faseName){
+  const f = node.fields || [];
+  const m2f = f.find(x => x.name?.includes('M²') || x.name?.includes('METRAGEM') && !x.name.includes('LINEAR'));
+  const dataf = f.find(x => x.name?.includes('DATA DE ENTRADA'));
+  return {
+    title: node.title,
+    fase: faseName,
+    m2: m2f?.value || null,
+    data: dataf?.value || null,
+  };
+}
+
+function renderObrasLista(containerId, cards, tipo){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  if(!cards.length){
+    el.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:.75rem">Nenhuma obra encontrada</div>';
+    return;
+  }
+  // Ordena por m² decrescente
+  const sorted = [...cards].sort((a,b) => (parseFloat(b.m2)||0)-(parseFloat(a.m2)||0));
+  el.innerHTML = sorted.map(c => {
+    const m2 = c.m2 ? parseFloat(c.m2).toFixed(0)+'m²' : '—';
+    const data = c.data && c.data !== 'CONFIRMADA' && c.data !== 'NÃO' 
+      ? formatData(c.data) : (c.data === 'CONFIRMADA' ? '✓ Confirmada' : '');
+    const nome = c.title.replace(/\(.*?\)/g,'').trim().substring(0,38);
+    return `<div class="obra-card ${tipo}" onclick="showView('chat',null,'tab-chat');document.getElementById('chat-input').value='Me fala tudo sobre a obra ${c.title.substring(0,30)}';enviar()">
+      <div>
+        <div class="obra-nome">${nome}</div>
+        <div class="obra-fase">${c.fase}</div>
+      </div>
+      <div class="obra-m2 ${tipo}">${m2}</div>
+      <div class="obra-data">${data}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderFasesDist(){
+  const phases = window.__phases || [];
+  const el = document.getElementById('fases-bars');
+  if(!el || !phases.length) return;
+  const maxCount = Math.max(...FASES_DIST_ORDER.map(f => {
+    const p = phases.find(ph => ph.id === f.id);
+    return p?.cards_count || 0;
+  }));
+  el.innerHTML = FASES_DIST_ORDER.map(f => {
+    const p = phases.find(ph => ph.id === f.id);
+    const count = p?.cards_count || 0;
+    if(!count) return '';
+    const pct = maxCount > 0 ? (count/maxCount*100).toFixed(0) : 0;
+    return `<div class="fase-bar-row">
+      <div class="fase-bar-label">${f.name}</div>
+      <div class="fase-bar-track"><div class="fase-bar-fill" style="width:${pct}%;background:${f.cor}"></div></div>
+      <div class="fase-bar-count">${count}</div>
+    </div>`;
+  }).filter(Boolean).join('');
+}
+
+function renderM2Chart(execCards, prevCards){
+  const el = document.getElementById('m2-chart');
+  if(!el) return;
+
+  // Agrupa previstas por data (semana)
+  const semanas = {};
+  const hoje = new Date();
+  
+  // Em execução = esta semana
+  const m2Exec = execCards.reduce((s,c)=>s+(parseFloat(c.m2)||0),0);
+  if(m2Exec > 0) semanas['Em execução'] = m2Exec;
+
+  // Previstas por data
+  prevCards.forEach(c => {
+    if(!c.data || c.data === 'CONFIRMADA' || c.data === 'NÃO') {
+      semanas['Sem data'] = (semanas['Sem data']||0) + (parseFloat(c.m2)||0);
+      return;
+    }
+    try {
+      const d = new Date(c.data);
+      const semLabel = getSemanaLabel(d, hoje);
+      semanas[semLabel] = (semanas[semLabel]||0) + (parseFloat(c.m2)||0);
+    } catch(e) {
+      semanas['Sem data'] = (semanas['Sem data']||0) + (parseFloat(c.m2)||0);
+    }
+  });
+
+  const labels = Object.keys(semanas);
+  const vals = Object.values(semanas);
+  const maxVal = Math.max(...vals);
+
+  const cores = {
+    'Em execução': 'var(--green)',
+    'Sem data': 'var(--text3)',
+  };
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:8px;height:100px;width:100%;padding-bottom:1.5rem;position:relative">
+      ${labels.map((lbl,i) => {
+        const h = maxVal > 0 ? Math.max(8, (vals[i]/maxVal)*90) : 8;
+        const cor = cores[lbl] || 'var(--amber)';
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:default" title="${lbl}: ${Math.round(vals[i])}m²">
+          <span style="font-family:var(--font-m);font-size:8px;color:var(--text3)">${Math.round(vals[i])}m²</span>
+          <div style="width:100%;height:${h}px;background:${cor};border-radius:3px 3px 0 0;opacity:.85;transition:opacity .15s" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.85"></div>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--font-m);text-align:center;max-width:60px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${lbl}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function getSemanaLabel(data, hoje){
+  const diff = Math.floor((data-hoje)/(1000*60*60*24));
+  if(diff < 0) return 'Atrasado';
+  if(diff <= 7) return 'Esta semana';
+  if(diff <= 14) return 'Próx. semana';
+  if(diff <= 21) return '2 semanas';
+  if(diff <= 35) return '1 mês';
+  if(diff <= 65) return '2 meses';
+  return '+2 meses';
+}
+
+function formatData(str){
+  if(!str) return '';
+  // tenta parse de "25/03/2026 06:00" ou ISO
+  try {
+    const d = new Date(str.includes('/') ? str.split('/').reverse().join('-').split(' ')[0] : str);
+    return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  } catch(e){ return str.substring(0,10); }
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// hidden class
+const style = document.createElement('style');
+style.textContent = '.hidden{display:none!important}';
+document.head.appendChild(style);
+</script>
+</body>
+</html>
