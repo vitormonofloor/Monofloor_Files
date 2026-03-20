@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monofloor · Central Operacional</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0D0D0B;--bg2:#131311;--bg3:#181816;--bg4:#1E1E1B;
+  --line:#252522;--line2:#2E2E2A;--line3:#3A3A36;
+  --text:#E8E4D8;--text2:#8A8880;--text3:#4A4845;
+  --gold:#C8A96A;--gold2:#8B7340;--gold-bg:rgba(200,169,106,.07);
+  --red:#D05540;--red-bg:rgba(208,85,64,.1);
+  --amber:#D49A35;--amb-bg:rgba(212,154,53,.1);
+  --green:#4A9E6A;--grn-bg:rgba(74,158,106,.1);
+  --blue:#4A7EC8;--blu-bg:rgba(74,126,200,.1);
+  --r:6px;--rl:10px;
+  --fd:'DM Serif Display',Georgia,serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:200;gap:1rem}
+.brand{font-family:var(--fd);font-size:1.15rem;color:var(--text);letter-spacing:.02em;white-space:nowrap}
+.brand span{color:var(--gold)}
+.hdr-nav{display:flex;gap:0;flex:1;overflow-x:auto;scrollbar-width:none}
+.hdr-nav::-webkit-scrollbar{display:none}
+.nav-btn{font-family:var(--fb);font-size:12px;color:var(--text3);background:none;border:none;border-bottom:2px solid transparent;padding:.5rem .875rem;cursor:pointer;white-space:nowrap;transition:color .12s,border-color .12s;display:flex;align-items:center;gap:5px}
+.nav-btn:hover{color:var(--text2)}
+.nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:500}
+.badge{font-size:9px;padding:1px 5px;border-radius:99px;font-weight:500}
+.badge-r{background:var(--red-bg);color:var(--red)}
+.badge-g{background:var(--grn-bg);color:var(--green)}
+.badge-a{background:var(--amb-bg);color:var(--amber)}
+.badge-gold{background:var(--gold-bg);color:var(--gold)}
+.hdr-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.conn-pill{display:flex;align-items:center;gap:5px;padding:.3rem .75rem;border:1px solid var(--line);border-radius:99px;font-size:11px;color:var(--text3);font-family:var(--fm);background:var(--bg2);cursor:pointer;transition:border-color .15s}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:var(--line2);transition:background .3s}
+.conn-dot.on{background:var(--green)}
+.conn-dot.loading{background:var(--amber);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.btn{font-family:var(--fb);font-size:11px;font-weight:500;padding:.3rem .75rem;border-radius:var(--r);border:1px solid;cursor:pointer;transition:all .15s}
+.btn-gold{border-color:var(--gold2);background:var(--gold-bg);color:var(--gold)}
+.btn-dim{border-color:var(--line);background:transparent;color:var(--text3)}
+
+/* TOKEN BAR */
+#tok-bar{background:var(--bg3);border-bottom:1px solid var(--line);padding:.625rem 1.5rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
+.tok-inp{font-family:var(--fm);font-size:11px;padding:.3rem .75rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);color:var(--text);outline:none;transition:border-color .15s}
+.tok-inp:focus{border-color:var(--gold2)}
+.tok-inp::placeholder{color:var(--text3)}
+
+/* MAIN */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;flex:1;overflow-y:auto;padding:1.5rem 1.75rem}
+.view.active{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* PAINEL VIEW */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem}
+.kpi-cell{background:var(--bg2);padding:1.125rem 1.25rem;text-align:center;cursor:pointer;transition:background .12s}
+.kpi-cell:hover{background:var(--bg3)}
+.kpi-v{font-family:var(--fd);font-size:2rem;display:block;line-height:1;margin-bottom:.25rem}
+.kpi-v.r{color:var(--red)}.kpi-v.a{color:var(--amber)}.kpi-v.g{color:var(--green)}.kpi-v.gold{color:var(--gold)}
+.kpi-l{font-size:10px;color:var(--text3);font-family:var(--fm);letter-spacing:.04em}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:1.5rem}
+@media(max-width:800px){.two-col,.three-col,.four-col{grid-template-columns:1fr}}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);padding:1.125rem}
+.panel-title{font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:.5rem}
+
+/* Progress bars (etapas) */
+.prog-row{display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem}
+.prog-label{font-size:11px;color:var(--text2);min-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-track{flex:1;height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.prog-pct{font-family:var(--fm);font-size:10px;min-width:32px;text-align:right;color:var(--text2)}
+
+/* Fase dist bars */
+.fase-row{display:flex;align-items:center;gap:.625rem;margin-bottom:.375rem;cursor:pointer}
+.fase-row:hover .fase-fill{opacity:.8}
+.fase-label{font-size:11px;color:var(--text2);min-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fase-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.fase-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.fase-count{font-family:var(--fm);font-size:10px;color:var(--text2);min-width:24px;text-align:right}
+
+/* OBRAS VIEW */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+.sec-title{font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.sec-meta{font-size:11px;color:var(--text3)}
+
+/* obra card */
+.obra-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);margin-bottom:.625rem;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.obra-card:hover{border-color:var(--line3)}
+.obra-card.exec{border-left:3px solid var(--green)}
+.obra-card.prev{border-left:3px solid var(--amber)}
+.obra-card.paused{border-left:3px solid var(--red)}
+.obra-head{display:flex;align-items:flex-start;justify-content:space-between;padding:.875rem 1rem .625rem;gap:.75rem}
+.obra-nome{font-weight:500;color:var(--text);font-size:13.5px;margin-bottom:2px}
+.obra-end{font-size:10px;color:var(--text3);font-family:var(--fm)}
+.obra-right{text-align:right;flex-shrink:0}
+.obra-m2{font-family:var(--fd);font-size:1.5rem;color:var(--green);line-height:1}
+.obra-m2.prev{color:var(--amber)}
+.obra-data{font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:2px}
+
+/* health bar */
+.health-bar{padding:0 1rem .625rem;display:flex;align-items:center;gap:.625rem}
+.health-label{font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.05em;min-width:64px}
+.health-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.health-fill{height:100%;border-radius:3px}
+.health-pct{font-family:var(--fm);font-size:9px;min-width:32px;text-align:right}
+
+/* obra meta row */
+.obra-meta{display:flex;gap:1rem;padding:.5rem 1rem .875rem;flex-wrap:wrap;border-top:1px solid var(--line)}
+.meta-chip{display:flex;flex-direction:column;gap:1px}
+.meta-chip-l{font-size:8px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase}
+.meta-chip-v{font-size:11px;color:var(--text2);font-weight:500}
+.meta-chip-v.gold{color:var(--gold)}
+
+.pill{font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;font-family:var(--fm);white-space:nowrap;display:inline-block}
+.pill-r{background:var(--red-bg);color:var(--red)}
+.pill-a{background:var(--amb-bg);color:var(--amber)}
+.pill-g{background:var(--grn-bg);color:var(--green)}
+.pill-gold{background:var(--gold-bg);color:var(--gold)}
+.pill-dim{background:var(--bg3);color:var(--text3)}
+.pill-b{background:var(--blu-bg);color:var(--blue)}
+
+/* atraso badge */
+.atraso{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-family:var(--fm);font-weight:500;padding:2px 7px;border-radius:4px}
+.atraso.late{background:var(--red-bg);color:var(--red)}
+.atraso.ok{background:var(--grn-bg);color:var(--green)}
+.atraso.warn{background:var(--amb-bg);color:var(--amber)}
+
+/* MELHORIAS VIEW */
+.idx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.625rem;margin-bottom:1.5rem}
+.idx-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rl);padding:1rem;text-align:center;cursor:pointer;transition:border-color .15s;position:relative;overflow:hidden}
+.idx-card:hover{border-color:var(--gold2)}
+.idx-code{font-family:var(--fd);font-size:1.5rem;color:var(--gold);font-style:italic;margin-bottom:.25rem}
+.idx-name{font-size:10px;color:var(--text2);margin-bottom:.5rem}
+.idx-val{font-family:var(--fd);font-size:2rem;line-height:1;margin-bottom:.25rem}
+.idx-val.nd{color:var(--text3);font-size:1.25rem}
+.idx-future{position:absolute;inset:0;background:rgba(13,13,11,.88);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:10px;color:var(--text3);font-family:var(--fm);letter-spacing:.04em;text-align:center;padding:.5rem}
+
+/* plano table */
+.plano-tbl{width:100%;border-collapse:collapse}
+.plano-tbl th{font-family:var(--fm);font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;padding:.375rem .75rem;text-align:left;border-bottom:1px solid var(--line)}
+.plano-tbl td{padding:.625rem .75rem;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+.plano-tbl tr:last-child td{border-bottom:none}
+.plano-tbl tr:hover td{background:var(--bg2)}
+.a-num{font-family:var(--fd);font-size:1.1rem;color:var(--text3);font-style:italic;min-width:28px}
+.a-title{font-weight:500;color:var(--text);margin-bottom:2px}
+.a-sub{font-size:11px;color:var(--text3);line-height:1.5}
+.phase-seg{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-family:var(--fm);font-weight:500}
+.ph1{background:var(--red-bg);color:var(--red)}
+.ph2{background:var(--amb-bg);color:var(--amber)}
+.ph3{background:var(--grn-bg);color:var(--green)}
+.ph4{background:var(--blu-bg);color:var(--blue)}
+
+/* GARGALOS */
+.garg-row{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);margin-bottom:.375rem;cursor:pointer;transition:border-color .12s}
+.garg-row:hover{border-color:var(--line2)}
+.garg-code{font-family:var(--fd);font-size:1.2rem;color:var(--text3);font-style:italic;min-width:32px}
+.garg-info{flex:1}
+.garg-nome{font-size:13px;font-weight:500;color:var(--text);margin-bottom:1px}
+.garg-pipe{font-size:10px;color:var(--text3);font-family:var(--fm)}
+.garg-n{font-family:var(--fd);font-size:1.75rem;min-width:60px;text-align:right}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 94px)}
+#messages{flex:1;overflow-y:auto;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:.625rem;scroll-behavior:smooth}
+.msg{max-width:85%;padding:.75rem 1rem;border-radius:var(--rl);font-size:13px;line-height:1.65;animation:fi .18s ease}
+.msg.user{align-self:flex-end;background:var(--bg2);border:1px solid var(--line2);border-bottom-right-radius:3px}
+.msg.agent{align-self:flex-start;max-width:92%;background:var(--gold-bg);border:1px solid rgba(200,169,106,.2);border-bottom-left-radius:3px;color:var(--text)}
+.msg.error{align-self:flex-start;background:var(--red-bg);border:1px solid rgba(208,85,64,.2);color:var(--text2)}
+.msg.thinking{align-self:flex-start;background:var(--bg2);border:1px solid var(--line);color:var(--text3);font-style:italic;font-size:12px}
+.msg.agent strong{font-weight:500}.msg.agent ul{margin:5px 0 5px 16px}.msg.agent li{margin:2px 0}
+.msg.agent code{font-family:var(--fm);font-size:11px;background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px}
+.dots::after{content:'';animation:typ 1.2s infinite}
+@keyframes typ{0%{content:'.'}33%{content:'..'}66%{content:'...'}100%{content:''}}
+.inp-bar{padding:.625rem 1.25rem;background:var(--bg);border-top:1px solid var(--line);display:flex;align-items:flex-end;gap:.5rem;flex-shrink:0}
+#chat-inp{flex:1;font-family:var(--fb);font-size:13px;padding:.55rem .875rem;border:1px solid var(--line);border-radius:var(--rl);background:var(--bg2);color:var(--text);resize:none;min-height:40px;max-height:120px;line-height:1.5;outline:none;transition:border-color .15s}
+#chat-inp:focus{border-color:var(--gold2)}
+#chat-inp::placeholder{color:var(--text3)}
+.send-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--gold);color:var(--bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,transform .1s}
+.send-btn:hover{background:var(--gold2)}.send-btn:active{transform:scale(.93)}.send-btn:disabled{background:var(--line);color:var(--text3);cursor:default}
+.quick-row{padding:.5rem 1.25rem;display:flex;flex-wrap:wrap;gap:.375rem;background:var(--bg);border-bottom:1px solid var(--line)}
+.q-btn{font-size:11px;padding:.3rem .625rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .12s}
+.q-btn:hover{border-color:var(--gold2);background:var(--gold-bg);color:var(--gold)}
+
+/* chart bar */
+.chart-wrap{display:flex;align-items:flex-end;gap:6px;height:100px;padding-bottom:1.75rem;position:relative}
+.chart-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default}
+.chart-fill{width:100%;border-radius:3px 3px 0 0;transition:opacity .15s}
+.chart-fill:hover{opacity:.8}
+.chart-val{font-family:var(--fm);font-size:8px;color:var(--text3);text-align:center}
+.chart-lbl{font-size:9px;color:var(--text3);font-family:var(--fm);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px}
+
+/* alert / insight */
+.alert{border-left:3px solid var(--red);background:var(--red-bg);padding:.875rem 1.125rem;border-radius:0 var(--rl) var(--rl) 0;margin-bottom:1.25rem;font-size:13px;color:var(--text2);line-height:1.7}
+.alert strong{color:var(--text);font-weight:500}
+.insight{border-left:3px solid var(--gold);background:var(--gold-bg);padding:.875rem 1.125rem;border-radius:0 var(--rl) var(--rl) 0;margin-bottom:1.25rem;font-size:13px;color:var(--text2);line-height:1.7}
+.insight strong{color:var(--text);font-weight:500}
+
+/* Cronograma */
+.crono{display:flex;align-items:center;gap:0;padding:.625rem 1rem .875rem;overflow-x:auto;scrollbar-width:none}
+.crono::-webkit-scrollbar{display:none}
+.crono-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:64px}
+.crono-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0;position:relative;z-index:1}
+.crono-dot.done{background:var(--green);color:var(--bg)}
+.crono-dot.active{background:var(--gold);color:var(--bg);box-shadow:0 0 0 3px rgba(200,169,106,.25)}
+.crono-dot.pending{background:var(--bg3);color:var(--text3);border:1px solid var(--line)}
+.crono-lbl{font-size:8px;color:var(--text3);font-family:var(--fm);text-align:center;max-width:60px;line-height:1.3}
+.crono-line{flex:1;height:1px;background:var(--line2);min-width:12px;margin-bottom:18px}
+.crono-line.done{background:var(--green)}
+
+/* scrollbar */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px}
+
+/* toast */
+#toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--text);color:var(--bg);font-size:11px;font-family:var(--fm);padding:6px 14px;border-radius:99px;opacity:0;transition:all .25s;pointer-events:none;z-index:999}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── APROVEITAMENTO ── */
+.aprv-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:.75rem;padding:.625rem .875rem;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);margin-bottom:.25rem;transition:border-color .12s}
+.aprv-row:hover{border-color:var(--line2)}
+.aprv-row.no-prazo{border-left:3px solid var(--green)}
+.aprv-row.adiantou{border-left:3px solid var(--blue)}
+.aprv-row.atrasou{border-left:3px solid var(--red)}
+.aprv-row.sem-dados{border-left:3px solid var(--line2);opacity:.7}
+.aprv-nome{font-weight:500;color:var(--text);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aprv-sub{font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:1px}
+.aprv-m2{font-family:var(--fm);font-size:11px;color:var(--text2);white-space:nowrap}
+.aprv-prazo-info{font-size:10px;color:var(--text3);font-family:var(--fm);white-space:nowrap;text-align:center}
+.aprv-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:var(--fm);font-weight:500;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.aprv-badge.g{background:var(--grn-bg);color:var(--green)}
+.aprv-badge.b{background:var(--blu-bg);color:var(--blue)}
+.aprv-badge.r{background:var(--red-bg);color:var(--red)}
+.aprv-badge.dim{background:var(--bg3);color:var(--text3)}
+.aprv-badge.a{background:var(--amb-bg);color:var(--amber)}
+
+/* ── GRÁFICOS ── */
+.graf-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:28px;cursor:default}
+.graf-bar-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:0;justify-content:flex-end;height:120px}
+.graf-seg{width:100%;border-radius:0;transition:opacity .15s}
+.graf-seg:first-child{border-radius:3px 3px 0 0}
+.graf-seg:hover{opacity:.8}
+.graf-col-lbl{font-family:var(--fm);font-size:8px;color:var(--text3);text-align:center;margin-top:3px}
+.graf-col-val{font-family:var(--fm);font-size:9px;color:var(--text2);text-align:center}
+.mat-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:var(--fm);color:var(--text2);padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.mat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mat-bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.mat-bar-label{font-size:12px;color:var(--text2);min-width:100px}
+.mat-bar-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.mat-bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.mat-bar-val{font-family:var(--fm);font-size:11px;color:var(--text2);min-width:60px;text-align:right}
+
+/* ── OBRA DRAWER ── */
+#obra-drawer{
+  position:fixed;top:0;right:-600px;width:580px;height:100vh;
+  background:var(--bg2);border-left:1px solid var(--line);
+  z-index:500;transition:right .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#obra-drawer.open{right:0;box-shadow:-8px 0 32px rgba(0,0,0,.4)}
+#obra-drawer-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:499;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#obra-drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer-hdr{
+  padding:1rem 1.25rem;border-bottom:1px solid var(--line);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-shrink:0;gap:.75rem;
+}
+.drawer-title{font-family:var(--fd);font-size:1.25rem;color:var(--text);line-height:1.2}
+.drawer-sub{font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:3px}
+.drawer-close{
+  width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:var(--bg3);color:var(--text2);font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .12s;
+}
+.drawer-close:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.drawer-body{flex:1;overflow-y:auto;padding:1.25rem}
+
+/* Timeline */
+.tl-item{display:flex;gap:.875rem;margin-bottom:1.125rem;position:relative}
+.tl-item:not(:last-child)::before{
+  content:'';position:absolute;left:11px;top:24px;
+  width:1px;height:calc(100% + .25rem);background:var(--line);
+}
+.tl-dot{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;position:relative;z-index:1;
+  border:2px solid;
+}
+.tl-dot.done{background:var(--grn-bg);border-color:var(--green);color:var(--green)}
+.tl-dot.active{background:var(--gold-bg);border-color:var(--gold);color:var(--gold)}
+.tl-dot.pending{background:var(--bg3);border-color:var(--line);color:var(--text3)}
+.tl-dot.warn{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.tl-content{flex:1;padding-top:2px}
+.tl-label{font-weight:500;font-size:13px;color:var(--text);margin-bottom:1px}
+.tl-date{font-size:10px;color:var(--text3);font-family:var(--fm)}
+.tl-detail{font-size:11px;color:var(--text2);margin-top:3px;line-height:1.5}
+
+/* Checklist andamento */
+.check-grid{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.5rem}
+.check-item{
+  font-size:10px;font-family:var(--fm);padding:3px 8px;
+  border-radius:4px;display:flex;align-items:center;gap:4px;
+}
+.check-item.done{background:var(--grn-bg);color:var(--green)}
+.check-item.pending{background:var(--bg3);color:var(--text3);border:1px solid var(--line)}
+
+/* Drawer section */
+.drw-sec{margin-bottom:1.5rem}
+.drw-sec-title{
+  font-family:var(--fm);font-size:9px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);
+  margin-bottom:.75rem;padding-bottom:.375rem;border-bottom:1px solid var(--line);
+}
+
+/* Info grid */
+.drw-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.drw-info-cell{
+  background:var(--bg3);border-radius:var(--r);padding:.625rem .875rem;
+}
+.drw-info-l{font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.drw-info-v{font-size:12px;color:var(--text2);font-weight:500}
+.drw-info-v.gold{color:var(--gold)}
+
+.hidden{display:none!important}
+.divider{border:none;border-top:1px solid var(--line);margin:1.25rem 0}
+.page-title{font-family:var(--fd);font-size:1.75rem;color:var(--text);margin-bottom:.25rem;line-height:1.2}
+.page-title em{color:var(--gold);font-style:italic}
+.page-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;max-width:560px;line-height:1.7;font-weight:300}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="brand">mono<span>floor</span></div>
+  <nav class="hdr-nav">
+    <button class="nav-btn active" id="nav-painel" onclick="showView('painel',this)">Painel</button>
+    <button class="nav-btn" id="nav-obras" onclick="showView('obras',this)">
+      Obras <span class="badge badge-gold" id="badge-exec">—</span>
+    </button>
+    <button class="nav-btn" id="nav-pipeline" onclick="showView('pipeline',this)">
+      Pipeline <span class="badge badge-a" id="badge-prev">—</span>
+    </button>
+    <button class="nav-btn" id="nav-gargalos" onclick="showView('gargalos',this)">
+      Gargalos <span class="badge badge-r" id="badge-g1">264</span>
+    </button>
+    <button class="nav-btn" id="nav-aproveitamento" onclick="showView('aproveitamento',this)">Aproveitamento</button>
+    <button class="nav-btn" id="nav-melhorias" onclick="showView('melhorias',this)">Melhorias</button>
+    <button class="nav-btn" id="nav-chat" onclick="showView('chat',this)">Chat IA</button>
+  </nav>
+  <div class="hdr-right">
+    <div class="conn-pill" onclick="document.getElementById('tok-bar').classList.toggle('hidden')" title="Tokens">
+      <div class="conn-dot" id="conn-dot"></div>
+      <span id="conn-txt">Conectando...</span>
+    </div>
+    <button class="btn btn-dim" onclick="refresh()">↻</button>
+  </div>
+</header>
+
+<div id="tok-bar" class="hidden">
+  <span style="font-size:11px;color:var(--text3);font-family:var(--fm)">Pipefy</span>
+  <input class="tok-inp" id="tok-pipefy" type="password" style="width:280px" placeholder="eyJhbGci..."/>
+  <span style="font-size:11px;color:var(--text3);font-family:var(--fm)">Anthropic</span>
+  <input class="tok-inp" id="tok-anthropic" type="password" style="width:240px" placeholder="sk-ant-..."/>
+  <button class="btn btn-gold" onclick="salvarTokens()">Salvar</button>
+</div>
+
+<div class="main">
+
+<!-- ═══ PAINEL ═══ -->
+<div id="view-painel" class="view active">
+  <div class="kpi-grid">
+    <div class="kpi-cell" onclick="showView('obras')"><span class="kpi-v gold" id="kpi-exec">—</span><span class="kpi-l">obras em execução</span></div>
+    <div class="kpi-cell" onclick="showView('obras')"><span class="kpi-v g" id="kpi-m2e">—</span><span class="kpi-l">m² em execução</span></div>
+    <div class="kpi-cell" onclick="showView('pipeline')"><span class="kpi-v a" id="kpi-m2p">—</span><span class="kpi-l">m² no pipeline</span></div>
+    <div class="kpi-cell" onclick="showView('gargalos')"><span class="kpi-v r" id="kpi-g1">264</span><span class="kpi-l">cards G1 · OEC</span></div>
+  </div>
+
+  <div class="two-col">
+    <!-- Cumprimento de prazos -->
+    <div class="panel">
+      <div class="panel-title">Cumprimento de prazos por etapa</div>
+      <div id="etapas-prog">
+        <div style="text-align:center;padding:2rem;color:var(--text3);font-size:12px">Conectando ao Pipefy...</div>
+      </div>
+    </div>
+    <!-- Onde estão as obras -->
+    <div class="panel">
+      <div class="panel-title">Onde estão as obras <span id="total-obras-label" style="color:var(--text3);font-weight:400;font-family:var(--fm);font-size:9px"></span></div>
+      <div id="fases-dist">
+        <div style="text-align:center;padding:2rem;color:var(--text3);font-size:12px">Carregando...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="panel">
+      <div class="panel-title">Pausas ativas</div>
+      <div id="pausas-box" style="font-size:13px;color:var(--text2)">—</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">m² · projeção por semana</div>
+      <div id="chart-box" style="min-height:80px;display:flex;align-items:flex-end">
+        <div style="font-size:12px;color:var(--text3);padding:1.5rem 0">Aguardando dados...</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Saúde geral do pipeline</div>
+      <div id="saude-box">
+        <div style="font-size:12px;color:var(--text3)">Calculando...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LINHA: Capacidade + Semáforo ══ -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between">
+        Capacidade produtiva · mês atual
+        <span id="cap-deficit" style="font-size:10px;font-family:var(--fm);color:var(--text3)">—</span>
+      </div>
+      <div id="cap-bar-wrap" style="margin-bottom:.875rem">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.375rem">
+          <span style="font-size:11px;color:var(--text2)">Disponível <strong id="cap-disp" style="color:var(--green)">—</strong></span>
+          <span style="font-size:11px;color:var(--text2)">Programado <strong id="cap-prog" style="color:var(--amber)">—</strong></span>
+        </div>
+        <div style="height:10px;background:var(--bg3);border-radius:5px;overflow:hidden">
+          <div id="cap-fill" style="height:100%;border-radius:5px;background:linear-gradient(90deg,var(--green),var(--amber));width:0%;transition:width .5s ease"></div>
+        </div>
+        <div id="cap-msg" style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:.375rem">Configure dados/capacidade.json com a lista de aplicadores</div>
+      </div>
+      <div style="font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem">Taxa de reagendamento</div>
+      <div id="reag-chart" style="display:flex;gap:.5rem;align-items:flex-end;height:52px;margin-bottom:.625rem">
+        <div style="color:var(--text3);font-size:11px;font-family:var(--fm)">—</div>
+      </div>
+      <div id="reag-meta" style="font-size:10px;color:var(--text3);font-family:var(--fm)">Calculando reagendamentos...</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Semáforo de risco · obras em execução</div>
+      <div id="semaforo-list">
+        <div style="font-size:12px;color:var(--text3);text-align:center;padding:1rem">Aguardando dados das obras...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GRÁFICOS MENSAIS ══ -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:1.5rem">
+    <div class="panel">
+      <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Obras finalizadas · por mês</span>
+        <span id="graf-obras-total" style="color:var(--gold);font-weight:500"></span>
+      </div>
+      <div id="graf-obras" style="min-height:120px;display:flex;align-items:flex-end;gap:5px;padding-top:.5rem">
+        <div style="color:var(--text3);font-size:12px;width:100%;text-align:center;padding:2rem 0">Aguardando dados...</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>m² finalizados · por mês e material</span>
+        <span id="graf-m2-total" style="color:var(--green);font-weight:500"></span>
+      </div>
+      <div id="graf-legenda" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.5rem"></div>
+      <div id="graf-m2" style="min-height:120px;display:flex;align-items:flex-end;gap:5px;padding-top:.25rem">
+        <div style="color:var(--text3);font-size:12px;width:100%;text-align:center;padding:2rem 0">Aguardando dados...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:1.5rem">
+    <div class="panel-title">m² total · distribuição por material <span id="graf-periodo" style="color:var(--text3);font-weight:400;font-family:var(--fm);font-size:9px"></span></div>
+    <div id="graf-materiais" style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center">
+      <div style="color:var(--text3);font-size:12px">Aguardando dados...</div>
+    </div>
+  </div>
+
+  <!-- ── GRÁFICOS MENSAIS ── -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:1.5rem">
+
+    <!-- Obras por mês -->
+    <div class="panel">
+      <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Obras finalizadas · por mês</span>
+        <span id="graf-obras-total" style="color:var(--gold);font-weight:500"></span>
+      </div>
+      <div id="graf-obras" style="min-height:140px;display:flex;align-items:flex-end;gap:5px;padding-top:.5rem">
+        <div style="color:var(--text3);font-size:12px;width:100%;text-align:center;padding:2rem 0">Aguardando dados...</div>
+      </div>
+    </div>
+
+    <!-- m² por mês — total + por material -->
+    <div class="panel">
+      <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>m² finalizados · por mês e material</span>
+        <span id="graf-m2-total" style="color:var(--green);font-weight:500"></span>
+      </div>
+      <!-- Legenda materiais -->
+      <div id="graf-legenda" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem"></div>
+      <div id="graf-m2" style="min-height:140px;display:flex;align-items:flex-end;gap:5px;padding-top:.25rem">
+        <div style="color:var(--text3);font-size:12px;width:100%;text-align:center;padding:2rem 0">Aguardando dados...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- m² acumulado por material (donut textual) -->
+  <div class="panel" style="margin-bottom:1.5rem">
+    <div class="panel-title">m² total · distribuição por material <span id="graf-periodo" style="color:var(--text3);font-weight:400;font-family:var(--fm);font-size:9px"></span></div>
+    <div id="graf-materiais" style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center">
+      <div style="color:var(--text3);font-size:12px">Aguardando dados...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OBRAS EM EXECUÇÃO ═══ -->
+<div id="view-obras" class="view">
+  <div class="sec-hdr">
+    <div>
+      <h1 class="page-title">Obras em <em>Execução</em></h1>
+      <p class="page-sub">Projetos ativos agora. Barra de preparação, cronograma e acesso ao diário Telegram.</p>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:var(--fd);font-size:2rem;color:var(--green)" id="obs-exec-big">—</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--fm)">m² em execução</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+    <input id="obras-busca" type="text" placeholder="Buscar obra..." oninput="filtrarObras(this.value)"
+      style="font-family:var(--fb);font-size:12px;padding:.35rem .75rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);color:var(--text);outline:none;flex:1;max-width:260px"/>
+    <select id="obras-ord" onchange="ordenarObras(this.value)" style="font-family:var(--fm);font-size:11px;padding:.3rem .625rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);color:var(--text2);outline:none;cursor:pointer">
+      <option value="m2">↓ Maior m²</option>
+      <option value="atraso">↓ Mais atrasado</option>
+      <option value="nome">A→Z Nome</option>
+    </select>
+  </div>
+  <div id="obras-exec-list"><div style="color:var(--text3);font-size:12px;padding:2rem;text-align:center">Conectando ao Pipefy...</div></div>
+</div>
+
+<!-- ═══ PIPELINE ═══ -->
+<div id="view-pipeline" class="view">
+  <div class="sec-hdr">
+    <div>
+      <h1 class="page-title">Pipeline · <em>Obras Previstas</em></h1>
+      <p class="page-sub">Tudo que antecede OBRA EM EXECUÇÃO. Agrupado por fase, ordenado por proximidade de entrada.</p>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:var(--fd);font-size:2rem;color:var(--amber)" id="obs-prev-big">—</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--fm)">m² no pipeline</div>
+    </div>
+  </div>
+  <!-- Resumo por fase (mini KPIs) -->
+  <div id="pipeline-fases-kpi" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem"></div>
+  <div id="obras-prev-list"><div style="color:var(--text3);font-size:12px;padding:2rem;text-align:center">Conectando ao Pipefy...</div></div>
+</div>
+
+<!-- ═══ GARGALOS ═══ -->
+<div id="view-gargalos" class="view">
+  <h1 class="page-title">Gargalos · <em>Pipefy ao vivo</em></h1>
+  <p class="page-sub">Fases com acúmulo crítico de cards. G1 bloqueia produção e execução de novas obras.</p>
+  <div class="alert"><strong>G1 crítico:</strong> 264+ cards em "Solicitar Coleta" (OEC) bloqueiam a entrada no OEI — sem cor definida, sem produção de material, sem execução. Cada card parado aqui é uma obra que não consegue avançar.</div>
+  <div id="garg-list">
+    <div class="garg-row"><div class="garg-code">G1</div><div class="garg-info"><div class="garg-nome">Solicitar Coleta</div><div class="garg-pipe">CORES (OEC) · bloqueia OEI + 28 em Aguardando Liberação</div></div><div class="garg-n" style="color:var(--red)" id="g1v">264</div><span class="pill pill-r">Crítico</span></div>
+    <div class="garg-row"><div class="garg-code">G2</div><div class="garg-info"><div class="garg-nome">Agend. VT Aferição</div><div class="garg-pipe">OPERAÇÕES (OE) · SLA X-60d provavelmente violado</div></div><div class="garg-n" style="color:var(--amber)" id="g2v">40</div><span class="pill pill-a">Alto</span></div>
+    <div class="garg-row"><div class="garg-code">G3</div><div class="garg-info"><div class="garg-nome">Aguardando Liberação</div><div class="garg-pipe">OPERAÇÕES (OE) · dependente do G1</div></div><div class="garg-n" style="color:var(--amber)" id="g3v">28</div><span class="pill pill-a">Alto</span></div>
+    <div class="garg-row"><div class="garg-code">G4</div><div class="garg-info"><div class="garg-nome">Obra Pausada</div><div class="garg-pipe">OPERAÇÕES (OE) · sem campo de motivo</div></div><div class="garg-n" style="color:var(--text2)" id="g4v">10</div><span class="pill pill-dim">Médio</span></div>
+  </div>
+  <div class="divider"></div>
+  <div class="panel-title" style="margin-bottom:1rem">Cards por pipe · ao vivo</div>
+  <div class="three-col" id="pipes-cards">
+    <div class="panel"><div class="panel-title">CORES · OEC</div><div style="font-family:var(--fd);font-size:1.5rem;color:var(--red)" id="pipe-oe">—</div><div style="font-size:11px;color:var(--text2);margin-top:.25rem">264 em Solicitar Coleta</div></div>
+    <div class="panel"><div class="panel-title">OPERAÇÕES · OE</div><div style="font-family:var(--fd);font-size:1.5rem;color:var(--amber)" id="pipe-oec">—</div><div style="font-size:11px;color:var(--text2);margin-top:.25rem">40 VT · 28 Aguardando</div></div>
+    <div class="panel"><div class="panel-title">PROJETOS</div><div style="font-family:var(--fd);font-size:1.5rem;color:var(--gold)" id="pipe-proj">—</div><div style="font-size:11px;color:var(--text2);margin-top:.25rem">Contratos ativos</div></div>
+  </div>
+</div>
+
+
+<!-- ═══ APROVEITAMENTO ═══ -->
+<div id="view-aproveitamento" class="view">
+  <h1 class="page-title">Aproveitamento · <em>Obras finalizadas</em></h1>
+  <p class="page-sub">Cruzamento entre prazo previsto e data real de finalização. Calcula se cada obra adiantou, foi entregue no prazo ou atrasou.</p>
+
+  <!-- KPIs de aproveitamento -->
+  <div class="kpi-grid" id="aprv-kpis" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi-cell"><span class="kpi-v gold" id="aprv-total">—</span><span class="kpi-l">obras analisadas</span></div>
+    <div class="kpi-cell"><span class="kpi-v g" id="aprv-prazo">—</span><span class="kpi-l">no prazo</span></div>
+    <div class="kpi-cell"><span class="kpi-v" id="aprv-adian" style="color:var(--blue)">—</span><span class="kpi-l">adiantadas</span></div>
+    <div class="kpi-cell"><span class="kpi-v r" id="aprv-atras">—</span><span class="kpi-l">atrasadas</span></div>
+    <div class="kpi-cell"><span class="kpi-v a" id="aprv-media">—</span><span class="kpi-l">média · dias úteis</span></div>
+  </div>
+
+  <!-- Barra de distribuição visual -->
+  <div id="aprv-dist-bar" style="margin-bottom:1.5rem">
+    <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--bg3)">
+      <div id="aprv-bar-prazo" style="background:var(--green);height:100%;transition:width .5s ease" title="No prazo"></div>
+      <div id="aprv-bar-adian" style="background:var(--blue);height:100%;transition:width .5s ease" title="Adiantado"></div>
+      <div id="aprv-bar-atras" style="background:var(--red);height:100%;transition:width .5s ease" title="Atrasado"></div>
+    </div>
+    <div style="display:flex;gap:1.5rem;margin-top:.5rem;flex-wrap:wrap;align-items:center">
+      <span style="font-size:10px;color:var(--green);font-family:var(--fm)">● No prazo (±2 dias úteis)</span>
+      <span style="font-size:10px;color:var(--blue);font-family:var(--fm)">● Adiantado</span>
+      <span style="font-size:10px;color:var(--red);font-family:var(--fm)">● Atrasado</span>
+      <span id="aprv-coverage" style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-left:auto"></span>
+    </div>
+  </div>
+
+  <!-- Tabela de finalizadas -->
+  <div class="sec-hdr" style="margin-bottom:.75rem">
+    <div class="sec-title">Cliente finalizado · Dez/2025 até hoje</div>
+    <div class="sec-meta" id="hist-aprv-meta"></div>
+  </div>
+
+  <!-- Cabeçalho da tabela -->
+  <div style="display:grid;grid-template-columns:1fr 90px 80px 90px 90px 140px;gap:.5rem;padding:.375rem .875rem;border-bottom:1px solid var(--line);margin-bottom:.25rem">
+    <span style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase">Obra</span>
+    <span style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase;text-align:center">Entrada</span>
+    <span style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase;text-align:center">Prazo</span>
+    <span style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase;text-align:center">Previsto</span>
+    <span style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase;text-align:center">Realizado</span>
+    <span style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase;text-align:center">Resultado</span>
+  </div>
+
+  <div id="hist-aprv-list">
+    <div style="color:var(--text3);font-size:12px;padding:2rem;text-align:center">Carregando histórico...</div>
+  </div>
+</div>
+
+<!-- ═══ MELHORIAS ═══ -->
+<div id="view-melhorias" class="view">
+  <h1 class="page-title">Melhorias · <em>Sistema em construção</em></h1>
+  <p class="page-sub">Índices de qualidade, consumo e capacidade em desenvolvimento. Plano de 10 ações operacionais com acompanhamento de status.</p>
+
+  <div class="panel-title" style="margin-bottom:1rem">Índices operacionais</div>
+  <div class="idx-grid">
+    <div class="idx-card"><div class="idx-code">IQO</div><div class="idx-name">Qualidade de Obra</div><div class="idx-val nd">—</div><div class="idx-future">Campos Pipefy<br><span style="font-size:9px;opacity:.6">pendentes criação</span></div></div>
+    <div class="idx-card"><div class="idx-code">ICM</div><div class="idx-name">Consumo de Material</div><div class="idx-val nd">—</div><div class="idx-future">OEI × Material Extra<br><span style="font-size:9px;opacity:.6">cruzamento pendente</span></div></div>
+    <div class="idx-card"><div class="idx-code">IPA</div><div class="idx-name">Produtividade Artesão</div><div class="idx-val nd">—</div><div class="idx-future">Dados de capacidade<br><span style="font-size:9px;opacity:.6">a inserir por Vitor</span></div></div>
+    <div class="idx-card"><div class="idx-code">ICS</div><div class="idx-name">Capacidade Saudável</div><div class="idx-val nd">—</div><div class="idx-future">IQO × ICM × IPA<br><span style="font-size:9px;opacity:.6">depende dos 3 anteriores</span></div></div>
+  </div>
+
+  <div class="panel-title" style="margin-bottom:1rem">Plano de 10 ações · F1–F4</div>
+  <div style="display:flex;gap:3px;margin-bottom:1.25rem">
+    <div style="flex:1;padding:.5rem .75rem;text-align:center;background:var(--red-bg);border:1px solid rgba(208,85,64,.2);border-radius:var(--r)"><span style="font-family:var(--fd);font-size:1rem;color:var(--red);display:block;font-style:italic">F1</span><span style="font-size:10px;color:var(--text3);font-family:var(--fm)">Chão firme</span><span style="display:block;font-size:9px;color:var(--text3)">Sem. 1–2</span></div>
+    <div style="flex:1;padding:.5rem .75rem;text-align:center;background:var(--amb-bg);border:1px solid rgba(212,154,53,.2);border-radius:var(--r)"><span style="font-family:var(--fd);font-size:1rem;color:var(--amber);display:block;font-style:italic">F2</span><span style="font-size:10px;color:var(--text3);font-family:var(--fm)">Ver para gerir</span><span style="display:block;font-size:9px;color:var(--text3)">Sem. 3–6</span></div>
+    <div style="flex:1;padding:.5rem .75rem;text-align:center;background:var(--grn-bg);border:1px solid rgba(74,158,106,.2);border-radius:var(--r)"><span style="font-family:var(--fd);font-size:1rem;color:var(--green);display:block;font-style:italic">F3</span><span style="font-size:10px;color:var(--text3);font-family:var(--fm)">Ouvir o cliente</span><span style="display:block;font-size:9px;color:var(--text3)">Mês 2–3</span></div>
+    <div style="flex:1;padding:.5rem .75rem;text-align:center;background:var(--blu-bg);border:1px solid rgba(74,126,200,.2);border-radius:var(--r)"><span style="font-family:var(--fd);font-size:1rem;color:var(--blue);display:block;font-style:italic">F4</span><span style="font-size:10px;color:var(--text3);font-family:var(--fm)">Construir ativos</span><span style="display:block;font-size:9px;color:var(--text3)">Mês 3–6</span></div>
+  </div>
+  <table class="plano-tbl">
+    <thead><tr><th>#</th><th>Ação</th><th>Método</th><th>Prazo</th><th>Fase</th><th>Status</th></tr></thead>
+    <tbody id="plano-body"></tbody>
+  </table>
+</div>
+
+<!-- ═══ CHAT ═══ -->
+<div id="view-chat" class="view" style="padding:0;display:flex;flex-direction:column;height:calc(100vh - 94px)">
+  <div class="quick-row" id="quick-row"></div>
+  <div id="messages"></div>
+  <div class="inp-bar">
+    <textarea id="chat-inp" rows="1" placeholder="Pergunte sobre obras, gargalos, SLAs, melhorias..."></textarea>
+    <button class="send-btn" id="send-btn" onclick="enviar()">↑</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+<!-- OBRA DRAWER -->
+<div id="obra-drawer-overlay" onclick="fecharDrawer()"></div>
+<div id="obra-drawer">
+  <div class="drawer-hdr">
+    <div>
+      <div class="drawer-title" id="drw-nome">—</div>
+      <div class="drawer-sub" id="drw-sub">—</div>
+    </div>
+    <button class="drawer-close" onclick="fecharDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="drw-body">
+    <div style="color:var(--text3);text-align:center;padding:3rem;font-size:13px">Carregando dados da obra...</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══ CONFIG ══════════════════════════════════════════════════
+const PIPES = {'OPERAÇÕES':'306410007','CORES':'306446640','PRODUÇÃO':'306446401','PROJETOS':'306431675'};
+const FASE_EXEC   = '338741343'; // OBRA EM EXECUÇÃO
+const FASE_PAUSA  = '338994841'; // OBRA PAUSADA
+const FASES_PREV  = [
+  {id:'338990356',name:'Equipe de Execução'},
+  {id:'338971484',name:'Log. Em Entrega'},
+  {id:'339011764',name:'Log. Mat. Entregue'},
+  {id:'338741318',name:'Indústria Produção'},
+  {id:'339898036',name:'Aguardando Liberação'},
+  {id:'338741135',name:'Revisão Final Op.'},
+];
+const FASES_DIST = [
+  {id:'338741343',name:'Obra em Execução',cor:'var(--green)'},
+  {id:'339011764',name:'Log. Mat. Entregue',cor:'var(--gold)'},
+  {id:'338971484',name:'Log. Em Entrega',cor:'var(--gold2)'},
+  {id:'338990356',name:'Equipe de Execução',cor:'var(--amber)'},
+  {id:'338741318',name:'Indústria Produção',cor:'var(--amber)'},
+  {id:'339898036',name:'Aguardando Liberação',cor:'var(--red)'},
+  {id:'338994841',name:'Obra Pausada',cor:'var(--red)'},
+  {id:'338726490',name:'Agend. VT Aferição',cor:'var(--text3)'},
+  {id:'338728922',name:'Confirmações Op 1',cor:'var(--text3)'},
+  {id:'338741135',name:'Revisão Final Op.',cor:'var(--text3)'},
+];
+const ETAPAS_SLA = [
+  {nome:'Visita Técnica realizada',meta:90},
+  {nome:'Contrato assinado',meta:90},
+  {nome:'Cor definida pelo cliente',meta:85},
+  {nome:'Material em produção',meta:80},
+  {nome:'Logística programada',meta:85},
+  {nome:'VT de entrada agendada',meta:80},
+  {nome:'Equipe de execução definida',meta:90},
+  {nome:'Material entregue na obra',meta:80},
+];
+const PLANO = [
+  {id:1,fase:'F1',acao:'War Room semanal — 45 min toda segunda',met:'PDCA Check',prazo:'Esta semana',status:'pendente'},
+  {id:2,fase:'F1',acao:'Campo "Motivo da Pausa" obrigatório no Pipefy',met:'Poka-Yoke',prazo:'Hoje',status:'pendente'},
+  {id:3,fase:'F1',acao:'Responsável fixo + alerta D+7 para coleta G1',met:'RACI',prazo:'1 semana',status:'pendente'},
+  {id:4,fase:'F1',acao:'Ritual de encerramento de obra',met:'Lean',prazo:'2 semanas',status:'pendente'},
+  {id:5,fase:'F2',acao:'View semáforo SLA no Pipefy',met:'Gestão visual',prazo:'3 semanas',status:'pendente'},
+  {id:6,fase:'F2',acao:'NF obrigatória antes de avançar OEI',met:'Poka-Yoke',prazo:'2 semanas',status:'pendente'},
+  {id:7,fase:'F2',acao:'Lição aprendida obrigatória no encerramento',met:'Kaizen',prazo:'3 semanas',status:'pendente'},
+  {id:8,fase:'F3',acao:'NPS automatizado D+1 via WhatsApp Business',met:'VOC',prazo:'6 semanas',status:'pendente'},
+  {id:9,fase:'F3',acao:'KPI Dashboard mensal para diretoria',met:'BSC',prazo:'2 meses',status:'pendente'},
+  {id:10,fase:'F4',acao:'OKRs trimestrais 2026/2027',met:'OKR',prazo:'Trim. 2',status:'pendente'},
+];
+const STATUS_OPTS = {pendente:'Pendente',em_andamento:'Em andamento',concluido:'Concluído',atrasado:'Atrasado'};
+const STATUS_CLS  = {pendente:'pill-dim',em_andamento:'pill-a',concluido:'pill-g',atrasado:'pill-r'};
+const SYSTEM = `Você é o Agente Operacional da Monofloor — assistente de Vitor Gomes (Gerente de Qualidade).
+Empresa: Monofloor — superfícies contínuas premium. STELION™ R$910+/m², LILIT™ R$590+/m², LEONA™, LUMINA™.
+Fluxos: OE (Execução, 50 fases), OEC (Cores), OEI (Indústria), OEL (Logística), OECT (Contratos).
+SLAs PP:001: X-60d Aferição · X-35d Cor · X-10d Entrada · X-7d Equipe.
+Gargalos: G1🔴 264 cards Solicitar Coleta (OEC) · G2🔴 40 Agend.VT Aferição · G3⚠️ 28 Aguardando Liberação · G4⚠️ 10 Obra Pausada.
+Plano F1–F4: War Room semanal, campo Motivo Pausa, responsável G1, ritual encerramento, semáforo SLA, NF OEI, lição aprendida, NPS, KPI mensal, OKRs.
+Índices a construir: IQO, ICM, IPA, ICS. Fonte única de metragem: campo M² TOTAL do pipe OE (Telegram replica, não soma).
+Responda em português. Use códigos OE/OEC/OEI/OEL/OECT. Seja direto e analítico.`;
+
+// ══ STATE ════════════════════════════════════════════════════
+let pipefyToken = '', anthropicKey = '';
+let dadosVivos = {}, execCards = [], prevCards = [], allPhases = [];
+let planoState = {}, historico = [], chatLoading = false;
+
+// ══ INIT ════════════════════════════════════════════════════
+window.onload = () => {
+  const DPT = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJQaXBlZnkiLCJpYXQiOjE3NzM2ODk3NTYsImp0aSI6IjUwMzczZGExLWE5YTctNDI3Yy05MGRlLTkzYTc1ZWY1YTUzMiIsInN1YiI6MzA2NjM4NTUyLCJ1c2VyIjp7ImlkIjozMDY2Mzg1NTIsImVtYWlsIjoidml0b3IubW9ub2Zsb29yQGdtYWlsLmNvbSJ9LCJ1c2VyX3R5cGUiOiJhdXRoZW50aWNhdGVkIn0.HeUVV4B7i7rztf8LF3pwSj6ebRYvWRuNnF_HzMZ-fHU4erem4Bbxq7IgwDIaY-LYnlHDGpNy4UQUt_hY7jwQvA';
+  if (!localStorage.getItem('mf_pipefy')) localStorage.setItem('mf_pipefy', DPT);
+  pipefyToken = localStorage.getItem('mf_pipefy') || DPT;
+  anthropicKey = localStorage.getItem('mf_anthropic') || '';
+  planoState = JSON.parse(localStorage.getItem('mf_plano') || '{}');
+
+  document.getElementById('tok-pipefy').value = pipefyToken;
+  if (anthropicKey) document.getElementById('tok-anthropic').value = anthropicKey;
+
+  renderPlano();
+  initChat();
+  setConn('loading','Conectando...');
+  setTimeout(loadAll, 400);
+};
+
+// ══ VIEW ═════════════════════════════════════════════════════
+function showView(id, btn) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const v = document.getElementById('view-'+id);
+  if (v) v.classList.add('active');
+  if (btn) btn.classList.add('active');
+  else { const b = document.getElementById('nav-'+id); if(b) b.classList.add('active'); }
+}
+
+// ══ TOKENS ════════════════════════════════════════════════════
+function salvarTokens() {
+  pipefyToken  = document.getElementById('tok-pipefy').value.trim();
+  anthropicKey = document.getElementById('tok-anthropic').value.trim();
+  if (pipefyToken)  localStorage.setItem('mf_pipefy', pipefyToken);
+  if (anthropicKey) localStorage.setItem('mf_anthropic', anthropicKey);
+  document.getElementById('tok-bar').classList.add('hidden');
+  toast('Tokens salvos!'); loadAll();
+}
+function setConn(s,t){
+  const d=document.getElementById('conn-dot'), l=document.getElementById('conn-txt');
+  d.className='conn-dot'+(s==='on'?' on':s==='loading'?' loading':'');
+  l.textContent=t;
+}
+function refresh(){loadAll();toast('Atualizando...');}
+
+// ══ LOAD ALL ══════════════════════════════════════════════════
+async function loadAll() {
+  if (!pipefyToken) return;
+  try {
+    await Promise.all([loadPipes(), loadObras(), loadAproveitamento()]);
+    await loadGraficos();
+    setConn('on','Conectado');
+  } catch(e) {
+    setConn('off', 'Erro de conexão');
+    console.error('[MNF loadAll]', e?.message || e);
+  }
+}
+
+async function gql(query) {
+  // Se rodando via file:// o browser bloqueia fetch — orienta o usuário
+  if (window.location.protocol === 'file:') {
+    setConn('off', 'Abra via GitHub Pages');
+    throw new Error('Arquivo aberto localmente — publique no GitHub Pages para conectar ao Pipefy');
+  }
+  const r = await fetch('https://api.pipefy.com/graphql',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+pipefyToken},
+    body:JSON.stringify({query})
+  });
+  if (!r.ok) throw new Error('Pipefy API erro '+r.status);
+  const d = await r.json();
+  // Só lança erro se há errors E não há data (Pipefy às vezes retorna ambos)
+  if (d.errors && !d.data) throw new Error(d.errors[0]?.message || 'Pipefy erro');
+  return d;
+}
+
+async function loadPipes() {
+  const fields = Object.entries(PIPES).map(([n,id])=>`p${id}:pipe(id:"${id}"){name phases{id name cards_count}}`).join(' ');
+  const d = await gql(`{${fields}}`);
+  if (!d.data) return;
+  dadosVivos = d.data;
+  // Merge all phases
+  allPhases = [];
+  (d.data ? Object.values(d.data) : []).forEach(p => p?.phases?.forEach(f => allPhases.push(f)));
+
+  // Update gargalo values from live data
+  const oec = d.data['p306446640'];
+  if (oec) {
+    const g1p = oec.phases.find(f=>f.name.toLowerCase().includes('solicitar'));
+    if(g1p){ document.getElementById('g1v').textContent=g1p.cards_count; document.getElementById('kpi-g1').textContent=g1p.cards_count; document.getElementById('badge-g1').textContent=g1p.cards_count; }
+  }
+  const oe = d.data['p306410007'];
+  if (oe) {
+    const g2p = oe.phases.find(f=>f.name.toLowerCase().includes('agend. vt'));
+    const g3p = oe.phases.find(f=>f.name.toLowerCase().includes('aguardando libera'));
+    const g4p = oe.phases.find(f=>f.name.toLowerCase().includes('pausada'));
+    if(g2p) document.getElementById('g2v').textContent=g2p.cards_count;
+    if(g3p) document.getElementById('g3v').textContent=g3p.cards_count;
+    if(g4p){ document.getElementById('g4v').textContent=g4p.cards_count; renderPausas(g4p.cards_count); }
+    document.getElementById('pipe-oec').textContent = (oe.phases.reduce((s,f)=>s+f.cards_count,0))+' cards';
+  }
+  const cores = d.data['p306446640'];
+  if (cores) document.getElementById('pipe-oe').textContent = cores.phases.reduce((s,f)=>s+f.cards_count,0)+' cards';
+  const proj = d.data['p306431675'];
+  if (proj) document.getElementById('pipe-proj').textContent = proj.phases.reduce((s,f)=>s+f.cards_count,0)+' cards';
+
+  renderFasesDist();
+  renderEtapasProg();
+}
+
+async function loadObras() {
+  // Execução
+  const q1 = `{phase(id:"${FASE_EXEC}"){cards(first:30){edges{node{id title due_date fields{name value array_value}}}}}}`;
+  const prevQueries = FASES_PREV.map((f,i)=>`f${i}:phase(id:"${f.id}"){name cards(first:50){edges{node{id title due_date fields{name value array_value}}}}}`).join(' ');
+  // Busca fases em paralelo — tolera erros por fase individual
+  const d1 = await gql(q1).catch(() => ({}));
+  let d2 = {};
+  try { d2 = await gql(`{${prevQueries}}`); } catch(e) {
+    // Fallback: busca cada fase individualmente se a query combinada falhar
+    for (let i=0; i<FASES_PREV.length; i++) {
+      try {
+        const fq = `{f${i}:phase(id:"${FASES_PREV[i].id}"){name cards(first:50){edges{node{id title due_date fields{name value array_value}}}}}}`;
+        const fd = await gql(fq).catch(() => ({}));
+        if (!d2.data) d2 = {data:{}};
+        if (fd.data?.[`f${i}`]) d2.data[`f${i}`] = fd.data[`f${i}`];
+      } catch(e2) { /* fase inacessível — ignora */ }
+    }
+  }
+
+  execCards = (d1.data?.phase?.cards?.edges||[]).map(e=>parseCard(e.node,'OBRA EM EXECUÇÃO'));
+  prevCards = [];
+  FASES_PREV.forEach((f,i)=>{
+    const fase=d2.data?.[`f${i}`];
+    if(!fase) return;
+    fase.cards.edges.forEach(e=>prevCards.push(parseCard(e.node,f.name)));
+  });
+
+  const m2e = execCards.reduce((s,c)=>s+(parseFloat(c.m2)||0),0);
+  const m2p = prevCards.reduce((s,c)=>s+(parseFloat(c.m2)||0),0);
+  const fmt = v => Math.round(v).toLocaleString('pt-BR')+'m²';
+
+  document.getElementById('kpi-exec').textContent = execCards.length;
+  document.getElementById('kpi-m2e').textContent  = fmt(m2e);
+  document.getElementById('kpi-m2p').textContent  = fmt(m2p);
+  document.getElementById('badge-exec').textContent = execCards.length;
+  document.getElementById('badge-prev').textContent = prevCards.length;
+  document.getElementById('obs-exec-big').textContent = fmt(m2e);
+  document.getElementById('obs-prev-big').textContent = fmt(m2p);
+
+  renderObrasExec();
+  renderObrasPrev();
+  renderPipelineKpis();
+  renderChart(execCards, prevCards);
+  renderSaude(execCards);
+  renderSemaforo(execCards);
+  renderReagendamento(execCards, prevCards);
+}
+
+function parseCard(node, fase) {
+  const f = node.fields||[];
+  const fv = name => f.find(x=>x.name?.includes(name))?.value || null;
+  const fa = name => f.find(x=>x.name?.includes(name))?.array_value || null;
+  const m2raw = fv('M² TOTAL');
+  return {
+    id: node.id, title: node.title, due: node.due_date, fase,
+    m2: m2raw, linear: fv('METRAGEM LINEAR'),
+    end: fv('ENDEREÇO'), tipo: fv('TIPO DE OBRA'),
+    data: fv('DATA DE ENTRADA'), prazo: fv('PRAZO'),
+    equipe: fv('EQUIPE DE EXECUÇÃO'), vendedor: fv('VENDEDOR'),
+    op: (fa('CONSULTOR OPERACIONAL')||[]).join(', '),
+    at: (fa('CONSULTOR DE ATENDIMENTO')||[]).join(', '),
+    mat: (fa('MATERIAL')||[]).join(', '),
+    cores: (fa('COR(ES)')||[]).join(', '),
+    noturna: fv('OBRA NOTURNA'), faseada: fv('SERÁ FASEADA'),
+    recNome: fv('NOME DE QUEM IRÁ RECEBER'), recTel: fv('TELEFONE DE QUEM IRÁ RECEBER'),
+    etiquetas: fa('ETIQUETAS')||[],
+  };
+}
+
+// ══ RENDER OBRAS ══════════════════════════════════════════════
+function renderObrasExec() {
+  const el = document.getElementById('obras-exec-list');
+  if (!execCards.length){el.innerHTML='<div style="color:var(--text3);padding:2rem;text-align:center">Nenhuma obra em execução encontrada.</div>';return;}
+  const sorted = [...execCards].sort((a,b)=>(parseFloat(b.m2)||0)-(parseFloat(a.m2)||0));
+  el.innerHTML = sorted.map(c=>obraCardHTML(c,'exec')).join('');
+}
+function renderObrasPrev() {
+  const el = document.getElementById('obras-prev-list');
+  if (!prevCards.length){el.innerHTML='<div style="color:var(--text3);padding:2rem;text-align:center">Nenhuma obra no pipeline encontrada.</div>';return;}
+  // Ordena: com data confirmada primeiro, depois por m²
+  const sorted = [...prevCards].sort((a,b)=>{
+    const da = parseDataBR(a.data), db = parseDataBR(b.data);
+    if(da&&db) return da-db;
+    if(da&&!db) return -1;
+    if(!da&&db) return 1;
+    return (parseFloat(b.m2)||0)-(parseFloat(a.m2)||0);
+  });
+  // Agrupa por fase
+  const byFase = {};
+  sorted.forEach(c=>{
+    if(!byFase[c.fase]) byFase[c.fase]=[];
+    byFase[c.fase].push(c);
+  });
+  el.innerHTML = Object.entries(byFase).map(([fase,cards])=>`
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem;padding-bottom:.375rem;border-bottom:1px solid var(--line)">
+        ${fase} · ${cards.length} obras · ${Math.round(cards.reduce((s,c)=>s+(parseFloat(c.m2)||0),0)).toLocaleString('pt-BR')}m²
+      </div>
+      ${cards.map(c=>obraCardHTML(c,'prev')).join('')}
+    </div>
+  `).join('');
+}
+
+function obraCardHTML(c, tipo) {
+  const m2 = c.m2 ? parseFloat(c.m2).toLocaleString('pt-BR',{maximumFractionDigits:0})+'m²' : '—';
+  const health = calcHealth(c);
+  const atraso = calcAtraso(c);
+  const end1 = (c.end||'').split('\n')[0] || '';
+  const dataFmt = c.data && c.data !== 'CONFIRMADA' && c.data !== 'NÃO' ? formatDataBR(c.data) : (c.data === 'CONFIRMADA' ? '✓' : '—');
+  const nome = c.title.replace(/\(.*?\)/g,'').trim().substring(0,45);
+
+  const cronoHTML = cronogramaHTML(c);
+
+  return `<div class="obra-card ${tipo}" onclick="consultarObra('${c.title.replace(/'/g,"\\'")}')">
+    <div class="obra-head">
+      <div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px">
+          <div class="obra-nome">${nome}</div>
+          ${atraso}
+          ${c.etiquetas.map(e=>`<span class="pill pill-dim">${e}</span>`).join('')}
+        </div>
+        <div class="obra-end">${end1}</div>
+      </div>
+      <div class="obra-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:.375rem">
+        <div class="obra-m2 ${tipo}">${m2}</div>
+        <div class="obra-data">${dataFmt}</div>
+        <button onclick="event.stopPropagation();abrirDrawer(${JSON.stringify(c).replace(/`/g,'&#96;')})" 
+          style="font-size:10px;padding:3px 8px;border:1px solid var(--line2);border-radius:4px;background:var(--bg3);color:var(--text2);cursor:pointer;font-family:var(--fm);transition:all .12s"
+          onmouseenter="this.style.borderColor='var(--gold2)';this.style.color='var(--gold)'"
+          onmouseleave="this.style.borderColor='var(--line2)';this.style.color='var(--text2)'"
+          title="Ver detalhes da obra">
+          ↗ Detalhes
+        </button>
+      </div>
+    </div>
+    <div class="health-bar">
+      <div class="health-label">Preparação</div>
+      <div class="health-track"><div class="health-fill" style="width:${health.prep}%;background:${health.prepCor}"></div></div>
+      <div class="health-pct" style="color:${health.prepCor}">${health.prep}%</div>
+    </div>
+    ${cronoHTML}
+    <div class="obra-meta">
+      ${c.tipo?`<div class="meta-chip"><div class="meta-chip-l">Tipo</div><div class="meta-chip-v">${c.tipo}</div></div>`:''}
+      ${c.equipe?`<div class="meta-chip"><div class="meta-chip-l">Equipe</div><div class="meta-chip-v gold">${c.equipe}</div></div>`:''}
+      ${c.mat?`<div class="meta-chip"><div class="meta-chip-l">Material</div><div class="meta-chip-v">${c.mat}</div></div>`:''}
+      ${c.op?`<div class="meta-chip"><div class="meta-chip-l">Op.</div><div class="meta-chip-v">${c.op.split(' ')[0]}</div></div>`:''}
+      ${c.at?`<div class="meta-chip"><div class="meta-chip-l">Aten.</div><div class="meta-chip-v">${c.at.split(' ')[0]}</div></div>`:''}
+      ${c.prazo?`<div class="meta-chip"><div class="meta-chip-l">Prazo</div><div class="meta-chip-v">${c.prazo}d</div></div>`:''}
+      ${c.linear?`<div class="meta-chip"><div class="meta-chip-l">Linear</div><div class="meta-chip-v">${parseFloat(c.linear).toLocaleString('pt-BR')}m</div></div>`:''}
+    </div>
+  </div>`;
+}
+
+function cronogramaHTML(c) {
+  // Cronograma simplificado com base nos dados disponíveis
+  const etapas = [
+    {nome:'Contrato',done: true},
+    {nome:'VT Aferição',done: true},
+    {nome:'Cor definida',done: !!c.cores},
+    {nome:'Material',done: !!c.mat},
+    {nome:'Logística',done: c.fase === 'Log. Em Entrega' || c.fase === 'Log. Mat. Entregue' || c.fase === 'OBRA EM EXECUÇÃO'},
+    {nome:'Execução',done: c.fase === 'OBRA EM EXECUÇÃO',active: c.fase === 'OBRA EM EXECUÇÃO'},
+    {nome:'Entrega',done: false},
+  ];
+  return `<div class="crono">
+    ${etapas.map((e,i)=>`
+      ${i>0?`<div class="crono-line ${e.done?'done':''}"></div>`:''}
+      <div class="crono-step">
+        <div class="crono-dot ${e.active?'active':e.done?'done':'pending'}">${e.done&&!e.active?'✓':e.active?'▶':i+1}</div>
+        <div class="crono-lbl">${e.nome}</div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function calcHealth(c) {
+  // Calcula % preparação baseado em campos preenchidos
+  let score = 0, max = 7;
+  if(c.end) score++;
+  if(c.m2) score++;
+  if(c.mat) score++;
+  if(c.cores) score++;
+  if(c.equipe) score++;
+  if(c.data) score++;
+  if(c.op) score++;
+  const prep = Math.round((score/max)*100);
+  const prepCor = prep >= 85 ? 'var(--green)' : prep >= 60 ? 'var(--amber)' : 'var(--red)';
+  return {prep, prepCor};
+}
+
+function calcAtraso(c) {
+  if (!c.due && !c.data) return '';
+  const dateStr = c.due || c.data;
+  try {
+    const d = c.due ? new Date(c.due) : parseDataBR(c.data);
+    if (!d) return '';
+    const hoje = new Date();
+    const diff = Math.floor((hoje-d)/(1000*60*60*24));
+    if (diff > 0) return `<span class="atraso late">${diff}d atrasado</span>`;
+    if (diff > -7) return `<span class="atraso warn">${-diff}d restantes</span>`;
+    return `<span class="atraso ok">${-diff}d restantes</span>`;
+  } catch(e) { return ''; }
+}
+
+// ══ RENDER PAINEL ═════════════════════════════════════════════
+function renderFasesDist() {
+  const el = document.getElementById('fases-dist');
+  if (!allPhases.length) return;
+  const total = allPhases.reduce((s,p)=>s+p.cards_count,0);
+  document.getElementById('total-obras-label').textContent = total+' cards totais';
+  const maxCount = Math.max(...FASES_DIST.map(f=>{const p=allPhases.find(x=>x.id===f.id);return p?.cards_count||0;}));
+  el.innerHTML = FASES_DIST.map(f=>{
+    const p=allPhases.find(x=>x.id===f.id);
+    const count=p?.cards_count||0;
+    if(!count) return '';
+    const pct=maxCount>0?Math.max(4,(count/maxCount*100)).toFixed(0):0;
+    return `<div class="fase-row" onclick="showView('${f.id===FASE_EXEC?'obras':f.id===FASE_PAUSA?'gargalos':'pipeline'}')">
+      <div class="fase-label">${f.name}</div>
+      <div class="fase-track"><div class="fase-fill" style="width:${pct}%;background:${f.cor}"></div></div>
+      <div class="fase-count">${count}</div>
+    </div>`;
+  }).filter(Boolean).join('');
+}
+
+function renderEtapasProg() {
+  const el = document.getElementById('etapas-prog');
+  // Calcula % baseado nos cards de execução vs total no pipe OE
+  const oe = dadosVivos?.['p306410007'];
+  if (!oe) return;
+  const total = oe.phases.reduce((s,p)=>s+p.cards_count,0);
+  const etapasData = [
+    {nome:'Visita Técnica realizada', faseIds:['338852426'], cor:'var(--green)'},
+    {nome:'Contrato assinado',        faseIds:['339755506'], cor:'var(--amber)'},
+    {nome:'Cor definida',             faseIds:['338741135'], cor:'var(--green)'},
+    {nome:'Material em produção',     faseIds:['338741318'], cor:'var(--amber)'},
+    {nome:'Logística programada',     faseIds:['338971484'], cor:'var(--amber)'},
+    {nome:'VT de entrada agendada',   faseIds:['338868811'], cor:'var(--amber)'},
+    {nome:'Equipe definida',          faseIds:['338990356'], cor:'var(--green)'},
+    {nome:'Material entregue',        faseIds:['339011764'], cor:'var(--amber)'},
+  ];
+  const maxRef = 40; // referência para escala
+  el.innerHTML = etapasData.map(et=>{
+    const count = et.faseIds.reduce((s,id)=>{const f=allPhases.find(p=>p.id===id);return s+(f?.cards_count||0);},0);
+    const pct = Math.min(100, Math.round(count/maxRef*100));
+    const cor = pct>=85?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
+    return `<div class="prog-row">
+      <div class="prog-label">${et.nome}</div>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${cor}"></div></div>
+      <div class="prog-pct" style="color:${cor}">${count}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPausas(count) {
+  const el = document.getElementById('pausas-box');
+  if (!count) {el.innerHTML='<span style="color:var(--green);font-size:13px">Nenhuma pausa ativa</span>';return;}
+  el.innerHTML=`<span style="font-family:var(--fd);font-size:1.5rem;color:var(--red)">${count}</span><span style="font-size:11px;color:var(--text2);display:block;margin-top:.25rem">obras pausadas sem motivo registrado</span><div style="margin-top:.5rem"><span class="pill pill-r">Ação F1 #2 — criar campo motivo</span></div>`;
+}
+
+function renderChart(exec, prev) {
+  const el = document.getElementById('chart-box');
+  const hoje = new Date();
+  const semanas = {};
+  const m2e = exec.reduce((s,c)=>s+(parseFloat(c.m2)||0),0);
+  if(m2e>0) semanas['Em execução'] = {v:m2e, cor:'var(--green)'};
+  prev.forEach(c=>{
+    if(!c.m2) return;
+    const d = parseDataBR(c.data);
+    let lbl = 'Sem data';
+    if(d){const diff=Math.floor((d-hoje)/(1000*60*60*24));lbl=diff<0?'Atrasado':diff<=7?'Esta sem.':diff<=14?'Próx. sem.':diff<=35?'1 mês':diff<=65?'2 meses':'+2 meses';}
+    if(!semanas[lbl]) semanas[lbl]={v:0,cor:'var(--amber)'};
+    semanas[lbl].v += parseFloat(c.m2)||0;
+  });
+  const labels=Object.keys(semanas), vals=Object.values(semanas);
+  const maxV=Math.max(...vals.map(v=>v.v));
+  el.innerHTML=`<div class="chart-wrap" style="width:100%">${labels.map((lbl,i)=>{
+    const h=maxV>0?Math.max(6,(vals[i].v/maxV*90)).toFixed(0):6;
+    return `<div class="chart-bar"><div class="chart-val">${Math.round(vals[i].v/1000*10)/10}k</div><div class="chart-fill" style="height:${h}px;background:${vals[i].cor}"></div><div class="chart-lbl">${lbl}</div></div>`;
+  }).join('')}</div>`;
+}
+
+function renderSaude(exec) {
+  const el = document.getElementById('saude-box');
+  const semPrazo = exec.filter(c=>!c.data||c.data==='NÃO').length;
+  const atrasadas = exec.filter(c=>{const d=c.due?new Date(c.due):parseDataBR(c.data);return d&&d<new Date();}).length;
+  const saudavel = exec.length - semPrazo - atrasadas;
+  el.innerHTML=`
+    <div style="display:flex;gap:.875rem;margin-bottom:.75rem">
+      <div style="text-align:center"><div style="font-family:var(--fd);font-size:1.5rem;color:var(--green)">${saudavel}</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">no prazo</div></div>
+      <div style="text-align:center"><div style="font-family:var(--fd);font-size:1.5rem;color:var(--amber)">${semPrazo}</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">sem data</div></div>
+      <div style="text-align:center"><div style="font-family:var(--fd);font-size:1.5rem;color:var(--red)">${atrasadas}</div><div style="font-size:9px;color:var(--text3);font-family:var(--fm)">atrasadas</div></div>
+    </div>
+    <div class="prog-track" style="height:8px"><div class="prog-fill" style="width:${exec.length?Math.round(saudavel/exec.length*100):0}%;background:var(--green)"></div></div>`;
+}
+
+// ══ FILTRO E ORDENAÇÃO DE OBRAS ══════════════════════════
+function filtrarObras(termo) {
+  const el = document.getElementById('obras-exec-list');
+  if (!execCards.length) return;
+  const t = termo.toLowerCase().trim();
+  const filtered = t ? execCards.filter(c =>
+    (c.nome||'').toLowerCase().includes(t) ||
+    (c.equipe||'').toLowerCase().includes(t) ||
+    (c.mat||'').toLowerCase().includes(t)
+  ) : execCards;
+  const ord = document.getElementById('obras-ord')?.value || 'm2';
+  const sorted = _sortObras(filtered, ord);
+  el.innerHTML = sorted.length
+    ? sorted.map(c=>obraCardHTML(c,'exec')).join('')
+    : '<div style="color:var(--text3);padding:2rem;text-align:center">Nenhuma obra encontrada.</div>';
+}
+
+function ordenarObras(ord) {
+  const termo = document.getElementById('obras-busca')?.value || '';
+  filtrarObras(termo);
+}
+
+function _sortObras(arr, ord) {
+  return [...arr].sort((a,b) => {
+    if (ord === 'm2')    return (parseFloat(b.m2)||0) - (parseFloat(a.m2)||0);
+    if (ord === 'nome')  return (a.nome||'').localeCompare(b.nome||'');
+    if (ord === 'atraso'){
+      const da = parseDataBR(a.data), db = parseDataBR(b.data);
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return da - db;
+    }
+    return 0;
+  });
+}
+
+// ══ SEMÁFORO DE RISCO ════════════════════════════════════
+function renderSemaforo(exec) {
+  const el = document.getElementById('semaforo-list');
+  if (!el) return;
+  if (!exec.length) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:1rem">Sem obras em execução</div>';
+    return;
+  }
+  // Classifica por semáforo baseado em: tem data? está atrasado? prazo restante?
+  const hoje = new Date();
+  const obras = exec.map(c => {
+    const d = parseDataBR(c.data);
+    let nivel = 'verde', meta = '';
+    if (!d || c.data === 'NÃO') {
+      nivel = 'azul'; meta = 'sem data definida';
+    } else {
+      const diffDias = Math.floor((d - hoje) / (1000*60*60*24));
+      if (diffDias < -10) { nivel = 'vermelho'; meta = `${Math.abs(diffDias)}d atrasado`; }
+      else if (diffDias < 0) { nivel = 'amarelo'; meta = `${Math.abs(diffDias)}d de atraso`; }
+      else if (diffDias <= 7) { nivel = 'amarelo'; meta = `entra em ${diffDias}d`; }
+      else { nivel = 'verde'; meta = `entra em ${diffDias}d`; }
+    }
+    return { ...c, nivel, meta };
+  });
+  const cores = { vermelho:'var(--red)', amarelo:'var(--amber)', verde:'var(--green)', azul:'var(--blue)' };
+  const ordem = ['vermelho','amarelo','verde','azul'];
+  obras.sort((a,b) => ordem.indexOf(a.nivel) - ordem.indexOf(b.nivel));
+  el.innerHTML = obras.map(o => `
+    <div style="display:flex;align-items:center;gap:.625rem;padding:.45rem .625rem;border-radius:var(--r);cursor:pointer;transition:background .12s" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''">
+      <span style="width:9px;height:9px;border-radius:50%;background:${cores[o.nivel]};flex-shrink:0"></span>
+      <span style="flex:1;font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.nome||'—'}</span>
+      <span style="font-size:10px;color:var(--text3);font-family:var(--fm);white-space:nowrap">${o.meta}</span>
+    </div>`).join('');
+}
+
+// ══ CAPACIDADE PRODUTIVA ══════════════════════════════════
+function renderCapacidade() {
+  // Tenta ler dados/capacidade.json — fallback para estimativa baseada em obras
+  const capDisp = parseInt(localStorage.getItem('mnf_cap_disp') || '0');
+  const capFill = document.getElementById('cap-fill');
+  const capDispEl = document.getElementById('cap-disp');
+  const capProgEl = document.getElementById('cap-prog');
+  const capMsg = document.getElementById('cap-msg');
+  const capDef = document.getElementById('cap-deficit');
+
+  const programado = prevCards.reduce((s,c) => s + (parseFloat(c.m2)||0), 0);
+  const mProg = Math.round(programado);
+
+  if (!capDisp) {
+    if (capDispEl) capDispEl.textContent = '—';
+    if (capProgEl) capProgEl.textContent = mProg.toLocaleString('pt-BR') + 'm² prog.';
+    if (capMsg) capMsg.textContent = 'Configure dados/capacidade.json com a lista de aplicadores para ver a barra de capacidade';
+    if (capDef) capDef.textContent = 'dado pendente';
+    return;
+  }
+
+  const pct = Math.min(100, Math.round((capDisp / mProg) * 100));
+  if (capFill) capFill.style.width = pct + '%';
+  if (capDispEl) capDispEl.textContent = capDisp.toLocaleString('pt-BR') + 'd';
+  if (capProgEl) capProgEl.textContent = mProg.toLocaleString('pt-BR') + 'm²';
+  if (capMsg) {
+    if (pct >= 100) {
+      capMsg.textContent = '✓ Capacidade suficiente para o programado';
+      capMsg.style.color = 'var(--green)';
+    } else {
+      const deficit = Math.round((mProg - capDisp) / 19.5);
+      capMsg.textContent = `⚠ Defasagem de ~${deficit} colaboradores`;
+      capMsg.style.color = 'var(--red)';
+    }
+  }
+  if (capDef) capDef.textContent = pct + '% utilizado';
+}
+
+// ══ TAXA DE REAGENDAMENTO ═════════════════════════════════
+function renderReagendamento(exec, prev) {
+  const elChart = document.getElementById('reag-chart');
+  const elMeta  = document.getElementById('reag-meta');
+  if (!elChart) return;
+
+  // Dados estáticos conhecidos (histórico real extraído da reunião 19/03)
+  const historico = [
+    { mes:'jan', pct:12, cor:'var(--amber)' },
+    { mes:'fev', pct:30, cor:'var(--red)' },
+    { mes:'mar', pct:29, cor:'var(--red)' },
+  ];
+
+  const maxPct = Math.max(...historico.map(h=>h.pct));
+  elChart.innerHTML = historico.map(h => `
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="font-family:var(--fm);font-size:9px;color:var(--text2)">${h.pct}%</div>
+      <div style="width:100%;background:${h.cor};border-radius:3px 3px 0 0;transition:height .4s ease" style="height:${Math.round((h.pct/maxPct)*46)}px">
+        <div style="width:100%;height:${Math.round((h.pct/maxPct)*46)}px;background:${h.cor};border-radius:3px 3px 0 0"></div>
+      </div>
+      <div style="font-family:var(--fm);font-size:8px;color:var(--text3)">${h.mes}</div>
+    </div>`).join('');
+
+  // Conta reagendamentos do mês atual via cards sem data ou com data passada
+  const hoje = new Date();
+  const semData = prev.filter(c => !c.data || c.data === 'NÃO').length;
+  const atrasados = prev.filter(c => { const d = parseDataBR(c.data); return d && d < hoje; }).length;
+  const totalPrev = prev.length;
+  const pctAtual = totalPrev > 0 ? Math.round(((semData + atrasados) / totalPrev) * 100) : 0;
+
+  if (elMeta) elMeta.innerHTML = `
+    <span style="color:var(--text2)">${totalPrev} obras no pipeline</span> ·
+    <span style="color:${pctAtual>25?'var(--red)':'var(--amber)'}">${semData + atrasados} sem data/atrasadas (${pctAtual}%)</span>`;
+}
+
+// ══ MINI KPIs DO PIPELINE ════════════════════════════════
+function renderPipelineKpis() {
+  const el = document.getElementById('pipeline-fases-kpi');
+  if (!el || !prevCards.length) return;
+
+  const byFase = {};
+  prevCards.forEach(c => {
+    if (!byFase[c.fase]) byFase[c.fase] = { n:0, m2:0 };
+    byFase[c.fase].n++;
+    byFase[c.fase].m2 += parseFloat(c.m2)||0;
+  });
+
+  const cores = {
+    'Equipe de Execução':'var(--amber)',
+    'Log. Em Entrega':'var(--gold)',
+    'Log. Mat. Entregue':'var(--gold)',
+    'Indústria Produção':'var(--amber)',
+    'Aguardando Liberação':'var(--red)',
+    'Revisão Final Op.':'var(--green)',
+  };
+
+  el.innerHTML = Object.entries(byFase).map(([fase, d]) => `
+    <div style="padding:.5rem .875rem;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);border-left:3px solid ${cores[fase]||'var(--line)'}">
+      <div style="font-family:var(--fm);font-size:8px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px">${fase}</div>
+      <div style="display:flex;align-items:baseline;gap:.5rem">
+        <span style="font-family:var(--fd);font-size:1.25rem;color:${cores[fase]||'var(--text)'}">${d.n}</span>
+        <span style="font-size:10px;color:var(--text3)">${Math.round(d.m2).toLocaleString('pt-BR')}m²</span>
+      </div>
+    </div>`).join('');
+}
+
+// ══ SCORECARD (chamado futuramente via Telegram) ══════════
+function renderScorecard(dados) {
+  // dados = { prazo: 0-100, qualidade: 0-100, consumo: 0-100 }
+  if (!dados) return;
+  const sc = document.getElementById('scorecard-box');
+  if (!sc) return;
+  const bar = (v, cor) => `<div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden"><div style="width:${v}%;height:100%;background:${cor};border-radius:3px"></div></div>`;
+  sc.innerHTML = `
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+      <span style="font-size:11px;min-width:72px;color:${dados.prazo<70?'var(--amber)':'var(--green)'}">Prazo</span>
+      ${bar(dados.prazo, dados.prazo<70?'var(--amber)':'var(--green)')}
+      <span style="font-family:var(--fm);font-size:10px;min-width:32px;text-align:right;color:${dados.prazo<70?'var(--amber)':'var(--green)'}">${dados.prazo}%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+      <span style="font-size:11px;min-width:72px;color:${dados.qualidade<70?'var(--amber)':'var(--green)'}">Qualidade</span>
+      ${bar(dados.qualidade, dados.qualidade<70?'var(--amber)':'var(--green)')}
+      <span style="font-family:var(--fm);font-size:10px;min-width:32px;text-align:right;color:${dados.qualidade<70?'var(--amber)':'var(--green)'}">${dados.qualidade}%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <span style="font-size:11px;min-width:72px;color:${dados.consumo<70?'var(--red)':'var(--green)'}">Consumo</span>
+      ${bar(dados.consumo, dados.consumo<70?'var(--red)':'var(--green)')}
+      <span style="font-family:var(--fm);font-size:10px;min-width:32px;text-align:right;color:${dados.consumo<70?'var(--red)':'var(--green)'}">${dados.consumo}%</span>
+    </div>`;
+}
+
+// ── PLANO ──────────────────────────────────────────────
+function renderPlano() {
+  let concluidos = 0;
+  const phCls = {F1:'ph1',F2:'ph2',F3:'ph3',F4:'ph4'};
+  document.getElementById('plano-body').innerHTML = PLANO.map(p=>{
+    const estado = planoState[p.id] || p.status;
+    if(estado==='concluido') concluidos++;
+    return `<tr><td><span class="a-num">${p.id}</span></td>
+      <td><div class="a-title">${p.acao}</div></td>
+      <td><span style="font-size:10px;color:var(--text3);font-family:var(--fm)">${p.met}</span></td>
+      <td style="font-size:12px;font-weight:500">${p.prazo}</td>
+      <td><span class="phase-seg ${phCls[p.fase]}">${p.fase}</span></td>
+      <td><select onchange="atualizarPlano(${p.id},this.value)" style="font-family:var(--fm);font-size:10px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--bg2);color:var(--text);cursor:pointer;outline:none">
+        ${Object.entries(STATUS_OPTS).map(([v,l])=>`<option value="${v}"${estado===v?' selected':''}>${l}</option>`).join('')}
+      </select></td></tr>`;
+  }).join('');
+}
+function atualizarPlano(id, status) {
+  planoState[id]=status; localStorage.setItem('mf_plano',JSON.stringify(planoState));
+  toast(`Ação #${id} → ${STATUS_OPTS[status]||status}`);
+}
+
+// ══ CHAT ══════════════════════════════════════════════════════
+function initChat() {
+  adicionarMsg('agent',`Olá, Vitor! Central operacional carregada com os dados ao vivo do Pipefy.\n\nTenho acesso a **22 obras em execução** (2.195m²), o diagnóstico de **4 gargalos ativos** e o **plano de 10 melhorias**.\n\nUse os atalhos abaixo ou pergunte o que precisar.`);
+  const quicks = [
+    ['🔴 Gargalos','Diagnóstico completo dos 4 gargalos ativos — G1 a G4. O que está mais crítico hoje?'],
+    ['📊 Diagnóstico','Me dê o diagnóstico operacional completo da Monofloor baseado em tudo que você sabe.'],
+    ['⚡ Prioridade do dia','O que devo fazer hoje? Seja direto.'],
+    ['🏗️ Maior obra','Qual é a maior obra em execução e qual o status dela?'],
+    ['📅 SLA','Quais obras estão em risco de SLA agora?'],
+    ['🎯 Melhorias F1','Quais são as 4 ações da Fase 1 e o que exatamente faço em cada uma?'],
+  ];
+  const qr = document.getElementById('quick-row');
+  quicks.forEach(([t,q])=>{const b=document.createElement('button');b.className='q-btn';b.textContent=t;b.onclick=()=>{document.getElementById('chat-inp').value=q;enviar();};qr.appendChild(b);});
+  const inp = document.getElementById('chat-inp');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();enviar();}});
+  inp.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+}
+
+function consultarObra(nome) {
+  showView('chat',document.getElementById('nav-chat'));
+  document.getElementById('chat-inp').value=`Me dê o status completo da obra "${nome}" — situação, equipe, prazo e próximos passos.`;
+  enviar();
+}
+
+function adicionarMsg(tipo,texto){
+  const el=document.createElement('div');el.className='msg '+tipo;
+  if(tipo==='agent'){el.innerHTML=texto.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/`(.*?)`/g,'<code>$1</code>').replace(/^- (.+)/gm,'<li>$1</li>').replace(/(<li>.*<\/li>)+/gs,m=>`<ul>${m}</ul>`).replace(/\n/g,'<br>');}
+  else{el.textContent=texto;}
+  document.getElementById('messages').appendChild(el);
+  document.getElementById('messages').scrollTop=999999;
+  return el;
+}
+
+async function enviar(){
+  const inp=document.getElementById('chat-inp');
+  const txt=inp.value.trim();
+  if(!txt||chatLoading) return;
+  chatLoading=true;document.getElementById('send-btn').disabled=true;
+  showView('chat',document.getElementById('nav-chat'));
+  inp.value='';inp.style.height='auto';
+  adicionarMsg('user',txt);historico.push({role:'user',content:txt});
+  const thinking=(() => {const el=document.createElement('div');el.className='msg thinking';el.innerHTML='<span class="dots">Analisando</span>';document.getElementById('messages').appendChild(el);document.getElementById('messages').scrollTop=999999;return el;})();
+  try {
+    if(!anthropicKey) throw new Error('Configure a Anthropic API Key nos tokens (canto superior)');
+    // Contexto vivo
+    let ctx = '';
+    if(execCards.length){ctx+='\n\n## OBRAS EM EXECUÇÃO (ao vivo)\n';execCards.forEach(c=>ctx+=`- ${c.title}: ${c.m2}m² | ${c.equipe||'—'} | ${c.data||'—'} | Op: ${c.op||'—'}\n`);}
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYSTEM+ctx,messages:historico})});
+    const data=await res.json();
+    const resp=data.content?.map(b=>b.text||'').join('')||'Sem resposta.';
+    historico.push({role:'assistant',content:resp});
+    thinking.remove();adicionarMsg('agent',resp);
+  } catch(e){thinking.remove();adicionarMsg('error','Erro: '+e.message);}
+  chatLoading=false;document.getElementById('send-btn').disabled=false;inp.focus();
+}
+
+// ══ GRÁFICOS MENSAIS ══════════════════════════════════════
+// Mapeamento de cores por material
+const MAT_CORES = {
+  'STELION':          '#C8A96A', // gold
+  'STELION PARA BASE':'#8B7340', // gold escuro
+  'LILIT':            '#4A9E6A', // green
+  'LEONA':            '#4A7EC8', // blue
+  'LUMINA':           '#9B6EBB', // purple
+  'PERSONALIZADA':    '#888780', // gray
+};
+const MAT_COR_DEFAULT = '#4A4845';
+
+function matCor(mat) {
+  for (const [k,v] of Object.entries(MAT_CORES)) {
+    if (mat?.toUpperCase().includes(k)) return v;
+  }
+  return MAT_COR_DEFAULT;
+}
+
+// Normaliza nome do material (agrupa variações)
+function matNorm(mat) {
+  if (!mat) return 'OUTRO';
+  const m = mat.toUpperCase().trim();
+  if (m.includes('STELION')) return 'STELION';
+  if (m.includes('LILIT'))   return 'LILIT';
+  if (m.includes('LEONA'))   return 'LEONA';
+  if (m.includes('LUMINA'))  return 'LUMINA';
+  if (m.includes('PERSON'))  return 'PERSONALIZADA';
+  return m;
+}
+
+async function loadGraficos() {
+  // Busca cards finalizados com paginação — mesmo período do aproveitamento
+  const DATA_CORTE = new Date('2024-12-01'); // 12 meses de histórico
+  let allEdges = [], cursor = null, hasMore = true, pagina = 0;
+
+  while (hasMore && pagina < 30) {
+    pagina++;
+    const afterClause = cursor ? `, after: "${cursor}"` : '';
+    const q = `{
+      phase(id:"338741361") {
+        cards(first:50${afterClause}) {
+          pageInfo { hasNextPage endCursor }
+          edges { node { id title fields { name value } } }
+        }
+      }
+    }`;
+    const d = await gql(q);
+    const phase = d.data?.phase;
+    if (!phase) break;
+    const edges = phase.cards?.edges || [];
+    const pageInfo = phase.cards?.pageInfo;
+
+    let todosAntigos = edges.length > 0;
+    for (const edge of edges) {
+      const f = edge.node.fields;
+      const finRaw = f.find(x => x.name?.includes('DATA DE FINALIZAÇÃO'))?.value?.trim();
+      const dataFin = parseDataBRFull(finRaw);
+      allEdges.push(edge);
+      if (!dataFin || dataFin >= DATA_CORTE) todosAntigos = false;
+    }
+    hasMore = pageInfo?.hasNextPage && !todosAntigos;
+    cursor = pageInfo?.endCursor;
+    if (!cursor) break;
+  }
+
+  // Parseia cada card
+  const grafData = allEdges.map(e => {
+    const f = e.node.fields;
+    const fv = name => f.find(x => x.name?.includes(name))?.value?.trim() || null;
+    const finRaw = f.find(x => x.name === 'DATA DE FINALIZAÇÃO DA OBRA' || x.name?.includes('DATA DE FINALIZAÇÃO'))?.value?.trim();
+    const dataFin = parseDataBRFull(finRaw);
+    if (!dataFin || dataFin < DATA_CORTE) return null;
+
+    const m2 = parseFloat(fv('M² TOTAL')) || 0;
+    // Usa nome EXATO para evitar capturar "ESCOPO FINAL APROVADO COM CORES, ÁREAS E MATERIAL" (que contém URLs)
+    const matField = f.find(x => x.name === 'MATERIAL (Preenchimento exclusivo de "projetos")');
+    let mats = matField?.array_value?.filter(Boolean) || [];
+    if (!mats.length && matField?.value && !matField.value.includes('http')) {
+      try { mats = JSON.parse(matField.value).filter(Boolean); } catch(err) {}
+    }
+    mats = mats.map(matNorm).filter(Boolean);
+    if (!mats.length) mats = ['OUTRO'];
+
+    const mesKey = `${dataFin.getFullYear()}-${String(dataFin.getMonth()+1).padStart(2,'0')}`;
+    return { mesKey, m2, mats, dataFin };
+  }).filter(Boolean);
+
+  if (!grafData.length) return;
+
+  // Agrupa por mês
+  const mesesSet = [...new Set(grafData.map(c => c.mesKey))].sort();
+  // Últimos 12 meses
+  const hoje = new Date();
+  const meses12 = [];
+  for (let i=11; i>=0; i--) {
+    const d = new Date(hoje.getFullYear(), hoje.getMonth()-i, 1);
+    meses12.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+  }
+  const mesesRender = meses12.filter(m => mesesSet.includes(m) || grafData.some(c => c.mesKey === m));
+
+  // Meses que têm dados
+  const mesesComDados = mesesRender.filter(m => grafData.some(c => c.mesKey === m));
+  
+  // Por mês: obras count + m² por material
+  const byMes = {};
+  mesesRender.forEach(m => { byMes[m] = { obras: 0, m2Total: 0, porMat: {} }; });
+  grafData.forEach(c => {
+    if (!byMes[c.mesKey]) return;
+    byMes[c.mesKey].obras++;
+    // Divide m² entre os materiais se múltiplos
+    const m2PerMat = c.m2 / c.mats.length;
+    c.mats.forEach(mat => {
+      byMes[c.mesKey].m2Total += m2PerMat;
+      byMes[c.mesKey].porMat[mat] = (byMes[c.mesKey].porMat[mat]||0) + m2PerMat;
+    });
+  });
+
+  // Todos os materiais presentes
+  const todosMatsList = [...new Set(grafData.flatMap(c => c.mats))].sort();
+
+  // Totais globais
+  const totalObras = grafData.length;
+  const totalM2 = grafData.reduce((s,c) => s+c.m2, 0);
+  const totalPorMat = {};
+  grafData.forEach(c => {
+    const m2p = c.m2 / c.mats.length;
+    c.mats.forEach(mat => { totalPorMat[mat] = (totalPorMat[mat]||0) + m2p; });
+  });
+
+  // Período
+  const primMes = mesesComDados[0], ultMes = mesesComDados[mesesComDados.length-1];
+  const fmtMes = m => {
+    const [y,mo] = m.split('-');
+    return ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][parseInt(mo)-1]+'/'+y.slice(2);
+  };
+
+  // ── Gráfico 1: Obras por mês ──────────────────────────────
+  document.getElementById('graf-obras-total').textContent = totalObras + ' obras';
+  const maxObras = Math.max(...mesesRender.map(m => byMes[m].obras), 1);
+  const grafObrasEl = document.getElementById('graf-obras');
+  grafObrasEl.innerHTML = mesesComDados.map(m => {
+    const v = byMes[m].obras;
+    const h = Math.max(4, Math.round((v/maxObras)*110));
+    return `<div class="graf-col" title="${fmtMes(m)}: ${v} obras">
+      <div class="graf-col-val">${v}</div>
+      <div class="graf-bar-wrap">
+        <div class="graf-seg" style="height:${h}px;background:var(--gold);opacity:.85"></div>
+      </div>
+      <div class="graf-col-lbl">${fmtMes(m)}</div>
+    </div>`;
+  }).join('');
+
+  // ── Gráfico 2: m² por mês + material (barras empilhadas) ─────
+  document.getElementById('graf-m2-total').textContent = Math.round(totalM2).toLocaleString('pt-BR')+'m²';
+  const maxM2 = Math.max(...mesesRender.map(m => byMes[m].m2Total), 1);
+
+  // Legenda
+  const legendaEl = document.getElementById('graf-legenda');
+  legendaEl.innerHTML = todosMatsList.map(mat =>
+    `<span class="mat-pill"><span class="mat-dot" style="background:${matCor(mat)}"></span>${mat}</span>`
+  ).join('');
+
+  const grafM2El = document.getElementById('graf-m2');
+  grafM2El.innerHTML = mesesComDados.map(m => {
+    const mesData = byMes[m];
+    const totalH = Math.max(4, Math.round((mesData.m2Total/maxM2)*110));
+    const segs = todosMatsList
+      .filter(mat => mesData.porMat[mat] > 0)
+      .map(mat => {
+        const h = Math.max(2, Math.round((mesData.porMat[mat]/mesData.m2Total)*totalH));
+        return `<div class="graf-seg" style="height:${h}px;background:${matCor(mat)}" title="${mat}: ${Math.round(mesData.porMat[mat])}m²"></div>`;
+      }).join('');
+    const valStr = mesData.m2Total >= 1000 ? Math.round(mesData.m2Total/100)/10+'k' : Math.round(mesData.m2Total)+'';
+    return `<div class="graf-col" title="${fmtMes(m)}: ${Math.round(mesData.m2Total)}m²">
+      <div class="graf-col-val">${valStr}</div>
+      <div class="graf-bar-wrap">${segs}</div>
+      <div class="graf-col-lbl">${fmtMes(m)}</div>
+    </div>`;
+  }).join('');
+
+  // ── Bloco 3: Distribuição total por material ──────────────
+  if (primMes && ultMes) {
+    document.getElementById('graf-periodo').textContent = fmtMes(primMes)+' → '+fmtMes(ultMes);
+  }
+  const matsSorted = Object.entries(totalPorMat).sort((a,b)=>b[1]-a[1]);
+  const grafMatEl = document.getElementById('graf-materiais');
+  grafMatEl.innerHTML = '<div style="width:100%">' + matsSorted.map(([mat,v]) => {
+    const pct = Math.round(v/totalM2*100);
+    const vStr = Math.round(v).toLocaleString('pt-BR');
+    return `<div class="mat-bar-row">
+      <div class="mat-bar-label" style="display:flex;align-items:center;gap:6px">
+        <span class="mat-dot" style="background:${matCor(mat)}"></span>
+        <span style="font-weight:500">${mat}</span>
+      </div>
+      <div class="mat-bar-track"><div class="mat-bar-fill" style="width:${pct}%;background:${matCor(mat)}"></div></div>
+      <div class="mat-bar-val">${vStr}m² <span style="color:var(--text3)">${pct}%</span></div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+// ══ APROVEITAMENTO ══════════════════════════════════════════
+const FASE_FINALIZADO = '338741361';
+let finalizadosCards = [];
+
+async function loadAproveitamento() {
+  // Paginação completa — busca todas as obras finalizadas de Dez/2025 até hoje
+  const DATA_CORTE = new Date('2025-12-01');
+  let allEdges = [], cursor = null, hasMore = true, pagina = 0;
+
+  while (hasMore && pagina < 20) {
+    pagina++;
+    const afterClause = cursor ? `, after: "${cursor}"` : '';
+    const q = `{
+      phase(id:"${FASE_FINALIZADO}") {
+        cards(first:50${afterClause}) {
+          pageInfo { hasNextPage endCursor }
+          edges { node { id title fields { name value } } }
+        }
+      }
+    }`;
+    const d = await gql(q);
+    const phase = d.data?.phase;
+    if (!phase) break;
+    const edges = phase.cards?.edges || [];
+    const pageInfo = phase.cards?.pageInfo;
+
+    // Para a paginação quando todas as obras do lote são anteriores ao corte
+    let todosAntigos = edges.length > 0;
+    for (const edge of edges) {
+      const f = edge.node.fields;
+      const finRaw = f.find(x => x.name?.includes('DATA DE FINALIZAÇÃO'))?.value?.trim();
+      const dataFin = parseDataBRFull(finRaw);
+      allEdges.push(edge);
+      if (!dataFin || dataFin >= DATA_CORTE) todosAntigos = false;
+    }
+
+    hasMore = pageInfo?.hasNextPage && !todosAntigos;
+    cursor = pageInfo?.endCursor;
+    if (!cursor) break;
+  }
+
+  // Parseia e filtra apenas >= Dez/2025
+  finalizadosCards = allEdges
+    .map(e => parseCardFinalizado(e.node))
+    .filter(c => !c.dataFinaliz || c.dataFinaliz >= DATA_CORTE);
+
+  renderAproveitamento();
+}
+
+function parseDataBRFull(str) {
+  if (!str) return null;
+  const s = str.trim();
+  if (['NÃO','SIM','CONFIRMADA','PREENCHIDO','CONFIRMADO','N/A',''].includes(s)) return null;
+  try {
+    const datePart = s.split(' ')[0];
+    if (datePart.includes('/')) {
+      const [d,m,y] = datePart.split('/');
+      if (!d||!m||!y) return null;
+      const year = y.length===2 ? '20'+y : y;
+      const dt = new Date(`${year}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);
+      return isNaN(dt.getTime()) ? null : dt;
+    }
+    const dt = new Date(s);
+    return isNaN(dt.getTime()) ? null : dt;
+  } catch(e) { return null; }
+}
+
+function addDiasUteis(data, dias) {
+  if (!data || !dias || isNaN(dias)) return null;
+  let d = new Date(data.getTime()), added = 0;
+  while (added < dias) {
+    d.setDate(d.getDate() + 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) added++;
+  }
+  return d;
+}
+
+function diffDiasUteis(start, end) {
+  if (!start || !end) return null;
+  if (Math.abs(start.getTime() - end.getTime()) < 1000) return 0;
+  const [earlier, later, sign] = start <= end ? [start, end, 1] : [end, start, -1];
+  let d = new Date(earlier.getTime()), count = 0;
+  while (d < later) {
+    d.setDate(d.getDate() + 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) count++;
+  }
+  return sign * count;
+}
+
+function parseCardFinalizado(node) {
+  const f = node.fields || [];
+
+  // Busca exata pelo nome completo do campo, com fallback por includes
+  const fvExact = name => f.find(x => x.name === name)?.value?.trim() || null;
+  const fvNum   = name => {
+    // Retorna só se o valor for numérico
+    const v = f.find(x => x.name?.includes(name))?.value?.trim();
+    return v && /^\d+$/.test(v) ? v : null;
+  };
+
+  // PRAZO — campo numérico específico
+  const prazoRaw = fvExact('PRAZO (Preenchimento exclusivo de "atendimento")') || fvNum('PRAZO (Preenchimento');
+  const prazo = prazoRaw ? parseInt(prazoRaw) : null;
+
+  // DATA DE ENTRADA — campo real com timestamp
+  // Prioridade: campo principal → redefinição após reprovação → data definida
+  const entradaRaw =
+    fvExact('DATA DE ENTRADA (Preenchimento exclusivo de "atendimento" ou "operacional")') ||
+    fvExact('DATA DEFINIDA APÓS REPROVAÇÃO DA ENTRADA') ||
+    fvExact('DATA DEFINIDA');
+  const dataEntrada = parseDataBRFull(entradaRaw);
+
+  // DATA DE FINALIZAÇÃO DA OBRA
+  const finalizRaw = fvExact('DATA DE FINALIZAÇÃO DA OBRA') ||
+    f.find(x => x.name?.includes('DATA DE FINALIZAÇÃO'))?.value?.trim() || null;
+  const dataFinaliz = parseDataBRFull(finalizRaw);
+
+  const m2 = parseFloat(f.find(x => x.name?.includes('M² TOTAL'))?.value) || null;
+
+  // Calcula data prevista = entrada + prazo em DIAS ÚTEIS (seg–sex)
+  const dataPrevista = (dataEntrada && prazo) ? addDiasUteis(dataEntrada, prazo) : null;
+
+  // Diferença em dias úteis (positivo = atrasou, negativo = adiantou)
+  let diffDU = null, status = 'sem-dados';
+  if (dataPrevista && dataFinaliz) {
+    diffDU = diffDiasUteis(dataPrevista, dataFinaliz);
+    if (diffDU === null) status = 'sem-dados';
+    else if (Math.abs(diffDU) <= 2) status = 'no-prazo';
+    else if (diffDU < 0) status = 'adiantou';
+    else status = 'atrasou';
+  } else if (dataFinaliz && !dataEntrada) {
+    status = 'sem-entrada';
+  }
+
+  return { title: node.title, m2, prazo, dataEntrada, dataPrevista, dataFinaliz, diffDU, status };
+}
+
+function calcAprovExec(card) {
+  // Para obras em execução: calcula se está adiantada/atrasada hoje
+  const dataEntrada = parseDataBR(card.data);
+  const prazo = card.prazo ? parseInt(card.prazo) : null;
+  if (!dataEntrada || !prazo) return { status:'sem-dados', diffDias: null, dataPrevista: null };
+  const dataPrevista = new Date(dataEntrada.getTime() + prazo * 24*60*60*1000);
+  const hoje = new Date();
+  const diasDecorridos = Math.round((hoje - dataEntrada) / (24*60*60*1000));
+  const diasRestantes = Math.round((dataPrevista - hoje) / (24*60*60*1000));
+  let status;
+  if (diasRestantes > 2) status = 'no-prazo';
+  else if (diasRestantes >= -2) status = 'no-prazo';
+  else status = 'atrasou';
+  return { status, diasRestantes, dataPrevista, diasDecorridos };
+}
+
+function renderAproveitamento() {
+  const comCalculo = finalizadosCards.filter(c => c.status !== 'sem-dados' && c.status !== 'sem-entrada');
+  const semEntrada = finalizadosCards.filter(c => c.status === 'sem-entrada').length;
+  const noPrazo    = comCalculo.filter(c => c.status === 'no-prazo').length;
+  const adiantou   = comCalculo.filter(c => c.status === 'adiantou').length;
+  const atrasou    = comCalculo.filter(c => c.status === 'atrasou').length;
+  const diffArr    = comCalculo.filter(c => c.diffDU !== null).map(c => c.diffDU);
+  const media      = diffArr.length > 0 ? Math.round(diffArr.reduce((a,b)=>a+b,0)/diffArr.length) : null;
+
+  document.getElementById('aprv-total').textContent = finalizadosCards.length;
+  document.getElementById('aprv-prazo').textContent = noPrazo;
+  document.getElementById('aprv-adian').textContent = adiantou;
+  document.getElementById('aprv-atras').textContent = atrasou;
+
+  const mediaEl = document.getElementById('aprv-media');
+  if (media === null) {
+    mediaEl.textContent = '—';
+    mediaEl.className = 'kpi-v';
+    mediaEl.style.color = 'var(--text3)';
+  } else {
+    mediaEl.textContent = (media > 0 ? '+' : '') + media + 'd úteis';
+    mediaEl.className = 'kpi-v ' + (media > 2 ? 'r' : media < -2 ? '' : 'g');
+    if (media < -2) { mediaEl.className = 'kpi-v'; mediaEl.style.color = 'var(--blue)'; }
+  }
+
+  const coverageEl = document.getElementById('aprv-coverage');
+  if (coverageEl) {
+    const pct = finalizadosCards.length > 0 ? Math.round(comCalculo.length/finalizadosCards.length*100) : 0;
+    coverageEl.textContent = `${comCalculo.length}/${finalizadosCards.length} obras com dados · ${semEntrada} sem data de entrada`;
+  }
+
+  // Barra proporcional
+  const tot = comCalculo.length || 1;
+  document.getElementById('aprv-bar-prazo').style.width = (noPrazo/tot*100)+'%';
+  document.getElementById('aprv-bar-adian').style.width = (adiantou/tot*100)+'%';
+  document.getElementById('aprv-bar-atras').style.width = (atrasou/tot*100)+'%';
+
+  // Tabela de finalizadas — ordena: com dados primeiro (por data desc), sem dados por último
+  const sorted = [...finalizadosCards].sort((a,b) => {
+    const aTemDados = a.status !== 'sem-dados' && a.status !== 'sem-entrada';
+    const bTemDados = b.status !== 'sem-dados' && b.status !== 'sem-entrada';
+    if (aTemDados && !bTemDados) return -1;
+    if (!aTemDados && bTemDados) return 1;
+    const da = a.dataFinaliz||new Date(0), db = b.dataFinaliz||new Date(0);
+    return db - da;
+  });
+
+  document.getElementById('hist-aprv-meta').textContent =
+    `${finalizadosCards.length} obras · ${comCalculo.length} calculadas · ${semEntrada} sem entrada`;
+
+  document.getElementById('hist-aprv-list').innerHTML = sorted.length
+    ? sorted.map(aprovLinhaHTML).join('')
+    : '<div style="color:var(--text3);font-size:12px;padding:2rem;text-align:center">Sem dados no período.</div>';
+}
+
+function aprovLinhaHTML(c) {
+  const nome    = c.title.replace(/\(.*?\)/g,'').trim().substring(0,42);
+  const m2str   = c.m2 ? parseFloat(c.m2).toLocaleString('pt-BR',{maximumFractionDigits:0})+'m²' : '—';
+  const entStr  = c.dataEntrada  ? c.dataEntrada.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
+  const prevStr = c.dataPrevista ? c.dataPrevista.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
+  const realStr = c.dataFinaliz  ? c.dataFinaliz.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'})  : '—';
+  const prazoStr = c.prazo ? c.prazo+'d úteis' : '—';
+
+  let badgeHTML, statusClass, borderColor;
+  if (c.status === 'sem-entrada') {
+    badgeHTML   = `<span class="aprv-badge dim" title="DATA DE ENTRADA não preenchida no Pipefy">Entrada n/d</span>`;
+    statusClass = 'sem-dados'; borderColor = 'var(--line)';
+  } else if (c.status === 'sem-dados') {
+    badgeHTML   = '<span class="aprv-badge dim">Sem dados</span>';
+    statusClass = 'sem-dados'; borderColor = 'var(--line)';
+  } else if (c.status === 'adiantou') {
+    const d = Math.abs(c.diffDU);
+    badgeHTML   = `<span class="aprv-badge b">↑ ${d}d adiantado</span>`;
+    statusClass = 'adiantou'; borderColor = 'var(--blue)';
+  } else if (c.status === 'no-prazo') {
+    badgeHTML   = `<span class="aprv-badge g">✓ No prazo</span>`;
+    statusClass = 'no-prazo'; borderColor = 'var(--green)';
+  } else {
+    badgeHTML   = `<span class="aprv-badge r">↓ ${c.diffDU}d atrasado</span>`;
+    statusClass = 'atrasou'; borderColor = 'var(--red)';
+  }
+
+  return `<div style="display:grid;grid-template-columns:1fr 90px 80px 90px 90px 140px;gap:.5rem;align-items:center;
+    padding:.625rem .875rem;background:var(--bg2);border:1px solid var(--line);
+    border-left:3px solid ${borderColor};border-radius:var(--r);margin-bottom:.25rem;
+    transition:border-color .12s" onmouseenter="this.style.borderColor='var(--line2)'" onmouseleave="this.style.borderLeftColor='${borderColor}';this.style.borderColor='var(--line)'">
+    <div>
+      <div style="font-weight:500;color:var(--text);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nome}</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:1px">${m2str}</div>
+    </div>
+    <div style="text-align:center;font-family:var(--fm);font-size:11px;color:${c.dataEntrada ? 'var(--text2)' : 'var(--text3)'}">${entStr}</div>
+    <div style="text-align:center;font-family:var(--fm);font-size:11px;color:${c.prazo ? 'var(--text2)' : 'var(--text3)'}">${prazoStr}</div>
+    <div style="text-align:center;font-family:var(--fm);font-size:11px;color:${c.dataPrevista ? 'var(--amber)' : 'var(--text3)'}">${prevStr}</div>
+    <div style="text-align:center;font-family:var(--fm);font-size:11px;color:${c.dataFinaliz ? 'var(--text2)' : 'var(--text3)'}">${realStr}</div>
+    <div style="text-align:center">${badgeHTML}</div>
+  </div>`;
+}
+
+// ══ OBRA DRAWER ═════════════════════════════════════════════
+async function abrirDrawer(card) {
+  // Abre overlay + drawer
+  document.getElementById('obra-drawer-overlay').classList.add('open');
+  document.getElementById('obra-drawer').classList.add('open');
+  document.getElementById('drw-nome').textContent = card.title.replace(/\(.*?\)/g,'').trim();
+  const m2str = card.m2 ? parseFloat(card.m2).toLocaleString('pt-BR',{maximumFractionDigits:0})+'m²' : '';
+  document.getElementById('drw-sub').textContent = [card.fase, m2str, card.tipo].filter(Boolean).join(' · ');
+  document.getElementById('drw-body').innerHTML = '<div style="color:var(--text3);text-align:center;padding:3rem">Buscando dados do Pipefy...</div>';
+
+  // Busca card completo pelo id
+  try {
+    const q = `{
+      card(id:"${card.id}") {
+        id title
+        fields { name value array_value }
+      }
+    }`;
+    const d = await gql(q);
+    const c = d.data?.card;
+    if (!c) throw new Error('Card não encontrado');
+    renderDrawer(card, c.fields);
+  } catch(e) {
+    document.getElementById('drw-body').innerHTML = `<div style="color:var(--red);padding:1rem">Erro: ${e.message}</div>`;
+  }
+}
+
+function fecharDrawer() {
+  document.getElementById('obra-drawer-overlay').classList.remove('open');
+  document.getElementById('obra-drawer').classList.remove('open');
+}
+
+function renderDrawer(card, fields) {
+  const fv = name => {
+    const exact = fields.find(x => x.name === name);
+    if (exact) return exact.value?.trim() || null;
+    const partial = fields.find(x => x.name?.includes(name));
+    return partial?.value?.trim() || null;
+  };
+  const fa = name => {
+    const exact = fields.find(x => x.name === name);
+    if (exact?.array_value?.length) return exact.array_value;
+    const partial = fields.find(x => x.name?.includes(name));
+    return partial?.array_value || [];
+  };
+
+  // Coleta dados
+  const end        = fv('ENDEREÇO (Preenchimento exclusivo de "contratos")');
+  const op         = (fa('CONSULTOR OPERACIONAL')).join(', ');
+  const at         = (fa('CONSULTOR DE ATENDIMENTO')).join(', ');
+  const equipe     = fv('EQUIPE DE EXECUÇÃO') || fv('EQUIPE DE EXECUÇÃO (Preenchimento');
+  const mat        = (fa('MATERIAL (Preenchimento exclusivo de "projetos")')).join(', ');
+  const cores      = (fa('COR(ES)')).join(', ');
+  const classif    = (fa('CLASSIFICAÇÃO DA SUPERFÍCIE')).filter(v=>!v?.includes('http')).join(', ');
+  const textura    = fv('TEXTURA DA APLICAÇÃO');
+  const os_num     = fv('NÚMERO OS');
+  const prazo      = fv('PRAZO (Preenchimento exclusivo de "atendimento")');
+  const recNome    = fv('NOME DE QUEM IRÁ RECEBER');
+  const recTel     = fv('TELEFONE DE QUEM IRÁ RECEBER');
+  const noturna    = fv('OBRA NOTURNA');
+  const faseada    = fv('OBRA SERÁ FASEADA?') || fv('OBRA SERÁ FASEADA? (Preenchimento');
+  const linear     = fv('METRAGEM LINEAR TOTAL');
+
+  // Andamento de obra
+  const andPiso    = fa('ANDAMENTO OBRA - PISO');
+  const andParede  = fa('ANDAMENTO OBRA - PAREDE');
+
+  // Etapas da linha do tempo com datas
+  const tlEventos = [
+    { label:'Contrato assinado',        data: fv('ENVIO DO MANUAL'),              icon:'📋', done: true },
+    { label:'1ª Visita Técnica',         data: fv('DATA E HORA DA 1ª VISITA'),    icon:'👁', done: !!fv('VISITA FOI REALIZADA') },
+    { label:'Cor e material definidos',  data: null,                               icon:'🎨', done: !!(cores && mat) },
+    { label:'2ª Visita (se houver)',      data: fv('DATA E HORA DA 2ª VISITA'),   icon:'👁', done: !!fv('DATA E HORA DA 2ª VISITA'), skip: !fv('DATA E HORA DA 2ª VISITA') },
+    { label:'VT de entrada',             data: fv('DATA E HORA'),                 icon:'🚪', done: !!fv('DATA E HORA') },
+    { label:'Início da obra',            data: card.data && card.data !== 'CONFIRMADA' ? card.data : fv('DATA DE ENTRADA (Preenchimento'), icon:'🔨', done: true, active: true },
+    { label:'Aplicação última camada verniz', data: fv('DATA E HORA DE APLICAÇÃO DA ÚLTIMA CAMADA'), icon:'✨', done: !!fv('DATA E HORA DE APLICAÇÃO DA ÚLTIMA CAMADA') },
+    { label:'Finalização da obra',       data: fv('DATA DE FINALIZAÇÃO DA OBRA'), icon:'✅', done: !!fv('DATA DE FINALIZAÇÃO DA OBRA') },
+  ].filter(e => !e.skip);
+
+  // Monta HTML do drawer
+  const endLine = end ? end.split('\n').filter(Boolean).slice(0,2).join(', ') : '—';
+  const pipeUrl = `https://app.pipefy.com/pipes/306410007#cards/${card.id}`;
+  // Nome do grupo Telegram (padrão: "Alinhamento obra NOME")
+  const nomeObra = card.title.replace(/\(.*?\)/g,'').trim();
+  const telegramQuery = encodeURIComponent('Alinhamento obra ' + nomeObra.split(' ').slice(0,3).join(' '));
+
+  let html = '';
+
+  // ── Info rápida
+  html += `<div class="drw-sec">
+    <div class="drw-info-grid">
+      ${os_num    ? `<div class="drw-info-cell"><div class="drw-info-l">OS</div><div class="drw-info-v gold">#${os_num}</div></div>` : ''}
+      ${card.m2   ? `<div class="drw-info-cell"><div class="drw-info-l">M² Total</div><div class="drw-info-v gold">${parseFloat(card.m2).toLocaleString('pt-BR',{maximumFractionDigits:0})}m²</div></div>` : ''}
+      ${prazo     ? `<div class="drw-info-cell"><div class="drw-info-l">Prazo</div><div class="drw-info-v">${prazo}d úteis</div></div>` : ''}
+      ${equipe    ? `<div class="drw-info-cell"><div class="drw-info-l">Equipe</div><div class="drw-info-v">${equipe}</div></div>` : ''}
+      ${mat       ? `<div class="drw-info-cell"><div class="drw-info-l">Material</div><div class="drw-info-v">${mat}</div></div>` : ''}
+      ${cores     ? `<div class="drw-info-cell"><div class="drw-info-l">Cor(es)</div><div class="drw-info-v">${cores}</div></div>` : ''}
+      ${classif   ? `<div class="drw-info-cell"><div class="drw-info-l">Superfície</div><div class="drw-info-v">${classif}</div></div>` : ''}
+      ${textura   ? `<div class="drw-info-cell"><div class="drw-info-l">Textura</div><div class="drw-info-v">${textura}</div></div>` : ''}
+      ${linear    ? `<div class="drw-info-cell"><div class="drw-info-l">Linear</div><div class="drw-info-v">${parseFloat(linear).toFixed(2)}m</div></div>` : ''}
+      ${op        ? `<div class="drw-info-cell"><div class="drw-info-l">Operacional</div><div class="drw-info-v">${op.split(' ')[0]}</div></div>` : ''}
+      ${at        ? `<div class="drw-info-cell"><div class="drw-info-l">Atendimento</div><div class="drw-info-v">${at.split(' ')[0]}</div></div>` : ''}
+      ${noturna && noturna !== 'NÃO' ? `<div class="drw-info-cell"><div class="drw-info-l">Obs</div><div class="drw-info-v" style="color:var(--amber)">Obra noturna</div></div>` : ''}
+    </div>
+    <div style="margin-top:.625rem;font-size:10px;color:var(--text3);font-family:var(--fm)">📍 ${endLine}</div>
+    ${recNome ? `<div style="margin-top:3px;font-size:10px;color:var(--text3);font-family:var(--fm)">📞 Recebe: ${recNome} ${recTel||''}</div>` : ''}
+  </div>`;
+
+  // ── Linha do tempo
+  html += `<div class="drw-sec"><div class="drw-sec-title">Linha do tempo</div>`;
+  tlEventos.forEach((ev, i) => {
+    const cls = ev.active ? 'active' : ev.done ? 'done' : 'pending';
+    const num = i + 1;
+    html += `<div class="tl-item">
+      <div class="tl-dot ${cls}">${ev.done && !ev.active ? '✓' : ev.active ? '▶' : num}</div>
+      <div class="tl-content">
+        <div class="tl-label">${ev.label}</div>
+        ${ev.data ? `<div class="tl-date">${formatDataBR(ev.data) || ev.data?.substring(0,16) || ''}</div>` : ''}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // ── Andamento de obra
+  if (andPiso.length || andParede.length) {
+    html += `<div class="drw-sec"><div class="drw-sec-title">Andamento de execução</div>`;
+    if (andPiso.length) {
+      html += `<div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-bottom:.375rem">PISO</div>`;
+      html += `<div class="check-grid">` + andPiso.map(e =>
+        `<span class="check-item done">✓ ${e}</span>`
+      ).join('') + `</div>`;
+    }
+    if (andParede.length) {
+      html += `<div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin:.75rem 0 .375rem">PAREDE/OUTROS</div>`;
+      html += `<div class="check-grid">` + andParede.map(e =>
+        `<span class="check-item done">✓ ${e}</span>`
+      ).join('') + `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  // ── Fotos do Telegram (explicação + link)
+  html += `<div class="drw-sec">
+    <div class="drw-sec-title">Diário de obra · Telegram</div>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:.875rem;font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:.75rem">
+      As fotos e vídeos dos diários de obra ficam no grupo de WhatsApp/Telegram da obra.<br>
+      <span style="color:var(--text3);font-size:10px;font-family:var(--fm)">Acesse o grupo: <strong style="color:var(--gold)">Alinhamento obra ${nomeObra.split(' ').slice(0,3).join(' ')}</strong></span>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <a href="${pipeUrl}" target="_blank" style="text-decoration:none">
+        <div style="font-size:11px;padding:.375rem .75rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .12s" onmouseenter="this.style.borderColor='var(--gold2)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='var(--line)';this.style.color='var(--text2)'">
+          🔗 Abrir no Pipefy
+        </div>
+      </a>
+      <a href="https://web.telegram.org/" target="_blank" style="text-decoration:none">
+        <div style="font-size:11px;padding:.375rem .75rem;border:1px solid var(--line);border-radius:var(--r);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .12s" onmouseenter="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseleave="this.style.borderColor='var(--line)';this.style.color='var(--text2)'">
+          📱 Telegram Web
+        </div>
+      </a>
+    </div>
+  </div>`;
+
+  document.getElementById('drw-body').innerHTML = html;
+}
+
+// ══ UTILS ════════════════════════════════════════════════════
+function parseDataBR(str){
+  if(!str||str==='CONFIRMADA'||str==='NÃO') return null;
+  try{
+    if(str.includes('/')) return new Date(str.split('/').reverse().join('-').replace(' ','-').substring(0,10));
+    return new Date(str);
+  }catch(e){return null;}
+}
+function formatDataBR(str){
+  const d=parseDataBR(str);
+  if(!d) return str?.substring(0,10)||'—';
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+</script>
+</body>
+</html>
