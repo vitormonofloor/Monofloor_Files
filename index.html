@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Monofloor — Repositório de POPs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --n:#1F3864;--b:#2E74B5;--bl:#D6E4F0;--bp:#EBF3FB;
+  --g:#375623;--gl:#E2EFDA;--a:#854F0B;--al:#FAEEDA;
+  --r:#A32D2D;--rl:#FCEBEB;
+  --bdr:#e2e6ea;--bg:#f4f6f9;--tx:#1a1d23;--mu:#6b7585;--cd:#fff;
+  --rd:8px;--rdl:12px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── TOP BAR ── */
+.tb{background:var(--n);height:58px;display:flex;align-items:center;padding:0 22px;gap:14px;position:sticky;top:0;z-index:100}
+.tb-mark{width:32px;height:32px;border-radius:8px;background:var(--b);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;padding:6px;flex-shrink:0}
+.tb-mark span{background:#fff;border-radius:2px}
+.tb-mark span:nth-child(2),.tb-mark span:nth-child(3){opacity:.38}
+.tb-info .tb-name{font-size:15px;font-weight:600;color:#fff;letter-spacing:.1px}
+.tb-info .tb-sub{font-size:11px;color:#89a6c8;margin-top:1px}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:var(--rd);padding:6px 12px;transition:background .15s}
+.tb-search:focus-within{background:rgba(255,255,255,.16)}
+.tb-search input{background:transparent;border:none;outline:none;font-family:'Inter',sans-serif;font-size:12px;color:#fff;width:180px}
+.tb-search input::placeholder{color:#89a6c8}
+.tb-search svg{opacity:.5;flex-shrink:0}
+.tb-version{font-size:11px;color:#89a6c8;font-family:'JetBrains Mono',monospace}
+
+/* ── LAYOUT ── */
+.lay{display:grid;grid-template-columns:230px 1fr}
+.sb{background:var(--cd);border-right:1px solid var(--bdr);padding:16px 10px;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+.sb-section{margin-bottom:18px}
+.sb-lbl{font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.09em;padding:2px 10px;margin-bottom:6px}
+.si{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:var(--rd);cursor:pointer;transition:background .1s;margin-bottom:1px}
+.si:hover{background:var(--bg)}.si.on{background:var(--bp)}
+.si-left{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.si-code{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);white-space:nowrap}
+.si-title{font-size:12px;font-weight:500;color:var(--tx);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si.on .si-title,.si.on .si-code{color:var(--b)}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.dok{background:#639922}.der{background:#E24B4a}.dwn{background:#BA7517}
+.status-tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;flex-shrink:0}
+.s-ok{background:var(--gl);color:#27500A}.s-er{background:var(--rl);color:#791F1F}.s-wn{background:var(--al);color:#633806}
+
+/* ── MAIN ── */
+.ma{padding:24px;max-width:820px}
+
+/* ── POP HEADER ── */
+.ph{background:var(--n);border-radius:var(--rdl);padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden}
+.ph::before{content:'';position:absolute;right:-30px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.03)}
+.ph-code{font-family:'JetBrains Mono',monospace;font-size:11px;color:#89a6c8;margin-bottom:4px}
+.ph-title{font-size:21px;font-weight:600;color:#fff;margin-bottom:13px}
+.ph-meta{display:flex;flex-wrap:wrap;gap:16px}
+.ph-item{font-size:11px;color:#89a6c8}.ph-item b{color:#cbd9e8;font-weight:500}
+
+/* ── FLUXO ── */
+.fx{background:var(--bp);border:1px solid var(--bl);border-radius:var(--rd);padding:10px 14px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.fx-lbl{font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-right:4px;white-space:nowrap}
+.fch{background:var(--n);color:#B5D4F4;font-size:11px;padding:3px 10px;border-radius:20px}
+.fch b{color:#fff}
+
+/* ── ALERT ── */
+.al{padding:10px 14px;border-radius:var(--rd);font-size:12px;margin-bottom:14px;line-height:1.6}
+.al-e{background:var(--rl);border:1px solid #F09595;color:var(--r)}
+.al-w{background:var(--al);border:1px solid #EF9F27;color:var(--a)}
+
+/* ── SECTIONS ── */
+.sc{background:var(--cd);border:1px solid var(--bdr);border-radius:var(--rdl);margin-bottom:10px;overflow:hidden}
+.sh{padding:13px 17px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background .1s;user-select:none}
+.sh:hover{background:var(--bg)}
+.sh-left{display:flex;align-items:center;gap:10px}
+.sh-title{font-size:13px;font-weight:500;color:var(--tx)}
+.sh-count{font-size:10px;color:var(--mu);background:var(--bg);border:1px solid var(--bdr);padding:1px 7px;border-radius:10px}
+.sh-arr{font-size:10px;color:var(--mu);transition:transform .15s}.sh-arr.open{transform:rotate(180deg)}
+.sb2{border-top:1px solid var(--bdr);padding:16px 17px}
+
+/* ── TABLE ── */
+.dt{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
+.dt th{background:var(--n);color:#fff;padding:8px 10px;text-align:left;font-weight:500;font-size:11px}
+.dt th:first-child{border-radius:var(--rd) 0 0 0}.dt th:last-child{border-radius:0 var(--rd) 0 0}
+.dt td{padding:8px 10px;border-bottom:1px solid var(--bdr);vertical-align:top;line-height:1.55;font-size:12px}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:nth-child(even) td{background:var(--bg)}
+.dt-warn{background:#FEF3EC!important}
+
+/* ── TEXT ── */
+.prose{font-size:13px;color:#374151;line-height:1.75}
+.note{border-left:3px solid var(--a);background:var(--al);padding:8px 12px;border-radius:0 var(--rd) var(--rd) 0;font-size:12px;color:var(--a);margin:10px 0;line-height:1.6}
+.note-crit{border-left-color:var(--r);background:var(--rl);color:var(--r)}
+
+/* ── OUTPUTS DIAGRAM ── */
+.od{margin:4px 0}
+.od-hdr{background:var(--n);border-radius:var(--rd) var(--rd) 0 0;padding:11px 15px;display:flex;align-items:center;gap:10px}
+.od-icon{width:28px;height:28px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0}
+.od-title{font-size:12px;font-weight:600;color:#fff}
+.od-sub{font-size:10px;color:#B5D4F4;margin-top:1px}
+.od-conn{background:var(--bp);border-left:1px solid var(--bl);border-right:1px solid var(--bl);height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--b);letter-spacing:.05em}
+.od-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));border:1px solid var(--bdr);border-top:none;border-radius:0 0 var(--rd) var(--rd);overflow:hidden}
+.oc{padding:14px 14px 14px 18px;position:relative;border-right:1px solid var(--bdr);border-top:1px solid var(--bdr);background:var(--cd)}
+.oc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.oc-bl::before{background:var(--b)}.oc-nv::before{background:var(--n)}.oc-gr::before{background:var(--g)}.oc-am::before{background:var(--a)}
+.oc-num{width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:7px}
+.oc-bl .oc-num{background:var(--b)}.oc-nv .oc-num{background:var(--n)}.oc-gr .oc-num{background:var(--g)}.oc-am .oc-num{background:var(--a)}
+.oc-title{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:4px;line-height:1.3}
+.oc-crit{font-size:11px;color:var(--mu);line-height:1.5}
+.oc-chk{position:absolute;top:11px;right:11px;color:var(--g);font-size:14px;font-weight:700}
+
+/* ── FLOWCHART ── */
+.flow-wrap{padding:4px 0 8px}
+.vflow{display:flex;flex-direction:column;align-items:center;gap:0;width:100%}
+.fn{border-radius:var(--rd);padding:9px 16px;font-size:12px;font-weight:500;text-align:center;max-width:480px;width:100%;line-height:1.4;position:relative}
+.fn-start{background:var(--n);color:#fff;border:none;font-weight:600}
+.fn-end{background:var(--g);color:#fff;border:none;font-weight:600}
+.fn-action{background:var(--bp);border:1.5px solid var(--bl);color:#0C447C}
+.fn-check{background:var(--al);border:1.5px solid #EF9F27;color:#633806}
+.fn-sys{background:#f0f5ff;border:1.5px solid var(--bl);color:var(--b)}
+.fn-warn{background:var(--rl);border:1.5px solid #F09595;color:var(--r)}
+.farr{width:2px;height:18px;background:var(--b);margin:0 auto;position:relative;flex-shrink:0}
+.farr::after{content:'▼';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);color:var(--b);font-size:9px}
+.flow-gap{height:16px;flex-shrink:0}
+.flow-cols{display:grid;gap:16px;width:100%}
+.flow-cols.c2{grid-template-columns:1fr 1fr}
+.col-title{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;text-align:center;padding-bottom:8px;border-bottom:2px solid var(--bdr);margin-bottom:10px}
+.flow-merge{text-align:center;font-size:20px;color:var(--b);margin:8px 0;line-height:1}
+
+/* ── RESP TABLE ── */
+.resp{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0}
+.resp th{background:var(--n);color:#fff;padding:8px 12px;text-align:left;font-weight:500;font-size:12px}
+.resp td{padding:8px 12px;border-bottom:1px solid var(--bdr);vertical-align:top;line-height:1.55}
+.resp tr:last-child td{border-bottom:none}
+.resp tr:nth-child(even) td{background:var(--bg)}
+
+/* ── SEARCH HIGHLIGHT ── */
+mark{background:#FFF176;border-radius:2px;padding:0 2px}
+
+/* ── NO RESULTS ── */
+.no-results{text-align:center;padding:60px 20px;color:var(--mu)}
+.no-results div:first-child{font-size:32px;margin-bottom:10px;opacity:.3}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .lay{grid-template-columns:1fr}
+  .sb{display:none}
+  .flow-cols.c2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="tb">
+  <div class="tb-mark"><span></span><span></span><span></span><span></span></div>
+  <div class="tb-info">
+    <div class="tb-name">Monofloor</div>
+    <div class="tb-sub">Repositório de Procedimentos Operacionais</div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-search">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.5"/><path d="M11 11L14.5 14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input type="text" id="search" placeholder="Buscar nos procedimentos..." oninput="doSearch(this.value)">
+    </div>
+    <div class="tb-version">v1.0 · Abr/2026</div>
+  </div>
+</div>
+
+<div class="lay">
+  <aside class="sb">
+    <div class="sb-section">
+      <div class="sb-lbl">Procedimentos</div>
+      <div id="sb-list"></div>
+    </div>
+    <div class="sb-section" style="margin-top:8px;padding-top:14px;border-top:1px solid var(--bdr)">
+      <div class="sb-lbl">Legenda</div>
+      <div style="padding:4px 10px;font-size:11px;color:var(--mu);line-height:2">
+        <div><span class="dot dok" style="display:inline-block;margin-right:6px;margin-bottom:-1px"></span>Revisado</div>
+        <div><span class="dot dwn" style="display:inline-block;margin-right:6px;margin-bottom:-1px"></span>Pendências</div>
+        <div><span class="dot der" style="display:inline-block;margin-right:6px;margin-bottom:-1px"></span>Divergência</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="ma" id="main"></main>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const POPS = [
+  {
+    id:'FIN-001', code:'POP-FIN-001', title:'Cadastro de Obras',
+    sector:'Financeiro / Contratos', status:'ok',
+    author:'Júlio César Bielenki Taporosky', rev:'0', date:'02/04/2026',
+    systems:'Omie · Maxipago · WhatsApp',
+    fluxo:[
+      {ref:'OECT-017', label:'Informações recebidas pós-assinatura'},
+      {ref:'OE início', label:'Cadastro no Omie e lançamentos financeiros'},
+      {ref:'Rotina diária', label:'Controle de boletos e RTs'},
+    ],
+    objetivo:'Padronizar o processo de cadastro de clientes e obras, bem como os lançamentos financeiros de contas a pagar e contas a receber, garantindo controle, rastreabilidade e conformidade dos dados.',
+    resp:[
+      {f:'Contratos', r:'Envio das informações completas após a assinatura do contrato.'},
+      {f:'Financeiro', r:'Cadastro do cliente e da obra no sistema, lançamentos financeiros e geração de boletos.'},
+      {f:'Gestão', r:'Validação de exceções e aprovações.'},
+    ],
+    secs:[
+      {id:'52', title:'5.2 Contas a pagar — lançamentos obrigatórios',
+       type:'table', headers:['Item','Favorecido (fictício)','Regra de data'],
+       rows:[
+         ['a) Pagamento ao Prestador','Ramon Maciel Menezes','Data de início da obra. Se não definida → utilizar 30/12.'],
+         ['b) Supervisão','Ramon Maciel Menezes','Mesma data da parcela 01 do prestador.'],
+         ['c) RT (quando houver)','Ramon Maciel Menezes','30/12 do ano vigente. Observações: % da RT, nome e telefone do arquiteto. Registrar também na planilha de controle de RTs.'],
+         ['d) Comissão João Farah','Aplicável a obras no RJ','30 dias após o pagamento ao prestador.'],
+         ['e) Despesas Acessórias (Provisão)','Controle interno','Data: 30/12. Hospedagem, alimentação, deslocamento.'],
+       ],
+       note:'O contrato e a tabela de valores devem ser anexados em todos os lançamentos, exceto na parcela 02 do prestador.'},
+      {id:'53', title:'5.3 Contas a receber',
+       body:'O setor Financeiro insere manualmente os dados do cliente no Omie — CPF, endereço, telefone e e-mail — conferindo se coincidem com o contrato assinado. As parcelas são inseridas conforme a tabela enviada pelo setor de Contratos.',
+       note:'Regra crítica: sem número preenchido no campo Nota Fiscal, o sistema não gera o boleto.', noteType:'crit',
+       extra:'Parcelamento no boleto: utilizar repetições e ajustar valores e datas manualmente. Parcelamento no cartão de crédito: a 1ª parcela vence 30 dias após a validade do link; gerar link via Maxipago.'},
+      {id:'6', title:'6. Controles e não conformidades',
+       body:'Conferência obrigatória antes de finalizar: dados do cliente, valores, datas e parcelamentos. Atualizar as planilhas Controle de Boletos e Controle de RTs após cada cadastro.',
+       extra:'Em caso de erro: corrigir no Omie → atualizar as planilhas → revalidar todos os dados antes de proceder com a emissão dos boletos.'},
+    ],
+    flow:[
+      {type:'start', text:'Contrato assinado pelo cliente'},
+      {type:'action', text:'O setor de Contratos envia as informações no grupo Financeiro Cadastro de Obras (WhatsApp)'},
+      {type:'action', text:'Financeiro cadastra o cliente no Omie\nCPF · Endereço · Telefone · E-mail'},
+      {type:'action', text:'Lançamentos de contas a pagar\nPrestador · Supervisão · RT · Comissão · Despesas'},
+      {type:'action', text:'Lançamento das parcelas a receber\nConforme tabela do setor de Contratos'},
+      {type:'check', text:'Número copiado para o campo Nota Fiscal na planilha de boletos'},
+      {type:'sys', text:'Boletos gerados no Omie — login financeiro'},
+      {type:'end', text:'Cadastro concluído — cliente, contas e boletos registrados'},
+    ],
+    outputs:[
+      {t:'Cliente cadastrado no Omie', c:'Dados conferidos com o contrato e a tabela de valores.', col:'oc-bl'},
+      {t:'Contas a pagar lançadas', c:'Todos os itens obrigatórios com favorecido e data corretos.', col:'oc-nv'},
+      {t:'Contas a receber estruturadas', c:'Parcelas conforme tabela; boletos numerados na planilha.', col:'oc-gr'},
+      {t:'Boletos gerados', c:'Número da Nota Fiscal preenchido no campo do Omie.', col:'oc-am'},
+    ],
+  },
+  {
+    id:'FIN-002', code:'POP-FIN-002', title:'Conciliação Bancária',
+    sector:'Financeiro', status:'ok',
+    author:'Júlio César Bielenki Taporosky', rev:'0', date:'02/04/2026',
+    systems:'Omie · Itaú · Bradesco',
+    fluxo:[
+      {ref:'Transversal', label:'Rotina diária — todos os dias úteis'},
+      {ref:'Transversal', label:'Após qualquer pagamento ou recebimento'},
+    ],
+    objetivo:'Padronizar o processo de conciliação bancária das contas da empresa, garantindo que todos os lançamentos financeiros estejam devidamente registrados e conciliados no sistema Omie.',
+    resp:[
+      {f:'Financeiro', r:'Realização da conciliação bancária diariamente, garantindo que todos os lançamentos estejam associados.'},
+      {f:'Gestão', r:'Validação de inconsistências e aprovação de ajustes quando necessário.'},
+    ],
+    secs:[
+      {id:'51', title:'5.1 Conciliação — Banco Itaú',
+       body:'O colaborador acessa a conta corrente e consulta o extrato. O período selecionado corresponde ao mesmo dia nos dias úteis; nas segundas-feiras, inclui o final de semana anterior. Após filtrar, o extrato é exportado em OFX com o padrão de nomenclatura: MATRIZ + data | FILIAL + data | MINERAL + data.'},
+      {id:'52', title:'5.2 Conciliação — Banco Bradesco',
+       body:'O colaborador acessa Saldos e extratos → Extrato (últimos lançamentos) → Salvar arquivo → formato OFX. O arquivo é nomeado com o padrão: Bradesco + data.'},
+      {id:'53', title:'5.3 Importação e conciliação no Omie',
+       body:'O arquivo OFX é importado no Omie na conta corrente correspondente. Os lançamentos importados são selecionados e associados a registros existentes, com valor inicial ajustado para R$ 1,00. A conciliação é confirmada quando: Valor do lançamento = Total associado.',
+       extra:'Para transferências entre contas: selecionar a opção correspondente e indicar a conta de origem.'},
+      {id:'7', title:'7. Não conformidades',
+       body:'Em caso de divergência: verificar lançamentos não registrados, valores divergentes e duplicidades. Valor divergente: cancelar o pagamento no sistema, ajustar o valor e baixar novamente na data efetiva. Corrigir no Omie e reprocessar a conciliação do período.'},
+    ],
+    flowCols:[
+      {title:'Banco Itaú', items:[
+        {type:'start', text:'Itaú — conta corrente'},
+        {type:'action', text:'Extrato filtrado pelo período'},
+        {type:'action', text:'Arquivo salvo em OFX\nMATRIZ / FILIAL / MINERAL + data'},
+      ]},
+      {title:'Banco Bradesco', items:[
+        {type:'start', text:'Bradesco — saldos e extratos'},
+        {type:'action', text:'Extrato acessado'},
+        {type:'action', text:'Arquivo salvo em OFX\nBradesco + data'},
+      ]},
+    ],
+    flowAfterCols:[
+      {type:'action', text:'OFX importado no Omie — conta corrente correspondente'},
+      {type:'action', text:'Lançamentos associados a registros existentes\nValor inicial: R$ 1,00'},
+      {type:'check', text:'Valor do lançamento = Total associado?'},
+      {type:'sys', text:'Conciliação confirmada no Omie'},
+      {type:'end', text:'Controle financeiro atualizado'},
+    ],
+    outputs:[
+      {t:'Extratos importados', c:'Arquivos OFX do Itaú e Bradesco importados sem erros no Omie.', col:'oc-bl'},
+      {t:'Lançamentos conciliados', c:'Valor = Total associado. Nenhum registro pendente.', col:'oc-gr'},
+      {t:'Controle financeiro atualizado', c:'Todos os movimentos do dia refletidos no sistema.', col:'oc-nv'},
+    ],
+  },
+  {
+    id:'FIN-003', code:'POP-FIN-003', title:'Registro de Horas — Prestadores',
+    sector:'Financeiro / Operações', status:'err',
+    author:'Cauã Matheus Bezerra da Silva', rev:'0', date:'02/04/2026',
+    systems:'Excel / Google Sheets · Mata-Metro',
+    pendencias:'Divergência: valor do Aplicador 3 — R$330,00 neste manual vs. R$320,00 no descritivo da Karine (POP-FIN-005). Pendente alinhamento com Júlio Taporosky antes da próxima revisão.',
+    fluxo:[
+      {ref:'OE-037 / 039', label:'Registro diário durante a execução da obra'},
+      {ref:'Quinzenal', label:'Base para lançamento no sistema Mata-Metro'},
+    ],
+    objetivo:'Descrever o processo de registro de horas trabalhadas pelos prestadores de serviço, a classificação por cargo e a aplicação correta dos adicionais conforme o tipo de jornada realizada.',
+    resp:[
+      {f:'Financeiro', r:'Registro na planilha, classificação de cargo e status, cálculo dos valores e lançamento no Mata-Metro.'},
+      {f:'Líderes de obra', r:'Envio das informações de horas e status de cada prestador da equipe.'},
+    ],
+    secs:[
+      {id:'cg', title:'Tabela de cargos e valores',
+       type:'table', headers:['Ind.','Cargo','Valor / 8h','Valor / hora','Adicional 20%','Adicional 40%'],
+       rows:[
+         ['1','Ajudante','R$ 150,00','R$ 18,75','R$ 22,50','R$ 26,25'],
+         ['2','Preparador','R$ 180,00','R$ 22,50','R$ 27,00','R$ 31,50'],
+         ['3','Finalizador','R$ 195,00','R$ 24,38','R$ 29,25','R$ 34,13'],
+         ['4','Aplicador 1','R$ 200,00','R$ 25,00','R$ 30,00','R$ 35,00'],
+         ['5','Aplicador 2','R$ 300,00','R$ 37,50','R$ 45,00','R$ 52,50'],
+         ['6','Aplicador 3 ⚠','R$ 330,00 ⚠','R$ 41,25','R$ 49,50','R$ 57,75'],
+         ['7','Líder','R$ 350,00','R$ 43,75','R$ 52,50','R$ 61,25'],
+       ],
+       warnRow:5,
+       note:'Adicional 20% = valor/hora × 1,20. Adicional 40% = valor/hora × 1,40.'},
+      {id:'st', title:'Classificação de status — tipos de jornada',
+       type:'table', headers:['Status','Situação de trabalho','Adicional','Fórmula'],
+       rows:[
+         ['1','Diurno em dia normal de semana','Sem adicional','Valor/hora normal'],
+         ['1','Noturno em dia normal de semana','+ 20%','Valor/hora × 1,20'],
+         ['2','Viagem (diurno) / Final de semana ou feriado (diurno)','+ 20%','Valor/hora × 1,20'],
+         ['3','Viagem noturna / Viagem em FDS ou feriado / FDS noturno','+ 40%','Valor/hora × 1,40'],
+       ],
+       note:'Preencher apenas UM número de status por linha na planilha.'},
+      {id:'pl', title:'Estrutura da planilha de registro',
+       type:'table', headers:['Coluna','Descrição'],
+       rows:[
+         ['Data','Data do dia trabalhado (ex.: 30/01/2026).'],
+         ['Dia da semana','Preenchido automaticamente conforme a data.'],
+         ['Prestador','Nome completo do prestador de serviço.'],
+         ['Cargo','Indicador numérico de 1 a 7 conforme a tabela de cargos.'],
+         ['Status','Indicador 1, 2 ou 3 conforme a tabela de status. Preencher apenas UM número por linha.'],
+         ['Entrada / Saída (manhã, tarde, noite)','Horários de início e encerramento de cada turno trabalhado.'],
+         ['TOTAL','Valor total a pagar no dia — soma dos três turnos.'],
+         ['Líder','Nome do líder responsável pela equipe naquele dia e obra.'],
+         ['Obra','Nome da obra em que o prestador esteve alocado.'],
+       ],
+       note:'Os campos Líder e Obra são obrigatórios para garantir rastreabilidade completa da alocação.'},
+    ],
+    flow:[
+      {type:'start', text:'Líder de obra envia as informações da equipe'},
+      {type:'action', text:'Financeiro registra na planilha Excel por obra\nData · Prestador · Cargo · Status · Horários'},
+      {type:'action', text:'Classificação do cargo (1–7) e status de jornada (1, 2 ou 3)'},
+      {type:'action', text:'Cálculo dos valores com adicionais aplicáveis\nStatus 1 = normal · Status 2 = +20% · Status 3 = +40%'},
+      {type:'check', text:'Validação dos valores por obra e base cadastral'},
+      {type:'sys', text:'Lançamento no sistema Mata-Metro\nBase e obra identificadas'},
+      {type:'end', text:'Pagamento quinzenal processado'},
+    ],
+    outputs:[
+      {t:'Planilha de horas preenchida', c:'Cargo, status, horários e totais corretos para todos os prestadores do período.', col:'oc-bl'},
+      {t:'Valores lançados no Mata-Metro', c:'Por obra e base cadastral, com adicionais aplicados corretamente.', col:'oc-gr'},
+      {t:'Rastreabilidade de alocação', c:'Histórico de onde cada prestador atuou, por líder e por obra.', col:'oc-nv'},
+    ],
+  },
+  {
+    id:'FIN-004', code:'POP-FIN-004', title:'Contrato de Empreitada',
+    sector:'Financeiro / Contratos', status:'ok',
+    author:'Júlio César Bielenki Taporosky', rev:'0', date:'02/04/2026',
+    systems:'D4Sign · Omie · Google Drive · Telegram',
+    fluxo:[
+      {ref:'OE-025', label:'Equipe definida — emissão do contrato'},
+      {ref:'OE-037', label:'Início da execução — pagamento da 1ª parcela'},
+      {ref:'OE-047/052', label:'Encerramento — 2ª parcela em até 4 dias'},
+    ],
+    objetivo:'Estabelecer o procedimento padrão para emissão de contrato com prestadores de serviço de aplicação que optaram pelo formato de empreitada — pagamento por metragem e superfície executada.',
+    resp:[
+      {f:'Financeiro', r:'Conferência no Telegram, ajustes no Omie, elaboração do contrato no D4Sign e solicitação da nota fiscal ao prestador.'},
+      {f:'Operacional', r:'Confirmação do início da obra registrada no grupo do Telegram.'},
+    ],
+    secs:[
+      {id:'bs', title:'Bases e CNPJs para emissão de nota fiscal',
+       type:'table', headers:['Base','Razão Social','CNPJ'],
+       rows:[
+         ['Matriz','MONOFLOOR Curitiba/PR','33.154.534/0001-21'],
+         ['Filial','MONOFLOOR São Paulo/SP','33.154.534/0002-02'],
+         ['Mineral','MINERAL COAT LTDA','21.898.969/0001-00'],
+       ]},
+      {id:'41', title:'4.1 – 4.2 Validação inicial e ajustes no Omie',
+       body:'O Financeiro verifica no grupo da obra no Telegram se o início está confirmado pelo setor Operacional e se a equipe pertence ao formato empreitada. O CNPJ do líder é confirmado, o fornecedor fictício RAMON é substituído pelo CNPJ real nas parcelas 01 e 02, e as datas são ajustadas: Parcela 01 = data de início da obra; Parcela 02 = 30 dias após.'},
+      {id:'44', title:'4.4 – 4.5 Elaboração e envio do contrato',
+       body:'O contrato é criado no Google Drive (pasta CONTRATOS PRESTADORES → pasta da equipe), renomeado conforme o padrão (ex.: W A PINTURAS - THIAGO DORIA São Paulo), editado com o endereço da obra (Cláusula 1ª), os valores em numérico e por extenso (Cláusula 2ª) e a data atualizada. Salvo em PDF e enviado via D4Sign.',
+       note:'Signatários: Prestador como parte + Testemunha. Não selecionar assinatura em ordem. Copiar e enviar o link de assinatura ao prestador.'},
+      {id:'47', title:'4.7 – 4.8 Pagamentos',
+       body:'1ª parcela: aguardar a nota fiscal do prestador → conferir dados → anexar ao lançamento no Omie → efetuar pagamento. 2ª parcela: após a conclusão da obra, verificar a metragem final (redução diminui o valor; acréscimo aumenta), solicitar a 2ª nota fiscal, conferir e pagar em até 4 dias.'},
+    ],
+    flow:[
+      {type:'start', text:'Confirmação de início de obra no Telegram (Operacional)'},
+      {type:'action', text:'Financeiro valida se a equipe pertence ao formato empreitada'},
+      {type:'action', text:'Ajuste dos lançamentos no Omie\nRAMON → CNPJ do líder · Parcelas 01 e 02 atualizadas'},
+      {type:'action', text:'Contrato elaborado no Google Drive e salvo em PDF'},
+      {type:'action', text:'Upload no D4Sign · Prestador + Testemunha cadastrados\nLink de assinatura copiado e enviado'},
+      {type:'action', text:'Prestador envia a nota fiscal'},
+      {type:'action', text:'NF conferida, anexada e 1ª parcela paga'},
+      {type:'check', text:'Obra concluída — metragem final verificada'},
+      {type:'action', text:'2ª NF solicitada, conferida e anexada ao lançamento'},
+      {type:'end', text:'2ª parcela paga em até 4 dias — contrato encerrado'},
+    ],
+    outputs:[
+      {t:'Lançamentos ajustados no Omie', c:'CNPJ real do líder e datas corretas nas parcelas 01 e 02.', col:'oc-bl'},
+      {t:'Contrato assinado via D4Sign', c:'Prestador e testemunha assinaram digitalmente.', col:'oc-nv'},
+      {t:'1ª parcela paga', c:'NF conferida, anexada ao lançamento e pagamento efetuado.', col:'oc-gr'},
+      {t:'2ª parcela paga', c:'Metragem final conferida. Pago em até 4 dias do encerramento.', col:'oc-am'},
+    ],
+  },
+  {
+    id:'RH-001', code:'POP-RH-001', title:'Recarga de Cartões Provisórios',
+    sector:'RH / Financeiro', status:'ok',
+    author:'Maria Eduarda de Oliveira Gomulski', rev:'0', date:'02/04/2026',
+    systems:'SuperPortal VR Benefícios · Omie · WhatsApp',
+    fluxo:[
+      {ref:'Transversal', label:'Rotina administrativa por demanda da Logística'},
+      {ref:'Regra fixa', label:'Saldo por cartão mantido em R$ 1.500,00'},
+    ],
+    objetivo:'Padronizar o processo de recarga dos cartões provisórios de combustível utilizados pelos funcionários — motoristas e responsáveis pelo estoque — para abastecimento dos veículos em entregas e viagens.',
+    resp:[
+      {f:'RH', r:'Verificação do saldo, pedido de recarga no SuperPortal VR e comunicação ao setor Financeiro.'},
+      {f:'Financeiro', r:'Lançamento no Omie, anexo dos comprovantes e efetivação do pagamento.'},
+    ],
+    secs:[
+      {id:'41', title:'4.1 Verificação de saldo no SuperPortal VR',
+       body:'O responsável acessa o SuperPortal do Empregador. Caminho: Benefícios → Cadastros e consultas → Beneficiários → Provisórios → Pesquisar → selecionar o cartão (ex.: RH 05) → Opções → Saldo Extrato. O valor da recarga é calculado: R$ 1.500,00 − saldo atual.'},
+      {id:'42', title:'4.2 Pedido de recarga',
+       body:'Pedidos → Novo pedido online → Cartão Multi → selecionar cartão → inserir valor → agendar pagamento para o mesmo dia do pedido → Enviar Pedido → confirmar.'},
+      {id:'43', title:'4.3 Lançamento no Omie',
+       body:'O colaborador acessa o cadastro da Matriz no Omie, navega até Finanças → Contas a Pagar → Exibir todas, pesquisa o fornecedor "VR Benefícios" e duplica um lançamento anterior. Os campos atualizados são: Data de vencimento (data do pedido), Valor (exato da recarga), Categoria (8.1.28 — Combustível Motorista/Estoque) e Observações (identificação do cartão + valor creditado + código de pagamento). O boleto e o relatório do pedido são anexados ao lançamento.',
+       note:'Conferir todos os dados antes de salvar. Erros nos lançamentos podem impactar outros setores.', noteType:'crit'},
+      {id:'46', title:'4.6 Comunicação ao Financeiro',
+       body:'Após o lançamento, o responsável pelo RH envia mensagem no grupo "Financeiro PURO" com o modelo: "Bom dia, @[responsável], solicito pagamento de combustível para o cartão provisório [ID do cartão]. Valor total: R$ [valor]. Lançado na [base correspondente]."'},
+    ],
+    flow:[
+      {type:'start', text:'Solicitação de crédito recebida pelo setor de RH'},
+      {type:'action', text:'RH verifica o saldo no SuperPortal VR\nSaldo alvo: R$ 1.500,00'},
+      {type:'action', text:'Pedido de recarga realizado no SuperPortal\nCartão selecionado · valor inserido · agendado para hoje'},
+      {type:'action', text:'Lançamento registrado no Omie\nDuplicação do lançamento anterior com dados atualizados'},
+      {type:'action', text:'Código de pagamento e relatório do pedido\nanexados ao lançamento no Omie'},
+      {type:'action', text:'Mensagem enviada ao grupo "Financeiro PURO"\ncom identificação, valor e base'},
+      {type:'end', text:'Pagamento efetuado · Saldo recarregado'},
+    ],
+    outputs:[
+      {t:'Saldo recarregado no cartão', c:'Crédito de R$ 1.500,00 restabelecido via SuperPortal VR.', col:'oc-gr'},
+      {t:'Lançamento no Omie', c:'Conta a pagar com valor, data, categoria e observações corretos.', col:'oc-bl'},
+      {t:'Comprovantes anexados', c:'Boleto e relatório do pedido anexados ao lançamento.', col:'oc-nv'},
+      {t:'Financeiro comunicado', c:'Mensagem enviada ao grupo "Financeiro PURO".', col:'oc-am'},
+    ],
+  },
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let cur = 'FIN-001';
+let openSec = {};
+let searchQ = '';
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
+function renderSidebar() {
+  const dots = {ok:'dok', err:'der', warn:'dwn'};
+  const stags = {ok:'s-ok', err:'s-er', warn:'s-wn'};
+  const stl = {ok:'✔', err:'⚠', warn:'⚠'};
+  document.getElementById('sb-list').innerHTML = POPS.map(p => `
+    <div class="si ${p.id===cur?'on':''}" onclick="selPOP('${p.id}')">
+      <span class="dot ${dots[p.status]}" style="margin-top:10px"></span>
+      <div class="si-left">
+        <div class="si-code">${p.code}</div>
+        <div class="si-title">${p.title}</div>
+      </div>
+      <span class="status-tag ${stags[p.status]}">${stl[p.status]}</span>
+    </div>`).join('');
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────────────────
+function renderPOP(pop, q='') {
+  const sts = {ok:'s-ok', err:'s-er', warn:'s-wn'};
+  const stl = {ok:'✔ Revisado', err:'⚠ Divergência', warn:'⚠ Pendências'};
+
+  let html = `
+    <div class="ph">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">
+        <div>
+          <div class="ph-code">${pop.code} · Rev.${pop.rev} · ${pop.date}</div>
+          <div class="ph-title">${hi(pop.title,q)}</div>
+        </div>
+        <span class="status-tag ${sts[pop.status]}" style="margin-top:4px;white-space:nowrap">${stl[pop.status]}</span>
+      </div>
+      <div class="ph-meta">
+        <div class="ph-item">Setor: <b>${pop.sector}</b></div>
+        <div class="ph-item">Elaboração: <b>${pop.author}</b></div>
+        <div class="ph-item">Sistemas: <b>${pop.systems}</b></div>
+      </div>
+    </div>
+    ${pop.pendencias ? `<div class="al al-e"><b>⚠ Pendência:</b> ${hi(pop.pendencias,q)}</div>` : ''}
+    <div class="fx">
+      <span class="fx-lbl">Fluxo</span>
+      ${pop.fluxo.map(f=>`<span class="fch"><b>${f.ref}</b> — ${f.label}</span>`).join('')}
+    </div>`;
+
+  // Seção: Objetivo
+  html += secCard('obj', '1. Objetivo',
+    `<p class="prose">${hi(pop.objetivo,q)}</p>`);
+
+  // Seção: Responsabilidades
+  html += secCard('resp', '3. Responsabilidades',
+    `<table class="resp">
+      <tr><th>Função</th><th>Responsabilidade</th></tr>
+      ${pop.resp.map(r=>`<tr><td><b>${hi(r.f,q)}</b></td><td>${hi(r.r,q)}</td></tr>`).join('')}
+    </table>`);
+
+  // Seções de procedimento
+  pop.secs.forEach(s => {
+    let body = '';
+    if (s.type === 'table') {
+      body = `<table class="dt">
+        <tr>${s.headers.map(h=>`<th>${h}</th>`).join('')}</tr>
+        ${s.rows.map((row,i)=>`
+          <tr ${s.warnRow===i?'class="dt-warn"':''}>
+            ${row.map(c=>`<td>${hi(c,q)}</td>`).join('')}
+          </tr>`).join('')}
+      </table>`;
+    } else {
+      body = `<p class="prose">${hi(s.body,q)}</p>`;
+      if (s.extra) body += `<p class="prose" style="margin-top:8px">${hi(s.extra,q)}</p>`;
+    }
+    if (s.note) {
+      body += `<div class="note ${s.noteType==='crit'?'note-crit':''}" style="margin-top:10px">
+        ${s.noteType==='crit'?'⚠ ':''}${hi(s.note,q)}
+      </div>`;
+    }
+    html += secCard(s.id, s.title, body);
+  });
+
+  // Seção: Fluxograma
+  const flowHTML = pop.flowCols ? buildFlowCols(pop) : buildFlowLinear(pop.flow);
+  html += secCard('flow', 'Fluxograma do processo', `<div class="flow-wrap">${flowHTML}</div>`);
+
+  // Seção: Saídas
+  const outHTML = `
+    <div class="od">
+      <div class="od-hdr">
+        <div class="od-icon">✦</div>
+        <div>
+          <div class="od-title">Saídas do processo</div>
+          <div class="od-sub">${pop.outputs.length} entregas obrigatórias ao final do processo</div>
+        </div>
+      </div>
+      <div class="od-conn">▼ &nbsp; ENTREGAS DO PROCESSO &nbsp; ▼</div>
+      <div class="od-grid">
+        ${pop.outputs.map((o,i)=>`
+        <div class="oc ${o.col}">
+          <span class="oc-chk">✔</span>
+          <div class="oc-num">${i+1}</div>
+          <div class="oc-title">${o.t}</div>
+          <div class="oc-crit">${o.c}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  html += secCard('out', 'Saídas do processo', outHTML);
+
+  return html;
+}
+
+function secCard(id, title, body) {
+  const open = openSec[id] !== false;
+  return `
+    <div class="sc">
+      <div class="sh" onclick="togSec('${id}')">
+        <div class="sh-left"><span class="sh-title">${title}</span></div>
+        <span class="sh-arr ${open?'open':''}">▼</span>
+      </div>
+      ${open ? `<div class="sb2">${body}</div>` : ''}
+    </div>`;
+}
+
+function buildFlowLinear(flow) {
+  return `<div class="vflow">` + flow.map((f,i) => `
+    <div class="fn fn-${f.type}">${f.text.replace(/\n/g,'<br><small style="opacity:.75;font-weight:400">')}</small></div>
+    ${i < flow.length-1 ? '<div class="farr"></div><div class="flow-gap"></div>' : ''}
+  `).join('') + `</div>`;
+}
+
+function buildFlowCols(pop) {
+  const colsHTML = `
+    <div class="flow-cols c2">
+      ${pop.flowCols.map(col => `
+        <div>
+          <div class="col-title">${col.title}</div>
+          <div class="vflow">
+            ${col.items.map((f,i) => `
+              <div class="fn fn-${f.type}" style="max-width:none;font-size:11px">${f.text.replace(/\n/g,'<br><small style="opacity:.75;font-weight:400">').replace(/<small>/g,'<small style="font-size:10px">')}</small></div>
+              ${i < col.items.length-1 ? '<div class="farr"></div><div class="flow-gap"></div>' : ''}
+            `).join('')}
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="flow-merge">⬇</div>`;
+
+  const afterHTML = buildFlowLinear(pop.flowAfterCols);
+  return colsHTML + afterHTML;
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────────
+function hi(text, q) {
+  if (!q || !text) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function doSearch(q) {
+  searchQ = q.trim().toLowerCase();
+  if (!searchQ) { renderMain(); return; }
+
+  const results = POPS.filter(p =>
+    JSON.stringify(p).toLowerCase().includes(searchQ)
+  );
+
+  if (!results.length) {
+    document.getElementById('main').innerHTML = `
+      <div class="no-results">
+        <div>◎</div>
+        <div style="font-size:15px;font-weight:500;margin-bottom:6px">Nenhum resultado</div>
+        <div>Não foram encontrados procedimentos com "<b>${searchQ}</b>"</div>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('main').innerHTML =
+    results.map(p => `
+      <div style="margin-bottom:24px">
+        <div style="font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace;margin-bottom:8px">${p.code}</div>
+        ${renderPOP(p, searchQ)}
+      </div>`).join('');
+}
+
+function renderMain() {
+  const pop = POPS.find(p => p.id === cur);
+  document.getElementById('main').innerHTML = renderPOP(pop, searchQ);
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────
+function selPOP(id) {
+  cur = id;
+  searchQ = '';
+  document.getElementById('search').value = '';
+  renderSidebar();
+  renderMain();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function togSec(id) {
+  openSec[id] = openSec[id] === false ? true : false;
+  renderMain();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+renderSidebar();
+renderMain();
+</script>
+</body>
+</html>
