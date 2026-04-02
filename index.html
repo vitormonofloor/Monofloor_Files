@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Monofloor — Procedimentos Operacionais</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --n:#1F3864;--n2:#162848;--b:#2E74B5;--bl:#D6E4F0;--bp:#EBF3FB;
@@ -198,6 +198,7 @@ mark{background:#FFF176;border-radius:2px;padding:0 2px}
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="white" stroke-width="1.5"/><path d="M11 11L14.5 14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
       <input type="text" id="search" placeholder="Buscar procedimentos..." oninput="doSearch(this.value)" onkeydown="if(event.key==='Escape'){this.value='';doSearch('')}">
     </div>
+    <button class="tn" id="nv-knowledge" onclick="goKnowledge()" title="Base de Conhecimento Monofloor" style="white-space:nowrap">Base de Conhecimento ↗</button>
     <div class="tb-ver">v1.0 · Abr/2026</div>
   </div>
 </header>
@@ -594,9 +595,118 @@ const POPS = [
 .sig-name{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px}
 .sig-role{font-size:11px;color:var(--mu)}
 .sig-line{border-top:1px solid var(--bdr);margin:10px 0 8px}
+/* ── JORNADA INTEGRATION ── */
+.j-block{background:#0f0d0b;border-radius:var(--rdl);overflow:hidden;margin-top:2px;margin-bottom:10px;font-family:'DM Sans','Inter',sans-serif}
+.j-header{padding:14px 18px 10px;border-bottom:1px solid rgba(245,240,235,.07);display:flex;align-items:center;justify-content:space-between}
+.j-logo{font-size:12px;color:rgba(245,240,235,.4);letter-spacing:.06em;font-weight:300}
+.j-logo b{color:#f5f0eb;font-weight:400}
+.j-open{font-size:11px;color:rgba(245,240,235,.4);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .12s}
+.j-open:hover{color:#f5f0eb}
+.j-title{font-size:11px;font-weight:400;color:rgba(245,240,235,.35);text-transform:uppercase;letter-spacing:.1em;padding:10px 18px 6px}
+.j-grid{padding:0 10px 12px;display:flex;flex-direction:column;gap:2px}
+.j-card{display:flex;align-items:flex-start;gap:12px;padding:10px 10px;border-radius:8px;cursor:pointer;text-decoration:none;transition:background .12s}
+.j-card:hover{background:rgba(245,240,235,.06)}
+.j-icon{font-size:16px;flex-shrink:0;margin-top:1px;opacity:.85}
+.j-card-title{font-size:13px;color:#f5f0eb;font-weight:400;line-height:1.3;margin-bottom:3px}
+.j-card-sub{font-size:11px;color:rgba(245,240,235,.42);line-height:1.5}
+.j-pill{display:inline-block;background:rgba(245,240,235,.08);color:rgba(245,240,235,.5);font-size:10px;padding:1px 7px;border-radius:10px;margin-left:6px;letter-spacing:.03em;vertical-align:middle}
+/* home sector card jornada count */
+.sc-j-link{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(245,240,235,.5);padding:8px 22px;background:#0f0d0b;border-top:1px solid rgba(245,240,235,.06);font-family:'DM Sans','Inter',sans-serif;cursor:pointer;text-decoration:none;transition:color .12s}
+.sc-j-link:hover{color:#f5f0eb}
+.sc-j-dot{width:5px;height:5px;border-radius:50%;background:rgba(245,240,235,.3);flex-shrink:0}
 `;
   document.head.appendChild(s);
 })();
+
+// ── JORNADA.MONOFLOOR.CLOUD — Base de Conhecimento ───────────────────────
+const BASE = 'https://jornada.monofloor.cloud';
+const JORNADA = [
+  // Estratégia
+  {cat:'Estratégia', icon:'🎯', id:'visao', title:'Visão & Objetivos Estratégicos',
+   sub:'6 objetivos definidos — Automação total com agentes IA, Eteris, MAQNA SaaS e Mission Control.',
+   url:'/docs/visao-objetivos-estrategicos.html', setores:['financeiro','operacoes','rh','comercial']},
+  {cat:'Estratégia', icon:'🏗️', id:'org', title:'Estrutura Organizacional',
+   sub:'10 pessoas-chave, 100+ artesãos, 74 prestadores, 13 equipes — Organograma completo.',
+   url:'/docs/estrutura-organizacional.html', setores:['rh','operacoes','financeiro']},
+  {cat:'Estratégia', icon:'⚡', id:'eficiencia', title:'Eficiência Operacional',
+   sub:'Diagnóstico das 3 fraturas (escopo, terceiros, estrutura reativa), GO/NO-GO com 8 critérios, 3 fases de implementação.',
+   url:'/docs/eficiencia-operacional.html', setores:['operacoes','financeiro']},
+  // Marketing & Marca
+  {cat:'Marketing & Marca', icon:'✍️', id:'linguagem', title:'Manual de Linguagem',
+   sub:'Manifesto "religare", 3 arquétipos (Criador, Sábio, Artesão), 5 características de tom de voz, vocabulário e glossário técnico.',
+   url:'/docs/manual-linguagem.html', setores:['comercial']},
+  {cat:'Marketing & Marca', icon:'🎨', id:'marca', title:'Manual de Marca & Identidade Visual',
+   sub:'Símbolo wave "Fluid Permanence", logotipo lowercase, 8 cores institucionais, tipografia Widescreen + Nite Club.',
+   url:'/docs/manual-marca.html', setores:['comercial']},
+  {cat:'Marketing & Marca', icon:'🖌️', id:'cores', title:'Catálogo de Cores',
+   sub:'26+ cores em 4 categorias (Neutros, Médios, Terrosos, Especiais) — de Arcturus a Terracota.',
+   url:'/docs/catalogo-cores.html', setores:['comercial','operacoes']},
+  {cat:'Marketing & Marca', icon:'🤖', id:'stelion', title:'Agente de Atendimento STELION',
+   sub:'848 linhas — Metodologia 3 fases (Conexão → Educação → Resolução), 5 scripts de cenário, 4 conversas reais.',
+   url:'/docs/agente-atendimento-stelion.html', setores:['comercial']},
+  // Operações & Execução
+  {cat:'Operações & Execução', icon:'📅', id:'gantt', title:'Cronograma GANTT de Execução',
+   sub:'15 etapas piso + 13 etapas parede — Regras de paralelismo, cura obrigatória e escalonamento por metragem.',
+   url:'/docs/cronograma-gantt.html', setores:['operacoes','financeiro']},
+  {cat:'Operações & Execução', icon:'📋', id:'contrato', title:'Contrato de Prestação de Serviços',
+   sub:'12 cláusulas — Remuneração (50%+25%+25%), cláusula penal (20%), material exclusivo, garantia vitalícia.',
+   url:'/docs/contrato-monofloor.html', setores:['financeiro','operacoes']},
+  {cat:'Operações & Execução', icon:'🗺️', id:'jornada', title:'Jornada do Cliente',
+   sub:'7 páginas, 3 variantes: Padrão (<90d), Revisado (>90d) e Encaixe. Do contrato até a logística de entrada.',
+   url:'/docs/jornada-cliente.html', setores:['comercial','operacoes','financeiro']},
+  {cat:'Operações & Execução', icon:'📍', id:'mapa', title:'Mapa de Obras Ativas',
+   sub:'23 projetos ativos em 20/02/2026 — De Amanda Negrelli (95%) a AVVA House (866m², 40%).',
+   url:'/docs/mapa-obras-ativas.html', setores:['operacoes','financeiro']},
+  {cat:'Operações & Execução', icon:'⏱️', id:'prazos', title:'Calculadora de Prazos',
+   sub:'15 janelas fixas (50m² → 1.200m²) — Tabela de produtividade, fórmula completa, sugestão automática de prestadores.',
+   url:'/docs/calculadora-prazos.html', setores:['operacoes','comercial']},
+  // Comercial
+  {cat:'Comercial', icon:'🧪', id:'produtos', title:'Produtos & Ficha Técnica',
+   sub:'STELION (80MPa, garantia vitalícia), LILIT, LEONA (42MPa), LUMINA (PU bicomponente). 26 cores e perfil de trincas.',
+   url:'/docs/produtos-ficha-tecnica.html', setores:['comercial','operacoes']},
+  {cat:'Comercial', icon:'📊', id:'leads', title:'Leads & CRM',
+   sub:'1.967 leads WhatsApp + 471 registros Pipefy — Cobertura nacional. CRM atual: Pipefy com fases de obra.',
+   url:'/docs/leads-crm.html', setores:['comercial']},
+  {cat:'Comercial', icon:'📈', id:'relatorio', title:'Relatório Comercial 2025',
+   sub:'R$ 24,2 milhões vendidos — 4.001 leads, 381 vendas, ticket médio R$ 90.850. Isabela lidera (46,9%).',
+   url:'/docs/relatorio-comercial-2025.html', setores:['comercial','financeiro']},
+  {cat:'Comercial', icon:'📄', id:'proposta', title:'Modelo de Proposta',
+   sub:'27 páginas — STELION R$ 910/m², LILIT R$ 590/m², social proof (CBF, Rosewood, Starck), 3 condições de pagamento.',
+   url:'/docs/modelo-proposta.html', setores:['comercial']},
+  {cat:'Comercial', icon:'👤', id:'clientes', title:'Controle de Clientes',
+   sub:'471 registros Pipefy + histórico xlsx — Evolução do controle manual ao Pipefy CRM.',
+   url:'/docs/controle-clientes.html', setores:['comercial','financeiro']},
+  // Financeiro
+  {cat:'Financeiro', icon:'📉', id:'dre', title:'DRE Monofloor',
+   sub:'Faturamento 2020/2021 — R$ 695.848 total 2020. Evolução mensal de R$ 20k a R$ 121k.',
+   url:'/docs/dre-monofloor.html', setores:['financeiro']},
+  {cat:'Financeiro', icon:'🧱', id:'custos', title:'Custos de Material',
+   sub:'25 matérias-primas + 10 fórmulas — De Água (R$ 0,25/kg) a TEGO Wet 270 (R$ 191/kg). Composição completa.',
+   url:'/docs/custos-material.html', setores:['financeiro','operacoes']},
+  {cat:'Financeiro', icon:'💳', id:'pagamentos', title:'Pagamentos & Contas a Receber',
+   sub:'515 contas = R$ 9,39 milhões — 443 a vencer (R$ 8,1M), 57 atrasados (R$ 791k). Filial SP (296), Matriz (181).',
+   url:'/docs/pagamentos-contas-receber.html', setores:['financeiro']},
+  {cat:'Financeiro', icon:'💰', id:'valores', title:'Valores de Custo',
+   sub:'25 matérias-primas referência Maio 2024 — Fretes, quantidades de carga e custos de produção.',
+   url:'/docs/valores-custo.html', setores:['financeiro','operacoes']},
+  // Sistema & Tecnologia
+  {cat:'Sistema & Tecnologia', icon:'🏛️', id:'arquitetura', title:'Arquitetura do Sistema',
+   sub:'Express + React 19 + Claude Sonnet 4.6 — 4 agentes IA, 7 integrações externas (Z-API, Telegram, Pipefy).',
+   url:'/docs/arquitetura-sistema.html', setores:[]},
+  {cat:'Sistema & Tecnologia', icon:'🤖', id:'agentes', title:'Agentes IA — ANA, CARLOS, MONITOR',
+   sub:'3 agentes + 6 serviços auxiliares — MONITOR (50+ regras), ANA (24 FAQs, KIRA), CARLOS (WhatsApp↔Telegram).',
+   url:'/docs/agentes-ia.html', setores:[]},
+  {cat:'Sistema & Tecnologia', icon:'🚀', id:'deploy', title:'Deploy & Infraestrutura',
+   sub:'VPS 72.61.56.150 — esbuild → scp → pm2. 6 processos PM2, Traefik SSL. SQLite + PostgreSQL Railway.',
+   url:'/docs/deploy-infra.html', setores:[]},
+  {cat:'Sistema & Tecnologia', icon:'🗄️', id:'banco', title:'Banco de Dados (30+ tabelas)',
+   sub:'SQLite + PostgreSQL — 512 projetos, 100k+ msgs WhatsApp, 278k msgs Telegram.',
+   url:'/docs/banco-dados.html', setores:[]},
+];
+
+function goKnowledge() {
+  window.open(BASE, '_blank');
+}
 
 // ── STATE ─────────────────────────────────────────────────────────────────
 let curPOP = null, curSector = null, openSec = {};
@@ -652,6 +762,7 @@ function renderHome() {
           <span class="sc-count">${pops.length} documento${pops.length>1?'s':''}${pending?' · <span style="color:var(--r)">'+pending+' pendência'+( pending>1?'s':'')+'</span>':''}</span>
           <span class="sc-cta">Ver documentos <span>→</span></span>
         </div>
+        ${(()=>{const rel=JORNADA.filter(d=>d.setores.includes(sec.id));return rel.length?`<a class="sc-j-link" href="${BASE}" target="_blank"><span class="sc-j-dot"></span>${rel.length} doc${rel.length>1?'s':''} na Base de Conhecimento ↗</a>`:''})()}
       </div>`;
   }).join('');
 }
@@ -716,7 +827,8 @@ function renderSidebar() {
         <div class="sb-item-title" style="color:var(--mu)">Instrução de Trabalho</div>
         <div style="font-size:10px;color:var(--a);margin-top:1px">Em manutenção</div>
       </div>
-    </div>`;
+    </div>
+    ${(()=>{const rel=JORNADA.filter(d=>d.setores.includes(curSector));return rel.length?`<a href="${BASE}" target="_blank" style="display:flex;align-items:center;gap:6px;padding:10px 10px;margin-top:6px;border-radius:var(--rd);background:#0f0d0b;text-decoration:none;font-family:'DM Sans','Inter',sans-serif;transition:opacity .12s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><span style="font-size:13px">📚</span><div><div style="font-size:10px;color:rgba(245,240,235,.4);letter-spacing:.05em">BASE DE CONHECIMENTO</div><div style="font-size:12px;color:#f5f0eb;margin-top:2px">${rel.length} documento${rel.length>1?'s':''} relacionado${rel.length>1?'s':''} ↗</div></div></a>`:'';})()}`;
 }
 
 function navPOP(id) {
@@ -828,6 +940,34 @@ function renderPOP() {
     const flowHTML = pop.flowCols ? buildFlowCols(pop) : buildFlowLinear(pop.flow);
     h += secCard('flow','Fluxograma do processo',`<div class="flow-wrap">${flowHTML}</div>`);
     h += secCard('out','Saídas do processo', buildOutputs(pop));
+  }
+
+  // ── Documentos relacionados da Jornada ─────────────────────────────────
+  const relDocs = JORNADA.filter(d => d.setores.includes(curSector));
+  if (relDocs.length) {
+    // group by category
+    const cats = [...new Set(relDocs.map(d=>d.cat))];
+    let jHtml = `<div class="j-block">
+      <div class="j-header">
+        <span class="j-logo"><b>monofloor</b> base de conhecimento</span>
+        <a class="j-open" href="${BASE}" target="_blank">Abrir hub completo ↗</a>
+      </div>`;
+    cats.forEach(cat => {
+      const docs = relDocs.filter(d=>d.cat===cat);
+      jHtml += `<div class="j-title">${cat}</div><div class="j-grid">`;
+      docs.forEach(d => {
+        jHtml += `<a class="j-card" href="${BASE}${d.url}" target="_blank">
+          <span class="j-icon">${d.icon}</span>
+          <div>
+            <div class="j-card-title">${d.title}</div>
+            <div class="j-card-sub">${d.sub}</div>
+          </div>
+        </a>`;
+      });
+      jHtml += `</div>`;
+    });
+    jHtml += `</div>`;
+    h += jHtml;
   }
 
   // Instrução de Trabalho tab — all documents
