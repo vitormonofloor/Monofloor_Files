@@ -211,7 +211,7 @@ mark{background:#FFF176;border-radius:2px;padding:0 2px}
       <h1>Procedimentos<br><em>Operacionais Padrão</em></h1>
       <p class="hero-sub">Consulte, aprenda e siga os procedimentos que guiam a operação da Monofloor. Tudo centralizado, padronizado e sempre atualizado.</p>
       <div class="hero-stats">
-        <div class="hstat"><b>5</b> procedimentos ativos</div>
+        <div class="hstat"><b>6</b> documentos ativos</div>
         <div class="hstat"><b>3</b> setores documentados</div>
         <div class="hstat"><b>Abr/2026</b> última atualização</div>
         <div class="hstat"><b>1</b> divergência pendente</div>
@@ -242,8 +242,8 @@ mark{background:#FFF176;border-radius:2px;padding:0 2px}
 // ── SECTORS ──────────────────────────────────────────────────────────────
 const SECTORS = [
   {id:'financeiro', emoji:'💰', name:'Financeiro', cls:'scard-fin',
-   desc:'Cadastro de obras, conciliação bancária, lançamentos e contratos com prestadores.',
-   pops:['FIN-001','FIN-002','FIN-004']},
+   desc:'Cadastro de obras, conciliação bancária, lançamentos, contratos com prestadores e descritivos de cargo.',
+   pops:['FIN-001','FIN-002','FIN-004','FIN-005']},
   {id:'operacoes', emoji:'⚙️', name:'Operações', cls:'scard-ops',
    desc:'Registro de horas de prestadores, classificação de cargos e controle de jornada.',
    pops:['FIN-003']},
@@ -442,7 +442,161 @@ const POPS = [
       {t:'Financeiro comunicado',c:'Mensagem enviada ao grupo "Financeiro PURO".',col:'oc-am'},
     ],
   },
+  // ── DESCRITIVO DE CARGO ─────────────────────────────────────────────────
+  {
+    id:'FIN-005', code:'DC-FIN-001', title:'Descritivo de Cargo — Assistente Financeiro',
+    type:'dc', // document type: descritivo de cargo
+    sector:'Financeiro / Administrativo-Operacional', status:'warn',
+    author:'Júlio César Bielenki Taporosky', rev:'0', date:'27/03/2026',
+    systems:'Omie · Mata-Metro · Pipefy · Excel · WhatsApp · Telegram · ClickBus · Decolar',
+    colaboradora:'Karine', superior:'Júlio Taporosky', diretoria:'Kassandra Martinho de Oliveira',
+    pendencias:'(1) Valor limite para autorização de compras pela diretoria — a definir. (2) Escopo de Material Químico (Insumos e MP) — a incorporar. (3) Localização oficial do Drive Financeiro (Google Drive — pasta específica?).',
+    fluxo:[
+      {ref:'Transversal', label:'Atribuições de suporte ao setor financeiro e administrativo-operacional'},
+      {ref:'Quinzenal', label:'Controle de prestadores via Mata-Metro'},
+      {ref:'Por demanda', label:'Hospedagem, compras, VT e estimativas de despesas'},
+    ],
+    objetivo:'Prestar apoio nas atividades do setor financeiro e administrativo-operacional da empresa, controlando despesas de prestadores, processos de compras, lançamentos em sistemas e estimativas de custos operacionais, garantindo a precisão dos registros e a conformidade com os procedimentos internos.',
+    resp:[
+      {f:'Karine', r:'Execução de todas as atribuições descritas nas seções de Encargos e Autoridade.'},
+      {f:'Júlio Taporosky', r:'Superior imediato — aprovação de exceções e alinhamento de procedimentos.'},
+      {f:'Kassandra Martinho', r:'Diretoria Operacional — referência hierárquica para autorizações de alto impacto.'},
+    ],
+    secs:[
+      {id:'21',title:'2.1 Lançamento de Reembolso de Prestadores',
+       body:'O colaborador verifica no grupo do WhatsApp a natureza do reembolso solicitado, identificando se é material de consumo (insumos e materiais adquiridos pelo prestador) ou deslocamento (combustível, transporte ou similares). Identifica a obra e a base cadastral correspondente (Mineral, Matriz ou Filial), verifica valores, datas e comprovantes de pagamento, e realiza o lançamento no Omie selecionando a base cadastral correta, anexando os comprovantes.'},
+      {id:'22',title:'2.2 Controle de Deslocamento de Prestadores',
+       body:'As informações de deslocamento são recebidas exclusivamente dos líderes de obra, que enviam o consolidado de toda a equipe. Deslocamento local: controlar o valor pago em dinheiro a cada 10 dias. Deslocamento em viagem: calcular com base no valor do km rodado ou no custo da passagem de ônibus/Uber. O lançamento é realizado no Omie por obra e base cadastral.'},
+      {id:'23',title:'2.3 Controle de Alimentação e Hospedagem de Prestadores',
+       type:'mixed',
+       body:'As despesas de alimentação seguem regras internas de valores diários:',
+       tableAfterBody:true,
+       type:'table',headers:['Situação','Valor diário (alimentação)'],
+       rows:[
+         ['Prestador no CT (Unidade de Hospedagem em SP) ou em viagem sem café da manhã','R$ 54,00 / dia'],
+         ['Prestador em hotel com café da manhã incluso','R$ 44,00 / dia'],
+       ],
+       note:'O CT é a unidade de hospedagem da empresa em São Paulo. Neste local, não há custo de hospedagem — apenas a alimentação é lançada.',
+       extra:'As solicitações de hospedagem são recebidas via formulário "Viagem e Hospedagem" no Pipefy, preenchido pelo time de Operações. Critérios de pesquisa: proximidade da obra (até ~3 km), valor médio de até R$ 150,00 por prestador/diária e disponibilidade de café da manhã. As informações do hotel são registradas no grupo da obra no Telegram e os vouchers de deslocamento são enviados no WhatsApp da equipe.'},
+      {id:'241',title:'2.4 Controle de Visitas Técnicas',
+       body:'Ao receber o agendamento de uma visita técnica, o colaborador entra em contato com o cliente para obter os dados de pagamento. O valor padrão de visita técnica é R$ 350,00. O lançamento é realizado no Omie como conta a receber. As visitas realizadas por Nathan e Braiam são enviadas semanalmente em planilha.'},
+      {id:'242',title:'2.4.1 Tipos de Visita Técnica — Nathan e Braiam',
+       type:'table',headers:['Tipo','Descrição da Visita','Valor (R$)'],
+       rows:[
+         ['1','Sem metragem','R$ 100,00'],
+         ['2','Completa, com metragem','R$ 150,00'],
+         ['3','Litígio / Conflito / Qualidade','R$ 200,00'],
+         ['4','Acompanhamento de obra','R$ 75,00'],
+         ['5','Visita longa distância','R$ 500,00'],
+         ['6','Fora de SP','R$ 300,00'],
+       ],
+       note:'O tipo da visita é informado por Nathan e Braiam na planilha semanal. Verificar o tipo registrado, identificar a base cadastral e o projeto correspondente, e realizar o lançamento no Omie conforme o fluxo padrão de pagamento de prestadores.'},
+      {id:'25',title:'2.5 Reserva Técnica (RT) dos Arquitetos',
+       body:'O colaborador acompanha os projetos liberados via contratos. A RT somente pode ser acionada com contrato assinado pelo cliente e confirmação do pagamento da primeira parcela. Após confirmar as condições, solicita ao cliente/arquiteto a emissão da NF conforme os dados da ART. A RT deve ser liberada no prazo máximo de 3 dias após o pagamento da primeira parcela. Após receber a NF, conferir dados (valor, dados bancários e ART) e lançar no Omie.'},
+      {id:'261',title:'2.6 Pagamento via Mata-Metro — Tabela de Cargos',
+       body:'O pagamento é calculado por função e status de atuação (condição da obra). Os dados são registrados em planilha Excel individual por obra, com horários, função e local de atuação.',
+       type:'table',headers:['Ind.','Cargo','Valor / 8h','Valor / hora','Adicional 20%','Adicional 40%'],
+       rows:[
+         ['1','Ajudante','R$ 150,00','R$ 18,75','R$ 22,50','R$ 26,25'],
+         ['2','Preparador','R$ 180,00','R$ 22,50','R$ 27,00','R$ 31,50'],
+         ['3','Finalizador','R$ 195,00','R$ 24,38','R$ 29,25','R$ 34,13'],
+         ['4','Aplicador 1','R$ 200,00','R$ 25,00','R$ 30,00','R$ 35,00'],
+         ['5','Aplicador 2','R$ 300,00','R$ 37,50','R$ 45,00','R$ 52,50'],
+         ['6','Aplicador 3','R$ 320,00','R$ 40,00','R$ 48,00','R$ 56,00'],
+         ['7','Líder','R$ 350,00','R$ 43,75','R$ 52,50','R$ 61,25'],
+       ]},
+      {id:'262',title:'2.6 Status de Apuração (condição da obra)',
+       type:'table',headers:['Status','Condição','Adicional'],
+       rows:[
+         ['Status 1','Diurno e/ou Diurno com Adicional Noturno','+ 20% no período noturno'],
+         ['Status 2','Viagem: diurno + 20%, noturno + 40%','+ 20% (dia) / + 40% (noite)'],
+         ['Status 3','Viagem em FDS, noturno e/ou feriados','+ 40% sobre o valor base'],
+       ]},
+      {id:'27',title:'2.7 Processo de Compras',
+       body:'Escopo atual: material de escritório e consumo administrativo/copa. Toda solicitação de compra deve partir exclusivamente de um gestor, e toda aquisição deve ser realizada utilizando o CNPJ da empresa (não é permitido compra em nome físico). As compras atendem SP, Curitiba e Rio de Janeiro. Realizar no mínimo três cotações, armazenando evidências (print de tela). Selecionar a melhor opção e acompanhar o pedido até a entrega.',
+       note:'⚠ PENDENTE: Definir valor limite a partir do qual é obrigatória autorização da diretoria. ⚠ PENDENTE: Incluir escopo de Material Químico (Insumos e MP).'},
+      {id:'281',title:'2.8 Cálculo de Estimativa de Despesas — Parâmetros',
+       body:'As informações são recebidas do time comercial via WhatsApp (cidade de destino e metragem da obra). Premissa: considerar sempre o frete partindo de Curitiba e o prestador saindo de Curitiba, independentemente de onde ele estiver. Trabalhar sempre com o cenário de maior custo.',
+       type:'table',headers:['Parâmetro','Regra'],
+       rows:[
+         ['Obras até 500 m² (somente piso)','12 dias trabalhados + 15 dias de hospedagem'],
+         ['Distância para VT até 150 km','Deslocamento não cobrado'],
+         ['Distância para VT acima de 150 km ou aéreo','Calcular passagem + Uber/carro + hospedagem'],
+         ['Custo padrão da Visita Obrigatória','R$ 650,00 (diária + hospedagem do colaborador técnico)'],
+       ]},
+      {id:'282',title:'2.8.1 Tabela de Referência — Alimentação e Hospedagem',
+       type:'table',headers:['Item','Valor unitário'],
+       rows:[
+         ['Café da manhã','R$ 15,00 / pessoa / dia'],
+         ['Almoço','R$ 30,00 / pessoa / dia'],
+         ['Jantar','R$ 30,00 / pessoa / dia'],
+         ['Alimentação completa (café + almoço + jantar)','R$ 75,00 / prestador / dia'],
+         ['Pousada / Hotel / AirBnB — diária padrão','R$ 150,00 / prestador / dia'],
+         ['Deslocamento obra–hotel (até 3 pessoas)','R$ 20,00 / dia (ida) + R$ 20,00 / dia (volta)'],
+         ['Deslocamento obra–hotel (mais de 3 pessoas)','R$ 40,00 / dia (ida) + R$ 40,00 / dia (volta)'],
+       ]},
+      {id:'283',title:'2.8.2 Número Mínimo de Prestadores por Metragem',
+       type:'table',headers:['Metragem da obra','Número mínimo de prestadores'],
+       rows:[
+         ['Até 150 m²','Mínimo 2 aplicadores'],
+         ['Até 400 m²','Mínimo 3 aplicadores'],
+         ['Acima de 400 m²','Mínimo 5 aplicadores'],
+       ]},
+      {id:'284',title:'2.8.3 Bloco 1 — Custos da Equipe de Obra',
+       body:'Abrange os custos operacionais da equipe de prestadores: (1) Hospedagem e Alimentação — calcular com base no número de prestadores × diárias × R$ 75,00/dia de alimentação + hospedagem. (2) Frete de materiais — cotação formal com transportadora, sempre partindo de Curitiba. (3) Deslocamento dos prestadores — calcular carro (km + pedágios ida/volta) ou avião (passagem + taxas + transfer aeroporto), sempre de Curitiba. (4) Deslocamento dentro da cidade — custo diário por aplicativo × dias trabalhados.'},
+      {id:'285',title:'2.8.4 Bloco 2 — Custos da Visita Obrigatória (Colaborador Técnico)',
+       body:'Calculado separadamente do Bloco 1. Diária do colaborador: R$ 350,00/dia. Hospedagem do colaborador: R$ 300,00/diária. Custo total padrão: R$ 650,00. Deslocamento: mesma lógica do Bloco 1 — carro ou avião conforme distância, partindo de Curitiba, cenário de maior custo.'},
+      {id:'3',title:'3. Requisitos do Cargo',
+       body:'Experiência em rotinas administrativas e/ou financeiras. Desejável experiência com sistemas ERP (preferencialmente Omie). Habilidades: boa comunicação verbal e escrita, organização e atenção a detalhes, capacidade de trabalhar em equipe, domínio de Excel/Pacote Office, facilidade com sistemas de gestão (ERP) e ferramentas digitais, noções de contabilidade e legislação fiscal.'},
+      {id:'4',title:'4. Sistemas e Ferramentas Utilizados',
+       type:'table',headers:['Sistema / Ferramenta','Finalidade','Status'],
+       rows:[
+         ['Omie (ERP)','Lançamentos financeiros, contas a pagar e receber, RT','✔ Confirmado'],
+         ['Mata-Metro','Controle operacional e pagamento de prestadores','✔ Confirmado'],
+         ['Pipefy','Solicitação de hospedagem e acompanhamento de obras','✔ Confirmado'],
+         ['Excel / Google Sheets','Planilha individual de obra e controle de dados','✔ Confirmado'],
+         ['WhatsApp (grupos)','Recebimento de solicitações e comunicação com prestadores','✔ Confirmado'],
+         ['Telegram (grupos de obra)','Registro de informações de hotel e logística por obra','✔ Confirmado'],
+         ['Drive Financeiro','Base de dados e cálculo de despesas operacionais','⚠ Confirmar localização'],
+         ['ClickBus','Reserva de passagens de ônibus','✔ Confirmado'],
+         ['Decolar','Pesquisa e reserva de passagens aéreas','✔ Confirmado'],
+         ['Rotas Brasil / Google Maps','Cálculo de distâncias, pedágios e rotas','✔ Confirmado'],
+         ['Uber / transporte local','Deslocamentos em obras fora da base','✔ Confirmado'],
+       ]},
+      {id:'5',title:'5. Partes Interessadas',
+       body:'Setor de Operações (origem das solicitações de hospedagem, deslocamento e VT) · Time Comercial (envio de demandas de cálculo de despesas) · Setor Técnico / Arquitetos (emissão de NF de ART) · Prestadores de serviço e líderes de obra · Fornecedores (processo de compras) · Nathan e Braiam (prestadores responsáveis pelas planilhas de VT semanal) · Diretoria Financeira e Operacional · Júlio Taporosky — Coordenador Financeiro (superior imediato).'},
+    ],
+    outputs:[
+      {t:'Lançamentos no Omie',c:'Reembolsos, deslocamentos, alimentação, hospedagem, VT e RT registrados corretamente.',col:'oc-bl'},
+      {t:'Pagamentos via Mata-Metro',c:'Prestadores pagos por obra e base cadastral, adicionais aplicados conforme status.',col:'oc-nv'},
+      {t:'Hospedagens organizadas',c:'Hotel pesquisado, vouchers enviados, informações registradas no Telegram da obra.',col:'oc-gr'},
+      {t:'Estimativas de despesas',c:'Cálculo completo preenchido no Drive Financeiro com evidências armazenadas.',col:'oc-am'},
+    ],
+  },
 ];
+
+// ── INJECT CSS ────────────────────────────────────────────────────────────
+(function(){
+  const s=document.createElement('style');
+  s.textContent=`
+.it-tab{border:1.5px dashed var(--bdr);border-radius:var(--rdl);padding:18px 20px;margin-top:2px;margin-bottom:10px;display:flex;align-items:center;gap:14px;background:var(--bg)}
+.it-icon{font-size:28px;flex-shrink:0}
+.it-title{font-size:13px;font-weight:600;color:var(--mu)}
+.it-sub{font-size:12px;color:var(--mu);margin-top:3px;line-height:1.5;opacity:.8}
+.it-badge{display:inline-flex;align-items:center;gap:5px;background:#FFF9E6;border:1px solid #EF9F27;color:#7F6000;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+.dc-badge{display:inline-block;background:#e8f0fe;color:#185FA5;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-left:6px;letter-spacing:.03em;vertical-align:middle}
+.dc-colaborador{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.09);border-radius:var(--rd);padding:10px 14px;margin-top:12px}
+.dc-avatar{width:38px;height:38px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.dc-col-name{font-size:13px;font-weight:600;color:#fff}
+.dc-col-role{font-size:11px;color:#89a6c8;margin-top:1px}
+.sig-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.sig-card{background:var(--bg);border:1px solid var(--bdr);border-radius:var(--rd);padding:12px;text-align:center}
+.sig-name{font-size:12px;font-weight:600;color:var(--tx);margin-bottom:3px}
+.sig-role{font-size:11px;color:var(--mu)}
+.sig-line{border-top:1px solid var(--bdr);margin:10px 0 8px}
+`;
+  document.head.appendChild(s);
+})();
 
 // ── STATE ─────────────────────────────────────────────────────────────────
 let curPOP = null, curSector = null, openSec = {};
@@ -482,12 +636,21 @@ function renderHome() {
                 <span class="sc-pop-code">${p.code}</span>
                 <span class="sc-pop-name">${p.title}</span>
               </div>
-              <span style="font-size:11px;color:${p.status==='ok'?'var(--g)':'var(--r)'}">${stl[p.status]}</span>
+              <span style="font-size:11px;color:${p.status==='ok'?'var(--g)':p.status==='warn'?'var(--a)':'var(--r)'}">
+                ${p.type==='dc'?'📋':stl[p.status]}</span>
             </div>`).join('')}
+          <div class="sc-pop-item" style="opacity:.5">
+            <div class="sc-pop-left">
+              <span style="font-size:12px;margin-right:2px">🚧</span>
+              <span class="sc-pop-code" style="color:var(--a)">IT</span>
+              <span class="sc-pop-name" style="color:var(--mu)">Instrução de Trabalho</span>
+            </div>
+            <span style="font-size:10px;color:var(--a);font-weight:600">Em manutenção</span>
+          </div>
         </div>
         <div class="sc-footer">
-          <span class="sc-count">${pops.length} procedimento${pops.length>1?'s':''}${pending?' · <span style="color:var(--r)">'+pending+' pendência'+( pending>1?'s':'')+'</span>':''}</span>
-          <span class="sc-cta">Ver procedimentos <span>→</span></span>
+          <span class="sc-count">${pops.length} documento${pops.length>1?'s':''}${pending?' · <span style="color:var(--r)">'+pending+' pendência'+( pending>1?'s':'')+'</span>':''}</span>
+          <span class="sc-cta">Ver documentos <span>→</span></span>
         </div>
       </div>`;
   }).join('');
@@ -541,11 +704,19 @@ function renderSidebar() {
     ${pops.map(p => `
       <div class="sb-item ${p.id===curPOP?'on':''}" onclick="navPOP('${p.id}')">
         <span class="dot ${dots[p.status]}"></span>
-        <div>
-          <div class="sb-item-code">${p.code}</div>
+        <div style="min-width:0">
+          <div class="sb-item-code">${p.code}${p.type==='dc'?' <span style="background:#e8f0fe;color:#185FA5;font-size:9px;padding:1px 5px;border-radius:6px;font-weight:600">DC</span>':''}</div>
           <div class="sb-item-title">${p.title}</div>
         </div>
-      </div>`).join('')}`;
+      </div>`).join('')}
+    <div class="sb-item" style="opacity:.5;cursor:default;margin-top:6px;border-top:1px dashed var(--bdr);padding-top:10px">
+      <span style="font-size:13px">🚧</span>
+      <div>
+        <div class="sb-item-code" style="color:var(--a)">IT</div>
+        <div class="sb-item-title" style="color:var(--mu)">Instrução de Trabalho</div>
+        <div style="font-size:10px;color:var(--a);margin-top:1px">Em manutenção</div>
+      </div>
+    </div>`;
 }
 
 function navPOP(id) {
@@ -564,7 +735,33 @@ function renderPOP() {
   const sts = {ok:'st-ok',err:'st-er',warn:'st-wn'};
   const stl = {ok:'✔ Revisado',err:'⚠ Divergência',warn:'⚠ Pendências'};
 
-  let h = `
+  // Special header for Descritivo de Cargo
+  const isDC = pop.type === 'dc';
+  let h = isDC ? `
+    <div class="ph" style="background:linear-gradient(135deg,#162848,#1F3864)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+        <div>
+          <div class="ph-code">${pop.code} · <span style="background:rgba(255,255,255,.12);padding:1px 7px;border-radius:10px;font-size:10px;letter-spacing:.04em">DESCRITIVO DE CARGO</span> · Rev.${pop.rev} · ${pop.date}</div>
+          <div class="ph-title" style="margin-top:6px">${pop.title}</div>
+        </div>
+        <span class="stag ${sts[pop.status]}" style="margin-top:4px;white-space:nowrap">${stl[pop.status]}</span>
+      </div>
+      <div class="ph-meta" style="margin-bottom:12px">
+        <div class="ph-it">Setor: <b>${pop.sector}</b></div>
+        <div class="ph-it">Superior imediato: <b>${pop.superior}</b></div>
+      </div>
+      <div class="dc-colaborador">
+        <div class="dc-avatar">${pop.colaboradora.charAt(0)}</div>
+        <div>
+          <div class="dc-col-name">${pop.colaboradora}</div>
+          <div class="dc-col-role">Assistente Financeiro · ${pop.sector}</div>
+        </div>
+      </div>
+    </div>
+    <div class="al-e" style="background:var(--al);border-color:#EF9F27;color:var(--a)"><b>⚠ Pendências abertas:</b> ${pop.pendencias}</div>
+    <div class="fx"><span class="fx-lbl">Atuação</span>
+      ${pop.fluxo.map(f=>`<span class="fch"><b>${f.ref}</b> — ${f.label}</span>`).join('')}
+    </div>` : `
     <div class="ph">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px">
         <div>
@@ -593,6 +790,8 @@ function renderPOP() {
     if (s.type === 'table') {
       body = `<table class="dt"><tr>${s.headers.map(h=>`<th>${h}</th>`).join('')}</tr>
         ${s.rows.map((row,i)=>`<tr ${s.warnRow===i?'class="dt-warn"':''}>${row.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+      if (s.body) body = `<p class="prose" style="margin-bottom:8px">${s.body}</p>` + body;
+      if (s.extra) body += `<p class="prose" style="margin-top:8px">${s.extra}</p>`;
     } else {
       body = `<p class="prose">${s.body}</p>`;
       if (s.extra) body += `<p class="prose" style="margin-top:8px">${s.extra}</p>`;
@@ -601,9 +800,45 @@ function renderPOP() {
     h += secCard(s.id, s.title, body);
   });
 
-  const flowHTML = pop.flowCols ? buildFlowCols(pop) : buildFlowLinear(pop.flow);
-  h += secCard('flow','Fluxograma do processo',`<div class="flow-wrap">${flowHTML}</div>`);
-  h += secCard('out','Saídas do processo', buildOutputs(pop));
+  // DC gets Assinaturas section instead of flow + special IT tab
+  if (isDC) {
+    h += secCard('assin','7. Assinaturas', `
+      <div class="sig-row">
+        <div class="sig-card">
+          <div class="sig-name">${pop.colaboradora}</div>
+          <div class="sig-role">Assistente Financeiro</div>
+          <div class="sig-line"></div>
+          <div style="font-size:10px;color:var(--mu)">Colaboradora</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">${pop.superior}</div>
+          <div class="sig-role">Coordenador Financeiro</div>
+          <div class="sig-line"></div>
+          <div style="font-size:10px;color:var(--mu)">Superior Imediato</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">${pop.diretoria}</div>
+          <div class="sig-role">Diretoria Operacional</div>
+          <div class="sig-line"></div>
+          <div style="font-size:10px;color:var(--mu)">Aprovação</div>
+        </div>
+      </div>`);
+    h += secCard('out','Saídas e Responsabilidades', buildOutputs(pop));
+  } else {
+    const flowHTML = pop.flowCols ? buildFlowCols(pop) : buildFlowLinear(pop.flow);
+    h += secCard('flow','Fluxograma do processo',`<div class="flow-wrap">${flowHTML}</div>`);
+    h += secCard('out','Saídas do processo', buildOutputs(pop));
+  }
+
+  // Instrução de Trabalho tab — all documents
+  h += `<div class="it-tab">
+    <div class="it-icon">🚧</div>
+    <div>
+      <div class="it-title">Instrução de Trabalho</div>
+      <div class="it-sub">Conteúdo detalhado de execução em elaboração.<br>Será adicionado pelo responsável em breve.</div>
+      <span class="it-badge">⚙ Em manutenção</span>
+    </div>
+  </div>`;
 
   document.getElementById('detail-main').innerHTML = h;
 }
