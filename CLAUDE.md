@@ -1,5 +1,8 @@
 # CLAUDE.md — Contexto Monofloor
 
+## Idioma
+Sempre responda em português brasileiro. Todos os comentários, commits, mensagens e explicações devem ser em PT-BR.
+
 ## Quem é o Vitor
 **Vitor Gomes** — Gerente de Qualidade da Monofloor. GitHub: `vitormonofloor`. Trabalha com otimização de processos e análise de dados. Está construindo um sistema de gestão operacional completo com assistência do Claude.
 
