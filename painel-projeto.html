@@ -137,6 +137,43 @@ a:hover { text-decoration: underline; }
 .brain-svg .pillar-node:hover { opacity: .85; }
 .brain-svg .dep-line { transition: opacity .3s; }
 .brain-hint { font-size: 11px; color: var(--text3); text-align: center; margin: 8px 0 0; }
+
+/* ── FLOWCHART ─────────────── */
+.flow-tabs{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--card);margin:0 20px;border-radius:8px 8px 0 0}
+.flow-tab{padding:9px 12px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.3px;color:var(--text3);transition:all .2s}
+.flow-tab:hover{background:var(--card2)}
+.flow-tab.active{border-bottom-color:var(--accent);color:var(--accent)}
+.flow-panel{display:none;padding:10px 20px}
+.flow-panel.active{display:block}
+.flow-intro{padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);margin-bottom:10px;font-size:11px;line-height:1.6;color:var(--text2)}
+.flow-intro strong{color:var(--text)}
+.fn{margin-bottom:2px}
+.fn-main{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);transition:all .15s}
+.fn-main:hover{border-color:#333}
+.fn-code{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;padding:2px 6px;border-radius:5px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.fn-text{font-size:11.5px;line-height:1.45;flex:1}
+.fn-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.fn-sys{font-size:8px;padding:1px 5px;border-radius:4px;background:#1a1a1a;color:var(--text3);margin-top:3px;display:inline-block}
+.fn-pipe{height:14px;padding-left:22px;display:flex;align-items:center}
+.fn-pipe::before{content:'';width:1.5px;height:100%;background:var(--border)}
+.fn-dec .fn-main{border-left:2.5px solid var(--amber);background:#111100}
+.fn-dec .fn-text{color:var(--amber)}
+.fn-branches{display:flex;gap:4px;margin-bottom:2px;padding-left:12px}
+.fn-branch{flex:1;border-radius:6px;border:1px solid var(--border);overflow:hidden;font-size:10px}
+.fn-branch-lbl{padding:3px 8px;text-align:center;font-weight:600;text-transform:uppercase;font-size:9px;letter-spacing:.3px}
+.fn-branch-yes .fn-branch-lbl{background:#22c55e12;color:var(--green)}
+.fn-branch-no .fn-branch-lbl{background:#ef444412;color:var(--red)}
+.fn-branch-body{padding:4px 8px;font-size:10px;color:var(--text2);line-height:1.4}
+.fn-sync .fn-main{border-left:2.5px solid #3b82f6;background:#0a1020}
+.fn-sync-tag{font-size:8px;padding:1px 6px;border-radius:4px;background:#3b82f622;color:#3b82f6;font-weight:600;display:inline-block;margin-top:2px}
+.fn-inv .fn-main{border-left:2.5px solid var(--red);background:#1a0505}
+.fn-inv-badge{font-size:8px;padding:1px 6px;border-radius:4px;font-weight:600;display:inline-block;margin-top:2px}
+.fn-inv-admin{background:#f59e0b22;color:var(--amber)}
+.fn-inv-tech{background:#ef444422;color:var(--red)}
+.fn-inv-log{background:#f9731622;color:#f97316}
+.fn-sla{font-size:8px;padding:1px 5px;border-radius:4px;background:#f59e0b15;color:var(--amber);margin-left:4px}
+.fn-pp{background:var(--card);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:11px;line-height:1.7;color:var(--text2)}
+.fn-pp strong{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -164,8 +201,9 @@ a:hover { text-decoration: underline; }
 
 <!-- ═══ TABS ═══ -->
 <div class="main-tabs">
-  <div class="main-tab active" onclick="switchTab('brain')">🧠 Mapa Cerebral</div>
-  <div class="main-tab" onclick="switchTab('tasks')">📋 Tarefas por Pilar</div>
+  <div class="main-tab active" onclick="switchTab('brain')">🧠 Mapa</div>
+  <div class="main-tab" onclick="switchTab('tasks')">📋 Tarefas</div>
+  <div class="main-tab" onclick="switchTab('flow')">🔄 Fluxograma</div>
 </div>
 
 <!-- ═══ TAB 1: BRAIN MAP ═══ -->
@@ -274,6 +312,12 @@ a:hover { text-decoration: underline; }
 <!-- ═══ DETAIL PANELS ═══ -->
 <div id="details"></div>
 
+</div>
+
+<!-- ═══ TAB 3: FLOWCHART ═══ -->
+<div class="tab-content" id="tab-flow">
+<div class="flow-tabs" id="flow-tabs"></div>
+<div id="flow-content"></div>
 </div>
 
 <!-- ═══ LEGEND ═══ -->
@@ -561,8 +605,192 @@ function switchTab(id) {
   document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   document.querySelectorAll('.main-tab').forEach(t => {
-    if ((id === 'brain' && t.textContent.includes('Mapa')) || (id === 'tasks' && t.textContent.includes('Tarefas'))) t.classList.add('active');
+    if ((id==='brain'&&t.textContent.includes('Mapa'))||(id==='tasks'&&t.textContent.includes('Tarefas'))||(id==='flow'&&t.textContent.includes('Fluxo'))) t.classList.add('active');
   });
+  if(id==='flow'&&!flowRendered){renderFlowchart();flowRendered=true;}
+}
+
+// ═══════════════════════════════════════════════════
+// FLOWCHART DATA (from PDF macro)
+// ═══════════════════════════════════════════════════
+let flowRendered=false;
+const FC=[
+{id:'oect',name:'OECT Contratos',c:'#a855f7',intro:'Da proposta aceita até assinatura. <strong>OE só inicia após OECT-017.</strong>',
+s:[
+{t:'p',c:'OECT-001',x:'Recebe do time comercial a proposta aceita',y:'Pipefy'},
+{t:'p',c:'OECT-002',x:'Comunicar aprovação da proposta comercial (PIUI)'},
+{t:'p',c:'OECT-003',x:'Inserir informações do questionário para produção de contrato',y:'Pipefy'},
+{t:'d',c:'OECT-004',x:'Informações completas?',a:'Conferir veracidade',b:'Contatar cliente'},
+{t:'p',c:'OECT-005',x:'Conferir veracidade: CPF (Serasa/Receita) + Endereço (Correios/Maps)',y:'Serasa'},
+{t:'p',c:'OECT-006',x:'Adicionar informações na base de dados'},
+{t:'d',c:'OECT-007',x:'Exige garantia estendida?',a:'Contrato com garantia',b:'Contrato regular'},
+{t:'p',c:'OECT-008',x:'Anexar contrato à plataforma de assinatura',y:'D4Sign'},
+{t:'p',c:'OECT-009',x:'Sinalizar o cliente'},
+{t:'p',c:'OECT-010',x:'Criar grupo de alinhamento — WhatsApp + Telegram',y:'WhatsApp'},
+{t:'d',c:'OECT-011',x:'Cliente acessou o contrato?',a:'OECT-012',b:'Sinalizar novamente'},
+{t:'d',c:'OECT-012',x:'Contrato assinado?',a:'Download e anexar',b:'Jurídico se necessário'},
+{t:'p',c:'OECT-014',x:'Download do contrato assinado e anexar aos registros'},
+{t:'p',c:'OECT-015',x:'Enviar informações ao cadastro financeiro',y:'Omie'},
+{t:'p',c:'OECT-016',x:'Sinalizar no WhatsApp que contrato foi assinado'},
+{t:'s',c:'OECT-017',x:'Fim do processo contratual',k:'LIBERA OPERAÇÃO (OE)'},
+]},
+{id:'oe1',name:'OE 1 Onboarding',c:'#3b82f6',intro:'1º contato, documentação, reunião diretora técnica, definição data/cor. <strong>PP:001 definido aqui.</strong>',
+s:[
+{t:'p',c:'OE-001',x:'Introduzir operação ao cliente'},
+{t:'p',c:'OE-002',x:'Adicionar participantes se necessário'},
+{t:'p',c:'OE-003',x:'Enviar documentação: Manual do processo, expectativas e PRAZO'},
+{t:'p',c:'OE-004',x:'Marcar reunião online com a Diretora Técnica'},
+{t:'d',c:'OE-005',x:'Reunião agendada?',a:'OE-006: Confirmar horário',b:'Inv. Administrativa'},
+{t:'p',c:'OE-006',x:'Confirmar dia e horário da reunião'},
+{t:'d',c:'OE-007',x:'Reunião aconteceu?',a:'OE-008',b:'Reagendar'},
+{t:'p',c:'OE-008',x:'Questionar: data prevista de execução + escolha das cores'},
+{t:'d',c:'OE-009',x:'Cor escolhida?',a:'Atualizar sistemas',b:'→ Inicia fluxo OEC'},
+{t:'d',c:'OE-010',x:'Data definida?',a:'Atualizar Pipefy + Telegram',b:'Reforçar com cliente'},
+{t:'q',x:'PP:001 — Data X definida | VT Aferição: X−60d | Cor: X−35d | VT Entrada: X−10d | Equipe: X−7d'},
+]},
+{id:'oe2',name:'OE 2 Aferição',c:'#3b82f6',intro:'VT de aferição, análise técnica, regularizações, relatório PDF, confirmação de data.',
+s:[
+{t:'p',c:'OE-011',x:'Agendar VT de aferição/orientação',l:'X−60d'},
+{t:'d',c:'OE-012',x:'VT realizada?',a:'Analisar resultado',b:'Reagendar / Inv. Técnica'},
+{t:'p',c:'OE-013',x:'Analisar resultado via Telegram (grupo de obra)',y:'Telegram'},
+{t:'p',c:'OE-014',x:'Sinalizar áreas que necessitam regularização — relatório PDF'},
+{t:'d',c:'OE-015',x:'Relatório enviado?',a:'OE-016',b:'Cobrar envio'},
+{t:'p',c:'OE-016',x:'Definir com cliente o que executar dentro do período'},
+{t:'d',c:'OE-017',x:'Cliente confirma data de início?',a:'Verificar faseamento',b:'Postergação → encaixe'},
+{t:'d',x:'Obra faseada?',a:'Informar custo faseamento',b:'Seguir normal'},
+{t:'p',c:'OE-018',x:'Monitorar adequações necessárias'},
+{t:'d',c:'OE-019',x:'Tempo hábil até entrada em obra?',a:'OE-020',b:'Inv. Técnica vs PP:001'},
+{t:'d',c:'OE-020',x:'Cliente confirmou regularizações?',a:'OE-021',b:'Termo de responsabilidade?'},
+{t:'p',c:'OE-021',x:'Solicitar fotos e vídeos das áreas para registro'},
+]},
+{id:'oec',name:'OEC Cores',c:'#ec4899',intro:'Showroom ou amostra física. Kit padrão (grátis) ou personalizado (R$500/cor). Foto frente/verso obrigatória. <strong>OEC-011 libera OEI.</strong>',
+s:[
+{t:'d',c:'OEC-001',x:'Meio de escolha da cor?',a:'Showroom → OEC-002',b:'Amostra → OEC-004'},
+{t:'d',c:'OEC-002',x:'Visitar showroom?',a:'Agendar via link',b:'OEC-003'},
+{t:'d',x:'Visita aconteceu?',a:'Foto frente/verso',b:'Remarcar / remanejamento'},
+{t:'d',c:'OEC-003',x:'Cliente possui amostra?',a:'Foto frente/verso',b:'OEC-004 envio físico'},
+{t:'p',c:'OEC-004',x:'Envio de amostra física ao cliente'},
+{t:'p',c:'OEC-005',x:'Confirmar endereço, cores, material e prazos de produção/envio'},
+{t:'d',c:'OEC-006',x:'Kit padrão?',a:'Prosseguir (sem custo)',b:'Personalizada → R$500/cor'},
+{t:'p',c:'OEC-007',x:'Solicitar ao ESTOQUE via Pipefy info de produção das amostras',y:'Pipefy'},
+{t:'p',c:'OEC-008',x:'Acompanhar até o envio'},
+{t:'d',c:'OEC-009',x:'Despachado?',a:'OEC-010',b:'Cobrar estoque'},
+{t:'d',c:'OEC-010',x:'Recebido pelo cliente?',a:'OEC-011',b:'Rastrear'},
+{t:'d',c:'OEC-011',x:'Cor e material definido?',a:'Libera OEI-001',b:'Inv. Administrativa'},
+{t:'s',c:'OEC-011',x:'Cor e material definidos',k:'LIBERA OEI-001 (produção)'},
+]},
+{id:'oe3',name:'OE 3 Pré-Obra',c:'#3b82f6',intro:'VT entrada, equipe, deslocamento/hospedagem, material, conferência pré-obra. <strong>Múltiplos bloqueios.</strong>',
+s:[
+{t:'p',c:'OE-022',x:'Monitorar atendimento e informar VT de entrada'},
+{t:'d',c:'OE-023',x:'VT de entrada realizada?',a:'OE-024',b:'Reagendar',l:'X−10d'},
+{t:'d',c:'OE-024',x:'Regularizações aptas? (Inv. Técnica)',a:'OE-025',b:'Inv. Técnica'},
+{t:'p',c:'OE-025',x:'DEFINIR EQUIPE de aplicação e registrar em sistema',l:'X−7d',y:'Pipefy'},
+{t:'d',c:'OE-026',x:'Equipe confirma aceite?',a:'OE-027',b:'Atualizar prestadores'},
+{t:'p',c:'OE-027',x:'Inserir líder da equipe no grupo Telegram',y:'Telegram'},
+{t:'d',x:'Necessita deslocamento?',a:'Solicitar ao setor',b:'Aguardar início'},
+{t:'d',x:'Necessita hospedagem?',a:'Repassar via Telegram',b:'Aguardar início'},
+{t:'p',c:'OE-028',x:'Informar no WhatsApp dados dos prestadores',y:'WhatsApp'},
+{t:'p',c:'OE-029',x:'Verificar dia/horário entrega de materiais',y:'Pipefy'},
+{t:'d',c:'OE-030',x:'Material em obra?',a:'Conferência',b:'Sinalizar logística'},
+{t:'s',c:'OE-030',x:'Material confirmado em obra',k:'Recebe de OEI-009/011'},
+{t:'p',c:'OE-031',x:'Conferência pré-obra'},
+{t:'d',c:'OE-032',x:'Prestador no local?',a:'OE-034',b:'BLOQUEIO até chegada'},
+{t:'d',c:'OE-033',x:'Entrega parcial?',a:'Inv. Logística (OEL)',b:'Inv. Técnica'},
+{t:'d',c:'OE-034',x:'Material conforme escopo?',a:'OE-035',b:'BLOQUEIO — Inv. Logística'},
+{t:'d',c:'OE-035',x:'Material conferido?',a:'OE-036',b:'Substituição necessária'},
+{t:'d',c:'OE-036',x:'Obra apta para execução?',a:'→ OE-037',b:'BLOQUEIO — critérios pendentes'},
+]},
+{id:'oe4',name:'OE 4 Execução',c:'#3b82f6',intro:'Início, diário de obra, pausas (cliente/externo/material/empresa), substituição de material, amostra urgente.',
+s:[
+{t:'p',c:'OE-037',x:'Início da Execução',y:'Telegram'},
+{t:'d',c:'OE-038',x:'Pausar obra?',a:'Identificar motivo →',b:'OE-039 continuar'},
+{t:'d',x:'Motivo cliente?',a:'Data de encaixe para retorno',b:'Motivo externo?'},
+{t:'d',x:'Motivo externo?',a:'Acompanhar causa raiz',b:'Material?'},
+{t:'d',x:'Material?',a:'Sinalizar indústria/estoque',b:'Motivo empresa'},
+{t:'d',x:'Substituição imediata?',a:'Substituir',b:'Material extra → tempo de produção'},
+{t:'d',x:'Cor do material?',a:'Amostra urgente via Pipefy',b:'Prosseguir substituição'},
+{t:'d',x:'Amostra enviada → recebida → aprovada?',a:'Produzir material',b:'Aguardar/rastrear'},
+{t:'p',c:'OE-039',x:'Execução / Finalização — diário de obra contínuo',y:'Telegram'},
+]},
+{id:'oe5',name:'OE 5 Entrega',c:'#3b82f6',intro:'Visita de entrega, aprovação, verniz, registro de materiais.',
+s:[
+{t:'p',c:'OE-040',x:'Agendar Visita de entrega de obra'},
+{t:'d',c:'OE-041',x:'Visita realizada?',a:'OE-042',b:'Reagendar'},
+{t:'d',c:'OE-042',x:'Obra aprovada?',a:'OE-043',b:'Ajuste de acabamento'},
+{t:'p',c:'OE-043',x:'Apta para finalização e aplicação do verniz'},
+{t:'p',c:'OE-044',x:'Enviar registro de materiais para coleta'},
+{t:'d',c:'OE-045',x:'Equipe enviou registro?',a:'OE-046',b:'Inv. Adm. — cobrar líder'},
+{t:'p',c:'OE-046',x:'Aplicação Finalizada'},
+]},
+{id:'oe6',name:'OE 6 Coleta',c:'#3b82f6',intro:'Coleta de materiais, agendamento, tempo de cura, encerramento.',
+s:[
+{t:'p',c:'OE-047',x:'Solicitar coleta de material'},
+{t:'p',c:'OE-048',x:'Agendar dias e horários para coleta'},
+{t:'d',c:'OE-049',x:'Acessar aplicação?',a:'Aguardar cura',b:'Prosseguir'},
+{t:'p',c:'OE-050',x:'Informar dados dos prestadores para coleta'},
+{t:'d',c:'OE-051',x:'Coleta realizada?',a:'OE-052',b:'Reagendar ou sinalizar gestão'},
+{t:'p',c:'OE-052',x:'✅ PROCESSO CONCLUÍDO'},
+]},
+{id:'oei',name:'OEI Indústria',c:'#06b6d4',intro:'Produção, NF, despacho (CIF/FOB), rastreamento de carga dedicada/compartilhada.',
+s:[
+{t:'s',c:'OEI-001',x:'Enviar para produção',k:'Recebe de OEC-011'},
+{t:'p',c:'OEI-002',x:'Envio de material'},
+{t:'p',c:'OEI-003',x:'Despacho logístico — CIF (Monofloor) / FOB (terceiros)'},
+{t:'s',c:'OEI-004',x:'Confirmação de despacho',k:'AVISA OE-029/030'},
+{t:'d',c:'OEI-005',x:'NF emitida?',a:'OEI-006',b:'Emitir NF',l:'Omie'},
+{t:'p',c:'OEI-006',x:'Data real do envio da carga'},
+{t:'p',c:'OEI-007',x:'Material em trânsito'},
+{t:'d',c:'OEI-008',x:'Dedicada ou compartilhada?',a:'Rastreio direto + monitoramento',b:'Confirmar rota, veículo, placa, motorista'},
+{t:'p',c:'OEI-009',x:'Monitorar janela de entrega vs SLA'},
+{t:'p',c:'OEI-010',x:'Limite da SLA'},
+{t:'d',c:'OEI-011',x:'Prestador sinalizou entrega?',a:'Confirma OE-030',b:'→ OEL-001'},
+{t:'s',c:'OEI-011',x:'Entrega confirmada',k:'CONFIRMA OE-030'},
+]},
+{id:'oel',name:'OEL Logística',c:'#f97316',intro:'Ocorrências, investigação, registro, impacto no cronograma, decisão com diretoria.',
+s:[
+{t:'p',c:'OEL-001',x:'Motivo não entrega — identificar causa'},
+{t:'i',c:'OEL-002',x:'INVESTIGAÇÃO LOGÍSTICA — Operador assume',v:'log',u:'Transporte? → Acionar responsáveis | Administrativo? → Rastrear erro'},
+{t:'p',c:'OEL-003',x:'Registrar ocorrência',y:'Pipefy'},
+{t:'d',c:'OEL-004',x:'Impacta cronograma?',a:'OEL-005 negociar',b:'Resolver e retornar'},
+{t:'p',c:'OEL-005',x:'Informar cliente sobre alteração no tempo / Negociar'},
+{t:'d',x:'Reenviar pedido total?',a:'Reenviar',b:'Entrega parcial → contagem'},
+{t:'d',x:'Carga comprometida?',a:'OEL-006',b:'Resolver parcial'},
+{t:'i',c:'OEL-006',x:'DECISÃO JUNTO À DIRETORIA (muitas variáveis)',v:'tech',u:'Criticidade alta — diretoria após análise completa'},
+{t:'s',c:'OEL-004',x:'Impacto logístico',k:'PODE ALTERAR SLA do OE'},
+]},
+];
+
+function renderFlowchart(){
+  document.getElementById('flow-tabs').innerHTML=FC.map((f,i)=>
+    `<div class="flow-tab${i===0?' active':''}" style="${i===0?'color:'+f.c+';border-bottom-color:'+f.c:''}" onclick="showFl('${f.id}',this,'${f.c}')">${f.name}</div>`
+  ).join('');
+  document.getElementById('flow-content').innerHTML=FC.map((f,i)=>
+    `<div class="flow-panel${i===0?' active':''}" id="fl-${f.id}"><div class="flow-intro">${f.intro}</div>${f.s.map(n=>renderFN(n,f.c)).join('')}</div>`
+  ).join('');
+}
+function showFl(id,el,c){
+  document.querySelectorAll('.flow-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.flow-tab').forEach(t=>{t.classList.remove('active');t.style.color='';t.style.borderBottomColor='transparent'});
+  document.getElementById('fl-'+id).classList.add('active');
+  el.classList.add('active');el.style.color=c;el.style.borderBottomColor=c;
+}
+function renderFN(n,c){
+  const code=n.c?`<span class="fn-code" style="background:${c}15;color:${c}">${n.c}</span>`:'';
+  const sys=n.y?`<span class="fn-sys">${n.y}</span>`:'';
+  const sla=n.l?`<span class="fn-sla">${n.l}</span>`:'';
+  const sub=n.u?`<div class="fn-sub">${n.u}</div>`:'';
+  if(n.t==='d'){
+    const br=(n.a||n.b)?`<div class="fn-branches"><div class="fn-branch fn-branch-yes"><div class="fn-branch-lbl">Sim</div><div class="fn-branch-body">${n.a||''}</div></div><div class="fn-branch fn-branch-no"><div class="fn-branch-lbl">Não</div><div class="fn-branch-body">${n.b||''}</div></div></div>`:'';
+    return `<div class="fn fn-dec"><div class="fn-main">${code}<div class="fn-text">${n.x}${sla}</div></div></div>${br}<div class="fn-pipe"></div>`;
+  }
+  if(n.t==='s') return `<div class="fn fn-sync"><div class="fn-main">${code}<div style="flex:1"><div class="fn-text">${n.x}</div><span class="fn-sync-tag">⚡ ${n.k}</span></div></div></div><div class="fn-pipe"></div>`;
+  if(n.t==='i'){
+    const lv=n.v==='admin'?'fn-inv-admin':n.v==='tech'?'fn-inv-tech':'fn-inv-log';
+    const ln=n.v==='admin'?'ADMINISTRATIVA':n.v==='tech'?'TÉCNICA':'LOGÍSTICA';
+    return `<div class="fn fn-inv"><div class="fn-main">${code}<div style="flex:1"><div class="fn-text">${n.x}</div><span class="fn-inv-badge ${lv}">INV. ${ln}</span>${sub}</div></div></div><div class="fn-pipe"></div>`;
+  }
+  if(n.t==='q') return `<div class="fn-pp"><strong>PP:001</strong> — ${n.x}</div>`;
+  return `<div class="fn"><div class="fn-main">${code}<div style="flex:1"><div class="fn-text">${n.x}${sla}</div>${sub}${sys}</div></div></div><div class="fn-pipe"></div>`;
 }
 
 let openPanelId = null;
