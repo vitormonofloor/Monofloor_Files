@@ -174,6 +174,24 @@ a:hover { text-decoration: underline; }
 .fn-sla{font-size:8px;padding:1px 5px;border-radius:4px;background:#f59e0b15;color:var(--amber);margin-left:4px}
 .fn-pp{background:var(--card);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:11px;line-height:1.7;color:var(--text2)}
 .fn-pp strong{color:var(--accent)}
+
+/* ── HUB ───────────────────── */
+.hub-wrap{padding:16px 20px}
+.hub-section{margin-bottom:20px}
+.hub-section-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.hub-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:var(--text)}
+.hub-card:hover{border-color:var(--accent);background:#1a1208;transform:translateY(-1px);text-decoration:none}
+.hub-card-icon{font-size:24px;margin-bottom:8px}
+.hub-card-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.hub-card-desc{font-size:11px;color:var(--text3);line-height:1.5}
+.hub-card-badge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:6px;margin-top:6px;font-weight:500}
+.hub-card-url{font-size:9px;color:var(--text3);margin-top:8px;word-break:break-all;opacity:.6}
+.hub-repos{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.hub-repo{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;flex:1;min-width:180px;text-decoration:none;display:block;color:var(--text);transition:all .2s}
+.hub-repo:hover{border-color:var(--accent);text-decoration:none}
+.hub-repo-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.hub-repo-desc{font-size:10px;color:var(--text3)}
 </style>
 </head>
 <body>
@@ -204,6 +222,7 @@ a:hover { text-decoration: underline; }
   <div class="main-tab active" onclick="switchTab('brain')">🧠 Mapa</div>
   <div class="main-tab" onclick="switchTab('tasks')">📋 Tarefas</div>
   <div class="main-tab" onclick="switchTab('flow')">🔄 Fluxograma</div>
+  <div class="main-tab" onclick="switchTab('hub')">🏠 Hub</div>
 </div>
 
 <!-- ═══ TAB 1: BRAIN MAP ═══ -->
@@ -318,6 +337,131 @@ a:hover { text-decoration: underline; }
 <div class="tab-content" id="tab-flow">
 <div class="flow-tabs" id="flow-tabs"></div>
 <div id="flow-content"></div>
+</div>
+
+<!-- ═══ TAB 4: HUB OPERACIONAL ═══ -->
+<div class="tab-content" id="tab-hub">
+<div class="hub-wrap">
+
+<div class="hub-section">
+<div class="hub-section-title">Portais e Dashboards</div>
+<div class="hub-grid">
+
+<a class="hub-card" href="https://vitormonofloor.github.io/cargo-assistente/portal.html" target="_blank">
+<div class="hub-card-icon">🏗️</div>
+<div class="hub-card-title">Portal Monofloor v10</div>
+<div class="hub-card-desc">Hub central: Dashboard, Obras, Financeiro, Alertas, Documentos, Timeline. Branding oficial.</div>
+<div class="hub-card-badge" style="background:#3b82f622;color:#3b82f6">6 abas · No ar</div>
+</a>
+
+<a class="hub-card" href="https://vitormonofloor.github.io/cargo-assistente/dashboard.html" target="_blank">
+<div class="hub-card-icon">📊</div>
+<div class="hub-card-title">Régua de Saúde Operacional</div>
+<div class="hub-card-desc">57 indicadores, 8 setores, barras verde/amarelo/vermelho, painel de prioridades.</div>
+<div class="hub-card-badge" style="background:#22c55e22;color:#22c55e">57 indicadores · No ar</div>
+</a>
+
+<a class="hub-card" href="https://vitormonofloor.github.io/Monofloor_Files/monofloor-dashboard_2.html" target="_blank">
+<div class="hub-card-icon">⚙️</div>
+<div class="hub-card-title">Central Operacional</div>
+<div class="hub-card-desc">Dados do Pipefy ao vivo: cards por fase, gargalos, semáforos de status.</div>
+<div class="hub-card-badge" style="background:#3b82f622;color:#3b82f6">Pipefy ao vivo</div>
+</a>
+
+<a class="hub-card" href="https://vitormonofloor.github.io/cargo-assistente/relatorio_financeiro.html" target="_blank">
+<div class="hub-card-icon">💰</div>
+<div class="hub-card-title">Relatório Financeiro</div>
+<div class="hub-card-desc">DRE simplificado, margem bruta, ticket médio R$151k, tabela de preços 2026.</div>
+<div class="hub-card-badge" style="background:#c4a77d22;color:#c4a77d">DRE · Margem · Preços</div>
+</a>
+
+</div>
+</div>
+
+<div class="hub-section">
+<div class="hub-section-title">Documentação e Processos</div>
+<div class="hub-grid">
+
+<a class="hub-card" href="https://vitormonofloor.github.io/Monofloor_Files/" target="_blank">
+<div class="hub-card-icon">📄</div>
+<div class="hub-card-title">Site de POPs</div>
+<div class="hub-card-desc">5 POPs + 1 DC publicados. Cards por setor, busca, sugestão de adições, painel admin.</div>
+<div class="hub-card-badge" style="background:#a855f722;color:#a855f7">5 POPs · 1 DC · Admin</div>
+</a>
+
+<a class="hub-card" href="https://vitormonofloor.github.io/Monofloor_Files/fluxograma-monofloor.html" target="_blank">
+<div class="hub-card-icon">🔀</div>
+<div class="hub-card-title">Fluxograma Interativo</div>
+<div class="hub-card-desc">Diagnóstico operacional: 5 fluxos, gargalos visuais, gaps identificados.</div>
+<div class="hub-card-badge" style="background:#06b6d422;color:#06b6d4">Diagnóstico · Gargalos</div>
+</a>
+
+<a class="hub-card" href="https://vitormonofloor.github.io/Monofloor_Files/fluxograma-macro.html" target="_blank">
+<div class="hub-card-icon">📋</div>
+<div class="hub-card-title">Fluxograma Macro Completo</div>
+<div class="hub-card-desc">Todos os passos OE/OEC/OEI/OEL/OECT do PDF em versão interativa com decisões e branches.</div>
+<div class="hub-card-badge" style="background:#f59e0b22;color:#f59e0b">10 fluxos · Completo</div>
+</a>
+
+<a class="hub-card" href="https://vitormonofloor.github.io/Monofloor_Files/fluxograma-geral.html" target="_blank">
+<div class="hub-card-icon">🔄</div>
+<div class="hub-card-title">Fluxograma Geral</div>
+<div class="hub-card-desc">Visão macro: fluxo, sincronizações, SLAs, sistemas e escalação em 5 abas.</div>
+<div class="hub-card-badge" style="background:#22c55e22;color:#22c55e">5 abas · SLAs</div>
+</a>
+
+</div>
+</div>
+
+<div class="hub-section">
+<div class="hub-section-title">Repositórios GitHub</div>
+<div class="hub-repos">
+<a class="hub-repo" href="https://github.com/vitormonofloor/Monofloor_Files" target="_blank">
+<div class="hub-repo-name">📁 Monofloor_Files</div>
+<div class="hub-repo-desc">POPs, dashboards, fluxogramas, painel de projeto</div>
+</a>
+<a class="hub-repo" href="https://github.com/vitormonofloor/cargo-assistente" target="_blank">
+<div class="hub-repo-name">📁 cargo-assistente</div>
+<div class="hub-repo-desc">Portal v10, régua de saúde, relatório financeiro, cérebro</div>
+</a>
+<a class="hub-repo" href="https://github.com/vitormonofloor/teleagente" target="_blank">
+<div class="hub-repo-name">📁 teleagente</div>
+<div class="hub-repo-desc">Bot Telegram @monofloor_op_bot — Railway</div>
+</a>
+</div>
+</div>
+
+<div class="hub-section">
+<div class="hub-section-title">Ferramentas e Integrações</div>
+<div class="hub-grid">
+<div class="hub-card" style="cursor:default">
+<div class="hub-card-icon">🤖</div>
+<div class="hub-card-title">Teleagente (@monofloor_op_bot)</div>
+<div class="hub-card-desc">Bot Telegram operacional. Comandos: /obras /gargalos /atrasadas /aproveitamento /alerta /status</div>
+<div class="hub-card-badge" style="background:#f59e0b22;color:#f59e0b">Railway · Parcial</div>
+</div>
+<div class="hub-card" style="cursor:default">
+<div class="hub-card-icon">🧠</div>
+<div class="hub-card-title">Cérebro Monofloor</div>
+<div class="hub-card-desc">GitHub Actions: agente operacional 07:30 + cérebro central 08:00. Alertas via Telegram.</div>
+<div class="hub-card-badge" style="background:#ef444422;color:#ef4444">Falta API key</div>
+</div>
+<div class="hub-card" style="cursor:default">
+<div class="hub-card-icon">🌐</div>
+<div class="hub-card-title">jornada.monofloor.cloud</div>
+<div class="hub-card-desc">SPA oficial da jornada do cliente. Acesso via browser (não acessível via API).</div>
+<div class="hub-card-badge" style="background:#3b82f622;color:#3b82f6">Externo</div>
+</div>
+<div class="hub-card" style="cursor:default">
+<div class="hub-card-icon">📐</div>
+<div class="hub-card-title">planejamento.monofloor.cloud</div>
+<div class="hub-card-desc">API de planejamento: 228 obras ativas, dados de prazo e aproveitamento.</div>
+<div class="hub-card-badge" style="background:#22c55e22;color:#22c55e">API ativa</div>
+</div>
+</div>
+</div>
+
+</div>
 </div>
 
 <!-- ═══ LEGEND ═══ -->
@@ -605,7 +749,7 @@ function switchTab(id) {
   document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   document.querySelectorAll('.main-tab').forEach(t => {
-    if ((id==='brain'&&t.textContent.includes('Mapa'))||(id==='tasks'&&t.textContent.includes('Tarefas'))||(id==='flow'&&t.textContent.includes('Fluxo'))) t.classList.add('active');
+    if ((id==='brain'&&t.textContent.includes('Mapa'))||(id==='tasks'&&t.textContent.includes('Tarefas'))||(id==='flow'&&t.textContent.includes('Fluxo'))||(id==='hub'&&t.textContent.includes('Hub'))) t.classList.add('active');
   });
   if(id==='flow'&&!flowRendered){renderFlowchart();flowRendered=true;}
 }
