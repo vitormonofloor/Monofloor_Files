@@ -120,6 +120,23 @@ a:hover { text-decoration: underline; }
   .stats { flex-direction: column; }
   .pillars { grid-template-columns: 1fr; }
 }
+
+/* ── TABS ────────────────────── */
+.main-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--card); margin: 12px 20px 0; border-radius: 12px 12px 0 0; overflow: hidden; }
+.main-tab { flex: 1; padding: 12px 16px; font-size: 13px; font-weight: 500; color: var(--text3); cursor: pointer; text-align: center; border-bottom: 2px solid transparent; transition: all .2s; }
+.main-tab:hover { color: var(--text2); background: var(--card2); }
+.main-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--card2); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── BRAIN MAP ──────────────── */
+.brain-wrap { padding: 16px 20px; }
+.brain-svg { width: 100%; height: auto; }
+.brain-svg text { font-family: 'Inter', sans-serif; }
+.brain-svg .pillar-node { cursor: pointer; transition: opacity .2s; }
+.brain-svg .pillar-node:hover { opacity: .85; }
+.brain-svg .dep-line { transition: opacity .3s; }
+.brain-hint { font-size: 11px; color: var(--text3); text-align: center; margin: 8px 0 0; }
 </style>
 </head>
 <body>
@@ -145,6 +162,104 @@ a:hover { text-decoration: underline; }
   <div class="progress-bar"><div class="fill" id="pct-bar" style="background:var(--accent)"></div></div>
 </div>
 
+<!-- ═══ TABS ═══ -->
+<div class="main-tabs">
+  <div class="main-tab active" onclick="switchTab('brain')">🧠 Mapa Cerebral</div>
+  <div class="main-tab" onclick="switchTab('tasks')">📋 Tarefas por Pilar</div>
+</div>
+
+<!-- ═══ TAB 1: BRAIN MAP ═══ -->
+<div class="tab-content active" id="tab-brain">
+<div class="brain-wrap">
+<svg class="brain-svg" viewBox="0 0 680 480" xmlns="http://www.w3.org/2000/svg">
+
+<!-- dependency lines -->
+<path class="dep-line" d="M170 100 C170 135, 170 135, 170 165" fill="none" stroke="#AFA9EC" stroke-width="1.2" opacity=".3"/>
+<path class="dep-line" d="M220 80 C310 80, 400 125, 450 165" fill="none" stroke="#85B7EB" stroke-width="1.2" opacity=".3"/>
+<path class="dep-line" d="M170 225 C170 248, 170 248, 170 275" fill="none" stroke="#5DCAA5" stroke-width="1.2" opacity=".3"/>
+<path class="dep-line" d="M95 100 C55 185, 55 240, 95 275" fill="none" stroke="#5DCAA5" stroke-width="1" opacity=".2"/>
+<path class="dep-line" d="M510 225 C510 248, 510 248, 510 275" fill="none" stroke="#F0997B" stroke-width="1.2" opacity=".3"/>
+<path class="dep-line" d="M440 225 C380 248, 350 270, 340 352" fill="none" stroke="#FAC775" stroke-width="1.2" opacity=".3"/>
+<path class="dep-line" d="M450 335 C410 348, 390 352, 380 362" fill="none" stroke="#FAC775" stroke-width="1.2" opacity=".3"/>
+<!-- Dashboards→Brainstorm -->
+<path class="dep-line" d="M340 408 C340 420, 340 420, 340 435" fill="none" stroke="#ED93B1" stroke-width="1.2" opacity=".35"/>
+<!-- Brainstorm→Melhorias -->
+<path class="dep-line" d="M410 460 C460 462, 500 460, 520 455" fill="none" stroke="#F7C1C1" stroke-width="1.2" opacity=".35"/>
+<!-- Melhorias→Knowledge feedback -->
+<path class="dep-line" d="M630 435 C658 320, 658 140, 280 60" fill="none" stroke="#AFA9EC" stroke-width=".8" opacity=".18" stroke-dasharray="4 3"/>
+<text x="660" y="260" fill="#555" font-size="9" transform="rotate(90 660 260)" font-family="Inter">feedback</text>
+
+<!-- P1: Base de Conhecimento -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p1'),100)">
+  <rect x="75" y="45" width="195" height="54" rx="12" fill="#EEEDFE" stroke="#AFA9EC" stroke-width=".8"/>
+  <text x="172" y="66" text-anchor="middle" fill="#3C3489" font-size="12" font-weight="600">Base de conhecimento</text>
+  <text x="172" y="83" text-anchor="middle" fill="#534AB7" font-size="10">8 skills · 9 planejadas</text>
+  <circle cx="262" cy="51" r="7" fill="#22c55e"/><text x="262" y="51" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">8</text>
+</g>
+
+<!-- P2: Documentação -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p2'),100)">
+  <rect x="65" y="166" width="210" height="54" rx="12" fill="#EEEDFE" stroke="#AFA9EC" stroke-width=".8"/>
+  <text x="170" y="187" text-anchor="middle" fill="#3C3489" font-size="12" font-weight="600">Documentação</text>
+  <text x="170" y="204" text-anchor="middle" fill="#534AB7" font-size="10">5 POPs · 1 DC · ITs pendentes</text>
+  <circle cx="267" cy="172" r="7" fill="#f59e0b"/><text x="267" y="172" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">5</text>
+</g>
+
+<!-- P3: Infraestrutura Digital -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p3'),100)">
+  <rect x="55" y="276" width="220" height="54" rx="12" fill="#E1F5EE" stroke="#5DCAA5" stroke-width=".8"/>
+  <text x="165" y="297" text-anchor="middle" fill="#085041" font-size="12" font-weight="600">Infraestrutura digital</text>
+  <text x="165" y="314" text-anchor="middle" fill="#0F6E56" font-size="10">4 sites · 2 repos GitHub</text>
+  <circle cx="267" cy="282" r="7" fill="#22c55e"/><text x="267" y="282" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">4</text>
+</g>
+
+<!-- P4: Integrações -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p4'),100)">
+  <rect x="380" y="166" width="225" height="54" rx="12" fill="#E6F1FB" stroke="#85B7EB" stroke-width=".8"/>
+  <text x="492" y="187" text-anchor="middle" fill="#0C447C" font-size="12" font-weight="600">Integrações externas</text>
+  <text x="492" y="204" text-anchor="middle" fill="#185FA5" font-size="10">Pipefy · Omie · D4Sign · API</text>
+  <circle cx="597" cy="172" r="7" fill="#ef4444"/><text x="597" y="172" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">!</text>
+</g>
+
+<!-- P5: Automação -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p5'),100)">
+  <rect x="400" y="276" width="210" height="54" rx="12" fill="#FAECE7" stroke="#F0997B" stroke-width=".8"/>
+  <text x="505" y="297" text-anchor="middle" fill="#712B13" font-size="12" font-weight="600">Automação</text>
+  <text x="505" y="314" text-anchor="middle" fill="#993C1D" font-size="10">Cérebro · Teleagente</text>
+  <circle cx="602" cy="282" r="7" fill="#f59e0b"/><text x="602" y="282" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">!</text>
+</g>
+
+<!-- P6: Dashboards -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p6'),100)">
+  <rect x="240" y="356" width="200" height="50" rx="12" fill="#FAEEDA" stroke="#FAC775" stroke-width=".8"/>
+  <text x="340" y="376" text-anchor="middle" fill="#633806" font-size="12" font-weight="600">Dashboards e painéis</text>
+  <text x="340" y="392" text-anchor="middle" fill="#854F0B" font-size="10">Régua · Portal · Central</text>
+  <circle cx="432" cy="362" r="7" fill="#22c55e"/><text x="432" y="362" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">3</text>
+</g>
+
+<!-- P7b: Brainstorm -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p7b'),100)">
+  <rect x="230" y="435" width="180" height="40" rx="10" fill="#FBEAF0" stroke="#ED93B1" stroke-width="1.2" stroke-dasharray="4 2"/>
+  <text x="320" y="455" text-anchor="middle" fill="#72243E" font-size="11" font-weight="600">💡 Brainstorm / Ideação</text>
+  <text x="320" y="468" text-anchor="middle" fill="#993556" font-size="9">7 ideias · 3 camadas</text>
+</g>
+
+<!-- P7: Melhorias -->
+<g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p7'),100)">
+  <rect x="510" y="420" width="170" height="50" rx="12" fill="#FCEBEB" stroke="#F7C1C1" stroke-width=".8"/>
+  <text x="595" y="440" text-anchor="middle" fill="#791F1F" font-size="12" font-weight="600">Melhorias</text>
+  <text x="595" y="456" text-anchor="middle" fill="#A32D2D" font-size="10">12 itens · 3 críticos</text>
+  <circle cx="672" cy="426" r="7" fill="#ef4444"/><text x="672" y="426" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">3</text>
+</g>
+
+</svg>
+<div class="brain-hint">Clique em qualquer pilar para ver as tarefas detalhadas →</div>
+</div>
+</div>
+
+<!-- ═══ TAB 2: TASKS ═══ -->
+<div class="tab-content" id="tab-tasks">
+
 <!-- ═══ SEARCH ═══ -->
 <div class="search-bar">
   <input type="text" id="search" placeholder="🔍 Buscar em todos os pilares..." oninput="filterTasks(this.value)">
@@ -158,6 +273,8 @@ a:hover { text-decoration: underline; }
 
 <!-- ═══ DETAIL PANELS ═══ -->
 <div id="details"></div>
+
+</div>
 
 <!-- ═══ LEGEND ═══ -->
 <div class="legend">
@@ -437,6 +554,15 @@ function renderDetails() {
       </div>
     `;
   }).join('');
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.querySelectorAll('.main-tab').forEach(t => {
+    if ((id === 'brain' && t.textContent.includes('Mapa')) || (id === 'tasks' && t.textContent.includes('Tarefas'))) t.classList.add('active');
+  });
 }
 
 let openPanelId = null;
