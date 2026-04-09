@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monofloor — Fluxograma Geral</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--card:#111;--card2:#181818;--border:#222;--accent:#c4a77d;--text:#e5e5e5;--text2:#999;--text3:#555}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+.header{background:linear-gradient(135deg,#0f0f0f,#1a1208);border-bottom:1px solid var(--border);padding:20px 24px 14px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.logo{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#000;flex-shrink:0}
+.header h1{font-size:18px;font-weight:700;color:var(--accent)}
+.header .sub{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:12px 20px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.view{display:none;padding:16px 20px 60px}
+.view.active{display:block}
+
+/* ── MACRO VIEW ── */
+.macro-flow{display:flex;flex-direction:column;gap:0;position:relative}
+.flow-stage{position:relative}
+.stage-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:var(--card)}
+.stage-header:hover{border-color:var(--accent);background:#1a1208}
+.stage-header.active{border-color:var(--accent);background:#1a1208}
+.stage-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.stage-title{font-size:14px;font-weight:600}
+.stage-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.stage-badge{margin-left:auto;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;flex-shrink:0}
+.stage-detail{display:none;margin:0 0 0 20px;padding:12px 16px;border-left:2px solid var(--border)}
+.stage-detail.open{display:block}
+
+.connector{display:flex;align-items:center;justify-content:center;height:32px;position:relative}
+.connector::before{content:'';position:absolute;width:2px;height:100%;background:var(--border);left:39px}
+.connector .arrow{width:12px;height:12px;border:2px solid var(--accent);border-top:none;border-left:none;transform:rotate(45deg);position:absolute;left:34px;background:var(--bg)}
+
+.step-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12px;border-bottom:1px solid #1a1a1a}
+.step-row:last-child{border-bottom:none}
+.step-code{font-size:10px;font-weight:600;color:var(--accent);width:60px;flex-shrink:0;font-family:'SF Mono','Fira Code',monospace}
+.step-name{flex:1;color:var(--text2);line-height:1.4}
+.step-sys{font-size:10px;padding:2px 6px;border-radius:6px;background:#1a1a1a;color:var(--text3);flex-shrink:0}
+
+.sync-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:#3b82f622;color:#3b82f6;margin:2px 4px 2px 0}
+.sla-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:#f59e0b22;color:#f59e0b}
+
+/* ── SYNC VIEW ── */
+.sync-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.sync-from{font-size:12px;font-weight:600;color:var(--accent)}
+.sync-arrow{font-size:16px;color:var(--text3);margin:4px 0}
+.sync-to{font-size:12px;font-weight:600;color:#3b82f6}
+.sync-desc{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5}
+
+/* ── SLA VIEW ── */
+.sla-table{width:100%;border-collapse:collapse}
+.sla-table th{text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.sla-table td{font-size:13px;padding:10px 12px;border-bottom:1px solid #1a1a1a;color:var(--text2)}
+.sla-table tr:hover td{background:var(--card2)}
+.sla-ref{font-size:10px;font-family:'SF Mono','Fira Code',monospace;color:var(--accent)}
+.sla-time{font-weight:600;color:var(--text)}
+
+/* ── SYSTEMS VIEW ── */
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.sys-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.sys-card h4{font-size:13px;font-weight:600;margin-bottom:4px}
+.sys-card p{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* ── ESCALATION VIEW ── */
+.esc-level{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #1a1a1a}
+.esc-level:last-child{border-bottom:none}
+.esc-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.esc-title{font-size:13px;font-weight:600}
+.esc-who{font-size:11px;color:var(--accent);margin-top:2px}
+.esc-trigger{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5}
+
+.section-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+@media(max-width:600px){.sys-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">M</div>
+  <div><h1>MONOFLOOR</h1><div class="sub">Fluxograma Geral da Operação</div></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showView('macro')">Fluxo Macro</div>
+  <div class="tab" onclick="showView('sync')">Sincronizações</div>
+  <div class="tab" onclick="showView('sla')">SLAs (PP:001)</div>
+  <div class="tab" onclick="showView('systems')">Sistemas</div>
+  <div class="tab" onclick="showView('escalation')">Escalação</div>
+</div>
+
+<!-- ═══ MACRO VIEW ═══ -->
+<div class="view active" id="v-macro">
+
+<div class="macro-flow">
+
+<!-- PROPOSTA ACEITA -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#22c55e22;color:#22c55e">📥</div>
+    <div><div class="stage-title">Proposta Aceita</div><div class="stage-sub">Ponto de partida — cliente aprova proposta comercial</div></div>
+    <div class="stage-badge" style="background:#22c55e22;color:#22c55e">Início</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-name">Cliente aceita proposta comercial → dispara 5 fluxos simultâneos abaixo</span></div>
+    <div class="step-row"><span class="step-name"><span class="sla-badge">Regra: OE só inicia após OECT-017 (contrato assinado)</span></span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OECT -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#a855f722;color:#a855f7">📝</div>
+    <div><div class="stage-title">OECT — Contratos</div><div class="stage-sub">Validação → Assinatura → Grupos → Finalização</div></div>
+    <div class="stage-badge" style="background:#a855f722;color:#a855f7">17 etapas</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OECT-001</span><span class="step-name">Receber dados do cliente (CPF, endereço)</span><span class="step-sys">Pipefy</span></div>
+    <div class="step-row"><span class="step-code">OECT-002</span><span class="step-name">Validar CPF — Serasa + Receita Federal</span><span class="step-sys">Serasa</span></div>
+    <div class="step-row"><span class="step-code">OECT-003</span><span class="step-name">Validar endereço — Correios + Google Maps</span><span class="step-sys">Correios</span></div>
+    <div class="step-row"><span class="step-code">OECT-008</span><span class="step-name">Emitir contrato (tipo conforme garantia)</span><span class="step-sys">D4Sign</span></div>
+    <div class="step-row"><span class="step-code">OECT-012</span><span class="step-name">Enviar para assinatura digital</span><span class="step-sys">D4Sign</span></div>
+    <div class="step-row"><span class="step-code">OECT-014</span><span class="step-name">Criar grupos WhatsApp + Telegram da obra</span><span class="step-sys">WhatsApp</span></div>
+    <div class="step-row"><span class="step-code">OECT-017</span><span class="step-name">Contrato finalizado → <span class="sync-badge">LIBERA OE</span></span><span class="step-sys">Pipefy</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OE Fase 1 -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#3b82f622;color:#3b82f6">👤</div>
+    <div><div class="stage-title">OE Fase 1 — Onboarding</div><div class="stage-sub">1º contato operacional → cadastro → orientações</div></div>
+    <div class="stage-badge" style="background:#3b82f622;color:#3b82f6">OE-001 a 010</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OE-001</span><span class="step-name">1º contato operacional com o cliente</span><span class="step-sys">WhatsApp</span></div>
+    <div class="step-row"><span class="step-code">OE-005</span><span class="step-name">Cadastrar obra no sistema financeiro</span><span class="step-sys">Omie</span></div>
+    <div class="step-row"><span class="step-code">OE-008</span><span class="step-name">Orientações iniciais ao cliente (contrapiso, prazo, telas)</span><span class="step-sys">WhatsApp</span></div>
+    <div class="step-row"><span class="step-code">OE-010</span><span class="step-name">Onboarding concluído → agendar VT</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OE Fase 2 -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#f59e0b22;color:#f59e0b">📐</div>
+    <div><div class="stage-title">OE Fase 2 — Aferição e Projeto</div><div class="stage-sub">VT de Aferição → Cálculo → Revisão → Confirmações</div></div>
+    <div class="stage-badge" style="background:#ef444422;color:#ef4444">SLA: X−60d</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OE-011</span><span class="step-name">Agendar VT de Aferição <span class="sla-badge">X − 60 dias</span></span><span class="step-sys">Pipefy</span></div>
+    <div class="step-row"><span class="step-code">OE-012</span><span class="step-name">Realizar VT — medir, fotografar, avaliar contrapiso</span><span class="step-sys">Telegram</span></div>
+    <div class="step-row"><span class="step-code">OE-015</span><span class="step-name">Projeto: cálculo de m², materiais, paginação</span><span class="step-sys">Pipefy</span></div>
+    <div class="step-row"><span class="step-code">OE-017</span><span class="step-name">1ª revisão de projeto → confirmação com cliente</span></div>
+    <div class="step-row"><span class="step-code">OE-021</span><span class="step-name">Regularização se necessário (contrapiso, nível)</span></div>
+    <div class="step-row"><span class="step-name" style="color:var(--text3)">⚠ Gargalo G2: 41 cards aqui, 97% acima do SLA</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OEC -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#ec489922;color:#ec4899">🎨</div>
+    <div><div class="stage-title">OEC — Cores e Amostras</div><div class="stage-sub">Showroom/amostra → definição → aprovação de cor</div></div>
+    <div class="stage-badge" style="background:#ef444422;color:#ef4444">G1: 267 cards</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OEC-001</span><span class="step-name">Cliente escolhe cor — showroom ou amostra enviada <span class="sla-badge">X − 35 dias</span></span></div>
+    <div class="step-row"><span class="step-code">OEC-005</span><span class="step-name">Amostra personalizada: R$500/cor (kit padrão: grátis)</span></div>
+    <div class="step-row"><span class="step-code">OEC-008</span><span class="step-name">Foto frente/verso obrigatória para registro</span><span class="step-sys">Pipefy</span></div>
+    <div class="step-row"><span class="step-code">OEC-011</span><span class="step-name">Cor definida → <span class="sync-badge">LIBERA OEI (produção)</span></span></div>
+    <div class="step-row"><span class="step-name" style="color:#ef4444">⛔ Gargalo G1: 267 amostras em "Solicitar Coleta" — 260 dias avg</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OEI -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#06b6d422;color:#06b6d4">🏭</div>
+    <div><div class="stage-title">OEI — Indústria e Produção</div><div class="stage-sub">Produção → NF → Despacho → Rastreamento</div></div>
+    <div class="stage-badge" style="background:#06b6d422;color:#06b6d4">9 etapas</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OEI-001</span><span class="step-name">Ordem de produção gerada (cor + m² definidos)</span><span class="step-sys">Pipefy</span></div>
+    <div class="step-row"><span class="step-code">OEI-003</span><span class="step-name">Produção concluída → emitir NF</span><span class="step-sys">Omie</span></div>
+    <div class="step-row"><span class="step-code">OEI-004</span><span class="step-name">Despacho: CIF (Monofloor) ou FOB (cliente) <span class="sync-badge">AVISA OE</span></span></div>
+    <div class="step-row"><span class="step-code">OEI-007</span><span class="step-name">Rastreamento: carga dedicada ou compartilhada</span></div>
+    <div class="step-row"><span class="step-code">OEI-009</span><span class="step-name">Material em trânsito → <span class="sync-badge">CONFIRMA OE-030</span></span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OE Fase 3 -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#f59e0b22;color:#f59e0b">🔧</div>
+    <div><div class="stage-title">OE Fase 3 — Pré-Obra</div><div class="stage-sub">Liberação → Equipe → Conferência → Material em obra</div></div>
+    <div class="stage-badge" style="background:#f59e0b22;color:#f59e0b">OE-022 a 036</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OE-022</span><span class="step-name">Aguardar liberação de obra</span></div>
+    <div class="step-row"><span class="step-code">OE-023</span><span class="step-name">VT de Entrada em Obra <span class="sla-badge">X − 10 dias</span></span></div>
+    <div class="step-row"><span class="step-code">OE-025</span><span class="step-name">Definir equipe de execução <span class="sla-badge">X − 7 dias</span></span></div>
+    <div class="step-row"><span class="step-code">OE-030</span><span class="step-name">Confirmar recebimento de material</span></div>
+    <div class="step-row"><span class="step-code">OE-035</span><span class="step-name">Conferência pré-obra aprovada → <span class="sync-badge">LIBERA EXECUÇÃO</span></span></div>
+    <div class="step-row"><span class="step-name" style="color:var(--text3)">⚠ Bloqueio OE-031/032: sem prestador no local</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OE Fase 4 -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#22c55e22;color:#22c55e">⚡</div>
+    <div><div class="stage-title">OE Fase 4 — Execução</div><div class="stage-sub">Aplicação do piso → Diário de obra → Aprovação</div></div>
+    <div class="stage-badge" style="background:#22c55e22;color:#22c55e">OE-037 a 039</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OE-037</span><span class="step-name">Início de execução (data X)</span><span class="step-sys">Telegram</span></div>
+    <div class="step-row"><span class="step-code">OE-038</span><span class="step-name">Diário de obra: fotos + legenda por camada</span><span class="step-sys">Telegram</span></div>
+    <div class="step-row"><span class="step-code">OE-039</span><span class="step-name">Obra concluída → aprovação do cliente</span></div>
+    <div class="step-row"><span class="step-name" style="color:var(--text3)">Pausa possível: motivo cliente/externo/empresa/material (taxa: 47,6%)</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OE Fase 5 -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#8b5cf622;color:#8b5cf6">✨</div>
+    <div><div class="stage-title">OE Fase 5 — Entrega e Verniz</div><div class="stage-sub">Aprovação → Verniz → Tempo de cura → Entrega final</div></div>
+    <div class="stage-badge" style="background:#8b5cf622;color:#8b5cf6">OE-040 a 046</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OE-040</span><span class="step-name">Obra aprovada pelo cliente</span></div>
+    <div class="step-row"><span class="step-code">OE-042</span><span class="step-name">Aplicação de verniz (quando aplicável)</span></div>
+    <div class="step-row"><span class="step-code">OE-044</span><span class="step-name">Aguardar tempo de cura</span></div>
+    <div class="step-row"><span class="step-code">OE-046</span><span class="step-name">Entrega formal ao cliente</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- OE Fase 6 + OEL -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#c4a77d22;color:var(--accent)">🚚</div>
+    <div><div class="stage-title">OE Fase 6 + OEL — Coleta e Logística</div><div class="stage-sub">Coleta de equipamentos → Encerramento → Ocorrências logísticas</div></div>
+    <div class="stage-badge" style="background:#c4a77d22;color:var(--accent)">OE-047 a 052</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-code">OE-047</span><span class="step-name">Agendar coleta de equipamentos e materiais</span></div>
+    <div class="step-row"><span class="step-code">OE-050</span><span class="step-name">Coleta realizada → conferência de retorno</span></div>
+    <div class="step-row"><span class="step-code">OE-052</span><span class="step-name">Obra encerrada no Pipefy</span><span class="step-sys">Pipefy</span></div>
+    <div class="step-row" style="border-top:1px solid var(--border);margin-top:6px;padding-top:10px"><span class="step-code" style="color:#06b6d4">OEL</span><span class="step-name"><strong>Logística:</strong> ocorrências de entrega → investigação → ajuste de SLA</span></div>
+    <div class="step-row"><span class="step-code" style="color:#06b6d4">OEL-004</span><span class="step-name">Impacto logístico pode alterar cronograma <span class="sync-badge">ALTERA SLA OE</span></span></div>
+    <div class="step-row"><span class="step-code" style="color:#06b6d4">OEL-006</span><span class="step-name">Carga comprometida → Decisão Diretoria</span></div>
+  </div>
+</div>
+
+<div class="connector"><div class="arrow"></div></div>
+
+<!-- PÓS-OBRA -->
+<div class="flow-stage">
+  <div class="stage-header" onclick="toggleStage(this)">
+    <div class="stage-icon" style="background:#ef444422;color:#ef4444">⭐</div>
+    <div><div class="stage-title">Pós-Obra (a implantar)</div><div class="stage-sub">NPS · Garantia · Indicação · Retorno</div></div>
+    <div class="stage-badge" style="background:#ef444422;color:#ef4444">0 cards</div>
+  </div>
+  <div class="stage-detail">
+    <div class="step-row"><span class="step-name" style="color:#ef4444">⛔ Processo inexistente — fases 36-50 do OE zeradas no Pipefy</span></div>
+    <div class="step-row"><span class="step-name">NPS pós-obra → pesquisa automática via WhatsApp</span></div>
+    <div class="step-row"><span class="step-name">Garantia → acompanhamento se acionada</span></div>
+    <div class="step-row"><span class="step-name">Indicação → cliente indica novos projetos</span></div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══ SYNC VIEW ═══ -->
+<div class="view" id="v-sync">
+<div class="section-title">Pontos de sincronização entre fluxos</div>
+
+<div class="sync-card"><div class="sync-from">OECT-017 — Contrato finalizado</div><div class="sync-arrow">↓</div><div class="sync-to">OE — Início da operação</div><div class="sync-desc">Regra crítica: a operação NÃO inicia sem contrato assinado. É o bloqueio mais importante do sistema.</div></div>
+
+<div class="sync-card"><div class="sync-from">OEC-011 — Cor/material definido</div><div class="sync-arrow">↓</div><div class="sync-to">OEI-001 — Ordem de produção</div><div class="sync-desc">A produção industrial só começa quando o cliente aprova a cor e o material. SLA: X − 35 dias.</div></div>
+
+<div class="sync-card"><div class="sync-from">OEI-004 — Confirmação de despacho</div><div class="sync-arrow">↓</div><div class="sync-to">OE-029/030 — Preparação de obra</div><div class="sync-desc">Material despachado → operação confirma recebimento e prepara o início da execução.</div></div>
+
+<div class="sync-card"><div class="sync-from">OEI-007/009 — Material em trânsito</div><div class="sync-arrow">↓</div><div class="sync-to">OE-030 — Monitoramento de chegada</div><div class="sync-desc">Carga dedicada ou compartilhada — rastreamento com veículo/placa/motorista registrados.</div></div>
+
+<div class="sync-card"><div class="sync-from">OEL-004 — Impacto logístico</div><div class="sync-arrow">↓</div><div class="sync-to">OE — Ajuste de cronograma/SLA</div><div class="sync-desc">Ocorrências de entrega podem alterar os prazos de execução da obra.</div></div>
+
+<div class="sync-card"><div class="sync-from">OE-025/027 — Equipe definida</div><div class="sync-arrow">↓</div><div class="sync-to">OE-028 — Dados ao cliente</div><div class="sync-desc">Equipe definida X − 7 dias → dados repassados ao grupo de alinhamento do cliente.</div></div>
+
+<div class="sync-card"><div class="sync-from">OE-035 — Conferência pré-obra OK</div><div class="sync-arrow">↓</div><div class="sync-to">OE-037 — Início de execução</div><div class="sync-desc">Conferência aprovada libera o início da execução. Bloqueio se prestador ausente.</div></div>
+</div>
+
+<!-- ═══ SLA VIEW ═══ -->
+<div class="view" id="v-sla">
+<div class="section-title">SLAs — Processo padrão PP:001 (base: Data de Início X)</div>
+<table class="sla-table">
+<thead><tr><th>Marco</th><th>Prazo</th><th>Referência</th><th>Status real</th></tr></thead>
+<tbody>
+<tr><td>Visita de Aferição</td><td class="sla-time">X − 60 dias</td><td><span class="sla-ref">OE-011 / OE-012</span></td><td style="color:#ef4444">3% no prazo (meta 90%)</td></tr>
+<tr><td>Escolha da Cor</td><td class="sla-time">X − 35 dias</td><td><span class="sla-ref">OEC-001 a OEC-011</span></td><td style="color:#ef4444">267 amostras paradas</td></tr>
+<tr><td>VT de Entrada em Obra</td><td class="sla-time">X − 10 dias</td><td><span class="sla-ref">OE-023</span></td><td style="color:var(--text3)">— sem dados</td></tr>
+<tr><td>Definição de Equipe</td><td class="sla-time">X − 7 dias</td><td><span class="sla-ref">OE-025</span></td><td style="color:var(--text3)">— sem dados</td></tr>
+<tr><td>Execução</td><td class="sla-time">X + definido</td><td><span class="sla-ref">OE-037 a OE-039</span></td><td style="color:#22c55e">25 obras/mês (throughput)</td></tr>
+<tr><td>Ciclo end-to-end</td><td class="sla-time">≤ 150 dias</td><td><span class="sla-ref">OE completo</span></td><td style="color:#ef4444">238 dias (média real)</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ═══ SYSTEMS VIEW ═══ -->
+<div class="view" id="v-systems">
+<div class="section-title">Sistemas e canais da operação</div>
+<div class="sys-grid">
+  <div class="sys-card"><h4 style="color:#3b82f6">📋 Pipefy</h4><p>Sistema central. 4 pipes ativos: OPERAÇÕES (OE), CORES (OEC), PRODUÇÃO (OEI), PROJETOS (OECT). Registro de todas as etapas, solicitações ao estoque, ocorrências.</p></div>
+  <div class="sys-card"><h4 style="color:#25D366">💬 WhatsApp Business</h4><p>Grupos de alinhamento com cliente. Padrão: "Alinhamento obra [NOME]". 266+ mensagens. Comunicação comercial e orientações.</p></div>
+  <div class="sys-card"><h4 style="color:#0088cc">📱 Telegram</h4><p>Grupos técnicos de obra. Diário de obra (fotos + legendas por camada). Teleagente @monofloor_op_bot para comandos operacionais.</p></div>
+  <div class="sys-card"><h4 style="color:var(--accent)">💰 Omie (ERP)</h4><p>Gestão financeira: cadastro de obras, NF, conciliação, margem. ⚠ Acesso pendente — 5/8 indicadores travados.</p></div>
+  <div class="sys-card"><h4 style="color:#8b5cf6">✍️ D4Sign</h4><p>Assinatura digital de contratos. 115 finalizados. Ticket médio 2026: R$150.885. Login 1 e 2 ativos.</p></div>
+  <div class="sys-card"><h4 style="color:#ef4444">🔍 Serasa + Receita</h4><p>Validação de CPF e situação cadastral do cliente antes da emissão do contrato (OECT-002).</p></div>
+  <div class="sys-card"><h4 style="color:#22c55e">📍 Correios + Maps</h4><p>Validação de endereço do cliente para o contrato (OECT-003).</p></div>
+  <div class="sys-card"><h4 style="color:#06b6d4">🌐 GitHub Pages</h4><p>Sites publicados: POPs, Portal, Dashboard, Fluxograma. Repositórios: Monofloor_Files e cargo-assistente.</p></div>
+</div>
+</div>
+
+<!-- ═══ ESCALATION VIEW ═══ -->
+<div class="view" id="v-escalation">
+<div class="section-title">Níveis de escalação</div>
+
+<div class="esc-level">
+  <div class="esc-num" style="background:#22c55e22;color:#22c55e">1</div>
+  <div><div class="esc-title">Investigação Administrativa</div><div class="esc-who">Operador</div><div class="esc-trigger">Gatilho: falhas de processo, atrasos de comunicação, cobranças pendentes.</div></div>
+</div>
+
+<div class="esc-level">
+  <div class="esc-num" style="background:#f59e0b22;color:#f59e0b">2</div>
+  <div><div class="esc-title">Investigação Técnica</div><div class="esc-who">Operador + Gestão</div><div class="esc-trigger">Gatilho: bloqueios de obra, regularizações, decisões que afetam SLA. Bloqueios formais: OE-031/032 (prestador ausente), OE-034 (material divergente).</div></div>
+</div>
+
+<div class="esc-level">
+  <div class="esc-num" style="background:#3b82f622;color:#3b82f6">3</div>
+  <div><div class="esc-title">Investigação Logística</div><div class="esc-who">Operador + Logística</div><div class="esc-trigger">Gatilho: ocorrências de entrega, carga comprometida parcialmente, reenvio de material.</div></div>
+</div>
+
+<div class="esc-level">
+  <div class="esc-num" style="background:#ef444422;color:#ef4444">4</div>
+  <div><div class="esc-title">Decisão Diretoria</div><div class="esc-who">Diretoria (após análise completa)</div><div class="esc-trigger">Gatilho: criticidade alta, muitas variáveis simultâneas, carga comprometida total (OEL-006), contrato cancelado.</div></div>
+</div>
+</div>
+
+<script>
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('v-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function toggleStage(el) {
+  const detail = el.nextElementSibling;
+  const isOpen = detail && detail.classList.contains('open');
+  document.querySelectorAll('.stage-detail').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.stage-header').forEach(h => h.classList.remove('active'));
+  if (!isOpen && detail) {
+    detail.classList.add('open');
+    el.classList.add('active');
+    detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+</script>
+</body>
+</html>
