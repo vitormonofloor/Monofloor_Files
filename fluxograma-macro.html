@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monofloor — Fluxograma Macro Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--card:#111;--card2:#161616;--border:#1e1e1e;--accent:#c4a77d;--text:#e5e5e5;--text2:#999;--text3:#555;
+--oe:#3b82f6;--oec:#ec4899;--oei:#06b6d4;--oel:#f97316;--oect:#a855f7;
+--green:#22c55e;--red:#ef4444;--amber:#f59e0b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+
+.header{background:linear-gradient(135deg,#0f0f0f,#1a1208);border-bottom:1px solid var(--border);padding:18px 20px 14px;position:sticky;top:0;z-index:100}
+.header-row{display:flex;align-items:center;gap:12px}
+.logo{width:34px;height:34px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#000}
+.header h1{font-size:17px;font-weight:700;color:var(--accent)}
+.header .sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:66px;z-index:99}
+.tab{padding:10px 14px;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+.tab:hover{background:var(--card2)}
+.tab.active{border-bottom-color:var(--accent)}
+
+.flow-view{display:none;padding:12px 16px 80px}
+.flow-view.active{display:block}
+
+.flow-intro{padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);margin-bottom:14px;font-size:12px;line-height:1.6;color:var(--text2)}
+.flow-intro strong{color:var(--text)}
+
+/* ── NODES ── */
+.node{position:relative;margin-bottom:2px}
+.node-main{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);transition:all .15s}
+.node-main:hover{border-color:#333}
+.node-code{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 7px;border-radius:6px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.node-body{flex:1;min-width:0}
+.node-text{font-size:12.5px;line-height:1.5;color:var(--text)}
+.node-sub{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4}
+.node-sys{font-size:9px;padding:2px 6px;border-radius:5px;background:#1a1a1a;color:var(--text3);margin-top:4px;display:inline-block}
+
+/* connector */
+.pipe{height:18px;display:flex;align-items:center;padding-left:26px}
+.pipe::before{content:'';width:1.5px;height:100%;background:var(--border)}
+
+/* decision */
+.decision{margin-bottom:2px}
+.decision .node-main{border-left:3px solid var(--amber);background:#111100}
+.decision .node-text{color:var(--amber)}
+
+/* branches */
+.branches{display:flex;gap:6px;margin-bottom:2px;padding-left:16px}
+.branch{flex:1;border-radius:8px;border:1px solid var(--border);overflow:hidden}
+.branch-label{font-size:10px;font-weight:600;padding:5px 10px;text-align:center;text-transform:uppercase;letter-spacing:.5px}
+.branch-yes .branch-label{background:#22c55e15;color:var(--green)}
+.branch-no .branch-label{background:#ef444415;color:var(--red)}
+.branch-content{padding:6px 8px}
+.branch-content .node-main{border:none;padding:6px 8px;background:transparent}
+.branch-content .node-main:hover{background:var(--card2)}
+.branch-content .node-code{font-size:9px;padding:2px 5px}
+.branch-content .node-text{font-size:11px}
+
+/* investigation */
+.investigation{margin-bottom:2px}
+.investigation .node-main{border-left:3px solid var(--red);background:#1a0505}
+.invest-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:600;display:inline-block;margin-top:3px}
+.invest-admin{background:#f59e0b22;color:var(--amber)}
+.invest-tech{background:#ef444422;color:var(--red)}
+.invest-log{background:#f9731622;color:var(--oel)}
+
+/* sync point */
+.sync{margin-bottom:2px}
+.sync .node-main{border-left:3px solid var(--oe);background:#0a1020}
+.sync-tag{font-size:9px;padding:2px 7px;border-radius:5px;background:#3b82f622;color:var(--oe);font-weight:600;display:inline-block;margin-top:3px}
+
+/* phase separator */
+.phase{margin:16px 0 8px;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;border:1px dashed}
+
+/* sla box */
+.sla-box{display:inline-block;font-size:9px;padding:2px 7px;border-radius:5px;background:#f59e0b15;color:var(--amber);font-weight:500;margin-left:4px}
+
+/* legend */
+.legend-bar{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);background:var(--card)}
+.legend-bar span{display:flex;align-items:center;gap:4px}
+.legend-bar .ld{width:10px;height:3px;border-radius:2px}
+
+/* PP:001 */
+.pp-box{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:14px;margin:12px 0;font-size:12px;line-height:1.7;color:var(--text2)}
+.pp-box strong{color:var(--accent)}
+.pp-box .pp-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="header-row">
+<div class="logo">M</div>
+<div><h1>MONOFLOOR</h1><div class="sub">Fluxograma Macro · Todos os Passos</div></div>
+</div>
+</div>
+
+<div class="legend-bar">
+<span><div class="ld" style="background:var(--oect)"></div>OECT Contratos</span>
+<span><div class="ld" style="background:var(--oe)"></div>OE Execução</span>
+<span><div class="ld" style="background:var(--oec)"></div>OEC Cores</span>
+<span><div class="ld" style="background:var(--oei)"></div>OEI Indústria</span>
+<span><div class="ld" style="background:var(--oel)"></div>OEL Logística</span>
+<span><div class="ld" style="background:var(--amber)"></div>Decisão</span>
+<span><div class="ld" style="background:var(--red)"></div>Investigação</span>
+<span><div class="ld" style="background:var(--oe)"></div>Sincronização</span>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div id="content"></div>
+
+<script>
+const C={oe:'var(--oe)',oec:'var(--oec)',oei:'var(--oei)',oel:'var(--oel)',oect:'var(--oect)'};
+
+const FLOWS = [
+{id:'oect',name:'OECT — Contratos',color:C.oect,
+intro:'Da proposta aceita até assinatura e finalização contratual. <strong>A operação (OE) só inicia após OECT-017.</strong> Validação CPF (Serasa/Receita), endereço (Correios/Maps), emissão de contrato, assinatura digital (D4Sign), criação de grupos.',
+steps:[
+{t:'process',code:'OECT-001',text:'Recebe do time comercial a proposta aceita',sys:'Pipefy'},
+{t:'process',code:'OECT-002',text:'Comunicar aprovação da proposta comercial (PIUI)'},
+{t:'process',code:'OECT-003',text:'Inserir em sistema informações sobre o questionário enviado ao cliente para produção de contrato',sys:'Pipefy'},
+{t:'decision',code:'OECT-004',text:'Informações estão completas?',yes:'OECT-005: Conferir veracidade',no:'Contatar cliente para completar dados'},
+{t:'process',code:'OECT-005',text:'Conferir veracidade das informações',sub:'CPF → Serasa + Receita Federal | Endereço → Correios + Google Maps',sys:'Serasa / Correios'},
+{t:'process',code:'OECT-006',text:'Adicionar informações na base de dados',sys:'Pipefy'},
+{t:'decision',code:'OECT-007',text:'O contrato exige garantia estendida?',yes:'Emitir contrato com garantia estendida',no:'Emitir contrato regular'},
+{t:'process',code:'OECT-008',text:'Anexar contrato à plataforma de assinatura',sys:'D4Sign'},
+{t:'process',code:'OECT-009',text:'Sinalizar o cliente sobre o contrato'},
+{t:'process',code:'OECT-010',text:'Criação de grupo de alinhamento do projeto — WhatsApp e Telegram',sys:'WhatsApp / Telegram'},
+{t:'decision',code:'OECT-011',text:'Cliente recebeu / acessou o contrato?',yes:'OECT-012',no:'OECT-013: Sinalizar cliente novamente'},
+{t:'decision',code:'OECT-012',text:'Contrato assinado?',yes:'OECT-014: Download e anexar',no:'Necessário atuação jurídica? → Investigação Técnica'},
+{t:'process',code:'OECT-014',text:'Fazer download do contrato assinado e anexar aos registros',sys:'D4Sign'},
+{t:'process',code:'OECT-015',text:'Enviar informações pertinentes ao cadastro financeiro',sys:'Omie'},
+{t:'process',code:'OECT-016',text:'Sinalizar no grupo de alinhamento WhatsApp que o contrato foi assinado',sys:'WhatsApp'},
+{t:'sync',code:'OECT-017',text:'Fim do processo contratual',sync:'LIBERA INÍCIO DA OPERAÇÃO (OE)'},
+]},
+
+{id:'oe1',name:'OE Fase 1 — Onboarding',color:C.oe,
+intro:'1º contato operacional com o cliente. Envio de documentação, reunião com diretora técnica, definições de data e cor. <strong>PP:001 é definido aqui.</strong>',
+steps:[
+{t:'process',code:'OE-001',text:'Introduzir operação ao cliente'},
+{t:'process',code:'OE-002',text:'Adicionar participantes se necessário'},
+{t:'process',code:'OE-003',text:'Enviar documentação: Manual do processo, o que é esperado e PRAZO de aplicação'},
+{t:'process',code:'OE-004',text:'Marcar reunião Online com a Diretora Técnica para esclarecimentos sobre o processo/material'},
+{t:'decision',code:'OE-005',text:'Reunião agendada?',yes:'OE-006: Confirmar dia e horário',no:'Investigação Administrativa — Operador assume para solucionar'},
+{t:'process',code:'OE-006',text:'Confirmar dia e horário da reunião'},
+{t:'decision',code:'OE-007',text:'A reunião aconteceu?',yes:'OE-008',no:'Reagendar'},
+{t:'process',code:'OE-008',text:'Questionar sobre definições do projeto: Data prevista para execução e escolha das cores'},
+{t:'decision',code:'OE-009',text:'Cor escolhida?',yes:'Atualizar sistemas',no:'→ Inicia fluxo OEC (Cores)'},
+{t:'decision',code:'OE-010',text:'Data definida?',yes:'Atualizar Pipefy e Telegram',no:'Reforçar necessidade junto ao cliente'},
+{t:'pp',text:'PP:001 — Ponto de Partida definido\nData de início: X\nVT Aferição: X − 60 dias\nEscolha da cor: X − 35 dias\nVT Entrada: X − 10 dias\nDefinir Equipe: X − 7 dias\nTempo execução: X + dias definidos pela gerência'},
+]},
+
+{id:'oe2',name:'OE Fase 2 — Aferição e Projeto',color:C.oe,
+intro:'Visita técnica de aferição, análise de resultado, regularizações, relatório PDF, confirmação de data com cliente.',
+steps:[
+{t:'process',code:'OE-011',text:'Agendar VT de aferição/orientação',sla:'X − 60 dias'},
+{t:'decision',code:'OE-012',text:'VT realizada?',yes:'OE-013: Analisar resultado',no:'Reagendar — Investigação Técnica se SLA estourar'},
+{t:'process',code:'OE-013',text:'Analisar resultado disponibilizado pelo responsável técnico via Telegram (grupo de obra)',sys:'Telegram'},
+{t:'process',code:'OE-014',text:'Sinalizar áreas que necessitam de regularização por meio de relatório PDF'},
+{t:'decision',code:'OE-015',text:'Relatório enviado?',yes:'OE-016',no:'Cobrar envio'},
+{t:'process',code:'OE-016',text:'Definir junto ao cliente o que deve ser executado dentro do período'},
+{t:'decision',code:'OE-017',text:'Cliente confirma a data de início do projeto?',yes:'Verificar faseamento',no:'Informar necessidade de postergação → verificar encaixe mais próximo'},
+{t:'decision',text:'Obra será faseada?',yes:'Informar custo de faseamento → Cliente confirma?',no:'Seguir fluxo normal'},
+{t:'process',code:'OE-018',text:'Monitorar as adequações necessárias'},
+{t:'decision',code:'OE-019',text:'Tempo hábil até a entrada em obra?',yes:'OE-020',no:'Investigação Técnica — verificar se pendente se encaixa no PP:001'},
+{t:'decision',code:'OE-020',text:'Cliente confirmou a finalização das regularizações?',yes:'OE-021',no:'Cenário para envio de termo de responsabilidade? → Cliente aceita → Assinar'},
+{t:'process',code:'OE-021',text:'Solicitar fotos e vídeos das áreas para registro'},
+]},
+
+{id:'oec',name:'OEC — Cores e Amostras',color:C.oec,
+intro:'Sub-ordem de execução de cor. Showroom, amostra física, kit padrão ou personalizado (R$500/cor). Foto frente/verso obrigatória. <strong>OEC-011 libera produção (OEI).</strong>',
+steps:[
+{t:'decision',code:'OEC-001',text:'Decisão de cor ocorreu por qual meio?',yes:'Showroom → OEC-002',no:'Amostra física → OEC-004'},
+{t:'decision',code:'OEC-002',text:'Cliente deseja visitar o showroom?',yes:'Agendar data e horário via link',no:'OEC-003'},
+{t:'decision',text:'Visita aconteceu?',yes:'Solicitar foto frente/verso da amostra para registro',no:'Reagendar / aceitar remanejamento'},
+{t:'decision',code:'OEC-003',text:'Cliente possui amostra?',yes:'Solicitar foto frente/verso',no:'OEC-004: Envio de amostra física'},
+{t:'process',code:'OEC-004',text:'Envio de amostra física ao cliente'},
+{t:'process',code:'OEC-005',text:'Confirmar endereço, cores e material que o cliente deseja e informar prazos de produção e envio'},
+{t:'decision',code:'OEC-006',text:'Amostra com kit padrão?',yes:'Prosseguir (sem custo se contemplado no escopo)',no:'Amostra personalizada?'},
+{t:'decision',text:'Escopo contempla amostra sem custo?',yes:'Prosseguir',no:'Informar custo de R$500,00 por cor → Cliente aceitou/efetuou pagamento?'},
+{t:'process',code:'OEC-007',text:'Solicitar ao ESTOQUE via sistema Pipefy todas as informações referentes à produção das amostras',sys:'Pipefy'},
+{t:'process',code:'OEC-008',text:'Acompanhar até o envio'},
+{t:'decision',code:'OEC-009',text:'Despachado?',yes:'OEC-010',no:'Cobrar estoque'},
+{t:'decision',code:'OEC-010',text:'Recebido pelo cliente?',yes:'OEC-011',no:'Rastrear envio'},
+{t:'decision',code:'OEC-011',text:'Cor e material definido?',yes:'→ Libera OEI-001 (produção)',no:'Investigação Administrativa — Operador assume para solucionar'},
+{t:'sync',code:'OEC-011',text:'Cor e material definidos',sync:'LIBERA OEI-001 — Enviar para produção indústria'},
+]},
+
+{id:'oe3',name:'OE Fase 3 — Pré-Obra',color:C.oe,
+intro:'Liberação de obra, VT de entrada, definição de equipe, deslocamento/hospedagem, recebimento de material, conferência pré-obra. <strong>Múltiplos bloqueios possíveis.</strong>',
+steps:[
+{t:'process',code:'OE-022',text:'Monitorar o atendimento e informar sobre a visita de entrada em obra'},
+{t:'decision',code:'OE-023',text:'VT de entrada realizada?',yes:'OE-024',no:'Reagendar',sla:'X − 10 dias'},
+{t:'decision',code:'OE-024',text:'(INVESTIGAÇÃO TÉCNICA) Regularizações aptas?',yes:'OE-025: Definir equipe',no:'Investigação Técnica — Operador assume para solucionar'},
+{t:'process',code:'OE-025',text:'DEFINIR EQUIPE responsável pela aplicação do projeto e registrar em sistema',sla:'X − 7 dias',sys:'Pipefy'},
+{t:'decision',code:'OE-026',text:'Equipe confirma o aceite de obra?',yes:'OE-027',no:'Atualizar prestadores'},
+{t:'process',code:'OE-027',text:'Identificar e inserir líder da equipe no grupo de obra no Telegram',sys:'Telegram'},
+{t:'decision',text:'Projeto necessita de deslocamento da equipe?',yes:'Solicitar ao setor responsável',no:'Aguardar início'},
+{t:'decision',text:'Projeto necessita de hospedagem para a equipe?',yes:'Repassar aos prestadores via grupo Telegram',no:'Aguardar início'},
+{t:'process',code:'OE-028',text:'Informar no grupo de Alinhamento WhatsApp os dados dos prestadores que irão acessar o local da obra',sys:'WhatsApp'},
+{t:'process',code:'OE-029',text:'Verificar dia e horário para a entrega dos materiais e registrar em sistema',sys:'Pipefy'},
+{t:'decision',text:'O material chegará antes do início da obra?',yes:'OE-030',no:'Coletar informações OEI-007 e repassar ao cliente'},
+{t:'decision',text:'Alguma informação relevante sobre o acesso ao local de obra?',yes:'Coletar as informações e acionar os envolvidos',no:'Prosseguir'},
+{t:'decision',code:'OE-030',text:'Material em obra?',yes:'Conferência do material recebido',no:'Sinalizar logística → retorna ao fluxo'},
+{t:'sync',code:'OE-030',text:'Material confirmado em obra',sync:'Recebe confirmação de OEI-009'},
+{t:'process',code:'OE-031',text:'Conferência pré-obra'},
+{t:'decision',code:'OE-032',text:'Prestador Monofloor no local?',yes:'OE-034',no:'Aguardar chegada para conferência — BLOQUEIO até sinalização'},
+{t:'decision',code:'OE-033',text:'Material se enquadra como entrega parcial?',yes:'Investigação Logística — verificar OEL-002',no:'Investigação Técnica — necessita conferência para início'},
+{t:'decision',code:'OE-034',text:'O tipo de material está de acordo com o escopo da obra?',yes:'OE-035',no:'INVESTIGAÇÃO LOGÍSTICA — BLOQUEIA — Sinalizar imediatamente, verificar OEI-004'},
+{t:'decision',code:'OE-035',text:'Material conferido? Preparação para aplicação',yes:'OE-036',no:'Solução imediata para correção? → Aguardar substituição'},
+{t:'decision',code:'OE-036',text:'Obra preparada e apta para início da execução?',yes:'→ OE-037: Início da execução',no:'Verificar todos os critérios — BLOQUEIO se pendente'},
+]},
+
+{id:'oe4',name:'OE Fase 4 — Execução',color:C.oe,
+intro:'Início da execução, diário de obra, pausas (motivo cliente/externo/empresa/material). Inclui sub-fluxo de substituição de material e solicitação de amostra urgente.',
+steps:[
+{t:'process',code:'OE-037',text:'Início Execução',sys:'Telegram'},
+{t:'decision',code:'OE-038',text:'Necessário pausar a obra?',yes:'Identificar motivo →',no:'OE-039: Continuar execução'},
+{t:'decision',text:'Motivo cliente?',yes:'Verificar data de encaixe para retorno',no:'Motivo externo?'},
+{t:'decision',text:'Motivo externo?',yes:'Acompanhar resolução da causa raiz → Liberado para retorno?',no:'Material?'},
+{t:'decision',text:'Material?',yes:'Sinalizar indústria/estoque imediatamente',no:'Motivo empresa → Acompanhar resolução'},
+{t:'decision',text:'Estoque possui material para substituição imediata?',yes:'Substituir',no:'Solicitação de material extra → verificar tempo de produção'},
+{t:'decision',text:'Obra externa?',yes:'Informar ao cliente sobre tempo necessário de produção e despacho logístico',no:'Informar ao cliente sobre o tempo de produção'},
+{t:'decision',text:'O motivo é relacionado à cor do material?',yes:'Necessário envio de amostra com cor para aprovação?',no:'Prosseguir substituição'},
+{t:'process',text:'Solicitar amostra ao estoque via Pipefy em caráter de urgência e detalhar a solicitação',sys:'Pipefy'},
+{t:'decision',text:'Amostra enviada? → Recebida? → Aprovada?',yes:'Produzir material',no:'Aguardar e informar o cliente / Rastrear'},
+{t:'process',code:'OE-039',text:'Fase de Execução / Finalização — Diário de obra contínuo',sys:'Telegram'},
+]},
+
+{id:'oe5',name:'OE Fase 5 — Entrega e Verniz',color:C.oe,
+intro:'Visita de entrega, aprovação do cliente, aplicação de verniz, tempo de cura, registro de materiais para coleta.',
+steps:[
+{t:'process',code:'OE-040',text:'Agendamento de Visita de entrega de obra'},
+{t:'decision',code:'OE-041',text:'Visita realizada?',yes:'OE-042',no:'Reagendar'},
+{t:'decision',code:'OE-042',text:'Obra aprovada pelo cliente?',yes:'OE-043',no:'Informar ao cliente sobre necessidade de ajuste no acabamento'},
+{t:'process',code:'OE-043',text:'Apta para finalização e aplicação do verniz'},
+{t:'process',code:'OE-044',text:'Ao término da aplicação deve ser enviado o registro de materiais para coleta'},
+{t:'decision',code:'OE-045',text:'Equipe enviou registro dos materiais?',yes:'OE-046',no:'Investigação Administrativa — cobrar líder da equipe'},
+{t:'process',code:'OE-046',text:'Aplicação Finalizada'},
+]},
+
+{id:'oe6',name:'OE Fase 6 — Coleta e Encerramento',color:C.oe,
+intro:'Solicitação de coleta, agendamento, tempo de cura, informar prestadores, conferência final.',
+steps:[
+{t:'process',code:'OE-047',text:'Solicitar coleta de material'},
+{t:'process',code:'OE-048',text:'Identificar e agendar dias e horários disponíveis para coleta'},
+{t:'decision',code:'OE-049',text:'Necessário acessar a aplicação?',yes:'Aguardar tempo de cura da aplicação',no:'Prosseguir'},
+{t:'process',code:'OE-050',text:'Informar dados dos prestadores que realizarão a coleta — repassar aos prestadores'},
+{t:'decision',code:'OE-051',text:'Coleta realizada?',yes:'OE-052',no:'Identificar motivo → Materiais disponíveis? → Agendar nova data ou sinalizar gestão'},
+{t:'process',code:'OE-052',text:'✅ PROCESSO CONCLUÍDO'},
+]},
+
+{id:'oei',name:'OEI — Indústria',color:C.oei,
+intro:'Produção, emissão de NF, despacho logístico (CIF/FOB), rastreamento de carga dedicada ou compartilhada, monitoramento de janela de entrega.',
+steps:[
+{t:'sync',code:'OEI-001',text:'Enviar para produção indústria',sync:'Recebe de OEC-011 (cor definida)'},
+{t:'process',code:'OEI-002',text:'Envio de material'},
+{t:'process',code:'OEI-003',text:'Despacho logístico',sub:'CIF: próprio ou fornecedor (Monofloor custeia) | FOB: terceiros ou comprador custeou'},
+{t:'sync',code:'OEI-004',text:'Confirmação de despacho',sync:'AVISA OE-029/030 — Preparação de obra'},
+{t:'decision',code:'OEI-005',text:'NF emitida?',yes:'OEI-006',no:'Emitir NF',sysLabel:'Omie'},
+{t:'process',code:'OEI-006',text:'Data real do envio da carga'},
+{t:'process',code:'OEI-007',text:'Material em trânsito'},
+{t:'decision',code:'OEI-008',text:'Carga dedicada ou compartilhada?',yes:'DEDICADA: informar rastreio para operação / monitoramento padrão',no:'COMPARTILHADA: confirmar sequência de rota, registrar veículo/placa/motorista, estimar impacto de rota'},
+{t:'process',code:'OEI-009',text:'Monitorar janela de entrega de acordo com SLA de início de obra',sub:'Confirmar dados: rua, número, cidade, estado, CEP, nome do cliente, horário, cor e tipo de material'},
+{t:'process',code:'OEI-010',text:'Limite da SLA'},
+{t:'decision',code:'OEI-011',text:'Prestador sinalizou entrega?',yes:'Confirmar em OE-030',no:'→ OEL-001: Motivo não entrega'},
+{t:'sync',code:'OEI-011',text:'Entrega confirmada',sync:'CONFIRMA OE-030 — Material em obra'},
+]},
+
+{id:'oel',name:'OEL — Logística',color:C.oel,
+intro:'Ocorrências de entrega, investigação logística, registro de ocorrência, impacto no cronograma, decisão com diretoria se carga comprometida.',
+steps:[
+{t:'process',code:'OEL-001',text:'Motivo não entrega — identificar causa'},
+{t:'investigation',code:'OEL-002',text:'INVESTIGAÇÃO LOGÍSTICA — Operador assume',level:'log',sub:'Ocorrência por transporte? → Acionar responsáveis (Prestador/Transportadora) | Ocorrência por registro administrativo? → Rastrear erro para correção'},
+{t:'process',code:'OEL-003',text:'Registrar ocorrência no Pipefy',sys:'Pipefy'},
+{t:'decision',code:'OEL-004',text:'Alteração impacta cronograma do projeto?',yes:'OEL-005',no:'Resolver e retornar ao fluxo'},
+{t:'process',code:'OEL-005',text:'Informar ao cliente sobre alteração no tempo de execução / Negociar'},
+{t:'decision',text:'Necessário reenviar pedido total?',yes:'Reenviar',no:'Acionar cliente sobre entrega parcial → aguardar contagem'},
+{t:'decision',text:'Carga comprometida?',yes:'OEL-006',no:'Resolver entrega parcial'},
+{t:'investigation',code:'OEL-006',text:'DECISÃO JUNTO À DIRETORIA para andamento (muitas variáveis)',level:'tech',sub:'Criticidade alta — envolve diretoria após análise completa do caso'},
+{t:'sync',code:'OEL-004',text:'Impacto logístico registrado',sync:'PODE ALTERAR SLA do OE — Ajuste de cronograma'},
+]}
+];
+
+// ═══ RENDER ═══
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = FLOWS.map((f,i) =>
+    `<div class="tab${i===0?' active':''}" style="color:${f.color};${i===0?'border-bottom-color:'+f.color:''}" onclick="showFlow('${f.id}',this)">${f.name.split('—')[0].trim()}</div>`
+  ).join('');
+}
+
+function renderNode(s, flow){
+  const codeColor = flow.color;
+  const codeHtml = s.code ? `<span class="node-code" style="background:${codeColor}15;color:${codeColor}">${s.code}</span>` : '';
+  const sysHtml = s.sys ? `<span class="node-sys">${s.sys}</span>` : '';
+  const slaHtml = s.sla ? `<span class="sla-box">${s.sla}</span>` : '';
+  const subHtml = s.sub ? `<div class="node-sub">${s.sub}</div>` : '';
+
+  if(s.t === 'decision'){
+    let branches = '';
+    if(s.yes || s.no){
+      branches = `<div class="branches">
+        <div class="branch branch-yes"><div class="branch-label">Sim</div><div class="branch-content"><div class="node-main"><div class="node-text" style="font-size:11px;color:var(--text2)">${s.yes||''}</div></div></div></div>
+        <div class="branch branch-no"><div class="branch-label">Não</div><div class="branch-content"><div class="node-main"><div class="node-text" style="font-size:11px;color:var(--text2)">${s.no||''}</div></div></div></div>
+      </div>`;
+    }
+    return `<div class="decision"><div class="node-main">${codeHtml}<div class="node-body"><div class="node-text">${s.text}${slaHtml}</div>${subHtml}</div></div></div>${branches}<div class="pipe"></div>`;
+  }
+
+  if(s.t === 'sync'){
+    return `<div class="sync"><div class="node-main">${codeHtml}<div class="node-body"><div class="node-text">${s.text}</div><span class="sync-tag">⚡ ${s.sync}</span>${subHtml}</div></div></div><div class="pipe"></div>`;
+  }
+
+  if(s.t === 'investigation'){
+    const lvl = s.level === 'admin' ? 'invest-admin' : s.level === 'tech' ? 'invest-tech' : 'invest-log';
+    const lvlName = s.level === 'admin' ? 'ADMINISTRATIVA' : s.level === 'tech' ? 'TÉCNICA' : 'LOGÍSTICA';
+    return `<div class="investigation"><div class="node-main">${codeHtml}<div class="node-body"><div class="node-text">${s.text}</div><span class="invest-badge ${lvl}">INVESTIGAÇÃO ${lvlName}</span>${subHtml}</div></div></div><div class="pipe"></div>`;
+  }
+
+  if(s.t === 'pp'){
+    return `<div class="pp-box"><div class="pp-title">PP:001 — Processo Padrão</div>${s.text.split('\n').map(l=>`<div>${l}</div>`).join('')}</div>`;
+  }
+
+  return `<div class="node"><div class="node-main">${codeHtml}<div class="node-body"><div class="node-text">${s.text}${slaHtml}</div>${subHtml}${sysHtml}</div></div></div><div class="pipe"></div>`;
+}
+
+function renderFlows(){
+  document.getElementById('content').innerHTML = FLOWS.map((f,i) =>
+    `<div class="flow-view${i===0?' active':''}" id="flow-${f.id}">
+      <div class="flow-intro">${f.intro}</div>
+      ${f.steps.map(s => renderNode(s, f)).join('')}
+    </div>`
+  ).join('');
+}
+
+function showFlow(id, tabEl){
+  document.querySelectorAll('.flow-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => {t.classList.remove('active');t.style.borderBottomColor='transparent'});
+  document.getElementById('flow-'+id).classList.add('active');
+  tabEl.classList.add('active');
+  const flow = FLOWS.find(f=>f.id===id);
+  if(flow) tabEl.style.borderBottomColor = flow.color;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+renderTabs();
+renderFlows();
+</script>
+</body>
+</html>
