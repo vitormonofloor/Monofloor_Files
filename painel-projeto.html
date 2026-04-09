@@ -133,7 +133,7 @@ a:hover { text-decoration: underline; }
       <div class="sub">Painel de Projeto — Cérebro Interligado</div>
     </div>
   </div>
-  <div class="updated">Última atualização: Abril/2026 · Construído por Vitor + Cláudio</div>
+  <div class="updated">Última atualização: 09/Abril/2026 · Construído por Vitor + Cláudio · 8 pilares interligados</div>
 </div>
 
 <!-- ═══ STATS ═══ -->
@@ -172,7 +172,7 @@ a:hover { text-decoration: underline; }
 <!-- ═══ FOOTER ═══ -->
 <div class="footer">
   <strong style="color:var(--accent)">Referência do Projeto Monofloor</strong><br>
-  Skills instaladas: monofloor-master · estrutura-monofloor · estrutura-pipefy · monofloor-whatsapp · monofloor-projetos · agente-performance · teleagente-monofloor<br>
+  Skills instaladas: monofloor-master · estrutura-monofloor · estrutura-pipefy · monofloor-whatsapp · monofloor-projetos · agente-performance · teleagente-monofloor · brainstorm-monofloor<br>
   Repositórios: <a href="https://github.com/vitormonofloor/Monofloor_Files" target="_blank">Monofloor_Files</a> · <a href="https://github.com/vitormonofloor/cargo-assistente" target="_blank">cargo-assistente</a> · <a href="https://github.com/vitormonofloor/teleagente" target="_blank">teleagente</a><br>
   Pessoas: Vitor Gomes (Qualidade) · Júlio Taporosky (Financeiro) · Karine (Ass. Financeiro) · Kassandra (Diretoria Op.) · Nathan · Braiam · Cauã · Maria Eduarda<br>
   Dados reais de: Mar–Abr/2026 · Pipefy pipe OE: 306410007 · OEC: 306446640
@@ -270,8 +270,8 @@ const PILLARS = [
   },
   {
     id: 'p6', name: 'Dashboards e painéis', icon: '📊', color: '#FAC775', bgColor: '#FAEEDA', textColor: '#854F0B',
-    feedsTo: ['p7'], dependsOn: ['p4','p5'],
-    depsLabel: 'Depende de → Integrações + Automação | Gera insights para → Melhorias',
+    feedsTo: ['p7b'], dependsOn: ['p4','p5'],
+    depsLabel: 'Depende de → Integrações + Automação | Gera insights para → Brainstorm → Melhorias',
     tasks: [
       { name: 'Central Operacional — dados Pipefy ao vivo', status: 'live', link: 'https://vitormonofloor.github.io/Monofloor_Files/monofloor-dashboard_2.html' },
       { name: 'Régua de Saúde — 57 indicadores, 8 setores', status: 'live', link: 'https://vitormonofloor.github.io/cargo-assistente/dashboard.html' },
@@ -279,9 +279,25 @@ const PILLARS = [
     ]
   },
   {
+    id: 'p7b', name: 'Brainstorm / Ideação', icon: '💡', color: '#ED93B1', bgColor: '#FBEAF0', textColor: '#72243E',
+    feedsTo: ['p7'], dependsOn: ['p1','p2','p3','p4','p5','p6'],
+    depsLabel: 'TRANSVERSAL — Cruza TODAS as skills antes de gerar ideias | Motor: 🟢 Quick Wins · 🟡 Estruturais · 🔴 Transformações | Alimenta → Melhorias',
+    tasks: [
+      { name: 'Skill brainstorm-monofloor — motor de ideação', status: 'done', notes: '3 camadas: Quick Wins, Melhorias Estruturais, Transformações. Cruza skills existentes antes de gerar ideias.' },
+      { name: '🟢 Automação alerta card parado +48h no Pipefy', status: 'todo', tag: 'Quick Win', tagType: 'info', notes: 'Notificação automática quando card fica parado >48h em qualquer fase.' },
+      { name: '🟢 Campo obrigatório "motivo" em fases de pausa', status: 'todo', tag: 'Quick Win', tagType: 'info', notes: 'Registrar por que a obra pausou — alimenta taxa de pausa (47,6%).' },
+      { name: '🟢 Template padronizado WhatsApp alinhamento obra', status: 'todo', tag: 'Quick Win', tagType: 'info', notes: 'Mensagem modelo para alinhamento com cliente antes da obra.' },
+      { name: '🟡 Checklist digital de entrega por obra', status: 'todo', tag: 'Estrutural', tagType: 'warn', notes: 'Substituir processo informal por checklist digital vinculado ao Pipefy.' },
+      { name: '🟡 Relatório semanal automático por obra via Telegram', status: 'todo', tag: 'Estrutural', tagType: 'warn', notes: 'Bot envia resumo semanal de cada obra ativa para o Teleagente.' },
+      { name: '🔴 NPS automático pós-obra via WhatsApp', status: 'todo', tag: 'Transformação', tagType: 'blocker', notes: 'Pesquisa automatizada após conclusão. Pré-requisito: ativar fases 36-50 do OE.' },
+      { name: '🔴 Conexão automática CORES→OPERAÇÕES', status: 'todo', tag: 'Transformação', tagType: 'blocker', notes: 'Quando amostra aprovada no pipe CORES, mover card automaticamente no OE.' },
+      { name: 'Modo contínuo — acumular insights a cada interação', status: 'done', notes: 'Cláudio registra oportunidades de melhoria, sugere cruzamentos entre skills e propõe refinamentos em cada comando operacional.' },
+    ]
+  },
+  {
     id: 'p7', name: 'Melhorias operacionais', icon: '🔧', color: '#F7C1C1', bgColor: '#FCEBEB', textColor: '#A32D2D',
-    feedsTo: ['p1'], dependsOn: ['p6'],
-    depsLabel: 'Depende de → Dashboards (insights) | Retroalimenta → Base de Conhecimento (feedback loop)',
+    feedsTo: ['p1'], dependsOn: ['p7b'],
+    depsLabel: 'Depende de → Brainstorm (ideias priorizadas) | Retroalimenta → Base de Conhecimento (feedback loop)',
     tasks: [
       { name: 'G1 — 267 amostras presas CORES (260 dias avg)', status: 'critical', tag: 'maior gargalo', tagType: 'blocker', notes: 'Criar SLA + responsável de coleta. Impacta G3 (28 cards Aguardando Liberação).' },
       { name: 'G2 — SLA VT Aferição: 3% vs meta 90% (41 cards)', status: 'critical', notes: '163 dias avg, 97% acima do SLA. Triar por urgência.' },
