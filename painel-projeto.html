@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monofloor — Painel de Projeto</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a; --card: #111; --card2: #181818; --border: #222; --border2: #2a2a2a;
+  --accent: #c4a77d; --accent2: #a8895f;
+  --green: #22c55e; --blue: #3b82f6; --amber: #f59e0b; --red: #ef4444; --gray: #6b7280; --purple: #a855f7;
+  --text: #e5e5e5; --text2: #999; --text3: #666;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── HEADER ─────────────────── */
+.header {
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1208 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 28px 18px;
+}
+.header-top { display: flex; align-items: center; gap: 14px; }
+.logo { width: 38px; height: 38px; border-radius: 8px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #000; }
+.header h1 { font-size: 20px; font-weight: 700; color: var(--accent); }
+.header .sub { font-size: 11px; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; }
+.header .updated { font-size: 11px; color: var(--text3); margin-top: 8px; }
+
+/* ── STATS ──────────────────── */
+.stats { display: flex; gap: 10px; padding: 16px 20px 0; flex-wrap: wrap; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; flex: 1; min-width: 120px; }
+.stat .label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px; }
+.stat .value { font-size: 28px; font-weight: 700; line-height: 1; }
+.stat .sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+/* ── PROGRESS ───────────────── */
+.progress-section { padding: 12px 20px; }
+.progress-bar-wrap { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+.progress-bar { background: #1a1a1a; border-radius: 6px; height: 8px; overflow: hidden; }
+.progress-bar .fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+
+/* ── PILLAR GRID ────────────── */
+.pillars { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; padding: 8px 20px 0; }
+.pillar-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; cursor: pointer; transition: all 0.2s;
+}
+.pillar-card:hover { border-color: var(--accent); background: #1a1208; }
+.pillar-card.active { border-color: var(--accent); background: #1a1208; }
+.pillar-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.pillar-icon { font-size: 16px; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.pillar-name { font-size: 13px; font-weight: 600; flex: 1; }
+.pillar-count { font-size: 11px; color: var(--text3); }
+.pillar-bar { background: #1a1a1a; border-radius: 4px; height: 4px; overflow: hidden; }
+.pillar-bar .fill { height: 100%; border-radius: 4px; }
+.pillar-status { display: flex; gap: 4px; margin-top: 6px; }
+.pillar-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ── DETAIL PANEL ───────────── */
+.detail { display: none; margin: 12px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.detail.open { display: block; }
+.detail-head {
+  padding: 14px 18px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border); background: var(--card2);
+}
+.detail-head h2 { font-size: 15px; font-weight: 600; flex: 1; }
+.detail-head .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--accent); color: #000; font-weight: 600; }
+.deps-info { font-size: 11px; color: var(--text3); padding: 8px 18px; border-bottom: 1px solid var(--border); line-height: 1.6; }
+.task {
+  display: flex; align-items: center; gap: 10px; padding: 10px 18px;
+  border-bottom: 1px solid var(--border); transition: background 0.15s;
+}
+.task:last-child { border-bottom: none; }
+.task:hover { background: var(--card2); }
+.task-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.task-name { flex: 1; font-size: 13px; line-height: 1.4; }
+.task-tag { font-size: 10px; padding: 2px 7px; border-radius: 8px; white-space: nowrap; font-weight: 500; margin-left: 4px; }
+.task-tag.blocker { background: #ef444422; color: var(--red); }
+.task-tag.warn { background: #f59e0b22; color: var(--amber); }
+.task-tag.info { background: #3b82f622; color: var(--blue); }
+.task-status { font-size: 11px; padding: 2px 8px; border-radius: 12px; white-space: nowrap; font-weight: 500; flex-shrink: 0; }
+.task-link { font-size: 11px; color: var(--accent); flex-shrink: 0; }
+.task-notes { font-size: 11px; color: var(--amber); padding: 4px 18px 10px 36px; line-height: 1.4; }
+
+/* ── DEPENDENCY MAP ─────────── */
+.dep-map { padding: 16px 20px 0; }
+.dep-map h3 { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* ── BLOCKER ALERT ──────────── */
+.blockers { padding: 12px 20px; }
+.blocker-card {
+  background: #1a0a0a; border: 1px solid #3a1515; border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 8px;
+}
+.blocker-card h4 { font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 4px; }
+.blocker-card p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.blocker-card .action { font-size: 12px; color: var(--accent); margin-top: 6px; font-weight: 500; }
+
+/* ── LEGEND ──────────────────── */
+.legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 16px 20px 24px; font-size: 12px; color: var(--text2); }
+.legend span { display: flex; align-items: center; gap: 5px; }
+.legend .ld { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── FOOTER ──────────────────── */
+.footer { padding: 16px 20px 30px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text3); line-height: 1.6; }
+
+/* ── SEARCH ──────────────────── */
+.search-bar { padding: 12px 20px 0; }
+.search-bar input {
+  width: 100%; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; color: var(--text); font-size: 13px; outline: none;
+  font-family: 'Inter', sans-serif;
+}
+.search-bar input:focus { border-color: var(--accent); }
+
+@media (max-width: 600px) {
+  .stats { flex-direction: column; }
+  .pillars { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">M</div>
+    <div>
+      <h1>MONOFLOOR</h1>
+      <div class="sub">Painel de Projeto — Cérebro Interligado</div>
+    </div>
+  </div>
+  <div class="updated">Última atualização: Abril/2026 · Construído por Vitor + Cláudio</div>
+</div>
+
+<!-- ═══ STATS ═══ -->
+<div class="stats" id="stats"></div>
+
+<!-- ═══ PROGRESS ═══ -->
+<div class="progress-section">
+  <div class="progress-bar-wrap"><span>Progresso geral do projeto</span><span id="pct-label"></span></div>
+  <div class="progress-bar"><div class="fill" id="pct-bar" style="background:var(--accent)"></div></div>
+</div>
+
+<!-- ═══ SEARCH ═══ -->
+<div class="search-bar">
+  <input type="text" id="search" placeholder="🔍 Buscar em todos os pilares..." oninput="filterTasks(this.value)">
+</div>
+
+<!-- ═══ BLOCKERS ═══ -->
+<div class="blockers" id="blockers"></div>
+
+<!-- ═══ PILLAR GRID ═══ -->
+<div class="pillars" id="pillars"></div>
+
+<!-- ═══ DETAIL PANELS ═══ -->
+<div id="details"></div>
+
+<!-- ═══ LEGEND ═══ -->
+<div class="legend">
+  <span><div class="ld" style="background:var(--green)"></div>Concluído / No ar</span>
+  <span><div class="ld" style="background:var(--blue)"></div>Publicado</span>
+  <span><div class="ld" style="background:var(--amber)"></div>Parcial / Atenção</span>
+  <span><div class="ld" style="background:var(--red)"></div>Bloqueado / Crítico</span>
+  <span><div class="ld" style="background:var(--gray)"></div>A fazer</span>
+  <span><div class="ld" style="background:var(--purple)"></div>Refinar</span>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+  <strong style="color:var(--accent)">Referência do Projeto Monofloor</strong><br>
+  Skills instaladas: monofloor-master · estrutura-monofloor · estrutura-pipefy · monofloor-whatsapp · monofloor-projetos · agente-performance · teleagente-monofloor<br>
+  Repositórios: <a href="https://github.com/vitormonofloor/Monofloor_Files" target="_blank">Monofloor_Files</a> · <a href="https://github.com/vitormonofloor/cargo-assistente" target="_blank">cargo-assistente</a> · <a href="https://github.com/vitormonofloor/teleagente" target="_blank">teleagente</a><br>
+  Pessoas: Vitor Gomes (Qualidade) · Júlio Taporosky (Financeiro) · Karine (Ass. Financeiro) · Kassandra (Diretoria Op.) · Nathan · Braiam · Cauã · Maria Eduarda<br>
+  Dados reais de: Mar–Abr/2026 · Pipefy pipe OE: 306410007 · OEC: 306446640
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA — PILARES E TAREFAS
+// ═══════════════════════════════════════════════════
+
+const STATUS_MAP = {
+  done:    { label: 'Concluído', color: 'var(--green)', bg: '#22c55e22' },
+  live:    { label: 'No ar',     color: 'var(--blue)',  bg: '#3b82f622' },
+  partial: { label: 'Parcial',   color: 'var(--amber)', bg: '#f59e0b22' },
+  blocked: { label: 'Bloqueado', color: 'var(--red)',   bg: '#ef444422' },
+  todo:    { label: 'A fazer',   color: 'var(--gray)',  bg: '#6b728022' },
+  critical:{ label: 'Crítico',   color: 'var(--red)',   bg: '#ef444422' },
+  high:    { label: 'Alto',      color: 'var(--amber)', bg: '#f59e0b22' },
+  medium:  { label: 'Médio',     color: 'var(--gray)',  bg: '#6b728022' },
+};
+
+const PILLARS = [
+  {
+    id: 'p1', name: 'Base de conhecimento', icon: '🧠', color: '#AFA9EC', bgColor: '#EEEDFE', textColor: '#534AB7',
+    feedsTo: ['p2','p3','p4'], dependsOn: ['p7'],
+    depsLabel: 'Alimenta → Documentação, Infraestrutura, Integrações | Recebe feedback ← Melhorias',
+    tasks: [
+      { name: 'monofloor-master — índice mestre do projeto', status: 'done' },
+      { name: 'estrutura-monofloor — 5 fluxos OE/OEC/OEI/OEL/OECT + SLAs', status: 'done' },
+      { name: 'estrutura-pipefy — 4 pipes, 50 fases, cards reais mar/26', status: 'done' },
+      { name: 'monofloor-whatsapp — grupos corporativos, padrões', status: 'done' },
+      { name: 'monofloor-projetos — log de sessões e decisões', status: 'done' },
+      { name: 'agente-performance — 57 indicadores, régua de saúde', status: 'done' },
+      { name: 'teleagente-monofloor — bot Telegram, tokens, arquitetura', status: 'done' },
+      { name: 'monofloor-oe — fluxo OE detalhado (52 etapas)', status: 'todo', notes: 'Roadmap planejado — criar na próxima sessão de mapeamento' },
+      { name: 'monofloor-oec — gestão de amostras e cores', status: 'todo', notes: 'Conecta com G1 (267 amostras presas)' },
+      { name: 'monofloor-telegram — estrutura grupos de obra', status: 'todo' },
+      { name: 'monofloor-clientes — base de obras ativas', status: 'todo' },
+      { name: 'monofloor-melhorias — backlog priorizado Pipefy', status: 'todo' },
+      { name: 'monofloor-oei / monofloor-oel / monofloor-oect', status: 'todo', notes: 'Skills por fluxo — prioridade média' },
+      { name: 'monofloor-equipe — consultores e operacionais', status: 'todo' },
+    ]
+  },
+  {
+    id: 'p2', name: 'Documentação', icon: '📄', color: '#AFA9EC', bgColor: '#EEEDFE', textColor: '#534AB7',
+    feedsTo: ['p3'], dependsOn: ['p1'],
+    depsLabel: 'Depende de → Base de Conhecimento | Alimenta → Infraestrutura Digital (sites)',
+    tasks: [
+      { name: 'POP-FIN-001 — Cadastro de Obras', status: 'done' },
+      { name: 'POP-FIN-002 — Conciliação Bancária (Omie)', status: 'done' },
+      { name: 'POP-FIN-003 — Registro de Horas Prestadores', status: 'partial', tag: 'divergência Aplicador 3', tagType: 'warn', notes: 'R$330 (POP-FIN-003) vs R$320 (DC-FIN-001) — alinhar com Júlio' },
+      { name: 'POP-FIN-004 — Contrato de Empreitada', status: 'done' },
+      { name: 'POP-RH-001 — Recarga de Cartões Provisórios', status: 'done' },
+      { name: 'DC-FIN-001 — Descritivo de Cargo Karine (14 seções)', status: 'done' },
+      { name: 'Instruções de Trabalho (ITs) — todos os setores', status: 'todo', tag: 'aguarda conteúdo', tagType: 'warn', notes: 'Placeholder "em manutenção" visível no site. Vitor precisa fornecer conteúdo.' },
+      { name: 'POPs setor Comercial', status: 'todo', notes: 'Marcado como "em breve" no site' },
+      { name: 'POPs setor Logística', status: 'todo' },
+      { name: 'POPs setor Qualidade', status: 'todo' },
+    ]
+  },
+  {
+    id: 'p3', name: 'Infraestrutura digital', icon: '🌐', color: '#5DCAA5', bgColor: '#E1F5EE', textColor: '#0F6E56',
+    feedsTo: [], dependsOn: ['p1','p2'],
+    depsLabel: 'Depende de → Base de Conhecimento + Documentação',
+    tasks: [
+      { name: 'Site de POPs (Monofloor_Files)', status: 'live', link: 'https://vitormonofloor.github.io/Monofloor_Files/', notes: 'Cards por setor, busca, sugestão de adições, painel admin' },
+      { name: 'Portal Monofloor v10 (cargo-assistente)', status: 'live', link: 'https://vitormonofloor.github.io/cargo-assistente/portal.html', notes: '6 abas: Dashboard, Obras, Financeiro, Alertas, Documentos, Timeline' },
+      { name: 'Fluxograma Interativo', status: 'live', link: 'https://vitormonofloor.github.io/Monofloor_Files/fluxograma-monofloor.html' },
+      { name: 'Dashboard Régua de Saúde', status: 'live', link: 'https://vitormonofloor.github.io/cargo-assistente/dashboard.html', notes: '57 indicadores, 8 setores, barras animadas' },
+    ]
+  },
+  {
+    id: 'p4', name: 'Integrações externas', icon: '🔗', color: '#85B7EB', bgColor: '#E6F1FB', textColor: '#185FA5',
+    feedsTo: ['p5','p6'], dependsOn: ['p1'],
+    depsLabel: 'Depende de → Base de Conhecimento | Alimenta → Automação + Dashboards | BLOQUEADOR: Omie sem acesso',
+    tasks: [
+      { name: 'Pipefy GraphQL — token ativo, 4 pipes mapeados', status: 'done', notes: 'OE: 306410007 · OEC: 306446640 · OEI: 306446401 · OECT: 306431675' },
+      { name: 'planejamento.monofloor.cloud — API com 228 obras', status: 'done' },
+      { name: 'GitHub Pages — 2 repos publicados e no ar', status: 'done' },
+      { name: 'D4Sign — 115 contratos finalizados', status: 'partial', tag: 'contornar visualização', tagType: 'warn', notes: '8 contratos 2026 analisados. Ticket médio R$150.885. Problema de visualização pendente.' },
+      { name: 'Omie (ERP) — margem, custo/m², fluxo de caixa', status: 'blocked', tag: 'bloqueador', tagType: 'blocker', notes: 'Sem acesso liberado. 5 dos 8 indicadores financeiros dependem disso.' },
+      { name: 'Teleagente API Telegram — webhook ativo', status: 'partial', tag: 'respostas inconsistentes', tagType: 'warn', notes: 'Bot online no Railway. Comandos não respondem 100%. Falta ANTHROPIC_API_KEY para /semana.' },
+    ]
+  },
+  {
+    id: 'p5', name: 'Automação', icon: '⚙️', color: '#F0997B', bgColor: '#FAECE7', textColor: '#993C1D',
+    feedsTo: ['p6'], dependsOn: ['p4'],
+    depsLabel: 'Depende de → Integrações | Alimenta → Dashboards | BLOQUEADOR: ANTHROPIC_API_KEY + TELEGRAM_CHAT_ID',
+    tasks: [
+      { name: 'Agente Operacional (Python) — extrai Pipefy + painel', status: 'done' },
+      { name: 'Agente D4Sign (Python) — extrai contratos', status: 'done' },
+      { name: 'Cérebro Central (Python) — análise com Claude API', status: 'done', notes: 'Depende da ANTHROPIC_API_KEY para funcionar' },
+      { name: 'GitHub Actions workflow — 07:30 + 08:00 BRT', status: 'partial', tag: 'faltam 2 secrets', tagType: 'blocker', notes: 'Código publicado (10 arquivos). Faltam: ANTHROPIC_API_KEY + TELEGRAM_CHAT_ID = 8151246424' },
+    ]
+  },
+  {
+    id: 'p6', name: 'Dashboards e painéis', icon: '📊', color: '#FAC775', bgColor: '#FAEEDA', textColor: '#854F0B',
+    feedsTo: ['p7'], dependsOn: ['p4','p5'],
+    depsLabel: 'Depende de → Integrações + Automação | Gera insights para → Melhorias',
+    tasks: [
+      { name: 'Central Operacional — dados Pipefy ao vivo', status: 'live', link: 'https://vitormonofloor.github.io/Monofloor_Files/monofloor-dashboard_2.html' },
+      { name: 'Régua de Saúde — 57 indicadores, 8 setores', status: 'live', link: 'https://vitormonofloor.github.io/cargo-assistente/dashboard.html' },
+      { name: 'Relatório Financeiro — DRE, margem, ticket médio', status: 'live', link: 'https://vitormonofloor.github.io/cargo-assistente/relatorio_financeiro.html' },
+    ]
+  },
+  {
+    id: 'p7', name: 'Melhorias operacionais', icon: '🔧', color: '#F7C1C1', bgColor: '#FCEBEB', textColor: '#A32D2D',
+    feedsTo: ['p1'], dependsOn: ['p6'],
+    depsLabel: 'Depende de → Dashboards (insights) | Retroalimenta → Base de Conhecimento (feedback loop)',
+    tasks: [
+      { name: 'G1 — 267 amostras presas CORES (260 dias avg)', status: 'critical', tag: 'maior gargalo', tagType: 'blocker', notes: 'Criar SLA + responsável de coleta. Impacta G3 (28 cards Aguardando Liberação).' },
+      { name: 'G2 — SLA VT Aferição: 3% vs meta 90% (41 cards)', status: 'critical', notes: '163 dias avg, 97% acima do SLA. Triar por urgência.' },
+      { name: 'NPS + pós-obra — processo inexistente', status: 'critical', notes: '0 cards nas fases 36-50 do OE. Criar processo novo + formulário NPS.' },
+      { name: 'M2 — Automação PROJETOS→OE (OECT-017)', status: 'high' },
+      { name: 'M4 — Campo "Motivo da Pausa" no Pipefy', status: 'high', tag: 'Vitor criar', tagType: 'warn', notes: 'Taxa de pausa: 47,6%. 10 obras pausadas sem motivo registrado.' },
+      { name: 'M5 — Ativar pós-venda (fases 36-50 OE)', status: 'high', notes: '15 fases zeradas. Pré-requisito para NPS.' },
+      { name: 'Campo "Data prevista conclusão" no Pipefy', status: 'high', tag: 'Vitor criar', tagType: 'warn', notes: 'Necessário para medir taxa de atraso vs planejado.' },
+      { name: 'M9 — Database central (ID único por obra)', status: 'high' },
+      { name: 'Divergência Aplicador 3 — R$330 vs R$320', status: 'high', tag: 'alinhar Júlio', tagType: 'warn', notes: 'POP-FIN-003 diz R$330, DC-FIN-001 diz R$320. Pendente alinhamento com Coordenador Financeiro.' },
+      { name: 'M6 — Automação OEC→OEI→OE entre pipes', status: 'medium' },
+      { name: 'M8 — Pipe OEL separado (Logística)', status: 'medium', notes: 'Gap identificado: logística não tem pipe próprio.' },
+      { name: 'Implantar CRM — rastrear leads e conversão', status: 'medium', notes: 'Escolha de ferramenta pendente.' },
+    ]
+  }
+];
+
+const BLOCKERS = [
+  {
+    title: 'ANTHROPIC_API_KEY — chave da API Claude',
+    desc: 'Sem ela, o Cérebro não analisa, o Teleagente não responde em linguagem natural, /semana não funciona, e alertas automáticos não disparam.',
+    action: '→ Criar em console.anthropic.com → adicionar nos GitHub Secrets (cargo-assistente) e Railway (teleagente)',
+    impacts: ['p4', 'p5']
+  },
+  {
+    title: 'Acesso ao Omie (ERP)',
+    desc: '5 dos 8 indicadores financeiros dependem do Omie: margem real, custo/m², fluxo de caixa, inadimplência e ponto de equilíbrio. Todos cinza no dashboard.',
+    action: '→ Solicitar liberação de acesso ao Omie internamente',
+    impacts: ['p4', 'p6']
+  },
+  {
+    title: 'G1 — 267 amostras presas no pipe CORES',
+    desc: 'Maior gargalo da operação. Média de 260 dias paradas em "Solicitar Coleta". Impacta G3 (Aguardando Liberação) em cascata.',
+    action: '→ Criar SLA de coleta + designar responsável + rotina de triagem',
+    impacts: ['p7']
+  },
+];
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+
+function countAll() {
+  let total = 0, done = 0, live = 0, partial = 0, blocked = 0, todo = 0;
+  PILLARS.forEach(p => {
+    p.tasks.forEach(t => {
+      total++;
+      if (t.status === 'done') done++;
+      else if (t.status === 'live') live++;
+      else if (t.status === 'partial') partial++;
+      else if (t.status === 'blocked' || t.status === 'critical') blocked++;
+      else todo++;
+    });
+  });
+  return { total, done, live, partial, blocked, todo };
+}
+
+function renderStats() {
+  const c = countAll();
+  const pct = Math.round(((c.done + c.live) / c.total) * 100);
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="label">Total</div><div class="value" style="color:var(--text)">${c.total}</div><div class="sub">${pct}% concluído</div></div>
+    <div class="stat"><div class="label">Concluído</div><div class="value" style="color:var(--green)">${c.done + c.live}</div><div class="sub">✅ + 🔵</div></div>
+    <div class="stat"><div class="label">Parcial</div><div class="value" style="color:var(--amber)">${c.partial}</div></div>
+    <div class="stat"><div class="label">Bloqueado</div><div class="value" style="color:var(--red)">${c.blocked}</div></div>
+    <div class="stat"><div class="label">A fazer</div><div class="value" style="color:var(--gray)">${c.todo}</div></div>
+  `;
+  document.getElementById('pct-label').textContent = pct + '%';
+  document.getElementById('pct-bar').style.width = pct + '%';
+}
+
+function renderBlockers() {
+  document.getElementById('blockers').innerHTML = '<h3 style="font-size:12px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">⛔ Bloqueadores ativos</h3>' +
+    BLOCKERS.map(b => `
+      <div class="blocker-card">
+        <h4>${b.title}</h4>
+        <p>${b.desc}</p>
+        <div class="action">${b.action}</div>
+      </div>
+    `).join('');
+}
+
+function renderPillars() {
+  document.getElementById('pillars').innerHTML = PILLARS.map(p => {
+    const done = p.tasks.filter(t => t.status === 'done' || t.status === 'live').length;
+    const total = p.tasks.length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    const dots = p.tasks.map(t => {
+      const s = STATUS_MAP[t.status] || STATUS_MAP.todo;
+      return `<div class="pillar-dot" style="background:${s.color}"></div>`;
+    }).join('');
+    return `
+      <div class="pillar-card" id="card-${p.id}" onclick="togglePanel('${p.id}')">
+        <div class="pillar-head">
+          <div class="pillar-icon" style="background:${p.bgColor};color:${p.textColor}">${p.icon}</div>
+          <div class="pillar-name">${p.name}</div>
+          <div class="pillar-count">${done}/${total}</div>
+        </div>
+        <div class="pillar-bar"><div class="fill" style="width:${pct}%;background:${pct===100?'var(--green)':'var(--accent)'}"></div></div>
+        <div class="pillar-status">${dots}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderDetails() {
+  document.getElementById('details').innerHTML = PILLARS.map(p => {
+    const done = p.tasks.filter(t => t.status === 'done' || t.status === 'live').length;
+    const taskHTML = p.tasks.map(t => {
+      const s = STATUS_MAP[t.status] || STATUS_MAP.todo;
+      let tagHTML = '';
+      if (t.tag) {
+        const tc = t.tagType === 'blocker' ? 'blocker' : t.tagType === 'warn' ? 'warn' : 'info';
+        tagHTML = `<span class="task-tag ${tc}">${t.tag}</span>`;
+      }
+      const linkHTML = t.link ? `<a class="task-link" href="${t.link}" target="_blank">abrir ↗</a>` : '';
+      const noteHTML = t.notes ? `<div class="task-notes">⚠ ${t.notes}</div>` : '';
+      return `
+        <div class="task" data-search="${(t.name + ' ' + (t.notes||'')).toLowerCase()}">
+          <div class="task-dot" style="background:${s.color}"></div>
+          <div class="task-name">${t.name}${tagHTML}</div>
+          <div class="task-status" style="background:${s.bg};color:${s.color}">${s.label}</div>
+          ${linkHTML}
+        </div>
+        ${noteHTML}
+      `;
+    }).join('');
+    return `
+      <div class="detail" id="panel-${p.id}">
+        <div class="detail-head">
+          <div class="pillar-icon" style="background:${p.bgColor};color:${p.textColor};font-size:16px">${p.icon}</div>
+          <h2>${p.name}</h2>
+          <div class="badge">${done}/${p.tasks.length}</div>
+        </div>
+        <div class="deps-info">${p.depsLabel}</div>
+        ${taskHTML}
+      </div>
+    `;
+  }).join('');
+}
+
+let openPanelId = null;
+function togglePanel(id) {
+  document.querySelectorAll('.detail').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.pillar-card').forEach(c => c.classList.remove('active'));
+  if (openPanelId === id) { openPanelId = null; return; }
+  const panel = document.getElementById('panel-' + id);
+  const card = document.getElementById('card-' + id);
+  if (panel) { panel.classList.add('open'); panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  if (card) card.classList.add('active');
+  openPanelId = id;
+}
+
+function filterTasks(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.task').forEach(row => {
+    const text = row.getAttribute('data-search') || '';
+    row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.task-notes').forEach(n => {
+    const prev = n.previousElementSibling;
+    if (prev) n.style.display = prev.style.display === 'none' ? 'none' : 'block';
+  });
+  if (q && !openPanelId) {
+    document.querySelectorAll('.detail').forEach(d => d.classList.add('open'));
+  }
+}
+
+// Init
+renderStats();
+renderBlockers();
+renderPillars();
+renderDetails();
+</script>
+</body>
+</html>
