@@ -6,24 +6,35 @@
 <title>Monofloor — Análise de Projetos</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ── Fonte oficial da marca Monofloor (com fallback) ── */
+@font-face {
+  font-family: 'Widescreen';
+  src: url('https://cliente.monofloor.cloud/_next/static/media/Widescreen%20Light-s.p.9717fdaf.otf') format('opentype');
+  font-weight: 300 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --bg: #0a0a0a;
-  --bg2: #0f0f0f;
-  --bg3: #161616;
-  --surface: #141414;
-  --surface-hover: #1c1c1c;
-  --border: #222;
-  --border2: #2a2a2a;
-  --border3: #333;
+  /* ── Paleta oficial Monofloor (browns warm + gold) ── */
+  --bg: #1a140e;          /* warm dark — slightly mais escuro que mono-brown-900 */
+  --bg2: #241d16;         /* mono-brown-900 — section background */
+  --bg3: #2d2519;         /* warm hover */
+  --surface: #322a1d;     /* card surface */
+  --surface-hover: #3a3122;
+  --border: #483a2b;      /* mono-brown-700 */
+  --border2: #5a4935;     /* mono-brown-600 */
+  --border3: #6f5c45;     /* warm divider */
 
-  --gold: #d4b483;
-  --gold2: #c4a77d;
-  --gold-dim: #8b7340;
-  --gold-bg: rgba(212, 180, 131, .08);
+  --gold: #e2bb88;        /* mono-gold — accent claro */
+  --gold2: #d4a96e;       /* mono-gold-dark — accent principal */
+  --gold-dim: #b8a080;    /* mono-brown-400 — warm muted accent */
+  --gold-bg: rgba(226, 187, 136, .08);
 
-  --green: #4ade80;
+  /* Alertas mantidos com leve ajuste warm */
+  --green: #6ee7b7;
   --green-dim: #166534;
-  --green-bg: rgba(74, 222, 128, .1);
+  --green-bg: rgba(110, 231, 183, .1);
 
   --red: #f87171;
   --red-dim: #7f1d1d;
@@ -32,16 +43,18 @@
   --amber: #fbbf24;
   --amber-bg: rgba(251, 191, 36, .1);
 
-  --blue: #60a5fa;
-  --blue-bg: rgba(96, 165, 250, .1);
+  --blue: #93c5fd;
+  --blue-bg: rgba(147, 197, 253, .1);
 
-  --text: #f5f5f4;
-  --text2: #a8a29e;
-  --text3: #78716c;
-  --text4: #57534e;
+  /* Texto warm cream */
+  --text: #faf8f5;        /* mono-brown-50 */
+  --text2: #d6c9b8;       /* warm light */
+  --text3: #a89880;       /* warm muted */
+  --text4: #6f5c45;       /* warm dark */
 
+  /* Tipografia: Widescreen como primário (com fallback Inter) */
   --fd: 'Fraunces', Georgia, serif;
-  --fb: 'Inter', system-ui, sans-serif;
+  --fb: 'Widescreen', 'Inter', system-ui, sans-serif;
   --fm: 'JetBrains Mono', monospace;
 
   --shadow-sm: 0 2px 8px rgba(0,0,0,.4);
@@ -493,7 +506,7 @@ button { font-family: inherit; cursor: pointer; }
 .drill-tab.active {
   background: var(--gold);
   border-color: var(--gold);
-  color: #0a0a0a;
+  color: var(--bg);
   font-weight: 600;
 }
 .drill-tab .icon { font-size: 16px; }
@@ -867,7 +880,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; align-items: center;
   padding-left: 12px;
   font-family: var(--fm); font-size: 12px;
-  font-weight: 700; color: #0a0a0a;
+  font-weight: 700; color: var(--bg);
   transition: width 1s cubic-bezier(.2,0,.2,1);
 }
 .scenario-bar.current {
@@ -941,7 +954,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; align-items: center;
   padding-left: 12px;
   font-family: var(--fm); font-size: 11px;
-  font-weight: 700; color: #0a0a0a;
+  font-weight: 700; color: var(--bg);
   transition: width 1s ease;
 }
 .rework-bar-extra {
@@ -1050,7 +1063,7 @@ button { font-family: inherit; cursor: pointer; }
 .deep-btn {
   display: inline-flex; align-items: center; gap: 12px;
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
-  color: #0a0a0a; font-weight: 600; font-size: 15px;
+  color: var(--bg); font-weight: 600; font-size: 15px;
   padding: 18px 32px; border-radius: 100px; border: none;
   cursor: pointer; transition: all .25s;
   box-shadow: 0 4px 24px rgba(212,180,131,.25);
@@ -1127,7 +1140,7 @@ button { font-family: inherit; cursor: pointer; }
   transition: width 1s ease;
 }
 .tp-bar-label {
-  font-family: var(--fm); font-size: 11px; color: #0a0a0a;
+  font-family: var(--fm); font-size: 11px; color: var(--bg);
   font-weight: 700;
 }
 .tp-meta {
@@ -1288,14 +1301,14 @@ button { font-family: inherit; cursor: pointer; }
 .month-bar {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--fm); font-size: 9px; font-weight: 700;
-  color: #0a0a0a;
+  color: var(--bg);
   transition: all .3s;
 }
 .month-bar:hover { filter: brightness(1.2); }
-.month-bar.p { background: #d4b483; }
-.month-bar.m { background: #c4a77d; }
-.month-bar.g { background: #b09367; }
-.month-bar.x { background: #8b7340; color: #fff; }
+.month-bar.p { background: #e2bb88; }
+.month-bar.m { background: #d4a96e; }
+.month-bar.g { background: #b8865a; }
+.month-bar.x { background: #a78757; color: #fff; }
 
 .months-legend {
   display: flex; gap: 16px; flex-wrap: wrap;
@@ -1490,15 +1503,15 @@ button { font-family: inherit; cursor: pointer; }
           <circle cx="100" cy="100" r="80" fill="none" stroke="var(--bg3)" stroke-width="30"/>
           <!-- Pré-obra: 78d (54.5%) -->
           <circle class="donut-segment" cx="100" cy="100" r="80"
-                  stroke="#d4b483"
+                  stroke="#e2bb88"
                   stroke-dasharray="274 502" stroke-dashoffset="0"/>
           <!-- Execução: 33d (23.1%) -->
           <circle class="donut-segment" cx="100" cy="100" r="80"
-                  stroke="#8b7340"
+                  stroke="#a78757"
                   stroke-dasharray="116 502" stroke-dashoffset="-274"/>
           <!-- Pós-obra: 32d (22.4%) -->
           <circle class="donut-segment" cx="100" cy="100" r="80"
-                  stroke="#5d4e2c"
+                  stroke="#7a6038"
                   stroke-dasharray="113 502" stroke-dashoffset="-390"/>
         </svg>
         <div class="donut-center">
@@ -1509,7 +1522,7 @@ button { font-family: inherit; cursor: pointer; }
 
       <div class="donut-legend">
         <div class="donut-legend-item">
-          <div class="donut-color" style="background:#d4b483"></div>
+          <div class="donut-color" style="background:#e2bb88"></div>
           <div class="donut-content">
             <h4>Pré-obra <span class="donut-num"><span class="pct">54%</span></span></h4>
             <p>1º contato, contratos, projetos, agendamentos de VT, aprovações,
@@ -1519,7 +1532,7 @@ button { font-family: inherit; cursor: pointer; }
         </div>
 
         <div class="donut-legend-item">
-          <div class="donut-color" style="background:#8b7340"></div>
+          <div class="donut-color" style="background:#a78757"></div>
           <div class="donut-content">
             <h4>Execução <span class="donut-num"><span class="pct">23%</span></span></h4>
             <p>A obra acontecendo no canteiro. Inclui pausas, refazimentos e finalização.
@@ -1529,7 +1542,7 @@ button { font-family: inherit; cursor: pointer; }
         </div>
 
         <div class="donut-legend-item">
-          <div class="donut-color" style="background:#5d4e2c"></div>
+          <div class="donut-color" style="background:#7a6038"></div>
           <div class="donut-content">
             <h4>Pós-obra <span class="donut-num"><span class="pct">22%</span></span></h4>
             <p>Obra terminou mas o card fica em "Cliente Finalizado" aguardando arquivamento
@@ -1762,10 +1775,10 @@ button { font-family: inherit; cursor: pointer; }
         <p class="h-sub">Obras finalizadas em cada mês, segmentadas por tipo. Permite ver tendência e sazonalidade.</p>
         <div id="months-chart"></div>
         <div class="months-legend">
-          <span><div class="dot" style="background:#d4b483"></div>Pequena (&lt;100m²)</span>
-          <span><div class="dot" style="background:#c4a77d"></div>Média (100-199m²)</span>
-          <span><div class="dot" style="background:#b09367"></div>Grande (200-499m²)</span>
-          <span><div class="dot" style="background:#8b7340"></div>XLarge (500m²+)</span>
+          <span><div class="dot" style="background:#e2bb88"></div>Pequena (&lt;100m²)</span>
+          <span><div class="dot" style="background:#d4a96e"></div>Média (100-199m²)</span>
+          <span><div class="dot" style="background:#b8865a"></div>Grande (200-499m²)</span>
+          <span><div class="dot" style="background:#a78757"></div>XLarge (500m²+)</span>
         </div>
       </div>
 
