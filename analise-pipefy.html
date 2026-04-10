@@ -1409,7 +1409,7 @@ button { font-family: inherit; cursor: pointer; }
     <div class="target-bar">
       <div class="target-bar-top">
         <span class="label">Realidade vs Meta</span>
-        <span class="target">Meta PP:001 ≤ 150 dias</span>
+        <span class="target">Meta interna ≤ 150 dias</span>
       </div>
       <div class="target-bar-track">
         <div class="target-bar-fill" style="width:95%"></div>
@@ -1812,7 +1812,7 @@ button { font-family: inherit; cursor: pointer; }
         <div class="simulator">
           <div class="simulator-head">
             <div class="simulator-title">Tempo de journey simulado</div>
-            <div class="simulator-current">Atual: <b>143 dias</b> · meta PP:001: <b>150 dias</b></div>
+            <div class="simulator-current">Atual: <b>143 dias</b> · meta interna: <b>150 dias</b></div>
           </div>
 
           <div class="slider-group">
@@ -1966,7 +1966,7 @@ button { font-family: inherit; cursor: pointer; }
               <td class="num">—</td>
             </tr>
             <tr>
-              <td>🎯 Meta PP:001</td>
+              <td>🎯 Meta interna atual</td>
               <td class="num">150 dias</td>
               <td class="num">25</td>
               <td class="num">300</td>
@@ -2475,7 +2475,7 @@ const INSIGHTS = [
     type: 'info',
     icon: '🎯',
     title: 'O caminho feliz já estoura a meta institucional',
-    body: 'Somando o tempo médio de cada fase principal (1 visita por fase), o resultado é <span class="num">~215 dias</span>. A meta PP:001 é <strong>≤150 dias</strong>. A meta é fisicamente impossível com a estrutura atual do pipe.'
+    body: 'Somando o tempo médio de cada fase principal (1 visita por fase), o resultado é <span class="num">~215 dias</span>. A meta interna definida é <strong>≤150 dias</strong>. A meta é fisicamente impossível com a estrutura atual do pipe.'
   },
   {
     type: 'warn',
@@ -2645,7 +2645,7 @@ function updateSimulator() {
 // ═══════════════════════════════════════════════════
 const SCENARIOS = [
   { label: 'Atual', icon: '📍', sub: '143 dias', value: 312, type: 'current', delta: null },
-  { label: 'Meta PP:001', icon: '🎯', sub: '150 dias', value: 300, type: 'below', delta: -4 },
+  { label: 'Meta interna atual', icon: '🎯', sub: '150 dias', value: 300, type: 'below', delta: -4 },
   { label: 'Melhoria moderada', icon: '⚡', sub: '120 dias', value: 372, type: 'above', delta: 19 },
   { label: 'Benchmark XL', icon: '🚀', sub: '100 dias', value: 444, type: 'above', delta: 42 },
   { label: 'Best case', icon: '🏆', sub: '80 dias', value: 552, type: 'best', delta: 77 },
