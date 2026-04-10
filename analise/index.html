@@ -1,0 +1,2868 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monofloor — Análise de Projetos · Capacidade & Tempo de Entrega</title>
+<meta name="description" content="Análise de 431 obras Monofloor: tempo médio de entrega, gargalos do pipeline, capacidade operacional e simulações de cenários.">
+<meta property="og:title" content="Monofloor · Análise de Projetos">
+<meta property="og:description" content="Quanto tempo leva uma obra Monofloor? Análise completa de 431 obras com gargalos, capacidade e cenários.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23d4b483'/%3E%3Ctext x='50' y='66' font-family='Georgia,serif' font-size='56' font-weight='700' fill='%230a0a0a' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #0f0f0f;
+  --bg3: #161616;
+  --surface: #141414;
+  --surface-hover: #1c1c1c;
+  --border: #222;
+  --border2: #2a2a2a;
+  --border3: #333;
+
+  --gold: #d4b483;
+  --gold2: #c4a77d;
+  --gold-dim: #8b7340;
+  --gold-bg: rgba(212, 180, 131, .08);
+
+  --green: #4ade80;
+  --green-dim: #166534;
+  --green-bg: rgba(74, 222, 128, .1);
+
+  --red: #f87171;
+  --red-dim: #7f1d1d;
+  --red-bg: rgba(248, 113, 113, .1);
+
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, .1);
+
+  --blue: #60a5fa;
+  --blue-bg: rgba(96, 165, 250, .1);
+
+  --text: #f5f5f4;
+  --text2: #a8a29e;
+  --text3: #78716c;
+  --text4: #57534e;
+
+  --fd: 'Fraunces', Georgia, serif;
+  --fb: 'Inter', system-ui, sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.4);
+  --shadow-md: 0 8px 24px rgba(0,0,0,.5);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.6);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--fb);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--gold); text-decoration: none; transition: color .15s; }
+a:hover { color: var(--gold2); }
+button { font-family: inherit; cursor: pointer; }
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+/* ════ NAV ════ */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,10,.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1240px; margin: 0 auto; padding: 16px 32px;
+  display: flex; align-items: center; gap: 20px;
+}
+.nav-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px; color: #000;
+  flex-shrink: 0;
+}
+.nav-brand {
+  font-size: 14px; font-weight: 600; letter-spacing: -.2px;
+}
+.nav-brand .sub {
+  display: block; font-size: 10px; color: var(--text3);
+  font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px;
+}
+.nav-links { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+.nav-link {
+  font-size: 12px; padding: 8px 14px; border-radius: 8px;
+  color: var(--text3); transition: all .15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.nav-back {
+  font-size: 12px; padding: 8px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text2);
+  background: transparent;
+  transition: all .15s;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-back:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-bg);
+}
+
+/* ════ HERO ════ */
+.hero {
+  padding: 100px 0 80px;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212,180,131,.06) 0%, transparent 50%),
+    var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--gold); font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 14px; border: 1px solid var(--gold-dim);
+  border-radius: 100px; background: var(--gold-bg);
+  margin-bottom: 32px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.85); }
+}
+.hero h1 {
+  font-family: var(--fd);
+  font-size: clamp(36px, 5.5vw, 64px);
+  font-weight: 400;
+  line-height: 1.05; letter-spacing: -1.5px;
+  margin-bottom: 24px;
+  max-width: 900px;
+  position: relative;
+}
+.hero h1 em {
+  font-style: italic; color: var(--gold);
+  font-weight: 300;
+}
+.hero-lead {
+  font-size: 17px; color: var(--text2);
+  max-width: 640px; line-height: 1.6;
+  margin-bottom: 56px;
+  position: relative;
+}
+
+/* ── Big number ── */
+.bignum {
+  display: grid; grid-template-columns: auto 1fr; gap: 40px;
+  align-items: end; margin-bottom: 48px;
+  position: relative;
+}
+.bignum-value {
+  font-family: var(--fd);
+  font-size: clamp(96px, 14vw, 180px);
+  font-weight: 300;
+  line-height: .85;
+  color: var(--text);
+  letter-spacing: -4px;
+  font-variant-numeric: tabular-nums;
+}
+.bignum-value .unit {
+  font-size: .35em; color: var(--text3);
+  font-weight: 400; letter-spacing: 0;
+  margin-left: 8px;
+}
+.bignum-context {
+  padding-bottom: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.bignum-label {
+  font-size: 12px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 2px;
+}
+.bignum-meta {
+  font-size: 14px; color: var(--text2);
+  max-width: 280px; line-height: 1.5;
+}
+.status-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: 100px;
+  background: var(--red-bg); border: 1px solid rgba(248,113,113,.3);
+  font-size: 12px; color: var(--red); font-weight: 500;
+  width: fit-content;
+}
+.status-pill::before {
+  content: '⚠'; font-size: 14px;
+}
+
+/* ── Comparison vs target ── */
+.target-bar {
+  margin-top: 16px; max-width: 480px;
+  padding: 20px 24px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 16px;
+}
+.target-bar-top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 12px;
+}
+.target-bar-top .label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; }
+.target-bar-top .target { font-family: var(--fm); font-size: 12px; color: var(--text2); }
+.target-bar-track {
+  height: 8px; background: var(--bg3); border-radius: 4px;
+  position: relative; overflow: visible;
+}
+.target-bar-fill {
+  position: absolute; left: 0; top: 0; height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--red) 100%);
+}
+.target-bar-marker {
+  position: absolute; top: -6px; bottom: -6px; width: 2px;
+  background: var(--green);
+}
+.target-bar-marker::after {
+  content: 'Meta'; position: absolute; top: -22px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px; color: var(--green); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .8px;
+  white-space: nowrap;
+}
+.target-bar-bottom {
+  display: flex; justify-content: space-between;
+  margin-top: 10px; font-family: var(--fm); font-size: 10px; color: var(--text3);
+}
+
+/* ════ STORY ════ */
+.story {
+  padding: 100px 0;
+  border-top: 1px solid var(--border);
+}
+.story-eyebrow, .section-eyebrow {
+  font-size: 11px; color: var(--gold); font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.story-title, .section-title {
+  font-family: var(--fd); font-weight: 400;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.15; letter-spacing: -.8px;
+  margin-bottom: 20px; max-width: 720px;
+}
+.story-title em, .section-title em { font-style: italic; color: var(--gold); }
+.story-lead, .section-lead {
+  font-size: 16px; color: var(--text2);
+  max-width: 600px; line-height: 1.65;
+  margin-bottom: 56px;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.story-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all .3s;
+}
+.story-card:hover {
+  border-color: var(--border3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.story-card-num {
+  font-family: var(--fd); font-size: 14px;
+  color: var(--gold); font-weight: 600;
+  letter-spacing: 2px; margin-bottom: 16px;
+}
+.story-card-headline {
+  font-family: var(--fd); font-size: 22px;
+  font-weight: 400; line-height: 1.25;
+  margin-bottom: 12px;
+}
+.story-card-headline strong { color: var(--gold); font-weight: 600; }
+.story-card-body {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.6;
+}
+.story-card-stat {
+  font-family: var(--fm); font-size: 11px;
+  color: var(--text3); margin-top: 16px;
+  padding-top: 16px; border-top: 1px solid var(--border);
+}
+
+/* ════ SECTION ════ */
+.section {
+  padding: 100px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* ════ TIPOS DE OBRA ════ */
+.tipos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.tipo-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all .25s;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  border-left: 3px solid var(--border2);
+}
+.tipo-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 0%, var(--gold-bg) 100%);
+  opacity: 0; transition: opacity .25s; pointer-events: none;
+}
+.tipo-card:hover, .tipo-card.active {
+  transform: translateY(-2px);
+  border-color: var(--border3);
+  border-left-color: var(--gold);
+  box-shadow: var(--shadow-md);
+}
+.tipo-card.active::before { opacity: 1; }
+.tipo-card .icon {
+  font-size: 36px; line-height: 1;
+  margin-bottom: 16px; display: block;
+}
+.tipo-card .label {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+.tipo-card .name {
+  font-family: var(--fd); font-size: 22px;
+  font-weight: 500; line-height: 1.2;
+  margin-bottom: 6px;
+}
+.tipo-card .range {
+  font-family: var(--fm); font-size: 11px;
+  color: var(--text3); margin-bottom: 24px;
+}
+.tipo-card .stats {
+  display: flex; gap: 16px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.tipo-card .stat { display: flex; flex-direction: column; gap: 2px; }
+.tipo-card .stat-v {
+  font-family: var(--fd); font-size: 24px;
+  font-weight: 500; color: var(--text);
+  line-height: 1; font-variant-numeric: tabular-nums;
+}
+.tipo-card .stat-l {
+  font-size: 9px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .5px;
+}
+
+/* ════ GARGALOS ════ */
+.gargalo-list {
+  display: flex; flex-direction: column; gap: 16px;
+}
+.gargalo {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  gap: 24px; align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px;
+  transition: all .2s;
+}
+.gargalo:hover { border-color: var(--border3); }
+.gargalo-rank {
+  font-family: var(--fd);
+  font-size: 48px; font-weight: 300;
+  color: var(--gold);
+  line-height: 1; font-variant-numeric: tabular-nums;
+}
+.gargalo-content { min-width: 0; }
+.gargalo-name {
+  font-family: var(--fd); font-size: 20px;
+  font-weight: 500; margin-bottom: 4px;
+}
+.gargalo-translation {
+  font-size: 13px; color: var(--text3);
+  margin-bottom: 14px;
+  font-style: italic;
+}
+.gargalo-bar-wrap {
+  height: 6px; background: var(--bg3);
+  border-radius: 3px; overflow: hidden;
+}
+.gargalo-bar {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+  transition: width 1s ease;
+}
+.gargalo-days {
+  font-family: var(--fd); font-size: 36px;
+  font-weight: 400; color: var(--text);
+  text-align: right; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.gargalo-days .unit {
+  font-size: 14px; color: var(--text3);
+  font-weight: 400; margin-left: 4px;
+}
+
+/* ════ COMPARATIVO ════ */
+.compare-section { background: var(--bg2); }
+.compare-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  overflow-x: auto;
+}
+.compare-table {
+  width: 100%; border-collapse: collapse;
+  min-width: 720px;
+}
+.compare-table th {
+  text-align: left; padding: 14px 16px;
+  font-size: 11px; color: var(--text3);
+  font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border2);
+}
+.compare-table th.col-tipo {
+  text-align: center; min-width: 90px;
+}
+.compare-table th.col-tipo .col-icon {
+  display: block; font-size: 22px; margin-bottom: 4px;
+}
+.compare-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--bg3); }
+.compare-table .phase-cell { color: var(--text); font-weight: 500; }
+.compare-table .phase-cell .desc {
+  display: block; font-size: 11px; color: var(--text3);
+  font-weight: 400; margin-top: 2px;
+}
+.compare-cell {
+  text-align: center; font-family: var(--fm);
+  font-size: 13px; font-weight: 600;
+  position: relative;
+}
+.compare-cell.high { color: var(--red); }
+.compare-cell.med { color: var(--amber); }
+.compare-cell.low { color: var(--text2); }
+.compare-cell.ok { color: var(--green); }
+.compare-cell.empty { color: var(--text4); font-weight: 400; }
+.compare-cell-bar {
+  display: block; height: 3px; border-radius: 2px;
+  background: currentColor; opacity: .3;
+  margin: 4px auto 0; width: 80%;
+  max-width: 60px;
+}
+
+/* ════ DRILL DOWN ════ */
+.drill-tabs {
+  display: flex; gap: 8px; margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.drill-tab {
+  padding: 12px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 13px; color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+  transition: all .2s;
+}
+.drill-tab:hover { border-color: var(--border3); color: var(--text); }
+.drill-tab.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #0a0a0a;
+  font-weight: 600;
+}
+.drill-tab .icon { font-size: 16px; }
+
+.drill-content { display: none; }
+.drill-content.active { display: block; animation: fadeIn .4s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.drill-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .drill-grid { grid-template-columns: 1fr; }
+}
+
+.drill-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+}
+.drill-block h3 {
+  font-family: var(--fd); font-size: 20px;
+  font-weight: 500; margin-bottom: 4px;
+}
+.drill-block .h-sub {
+  font-size: 12px; color: var(--text3);
+  margin-bottom: 24px;
+}
+
+/* phase mini bars */
+.mini-phases { display: flex; flex-direction: column; gap: 10px; }
+.mini-phase {
+  display: grid; grid-template-columns: 1fr 60px;
+  align-items: center; gap: 12px;
+}
+.mini-phase-name {
+  font-size: 12px; color: var(--text);
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-phase-bar-wrap {
+  grid-column: 1 / -1;
+  height: 4px; background: var(--bg3);
+  border-radius: 2px; overflow: hidden;
+}
+.mini-phase-bar {
+  height: 100%; border-radius: 2px;
+}
+.mini-phase-row {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 8px; align-items: baseline;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.mini-phase-row:last-child { border-bottom: none; padding-bottom: 0; }
+.mini-phase-meta {
+  font-family: var(--fm); font-size: 11px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.mini-phase-meta b { color: var(--text); font-weight: 600; }
+
+/* obras críticas */
+.obra-list { display: flex; flex-direction: column; gap: 10px; }
+.obra-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px; align-items: center;
+  padding: 16px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 12px;
+  transition: all .2s;
+}
+.obra-item:hover {
+  background: var(--bg2);
+  border-left-width: 5px;
+}
+.obra-item .obra-num {
+  font-family: var(--fd); font-size: 18px;
+  font-weight: 400; color: var(--text3);
+  width: 24px; text-align: center;
+}
+.obra-item .obra-info { min-width: 0; }
+.obra-item .obra-name {
+  font-size: 13px; font-weight: 500;
+  color: var(--text); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.obra-item .obra-meta {
+  font-size: 11px; color: var(--text3);
+  font-family: var(--fm);
+}
+.obra-item .obra-days {
+  font-family: var(--fd); font-size: 22px;
+  font-weight: 500; color: var(--red);
+  white-space: nowrap;
+}
+.obra-item .obra-days .unit {
+  font-size: 11px; color: var(--text3);
+  font-weight: 400; margin-left: 2px;
+}
+
+/* ════ INSIGHTS ════ */
+.insights-section { background: var(--bg2); }
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 800px) { .insights-grid { grid-template-columns: 1fr; } }
+.insight-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.insight-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; bottom: 0; width: 3px;
+  background: var(--gold);
+}
+.insight-card.critical::before { background: var(--red); }
+.insight-card.warn::before { background: var(--amber); }
+.insight-card.good::before { background: var(--green); }
+.insight-card.info::before { background: var(--blue); }
+
+.insight-card .insight-icon {
+  font-size: 24px; margin-bottom: 12px; display: block;
+}
+.insight-card h3 {
+  font-family: var(--fd); font-size: 19px;
+  font-weight: 500; line-height: 1.3;
+  margin-bottom: 12px;
+}
+.insight-card p {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.65;
+}
+.insight-card p strong { color: var(--text); }
+.insight-card .num {
+  font-family: var(--fm); color: var(--gold);
+  font-weight: 600;
+}
+
+/* ════ FOOTER ════ */
+.footer {
+  padding: 64px 0 80px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+.footer-brand h4 {
+  font-family: var(--fd); font-size: 22px;
+  font-weight: 500; margin-bottom: 8px;
+}
+.footer-brand p {
+  font-size: 13px; color: var(--text3);
+  max-width: 360px;
+}
+.footer-col h5 {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  font-weight: 600; margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-col a { font-size: 13px; color: var(--text2); }
+.footer-col a:hover { color: var(--gold); }
+.footer-meta {
+  padding-top: 32px; border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text4);
+  font-family: var(--fm);
+  display: flex; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+
+/* ════ DONUT CHART ════ */
+.donut-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+.donut-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 60px;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .donut-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+.donut-wrap {
+  position: relative;
+  width: 320px; height: 320px;
+  margin: 0 auto;
+}
+.donut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.donut-segment {
+  fill: none;
+  stroke-width: 30;
+  transition: all .8s cubic-bezier(.2, 0, .2, 1);
+}
+.donut-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.donut-center-value {
+  font-family: var(--fd);
+  font-size: 64px; font-weight: 400;
+  line-height: .9; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.donut-center-label {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-top: 6px;
+}
+.donut-legend {
+  display: flex; flex-direction: column; gap: 24px;
+}
+.donut-legend-item {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 16px; align-items: start;
+}
+.donut-color {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  margin-top: 6px;
+  justify-self: end;
+}
+.donut-num {
+  font-family: var(--fd);
+  font-size: 32px; font-weight: 400;
+  line-height: 1; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.donut-num .pct {
+  font-size: 14px; color: var(--text3);
+  margin-left: 6px; font-weight: 400;
+}
+.donut-content h4 {
+  font-family: var(--fd); font-size: 18px;
+  font-weight: 500; margin-bottom: 4px;
+}
+.donut-content p {
+  font-size: 13px; color: var(--text3);
+  line-height: 1.55;
+}
+.donut-days {
+  font-family: var(--fd);
+  font-size: 36px; font-weight: 300;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.donut-days .u {
+  font-size: 12px; color: var(--text3);
+  margin-left: 4px;
+}
+
+/* ════ WIP VIZ ════ */
+.wip-viz {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 28px;
+  align-items: center;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 24px;
+}
+@media (max-width: 700px) { .wip-viz { grid-template-columns: 1fr; } }
+
+.wip-side { text-align: center; }
+.wip-side h4 {
+  font-family: var(--fd); font-size: 16px;
+  font-weight: 500; margin-bottom: 4px;
+}
+.wip-side .label {
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+.wip-bar {
+  height: 200px; width: 100%; max-width: 200px;
+  margin: 0 auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.wip-fill {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dim) 100%);
+  transition: height 1.2s cubic-bezier(.2, 0, .2, 1);
+}
+.wip-fill.over {
+  background: linear-gradient(180deg, var(--red) 0%, var(--red-dim) 100%);
+}
+.wip-num {
+  font-family: var(--fd); font-size: 56px;
+  font-weight: 400; line-height: 1;
+  color: var(--text); margin-top: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.wip-num.bad { color: var(--red); }
+.wip-num .u {
+  font-size: 14px; color: var(--text3);
+  font-weight: 400; margin-left: 4px;
+}
+.wip-side .desc {
+  font-size: 11px; color: var(--text3);
+  margin-top: 4px;
+}
+.wip-divider {
+  font-family: var(--fd); font-size: 36px;
+  color: var(--text4);
+  text-align: center;
+}
+
+/* ════ SCENARIOS BAR CHART ════ */
+.scenario-chart {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 24px;
+}
+.scenario-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  gap: 20px;
+  align-items: center;
+}
+.scenario-name {
+  font-size: 13px; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.scenario-name .icon { font-size: 16px; }
+.scenario-name .sub {
+  font-family: var(--fm); font-size: 10px;
+  color: var(--text3);
+  display: block; margin-top: 2px;
+}
+.scenario-bar-wrap {
+  height: 36px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.scenario-bar {
+  height: 100%;
+  display: flex; align-items: center;
+  padding-left: 12px;
+  font-family: var(--fm); font-size: 12px;
+  font-weight: 700; color: #0a0a0a;
+  transition: width 1s cubic-bezier(.2,0,.2,1);
+}
+.scenario-bar.current {
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+}
+.scenario-bar.below {
+  background: linear-gradient(90deg, var(--red-dim) 0%, var(--red) 100%);
+  color: #fff;
+}
+.scenario-bar.above {
+  background: linear-gradient(90deg, #166534 0%, var(--green) 100%);
+}
+.scenario-bar.best {
+  background: linear-gradient(90deg, #166534 0%, var(--green) 100%);
+  box-shadow: 0 0 20px rgba(74, 222, 128, .25);
+}
+.scenario-delta {
+  text-align: right;
+  font-family: var(--fm); font-size: 13px;
+  font-weight: 600;
+}
+.scenario-delta.up { color: var(--green); }
+.scenario-delta.down { color: var(--red); }
+.scenario-delta.same { color: var(--text3); }
+@media (max-width: 700px) {
+  .scenario-row { grid-template-columns: 1fr; gap: 6px; }
+  .scenario-bar-wrap { width: 100%; }
+}
+
+/* ════ REWORK SECTION ════ */
+.rework-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  margin-top: 24px;
+}
+@media (max-width: 900px) { .rework-grid { grid-template-columns: 1fr; } }
+
+.rework-viz {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+.rework-stack {
+  display: flex; flex-direction: column;
+  gap: 14px; margin: 24px 0;
+}
+.rework-bar-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.rework-bar-label {
+  font-size: 12px; color: var(--text2);
+  text-align: right;
+}
+.rework-bar-track {
+  height: 40px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  position: relative;
+}
+.rework-bar-base {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+  display: flex; align-items: center;
+  padding-left: 12px;
+  font-family: var(--fm); font-size: 11px;
+  font-weight: 700; color: #0a0a0a;
+  transition: width 1s ease;
+}
+.rework-bar-extra {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(248,113,113,.6) 0%, var(--red) 100%);
+  display: flex; align-items: center;
+  padding-left: 8px;
+  font-family: var(--fm); font-size: 11px;
+  font-weight: 700; color: #fff;
+  transition: width 1s ease;
+}
+
+.rework-control {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+}
+.rework-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+.rework-preset {
+  padding: 12px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text2);
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: inherit;
+}
+.rework-preset:hover {
+  border-color: var(--gold-dim);
+  color: var(--text);
+}
+.rework-preset.active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.rework-preset .v {
+  display: block;
+  font-family: var(--fd); font-size: 22px;
+  font-weight: 500; line-height: 1;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.rework-preset.active .v { color: var(--gold); }
+
+.rework-impact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.rework-impact-cell {
+  text-align: center;
+}
+.rework-impact-cell .l {
+  font-size: 9px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.rework-impact-cell .v {
+  font-family: var(--fd); font-size: 26px;
+  font-weight: 400; color: var(--text);
+  line-height: 1; font-variant-numeric: tabular-nums;
+}
+.rework-impact-cell .v .u {
+  font-size: 12px; color: var(--text3);
+  margin-left: 4px;
+}
+
+/* ════ DEEP ANALYSIS ════ */
+.deep-cta {
+  padding: 80px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.deep-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(212,180,131,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.deep-cta-inner { position: relative; }
+.deep-cta h2 {
+  font-family: var(--fd); font-size: clamp(28px, 4vw, 44px);
+  font-weight: 400; line-height: 1.15; letter-spacing: -.8px;
+  margin-bottom: 16px;
+}
+.deep-cta h2 em { font-style: italic; color: var(--gold); }
+.deep-cta p {
+  font-size: 16px; color: var(--text2);
+  max-width: 560px; margin: 0 auto 36px;
+}
+.deep-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  color: #0a0a0a; font-weight: 600; font-size: 15px;
+  padding: 18px 32px; border-radius: 100px; border: none;
+  cursor: pointer; transition: all .25s;
+  box-shadow: 0 4px 24px rgba(212,180,131,.25);
+  font-family: inherit;
+}
+.deep-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(212,180,131,.4);
+}
+.deep-btn:active { transform: translateY(0); }
+.deep-btn .arrow { transition: transform .25s; }
+.deep-btn:hover .arrow { transform: translateX(4px); }
+.deep-btn.expanded .arrow { transform: rotate(90deg); }
+
+/* Deep panel */
+.deep-panel {
+  max-height: 0; overflow: hidden;
+  transition: max-height .6s cubic-bezier(.4, 0, .2, 1);
+  background: var(--bg2);
+  border-top: 1px solid transparent;
+}
+.deep-panel.open {
+  max-height: 8000px;
+  border-top-color: var(--border);
+}
+.deep-content { padding: 80px 0; }
+.deep-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  margin-bottom: 24px;
+}
+.deep-block-head {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-bottom: 8px;
+}
+.deep-block-num {
+  font-family: var(--fd); font-size: 14px; color: var(--gold);
+  font-weight: 600; letter-spacing: 2px;
+}
+.deep-block h3 {
+  font-family: var(--fd); font-size: 26px;
+  font-weight: 500; line-height: 1.2;
+}
+.deep-block .h-sub {
+  font-size: 14px; color: var(--text3);
+  margin-bottom: 32px;
+}
+
+/* Throughput chart */
+.throughput-chart {
+  display: grid; grid-template-columns: 100px 1fr;
+  gap: 16px; align-items: center; margin-top: 16px;
+}
+.throughput-row {
+  display: contents;
+}
+.tp-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text);
+}
+.tp-label .tp-icon { font-size: 18px; }
+.tp-bar-wrap {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 16px;
+}
+.tp-bar {
+  height: 32px; border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 12px; min-width: 30px;
+  position: relative;
+  transition: width 1s ease;
+}
+.tp-bar-label {
+  font-family: var(--fm); font-size: 11px; color: #0a0a0a;
+  font-weight: 700;
+}
+.tp-meta {
+  font-family: var(--fm); font-size: 12px;
+  color: var(--text3); white-space: nowrap;
+}
+.tp-meta b { color: var(--text); font-weight: 600; }
+
+/* Big stat cards */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+.stat-card .label {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+.stat-card .value {
+  font-family: var(--fd); font-size: 44px;
+  font-weight: 400; line-height: .95;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.stat-card .value .unit {
+  font-size: 16px; color: var(--text3);
+  font-weight: 400; margin-left: 6px;
+}
+.stat-card .delta {
+  font-family: var(--fm); font-size: 11px;
+  margin-top: 10px;
+}
+.stat-card .delta.up { color: var(--green); }
+.stat-card .delta.down { color: var(--red); }
+
+/* What if simulator */
+.simulator {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+.simulator-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 24px;
+  flex-wrap: wrap; gap: 12px;
+}
+.simulator-title {
+  font-family: var(--fd); font-size: 18px;
+  font-weight: 500;
+}
+.simulator-current {
+  font-family: var(--fm); font-size: 12px; color: var(--text3);
+}
+.simulator-current b {
+  font-family: var(--fd); font-size: 22px; color: var(--gold);
+  font-weight: 500;
+}
+
+.slider-group {
+  display: grid; grid-template-columns: 1fr 100px;
+  gap: 20px; align-items: center;
+  margin-bottom: 20px;
+}
+.slider-wrap { position: relative; }
+.slider-wrap input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: var(--bg);
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid var(--border);
+}
+.slider-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg);
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+.slider-wrap input[type=range]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg);
+}
+.slider-value {
+  font-family: var(--fm); font-size: 18px;
+  color: var(--gold); font-weight: 600;
+  text-align: right;
+}
+.slider-marks {
+  display: flex; justify-content: space-between;
+  font-family: var(--fm); font-size: 10px;
+  color: var(--text4); margin-top: 6px;
+}
+
+.simulator-result {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 24px;
+  padding-top: 24px; border-top: 1px solid var(--border);
+}
+.sim-result-cell {
+  text-align: center;
+}
+.sim-result-cell .l {
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.sim-result-cell .v {
+  font-family: var(--fd); font-size: 32px;
+  font-weight: 400; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.sim-result-cell .v .u {
+  font-size: 13px; color: var(--text3);
+  margin-left: 4px;
+}
+.sim-result-cell .delta {
+  font-family: var(--fm); font-size: 11px;
+  margin-top: 4px;
+}
+.sim-result-cell .delta.up { color: var(--green); }
+
+/* Months chart */
+.months-chart {
+  display: grid; grid-template-columns: 60px 1fr; gap: 16px;
+  align-items: center; font-size: 12px;
+  margin-top: 8px;
+}
+.month-label {
+  font-family: var(--fm); color: var(--text3);
+  font-size: 11px;
+  text-align: right;
+}
+.month-bars {
+  display: flex; height: 28px;
+  background: var(--bg); border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.month-bar {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 9px; font-weight: 700;
+  color: #0a0a0a;
+  transition: all .3s;
+}
+.month-bar:hover { filter: brightness(1.2); }
+.month-bar.p { background: #d4b483; }
+.month-bar.m { background: #c4a77d; }
+.month-bar.g { background: #b09367; }
+.month-bar.x { background: #8b7340; color: #fff; }
+
+.months-legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text3);
+}
+.months-legend span { display: flex; align-items: center; gap: 6px; }
+.months-legend .dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* Capacity table */
+.capacity-table {
+  width: 100%; border-collapse: collapse; margin-top: 8px;
+}
+.capacity-table th, .capacity-table td {
+  padding: 14px 16px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.capacity-table th {
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+  font-weight: 600;
+}
+.capacity-table .num {
+  font-family: var(--fm); text-align: right;
+  font-weight: 600;
+}
+.capacity-table .num.gold { color: var(--gold); }
+.capacity-table .num.green { color: var(--green); }
+.capacity-table .num.red { color: var(--red); }
+.capacity-table tr:last-child td { border-bottom: none; }
+.capacity-table .scenario-row {
+  background: var(--bg3);
+}
+.capacity-table .scenario-row td:first-child {
+  font-weight: 600; color: var(--text);
+}
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 900px) {
+  .wrap { padding: 0 20px; }
+  .nav-inner { padding: 14px 20px; }
+  .hero { padding: 64px 0 56px; }
+  .bignum { grid-template-columns: 1fr; gap: 20px; }
+  .bignum-context { padding-bottom: 0; }
+  .story { padding: 64px 0; }
+  .section { padding: 64px 0; }
+  .story-grid { grid-template-columns: 1fr; gap: 16px; }
+  .tipos-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .gargalo { grid-template-columns: 50px 1fr 80px; gap: 16px; padding: 20px; }
+  .gargalo-rank { font-size: 36px; }
+  .gargalo-days { font-size: 28px; }
+}
+@media (max-width: 600px) {
+  .tipos-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: 1fr; }
+  .simulator-result { grid-template-columns: 1fr; }
+  .deep-block { padding: 28px 24px; }
+  .throughput-chart { grid-template-columns: 1fr; gap: 8px; }
+  .tp-bar-wrap { grid-template-columns: 1fr; gap: 8px; }
+  .months-chart { grid-template-columns: 50px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">M</div>
+    <div class="nav-brand">
+      Monofloor
+      <span class="sub">Análise de Projetos</span>
+    </div>
+    <div class="nav-links">
+      <a href="#tipos" class="nav-link">Tipos de obra</a>
+      <a href="#gargalos" class="nav-link">Onde trava</a>
+      <a href="#explorar" class="nav-link">Explorar</a>
+      <a href="#capacidade" class="nav-link">⚡ Capacidade</a>
+      <button class="nav-back" onclick="copiarLink()" title="Copiar link desta página">🔗 Compartilhar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Snapshot 10 / Abril / 2026</div>
+    <h1>
+      Quanto tempo leva uma <em>obra Monofloor</em> do primeiro contato até o cliente finalizado?
+    </h1>
+    <p class="hero-lead">
+      Analisamos 431 obras concluídas com dados completos de movimentação no Pipefy.
+      Aqui está o que descobrimos sobre tempo, gargalos e diferenças entre projetos.
+      <strong style="color:var(--text);font-weight:500;display:block;margin-top:8px">
+        Todos os números são médias extraídas do cenário atual (ago/2025–mar/2026).
+      </strong>
+    </p>
+
+    <div class="bignum">
+      <div class="bignum-value">143<span class="unit">dias</span></div>
+      <div class="bignum-context">
+        <div class="bignum-label">Tempo médio de uma obra</div>
+        <div class="bignum-meta">Média dos últimos 8 meses. Mediana em 106d. P90 em 195d.</div>
+        <div class="status-pill">Meta institucional: 150d · realidade próxima do limite</div>
+      </div>
+    </div>
+
+    <div class="target-bar">
+      <div class="target-bar-top">
+        <span class="label">Realidade vs Meta</span>
+        <span class="target">Meta interna ≤ 150 dias</span>
+      </div>
+      <div class="target-bar-track">
+        <div class="target-bar-fill" style="width:95%"></div>
+        <div class="target-bar-marker" style="left:52%"></div>
+      </div>
+      <div class="target-bar-bottom">
+        <span>0 dias</span>
+        <span>290 dias (P95)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ STORY ══════════════ -->
+<section class="story">
+  <div class="wrap">
+    <div class="story-eyebrow">A história em 3 pontos</div>
+    <h2 class="story-title">
+      O processo é <em>rápido na execução</em>, mas trava no meio do caminho.
+    </h2>
+    <p class="story-lead">
+      Quando uma obra finalmente entra em execução, ela é entregue rapidamente.
+      O problema mora nas etapas que <em>antecedem</em> a execução — agendamentos, aprovações
+      e confirmações que se acumulam silenciosamente.
+      <span style="color:var(--text4);font-size:12px;display:block;margin-top:8px">
+        💡 Todos os números desta página são <strong>médias extraídas do cenário atual</strong> (ago/2025–mar/2026).
+      </span>
+    </p>
+
+    <div class="story-grid">
+      <div class="story-card">
+        <div class="story-card-num">01</div>
+        <h3 class="story-card-headline">A obra <strong>em si</strong> leva só 33 dias.</h3>
+        <p class="story-card-body">
+          Quando a equipe finalmente está em campo, o trabalho flui. O tempo médio na fase
+          "obra em execução" é de apenas 33 dias.
+        </p>
+        <div class="story-card-stat">Fase: OBRA EM EXECUÇÃO · 201 visitas</div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-card-num">02</div>
+        <h3 class="story-card-headline">Mas <strong>chegar lá</strong> demora 110 dias.</h3>
+        <p class="story-card-body">
+          Entre o primeiro contato e o início da obra, são em média 110 dias de
+          agendamentos, visitas técnicas, aprovações e logística. É aqui que está o gargalo.
+        </p>
+        <div class="story-card-stat">Soma das fases pré-obra · meta interna: 60-90d</div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-card-num">03</div>
+        <h3 class="story-card-headline">E ainda fica <strong>1 mês parado</strong> depois.</h3>
+        <p class="story-card-body">
+          Mesmo após a obra terminar, o card fica em "Cliente Finalizado" por 32 dias em
+          média até o arquivamento administrativo. Uma cauda longa silenciosa.
+        </p>
+        <div class="story-card-stat">Fase: CLIENTE FINALIZADO · gargalo administrativo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DONUT — Como os 143 dias se distribuem ══════════════ -->
+<section class="donut-section">
+  <div class="wrap">
+    <div class="section-eyebrow">Onde mora o tempo</div>
+    <h2 class="section-title">Visualize <em>onde os 143 dias</em> são consumidos.</h2>
+    <p class="section-lead">
+      Cada parte do gráfico é uma macro-fase da obra. Os números são as médias observadas
+      nos últimos 8 meses.
+    </p>
+
+    <div class="donut-grid">
+      <div class="donut-wrap">
+        <svg class="donut-svg" viewBox="0 0 200 200">
+          <!-- background ring -->
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--bg3)" stroke-width="30"/>
+          <!-- Pré-obra: 78d (54.5%) -->
+          <circle class="donut-segment" cx="100" cy="100" r="80"
+                  stroke="#d4b483"
+                  stroke-dasharray="274 502" stroke-dashoffset="0"/>
+          <!-- Execução: 33d (23.1%) -->
+          <circle class="donut-segment" cx="100" cy="100" r="80"
+                  stroke="#8b7340"
+                  stroke-dasharray="116 502" stroke-dashoffset="-274"/>
+          <!-- Pós-obra: 32d (22.4%) -->
+          <circle class="donut-segment" cx="100" cy="100" r="80"
+                  stroke="#5d4e2c"
+                  stroke-dasharray="113 502" stroke-dashoffset="-390"/>
+        </svg>
+        <div class="donut-center">
+          <div class="donut-center-value">143<span style="font-size:.4em;color:var(--text3)">d</span></div>
+          <div class="donut-center-label">Journey médio</div>
+        </div>
+      </div>
+
+      <div class="donut-legend">
+        <div class="donut-legend-item">
+          <div class="donut-color" style="background:#d4b483"></div>
+          <div class="donut-content">
+            <h4>Pré-obra <span class="donut-num"><span class="pct">54%</span></span></h4>
+            <p>1º contato, contratos, projetos, agendamentos de VT, aprovações,
+            informações financeiras e logística. <strong>O maior gargalo do pipeline.</strong></p>
+          </div>
+          <div class="donut-days">78<span class="u">d</span></div>
+        </div>
+
+        <div class="donut-legend-item">
+          <div class="donut-color" style="background:#8b7340"></div>
+          <div class="donut-content">
+            <h4>Execução <span class="donut-num"><span class="pct">23%</span></span></h4>
+            <p>A obra acontecendo no canteiro. Inclui pausas, refazimentos e finalização.
+            <strong>É a fase mais rápida — ironia do processo.</strong></p>
+          </div>
+          <div class="donut-days">33<span class="u">d</span></div>
+        </div>
+
+        <div class="donut-legend-item">
+          <div class="donut-color" style="background:#5d4e2c"></div>
+          <div class="donut-content">
+            <h4>Pós-obra <span class="donut-num"><span class="pct">22%</span></span></h4>
+            <p>Obra terminou mas o card fica em "Cliente Finalizado" aguardando arquivamento
+            administrativo. <strong>Buraco negro silencioso.</strong></p>
+          </div>
+          <div class="donut-days">32<span class="u">d</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TIPOS DE OBRA ══════════════ -->
+<section class="section" id="tipos">
+  <div class="wrap">
+    <div class="section-eyebrow">Segmentação por tamanho</div>
+    <h2 class="section-title">
+      Não existe "uma obra média". Existem <em>4 tipos diferentes</em>.
+    </h2>
+    <p class="section-lead">
+      Obras pequenas, médias, grandes e XL têm comportamentos completamente diferentes
+      no pipeline. Surpresa: as maiores são as mais rápidas.
+    </p>
+
+    <div class="tipos-grid" id="tipos-grid"></div>
+  </div>
+</section>
+
+<!-- ══════════════ GARGALOS ══════════════ -->
+<section class="section" style="background:var(--bg2)" id="gargalos">
+  <div class="wrap">
+    <div class="section-eyebrow">Onde a obra trava</div>
+    <h2 class="section-title">
+      Os 5 maiores <em>consumidores de tempo</em> do pipeline.
+    </h2>
+    <p class="section-lead">
+      Estas são as fases onde o relógio mais corre. Cada barra mostra o tempo médio que
+      um card passa nessa etapa antes de avançar.
+    </p>
+
+    <div class="gargalo-list" id="gargalo-list"></div>
+  </div>
+</section>
+
+<!-- ══════════════ COMPARATIVO ══════════════ -->
+<section class="section compare-section">
+  <div class="wrap">
+    <div class="section-eyebrow">Comparativo direto</div>
+    <h2 class="section-title">
+      A mesma fase, <em>4 realidades diferentes</em>.
+    </h2>
+    <p class="section-lead">
+      Cada coluna é um tamanho de obra. Cada linha é uma fase do pipeline.
+      Os números são o tempo médio em dias.
+    </p>
+
+    <div class="compare-card">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Fase do pipeline</th>
+            <th class="col-tipo"><span class="col-icon">🏠</span>Pequena<br><small>&lt;100m²</small></th>
+            <th class="col-tipo"><span class="col-icon">🏡</span>Média<br><small>100-199</small></th>
+            <th class="col-tipo"><span class="col-icon">🏢</span>Grande<br><small>200-499</small></th>
+            <th class="col-tipo"><span class="col-icon">🏭</span>XLarge<br><small>500+</small></th>
+          </tr>
+        </thead>
+        <tbody id="compare-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DRILL DOWN ══════════════ -->
+<section class="section" id="explorar">
+  <div class="wrap">
+    <div class="section-eyebrow">Drill down</div>
+    <h2 class="section-title">
+      Explore um <em>tamanho específico</em> em profundidade.
+    </h2>
+    <p class="section-lead">
+      Selecione um tipo de obra para ver o detalhe: todas as fases ordenadas por tempo
+      e as obras mais lentas desse segmento.
+    </p>
+
+    <div class="drill-tabs" id="drill-tabs"></div>
+    <div id="drill-content"></div>
+  </div>
+</section>
+
+<!-- ══════════════ INSIGHTS ══════════════ -->
+<section class="section insights-section">
+  <div class="wrap">
+    <div class="section-eyebrow">O que isso significa</div>
+    <h2 class="section-title">
+      8 conclusões <em>acionáveis</em> dos dados.
+    </h2>
+    <p class="section-lead">
+      Achados que valem virar conversa de gestão. Cada um aponta para uma decisão concreta.
+    </p>
+
+    <div class="insights-grid" id="insights-grid"></div>
+  </div>
+</section>
+
+<!-- ══════════════ DEEP ANALYSIS CTA ══════════════ -->
+<section class="deep-cta" id="capacidade">
+  <div class="wrap">
+    <div class="deep-cta-inner">
+      <div class="section-eyebrow">Análise profunda</div>
+      <h2>Quanto a Monofloor consegue <em>entregar por mês</em>?</h2>
+      <p>
+        Com base no histórico real dos últimos 8 meses, calculamos o throughput observado,
+        a capacidade simultânea pela Lei de Little e cenários de melhoria.
+        <strong style="display:block;margin-top:8px;color:var(--text2)">
+          Todos os cálculos partem das médias do cenário atual.
+        </strong>
+      </p>
+      <button class="deep-btn" id="deep-btn" onclick="toggleDeep()">
+        <span>Ver análise de capacidade operacional</span>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="deep-panel" id="deep-panel">
+  <div class="deep-content">
+    <div class="wrap">
+
+      <!-- BLOCO 1: Throughput observado -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">01</div>
+          <h3>Throughput mensal observado</h3>
+        </div>
+        <p class="h-sub">Média de obras finalizadas por mês entre ago/2025 e mar/2026 (8 meses) — apenas obras com m² registrado. <strong style="color:var(--text2)">Os números são médias do cenário atual.</strong></p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="label">Total mensal</div>
+            <div class="value">26<span class="unit">obras / mês</span></div>
+            <div class="delta">210 obras em 8 meses</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Volume mensal em m²</div>
+            <div class="value">3.963<span class="unit">m² / mês</span></div>
+            <div class="delta">~31.700 m² no período</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Ticket médio m²</div>
+            <div class="value">152<span class="unit">m² / obra</span></div>
+            <div class="delta">média ponderada</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Receita estimada</div>
+            <div class="value">2,5M<span class="unit">R$ / mês</span></div>
+            <div class="delta">se R$637/m² (STELION)</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Distribuição por tipo de obra</h4>
+        <div class="throughput-chart" id="throughput-chart"></div>
+      </div>
+
+      <!-- BLOCO 2: Capacidade Simultânea -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">02</div>
+          <h3>Capacidade simultânea (Lei de Little)</h3>
+        </div>
+        <p class="h-sub">L = λ × W. Quantas obras devem estar tramitando ao mesmo tempo dado o throughput observado e o tempo de journey atual. <strong style="color:var(--text2)">Baseado nas médias do cenário atual.</strong></p>
+
+        <div class="wip-viz">
+          <div class="wip-side">
+            <h4>WIP Teórico</h4>
+            <div class="label">Lei de Little</div>
+            <div class="wip-bar"><div class="wip-fill" style="height:49%"></div></div>
+            <div class="wip-num">120<span class="u">cards</span></div>
+            <div class="desc">26 obras/mês × 143d ÷ 30 = 120</div>
+          </div>
+          <div class="wip-divider">VS</div>
+          <div class="wip-side">
+            <h4>WIP Real</h4>
+            <div class="label">Observado no Pipefy</div>
+            <div class="wip-bar"><div class="wip-fill over" style="height:100%"></div></div>
+            <div class="wip-num bad">243<span class="u">cards</span></div>
+            <div class="desc">+103% acima do esperado</div>
+          </div>
+        </div>
+
+        <table class="capacity-table" style="margin-top:32px">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th class="num">Throughput</th>
+              <th class="num">Journey</th>
+              <th class="num">WIP teórico</th>
+              <th class="num">WIP real</th>
+              <th class="num">Status</th>
+            </tr>
+          </thead>
+          <tbody id="capacity-tbody"></tbody>
+          <tfoot>
+            <tr class="scenario-row">
+              <td><b>TOTAL</b></td>
+              <td class="num gold">26 / mês</td>
+              <td class="num">—</td>
+              <td class="num">120</td>
+              <td class="num red">243</td>
+              <td class="num red">+103% sobrecarga</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <p style="margin-top:16px;font-size:13px;color:var(--text3);line-height:1.6">
+          <strong style="color:var(--amber)">⚠ Diagnóstico:</strong>
+          O pipeline tem o <b style="color:var(--text)">dobro de cards</b> que deveria ter
+          dado o throughput observado. Significa que cards entram mais rápido do que saem,
+          ou existem cards "zumbi" (criados mas abandonados sem fechar).
+        </p>
+      </div>
+
+      <!-- BLOCO 3: Histórico mensal -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">03</div>
+          <h3>Histórico mês a mês</h3>
+        </div>
+        <p class="h-sub">Obras finalizadas em cada mês, segmentadas por tipo. Permite ver tendência e sazonalidade.</p>
+        <div id="months-chart"></div>
+        <div class="months-legend">
+          <span><div class="dot" style="background:#d4b483"></div>Pequena (&lt;100m²)</span>
+          <span><div class="dot" style="background:#c4a77d"></div>Média (100-199m²)</span>
+          <span><div class="dot" style="background:#b09367"></div>Grande (200-499m²)</span>
+          <span><div class="dot" style="background:#8b7340"></div>XLarge (500m²+)</span>
+        </div>
+      </div>
+
+      <!-- BLOCO 4: Projeções -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">04</div>
+          <h3>Projeções de capacidade</h3>
+        </div>
+        <p class="h-sub">Extrapolando o throughput atual de 26 obras/mês para diferentes janelas temporais.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="label">Trimestre</div>
+            <div class="value">78<span class="unit">obras</span></div>
+            <div class="delta">~11.890 m²</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Semestre</div>
+            <div class="value">156<span class="unit">obras</span></div>
+            <div class="delta">~23.780 m²</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Ano</div>
+            <div class="value">312<span class="unit">obras</span></div>
+            <div class="delta">~47.560 m²</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Receita anual estimada</div>
+            <div class="value">30M<span class="unit">R$</span></div>
+            <div class="delta">a R$637/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO 5: Simulador What-if -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">05</div>
+          <h3>Simulador: e se o journey diminuísse?</h3>
+        </div>
+        <p class="h-sub">A WIP atual é 243 cards. Se ela permanecer estável e o tempo médio de journey reduzir, o throughput aumenta proporcionalmente. Arraste o slider.</p>
+
+        <div class="simulator">
+          <div class="simulator-head">
+            <div class="simulator-title">Tempo de journey simulado</div>
+            <div class="simulator-current">Atual: <b>143 dias</b> · meta interna: <b>150 dias</b></div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-wrap">
+              <input type="range" id="journey-slider" min="60" max="200" value="143" step="5"
+                     oninput="updateSimulator()">
+              <div class="slider-marks">
+                <span>60d ⚡</span>
+                <span>100d</span>
+                <span>143d (atual)</span>
+                <span>200d</span>
+              </div>
+            </div>
+            <div class="slider-value" id="slider-value">143d</div>
+          </div>
+
+          <div class="simulator-result">
+            <div class="sim-result-cell">
+              <div class="l">Throughput novo</div>
+              <div class="v" id="sim-monthly">26<span class="u">obras/mês</span></div>
+              <div class="delta up" id="sim-delta-monthly">—</div>
+            </div>
+            <div class="sim-result-cell">
+              <div class="l">Por trimestre</div>
+              <div class="v" id="sim-quarterly">78<span class="u">obras</span></div>
+              <div class="delta up" id="sim-delta-quarterly">—</div>
+            </div>
+            <div class="sim-result-cell">
+              <div class="l">Por ano</div>
+              <div class="v" id="sim-yearly">312<span class="u">obras</span></div>
+              <div class="delta up" id="sim-delta-yearly">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO 5b: Taxa de retrabalho -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">05b</div>
+          <h3>Considerando o fator retrabalho</h3>
+        </div>
+        <p class="h-sub">
+          Nem toda obra é aprovada de primeira. Quando há reprovação técnica, a obra precisa
+          ser refeita parcial ou totalmente. Esse <strong>retrabalho infla o tempo de execução</strong> e o journey total.
+          Os números abaixo simulam o impacto.
+          <span style="color:var(--text4);display:block;margin-top:6px">Baseline: 143d médio do cenário atual.</span>
+        </p>
+
+        <div class="rework-grid">
+          <div class="rework-viz">
+            <h4 style="font-family:var(--fd);font-size:18px;font-weight:500;margin-bottom:4px">Impacto no journey por bucket</h4>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:20px">
+              Barra dourada = tempo base · barra vermelha = inflação por retrabalho
+            </div>
+            <div class="rework-stack" id="rework-stack"></div>
+            <p style="font-size:12px;color:var(--text3);line-height:1.6;margin-top:8px">
+              <strong style="color:var(--text2)">Como funciona:</strong>
+              cada obra reprovada precisa refazer ~30 dias do ciclo de execução +
+              re-agendar VT (~20 dias). A média ponderada é aplicada ao journey baseado na taxa.
+            </p>
+          </div>
+
+          <div class="rework-control">
+            <h4 style="font-family:var(--fd);font-size:18px;font-weight:500;margin-bottom:4px">Taxa de retrabalho</h4>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:20px">
+              Selecione um cenário ou ajuste manualmente
+            </div>
+
+            <div class="slider-group" style="margin-bottom:16px">
+              <div class="slider-wrap">
+                <input type="range" id="rework-slider" min="0" max="30" value="18" step="1"
+                       oninput="updateRework()">
+                <div class="slider-marks">
+                  <span>0%</span>
+                  <span>5% ✓</span>
+                  <span>15%</span>
+                  <span>30%</span>
+                </div>
+              </div>
+              <div class="slider-value" id="rework-slider-value">18%</div>
+            </div>
+
+            <div class="rework-presets">
+              <button class="rework-preset" onclick="setRework(5)" data-rate="5">
+                <span class="v">5%</span>
+                Saudável
+              </button>
+              <button class="rework-preset active" onclick="setRework(18)" data-rate="18">
+                <span class="v">18%</span>
+                Atual estimado
+              </button>
+              <button class="rework-preset" onclick="setRework(25)" data-rate="25">
+                <span class="v">25%</span>
+                Crítico
+              </button>
+            </div>
+
+            <div class="rework-impact">
+              <div class="rework-impact-cell">
+                <div class="l">Journey médio</div>
+                <div class="v" id="rework-journey">169<span class="u">d</span></div>
+              </div>
+              <div class="rework-impact-cell">
+                <div class="l">Throughput / mês</div>
+                <div class="v" id="rework-throughput">22<span class="u">obras</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:24px;font-size:13px;color:var(--text3);line-height:1.6">
+          <strong style="color:var(--gold)">📐 Nota técnica:</strong>
+          Com a taxa atual estimada de 18% (alto), uma obra de 143d médios sobe para
+          <strong style="color:var(--text)">~169 dias</strong> efetivos quando contamos os refazimentos.
+          Reduzir a taxa para 5% (saudável) recupera ~21 dias por obra na média e
+          <strong style="color:var(--text)">aumenta o throughput em ~14%</strong> sem mexer em mais nada.
+        </p>
+      </div>
+
+      <!-- BLOCO 6: Cenários comparativos -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">06</div>
+          <h3>Cenários comparativos</h3>
+        </div>
+        <p class="h-sub">Quanto a Monofloor pode entregar em diferentes níveis de eficiência operacional, mantendo a WIP atual de 243 cards. <strong style="color:var(--text2)">Baseado nas médias do cenário atual.</strong></p>
+
+        <h4 style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-top:24px;margin-bottom:8px">Obras finalizadas por ano em cada cenário</h4>
+        <div class="scenario-chart" id="scenario-chart"></div>
+
+        <h4 style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-top:40px;margin-bottom:8px">Tabela completa</h4>
+        <table class="capacity-table">
+          <thead>
+            <tr>
+              <th>Cenário</th>
+              <th class="num">Journey alvo</th>
+              <th class="num">Obras / mês</th>
+              <th class="num">Obras / ano</th>
+              <th class="num">m² / ano</th>
+              <th class="num">Δ vs hoje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📍 Atual</td>
+              <td class="num">143 dias</td>
+              <td class="num gold">26</td>
+              <td class="num gold">312</td>
+              <td class="num">47.560</td>
+              <td class="num">—</td>
+            </tr>
+            <tr>
+              <td>🎯 Meta interna atual</td>
+              <td class="num">150 dias</td>
+              <td class="num">25</td>
+              <td class="num">300</td>
+              <td class="num">45.700</td>
+              <td class="num red">−4%</td>
+            </tr>
+            <tr>
+              <td>⚡ Melhoria moderada</td>
+              <td class="num">120 dias</td>
+              <td class="num green">31</td>
+              <td class="num green">372</td>
+              <td class="num">56.700</td>
+              <td class="num green">+19%</td>
+            </tr>
+            <tr>
+              <td>🚀 Benchmark XL</td>
+              <td class="num">100 dias</td>
+              <td class="num green">37</td>
+              <td class="num green">444</td>
+              <td class="num">67.700</td>
+              <td class="num green">+42%</td>
+            </tr>
+            <tr>
+              <td>🏆 Best case</td>
+              <td class="num">80 dias</td>
+              <td class="num green">46</td>
+              <td class="num green">552</td>
+              <td class="num">84.150</td>
+              <td class="num green">+77%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:20px;font-size:13px;color:var(--text3);line-height:1.6">
+          <strong style="color:var(--gold)">📐 Como ler isto:</strong>
+          Os cenários assumem que a Monofloor mantém a mesma WIP (cards simultâneos) atual.
+          Reduzir o tempo de journey libera capacidade para finalizar mais obras no mesmo período.
+          A Lei de Little (L = λ × W) é um teorema sólido — se você reduz W, λ cresce proporcionalmente.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>Sobre esta análise</h4>
+        <p>
+          Os dados são extraídos automaticamente do sistema operacional da Monofloor.
+          Cada obra concluída entra no histórico e os indicadores são recalculados semanalmente.
+          Esta versão é um snapshot estático para compartilhamento.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h5>Metodologia</h5>
+        <ul>
+          <li><span>431 obras analisadas</span></li>
+          <li><span>~7.080 movimentações</span></li>
+          <li><span>Lei de Little para capacidade</span></li>
+          <li><span>Médias do cenário atual</span></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Período</h5>
+        <ul>
+          <li><span>Início: agosto/2025</span></li>
+          <li><span>Snapshot: 10/abril/2026</span></li>
+          <li><span>8 meses de operação</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <span>Monofloor · Análise de Projetos · 2026</span>
+      <span>Snapshot 10/Abr/2026 · 431 obras · 38 fases</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-share" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#0a0a0a;padding:12px 24px;border-radius:100px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.4);transition:transform .3s ease;pointer-events:none">
+  ✓ Link copiado para a área de transferência
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DADOS — gerados a partir do snapshot 2026-04-10
+// ═══════════════════════════════════════════════════
+
+const BUCKETS = {
+  p: {
+    label: 'Pequena', emoji: '🏠', range: '0-99 m²',
+    description: 'Apartamentos e áreas pequenas',
+    cards: 184, avg_m2: 62,
+    journey_avg: 143, journey_median: 106, journey_max: 1666,
+    phases: [
+      {name:'OBRA EM EXECUÇÃO',n:91,avg:27.1,max:155.9},
+      {name:'OBRA PAUSADA',n:10,avg:25.0,max:61.9},
+      {name:'DATA À DEFINIR',n:27,avg:24.2,max:196.1},
+      {name:'AGUARDANDO LIBERAÇÃO',n:106,avg:18.7,max:165.0},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:93,avg:18.4,max:210.0},
+      {name:'CLIENTE FINALIZADO',n:7,avg:13.9,max:39.3},
+      {name:'RESULTADO VT - ACOMPANHAMENTO',n:14,avg:12.5,max:112.1},
+      {name:'LOGÍSTICA - EM COLETA',n:60,avg:12.3,max:117.9},
+      {name:'LOGÍSTICA - EM ENTREGA',n:103,avg:11.8,max:127.7},
+      {name:'1º CONTATO OP.',n:152,avg:11.2,max:112.9},
+      {name:'OBRA CONCLUÍDA',n:81,avg:10.0,max:118.2},
+      {name:'REVISÃO FINAL OP',n:136,avg:9.8,max:167.0},
+      {name:'CONFIRMAÇÕES OP 1',n:142,avg:9.6,max:135.1},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:119,avg:9.4,max:127.9},
+      {name:'AGEND. VT - ENTRADA',n:116,avg:9.1,max:159.3},
+      {name:'LOGÍSTICA - COLETAR',n:79,avg:9.0,max:118.2},
+      {name:'RESULTADO VT - ENTRADA',n:73,avg:8.8,max:128.1},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:138,avg:8.3,max:128.0},
+      {name:'EQUIPE DE EXECUÇÃO',n:111,avg:7.6,max:131.0},
+      {name:'EM CONTRATO',n:98,avg:7.5,max:106.1},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:141,avg:7.3,max:97.7},
+      {name:'PROJETOS - 1ª REVISÃO',n:147,avg:7.1,max:196.0},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:133,avg:6.4,max:191.0},
+      {name:'ENTRADA',n:183,avg:6.1,max:133.0},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:111,avg:5.3,max:132.0},
+      {name:'CONFIRMAÇÕES OP 2',n:133,avg:4.6,max:135.1},
+      {name:'FINANCEIRO - EM REVISÃO',n:113,avg:2.5,max:128.1},
+    ],
+    top_cards: [
+      {days:1666,m2:10.45,name:'LOVELY RITA DIAS MENEZES'},
+      {days:1029,m2:98.88,name:'ALEXANDRE BASTOS DA SILVA'},
+      {days:773,m2:99.09,name:'LUIS FERNANDO DE LIMA CARVALHO'},
+      {days:639,m2:84.23,name:'ANA CAROLINA PLACCO FERREIRA'},
+      {days:615,m2:60.36,name:'MARCIA ANDREA SCHMIDT DA SILVA'},
+    ],
+  },
+  m: {
+    label: 'Média', emoji: '🏡', range: '100-199 m²',
+    description: 'Casas e lofts médios',
+    cards: 142, avg_m2: 142,
+    journey_avg: 136, journey_median: 121, journey_max: 455,
+    phases: [
+      {name:'OBRA EM EXECUÇÃO',n:64,avg:33.0,max:130.3},
+      {name:'OBRA PAUSADA',n:11,avg:25.9,max:81.1},
+      {name:'CLIENTE FINALIZADO',n:3,avg:52.9,max:91.8},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:109,avg:20.4,max:181.9},
+      {name:'LOGÍSTICA - EM COLETA',n:51,avg:17.6,max:217.9},
+      {name:'1º CONTATO OP.',n:128,avg:15.2,max:133.0},
+      {name:'AGUARDANDO LIBERAÇÃO',n:74,avg:15.1,max:124.8},
+      {name:'LOGÍSTICA - EM ENTREGA',n:71,avg:11.3,max:188.2},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:65,avg:10.7,max:64.3},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:85,avg:10.0,max:103.8},
+      {name:'LOGÍSTICA - COLETAR',n:62,avg:9.5,max:72.8},
+      {name:'CONFIRMAÇÕES OP 1',n:100,avg:8.9,max:97.8},
+      {name:'ENTRADA',n:141,avg:8.7,max:156.3},
+      {name:'EQUIPE DE EXECUÇÃO',n:82,avg:7.7,max:95.2},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:111,avg:7.6,max:91.9},
+      {name:'RESULTADO VT - ACOMPANHAMENTO',n:22,avg:6.6,max:40.0},
+      {name:'OBRA CONCLUÍDA',n:62,avg:6.3,max:67.1},
+      {name:'AGEND. VT - ENTRADA',n:82,avg:6.3,max:63.5},
+      {name:'EM CONTRATO',n:90,avg:6.1,max:80.1},
+      {name:'REVISÃO FINAL OP',n:96,avg:6.0,max:124.8},
+      {name:'DATA À DEFINIR',n:14,avg:5.8,max:26.1},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:100,avg:4.2,max:69.9},
+      {name:'PROJETOS - 1ª REVISÃO',n:107,avg:3.6,max:44.2},
+      {name:'RESULTADO VT - ENTRADA',n:58,avg:3.6,max:33.8},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:81,avg:3.4,max:84.1},
+      {name:'CONFIRMAÇÕES OP 2',n:99,avg:3.2,max:84.2},
+      {name:'FINANCEIRO - EM REVISÃO',n:82,avg:1.5,max:17.9},
+    ],
+    top_cards: [
+      {days:455,m2:172.73,name:'SUELI HIGA'},
+      {days:436,m2:112.14,name:'MARIANA SARNO DRUMMOND'},
+      {days:389,m2:148.28,name:'CLÁUDIA RESENDE SOARES DE OLIVEIRA'},
+      {days:362,m2:141.01,name:'ALEXANDRE OSMAN'},
+      {days:327,m2:123.61,name:'FLÁVIA AUGUSTA DE ASSIS ROCHA'},
+    ],
+  },
+  g: {
+    label: 'Grande', emoji: '🏢', range: '200-499 m²',
+    description: 'Casas grandes ou comércio',
+    cards: 82, avg_m2: 298,
+    journey_avg: 133, journey_median: 117, journey_max: 539,
+    phases: [
+      {name:'CLIENTE FINALIZADO',n:4,avg:57.5,max:160.3},
+      {name:'OBRA EM EXECUÇÃO',n:37,avg:47.1,max:163.1},
+      {name:'OBRA PAUSADA',n:12,avg:31.3,max:107.1},
+      {name:'AGUARDANDO LIBERAÇÃO',n:38,avg:17.7,max:164.0},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:58,avg:13.6,max:135.7},
+      {name:'LOGÍSTICA - COLETAR',n:30,avg:12.7,max:80.0},
+      {name:'ENTRADA',n:80,avg:12.4,max:259.1},
+      {name:'1º CONTATO OP.',n:69,avg:12.0,max:89.2},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:31,avg:11.9,max:105.9},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:56,avg:11.2,max:109.2},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:45,avg:9.8,max:72.8},
+      {name:'LOGÍSTICA - EM ENTREGA',n:41,avg:9.4,max:48.9},
+      {name:'OBRA CONCLUÍDA',n:33,avg:8.9,max:105.9},
+      {name:'EM CONTRATO',n:42,avg:8.6,max:71.2},
+      {name:'PROJETOS - 1ª REVISÃO',n:55,avg:8.5,max:150.5},
+      {name:'LOGÍSTICA - EM COLETA',n:17,avg:7.4,max:36.8},
+      {name:'AGEND. VT - ENTRADA',n:44,avg:7.2,max:40.9},
+      {name:'CONFIRMAÇÕES OP 2',n:52,avg:5.9,max:90.0},
+      {name:'REVISÃO FINAL OP',n:51,avg:5.8,max:82.0},
+      {name:'CONFIRMAÇÕES OP 1',n:52,avg:5.5,max:35.1},
+      {name:'RESULTADO VT - ENTRADA',n:23,avg:4.5,max:82.0},
+      {name:'EQUIPE DE EXECUÇÃO',n:42,avg:4.4,max:41.0},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:52,avg:3.1,max:40.0},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:42,avg:2.0,max:41.1},
+      {name:'FINANCEIRO - EM REVISÃO',n:43,avg:0.9,max:11.4},
+    ],
+    top_cards: [
+      {days:539,m2:465.87,name:'SPE TLMC 29 (EUROFARMA)'},
+      {days:460,m2:379.26,name:'MARCELO ANDRE STEUER'},
+      {days:384,m2:337.74,name:'YAHYA EL HASSAN'},
+      {days:346,m2:472.26,name:'VANESSA AUGUSTA DELGADO PIMENTEL'},
+      {days:318,m2:282.73,name:'FLÁVIO FAVA DITT'},
+    ],
+  },
+  x: {
+    label: 'XLarge', emoji: '🏭', range: '500+ m²',
+    description: 'Comercial / industrial',
+    cards: 23, avg_m2: 798,
+    journey_avg: 100, journey_median: 65, journey_max: 281,
+    phases: [
+      {name:'OBRA EM EXECUÇÃO',n:6,avg:58.7,max:106.8},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:13,avg:38.1,max:159.9},
+      {name:'CLIENTE FINALIZADO',n:3,avg:29.0,max:69.9},
+      {name:'LOGÍSTICA - EM COLETA',n:3,avg:15.7,max:39.4},
+      {name:'LOGÍSTICA - EM ENTREGA',n:6,avg:13.3,max:24.8},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:7,avg:12.6,max:31.1},
+      {name:'EQUIPE DE EXECUÇÃO',n:7,avg:11.8,max:75.3},
+      {name:'ENTRADA',n:23,avg:10.8,max:69.9},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:6,avg:9.5,max:52.7},
+      {name:'CONFIRMAÇÕES OP 1',n:10,avg:9.0,max:27.0},
+      {name:'AGUARDANDO LIBERAÇÃO',n:6,avg:8.5,max:27.1},
+      {name:'1º CONTATO OP.',n:17,avg:8.1,max:28.9},
+      {name:'OBRA CONCLUÍDA',n:5,avg:7.0,max:33.1},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:10,avg:6.6,max:34.0},
+      {name:'LOGÍSTICA - COLETAR',n:6,avg:5.5,max:33.1},
+      {name:'CONFIRMAÇÕES OP 2',n:10,avg:4.9,max:48.9},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:12,avg:4.8,max:29.2},
+      {name:'PROJETOS - 1ª REVISÃO',n:11,avg:3.8,max:11.8},
+      {name:'EM CONTRATO',n:14,avg:3.5,max:13.1},
+      {name:'AGEND. VT - ENTRADA',n:7,avg:3.1,max:16.1},
+      {name:'REVISÃO FINAL OP',n:9,avg:2.8,max:15.9},
+      {name:'FINANCEIRO - EM REVISÃO',n:7,avg:2.4,max:12.1},
+      {name:'RESULTADO VT - ENTRADA',n:4,avg:2.1,max:8.3},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:7,avg:1.3,max:5.3},
+    ],
+    top_cards: [
+      {days:281,m2:1202.90,name:'DEPECHE MOVEIS LTDA'},
+      {days:279,m2:525.22,name:'CAROLINA RACHE GUIMARAES'},
+      {days:243,m2:549.91,name:'GUILHERME HAIDAR BERJEAUT'},
+      {days:217,m2:673.73,name:'NATHALIA ROBERTA MACARIO'},
+      {days:207,m2:843.96,name:'RAFAEL GUIMARÃES LIMA'},
+    ],
+  },
+};
+
+// Tradução de nomes técnicos para linguagem acessível
+const PHASE_TRANSLATIONS = {
+  'OBRA EM EXECUÇÃO': 'A obra está acontecendo em campo',
+  'CLIENTE FINALIZADO': 'Cliente terminou — limbo administrativo até arquivar',
+  'OBRA PAUSADA': 'Obra parada por algum motivo (cliente, material, etc.)',
+  'AGUARDANDO LIBERAÇÃO': 'Esperando aprovação interna pra avançar',
+  'DATA À DEFINIR': 'Sem data agendada ainda',
+  'LOGÍSTICA - MATERIAL ENTREGUE': 'Material chegou na obra',
+  'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO': 'Agendando visita técnica de aferição',
+  'LOGÍSTICA - EM COLETA': 'Material em processo de coleta',
+  '1º CONTATO OP.': 'Primeiro contato operacional com cliente',
+  'LOGÍSTICA - EM ENTREGA': 'Material a caminho da obra',
+  'INDÚSTRIA - EM PRODUÇÃO': 'Material sendo produzido na fábrica',
+  'LOGÍSTICA - COLETAR': 'Solicitando coleta do material restante',
+  'CONFIRMAÇÕES OP 1': 'Primeira rodada de confirmações operacionais',
+  'CONFIRMAÇÕES OP 2': 'Segunda rodada de confirmações',
+  'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO': 'Resultado da visita técnica de aferição',
+  'OBRA CONCLUÍDA': 'Execução terminou, aguardando próximas etapas',
+  'ENTRADA': 'Card recém-criado, entrando no fluxo',
+  'AGEND. VT - ENTRADA': 'Agendando visita técnica de entrada',
+  'REVISÃO FINAL OP': 'Revisão final operacional antes de finalizar',
+  'EQUIPE DE EXECUÇÃO': 'Definindo a equipe que vai executar',
+  'EM CONTRATO': 'Aguardando assinatura do contrato',
+  'PROJETOS - 1ª REVISÃO': 'Primeira revisão do projeto técnico',
+  'RESULTADO VT - ENTRADA': 'Resultado da visita técnica de entrada',
+  'AGEND. VT - ACOMPANHAMENTO': 'Agendando visita de acompanhamento',
+  'RESULTADO VT - ACOMPANHAMENTO': 'Resultado da visita de acompanhamento',
+  'INFORMAÇÕES LOGÍSTICAS': 'Coletando informações de logística',
+  'INFORMAÇÕES PROJETOS': 'Coletando informações do projeto',
+  'INFORMAÇÕES FINANCEIRAS': 'Coletando informações financeiras',
+  'FINANCEIRO - EM REVISÃO': 'Financeiro revisando o caso',
+  'PÓS VENDAS ACIONADO': 'Pós-vendas foi acionado',
+  'RESULTADO VT - QUALIDADE': 'Resultado de visita de qualidade',
+  'AGEND. VT - QUALIDADE': 'Agendando visita de qualidade',
+};
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+
+// Top 5 gargalos (média entre todos os buckets, ponderada)
+function getTopGargalos() {
+  const phaseTotals = {};
+  ['p','m','g','x'].forEach(b => {
+    BUCKETS[b].phases.forEach(p => {
+      if (!phaseTotals[p.name]) phaseTotals[p.name] = { sum: 0, count: 0, n: 0 };
+      phaseTotals[p.name].sum += p.avg * p.n;
+      phaseTotals[p.name].count += p.n;
+      phaseTotals[p.name].n += p.n;
+    });
+  });
+  return Object.entries(phaseTotals)
+    .map(([name, t]) => ({ name, avg: t.sum / t.count, n: t.n }))
+    .sort((a, b) => b.avg - a.avg)
+    .slice(0, 5);
+}
+
+function renderGargalos() {
+  const top = getTopGargalos();
+  const maxAvg = top[0].avg;
+  document.getElementById('gargalo-list').innerHTML = top.map((p, i) => {
+    const pct = (p.avg / maxAvg) * 100;
+    const translation = PHASE_TRANSLATIONS[p.name] || '';
+    return `
+      <div class="gargalo">
+        <div class="gargalo-rank">${String(i+1).padStart(2,'0')}</div>
+        <div class="gargalo-content">
+          <div class="gargalo-name">${p.name}</div>
+          <div class="gargalo-translation">${translation}</div>
+          <div class="gargalo-bar-wrap">
+            <div class="gargalo-bar" style="width:${pct}%"></div>
+          </div>
+        </div>
+        <div class="gargalo-days">${p.avg.toFixed(0)}<span class="unit">dias</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Tipos cards
+function renderTipos() {
+  const html = ['p','m','g','x'].map(b => {
+    const d = BUCKETS[b];
+    const isActive = b === 'p' ? 'active' : '';
+    return `
+      <div class="tipo-card ${isActive}" onclick="document.querySelector('[data-drill=\\'${b}\\']').click(); document.getElementById('explorar').scrollIntoView({behavior:'smooth'})">
+        <span class="icon">${d.emoji}</span>
+        <div class="label">${d.range}</div>
+        <div class="name">${d.label}</div>
+        <div class="range">${d.description}</div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-v">${d.cards}</div>
+            <div class="stat-l">obras</div>
+          </div>
+          <div class="stat">
+            <div class="stat-v">${d.journey_avg}<span style="font-size:14px;color:var(--text3)">d</span></div>
+            <div class="stat-l">média</div>
+          </div>
+          <div class="stat">
+            <div class="stat-v">${d.journey_median}<span style="font-size:14px;color:var(--text3)">d</span></div>
+            <div class="stat-l">mediana</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('tipos-grid').innerHTML = html;
+}
+
+// Comparativo (top 12 fases mais relevantes)
+function renderCompare() {
+  const allPhases = new Set();
+  ['p','m','g','x'].forEach(b => BUCKETS[b].phases.forEach(p => allPhases.add(p.name)));
+
+  const phaseStats = [];
+  allPhases.forEach(name => {
+    const vals = ['p','m','g','x'].map(b => {
+      const ph = BUCKETS[b].phases.find(p => p.name === name);
+      return ph ? ph.avg : null;
+    });
+    const valid = vals.filter(v => v !== null);
+    if (valid.length >= 3) {
+      const avgOverall = valid.reduce((s, v) => s + v, 0) / valid.length;
+      phaseStats.push({ name, vals, avgOverall });
+    }
+  });
+  phaseStats.sort((a, b) => b.avgOverall - a.avgOverall);
+
+  const top = phaseStats.slice(0, 12);
+  const maxValue = Math.max(...top.flatMap(p => p.vals.filter(v => v !== null)));
+
+  document.getElementById('compare-tbody').innerHTML = top.map(p => {
+    const cells = p.vals.map(v => {
+      if (v === null) return '<td class="compare-cell empty">—</td>';
+      const cls = v >= 25 ? 'high' : v >= 12 ? 'med' : v >= 6 ? 'low' : 'ok';
+      const barW = (v / maxValue) * 100;
+      return `<td class="compare-cell ${cls}">${v.toFixed(1)}d<span class="compare-cell-bar" style="width:${barW}%"></span></td>`;
+    }).join('');
+    const desc = PHASE_TRANSLATIONS[p.name] || '';
+    return `
+      <tr>
+        <td class="phase-cell">
+          ${p.name}
+          ${desc ? `<span class="desc">${desc}</span>` : ''}
+        </td>
+        ${cells}
+      </tr>
+    `;
+  }).join('');
+}
+
+// Drill down — tabs + detalhes
+function renderDrill() {
+  const tabsHtml = ['p','m','g','x'].map(b => {
+    const d = BUCKETS[b];
+    return `
+      <button class="drill-tab ${b==='p'?'active':''}" data-drill="${b}" onclick="showDrill('${b}')">
+        <span class="icon">${d.emoji}</span>
+        ${d.label} <span style="opacity:.6">·</span> ${d.cards} obras
+      </button>
+    `;
+  }).join('');
+  document.getElementById('drill-tabs').innerHTML = tabsHtml;
+
+  const contentHtml = ['p','m','g','x'].map(b => {
+    const d = BUCKETS[b];
+    const sortedPhases = [...d.phases].sort((a, b) => b.avg - a.avg).slice(0, 12);
+    const maxAvg = sortedPhases[0].avg;
+
+    const phaseList = sortedPhases.map(p => {
+      const pct = (p.avg / maxAvg) * 100;
+      const color = p.avg >= 25 ? 'var(--red)' : p.avg >= 12 ? 'var(--amber)' : 'var(--gold)';
+      return `
+        <div class="mini-phase">
+          <div class="mini-phase-row">
+            <div class="mini-phase-name">${p.name}</div>
+            <div class="mini-phase-meta"><b>${p.avg.toFixed(1)}d</b> · n=${p.n}</div>
+          </div>
+          <div class="mini-phase-bar-wrap">
+            <div class="mini-phase-bar" style="width:${pct}%;background:${color}"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const obras = d.top_cards.map((c, i) => `
+      <div class="obra-item">
+        <div class="obra-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="obra-info">
+          <div class="obra-name">${c.name}</div>
+          <div class="obra-meta">${c.m2.toFixed(0)} m²</div>
+        </div>
+        <div class="obra-days">${c.days}<span class="unit">d</span></div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="drill-content ${b==='p'?'active':''}" data-drill-content="${b}">
+        <div class="drill-grid">
+          <div class="drill-block">
+            <h3>Top 12 fases mais lentas neste segmento</h3>
+            <div class="h-sub">${d.label} · ${d.cards} obras analisadas · journey médio ${d.journey_avg}d</div>
+            <div class="mini-phases">${phaseList}</div>
+          </div>
+          <div class="drill-block">
+            <h3>Obras mais lentas</h3>
+            <div class="h-sub">5 cards com maior tempo total acumulado no pipeline</div>
+            <div class="obra-list">${obras}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('drill-content').innerHTML = contentHtml;
+}
+
+function showDrill(b) {
+  document.querySelectorAll('.drill-tab').forEach(t => t.classList.toggle('active', t.dataset.drill === b));
+  document.querySelectorAll('.drill-content').forEach(c => c.classList.toggle('active', c.dataset.drillContent === b));
+}
+
+// Insights
+const INSIGHTS = [
+  {
+    type: 'critical',
+    icon: '🚨',
+    title: 'Obras pequenas têm a maior cauda de problemas',
+    body: 'O pior caso é uma obra de <strong>10 m²</strong> que está há <span class="num">1666 dias</span> no pipeline (LOVELY RITA DIAS MENEZES). É 11x mais lenta que a média. Existe um efeito de "obra pequena = baixa prioridade = abandono".'
+  },
+  {
+    type: 'good',
+    icon: '✅',
+    title: 'Obras grandes (XL) são as mais rápidas',
+    body: 'Apesar da complexidade, obras de <strong>500m² ou mais</strong> têm journey médio de <span class="num">100 dias</span>, contra 143 das pequenas. Recebem prioridade institucional e fluem melhor pelo pipeline. Mediana de 65 dias é excelente.'
+  },
+  {
+    type: 'warn',
+    icon: '📅',
+    title: 'Agendar visita técnica trava 5x mais em obras grandes',
+    body: 'Pequenas: 7d. Médias: 20d. <strong>XL: 38 dias</strong>. Quanto maior a obra, mais difícil agendar a equipe técnica especializada — está superalocada. Sinal de necessidade de mais técnicos seniores.'
+  },
+  {
+    type: 'critical',
+    icon: '⏳',
+    title: '"Cliente Finalizado" é um buraco negro silencioso',
+    body: 'Em obras médias e grandes, o card fica em média <span class="num">50-58 dias parado</span> em "Cliente Finalizado" antes de ser arquivado. É puro gargalo administrativo — financeiro/pós-venda que não fecha o ciclo.'
+  },
+  {
+    type: 'warn',
+    icon: '🔄',
+    title: 'A fase 1º Contato OP é mais lenta em obras médias',
+    body: 'Pequenas: 11d. <strong>Médias: 15d</strong>. Grandes: 12d. XL: 8d. Cliente médio é menos definido (sem decoradora/arquiteto, mas obra grande o suficiente pra ter complexidade). Mais ida-e-volta no contato inicial.'
+  },
+  {
+    type: 'info',
+    icon: '🎯',
+    title: 'O caminho feliz já estoura a meta institucional',
+    body: 'Somando o tempo médio de cada fase principal (1 visita por fase), o resultado é <span class="num">~215 dias</span>. A meta interna definida é <strong>≤150 dias</strong>. A meta é fisicamente impossível com a estrutura atual do pipe.'
+  },
+  {
+    type: 'warn',
+    icon: '📦',
+    title: 'Logística agrupa fretes em detrimento de obras pequenas',
+    body: 'Logística de material entregue: <strong>pequenas 18d vs grandes 12d</strong>. Contraintuitivo — obras pequenas demoram MAIS. Causa provável: agrupamento de fretes/coletas para reduzir custo posterga obras pequenas individuais.'
+  },
+  {
+    type: 'good',
+    icon: '💰',
+    title: 'Backoffice financeiro está saudável',
+    body: 'FINANCEIRO - EM REVISÃO leva apenas <span class="num">1.8 dias em média</span>. Informações financeiras: 0.4d. Não é o financeiro que está atrapalhando o ciclo — o problema é operacional, não administrativo.'
+  },
+];
+
+function renderInsights() {
+  document.getElementById('insights-grid').innerHTML = INSIGHTS.map(i => `
+    <div class="insight-card ${i.type}">
+      <span class="insight-icon">${i.icon}</span>
+      <h3>${i.title}</h3>
+      <p>${i.body}</p>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// DEEP ANALYSIS — Capacidade operacional
+// ═══════════════════════════════════════════════════
+
+const CAPACITY = {
+  period_months: 8,
+  total_finalized: 210,
+  wip_actual: 243,
+  monthly: {
+    p: { cards: 12.75, m2: 816, journey: 143, label: 'Pequena', emoji: '🏠' },
+    m: { cards: 8.25, m2: 1150, journey: 136, label: 'Média', emoji: '🏡' },
+    g: { cards: 4.5, m2: 1301, journey: 133, label: 'Grande', emoji: '🏢' },
+    x: { cards: 0.75, m2: 696, journey: 100, label: 'XLarge', emoji: '🏭' },
+  },
+  // Histórico mês a mês (cards finalizados)
+  history: [
+    { month: '2025-08', p: 1, m: 2, g: 5, x: 1 },
+    { month: '2025-09', p: 0, m: 3, g: 0, x: 0 },
+    { month: '2025-10', p: 25, m: 17, g: 8, x: 2 },
+    { month: '2025-11', p: 13, m: 3, g: 1, x: 2 },
+    { month: '2025-12', p: 27, m: 13, g: 10, x: 1 },
+    { month: '2026-01', p: 11, m: 5, g: 3, x: 0 },
+    { month: '2026-02', p: 14, m: 13, g: 5, x: 0 },
+    { month: '2026-03', p: 11, m: 10, g: 4, x: 0 },
+  ],
+};
+
+// Render throughput chart
+function renderThroughput() {
+  const buckets = ['p', 'm', 'g', 'x'];
+  const max = Math.max(...buckets.map(b => CAPACITY.monthly[b].cards));
+  const html = buckets.map(b => {
+    const d = CAPACITY.monthly[b];
+    const pct = (d.cards / max) * 100;
+    return `
+      <div class="tp-label">
+        <span class="tp-icon">${d.emoji}</span>${d.label}
+      </div>
+      <div class="tp-bar-wrap">
+        <div class="tp-bar" style="width:${pct}%">
+          <span class="tp-bar-label">${d.cards.toFixed(1)}/mês</span>
+        </div>
+        <div class="tp-meta">
+          <b>${d.m2.toFixed(0)} m²</b>/mês · ${(d.cards * 12).toFixed(0)}/ano
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('throughput-chart').innerHTML = html;
+}
+
+// Capacity table
+function renderCapacity() {
+  const buckets = ['p', 'm', 'g', 'x'];
+  const html = buckets.map(b => {
+    const d = CAPACITY.monthly[b];
+    // L = λ × W = (cards/month / 30 days) × journey days
+    const wipTeorico = Math.round((d.cards / 30) * d.journey);
+    // WIP real proporcional ao share dos buckets (estimativa)
+    const totalThroughput = buckets.reduce((s, x) => s + CAPACITY.monthly[x].cards, 0);
+    const share = d.cards / totalThroughput;
+    const wipReal = Math.round(CAPACITY.wip_actual * share);
+    const ratio = wipReal / wipTeorico;
+    let statusClass = 'gold', statusLabel = '✓ ok';
+    if (ratio > 1.5) { statusClass = 'red'; statusLabel = '+' + Math.round((ratio-1)*100) + '% sobrecarga'; }
+    else if (ratio > 1.2) { statusClass = 'amber'; statusLabel = '+' + Math.round((ratio-1)*100) + '% acima'; }
+    else if (ratio < 0.8) { statusClass = 'green'; statusLabel = 'subutilizado'; }
+    return `
+      <tr>
+        <td>${d.emoji} ${d.label}</td>
+        <td class="num">${d.cards.toFixed(1)}/mês</td>
+        <td class="num">${d.journey}d</td>
+        <td class="num">${wipTeorico}</td>
+        <td class="num ${ratio>1.5?'red':''}">${wipReal}</td>
+        <td class="num ${statusClass}">${statusLabel}</td>
+      </tr>
+    `;
+  }).join('');
+  document.getElementById('capacity-tbody').innerHTML = html;
+}
+
+// Months chart
+function renderMonths() {
+  const maxTotal = Math.max(...CAPACITY.history.map(m => m.p + m.m + m.g + m.x));
+  const html = CAPACITY.history.map(row => {
+    const total = row.p + row.m + row.g + row.x;
+    const widthPct = (total / maxTotal) * 100;
+    const segments = ['p', 'm', 'g', 'x'].map(b => {
+      const v = row[b];
+      if (v === 0) return '';
+      const pct = (v / total) * 100;
+      return `<div class="month-bar ${b}" style="flex:${v}" title="${v} obras">${v}</div>`;
+    }).join('');
+    return `
+      <div class="months-chart">
+        <div class="month-label">${row.month}</div>
+        <div class="month-bars" style="width:${widthPct}%;min-width:60px">${segments}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('months-chart').innerHTML = html;
+}
+
+// Simulator
+function updateSimulator() {
+  const newJourney = parseInt(document.getElementById('journey-slider').value);
+  document.getElementById('slider-value').textContent = newJourney + 'd';
+
+  // L = λ × W → λ = L / W
+  // L atual = 243, W atual = 143
+  // Mas devemos usar throughput observado real, não L
+  // Se assumimos que reduzir W mantém L constante: λ_new = L / W_new
+  const wip = CAPACITY.wip_actual;
+  const newDailyThroughput = wip / newJourney;
+  const newMonthly = newDailyThroughput * 30;
+  const newQuarterly = newMonthly * 3;
+  const newYearly = newMonthly * 12;
+
+  // Comparar com baseline atual de 26/mês
+  const baseMonthly = 26;
+  const deltaMonthly = ((newMonthly / baseMonthly) - 1) * 100;
+  const deltaSign = deltaMonthly >= 0 ? '+' : '';
+
+  document.getElementById('sim-monthly').innerHTML =
+    Math.round(newMonthly) + '<span class="u">obras/mês</span>';
+  document.getElementById('sim-quarterly').innerHTML =
+    Math.round(newQuarterly) + '<span class="u">obras</span>';
+  document.getElementById('sim-yearly').innerHTML =
+    Math.round(newYearly) + '<span class="u">obras</span>';
+
+  const deltaText = deltaSign + Math.round(deltaMonthly) + '% vs atual';
+  const deltaClass = deltaMonthly >= 0 ? 'up' : 'down';
+  ['sim-delta-monthly', 'sim-delta-quarterly', 'sim-delta-yearly'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = deltaText;
+    el.className = 'delta ' + deltaClass;
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// SCENARIOS BAR CHART
+// ═══════════════════════════════════════════════════
+const SCENARIOS = [
+  { label: 'Atual', icon: '📍', sub: '143 dias', value: 312, type: 'current', delta: null },
+  { label: 'Meta interna atual', icon: '🎯', sub: '150 dias', value: 300, type: 'below', delta: -4 },
+  { label: 'Melhoria moderada', icon: '⚡', sub: '120 dias', value: 372, type: 'above', delta: 19 },
+  { label: 'Benchmark XL', icon: '🚀', sub: '100 dias', value: 444, type: 'above', delta: 42 },
+  { label: 'Best case', icon: '🏆', sub: '80 dias', value: 552, type: 'best', delta: 77 },
+];
+
+function renderScenarios() {
+  const max = Math.max(...SCENARIOS.map(s => s.value));
+  const html = SCENARIOS.map(s => {
+    const pct = (s.value / max) * 100;
+    const deltaTxt = s.delta === null ? '—' : (s.delta > 0 ? '+' : '') + s.delta + '%';
+    const deltaCls = s.delta === null ? 'same' : s.delta > 0 ? 'up' : 'down';
+    return `
+      <div class="scenario-row">
+        <div class="scenario-name">
+          <span class="icon">${s.icon}</span>
+          <div>
+            <div>${s.label}</div>
+            <div class="sub">${s.sub}</div>
+          </div>
+        </div>
+        <div class="scenario-bar-wrap">
+          <div class="scenario-bar ${s.type}" style="width:${pct}%">
+            ${s.value} obras/ano
+          </div>
+        </div>
+        <div class="scenario-delta ${deltaCls}">${deltaTxt}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('scenario-chart').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// REWORK SIMULATOR
+// ═══════════════════════════════════════════════════
+
+// Modelo: cada obra reprovada precisa redo de ~50 dias (30 execução + 20 reagendamento)
+const REWORK_PENALTY_DAYS = 50;
+
+function calcRework(rate) {
+  const r = rate / 100;
+  const buckets = ['p', 'm', 'g', 'x'];
+  const result = {};
+  let totalBase = 0, totalInflated = 0, totalCards = 0;
+
+  buckets.forEach(b => {
+    const d = CAPACITY.monthly[b];
+    const inflation = r * REWORK_PENALTY_DAYS;
+    const newJourney = d.journey + inflation;
+    result[b] = {
+      base: d.journey,
+      extra: inflation,
+      total: newJourney,
+      label: d.label,
+      emoji: d.emoji,
+      cards: d.cards,
+    };
+    totalBase += d.journey * d.cards;
+    totalInflated += newJourney * d.cards;
+    totalCards += d.cards;
+  });
+
+  const avgBase = totalBase / totalCards;
+  const avgInflated = totalInflated / totalCards;
+  const newDailyThroughput = CAPACITY.wip_actual / avgInflated;
+  const newMonthly = newDailyThroughput * 30;
+
+  return { buckets: result, avgBase, avgInflated, monthlyThroughput: newMonthly };
+}
+
+function renderReworkStack(reworkData) {
+  const buckets = ['p', 'm', 'g', 'x'];
+  let maxVal = 0;
+  buckets.forEach(b => {
+    const d = reworkData.buckets[b];
+    if (d.total > maxVal) maxVal = d.total;
+  });
+
+  const html = buckets.map(b => {
+    const d = reworkData.buckets[b];
+    const basePct = (d.base / maxVal) * 100;
+    const extraPct = (d.extra / maxVal) * 100;
+    return `
+      <div class="rework-bar-row">
+        <div class="rework-bar-label">${d.emoji} ${d.label}</div>
+        <div class="rework-bar-track">
+          <div class="rework-bar-base" style="width:${basePct}%">${d.base}d</div>
+          ${d.extra > 0 ? `<div class="rework-bar-extra" style="width:${extraPct}%">+${d.extra.toFixed(0)}d</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('rework-stack').innerHTML = html;
+}
+
+function updateRework() {
+  const rate = parseInt(document.getElementById('rework-slider').value);
+  document.getElementById('rework-slider-value').textContent = rate + '%';
+
+  const data = calcRework(rate);
+  renderReworkStack(data);
+
+  document.getElementById('rework-journey').innerHTML =
+    Math.round(data.avgInflated) + '<span class="u">d</span>';
+  document.getElementById('rework-throughput').innerHTML =
+    Math.round(data.monthlyThroughput) + '<span class="u">obras</span>';
+
+  document.querySelectorAll('.rework-preset').forEach(p => {
+    p.classList.toggle('active', parseInt(p.dataset.rate) === rate);
+  });
+}
+
+function setRework(rate) {
+  document.getElementById('rework-slider').value = rate;
+  updateRework();
+}
+
+// Toggle deep panel
+function toggleDeep() {
+  const btn = document.getElementById('deep-btn');
+  const panel = document.getElementById('deep-panel');
+  const isOpen = panel.classList.toggle('open');
+  btn.classList.toggle('expanded', isOpen);
+  btn.querySelector('span:first-child').textContent = isOpen
+    ? 'Fechar análise de capacidade'
+    : 'Ver análise de capacidade operacional';
+
+  if (isOpen) {
+    // Render charts only when first opened (lazy)
+    if (!btn.dataset.rendered) {
+      renderThroughput();
+      renderCapacity();
+      renderMonths();
+      updateSimulator();
+      renderScenarios();
+      updateRework();
+      btn.dataset.rendered = '1';
+    }
+    // Smooth scroll to panel
+    setTimeout(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+// Auto-open if anchor matches
+if (window.location.hash === '#capacidade') {
+  setTimeout(() => toggleDeep(), 200);
+}
+
+// ═══════════════════════════════════════════════════
+// SHARE BUTTON
+// ═══════════════════════════════════════════════════
+function copiarLink() {
+  const url = window.location.href.split('#')[0];
+  const toast = document.getElementById('toast-share');
+
+  const showToast = (msg) => {
+    toast.textContent = msg;
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => {
+      toast.style.transform = 'translateX(-50%) translateY(80px)';
+    }, 2400);
+  };
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(
+      () => showToast('✓ Link copiado para a área de transferência'),
+      () => showToast('⚠ Não foi possível copiar — copie manualmente: ' + url)
+    );
+  } else {
+    // Fallback para http ou navegadores antigos
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('✓ Link copiado');
+    } catch (e) {
+      showToast('⚠ Copie manualmente: ' + url);
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+// Init
+renderTipos();
+renderGargalos();
+renderCompare();
+renderDrill();
+renderInsights();
+</script>
+</body>
+</html>
