@@ -278,7 +278,7 @@ a:hover { text-decoration: underline; }
     </div>
   </div>
   <div class="updated">
-    <span id="updated-label">Snapshot: 10/Abril/2026</span>
+    <span id="updated-label">Snapshot: 10/Abril/2026 — Cérebro v2</span>
     · <span id="updated-relative">atualizado agora</span>
     · Construído por Vitor + Cláudio · 8 pilares interligados
   </div>
@@ -394,8 +394,8 @@ a:hover { text-decoration: underline; }
 <g class="pillar-node" onclick="switchTab('tasks');setTimeout(()=>togglePanel('p5'),100)">
   <rect x="400" y="276" width="210" height="54" rx="12" fill="#FAECE7" stroke="#F0997B" stroke-width=".8"/>
   <text x="505" y="297" text-anchor="middle" fill="#712B13" font-size="12" font-weight="600">Automação</text>
-  <text x="505" y="314" text-anchor="middle" fill="#993C1D" font-size="10">Cérebro · Teleagente</text>
-  <circle cx="602" cy="282" r="7" fill="#f59e0b"/><text x="602" y="282" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">!</text>
+  <text x="505" y="314" text-anchor="middle" fill="#993C1D" font-size="10">Cérebro v2 · Regras + AI</text>
+  <circle cx="602" cy="282" r="7" fill="#22c55e"/><text x="602" y="282" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="8" font-weight="700">5</text>
 </g>
 
 <!-- P6: Dashboards -->
@@ -669,20 +669,22 @@ const PILLARS = [
       { name: 'Pipefy GraphQL — token ativo, 4 pipes mapeados', status: 'done', notes: 'OE: 306410007 · OEC: 306446640 · OEI: 306446401 · OECT: 306431675' },
       { name: 'planejamento.monofloor.cloud — API com 228 obras', status: 'done' },
       { name: 'GitHub Pages — 2 repos publicados e no ar', status: 'done' },
+      { name: 'GitHub Models — AI gratuita via GITHUB_TOKEN', status: 'done', tag: 'NOVO', tagType: 'info', notes: 'Free tier habilitado no workflow do Cérebro (permissions.models:read). Usa gpt-4o-mini. Substitui Anthropic API como provedor default.' },
       { name: 'D4Sign — 115 contratos finalizados', status: 'partial', tag: 'contornar visualização', tagType: 'warn', notes: '8 contratos 2026 analisados. Ticket médio R$150.885. Problema de visualização pendente.' },
       { name: 'Omie (ERP) — margem, custo/m², fluxo de caixa', status: 'blocked', tag: 'bloqueador', tagType: 'blocker', notes: 'Sem acesso liberado. 5 dos 8 indicadores financeiros dependem disso.' },
-      { name: 'Teleagente API Telegram — webhook ativo', status: 'partial', tag: 'respostas inconsistentes', tagType: 'warn', notes: 'Bot online no Railway. Comandos não respondem 100%. Falta ANTHROPIC_API_KEY para /semana.' },
+      { name: 'Teleagente API Telegram — webhook ativo', status: 'partial', tag: 'respostas inconsistentes', tagType: 'warn', notes: 'Bot online no Railway. Comandos não respondem 100%. Pode migrar para GitHub Models para /semana funcionar sem Anthropic.' },
     ]
   },
   {
     id: 'p5', name: 'Automação', icon: '⚙️', color: '#F0997B', bgColor: '#FAECE7', textColor: '#993C1D',
     feedsTo: ['p6'], dependsOn: ['p4'],
-    depsLabel: 'Depende de → Integrações | Alimenta → Dashboards | BLOQUEADOR: ANTHROPIC_API_KEY + TELEGRAM_CHAT_ID',
+    depsLabel: 'Depende de → Integrações | Alimenta → Dashboards | Arquitetura híbrida: regras + AI opcional (GitHub Models free tier)',
     tasks: [
-      { name: 'Agente Operacional (Python) — extrai Pipefy + painel', status: 'done' },
+      { name: 'Agente Operacional (Python) — extrai Pipefy', status: 'done', notes: 'v2: pipe IDs corrigidos (306410007/306446640/306446401/306431675). Query robusta + resumo agregado.' },
       { name: 'Agente D4Sign (Python) — extrai contratos', status: 'done' },
-      { name: 'Cérebro Central (Python) — análise com Claude API', status: 'done', notes: 'Depende da ANTHROPIC_API_KEY para funcionar' },
-      { name: 'GitHub Actions workflow — 07:30 + 08:00 BRT', status: 'partial', tag: 'faltam 2 secrets', tagType: 'blocker', notes: 'Código publicado (10 arquivos). Faltam: ANTHROPIC_API_KEY + TELEGRAM_CHAT_ID = 8151246424' },
+      { name: 'Cérebro de Regras (cerebro_regras.py) — motor determinístico', status: 'done', tag: 'NOVO', tagType: 'info', notes: 'Motor 100% determinístico: G1/G2/G3/G4, SLAs PP:001, thresholds configuráveis em config/thresholds.json. Zero dependência de AI.' },
+      { name: 'Cérebro Central (cerebro_central.py) — regras + AI opcional', status: 'done', notes: 'v2: regras sempre rodam, AI enriquece via GitHub Models (free tier) → Anthropic (fallback). Funciona sem nenhuma key de AI.' },
+      { name: 'GitHub Actions workflow — 07:30 + 08:00 BRT', status: 'live', notes: 'permissions.models:read habilitado. Só PIPEFY_TOKEN é obrigatório. TELEGRAM_* e ANTHROPIC_API_KEY agora são opcionais.' },
     ]
   },
   {
@@ -733,12 +735,6 @@ const PILLARS = [
 ];
 
 const BLOCKERS = [
-  {
-    title: 'ANTHROPIC_API_KEY — chave da API Claude',
-    desc: 'Sem ela, o Cérebro não analisa, o Teleagente não responde em linguagem natural, /semana não funciona, e alertas automáticos não disparam.',
-    action: '→ Criar em console.anthropic.com → adicionar nos GitHub Secrets (cargo-assistente) e Railway (teleagente)',
-    impacts: ['p4', 'p5']
-  },
   {
     title: 'Acesso ao Omie (ERP)',
     desc: '5 dos 8 indicadores financeiros dependem do Omie: margem real, custo/m², fluxo de caixa, inadimplência e ponto de equilíbrio. Todos cinza no dashboard.',
@@ -1080,7 +1076,7 @@ function filterTasks(query) {
 // ANALYTICS LOCAIS — FILTROS, AGREGAÇÕES, EXPORT, TIMESTAMP
 // ═══════════════════════════════════════════════════
 
-const SNAPSHOT_DATE = new Date('2026-04-10T00:00:00');
+const SNAPSHOT_DATE = new Date('2026-04-10T12:00:00');
 let currentFilter = 'all';
 
 function renderAnalyticsBar() {
