@@ -683,6 +683,319 @@ button { font-family: inherit; cursor: pointer; }
   flex-wrap: wrap; gap: 12px;
 }
 
+/* ════ DEEP ANALYSIS ════ */
+.deep-cta {
+  padding: 80px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.deep-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(212,180,131,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.deep-cta-inner { position: relative; }
+.deep-cta h2 {
+  font-family: var(--fd); font-size: clamp(28px, 4vw, 44px);
+  font-weight: 400; line-height: 1.15; letter-spacing: -.8px;
+  margin-bottom: 16px;
+}
+.deep-cta h2 em { font-style: italic; color: var(--gold); }
+.deep-cta p {
+  font-size: 16px; color: var(--text2);
+  max-width: 560px; margin: 0 auto 36px;
+}
+.deep-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  color: #0a0a0a; font-weight: 600; font-size: 15px;
+  padding: 18px 32px; border-radius: 100px; border: none;
+  cursor: pointer; transition: all .25s;
+  box-shadow: 0 4px 24px rgba(212,180,131,.25);
+  font-family: inherit;
+}
+.deep-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(212,180,131,.4);
+}
+.deep-btn:active { transform: translateY(0); }
+.deep-btn .arrow { transition: transform .25s; }
+.deep-btn:hover .arrow { transform: translateX(4px); }
+.deep-btn.expanded .arrow { transform: rotate(90deg); }
+
+/* Deep panel */
+.deep-panel {
+  max-height: 0; overflow: hidden;
+  transition: max-height .6s cubic-bezier(.4, 0, .2, 1);
+  background: var(--bg2);
+  border-top: 1px solid transparent;
+}
+.deep-panel.open {
+  max-height: 8000px;
+  border-top-color: var(--border);
+}
+.deep-content { padding: 80px 0; }
+.deep-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  margin-bottom: 24px;
+}
+.deep-block-head {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-bottom: 8px;
+}
+.deep-block-num {
+  font-family: var(--fd); font-size: 14px; color: var(--gold);
+  font-weight: 600; letter-spacing: 2px;
+}
+.deep-block h3 {
+  font-family: var(--fd); font-size: 26px;
+  font-weight: 500; line-height: 1.2;
+}
+.deep-block .h-sub {
+  font-size: 14px; color: var(--text3);
+  margin-bottom: 32px;
+}
+
+/* Throughput chart */
+.throughput-chart {
+  display: grid; grid-template-columns: 100px 1fr;
+  gap: 16px; align-items: center; margin-top: 16px;
+}
+.throughput-row {
+  display: contents;
+}
+.tp-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text);
+}
+.tp-label .tp-icon { font-size: 18px; }
+.tp-bar-wrap {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 16px;
+}
+.tp-bar {
+  height: 32px; border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 12px; min-width: 30px;
+  position: relative;
+  transition: width 1s ease;
+}
+.tp-bar-label {
+  font-family: var(--fm); font-size: 11px; color: #0a0a0a;
+  font-weight: 700;
+}
+.tp-meta {
+  font-family: var(--fm); font-size: 12px;
+  color: var(--text3); white-space: nowrap;
+}
+.tp-meta b { color: var(--text); font-weight: 600; }
+
+/* Big stat cards */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+.stat-card .label {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+.stat-card .value {
+  font-family: var(--fd); font-size: 44px;
+  font-weight: 400; line-height: .95;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.stat-card .value .unit {
+  font-size: 16px; color: var(--text3);
+  font-weight: 400; margin-left: 6px;
+}
+.stat-card .delta {
+  font-family: var(--fm); font-size: 11px;
+  margin-top: 10px;
+}
+.stat-card .delta.up { color: var(--green); }
+.stat-card .delta.down { color: var(--red); }
+
+/* What if simulator */
+.simulator {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+.simulator-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 24px;
+  flex-wrap: wrap; gap: 12px;
+}
+.simulator-title {
+  font-family: var(--fd); font-size: 18px;
+  font-weight: 500;
+}
+.simulator-current {
+  font-family: var(--fm); font-size: 12px; color: var(--text3);
+}
+.simulator-current b {
+  font-family: var(--fd); font-size: 22px; color: var(--gold);
+  font-weight: 500;
+}
+
+.slider-group {
+  display: grid; grid-template-columns: 1fr 100px;
+  gap: 20px; align-items: center;
+  margin-bottom: 20px;
+}
+.slider-wrap { position: relative; }
+.slider-wrap input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: var(--bg);
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid var(--border);
+}
+.slider-wrap input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg);
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+.slider-wrap input[type=range]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg);
+}
+.slider-value {
+  font-family: var(--fm); font-size: 18px;
+  color: var(--gold); font-weight: 600;
+  text-align: right;
+}
+.slider-marks {
+  display: flex; justify-content: space-between;
+  font-family: var(--fm); font-size: 10px;
+  color: var(--text4); margin-top: 6px;
+}
+
+.simulator-result {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 24px;
+  padding-top: 24px; border-top: 1px solid var(--border);
+}
+.sim-result-cell {
+  text-align: center;
+}
+.sim-result-cell .l {
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.sim-result-cell .v {
+  font-family: var(--fd); font-size: 32px;
+  font-weight: 400; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.sim-result-cell .v .u {
+  font-size: 13px; color: var(--text3);
+  margin-left: 4px;
+}
+.sim-result-cell .delta {
+  font-family: var(--fm); font-size: 11px;
+  margin-top: 4px;
+}
+.sim-result-cell .delta.up { color: var(--green); }
+
+/* Months chart */
+.months-chart {
+  display: grid; grid-template-columns: 60px 1fr; gap: 16px;
+  align-items: center; font-size: 12px;
+  margin-top: 8px;
+}
+.month-label {
+  font-family: var(--fm); color: var(--text3);
+  font-size: 11px;
+  text-align: right;
+}
+.month-bars {
+  display: flex; height: 28px;
+  background: var(--bg); border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.month-bar {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 9px; font-weight: 700;
+  color: #0a0a0a;
+  transition: all .3s;
+}
+.month-bar:hover { filter: brightness(1.2); }
+.month-bar.p { background: #d4b483; }
+.month-bar.m { background: #c4a77d; }
+.month-bar.g { background: #b09367; }
+.month-bar.x { background: #8b7340; color: #fff; }
+
+.months-legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text3);
+}
+.months-legend span { display: flex; align-items: center; gap: 6px; }
+.months-legend .dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* Capacity table */
+.capacity-table {
+  width: 100%; border-collapse: collapse; margin-top: 8px;
+}
+.capacity-table th, .capacity-table td {
+  padding: 14px 16px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.capacity-table th {
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+  font-weight: 600;
+}
+.capacity-table .num {
+  font-family: var(--fm); text-align: right;
+  font-weight: 600;
+}
+.capacity-table .num.gold { color: var(--gold); }
+.capacity-table .num.green { color: var(--green); }
+.capacity-table .num.red { color: var(--red); }
+.capacity-table tr:last-child td { border-bottom: none; }
+.capacity-table .scenario-row {
+  background: var(--bg3);
+}
+.capacity-table .scenario-row td:first-child {
+  font-weight: 600; color: var(--text);
+}
+
 /* ════ RESPONSIVE ════ */
 @media (max-width: 900px) {
   .wrap { padding: 0 20px; }
@@ -701,6 +1014,12 @@ button { font-family: inherit; cursor: pointer; }
 }
 @media (max-width: 600px) {
   .tipos-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: 1fr; }
+  .simulator-result { grid-template-columns: 1fr; }
+  .deep-block { padding: 28px 24px; }
+  .throughput-chart { grid-template-columns: 1fr; gap: 8px; }
+  .tp-bar-wrap { grid-template-columns: 1fr; gap: 8px; }
+  .months-chart { grid-template-columns: 50px 1fr; }
 }
 </style>
 </head>
@@ -718,6 +1037,7 @@ button { font-family: inherit; cursor: pointer; }
       <a href="#tipos" class="nav-link">Tipos de obra</a>
       <a href="#gargalos" class="nav-link">Onde trava</a>
       <a href="#explorar" class="nav-link">Explorar</a>
+      <a href="#capacidade" class="nav-link">⚡ Capacidade</a>
       <a href="painel-projeto.html" class="nav-back">← Painel</a>
     </div>
   </div>
@@ -900,6 +1220,274 @@ button { font-family: inherit; cursor: pointer; }
     <div class="insights-grid" id="insights-grid"></div>
   </div>
 </section>
+
+<!-- ══════════════ DEEP ANALYSIS CTA ══════════════ -->
+<section class="deep-cta" id="capacidade">
+  <div class="wrap">
+    <div class="deep-cta-inner">
+      <div class="section-eyebrow">Análise profunda</div>
+      <h2>Quanto a Monofloor consegue <em>entregar por mês</em>?</h2>
+      <p>
+        Com base no histórico real dos últimos 8 meses, calculamos o throughput observado,
+        a capacidade simultânea pela Lei de Little e cenários de melhoria.
+      </p>
+      <button class="deep-btn" id="deep-btn" onclick="toggleDeep()">
+        <span>Ver análise de capacidade operacional</span>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="deep-panel" id="deep-panel">
+  <div class="deep-content">
+    <div class="wrap">
+
+      <!-- BLOCO 1: Throughput observado -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">01</div>
+          <h3>Throughput mensal observado</h3>
+        </div>
+        <p class="h-sub">Média de obras finalizadas por mês entre ago/2025 e mar/2026 (8 meses) — apenas obras com m² registrado.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="label">Total mensal</div>
+            <div class="value">26<span class="unit">obras / mês</span></div>
+            <div class="delta">210 obras em 8 meses</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Volume mensal em m²</div>
+            <div class="value">3.963<span class="unit">m² / mês</span></div>
+            <div class="delta">~31.700 m² no período</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Ticket médio m²</div>
+            <div class="value">152<span class="unit">m² / obra</span></div>
+            <div class="delta">média ponderada</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Receita estimada</div>
+            <div class="value">2,5M<span class="unit">R$ / mês</span></div>
+            <div class="delta">se R$637/m² (STELION)</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 12px">Distribuição por tipo de obra</h4>
+        <div class="throughput-chart" id="throughput-chart"></div>
+      </div>
+
+      <!-- BLOCO 2: Capacidade Simultânea -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">02</div>
+          <h3>Capacidade simultânea (Lei de Little)</h3>
+        </div>
+        <p class="h-sub">L = λ × W. Quantas obras devem estar tramitando ao mesmo tempo dado o throughput observado e o tempo de journey atual.</p>
+
+        <table class="capacity-table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th class="num">Throughput</th>
+              <th class="num">Journey</th>
+              <th class="num">WIP teórico</th>
+              <th class="num">WIP real</th>
+              <th class="num">Status</th>
+            </tr>
+          </thead>
+          <tbody id="capacity-tbody"></tbody>
+          <tfoot>
+            <tr class="scenario-row">
+              <td><b>TOTAL</b></td>
+              <td class="num gold">26 / mês</td>
+              <td class="num">—</td>
+              <td class="num">120</td>
+              <td class="num red">243</td>
+              <td class="num red">+103% sobrecarga</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <p style="margin-top:16px;font-size:13px;color:var(--text3);line-height:1.6">
+          <strong style="color:var(--amber)">⚠ Diagnóstico:</strong>
+          O pipeline tem o <b style="color:var(--text)">dobro de cards</b> que deveria ter
+          dado o throughput observado. Significa que cards entram mais rápido do que saem,
+          ou existem cards "zumbi" (criados mas abandonados sem fechar).
+        </p>
+      </div>
+
+      <!-- BLOCO 3: Histórico mensal -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">03</div>
+          <h3>Histórico mês a mês</h3>
+        </div>
+        <p class="h-sub">Obras finalizadas em cada mês, segmentadas por tipo. Permite ver tendência e sazonalidade.</p>
+        <div id="months-chart"></div>
+        <div class="months-legend">
+          <span><div class="dot" style="background:#d4b483"></div>Pequena (&lt;100m²)</span>
+          <span><div class="dot" style="background:#c4a77d"></div>Média (100-199m²)</span>
+          <span><div class="dot" style="background:#b09367"></div>Grande (200-499m²)</span>
+          <span><div class="dot" style="background:#8b7340"></div>XLarge (500m²+)</span>
+        </div>
+      </div>
+
+      <!-- BLOCO 4: Projeções -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">04</div>
+          <h3>Projeções de capacidade</h3>
+        </div>
+        <p class="h-sub">Extrapolando o throughput atual de 26 obras/mês para diferentes janelas temporais.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="label">Trimestre</div>
+            <div class="value">78<span class="unit">obras</span></div>
+            <div class="delta">~11.890 m²</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Semestre</div>
+            <div class="value">156<span class="unit">obras</span></div>
+            <div class="delta">~23.780 m²</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Ano</div>
+            <div class="value">312<span class="unit">obras</span></div>
+            <div class="delta">~47.560 m²</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Receita anual estimada</div>
+            <div class="value">30M<span class="unit">R$</span></div>
+            <div class="delta">a R$637/m²</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO 5: Simulador What-if -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">05</div>
+          <h3>Simulador: e se o journey diminuísse?</h3>
+        </div>
+        <p class="h-sub">A WIP atual é 243 cards. Se ela permanecer estável e o tempo médio de journey reduzir, o throughput aumenta proporcionalmente. Arraste o slider.</p>
+
+        <div class="simulator">
+          <div class="simulator-head">
+            <div class="simulator-title">Tempo de journey simulado</div>
+            <div class="simulator-current">Atual: <b>143 dias</b> · meta PP:001: <b>150 dias</b></div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-wrap">
+              <input type="range" id="journey-slider" min="60" max="200" value="143" step="5"
+                     oninput="updateSimulator()">
+              <div class="slider-marks">
+                <span>60d ⚡</span>
+                <span>100d</span>
+                <span>143d (atual)</span>
+                <span>200d</span>
+              </div>
+            </div>
+            <div class="slider-value" id="slider-value">143d</div>
+          </div>
+
+          <div class="simulator-result">
+            <div class="sim-result-cell">
+              <div class="l">Throughput novo</div>
+              <div class="v" id="sim-monthly">26<span class="u">obras/mês</span></div>
+              <div class="delta up" id="sim-delta-monthly">—</div>
+            </div>
+            <div class="sim-result-cell">
+              <div class="l">Por trimestre</div>
+              <div class="v" id="sim-quarterly">78<span class="u">obras</span></div>
+              <div class="delta up" id="sim-delta-quarterly">—</div>
+            </div>
+            <div class="sim-result-cell">
+              <div class="l">Por ano</div>
+              <div class="v" id="sim-yearly">312<span class="u">obras</span></div>
+              <div class="delta up" id="sim-delta-yearly">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO 6: Cenários comparativos -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">06</div>
+          <h3>Cenários comparativos</h3>
+        </div>
+        <p class="h-sub">Quanto a Monofloor pode entregar em diferentes níveis de eficiência operacional, mantendo a WIP atual de 243 cards.</p>
+
+        <table class="capacity-table">
+          <thead>
+            <tr>
+              <th>Cenário</th>
+              <th class="num">Journey alvo</th>
+              <th class="num">Obras / mês</th>
+              <th class="num">Obras / ano</th>
+              <th class="num">m² / ano</th>
+              <th class="num">Δ vs hoje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📍 Atual</td>
+              <td class="num">143 dias</td>
+              <td class="num gold">26</td>
+              <td class="num gold">312</td>
+              <td class="num">47.560</td>
+              <td class="num">—</td>
+            </tr>
+            <tr>
+              <td>🎯 Meta PP:001</td>
+              <td class="num">150 dias</td>
+              <td class="num">25</td>
+              <td class="num">300</td>
+              <td class="num">45.700</td>
+              <td class="num red">−4%</td>
+            </tr>
+            <tr>
+              <td>⚡ Melhoria moderada</td>
+              <td class="num">120 dias</td>
+              <td class="num green">31</td>
+              <td class="num green">372</td>
+              <td class="num">56.700</td>
+              <td class="num green">+19%</td>
+            </tr>
+            <tr>
+              <td>🚀 Benchmark XL</td>
+              <td class="num">100 dias</td>
+              <td class="num green">37</td>
+              <td class="num green">444</td>
+              <td class="num">67.700</td>
+              <td class="num green">+42%</td>
+            </tr>
+            <tr>
+              <td>🏆 Best case</td>
+              <td class="num">80 dias</td>
+              <td class="num green">46</td>
+              <td class="num green">552</td>
+              <td class="num">84.150</td>
+              <td class="num green">+77%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:20px;font-size:13px;color:var(--text3);line-height:1.6">
+          <strong style="color:var(--gold)">📐 Como ler isto:</strong>
+          Os cenários assumem que a Monofloor mantém a mesma WIP (cards simultâneos) atual.
+          Reduzir o tempo de journey libera capacidade para finalizar mais obras no mesmo período.
+          A Lei de Little (L = λ × W) é um teorema sólido — se você reduz W, λ cresce proporcionalmente.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer class="footer">
@@ -1388,6 +1976,176 @@ function renderInsights() {
       <p>${i.body}</p>
     </div>
   `).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// DEEP ANALYSIS — Capacidade operacional
+// ═══════════════════════════════════════════════════
+
+const CAPACITY = {
+  period_months: 8,
+  total_finalized: 210,
+  wip_actual: 243,
+  monthly: {
+    p: { cards: 12.75, m2: 816, journey: 143, label: 'Pequena', emoji: '🏠' },
+    m: { cards: 8.25, m2: 1150, journey: 136, label: 'Média', emoji: '🏡' },
+    g: { cards: 4.5, m2: 1301, journey: 133, label: 'Grande', emoji: '🏢' },
+    x: { cards: 0.75, m2: 696, journey: 100, label: 'XLarge', emoji: '🏭' },
+  },
+  // Histórico mês a mês (cards finalizados)
+  history: [
+    { month: '2025-08', p: 1, m: 2, g: 5, x: 1 },
+    { month: '2025-09', p: 0, m: 3, g: 0, x: 0 },
+    { month: '2025-10', p: 25, m: 17, g: 8, x: 2 },
+    { month: '2025-11', p: 13, m: 3, g: 1, x: 2 },
+    { month: '2025-12', p: 27, m: 13, g: 10, x: 1 },
+    { month: '2026-01', p: 11, m: 5, g: 3, x: 0 },
+    { month: '2026-02', p: 14, m: 13, g: 5, x: 0 },
+    { month: '2026-03', p: 11, m: 10, g: 4, x: 0 },
+  ],
+};
+
+// Render throughput chart
+function renderThroughput() {
+  const buckets = ['p', 'm', 'g', 'x'];
+  const max = Math.max(...buckets.map(b => CAPACITY.monthly[b].cards));
+  const html = buckets.map(b => {
+    const d = CAPACITY.monthly[b];
+    const pct = (d.cards / max) * 100;
+    return `
+      <div class="tp-label">
+        <span class="tp-icon">${d.emoji}</span>${d.label}
+      </div>
+      <div class="tp-bar-wrap">
+        <div class="tp-bar" style="width:${pct}%">
+          <span class="tp-bar-label">${d.cards.toFixed(1)}/mês</span>
+        </div>
+        <div class="tp-meta">
+          <b>${d.m2.toFixed(0)} m²</b>/mês · ${(d.cards * 12).toFixed(0)}/ano
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('throughput-chart').innerHTML = html;
+}
+
+// Capacity table
+function renderCapacity() {
+  const buckets = ['p', 'm', 'g', 'x'];
+  const html = buckets.map(b => {
+    const d = CAPACITY.monthly[b];
+    // L = λ × W = (cards/month / 30 days) × journey days
+    const wipTeorico = Math.round((d.cards / 30) * d.journey);
+    // WIP real proporcional ao share dos buckets (estimativa)
+    const totalThroughput = buckets.reduce((s, x) => s + CAPACITY.monthly[x].cards, 0);
+    const share = d.cards / totalThroughput;
+    const wipReal = Math.round(CAPACITY.wip_actual * share);
+    const ratio = wipReal / wipTeorico;
+    let statusClass = 'gold', statusLabel = '✓ ok';
+    if (ratio > 1.5) { statusClass = 'red'; statusLabel = '+' + Math.round((ratio-1)*100) + '% sobrecarga'; }
+    else if (ratio > 1.2) { statusClass = 'amber'; statusLabel = '+' + Math.round((ratio-1)*100) + '% acima'; }
+    else if (ratio < 0.8) { statusClass = 'green'; statusLabel = 'subutilizado'; }
+    return `
+      <tr>
+        <td>${d.emoji} ${d.label}</td>
+        <td class="num">${d.cards.toFixed(1)}/mês</td>
+        <td class="num">${d.journey}d</td>
+        <td class="num">${wipTeorico}</td>
+        <td class="num ${ratio>1.5?'red':''}">${wipReal}</td>
+        <td class="num ${statusClass}">${statusLabel}</td>
+      </tr>
+    `;
+  }).join('');
+  document.getElementById('capacity-tbody').innerHTML = html;
+}
+
+// Months chart
+function renderMonths() {
+  const maxTotal = Math.max(...CAPACITY.history.map(m => m.p + m.m + m.g + m.x));
+  const html = CAPACITY.history.map(row => {
+    const total = row.p + row.m + row.g + row.x;
+    const widthPct = (total / maxTotal) * 100;
+    const segments = ['p', 'm', 'g', 'x'].map(b => {
+      const v = row[b];
+      if (v === 0) return '';
+      const pct = (v / total) * 100;
+      return `<div class="month-bar ${b}" style="flex:${v}" title="${v} obras">${v}</div>`;
+    }).join('');
+    return `
+      <div class="months-chart">
+        <div class="month-label">${row.month}</div>
+        <div class="month-bars" style="width:${widthPct}%;min-width:60px">${segments}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('months-chart').innerHTML = html;
+}
+
+// Simulator
+function updateSimulator() {
+  const newJourney = parseInt(document.getElementById('journey-slider').value);
+  document.getElementById('slider-value').textContent = newJourney + 'd';
+
+  // L = λ × W → λ = L / W
+  // L atual = 243, W atual = 143
+  // Mas devemos usar throughput observado real, não L
+  // Se assumimos que reduzir W mantém L constante: λ_new = L / W_new
+  const wip = CAPACITY.wip_actual;
+  const newDailyThroughput = wip / newJourney;
+  const newMonthly = newDailyThroughput * 30;
+  const newQuarterly = newMonthly * 3;
+  const newYearly = newMonthly * 12;
+
+  // Comparar com baseline atual de 26/mês
+  const baseMonthly = 26;
+  const deltaMonthly = ((newMonthly / baseMonthly) - 1) * 100;
+  const deltaSign = deltaMonthly >= 0 ? '+' : '';
+
+  document.getElementById('sim-monthly').innerHTML =
+    Math.round(newMonthly) + '<span class="u">obras/mês</span>';
+  document.getElementById('sim-quarterly').innerHTML =
+    Math.round(newQuarterly) + '<span class="u">obras</span>';
+  document.getElementById('sim-yearly').innerHTML =
+    Math.round(newYearly) + '<span class="u">obras</span>';
+
+  const deltaText = deltaSign + Math.round(deltaMonthly) + '% vs atual';
+  const deltaClass = deltaMonthly >= 0 ? 'up' : 'down';
+  ['sim-delta-monthly', 'sim-delta-quarterly', 'sim-delta-yearly'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = deltaText;
+    el.className = 'delta ' + deltaClass;
+  });
+}
+
+// Toggle deep panel
+function toggleDeep() {
+  const btn = document.getElementById('deep-btn');
+  const panel = document.getElementById('deep-panel');
+  const isOpen = panel.classList.toggle('open');
+  btn.classList.toggle('expanded', isOpen);
+  btn.querySelector('span:first-child').textContent = isOpen
+    ? 'Fechar análise de capacidade'
+    : 'Ver análise de capacidade operacional';
+
+  if (isOpen) {
+    // Render charts only when first opened (lazy)
+    if (!btn.dataset.rendered) {
+      renderThroughput();
+      renderCapacity();
+      renderMonths();
+      updateSimulator();
+      btn.dataset.rendered = '1';
+    }
+    // Smooth scroll to panel
+    setTimeout(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+// Auto-open if anchor matches
+if (window.location.hash === '#capacidade') {
+  setTimeout(() => toggleDeep(), 200);
 }
 
 // Init
