@@ -1,7 +1,24 @@
 # CLAUDE.md — Contexto Monofloor
 
-## Idioma
-Sempre responda em português brasileiro. Todos os comentários, commits, mensagens e explicações devem ser em PT-BR.
+## Regras de Comportamento
+- Sempre responda em português brasileiro. Commits, comentários e explicações em PT-BR.
+- Nunca peça confirmação para ler arquivos do projeto — leia direto.
+- Quando Vitor pedir algo relacionado a um arquivo, abra e edite sem perguntar.
+- Sempre faça `git add`, `git commit` com mensagem em PT-BR e `git push` automaticamente após editar arquivos.
+- Use emojis nos commits: 📋 docs, 🔧 fix, ✨ feature, 🎨 style, 📊 data, 🔄 update.
+- Ao iniciar, leia este arquivo silenciosamente — não precisa listar o conteúdo, apenas absorva o contexto.
+- Quando não souber algo, consulte os arquivos HTML do repositório antes de perguntar.
+- Branding padrão: fundo escuro (#0a0a0a), accent dourado (#c4a77d), fonte Inter, logo "M" dourado.
+
+## Atalhos de Comando
+Quando Vitor digitar esses comandos curtos, execute automaticamente:
+- `status` → Mostrar gargalos ativos + bloqueadores + próximas prioridades
+- `sla` → Abrir/editar a tabela de SLAs por etapa
+- `push` → Git add, commit e push com mensagem automática
+- `painel` → Abrir e editar painel-projeto.html
+- `fluxo` → Abrir e editar fluxograma-macro.html
+- `pipefy` → Consultar Pipefy via API GraphQL com o token salvo
+- `hub` → Mostrar todos os links publicados do projeto
 
 ## Quem é o Vitor
 **Vitor Gomes** — Gerente de Qualidade da Monofloor. GitHub: `vitormonofloor`. Trabalha com otimização de processos e análise de dados. Está construindo um sistema de gestão operacional completo com assistência do Claude.
