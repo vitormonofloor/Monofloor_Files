@@ -17,6 +17,7 @@
 body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+code { font-family: var(--fm); font-size: .9em; background: #1a1a1a; padding: 1px 5px; border-radius: 3px; color: var(--accent); }
 
 /* HEADER */
 .header {
@@ -50,6 +51,41 @@ a:hover { text-decoration: underline; }
 .kpi .value.red { color: var(--red); }
 .kpi .sub { font-size: 11px; color: var(--text3); margin-top: 6px; }
 
+/* SEGMENT TABS */
+.seg-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+.seg-tab {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; cursor: pointer; transition: all .2s;
+  text-align: left;
+}
+.seg-tab:hover { border-color: var(--accent2); background: #1a1208; }
+.seg-tab.active { border-color: var(--accent); background: #1a1208; box-shadow: 0 0 0 1px var(--accent); }
+.seg-tab .seg-emoji { font-size: 24px; line-height: 1; margin-bottom: 6px; }
+.seg-tab .seg-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.seg-tab .seg-range { font-size: 10px; color: var(--text3); font-family: var(--fm); margin-top: 2px; }
+.seg-tab .seg-stats { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.seg-tab .seg-stat { display: flex; flex-direction: column; align-items: flex-start; }
+.seg-tab .seg-stat .v { font-family: var(--fm); font-size: 14px; font-weight: 700; color: var(--accent); }
+.seg-tab .seg-stat .l { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; }
+
+@media (max-width: 700px) {
+  .seg-tabs { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* SEGMENT DETAIL */
+.seg-detail { display: none; }
+.seg-detail.active { display: block; }
+
+/* COMPARATIVO BUCKETS */
+.compare-grid { display: grid; grid-template-columns: 200px repeat(4, 1fr); gap: 4px; align-items: center; font-size: 11px; }
+.compare-grid .ch { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; padding: 8px; text-align: center; background: var(--card); border-bottom: 1px solid var(--border); }
+.compare-grid .cl { padding: 8px 12px; color: var(--text2); border-bottom: 1px solid #1a1a1a; }
+.compare-grid .cv { padding: 8px; text-align: center; font-family: var(--fm); border-bottom: 1px solid #1a1a1a; }
+.compare-grid .cv.high { background: #ef444415; color: var(--red); font-weight: 700; }
+.compare-grid .cv.med { background: #f59e0b15; color: var(--amber); font-weight: 600; }
+.compare-grid .cv.low { background: #22c55e10; color: var(--green); }
+.compare-grid .row-divider { grid-column: 1 / -1; height: 1px; background: var(--border); margin: 6px 0; }
+
 /* PHASE BAR CHART */
 .phase-list { display: flex; flex-direction: column; gap: 6px; }
 .phase-row { display: grid; grid-template-columns: 280px 1fr 80px 60px; gap: 12px; align-items: center; padding: 8px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; transition: all .15s; }
@@ -63,15 +99,17 @@ a:hover { text-decoration: underline; }
 .phase-avg { font-family: var(--fm); font-size: 13px; font-weight: 600; text-align: right; }
 .phase-n { font-family: var(--fm); font-size: 10px; text-align: right; color: var(--text3); }
 
-/* VARIANCE TABLE */
-.variance-table { width: 100%; border-collapse: collapse; }
-.variance-table th, .variance-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 12px; }
-.variance-table th { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; font-weight: 600; }
-.variance-table td { color: var(--text2); }
-.variance-table tr:hover td { background: var(--card); }
-.variance-table .num { font-family: var(--fm); text-align: right; }
-.variance-table .ratio.high { color: var(--red); font-weight: 700; }
-.variance-table .ratio.med { color: var(--amber); font-weight: 600; }
+/* TOP CARDS */
+.cards-list { display: flex; flex-direction: column; gap: 6px; }
+.card-item {
+  display: grid; grid-template-columns: 60px 80px 1fr; gap: 12px; align-items: center;
+  padding: 10px 14px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; transition: all .15s;
+}
+.card-item:hover { border-color: var(--red); background: #1a0a0a; }
+.card-item .days { font-family: var(--fm); font-size: 16px; font-weight: 700; color: var(--red); text-align: right; }
+.card-item .m2 { font-family: var(--fm); font-size: 11px; color: var(--text3); text-align: right; }
+.card-item .name { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* INSIGHTS CARDS */
 .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
@@ -84,25 +122,13 @@ a:hover { text-decoration: underline; }
 .insight p { font-size: 12px; color: var(--text2); line-height: 1.6; }
 .insight .num { font-family: var(--fm); color: var(--accent); font-weight: 600; }
 
-/* CAMINHO FELIZ */
-.journey-flow { display: flex; flex-direction: column; gap: 4px; max-width: 720px; }
-.journey-step { display: grid; grid-template-columns: 24px 1fr 60px; gap: 10px; align-items: center; padding: 8px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; }
-.journey-step .num { font-family: var(--fm); font-size: 11px; color: var(--text3); }
-.journey-step .name { font-size: 12px; color: var(--text); }
-.journey-step .days { font-family: var(--fm); font-size: 12px; font-weight: 600; color: var(--accent); text-align: right; }
-.journey-total { display: grid; grid-template-columns: 24px 1fr 60px; gap: 10px; align-items: center; padding: 12px 12px; background: linear-gradient(135deg, #1a1208 0%, #0f0a04 100%); border: 1px solid var(--accent); border-radius: 8px; margin-top: 8px; }
-.journey-total .name { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: .5px; }
-.journey-total .days { font-family: var(--fm); font-size: 16px; font-weight: 700; color: var(--accent); text-align: right; }
-.journey-meta { font-size: 11px; color: var(--text3); margin-top: 8px; padding: 8px 12px; }
-
 /* FOOTER */
 .footer { padding: 20px 28px 30px; font-size: 11px; color: var(--text3); line-height: 1.6; }
 
 @media (max-width: 700px) {
   .phase-row { grid-template-columns: 1fr 60px 50px; }
   .phase-name { grid-column: 1 / -1; }
-  .header-top { flex-direction: column; align-items: flex-start; }
-  .back-link { margin-left: 0; margin-top: 8px; }
+  .compare-grid { grid-template-columns: 120px repeat(4, 1fr); font-size: 10px; }
 }
 </style>
 </head>
@@ -114,205 +140,292 @@ a:hover { text-decoration: underline; }
     <div class="logo">M</div>
     <div>
       <h1>MONOFLOOR · Análise Granular Pipefy</h1>
-      <div class="sub">Tempo médio por fase — pipe OE</div>
+      <div class="sub">Tempo por fase segmentado por metragem</div>
     </div>
     <a href="painel-projeto.html" class="back-link">← Voltar ao Painel</a>
   </div>
   <div class="meta">
-    Snapshot: <b id="snap-date">10/Abril/2026</b> · Pipe OE (306410007) ·
-    <b id="total-cards">611</b> cards (<b id="finalizados">368</b> finalizados, <b id="ativos">243</b> ativos) ·
-    <b id="phase-count">38</b> fases distintas
+    Snapshot: <b>10/Abril/2026</b> · Pipe OE (306410007) ·
+    <b>431</b> cards com m² conhecida ·
+    <b>~7.080</b> visitas a fases analisadas ·
+    <b>4 segmentos</b> de metragem
   </div>
 </div>
 
-<!-- KPIs PRINCIPAIS -->
+<!-- KPIS GERAIS -->
 <div class="section">
-  <h2><span class="icon">📊</span> Journey total — cards finalizados</h2>
-  <div class="section-intro">
-    Análise dos 304 cards com data válida. Tempo total da criação até a finalização administrativa.
-  </div>
+  <h2><span class="icon">📊</span> Visão geral — todos os segmentos</h2>
   <div class="kpi-grid">
-    <div class="kpi"><div class="label">Cards válidos</div><div class="value gold">304</div><div class="sub">de 368 finalizados</div></div>
-    <div class="kpi"><div class="label">Média</div><div class="value amber">90.7</div><div class="sub">dias</div></div>
-    <div class="kpi"><div class="label">Mediana</div><div class="value">85</div><div class="sub">dias</div></div>
-    <div class="kpi"><div class="label">P90</div><div class="value">195</div><div class="sub">dias (90% completam)</div></div>
-    <div class="kpi"><div class="label">Mínimo</div><div class="value green">0</div><div class="sub">dias</div></div>
-    <div class="kpi"><div class="label">Máximo</div><div class="value red">304</div><div class="sub">dias</div></div>
+    <div class="kpi"><div class="label">Cards analisados</div><div class="value gold">431</div><div class="sub">com m² + phases_history</div></div>
+    <div class="kpi"><div class="label">Pequenas <100</div><div class="value">184</div><div class="sub">avg 62 m² · 143d journey</div></div>
+    <div class="kpi"><div class="label">Médias 100-200</div><div class="value">142</div><div class="sub">avg 142 m² · 136d journey</div></div>
+    <div class="kpi"><div class="label">Grandes 200-500</div><div class="value">82</div><div class="sub">avg 298 m² · 133d journey</div></div>
+    <div class="kpi"><div class="label">XLarge 500+</div><div class="value green">23</div><div class="sub">avg 798 m² · 100d journey</div></div>
   </div>
 </div>
 
-<!-- PHASE BAR CHART -->
+<!-- COMPARATIVO ENTRE BUCKETS -->
 <div class="section">
-  <h2><span class="icon">⏱️</span> Tempo médio real por fase</h2>
+  <h2><span class="icon">⚖️</span> Comparativo: as mesmas fases por segmento</h2>
   <div class="section-intro">
-    Calculado a partir do <code>phases_history</code> de cada card (firstTimeIn → lastTimeOut por visita).
-    Barras claras representam o máximo já registrado naquela fase.
+    Mesmas fases, segmentadas por tamanho da obra. Permite ver onde cada bloco trava.
+    Vermelho = fase consome muito tempo nesse segmento, verde = saudável.
   </div>
-  <div class="phase-list" id="phase-list"></div>
+  <div class="compare-grid">
+    <div class="ch">Fase</div>
+    <div class="ch">🏠 Pequena</div>
+    <div class="ch">🏡 Média</div>
+    <div class="ch">🏢 Grande</div>
+    <div class="ch">🏭 XLarge</div>
+    <div id="compare-rows" style="display:contents"></div>
+  </div>
 </div>
 
-<!-- VARIÂNCIA -->
+<!-- SEGMENTOS DETALHADOS -->
 <div class="section">
-  <h2><span class="icon">📈</span> Outliers extremos — fases com maior gap avg vs max</h2>
+  <h2><span class="icon">🎯</span> Análise detalhada por segmento</h2>
   <div class="section-intro">
-    Identifica fases onde o tempo médio é razoável mas casos extremos travam o pipeline.
-    Razão alta indica que existem cards específicos presos por muito mais tempo que a média.
+    Clique em um segmento para ver fases detalhadas e top obras mais lentas.
   </div>
-  <table class="variance-table">
-    <thead>
-      <tr>
-        <th>Fase</th>
-        <th class="num">Visitas</th>
-        <th class="num">Avg (d)</th>
-        <th class="num">Max (d)</th>
-        <th class="num">Razão</th>
-      </tr>
-    </thead>
-    <tbody id="variance-tbody"></tbody>
-  </table>
-</div>
-
-<!-- CAMINHO FELIZ -->
-<div class="section">
-  <h2><span class="icon">🛤️</span> Caminho feliz teórico — soma das principais fases</h2>
-  <div class="section-intro">
-    Se um card passar exatamente <b>uma vez</b> por cada fase principal do fluxo, somando o tempo médio,
-    quanto demoraria? Compare com a meta PP:001 (≤150 dias).
-  </div>
-  <div class="journey-flow" id="journey-flow"></div>
-  <div class="journey-meta">
-    Meta PP:001 do CLAUDE.md: <b>≤150 dias</b> · Realidade do snapshot: <b>~215 dias</b> ·
-    <span style="color:var(--red)">Excesso de 65 dias mesmo no caminho feliz</span>
-  </div>
+  <div class="seg-tabs" id="seg-tabs"></div>
+  <div id="seg-details"></div>
 </div>
 
 <!-- ACHADOS -->
 <div class="section">
-  <h2><span class="icon">💡</span> Achados-chave</h2>
+  <h2><span class="icon">💡</span> Achados-chave da segmentação</h2>
   <div class="insight-grid" id="insight-grid"></div>
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
-  Fonte: <code>cargo-assistente/cerebro_monofloor/snapshots/pipefy_cards_2026-04-10.json</code><br>
-  Coletado por <code>agente_historico.py</code> via Pipefy GraphQL · Próxima coleta automática: segunda 05:00 BRT<br>
+  Fonte: cruzamento de <code>pipefy_cards.json</code> (m²) + <code>cargo-assistente/cerebro_monofloor/snapshots/pipefy_cards_2026-04-10.json</code> (phases_history)<br>
+  Próxima coleta automática: segunda-feira 05:00 BRT via GitHub Actions<br>
   <a href="https://github.com/vitormonofloor/cargo-assistente" target="_blank">Repositório cargo-assistente</a> ·
   <a href="painel-projeto.html">Painel do Projeto</a>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════
-// DADOS — extraídos de pipefy_cards_2026-04-10.json
+// DADOS — gerados a partir do snapshot 2026-04-10
 // ═══════════════════════════════════════════════════
 
-const PHASES = [
-  { name: 'OBRA EM EXECUÇÃO', n: 201, avg: 33.3, max: 163.1 },
-  { name: 'CLIENTE FINALIZADO', n: 18, avg: 31.8, max: 160.3 },
-  { name: 'OBRA PAUSADA', n: 35, avg: 27.6, max: 107.1 },
-  { name: 'AGUARDANDO LIBERAÇÃO', n: 233, avg: 16.7, max: 165.0 },
-  { name: 'DATA À DEFINIR', n: 49, avg: 15.8, max: 196.1 },
-  { name: 'LOGÍSTICA - MATERIAL ENTREGUE', n: 198, avg: 14.4, max: 210.0 },
-  { name: 'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO', n: 335, avg: 14.0, max: 181.9 },
-  { name: 'LOGÍSTICA - EM COLETA', n: 133, avg: 13.8, max: 217.9 },
-  { name: '1º CONTATO OP.', n: 384, avg: 12.3, max: 133.0 },
-  { name: 'LOGÍSTICA - EM ENTREGA', n: 223, avg: 11.4, max: 188.2 },
-  { name: 'INDÚSTRIA - EM PRODUÇÃO', n: 265, avg: 9.7, max: 127.9 },
-  { name: 'LOGÍSTICA - COLETAR', n: 180, avg: 9.5, max: 118.2 },
-  { name: 'CONFIRMAÇÕES OP 1', n: 317, avg: 8.5, max: 135.1 },
-  { name: 'RESULTADO VT - ACOMPANHAMENTO', n: 45, avg: 8.4, max: 112.1 },
-  { name: 'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO', n: 331, avg: 8.3, max: 128.0 },
-  { name: 'OBRA CONCLUÍDA', n: 184, avg: 8.3, max: 118.2 },
-  { name: 'ENTRADA', n: 598, avg: 7.9, max: 259.1 },
-  { name: 'AGEND. VT - ENTRADA', n: 255, avg: 7.5, max: 159.3 },
-  { name: 'REVISÃO FINAL OP', n: 304, avg: 7.3, max: 167.0 },
-  { name: 'EQUIPE DE EXECUÇÃO', n: 246, avg: 7.3, max: 131.0 },
-  { name: 'EM CONTRATO', n: 256, avg: 7.0, max: 106.1 },
-  { name: 'PROJETOS - 1ª REVISÃO', n: 335, avg: 6.1, max: 196.0 },
-  { name: 'RESULTADO VT - ENTRADA', n: 159, avg: 6.0, max: 128.1 },
-  { name: 'AGEND. VT - ACOMPANHAMENTO', n: 307, avg: 4.9, max: 191.0 },
-  { name: 'CONFIRMAÇÕES OP 2', n: 306, avg: 4.2, max: 135.1 },
-  { name: 'RESULTADO VT - QUALIDADE', n: 11, avg: 4.0, max: 17.0 },
-  { name: 'INFORMAÇÕES LOGÍSTICAS', n: 245, avg: 3.9, max: 132.0 },
-  { name: 'PÓS VENDAS ACIONADO', n: 18, avg: 3.5, max: 27.0 },
-  { name: 'INFORMAÇÕES PROJETOS', n: 9, avg: 3.2, max: 15.1 },
-  { name: 'FINANCEIRO - EM REVISÃO', n: 250, avg: 1.8, max: 128.1 },
-  { name: 'AGEND. VT - QUALIDADE', n: 13, avg: 1.4, max: 14.8 },
-  { name: 'REVISÃO FINAL PÓS - OP', n: 4, avg: 1.3, max: 5.0 },
-  { name: 'VT - AGENDADA', n: 13, avg: 1.1, max: 10.9 },
-  { name: 'ALINHANDO RETORNO', n: 4, avg: 0.7, max: 2.8 },
-  { name: 'INFORMAÇÕES FINANCEIRAS', n: 6, avg: 0.4, max: 2.1 },
-];
-
-// Caminho feliz — fluxo padrão de uma obra (1 visita por fase)
-const JOURNEY = [
-  { name: '1º CONTATO OP.', dias: 12.3 },
-  { name: 'CONFIRMAÇÕES OP 1', dias: 8.5 },
-  { name: 'EM CONTRATO', dias: 7.0 },
-  { name: 'PROJETOS - 1ª REVISÃO', dias: 6.1 },
-  { name: 'AGEND. VT - AFERIÇÃO', dias: 14.0 },
-  { name: 'RESULTADO VT - AFERIÇÃO', dias: 8.3 },
-  { name: 'AGUARDANDO LIBERAÇÃO', dias: 16.7 },
-  { name: 'AGEND. VT - ENTRADA', dias: 7.5 },
-  { name: 'RESULTADO VT - ENTRADA', dias: 6.0 },
-  { name: 'INDÚSTRIA - EM PRODUÇÃO', dias: 9.7 },
-  { name: 'LOGÍSTICA - EM ENTREGA', dias: 11.4 },
-  { name: 'LOGÍSTICA - MATERIAL ENTREGUE', dias: 14.4 },
-  { name: 'EQUIPE DE EXECUÇÃO', dias: 7.3 },
-  { name: 'OBRA EM EXECUÇÃO', dias: 33.3 },
-  { name: 'LOGÍSTICA - COLETAR', dias: 9.5 },
-  { name: 'LOGÍSTICA - EM COLETA', dias: 13.8 },
-  { name: 'REVISÃO FINAL OP', dias: 7.3 },
-  { name: 'CLIENTE FINALIZADO', dias: 31.8 },
-];
+const BUCKETS = {
+  p: {
+    label: 'Pequena', emoji: '🏠', range: '0-99 m²',
+    cards: 184, avg_m2: 62,
+    journey_avg: 143, journey_median: 106, journey_max: 1666,
+    phases: [
+      {name:'OBRA EM EXECUÇÃO',n:91,avg:27.1,max:155.9},
+      {name:'OBRA PAUSADA',n:10,avg:25.0,max:61.9},
+      {name:'DATA À DEFINIR',n:27,avg:24.2,max:196.1},
+      {name:'AGUARDANDO LIBERAÇÃO',n:106,avg:18.7,max:165.0},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:93,avg:18.4,max:210.0},
+      {name:'CLIENTE FINALIZADO',n:7,avg:13.9,max:39.3},
+      {name:'RESULTADO VT - ACOMPANHAMENTO',n:14,avg:12.5,max:112.1},
+      {name:'LOGÍSTICA - EM COLETA',n:60,avg:12.3,max:117.9},
+      {name:'LOGÍSTICA - EM ENTREGA',n:103,avg:11.8,max:127.7},
+      {name:'1º CONTATO OP.',n:152,avg:11.2,max:112.9},
+      {name:'OBRA CONCLUÍDA',n:81,avg:10.0,max:118.2},
+      {name:'REVISÃO FINAL OP',n:136,avg:9.8,max:167.0},
+      {name:'CONFIRMAÇÕES OP 1',n:142,avg:9.6,max:135.1},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:119,avg:9.4,max:127.9},
+      {name:'AGEND. VT - ENTRADA',n:116,avg:9.1,max:159.3},
+      {name:'LOGÍSTICA - COLETAR',n:79,avg:9.0,max:118.2},
+      {name:'RESULTADO VT - ENTRADA',n:73,avg:8.8,max:128.1},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:138,avg:8.3,max:128.0},
+      {name:'EQUIPE DE EXECUÇÃO',n:111,avg:7.6,max:131.0},
+      {name:'EM CONTRATO',n:98,avg:7.5,max:106.1},
+      {name:'PÓS VENDAS ACIONADO',n:8,avg:7.4,max:27.0},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:141,avg:7.3,max:97.7},
+      {name:'PROJETOS - 1ª REVISÃO',n:147,avg:7.1,max:196.0},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:133,avg:6.4,max:191.0},
+      {name:'ENTRADA',n:183,avg:6.1,max:133.0},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:111,avg:5.3,max:132.0},
+      {name:'CONFIRMAÇÕES OP 2',n:133,avg:4.6,max:135.1},
+      {name:'FINANCEIRO - EM REVISÃO',n:113,avg:2.5,max:128.1},
+    ],
+    top_cards: [
+      {days:1666,m2:10.45,name:'LOVELY RITA DIAS MENEZES'},
+      {days:1029,m2:98.88,name:'ALEXANDRE BASTOS DA SILVA'},
+      {days:773,m2:99.09,name:'LUIS FERNANDO DE LIMA CARVALHO'},
+      {days:639,m2:84.23,name:'ANA CAROLINA PLACCO FERREIRA - AREA EXTERNA'},
+      {days:615,m2:60.36,name:'MARCIA ANDREA SCHMIDT DA SILVA'},
+    ],
+  },
+  m: {
+    label: 'Média', emoji: '🏡', range: '100-199 m²',
+    cards: 142, avg_m2: 142,
+    journey_avg: 136, journey_median: 121, journey_max: 455,
+    phases: [
+      {name:'OBRA EM EXECUÇÃO',n:64,avg:33.0,max:130.3},
+      {name:'OBRA PAUSADA',n:11,avg:25.9,max:81.1},
+      {name:'CLIENTE FINALIZADO',n:3,avg:52.9,max:91.8},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:109,avg:20.4,max:181.9},
+      {name:'LOGÍSTICA - EM COLETA',n:51,avg:17.6,max:217.9},
+      {name:'AGUARDANDO LIBERAÇÃO',n:74,avg:15.1,max:124.8},
+      {name:'1º CONTATO OP.',n:128,avg:15.2,max:133.0},
+      {name:'LOGÍSTICA - EM ENTREGA',n:71,avg:11.3,max:188.2},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:65,avg:10.7,max:64.3},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:85,avg:10.0,max:103.8},
+      {name:'LOGÍSTICA - COLETAR',n:62,avg:9.5,max:72.8},
+      {name:'CONFIRMAÇÕES OP 1',n:100,avg:8.9,max:97.8},
+      {name:'ENTRADA',n:141,avg:8.7,max:156.3},
+      {name:'EQUIPE DE EXECUÇÃO',n:82,avg:7.7,max:95.2},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:111,avg:7.6,max:91.9},
+      {name:'RESULTADO VT - ACOMPANHAMENTO',n:22,avg:6.6,max:40.0},
+      {name:'OBRA CONCLUÍDA',n:62,avg:6.3,max:67.1},
+      {name:'AGEND. VT - ENTRADA',n:82,avg:6.3,max:63.5},
+      {name:'EM CONTRATO',n:90,avg:6.1,max:80.1},
+      {name:'REVISÃO FINAL OP',n:96,avg:6.0,max:124.8},
+      {name:'DATA À DEFINIR',n:14,avg:5.8,max:26.1},
+      {name:'RESULTADO VT - QUALIDADE',n:6,avg:5.2,max:17.0},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:100,avg:4.2,max:69.9},
+      {name:'PROJETOS - 1ª REVISÃO',n:107,avg:3.6,max:44.2},
+      {name:'RESULTADO VT - ENTRADA',n:58,avg:3.6,max:33.8},
+      {name:'INFORMAÇÕES PROJETOS',n:4,avg:3.5,max:7.0},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:81,avg:3.4,max:84.1},
+      {name:'CONFIRMAÇÕES OP 2',n:99,avg:3.2,max:84.2},
+      {name:'AGEND. VT - QUALIDADE',n:6,avg:3.0,max:14.8},
+      {name:'FINANCEIRO - EM REVISÃO',n:82,avg:1.5,max:17.9},
+    ],
+    top_cards: [
+      {days:455,m2:172.73,name:'SUELI HIGA'},
+      {days:436,m2:112.14,name:'MARIANA SARNO DRUMMOND'},
+      {days:389,m2:148.28,name:'CLÁUDIA RESENDE SOARES DE OLIVEIRA'},
+      {days:362,m2:141.01,name:'ALEXANDRE OSMAN - BILAL ABOU OSMAN'},
+      {days:327,m2:123.61,name:'FLÁVIA AUGUSTA DE ASSIS ROCHA'},
+    ],
+  },
+  g: {
+    label: 'Grande', emoji: '🏢', range: '200-499 m²',
+    cards: 82, avg_m2: 298,
+    journey_avg: 133, journey_median: 117, journey_max: 539,
+    phases: [
+      {name:'CLIENTE FINALIZADO',n:4,avg:57.5,max:160.3},
+      {name:'OBRA EM EXECUÇÃO',n:37,avg:47.1,max:163.1},
+      {name:'OBRA PAUSADA',n:12,avg:31.3,max:107.1},
+      {name:'AGUARDANDO LIBERAÇÃO',n:38,avg:17.7,max:164.0},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:58,avg:13.6,max:135.7},
+      {name:'LOGÍSTICA - COLETAR',n:30,avg:12.7,max:80.0},
+      {name:'ENTRADA',n:80,avg:12.4,max:259.1},
+      {name:'1º CONTATO OP.',n:69,avg:12.0,max:89.2},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:31,avg:11.9,max:105.9},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:56,avg:11.2,max:109.2},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:45,avg:9.8,max:72.8},
+      {name:'LOGÍSTICA - EM ENTREGA',n:41,avg:9.4,max:48.9},
+      {name:'OBRA CONCLUÍDA',n:33,avg:8.9,max:105.9},
+      {name:'EM CONTRATO',n:42,avg:8.6,max:71.2},
+      {name:'PROJETOS - 1ª REVISÃO',n:55,avg:8.5,max:150.5},
+      {name:'LOGÍSTICA - EM COLETA',n:17,avg:7.4,max:36.8},
+      {name:'AGEND. VT - ENTRADA',n:44,avg:7.2,max:40.9},
+      {name:'RESULTADO VT - ACOMPANHAMENTO',n:7,avg:7.2,max:27.9},
+      {name:'CONFIRMAÇÕES OP 2',n:52,avg:5.9,max:90.0},
+      {name:'REVISÃO FINAL OP',n:51,avg:5.8,max:82.0},
+      {name:'DATA À DEFINIR',n:5,avg:5.7,max:26.9},
+      {name:'CONFIRMAÇÕES OP 1',n:52,avg:5.5,max:35.1},
+      {name:'RESULTADO VT - ENTRADA',n:23,avg:4.5,max:82.0},
+      {name:'EQUIPE DE EXECUÇÃO',n:42,avg:4.4,max:41.0},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:52,avg:3.1,max:40.0},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:42,avg:2.0,max:41.1},
+      {name:'FINANCEIRO - EM REVISÃO',n:43,avg:0.9,max:11.4},
+    ],
+    top_cards: [
+      {days:539,m2:465.87,name:'SPE TLMC 29 LTDA (EUROFARMA)'},
+      {days:460,m2:379.26,name:'MARCELO ANDRE STEUER'},
+      {days:384,m2:337.74,name:'YAHYA EL HASSAN'},
+      {days:346,m2:472.26,name:'VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL'},
+      {days:318,m2:282.73,name:'FLÁVIO FAVA DITT'},
+    ],
+  },
+  x: {
+    label: 'XLarge', emoji: '🏭', range: '500+ m²',
+    cards: 23, avg_m2: 798,
+    journey_avg: 100, journey_median: 65, journey_max: 281,
+    phases: [
+      {name:'OBRA EM EXECUÇÃO',n:6,avg:58.7,max:106.8},
+      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:13,avg:38.1,max:159.9},
+      {name:'CLIENTE FINALIZADO',n:3,avg:29.0,max:69.9},
+      {name:'LOGÍSTICA - EM COLETA',n:3,avg:15.7,max:39.4},
+      {name:'LOGÍSTICA - EM ENTREGA',n:6,avg:13.3,max:24.8},
+      {name:'INDÚSTRIA - EM PRODUÇÃO',n:7,avg:12.6,max:31.1},
+      {name:'EQUIPE DE EXECUÇÃO',n:7,avg:11.8,max:75.3},
+      {name:'ENTRADA',n:23,avg:10.8,max:69.9},
+      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:6,avg:9.5,max:52.7},
+      {name:'CONFIRMAÇÕES OP 1',n:10,avg:9.0,max:27.0},
+      {name:'AGUARDANDO LIBERAÇÃO',n:6,avg:8.5,max:27.1},
+      {name:'1º CONTATO OP.',n:17,avg:8.1,max:28.9},
+      {name:'OBRA CONCLUÍDA',n:5,avg:7.0,max:33.1},
+      {name:'AGEND. VT - ACOMPANHAMENTO',n:10,avg:6.6,max:34.0},
+      {name:'LOGÍSTICA - COLETAR',n:6,avg:5.5,max:33.1},
+      {name:'CONFIRMAÇÕES OP 2',n:10,avg:4.9,max:48.9},
+      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:12,avg:4.8,max:29.2},
+      {name:'PROJETOS - 1ª REVISÃO',n:11,avg:3.8,max:11.8},
+      {name:'EM CONTRATO',n:14,avg:3.5,max:13.1},
+      {name:'AGEND. VT - ENTRADA',n:7,avg:3.1,max:16.1},
+      {name:'REVISÃO FINAL OP',n:9,avg:2.8,max:15.9},
+      {name:'FINANCEIRO - EM REVISÃO',n:7,avg:2.4,max:12.1},
+      {name:'RESULTADO VT - ENTRADA',n:4,avg:2.1,max:8.3},
+      {name:'INFORMAÇÕES LOGÍSTICAS',n:7,avg:1.3,max:5.3},
+    ],
+    top_cards: [
+      {days:281,m2:1202.90,name:'DEPECHE MOVEIS LTDA EPP'},
+      {days:279,m2:525.22,name:'CAROLINA RACHE GUIMARAES'},
+      {days:243,m2:549.91,name:'GUILHERME HAIDAR BERJEAUT'},
+      {days:217,m2:673.73,name:'NATHALIA ROBERTA MACARIO'},
+      {days:207,m2:843.96,name:'RAFAEL GUIMARÃES LIMA'},
+    ],
+  },
+};
 
 const INSIGHTS = [
   {
     type: 'critical',
     icon: '🚨',
-    title: 'OBRA EM EXECUÇÃO domina o tempo médio (33d)',
-    body: 'Maior consumo individual. Esperado por ser a fase produtiva, mas o <span class="num">max de 163 dias</span> indica obras pausadas crônicas. Cruzar com obras_pausadas (G4).'
+    title: 'Obras pequenas têm a maior cauda',
+    body: 'Pequenas <100m²: <span class="num">184 cards</span>, journey médio <span class="num">143d</span>, mas <b>max 1666 dias</b> (LOVELY RITA, 10m²). XLarge tem journey médio <span class="num">100d</span> e max só 281d. Existe um efeito de "obra pequena = baixa prioridade = abandono".'
+  },
+  {
+    type: 'warn',
+    icon: '🏗️',
+    title: 'Obra em Execução: 27d (peq) vs 47d (grande) vs 59d (XL)',
+    body: 'Como esperado, obras maiores levam mais tempo na execução. Mas a diferença é <b>2x</b> entre pequena e XL — esperado seria mais. Indica que pequenas devem fluir mais rápido na execução, confirmando o efeito.'
   },
   {
     type: 'critical',
-    icon: '🐌',
-    title: 'CLIENTE FINALIZADO levando 31.8d em média',
-    body: 'O card fica mais de um mês <b>parado em "Cliente Finalizado"</b> antes de ser arquivado. Gargalo administrativo puro — pós-venda/financeiro segurando.'
+    icon: '📅',
+    title: 'AGEND. VT AFERIÇÃO trava em obras médias e XL',
+    body: 'Pequenas: <span class="num">7d avg</span>. Médias: <span class="num">20d avg</span> (3x!). XL: <span class="num">38d avg</span> (5x!). Quanto maior a obra, mais difícil agendar VT — precisa de equipe especializada que está superalocada.'
   },
   {
     type: 'warn',
-    icon: '📊',
-    title: 'Variância gigante em fases supostamente rápidas',
-    body: 'ENTRADA: avg 7.9d / <b>max 259d (33x)</b>. AGEND VT ACOMPANHAMENTO: avg 4.9d / max 191d (39x). Existem casos catastróficos pontuais que precisam ser isolados como ações.'
-  },
-  {
-    type: 'warn',
-    icon: '🎯',
-    title: 'Caminho feliz já estoura a meta em 65 dias',
-    body: 'Soma das fases principais = <span class="num">~215 dias</span>. Meta PP:001 = <span class="num">≤150 dias</span>. A meta é fisicamente impossível com a estrutura atual.'
-  },
-  {
-    type: 'info',
-    icon: '🆕',
-    title: '10 fases novas descobertas no snapshot',
-    body: 'Pipe OE tem 38 fases distintas (mais que as 27 mapeadas no painel). Novas: ALINHANDO RETORNO, DATA À DEFINIR, VT-AGENDADA, AGEND/RESULTADO VT ACOMPANHAMENTO, CONFIRMAÇÕES OP 2, INFORMAÇÕES LOGÍSTICAS PÓS, REVISÃO FINAL PÓS-OP, FINANCEIRO EM REVISÃO, SEM DATA.'
+    icon: '⏳',
+    title: 'CLIENTE FINALIZADO consome 53-58d em médias e grandes',
+    body: 'Pequenas: 14d. Médias: <b>53d</b>. Grandes: <b>58d</b>. XL: 29d. Obras médias e grandes ficam quase 2 meses parados em "Cliente Finalizado" antes de ser arquivados — gargalo administrativo financeiro/pós-venda.'
   },
   {
     type: 'good',
     icon: '✅',
-    title: 'Fases administrativas estão saudáveis',
-    body: 'FINANCEIRO - EM REVISÃO (1.8d), INFORMAÇÕES FINANCEIRAS (0.4d) e ALINHANDO RETORNO (0.7d) rodam rápido. O problema NÃO é processo administrativo backoffice.'
-  },
-  {
-    type: 'info',
-    icon: '🔁',
-    title: '1º CONTATO OP é a fase mais visitada (384 vezes)',
-    body: 'Indica que muitos cards <b>retornam</b> à fase inicial — sinal de retrabalho. Em um fluxo linear cada card visitaria 1x. Possível causa: dados incompletos do cliente.'
+    title: 'XLarge é o segmento mais saudável',
+    body: 'Apesar de serem mais complexas, obras XL (>500m²) têm <span class="num">journey de 100d</span> (vs 143d das pequenas). Recebem mais atenção/prioridade institucional. Mediana de 65 dias é excelente.'
   },
   {
     type: 'critical',
-    icon: '⚠️',
-    title: 'Logística domina o gargalo de outliers',
-    body: 'LOGÍSTICA - EM COLETA (max 218d), MATERIAL ENTREGUE (210d), EM ENTREGA (188d). Esses 3 estados de logística juntos têm os piores casos do pipe.'
+    icon: '🐌',
+    title: 'Top 3 cards mais lentos do dataset',
+    body: '1. <b>LOVELY RITA DIAS MENEZES</b> (10m², 1666 dias). 2. <b>ALEXANDRE BASTOS DA SILVA</b> (98m², 1029 dias). 3. <b>LUIS FERNANDO DE LIMA CARVALHO</b> (99m², 773 dias). Todos pequenos — sugere triagem manual urgente.'
+  },
+  {
+    type: 'info',
+    icon: '🔄',
+    title: '1º CONTATO OP é mais lento em obras médias',
+    body: 'Pequenas: 11d. <b>Médias: 15d</b>. Grandes: 12d. XL: 8d. Obras médias têm mais ida-e-volta no contato inicial — possivelmente porque o cliente é menos definido (não tem decoradora/arquiteto, mas a obra é grande o suficiente pra ter complexidade).'
+  },
+  {
+    type: 'warn',
+    icon: '📦',
+    title: 'Logística Material Entregue: pequenas 18d vs grandes 12d',
+    body: 'Contraintuitivo: <b>obras pequenas demoram mais</b> entre material entregue e início. Causa provável: agrupamento de fretes/coletas para reduzir custo, postergando obras pequenas individuais.'
   },
 ];
 
@@ -327,67 +440,125 @@ function markerFor(avg) {
   return '✅';
 }
 
-function renderPhaseList() {
-  const sorted = [...PHASES].sort((a, b) => b.avg - a.avg);
-  const maxOverall = Math.max(...PHASES.map(p => p.max));
+function colorFor(avg) {
+  if (avg >= 25) return 'var(--red)';
+  if (avg >= 12) return 'var(--amber)';
+  if (avg >= 5) return 'var(--accent)';
+  return 'var(--green)';
+}
 
-  document.getElementById('phase-list').innerHTML = sorted.map(p => {
-    const avgPct = (p.avg / maxOverall) * 100;
-    const maxPct = (p.max / maxOverall) * 100;
-    const color = p.avg >= 25 ? 'var(--red)' :
-                  p.avg >= 12 ? 'var(--amber)' :
-                  p.avg >= 5 ? 'var(--accent)' : 'var(--green)';
+// Tabs de segmento
+function renderSegTabs() {
+  const tabs = ['p', 'm', 'g', 'x'].map(b => {
+    const d = BUCKETS[b];
     return `
-      <div class="phase-row">
-        <div class="phase-name"><span class="marker">${markerFor(p.avg)}</span>${p.name}</div>
-        <div class="phase-bar-wrap">
-          <div class="phase-bar-max" style="width:${maxPct}%;background:${color}"></div>
-          <div class="phase-bar-avg" style="width:${avgPct}%;background:${color}"></div>
-          <div class="phase-bar-label">${p.avg.toFixed(1)}d avg · max ${p.max.toFixed(0)}d</div>
+      <div class="seg-tab ${b==='p'?'active':''}" data-bucket="${b}" onclick="showBucket('${b}')">
+        <div class="seg-emoji">${d.emoji}</div>
+        <div class="seg-title">${d.label}</div>
+        <div class="seg-range">${d.range}</div>
+        <div class="seg-stats">
+          <div class="seg-stat"><div class="v">${d.cards}</div><div class="l">cards</div></div>
+          <div class="seg-stat"><div class="v">${d.journey_avg}d</div><div class="l">avg</div></div>
+          <div class="seg-stat"><div class="v">${d.journey_median}d</div><div class="l">median</div></div>
         </div>
-        <div class="phase-avg">${p.avg.toFixed(1)}d</div>
-        <div class="phase-n">n=${p.n}</div>
       </div>
     `;
   }).join('');
+  document.getElementById('seg-tabs').innerHTML = tabs;
 }
 
-function renderVariance() {
-  const items = PHASES
-    .filter(p => p.avg > 0 && p.n >= 5)
-    .map(p => ({ ...p, ratio: p.max / p.avg }))
-    .sort((a, b) => b.ratio - a.ratio)
-    .slice(0, 12);
+function showBucket(b) {
+  document.querySelectorAll('.seg-tab').forEach(t => t.classList.toggle('active', t.dataset.bucket === b));
+  document.querySelectorAll('.seg-detail').forEach(d => d.classList.toggle('active', d.dataset.bucket === b));
+}
 
-  document.getElementById('variance-tbody').innerHTML = items.map(p => {
-    const cls = p.ratio >= 25 ? 'high' : p.ratio >= 12 ? 'med' : '';
+// Detalhes por segmento
+function renderSegDetails() {
+  const html = ['p', 'm', 'g', 'x'].map(b => {
+    const d = BUCKETS[b];
+    const phases = [...d.phases].sort((a, b) => b.avg - a.avg);
+    const maxOverall = Math.max(...phases.map(p => p.max));
+
+    const phaseRows = phases.map(p => {
+      const avgPct = (p.avg / maxOverall) * 100;
+      const maxPct = (p.max / maxOverall) * 100;
+      const c = colorFor(p.avg);
+      return `
+        <div class="phase-row">
+          <div class="phase-name"><span class="marker">${markerFor(p.avg)}</span>${p.name}</div>
+          <div class="phase-bar-wrap">
+            <div class="phase-bar-max" style="width:${maxPct}%;background:${c}"></div>
+            <div class="phase-bar-avg" style="width:${avgPct}%;background:${c}"></div>
+            <div class="phase-bar-label">${p.avg.toFixed(1)}d avg · max ${p.max.toFixed(0)}d</div>
+          </div>
+          <div class="phase-avg" style="color:${c}">${p.avg.toFixed(1)}d</div>
+          <div class="phase-n">n=${p.n}</div>
+        </div>
+      `;
+    }).join('');
+
+    const topCards = d.top_cards.map(c => `
+      <div class="card-item">
+        <div class="days">${c.days}d</div>
+        <div class="m2">${c.m2.toFixed(0)} m²</div>
+        <div class="name">${c.name}</div>
+      </div>
+    `).join('');
+
     return `
-      <tr>
-        <td>${p.name}</td>
-        <td class="num">${p.n}</td>
-        <td class="num">${p.avg.toFixed(1)}</td>
-        <td class="num">${p.max.toFixed(0)}</td>
-        <td class="num ratio ${cls}">${p.ratio.toFixed(0)}x</td>
-      </tr>
+      <div class="seg-detail ${b==='p'?'active':''}" data-bucket="${b}">
+        <div style="display:grid;grid-template-columns:1fr;gap:24px;margin-top:8px">
+          <div>
+            <h3 style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">
+              ${d.emoji} ${d.label} (${d.range}) — ${d.cards} cards · journey médio ${d.journey_avg}d
+            </h3>
+            <div class="phase-list">${phaseRows}</div>
+          </div>
+          <div>
+            <h3 style="font-size:12px;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">
+              🚨 Top 5 obras mais lentas neste segmento
+            </h3>
+            <div class="cards-list">${topCards}</div>
+          </div>
+        </div>
+      </div>
     `;
   }).join('');
+  document.getElementById('seg-details').innerHTML = html;
 }
 
-function renderJourney() {
-  const total = JOURNEY.reduce((s, j) => s + j.dias, 0);
-  document.getElementById('journey-flow').innerHTML =
-    JOURNEY.map((j, i) => `
-      <div class="journey-step">
-        <div class="num">${String(i+1).padStart(2,'0')}</div>
-        <div class="name">${j.name}</div>
-        <div class="days">${j.dias.toFixed(1)}d</div>
-      </div>
-    `).join('') +
-    `<div class="journey-total">
-      <div class="num">Σ</div>
-      <div class="name">Total caminho feliz</div>
-      <div class="days">${total.toFixed(0)}d</div>
-    </div>`;
+// Comparativo entre buckets
+function renderCompare() {
+  // Pega as 12 fases mais relevantes (presentes em todos os buckets, ordenadas por relevância média)
+  const allPhases = new Set();
+  ['p','m','g','x'].forEach(b => BUCKETS[b].phases.forEach(p => allPhases.add(p.name)));
+
+  const phaseStats = [];
+  allPhases.forEach(name => {
+    const vals = ['p','m','g','x'].map(b => {
+      const ph = BUCKETS[b].phases.find(p => p.name === name);
+      return ph ? ph.avg : null;
+    });
+    const validVals = vals.filter(v => v !== null);
+    if (validVals.length >= 3) {
+      const avgOverall = validVals.reduce((a,b)=>a+b, 0) / validVals.length;
+      phaseStats.push({ name, vals, avgOverall });
+    }
+  });
+  phaseStats.sort((a, b) => b.avgOverall - a.avgOverall);
+
+  const top = phaseStats.slice(0, 14);
+
+  const rows = top.map(p => {
+    const vals = p.vals.map(v => {
+      if (v === null) return '<div class="cv">—</div>';
+      const cls = v >= 20 ? 'high' : v >= 10 ? 'med' : 'low';
+      return `<div class="cv ${cls}">${v.toFixed(1)}d</div>`;
+    }).join('');
+    return `<div class="cl">${p.name}</div>${vals}`;
+  }).join('');
+
+  document.getElementById('compare-rows').innerHTML = rows;
 }
 
 function renderInsights() {
@@ -399,9 +570,9 @@ function renderInsights() {
   `).join('');
 }
 
-renderPhaseList();
-renderVariance();
-renderJourney();
+renderSegTabs();
+renderSegDetails();
+renderCompare();
 renderInsights();
 </script>
 </body>
