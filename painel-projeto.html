@@ -121,6 +121,78 @@ a:hover { text-decoration: underline; }
   .pillars { grid-template-columns: 1fr; }
 }
 
+/* ── BARRA ANALÍTICA ────────── */
+.conn-bar {
+  display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+  background: #111; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+}
+.conn-label { font-size: 11px; color: var(--text3); margin-right: 4px; }
+.filter-chip { font-size: 11px; padding: 4px 12px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; }
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+.export-btn { font-size: 10px; padding: 4px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text3); cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; }
+.export-btn:hover { border-color: var(--accent); color: var(--accent); }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #000; padding: 8px 20px; border-radius: 10px; font-size: 12px; font-weight: 600; z-index: 999; transition: transform .3s ease; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── ANALYTICS SECTION ─ */
+.analytics-section {
+  padding: 16px 20px; background: #0d0d0d; border-bottom: 1px solid var(--border);
+}
+.analytics-section h3 {
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+}
+.analytics-grid {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px;
+}
+@media (max-width: 800px) { .analytics-grid { grid-template-columns: 1fr; } }
+
+/* Bar chart por pilar */
+.pbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; transition: opacity .15s; }
+.pbar-row:hover { opacity: .85; }
+.pbar-label { font-size: 11px; color: var(--text2); min-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pbar-track { flex: 1; height: 10px; background: #1a1a1a; border-radius: 5px; overflow: hidden; position: relative; }
+.pbar-fill { height: 100%; border-radius: 5px; transition: width .8s ease; }
+.pbar-pct { font-family: 'Inter', monospace; font-size: 11px; min-width: 36px; text-align: right; color: var(--text2); font-weight: 600; }
+
+/* Status distribution — barra empilhada */
+.status-dist { display: flex; height: 18px; border-radius: 9px; overflow: hidden; background: #1a1a1a; margin-bottom: 10px; }
+.status-seg { transition: flex .4s ease; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #000; }
+.status-legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 10px; color: var(--text2); }
+.status-legend span { display: flex; align-items: center; gap: 4px; }
+.status-legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* Ranking crítico */
+.crit-ranking { padding: 16px 20px; background: #0d0d0d; border-bottom: 1px solid var(--border); }
+.crit-ranking h3 { font-size: 11px; font-weight: 600; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.crit-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 6px;
+  cursor: pointer; transition: all .15s;
+}
+.crit-item:hover { border-color: var(--red); background: #1a0a0a; }
+.crit-rank { font-size: 18px; font-weight: 700; color: var(--text3); min-width: 28px; font-family: 'Inter', monospace; }
+.crit-content { flex: 1; min-width: 0; }
+.crit-name { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.crit-meta { font-size: 10px; color: var(--text3); }
+.crit-pillar { font-size: 9px; padding: 2px 7px; border-radius: 6px; background: var(--accent); color: #000; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; white-space: nowrap; }
+.crit-status-badge { font-size: 9px; padding: 2px 7px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
+
+/* ── BARRA DE ANÁLISE POR PILAR ─ */
+.analytics-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;
+  padding: 12px 20px; background: #0d0d0d; border-bottom: 1px solid var(--border);
+}
+.analytics-cell { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.analytics-cell .ac-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.analytics-cell .ac-value { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1; }
+.analytics-cell .ac-sub { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.analytics-cell.critical .ac-value { color: var(--red); }
+.analytics-cell.warn .ac-value { color: var(--amber); }
+.analytics-cell.good .ac-value { color: var(--green); }
+.analytics-cell.accent .ac-value { color: var(--accent); }
+
 /* ── TABS ────────────────────── */
 .main-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--card); margin: 12px 20px 0; border-radius: 12px 12px 0 0; overflow: hidden; }
 .main-tab { flex: 1; padding: 12px 16px; font-size: 13px; font-weight: 500; color: var(--text3); cursor: pointer; text-align: center; border-bottom: 2px solid transparent; transition: all .2s; }
@@ -205,7 +277,47 @@ a:hover { text-decoration: underline; }
       <div class="sub">Painel de Projeto — Cérebro Interligado</div>
     </div>
   </div>
-  <div class="updated">Última atualização: 09/Abril/2026 · Construído por Vitor + Cláudio · 8 pilares interligados</div>
+  <div class="updated">
+    <span id="updated-label">Snapshot: 10/Abril/2026</span>
+    · <span id="updated-relative">atualizado agora</span>
+    · Construído por Vitor + Cláudio · 8 pilares interligados
+  </div>
+</div>
+
+<!-- ═══ BARRA ANALÍTICA ═══ -->
+<div class="conn-bar" id="conn-bar">
+  <div class="conn-label">Filtrar por status:</div>
+  <button class="filter-chip active" data-filter="all" onclick="setFilter('all', this)">Todos</button>
+  <button class="filter-chip" data-filter="critical" onclick="setFilter('critical', this)">Críticos</button>
+  <button class="filter-chip" data-filter="blocked" onclick="setFilter('blocked', this)">Bloqueados</button>
+  <button class="filter-chip" data-filter="partial" onclick="setFilter('partial', this)">Parciais</button>
+  <button class="filter-chip" data-filter="todo" onclick="setFilter('todo', this)">A fazer</button>
+  <button class="filter-chip" data-filter="done" onclick="setFilter('done', this)">Concluídos</button>
+  <button class="export-btn" onclick="exportCSV()" style="margin-left:auto">📥 Exportar CSV</button>
+</div>
+
+<!-- ═══ ANALYTICS BAR ═══ -->
+<div class="analytics-bar" id="analytics-bar"></div>
+
+<!-- ═══ ANALYTICS SECTION — GRÁFICOS E DISTRIBUIÇÃO ═══ -->
+<div class="analytics-section">
+  <div class="analytics-grid">
+    <div>
+      <h3>📊 Conclusão por Pilar</h3>
+      <div id="pillar-chart"></div>
+    </div>
+    <div>
+      <h3>📈 Distribuição de Status</h3>
+      <div class="status-dist" id="status-dist"></div>
+      <div class="status-legend" id="status-legend"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RANKING CRÍTICO ═══ -->
+<div class="crit-ranking">
+  <h3>🚨 Top Itens Críticos — Ação Prioritária</h3>
+  <div id="crit-ranking-list"></div>
 </div>
 
 <!-- ═══ STATS ═══ -->
@@ -964,11 +1076,252 @@ function filterTasks(query) {
   }
 }
 
+// ═══════════════════════════════════════════════════
+// ANALYTICS LOCAIS — FILTROS, AGREGAÇÕES, EXPORT, TIMESTAMP
+// ═══════════════════════════════════════════════════
+
+const SNAPSHOT_DATE = new Date('2026-04-10T00:00:00');
+let currentFilter = 'all';
+
+function renderAnalyticsBar() {
+  // Agrega números a partir dos PILLARS
+  let totalTasks = 0, criticalCount = 0, blockedCount = 0, partialCount = 0, doneCount = 0;
+  let topPillar = { name: '', pct: -1 };
+  let worstPillar = { name: '', pct: 101 };
+
+  PILLARS.forEach(p => {
+    const t = p.tasks.length;
+    const d = p.tasks.filter(t => t.status === 'done' || t.status === 'live').length;
+    const pct = t > 0 ? Math.round((d / t) * 100) : 0;
+    if (pct > topPillar.pct) topPillar = { name: p.name, pct };
+    if (pct < worstPillar.pct) worstPillar = { name: p.name, pct };
+    totalTasks += t;
+    p.tasks.forEach(task => {
+      if (task.status === 'critical') criticalCount++;
+      if (task.status === 'blocked') blockedCount++;
+      if (task.status === 'partial') partialCount++;
+      if (task.status === 'done' || task.status === 'live') doneCount++;
+    });
+  });
+
+  const healthScore = Math.round((doneCount / totalTasks) * 100);
+
+  document.getElementById('analytics-bar').innerHTML = `
+    <div class="analytics-cell accent">
+      <div class="ac-label">Saúde do Projeto</div>
+      <div class="ac-value">${healthScore}%</div>
+      <div class="ac-sub">${doneCount} de ${totalTasks} tarefas</div>
+    </div>
+    <div class="analytics-cell critical">
+      <div class="ac-label">Itens Críticos</div>
+      <div class="ac-value">${criticalCount}</div>
+      <div class="ac-sub">ação imediata</div>
+    </div>
+    <div class="analytics-cell critical">
+      <div class="ac-label">Bloqueadores</div>
+      <div class="ac-value">${blockedCount + BLOCKERS.length}</div>
+      <div class="ac-sub">${BLOCKERS.length} globais + ${blockedCount} tasks</div>
+    </div>
+    <div class="analytics-cell warn">
+      <div class="ac-label">Parciais</div>
+      <div class="ac-value">${partialCount}</div>
+      <div class="ac-sub">precisam de atenção</div>
+    </div>
+    <div class="analytics-cell good">
+      <div class="ac-label">Pilar Mais Forte</div>
+      <div class="ac-value">${topPillar.pct}%</div>
+      <div class="ac-sub">${topPillar.name}</div>
+    </div>
+    <div class="analytics-cell critical">
+      <div class="ac-label">Pilar Mais Fraco</div>
+      <div class="ac-value">${worstPillar.pct}%</div>
+      <div class="ac-sub">${worstPillar.name}</div>
+    </div>
+  `;
+}
+
+function setFilter(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  // Se aplicou filtro, abrir todos os painéis pra ver os matches
+  if (filter !== 'all') {
+    document.querySelectorAll('.detail').forEach(d => d.classList.add('open'));
+  }
+
+  document.querySelectorAll('.task').forEach(row => {
+    const status = row.getAttribute('data-status') || '';
+    let show = false;
+    if (filter === 'all') show = true;
+    else if (filter === 'done') show = (status === 'done' || status === 'live');
+    else show = (status === filter);
+    row.style.display = show ? 'flex' : 'none';
+
+    const note = row.nextElementSibling;
+    if (note && note.classList.contains('task-notes')) {
+      note.style.display = show ? 'block' : 'none';
+    }
+  });
+
+  // Esconde pilares sem matches
+  document.querySelectorAll('.detail').forEach(d => {
+    const hasVisible = Array.from(d.querySelectorAll('.task')).some(t => t.style.display !== 'none');
+    if (filter !== 'all' && !hasVisible) d.classList.remove('open');
+  });
+}
+
+function exportCSV() {
+  const rows = [['Pilar','Tarefa','Status','Tag','Notas']];
+  PILLARS.forEach(p => {
+    p.tasks.forEach(t => {
+      const status = (STATUS_MAP[t.status] || {}).label || t.status;
+      rows.push([
+        p.name,
+        (t.name || '').replace(/"/g, '""'),
+        status,
+        t.tag || '',
+        (t.notes || '').replace(/"/g, '""')
+      ]);
+    });
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `monofloor-painel-${stamp}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exportado');
+}
+
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.className = 'toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function renderRelativeTime() {
+  const now = new Date();
+  const diffMs = now - SNAPSHOT_DATE;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffMin = Math.floor(diffMs / (1000 * 60));
+  let txt;
+  if (diffMin < 1) txt = 'atualizado agora';
+  else if (diffMin < 60) txt = `atualizado há ${diffMin} min`;
+  else if (diffHours < 24) txt = `atualizado há ${diffHours}h`;
+  else if (diffDays === 1) txt = 'atualizado há 1 dia';
+  else txt = `atualizado há ${diffDays} dias`;
+  const el = document.getElementById('updated-relative');
+  if (el) el.textContent = txt;
+}
+
+function renderPillarChart() {
+  const rows = PILLARS.map(p => {
+    const done = p.tasks.filter(t => t.status === 'done' || t.status === 'live').length;
+    const total = p.tasks.length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    return { id: p.id, name: p.name, icon: p.icon, pct, done, total, color: p.color };
+  }).sort((a, b) => b.pct - a.pct);
+
+  document.getElementById('pillar-chart').innerHTML = rows.map(r => {
+    const barColor = r.pct >= 80 ? 'var(--green)' : r.pct >= 50 ? 'var(--accent)' : r.pct >= 25 ? 'var(--amber)' : 'var(--red)';
+    return `
+      <div class="pbar-row" onclick="switchTab('tasks');setTimeout(()=>togglePanel('${r.id}'),100)">
+        <div class="pbar-label">${r.icon} ${r.name}</div>
+        <div class="pbar-track"><div class="pbar-fill" style="width:${r.pct}%;background:${barColor}"></div></div>
+        <div class="pbar-pct">${r.pct}%</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderStatusDist() {
+  const c = countAll();
+  const total = c.total;
+  const segs = [
+    { key: 'done', label: 'Concluído', count: c.done + c.live, color: 'var(--green)' },
+    { key: 'partial', label: 'Parcial', count: c.partial, color: 'var(--amber)' },
+    { key: 'blocked', label: 'Bloq/Crít', count: c.blocked, color: 'var(--red)' },
+    { key: 'todo', label: 'A fazer', count: c.todo, color: 'var(--gray)' },
+  ];
+  document.getElementById('status-dist').innerHTML = segs.map(s => {
+    const flex = s.count;
+    const pct = Math.round((s.count / total) * 100);
+    return `<div class="status-seg" style="flex:${flex};background:${s.color}" title="${s.label}: ${s.count} (${pct}%)">${pct >= 8 ? pct + '%' : ''}</div>`;
+  }).filter(h => h).join('');
+
+  document.getElementById('status-legend').innerHTML = segs.map(s => {
+    const pct = Math.round((s.count / total) * 100);
+    return `<span><div class="dot" style="background:${s.color}"></div>${s.label}: <b style="color:var(--text)">${s.count}</b> (${pct}%)</span>`;
+  }).join('');
+}
+
+function renderCritRanking() {
+  // Priority order: critical > blocked > high > partial
+  const PRIORITY = { critical: 0, blocked: 1, high: 2, partial: 3 };
+  const items = [];
+  PILLARS.forEach(p => {
+    p.tasks.forEach(t => {
+      if (t.status in PRIORITY) {
+        items.push({ ...t, pillarId: p.id, pillarName: p.name, pillarIcon: p.icon, priority: PRIORITY[t.status] });
+      }
+    });
+  });
+  items.sort((a, b) => a.priority - b.priority);
+  const top = items.slice(0, 8);
+
+  document.getElementById('crit-ranking-list').innerHTML = top.map((item, i) => {
+    const s = STATUS_MAP[item.status] || STATUS_MAP.todo;
+    return `
+      <div class="crit-item" onclick="switchTab('tasks');setTimeout(()=>togglePanel('${item.pillarId}'),100)">
+        <div class="crit-rank">#${i + 1}</div>
+        <div class="crit-content">
+          <div class="crit-name">${item.name}</div>
+          <div class="crit-meta">${item.notes || 'Sem detalhes adicionais'}</div>
+        </div>
+        <div class="crit-pillar">${item.pillarIcon} ${item.pillarName}</div>
+        <div class="crit-status-badge" style="background:${s.bg};color:${s.color}">${s.label}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Patch: adiciona data-status aos .task para filtro funcionar
+const _origRenderDetails = renderDetails;
+renderDetails = function() {
+  _origRenderDetails();
+  PILLARS.forEach(p => {
+    p.tasks.forEach((t, i) => {
+      const details = document.getElementById('panel-' + p.id);
+      if (!details) return;
+      const tasks = details.querySelectorAll('.task');
+      if (tasks[i]) tasks[i].setAttribute('data-status', t.status);
+    });
+  });
+};
+
 // Init
 renderStats();
 renderBlockers();
 renderPillars();
 renderDetails();
+renderAnalyticsBar();
+renderPillarChart();
+renderStatusDist();
+renderCritRanking();
+renderRelativeTime();
+setInterval(renderRelativeTime, 60000);
 </script>
 </body>
 </html>
