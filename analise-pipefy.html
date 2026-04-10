@@ -683,6 +683,345 @@ button { font-family: inherit; cursor: pointer; }
   flex-wrap: wrap; gap: 12px;
 }
 
+/* ════ DONUT CHART ════ */
+.donut-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+.donut-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 60px;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .donut-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+.donut-wrap {
+  position: relative;
+  width: 320px; height: 320px;
+  margin: 0 auto;
+}
+.donut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.donut-segment {
+  fill: none;
+  stroke-width: 30;
+  transition: all .8s cubic-bezier(.2, 0, .2, 1);
+}
+.donut-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.donut-center-value {
+  font-family: var(--fd);
+  font-size: 64px; font-weight: 400;
+  line-height: .9; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.donut-center-label {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-top: 6px;
+}
+.donut-legend {
+  display: flex; flex-direction: column; gap: 24px;
+}
+.donut-legend-item {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 16px; align-items: start;
+}
+.donut-color {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  margin-top: 6px;
+  justify-self: end;
+}
+.donut-num {
+  font-family: var(--fd);
+  font-size: 32px; font-weight: 400;
+  line-height: 1; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.donut-num .pct {
+  font-size: 14px; color: var(--text3);
+  margin-left: 6px; font-weight: 400;
+}
+.donut-content h4 {
+  font-family: var(--fd); font-size: 18px;
+  font-weight: 500; margin-bottom: 4px;
+}
+.donut-content p {
+  font-size: 13px; color: var(--text3);
+  line-height: 1.55;
+}
+.donut-days {
+  font-family: var(--fd);
+  font-size: 36px; font-weight: 300;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.donut-days .u {
+  font-size: 12px; color: var(--text3);
+  margin-left: 4px;
+}
+
+/* ════ WIP VIZ ════ */
+.wip-viz {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 28px;
+  align-items: center;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 24px;
+}
+@media (max-width: 700px) { .wip-viz { grid-template-columns: 1fr; } }
+
+.wip-side { text-align: center; }
+.wip-side h4 {
+  font-family: var(--fd); font-size: 16px;
+  font-weight: 500; margin-bottom: 4px;
+}
+.wip-side .label {
+  font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+.wip-bar {
+  height: 200px; width: 100%; max-width: 200px;
+  margin: 0 auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.wip-fill {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dim) 100%);
+  transition: height 1.2s cubic-bezier(.2, 0, .2, 1);
+}
+.wip-fill.over {
+  background: linear-gradient(180deg, var(--red) 0%, var(--red-dim) 100%);
+}
+.wip-num {
+  font-family: var(--fd); font-size: 56px;
+  font-weight: 400; line-height: 1;
+  color: var(--text); margin-top: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.wip-num.bad { color: var(--red); }
+.wip-num .u {
+  font-size: 14px; color: var(--text3);
+  font-weight: 400; margin-left: 4px;
+}
+.wip-side .desc {
+  font-size: 11px; color: var(--text3);
+  margin-top: 4px;
+}
+.wip-divider {
+  font-family: var(--fd); font-size: 36px;
+  color: var(--text4);
+  text-align: center;
+}
+
+/* ════ SCENARIOS BAR CHART ════ */
+.scenario-chart {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 24px;
+}
+.scenario-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  gap: 20px;
+  align-items: center;
+}
+.scenario-name {
+  font-size: 13px; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.scenario-name .icon { font-size: 16px; }
+.scenario-name .sub {
+  font-family: var(--fm); font-size: 10px;
+  color: var(--text3);
+  display: block; margin-top: 2px;
+}
+.scenario-bar-wrap {
+  height: 36px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.scenario-bar {
+  height: 100%;
+  display: flex; align-items: center;
+  padding-left: 12px;
+  font-family: var(--fm); font-size: 12px;
+  font-weight: 700; color: #0a0a0a;
+  transition: width 1s cubic-bezier(.2,0,.2,1);
+}
+.scenario-bar.current {
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+}
+.scenario-bar.below {
+  background: linear-gradient(90deg, var(--red-dim) 0%, var(--red) 100%);
+  color: #fff;
+}
+.scenario-bar.above {
+  background: linear-gradient(90deg, #166534 0%, var(--green) 100%);
+}
+.scenario-bar.best {
+  background: linear-gradient(90deg, #166534 0%, var(--green) 100%);
+  box-shadow: 0 0 20px rgba(74, 222, 128, .25);
+}
+.scenario-delta {
+  text-align: right;
+  font-family: var(--fm); font-size: 13px;
+  font-weight: 600;
+}
+.scenario-delta.up { color: var(--green); }
+.scenario-delta.down { color: var(--red); }
+.scenario-delta.same { color: var(--text3); }
+@media (max-width: 700px) {
+  .scenario-row { grid-template-columns: 1fr; gap: 6px; }
+  .scenario-bar-wrap { width: 100%; }
+}
+
+/* ════ REWORK SECTION ════ */
+.rework-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  margin-top: 24px;
+}
+@media (max-width: 900px) { .rework-grid { grid-template-columns: 1fr; } }
+
+.rework-viz {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+.rework-stack {
+  display: flex; flex-direction: column;
+  gap: 14px; margin: 24px 0;
+}
+.rework-bar-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.rework-bar-label {
+  font-size: 12px; color: var(--text2);
+  text-align: right;
+}
+.rework-bar-track {
+  height: 40px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  position: relative;
+}
+.rework-bar-base {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 100%);
+  display: flex; align-items: center;
+  padding-left: 12px;
+  font-family: var(--fm); font-size: 11px;
+  font-weight: 700; color: #0a0a0a;
+  transition: width 1s ease;
+}
+.rework-bar-extra {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(248,113,113,.6) 0%, var(--red) 100%);
+  display: flex; align-items: center;
+  padding-left: 8px;
+  font-family: var(--fm); font-size: 11px;
+  font-weight: 700; color: #fff;
+  transition: width 1s ease;
+}
+
+.rework-control {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+}
+.rework-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+.rework-preset {
+  padding: 12px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text2);
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: inherit;
+}
+.rework-preset:hover {
+  border-color: var(--gold-dim);
+  color: var(--text);
+}
+.rework-preset.active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.rework-preset .v {
+  display: block;
+  font-family: var(--fd); font-size: 22px;
+  font-weight: 500; line-height: 1;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.rework-preset.active .v { color: var(--gold); }
+
+.rework-impact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.rework-impact-cell {
+  text-align: center;
+}
+.rework-impact-cell .l {
+  font-size: 9px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.rework-impact-cell .v {
+  font-family: var(--fd); font-size: 26px;
+  font-weight: 400; color: var(--text);
+  line-height: 1; font-variant-numeric: tabular-nums;
+}
+.rework-impact-cell .v .u {
+  font-size: 12px; color: var(--text3);
+  margin-left: 4px;
+}
+
 /* ════ DEEP ANALYSIS ════ */
 .deep-cta {
   padding: 80px 0;
@@ -1053,14 +1392,17 @@ button { font-family: inherit; cursor: pointer; }
     <p class="hero-lead">
       Analisamos 431 obras concluídas com dados completos de movimentação no Pipefy.
       Aqui está o que descobrimos sobre tempo, gargalos e diferenças entre projetos.
+      <strong style="color:var(--text);font-weight:500;display:block;margin-top:8px">
+        Todos os números são médias extraídas do cenário atual (ago/2025–mar/2026).
+      </strong>
     </p>
 
     <div class="bignum">
       <div class="bignum-value">143<span class="unit">dias</span></div>
       <div class="bignum-context">
         <div class="bignum-label">Tempo médio de uma obra</div>
-        <div class="bignum-meta">É quase o dobro da meta institucional. Mediana fica em 106 dias.</div>
-        <div class="status-pill">95 dias acima da meta de 150d</div>
+        <div class="bignum-meta">Média dos últimos 8 meses. Mediana em 106d. P90 em 195d.</div>
+        <div class="status-pill">Meta institucional: 150d · realidade próxima do limite</div>
       </div>
     </div>
 
@@ -1092,6 +1434,9 @@ button { font-family: inherit; cursor: pointer; }
       Quando uma obra finalmente entra em execução, ela é entregue rapidamente.
       O problema mora nas etapas que <em>antecedem</em> a execução — agendamentos, aprovações
       e confirmações que se acumulam silenciosamente.
+      <span style="color:var(--text4);font-size:12px;display:block;margin-top:8px">
+        💡 Todos os números desta página são <strong>médias extraídas do cenário atual</strong> (ago/2025–mar/2026).
+      </span>
     </p>
 
     <div class="story-grid">
@@ -1123,6 +1468,75 @@ button { font-family: inherit; cursor: pointer; }
           média até o arquivamento administrativo. Uma cauda longa silenciosa.
         </p>
         <div class="story-card-stat">Fase: CLIENTE FINALIZADO · gargalo administrativo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DONUT — Como os 143 dias se distribuem ══════════════ -->
+<section class="donut-section">
+  <div class="wrap">
+    <div class="section-eyebrow">Onde mora o tempo</div>
+    <h2 class="section-title">Visualize <em>onde os 143 dias</em> são consumidos.</h2>
+    <p class="section-lead">
+      Cada parte do gráfico é uma macro-fase da obra. Os números são as médias observadas
+      nos últimos 8 meses.
+    </p>
+
+    <div class="donut-grid">
+      <div class="donut-wrap">
+        <svg class="donut-svg" viewBox="0 0 200 200">
+          <!-- background ring -->
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--bg3)" stroke-width="30"/>
+          <!-- Pré-obra: 78d (54.5%) -->
+          <circle class="donut-segment" cx="100" cy="100" r="80"
+                  stroke="#d4b483"
+                  stroke-dasharray="274 502" stroke-dashoffset="0"/>
+          <!-- Execução: 33d (23.1%) -->
+          <circle class="donut-segment" cx="100" cy="100" r="80"
+                  stroke="#8b7340"
+                  stroke-dasharray="116 502" stroke-dashoffset="-274"/>
+          <!-- Pós-obra: 32d (22.4%) -->
+          <circle class="donut-segment" cx="100" cy="100" r="80"
+                  stroke="#5d4e2c"
+                  stroke-dasharray="113 502" stroke-dashoffset="-390"/>
+        </svg>
+        <div class="donut-center">
+          <div class="donut-center-value">143<span style="font-size:.4em;color:var(--text3)">d</span></div>
+          <div class="donut-center-label">Journey médio</div>
+        </div>
+      </div>
+
+      <div class="donut-legend">
+        <div class="donut-legend-item">
+          <div class="donut-color" style="background:#d4b483"></div>
+          <div class="donut-content">
+            <h4>Pré-obra <span class="donut-num"><span class="pct">54%</span></span></h4>
+            <p>1º contato, contratos, projetos, agendamentos de VT, aprovações,
+            informações financeiras e logística. <strong>O maior gargalo do pipeline.</strong></p>
+          </div>
+          <div class="donut-days">78<span class="u">d</span></div>
+        </div>
+
+        <div class="donut-legend-item">
+          <div class="donut-color" style="background:#8b7340"></div>
+          <div class="donut-content">
+            <h4>Execução <span class="donut-num"><span class="pct">23%</span></span></h4>
+            <p>A obra acontecendo no canteiro. Inclui pausas, refazimentos e finalização.
+            <strong>É a fase mais rápida — ironia do processo.</strong></p>
+          </div>
+          <div class="donut-days">33<span class="u">d</span></div>
+        </div>
+
+        <div class="donut-legend-item">
+          <div class="donut-color" style="background:#5d4e2c"></div>
+          <div class="donut-content">
+            <h4>Pós-obra <span class="donut-num"><span class="pct">22%</span></span></h4>
+            <p>Obra terminou mas o card fica em "Cliente Finalizado" aguardando arquivamento
+            administrativo. <strong>Buraco negro silencioso.</strong></p>
+          </div>
+          <div class="donut-days">32<span class="u">d</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1230,6 +1644,9 @@ button { font-family: inherit; cursor: pointer; }
       <p>
         Com base no histórico real dos últimos 8 meses, calculamos o throughput observado,
         a capacidade simultânea pela Lei de Little e cenários de melhoria.
+        <strong style="display:block;margin-top:8px;color:var(--text2)">
+          Todos os cálculos partem das médias do cenário atual.
+        </strong>
       </p>
       <button class="deep-btn" id="deep-btn" onclick="toggleDeep()">
         <span>Ver análise de capacidade operacional</span>
@@ -1249,7 +1666,7 @@ button { font-family: inherit; cursor: pointer; }
           <div class="deep-block-num">01</div>
           <h3>Throughput mensal observado</h3>
         </div>
-        <p class="h-sub">Média de obras finalizadas por mês entre ago/2025 e mar/2026 (8 meses) — apenas obras com m² registrado.</p>
+        <p class="h-sub">Média de obras finalizadas por mês entre ago/2025 e mar/2026 (8 meses) — apenas obras com m² registrado. <strong style="color:var(--text2)">Os números são médias do cenário atual.</strong></p>
 
         <div class="stat-grid">
           <div class="stat-card">
@@ -1284,9 +1701,27 @@ button { font-family: inherit; cursor: pointer; }
           <div class="deep-block-num">02</div>
           <h3>Capacidade simultânea (Lei de Little)</h3>
         </div>
-        <p class="h-sub">L = λ × W. Quantas obras devem estar tramitando ao mesmo tempo dado o throughput observado e o tempo de journey atual.</p>
+        <p class="h-sub">L = λ × W. Quantas obras devem estar tramitando ao mesmo tempo dado o throughput observado e o tempo de journey atual. <strong style="color:var(--text2)">Baseado nas médias do cenário atual.</strong></p>
 
-        <table class="capacity-table">
+        <div class="wip-viz">
+          <div class="wip-side">
+            <h4>WIP Teórico</h4>
+            <div class="label">Lei de Little</div>
+            <div class="wip-bar"><div class="wip-fill" style="height:49%"></div></div>
+            <div class="wip-num">120<span class="u">cards</span></div>
+            <div class="desc">26 obras/mês × 143d ÷ 30 = 120</div>
+          </div>
+          <div class="wip-divider">VS</div>
+          <div class="wip-side">
+            <h4>WIP Real</h4>
+            <div class="label">Observado no Pipefy</div>
+            <div class="wip-bar"><div class="wip-fill over" style="height:100%"></div></div>
+            <div class="wip-num bad">243<span class="u">cards</span></div>
+            <div class="desc">+103% acima do esperado</div>
+          </div>
+        </div>
+
+        <table class="capacity-table" style="margin-top:32px">
           <thead>
             <tr>
               <th>Tipo</th>
@@ -1414,14 +1849,102 @@ button { font-family: inherit; cursor: pointer; }
         </div>
       </div>
 
+      <!-- BLOCO 5b: Taxa de retrabalho -->
+      <div class="deep-block">
+        <div class="deep-block-head">
+          <div class="deep-block-num">05b</div>
+          <h3>Considerando o fator retrabalho</h3>
+        </div>
+        <p class="h-sub">
+          Nem toda obra é aprovada de primeira. Quando há reprovação técnica, a obra precisa
+          ser refeita parcial ou totalmente. Esse <strong>retrabalho infla o tempo de execução</strong> e o journey total.
+          Os números abaixo simulam o impacto.
+          <span style="color:var(--text4);display:block;margin-top:6px">Baseline: 143d médio do cenário atual.</span>
+        </p>
+
+        <div class="rework-grid">
+          <div class="rework-viz">
+            <h4 style="font-family:var(--fd);font-size:18px;font-weight:500;margin-bottom:4px">Impacto no journey por bucket</h4>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:20px">
+              Barra dourada = tempo base · barra vermelha = inflação por retrabalho
+            </div>
+            <div class="rework-stack" id="rework-stack"></div>
+            <p style="font-size:12px;color:var(--text3);line-height:1.6;margin-top:8px">
+              <strong style="color:var(--text2)">Como funciona:</strong>
+              cada obra reprovada precisa refazer ~30 dias do ciclo de execução +
+              re-agendar VT (~20 dias). A média ponderada é aplicada ao journey baseado na taxa.
+            </p>
+          </div>
+
+          <div class="rework-control">
+            <h4 style="font-family:var(--fd);font-size:18px;font-weight:500;margin-bottom:4px">Taxa de retrabalho</h4>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:20px">
+              Selecione um cenário ou ajuste manualmente
+            </div>
+
+            <div class="slider-group" style="margin-bottom:16px">
+              <div class="slider-wrap">
+                <input type="range" id="rework-slider" min="0" max="30" value="18" step="1"
+                       oninput="updateRework()">
+                <div class="slider-marks">
+                  <span>0%</span>
+                  <span>5% ✓</span>
+                  <span>15%</span>
+                  <span>30%</span>
+                </div>
+              </div>
+              <div class="slider-value" id="rework-slider-value">18%</div>
+            </div>
+
+            <div class="rework-presets">
+              <button class="rework-preset" onclick="setRework(5)" data-rate="5">
+                <span class="v">5%</span>
+                Saudável
+              </button>
+              <button class="rework-preset active" onclick="setRework(18)" data-rate="18">
+                <span class="v">18%</span>
+                Atual estimado
+              </button>
+              <button class="rework-preset" onclick="setRework(25)" data-rate="25">
+                <span class="v">25%</span>
+                Crítico
+              </button>
+            </div>
+
+            <div class="rework-impact">
+              <div class="rework-impact-cell">
+                <div class="l">Journey médio</div>
+                <div class="v" id="rework-journey">169<span class="u">d</span></div>
+              </div>
+              <div class="rework-impact-cell">
+                <div class="l">Throughput / mês</div>
+                <div class="v" id="rework-throughput">22<span class="u">obras</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:24px;font-size:13px;color:var(--text3);line-height:1.6">
+          <strong style="color:var(--gold)">📐 Nota técnica:</strong>
+          Com a taxa atual estimada de 18% (alto), uma obra de 143d médios sobe para
+          <strong style="color:var(--text)">~169 dias</strong> efetivos quando contamos os refazimentos.
+          Reduzir a taxa para 5% (saudável) recupera ~21 dias por obra na média e
+          <strong style="color:var(--text)">aumenta o throughput em ~14%</strong> sem mexer em mais nada.
+        </p>
+      </div>
+
       <!-- BLOCO 6: Cenários comparativos -->
       <div class="deep-block">
         <div class="deep-block-head">
           <div class="deep-block-num">06</div>
           <h3>Cenários comparativos</h3>
         </div>
-        <p class="h-sub">Quanto a Monofloor pode entregar em diferentes níveis de eficiência operacional, mantendo a WIP atual de 243 cards.</p>
+        <p class="h-sub">Quanto a Monofloor pode entregar em diferentes níveis de eficiência operacional, mantendo a WIP atual de 243 cards. <strong style="color:var(--text2)">Baseado nas médias do cenário atual.</strong></p>
 
+        <h4 style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-top:24px;margin-bottom:8px">Obras finalizadas por ano em cada cenário</h4>
+        <div class="scenario-chart" id="scenario-chart"></div>
+
+        <h4 style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-top:40px;margin-bottom:8px">Tabela completa</h4>
         <table class="capacity-table">
           <thead>
             <tr>
@@ -2117,6 +2640,129 @@ function updateSimulator() {
   });
 }
 
+// ═══════════════════════════════════════════════════
+// SCENARIOS BAR CHART
+// ═══════════════════════════════════════════════════
+const SCENARIOS = [
+  { label: 'Atual', icon: '📍', sub: '143 dias', value: 312, type: 'current', delta: null },
+  { label: 'Meta PP:001', icon: '🎯', sub: '150 dias', value: 300, type: 'below', delta: -4 },
+  { label: 'Melhoria moderada', icon: '⚡', sub: '120 dias', value: 372, type: 'above', delta: 19 },
+  { label: 'Benchmark XL', icon: '🚀', sub: '100 dias', value: 444, type: 'above', delta: 42 },
+  { label: 'Best case', icon: '🏆', sub: '80 dias', value: 552, type: 'best', delta: 77 },
+];
+
+function renderScenarios() {
+  const max = Math.max(...SCENARIOS.map(s => s.value));
+  const html = SCENARIOS.map(s => {
+    const pct = (s.value / max) * 100;
+    const deltaTxt = s.delta === null ? '—' : (s.delta > 0 ? '+' : '') + s.delta + '%';
+    const deltaCls = s.delta === null ? 'same' : s.delta > 0 ? 'up' : 'down';
+    return `
+      <div class="scenario-row">
+        <div class="scenario-name">
+          <span class="icon">${s.icon}</span>
+          <div>
+            <div>${s.label}</div>
+            <div class="sub">${s.sub}</div>
+          </div>
+        </div>
+        <div class="scenario-bar-wrap">
+          <div class="scenario-bar ${s.type}" style="width:${pct}%">
+            ${s.value} obras/ano
+          </div>
+        </div>
+        <div class="scenario-delta ${deltaCls}">${deltaTxt}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('scenario-chart').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// REWORK SIMULATOR
+// ═══════════════════════════════════════════════════
+
+// Modelo: cada obra reprovada precisa redo de ~50 dias (30 execução + 20 reagendamento)
+const REWORK_PENALTY_DAYS = 50;
+
+function calcRework(rate) {
+  const r = rate / 100;
+  const buckets = ['p', 'm', 'g', 'x'];
+  const result = {};
+  let totalBase = 0, totalInflated = 0, totalCards = 0;
+
+  buckets.forEach(b => {
+    const d = CAPACITY.monthly[b];
+    const inflation = r * REWORK_PENALTY_DAYS;
+    const newJourney = d.journey + inflation;
+    result[b] = {
+      base: d.journey,
+      extra: inflation,
+      total: newJourney,
+      label: d.label,
+      emoji: d.emoji,
+      cards: d.cards,
+    };
+    totalBase += d.journey * d.cards;
+    totalInflated += newJourney * d.cards;
+    totalCards += d.cards;
+  });
+
+  const avgBase = totalBase / totalCards;
+  const avgInflated = totalInflated / totalCards;
+  const newDailyThroughput = CAPACITY.wip_actual / avgInflated;
+  const newMonthly = newDailyThroughput * 30;
+
+  return { buckets: result, avgBase, avgInflated, monthlyThroughput: newMonthly };
+}
+
+function renderReworkStack(reworkData) {
+  const buckets = ['p', 'm', 'g', 'x'];
+  let maxVal = 0;
+  buckets.forEach(b => {
+    const d = reworkData.buckets[b];
+    if (d.total > maxVal) maxVal = d.total;
+  });
+
+  const html = buckets.map(b => {
+    const d = reworkData.buckets[b];
+    const basePct = (d.base / maxVal) * 100;
+    const extraPct = (d.extra / maxVal) * 100;
+    return `
+      <div class="rework-bar-row">
+        <div class="rework-bar-label">${d.emoji} ${d.label}</div>
+        <div class="rework-bar-track">
+          <div class="rework-bar-base" style="width:${basePct}%">${d.base}d</div>
+          ${d.extra > 0 ? `<div class="rework-bar-extra" style="width:${extraPct}%">+${d.extra.toFixed(0)}d</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('rework-stack').innerHTML = html;
+}
+
+function updateRework() {
+  const rate = parseInt(document.getElementById('rework-slider').value);
+  document.getElementById('rework-slider-value').textContent = rate + '%';
+
+  const data = calcRework(rate);
+  renderReworkStack(data);
+
+  document.getElementById('rework-journey').innerHTML =
+    Math.round(data.avgInflated) + '<span class="u">d</span>';
+  document.getElementById('rework-throughput').innerHTML =
+    Math.round(data.monthlyThroughput) + '<span class="u">obras</span>';
+
+  document.querySelectorAll('.rework-preset').forEach(p => {
+    p.classList.toggle('active', parseInt(p.dataset.rate) === rate);
+  });
+}
+
+function setRework(rate) {
+  document.getElementById('rework-slider').value = rate;
+  updateRework();
+}
+
 // Toggle deep panel
 function toggleDeep() {
   const btn = document.getElementById('deep-btn');
@@ -2134,6 +2780,8 @@ function toggleDeep() {
       renderCapacity();
       renderMonths();
       updateSimulator();
+      renderScenarios();
+      updateRework();
       btn.dataset.rendered = '1';
     }
     // Smooth scroll to panel
