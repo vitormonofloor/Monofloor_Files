@@ -1102,6 +1102,453 @@ button { font-family: inherit; cursor: pointer; }
 }
 .season-warning strong { color: var(--amber); }
 
+/* ════ TRIAGE MODAL ════ */
+.triage-trigger {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+  color: var(--bg);
+  border: none;
+  font-family: inherit;
+  font-size: 13px; font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 16px rgba(212, 169, 110, .25);
+  margin-top: 16px;
+}
+.triage-trigger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 169, 110, .4);
+}
+.triage-trigger .ico { font-size: 18px; }
+
+.triage-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(10, 8, 6, .85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 40px 20px;
+  animation: fadeOverlay .3s ease;
+}
+.triage-overlay.open { display: block; }
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.triage-modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 32px 96px rgba(0,0,0,.6);
+  animation: slideUp .4s cubic-bezier(.2, 0, .2, 1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.triage-header {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px;
+  background: var(--surface);
+}
+.triage-header h2 {
+  font-family: var(--fd);
+  font-size: 22px; font-weight: 500;
+  flex: 1;
+}
+.triage-header h2 em {
+  font-style: italic; color: var(--gold);
+}
+.triage-close {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.triage-close:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.triage-body {
+  padding: 32px;
+}
+
+/* Health gauge */
+.gauge-section {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+@media (max-width: 700px) {
+  .gauge-section { grid-template-columns: 1fr; }
+}
+.gauge-wrap {
+  position: relative;
+  width: 240px; height: 240px;
+  margin: 0 auto;
+}
+.gauge-svg {
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+.gauge-bg {
+  fill: none;
+  stroke: var(--bg3);
+  stroke-width: 24;
+}
+.gauge-arc {
+  fill: none;
+  stroke-width: 24;
+  stroke-linecap: round;
+  transition: all .8s cubic-bezier(.2, 0, .2, 1);
+}
+.gauge-arc.healthy { stroke: #6ee7b7; }
+.gauge-arc.atrisk { stroke: var(--amber); }
+.gauge-arc.zombie { stroke: var(--red); }
+.gauge-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.gauge-center .pct {
+  font-family: var(--fd);
+  font-size: 56px; font-weight: 400;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.gauge-center .pct.crit { color: var(--red); }
+.gauge-center .pct.warn { color: var(--amber); }
+.gauge-center .pct.ok { color: #6ee7b7; }
+.gauge-center .lab {
+  font-size: 11px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-top: 6px;
+}
+
+.gauge-stats {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.gauge-stat {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.gauge-stat .dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+.gauge-stat .dot.healthy { background: #6ee7b7; }
+.gauge-stat .dot.atrisk { background: var(--amber); }
+.gauge-stat .dot.zombie { background: var(--red); }
+.gauge-stat .name {
+  font-size: 13px;
+  color: var(--text);
+}
+.gauge-stat .name small {
+  display: block;
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.gauge-stat .num {
+  font-family: var(--fd);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Filters */
+.triage-filters {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.triage-filters h3 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+.filter-toggles {
+  display: flex; gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.filter-toggle {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text2);
+  transition: all .15s;
+  font-family: inherit;
+}
+.filter-toggle:hover {
+  border-color: var(--gold-dim);
+  color: var(--text);
+}
+.filter-toggle.active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.filter-toggle .check {
+  width: 14px; height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+.filter-toggle.active .check {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+
+.recalc-panel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 700px) { .recalc-panel { grid-template-columns: 1fr; } }
+.recalc-cell {
+  text-align: center;
+  padding: 12px 8px;
+}
+.recalc-cell .l {
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.recalc-cell .v {
+  font-family: var(--fd);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.recalc-cell .v .u {
+  font-size: 12px;
+  color: var(--text3);
+  margin-left: 4px;
+}
+.recalc-cell .delta {
+  font-family: var(--fm);
+  font-size: 10px;
+  margin-top: 4px;
+  color: var(--text3);
+}
+.recalc-cell .delta.up { color: #6ee7b7; }
+.recalc-cell .delta.down { color: var(--red); }
+
+/* Phases breakdown */
+.phases-breakdown {
+  margin-bottom: 24px;
+}
+.phases-breakdown h3 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+.phase-bar-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 40px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .phase-bar-row { grid-template-columns: 130px 1fr 30px; }
+}
+.phase-bar-row .nm {
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.phase-bar-row .br {
+  height: 8px;
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.phase-bar-row .br > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red-dim) 0%, var(--red) 100%);
+  border-radius: 4px;
+  transition: width .8s ease;
+}
+.phase-bar-row .ct {
+  font-family: var(--fm);
+  text-align: right;
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* Card list */
+.cards-search {
+  margin-bottom: 16px;
+}
+.cards-search input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color .15s;
+}
+.cards-search input:focus { border-color: var(--gold); }
+.cards-search input::placeholder { color: var(--text3); }
+
+.triage-list {
+  max-height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.triage-list::-webkit-scrollbar { width: 8px; }
+.triage-list::-webkit-scrollbar-track { background: var(--bg); }
+.triage-list::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 4px;
+}
+.triage-card {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.triage-card:last-child { border-bottom: none; }
+.triage-card:hover { background: var(--surface); }
+.triage-card.zombie { border-left: 3px solid var(--red); }
+.triage-card.atrisk { border-left: 3px solid var(--amber); }
+.triage-card.healthy { border-left: 3px solid #6ee7b7; }
+.triage-card .days {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.triage-card.zombie .days { color: var(--red); }
+.triage-card.atrisk .days { color: var(--amber); }
+.triage-card.healthy .days { color: #6ee7b7; }
+.triage-card .info { min-width: 0; }
+.triage-card .info .name {
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+.triage-card .info .phase {
+  color: var(--text3);
+  font-family: var(--fm);
+  font-size: 10px;
+}
+.triage-card .badge-cat {
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.triage-card.zombie .badge-cat {
+  background: var(--red-bg); color: var(--red);
+}
+.triage-card.atrisk .badge-cat {
+  background: var(--amber-bg); color: var(--amber);
+}
+.triage-card.healthy .badge-cat {
+  background: rgba(110,231,183,.1); color: #6ee7b7;
+}
+
+.triage-footer {
+  padding: 20px 32px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.triage-footer .info-text {
+  font-size: 11px;
+  color: var(--text3);
+}
+.triage-actions {
+  display: flex; gap: 8px;
+}
+.triage-export {
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.triage-export:hover {
+  background: var(--gold2);
+  transform: translateY(-1px);
+}
+
 /* ════ DONUT CHART ════ */
 .donut-section {
   padding: 80px 0;
@@ -2314,6 +2761,11 @@ button { font-family: inherit; cursor: pointer; }
               <span class="f0-step">2. Categorizar: <b>ativo</b> · <b>perdido</b> · <b>aguardando</b></span>
               <span class="f0-step">3. Fechar zumbis · reativar pendentes</span>
             </div>
+            <button class="triage-trigger" onclick="openTriage()">
+              <span class="ico">🧟</span>
+              <span>Ver triagem interativa dos 243 cards</span>
+              <span style="opacity:.7">→</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2668,6 +3120,120 @@ button { font-family: inherit; cursor: pointer; }
     </div>
   </div>
 </footer>
+
+<div id="toast-share" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:var(--bg);padding:12px 24px;border-radius:100px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.4);transition:transform .3s ease;pointer-events:none">
+  ✓ Link copiado para a área de transferência
+</div>
+
+<!-- ══════════════ TRIAGE MODAL ══════════════ -->
+<div class="triage-overlay" id="triage-overlay" onclick="if(event.target===this)closeTriage()">
+  <div class="triage-modal">
+    <div class="triage-header">
+      <div style="font-size:28px">🧟</div>
+      <h2>Triagem dos <em>243 cards</em> ativos</h2>
+      <button class="triage-close" onclick="closeTriage()">✕ Fechar</button>
+    </div>
+    <div class="triage-body">
+
+      <!-- Health gauge + stats -->
+      <div class="gauge-section">
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 200 200">
+            <circle class="gauge-bg" cx="100" cy="100" r="80"/>
+            <!-- Healthy: 132/243 = 54.3% → arco -->
+            <circle class="gauge-arc healthy" id="gauge-healthy" cx="100" cy="100" r="80"
+                    stroke-dasharray="273 502" stroke-dashoffset="0"/>
+            <!-- At-risk: 37/243 = 15.2% -->
+            <circle class="gauge-arc atrisk" id="gauge-atrisk" cx="100" cy="100" r="80"
+                    stroke-dasharray="76 502" stroke-dashoffset="-273"/>
+            <!-- Zombie: 74/243 = 30.5% -->
+            <circle class="gauge-arc zombie" id="gauge-zombie" cx="100" cy="100" r="80"
+                    stroke-dasharray="153 502" stroke-dashoffset="-349"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="pct warn" id="gauge-pct">54%</div>
+            <div class="lab">saudáveis</div>
+          </div>
+        </div>
+        <div class="gauge-stats">
+          <div class="gauge-stat">
+            <div class="dot healthy"></div>
+            <div class="name">Saudáveis<small>Menos de 150 dias no pipeline</small></div>
+            <div class="num" id="stat-healthy">132</div>
+          </div>
+          <div class="gauge-stat">
+            <div class="dot atrisk"></div>
+            <div class="name">Em risco<small>150 a 200 dias — vão virar zumbi</small></div>
+            <div class="num" id="stat-atrisk">37</div>
+          </div>
+          <div class="gauge-stat">
+            <div class="dot zombie"></div>
+            <div class="name">Zumbis<small>Mais de 200 dias — abandono provável</small></div>
+            <div class="num" id="stat-zombie">74</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters + recalculation -->
+      <div class="triage-filters">
+        <h3>Simulador: o que acontece se eu limpar?</h3>
+        <div class="filter-toggles">
+          <button class="filter-toggle active" id="ft-zombie" onclick="toggleFilter('zombie')">
+            <span class="check">✓</span>
+            Incluir zumbis (74)
+          </button>
+          <button class="filter-toggle active" id="ft-atrisk" onclick="toggleFilter('atrisk')">
+            <span class="check">✓</span>
+            Incluir at-risk (37)
+          </button>
+          <button class="filter-toggle active" id="ft-healthy" onclick="toggleFilter('healthy')">
+            <span class="check">✓</span>
+            Incluir saudáveis (132)
+          </button>
+        </div>
+        <div class="recalc-panel">
+          <div class="recalc-cell">
+            <div class="l">WIP filtrada</div>
+            <div class="v" id="recalc-wip">243<span class="u">cards</span></div>
+            <div class="delta" id="recalc-wip-delta">—</div>
+          </div>
+          <div class="recalc-cell">
+            <div class="l">Throughput potencial</div>
+            <div class="v" id="recalc-throughput">26<span class="u">obras/mês</span></div>
+            <div class="delta" id="recalc-throughput-delta">—</div>
+          </div>
+          <div class="recalc-cell">
+            <div class="l">Estado da pipeline</div>
+            <div class="v" id="recalc-status" style="font-size:18px">⚠️ Sobrecarga</div>
+            <div class="delta" id="recalc-status-delta">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phases breakdown -->
+      <div class="phases-breakdown">
+        <h3>Onde estão os zumbis (top 8 fases)</h3>
+        <div id="phases-bars"></div>
+      </div>
+
+      <!-- Card list -->
+      <div class="cards-search">
+        <input type="text" id="card-search" placeholder="🔍 Buscar por nome do cliente..."
+               oninput="renderCardsList()">
+      </div>
+      <div class="triage-list" id="triage-list"></div>
+
+    </div>
+    <div class="triage-footer">
+      <div class="info-text">
+        Snapshot 10/Abr/2026 · Threshold zumbi: <b>>200 dias</b> · Threshold at-risk: <b>150-200 dias</b>
+      </div>
+      <div class="triage-actions">
+        <button class="triage-export" onclick="exportTriageCSV()">📥 Exportar CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════
@@ -3448,6 +4014,287 @@ function toggleDeep() {
 // Auto-open if anchor matches
 if (window.location.hash === '#capacidade') {
   setTimeout(() => toggleDeep(), 200);
+}
+
+// ═══════════════════════════════════════════════════
+// TRIAGE MODAL — cards zumbi/at-risk
+// ═══════════════════════════════════════════════════
+
+const TRIAGE = {
+  baseline_journey: 143,
+  baseline_throughput: 26,
+  zombies: [
+    {d:309,p:"LOGÍSTICA - COLETAR",n:"SPE TLMC 29 LTDA (EUROFARMA)"},
+    {d:308,p:"OBRA EM EXECUÇÃO",n:"LUCA BAZURO"},
+    {d:303,p:"LOGÍSTICA - EM COLETA",n:"YAHYA EL HASSAN"},
+    {d:268,p:"LOGÍSTICA - EM COLETA",n:"GUSTAVO DE SOUZA PEREIRA"},
+    {d:267,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"GRIFO PARTICIPACOES E ADMINISTRACAO DE BENS LTDA"},
+    {d:267,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"CAROLINA PIARDI RICCHETTI"},
+    {d:267,p:"LOGÍSTICA - EM COLETA",n:"NATHALIA DE FIGUEIREDO NUNES RABELO"},
+    {d:259,p:"OBRA PAUSADA",n:"PEDRO SAVOI GABBAY"},
+    {d:259,p:"OBRA PAUSADA",n:"ANTONIO CARLOS CANTO PORTO NETO"},
+    {d:256,p:"LOGÍSTICA - EM COLETA",n:"MONICA ESMERALDA BRUCKMANN MAYNETTO"},
+    {d:255,p:"REVISÃO FINAL OP",n:"NATHALIA ROBERTA MACARIO"},
+    {d:255,p:"RESULTADO VT - ENTRADA",n:"RICARDO XAVIER DE OLIVEIRA NETO"},
+    {d:255,p:"PÓS VENDAS ACIONADO",n:"PIERRE JULIEN CHAPRON"},
+    {d:255,p:"PROJETOS - 1ª REVISÃO",n:"NINA RODRIGUES FIALDINI"},
+    {d:255,p:"PROJETOS - 1ª REVISÃO",n:"ALEXANDRE BARCELLOS RAMOS"},
+    {d:255,p:"OBRA PAUSADA",n:"TALLY FELDMAN SINGAL GROSS"},
+    {d:255,p:"OBRA PAUSADA",n:"CD 01 DESENVOLVIMENTO IMOBILIÁRIOS LTDA 1ª fase"},
+    {d:255,p:"OBRA PAUSADA",n:"AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA"},
+    {d:255,p:"OBRA EM EXECUÇÃO",n:"RODRIGO DE FARIA JARDIM"},
+    {d:255,p:"OBRA EM EXECUÇÃO",n:"ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"},
+    {d:255,p:"OBRA CONCLUÍDA",n:"CAROLINA RACHE GUIMARAES"},
+    {d:255,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"FLÁVIO FAVA DITT"},
+    {d:255,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"EDUARDO JOSE SCOTTI"},
+    {d:255,p:"LOGÍSTICA - EM ENTREGA",n:"RAFIK WLADIMIR FREUA"},
+    {d:255,p:"LOGÍSTICA - EM ENTREGA",n:"ALBERTO ALMIR LABAN"},
+    {d:255,p:"LOGÍSTICA - EM COLETA",n:"MARCOS JOSÉ VEIGA GOMES"},
+    {d:255,p:"LOGÍSTICA - EM COLETA",n:"LUIS GUSTAVO ROVARON"},
+    {d:255,p:"LOGÍSTICA - EM COLETA",n:"BERNARD DE CASTRO DALLA BERNARDINA"},
+    {d:255,p:"INFORMAÇÕES PROJETOS",n:"ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO"},
+    {d:255,p:"INFORMAÇÕES PROJETOS",n:"ALINIE MENDES PEIGO"},
+    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"JEAN LUC SENAC"},
+    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"CAMILA MAGALHAES SILVEIRA"},
+    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"BM VAREJO – M. FASHION"},
+    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"ALEXANDRE BASTOS DA SILVA"},
+    {d:255,p:"FINANCEIRO PÓS - EM REVISÃO",n:"GUILHERME HAIDAR BERJEAUT"},
+    {d:255,p:"EQUIPE DE EXECUÇÃO",n:"ANA CAROLINA RAWET FAGE"},
+    {d:255,p:"CONFIRMAÇÕES OP 2",n:"MARCUS VINICIUS RODRIGUES ELTSCHEMINOV"},
+    {d:255,p:"CONFIRMAÇÕES OP 1",n:"ROBERTA ASSONI BUENO"},
+    {d:255,p:"AGUARDANDO LIBERAÇÃO",n:"CLINGER - JOVELINA CRISTINA DE OLIVEIRA"},
+    {d:255,p:"AGUARDANDO LIBERAÇÃO",n:"ADRIANO DE FIGUEIREDO MACORIN 1ª FASE"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"RICARDO MARQUES MENDES"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"MARCELO PUERTO PERIANES"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"JULIANA DE ARAÚJO SILVA"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"JORGE LUIZ BARBIERI GALLO"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"JONATHAS DE ALMEIDA NUNES LUKAS"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"FREDERICO CUNHA VALIM"},
+    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"EDUARDO PUERTA PERIANES"},
+    {d:255,p:"1º CONTATO OP.",n:"Beatriz"},
+    {d:241,p:"LOGÍSTICA - EM ENTREGA",n:"RODRIGO DE ALMEIDA SCHMIDT"},
+    {d:241,p:"LOGÍSTICA - EM ENTREGA",n:"APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES"},
+    {d:241,p:"LOGÍSTICA - EM COLETA",n:"IOLANDA ODEBRECHT PELTIER DE QUEIROZ"},
+    {d:241,p:"AGUARDANDO LIBERAÇÃO",n:"CLAUDIANE DA SILVA GOMES"},
+    {d:241,p:"AGEND. VT - ENTRADA",n:"VINICIUS MACHADO ARIAS"},
+    {d:241,p:"AGEND. VT - ENTRADA",n:"LC ADMINISTRAÇÃO E PARTICIPAÇÕES LTDA"},
+    {d:241,p:"AGEND. VT - AFERIÇÃO",n:"SILAS AUGUSTO FARIA MARTINS"},
+    {d:240,p:"INFORMAÇÕES PROJETOS",n:"GUSTAVO FONTES VALENTE SALGUEIRO"},
+    {d:239,p:"REVISÃO FINAL OP",n:"IAN GALENO DE ANDRADE"},
+    {d:234,p:"REVISÃO FINAL OP",n:"ESCOLA DO BAIRRO EDUCAÇÃO BÁSICA LTDA - EPP"},
+    {d:233,p:"CONFIRMAÇÕES OP 1",n:"THALES MATZKEIT LEYTON"},
+    {d:231,p:"LOGÍSTICA - EM COLETA",n:"JULIA PAIVA HEYMANN"},
+    {d:231,p:"AGEND. VT - AFERIÇÃO",n:"BRUNO DE SOUSA MENDES PARENTE"},
+    {d:228,p:"LOGÍSTICA - EM COLETA",n:"ARTHUR HADLER FERREIRA MACHADO"},
+    {d:228,p:"AGEND. VT - AFERIÇÃO",n:"MAYARA ULIANA CASAGRANDE"},
+    {d:226,p:"RESULTADO VT - AFERIÇÃO",n:"GABRIEL LEIVAS PROTO"},
+    {d:225,p:"AGEND. VT - AFERIÇÃO",n:"GABRIEL FIGUEIREDO MENEZES"},
+    {d:223,p:"AGEND. VT - AFERIÇÃO",n:"BRUNO FRIGO ZEZZE"},
+    {d:221,p:"CONFIRMAÇÕES OP 1",n:"APARTAMENTO 92 FELIPE SIMAS"},
+    {d:221,p:"AGUARDANDO LIBERAÇÃO",n:"APARTAMENTO 102 FELIPE SIMAS"},
+    {d:219,p:"LOGÍSTICA - COLETAR",n:"MARIO AMATO NETTO"},
+    {d:213,p:"LOGÍSTICA - EM COLETA",n:"BENY MAJTLIS"},
+    {d:213,p:"INFORMAÇÕES FINANCEIRAS",n:"DEPECHE MOVEIS LTDA EPP"},
+    {d:212,p:"LOGÍSTICA - EM ENTREGA",n:"IZABELLA VINCE GARCIA PEDRIALI DALCANALE"},
+    {d:203,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA"},
+  ],
+  atrisk: [
+    {d:200,p:"INDÚSTRIA - EM PRODUÇÃO",n:"GUSTAVO PARRILO DA NOBREGA"},
+    {d:198,p:"OBRA EM EXECUÇÃO",n:"VICENTE PAULO DAS GRACAS PEREIRA"},
+    {d:198,p:"CONFIRMAÇÕES OP 1",n:"FABIO FEDERICI DE CARVALHO"},
+    {d:197,p:"LOGÍSTICA - EM ENTREGA",n:"BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"},
+    {d:196,p:"INDÚSTRIA - EM PRODUÇÃO",n:"SR2 CASAS CONSTRUTORA LTDA - GOLF RESORT"},
+    {d:189,p:"AGEND. VT - AFERIÇÃO",n:"VICTOR PEIXOTO DOS SANTOS"},
+    {d:185,p:"LOGÍSTICA - EM COLETA",n:"BM VAREJO – M. FASHION - 1 FASE"},
+    {d:184,p:"RESULTADO VT - AFERIÇÃO",n:"ANA PAULA JACINTHO JUNQUEIRA GOIAS/RIO"},
+    {d:184,p:"LOGÍSTICA - EM ENTREGA",n:"APTO STUDIO ANA PAULA JACINTHO JUNQUEIRA"},
+    {d:184,p:"LOGÍSTICA - EM COLETA",n:"APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA"},
+    {d:183,p:"LOGÍSTICA - EM COLETA",n:"NEWTON BRIAO MARQUES"},
+    {d:177,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"THIAGO DORIA"},
+    {d:176,p:"OBRA EM EXECUÇÃO",n:"CHRISTIAN KORT CERAVOLO"},
+    {d:176,p:"ENTRADA",n:"PEGORARO ENGENHARIA"},
+    {d:175,p:"OBRA PAUSADA",n:"CD 01 DESENVOLVIMENTO IMOBILIÁRIOS LTDA 2ª fase"},
+    {d:172,p:"LOGÍSTICA - EM ENTREGA",n:"APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES"},
+    {d:172,p:"LOGÍSTICA - EM COLETA",n:"MATEUS HENRIQUE PIENTA FAGUNDES"},
+    {d:172,p:"AGEND. VT - AFERIÇÃO",n:"VALERIA ALVES BELIZARIO"},
+    {d:171,p:"INFORMAÇÕES LOGÍSTICAS",n:"CHANG YU CHENG"},
+    {d:171,p:"CONFIRMAÇÕES OP 1",n:"RAFAEL DE OLIVEIRA BOTELHO CORREA"},
+    {d:170,p:"OBRA PAUSADA",n:"GUILHERME WENTZ"},
+    {d:170,p:"OBRA EM EXECUÇÃO",n:"P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA"},
+    {d:170,p:"LOGÍSTICA - EM ENTREGA",n:"JOAO PEDRO SCANAGATTA DAMACENO"},
+    {d:170,p:"LOGÍSTICA - EM COLETA",n:"ADRIANO CARVALHEDO CASTELLO BRANCO GONCALVES"},
+    {d:170,p:"INFORMAÇÕES FINANCEIRAS",n:"DREAM FARM AGRONEGOCIOS LTDA"},
+    {d:164,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"GN DERMATO LTDA"},
+    {d:162,p:"RESULTADO VT - QUALIDADE",n:"VILA VERTICAL FRADIQUE EMPREENDIMENTO IMOBILIARIO SPE LTDA"},
+    {d:162,p:"OBRA PAUSADA",n:"MISCI BRASIL COMERCIO DE MODA LTDA"},
+    {d:162,p:"AGUARDANDO LIBERAÇÃO",n:"RAFAEL PEREIRA FERNANDES"},
+    {d:162,p:"AGUARDANDO LIBERAÇÃO",n:"JOAO PAULO VERIDIANO PICCOLO"},
+    {d:161,p:"LOGÍSTICA - EM COLETA",n:"AVVA HOUSE LTDA - MOZART RODRIGUES"},
+    {d:158,p:"LOGÍSTICA - EM COLETA",n:"FERNANDO CESAR ALCON DELGADO"},
+    {d:157,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"LOVELY RITA DIAS MENEZES"},
+    {d:156,p:"ENTRADA",n:"Andrea Almeida"},
+    {d:151,p:"RESULTADO VT - AFERIÇÃO",n:"LEMBECK ADMINISTRADORA DE BENS LTDA"},
+    {d:151,p:"OBRA PAUSADA",n:"CLÁUDIO KUTNIKAS"},
+    {d:151,p:"LOGÍSTICA - EM COLETA",n:"FELIPE GUSTAVO LOPES DE OLIVEIRA"},
+  ],
+  // Healthy: 132 cards (não listamos individualmente — só contagem para os cálculos)
+  healthy_count: 132,
+};
+
+const FILTERS = { zombie: true, atrisk: true, healthy: true };
+
+function openTriage() {
+  document.getElementById('triage-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (!document.getElementById('triage-overlay').dataset.rendered) {
+    renderTriagePhases();
+    renderCardsList();
+    recalculateTriage();
+    document.getElementById('triage-overlay').dataset.rendered = '1';
+  }
+}
+function closeTriage() {
+  document.getElementById('triage-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeTriage();
+});
+
+function toggleFilter(cat) {
+  FILTERS[cat] = !FILTERS[cat];
+  document.getElementById('ft-' + cat).classList.toggle('active');
+  recalculateTriage();
+  renderCardsList();
+}
+
+function recalculateTriage() {
+  const zCount = TRIAGE.zombies.length;
+  const aCount = TRIAGE.atrisk.length;
+  const hCount = TRIAGE.healthy_count;
+
+  const wip = (FILTERS.zombie ? zCount : 0) +
+              (FILTERS.atrisk ? aCount : 0) +
+              (FILTERS.healthy ? hCount : 0);
+
+  // Throughput potencial: usa baseline scaled
+  // Baseline observado: 26 obras/mês com WIP "real útil" ≈ 132 (apenas saudáveis)
+  // Quando filtramos, estimamos throughput = 26 × (wip / 132) limitado por journey atual
+  // Ou seja, mais cards saudáveis = mais throughput possível
+  let throughputPotential = 26; // default
+  if (hCount > 0) {
+    throughputPotential = TRIAGE.baseline_throughput * (wip / hCount);
+    // limita a um teto razoável
+    if (throughputPotential > 80) throughputPotential = 80;
+  }
+
+  // Status pipeline
+  const teorico = 124; // L = λ×W = 26 × 143/30 ≈ 124
+  let status = '⚠️ Sobrecarga', statusDelta = '';
+  let statusColor = 'var(--red)';
+  if (wip <= teorico * 1.1) {
+    status = '✅ Saudável';
+    statusColor = '#6ee7b7';
+    statusDelta = '≤ 10% do teórico';
+  } else if (wip <= teorico * 1.5) {
+    status = '⚠️ Atenção';
+    statusColor = 'var(--amber)';
+    statusDelta = `+${Math.round((wip/teorico-1)*100)}% acima`;
+  } else {
+    status = '🚨 Sobrecarga';
+    statusColor = 'var(--red)';
+    statusDelta = `+${Math.round((wip/teorico-1)*100)}% acima`;
+  }
+
+  const wipDelta = wip - 243;
+  const wipDeltaStr = wipDelta === 0 ? '—' : (wipDelta > 0 ? '+' : '') + wipDelta + ' vs total';
+  const wipDeltaCls = wipDelta < 0 ? 'down' : '';
+
+  const tpDelta = throughputPotential - 26;
+  const tpDeltaStr = tpDelta >= 0 ? '+' + Math.round(tpDelta) + ' obras/mês' : Math.round(tpDelta) + ' obras/mês';
+
+  document.getElementById('recalc-wip').innerHTML = wip + '<span class="u">cards</span>';
+  document.getElementById('recalc-wip-delta').textContent = wipDeltaStr;
+  document.getElementById('recalc-wip-delta').className = 'delta ' + wipDeltaCls;
+
+  document.getElementById('recalc-throughput').innerHTML =
+    Math.round(throughputPotential) + '<span class="u">obras/mês</span>';
+  document.getElementById('recalc-throughput-delta').textContent = tpDeltaStr;
+  document.getElementById('recalc-throughput-delta').className = 'delta ' + (tpDelta >= 0 ? 'up' : 'down');
+
+  document.getElementById('recalc-status').innerHTML = status;
+  document.getElementById('recalc-status').style.color = statusColor;
+  document.getElementById('recalc-status-delta').textContent = statusDelta;
+}
+
+function renderTriagePhases() {
+  const phaseCounts = {};
+  TRIAGE.zombies.forEach(z => {
+    phaseCounts[z.p] = (phaseCounts[z.p] || 0) + 1;
+  });
+  const sorted = Object.entries(phaseCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+  const max = sorted[0][1];
+
+  document.getElementById('phases-bars').innerHTML = sorted.map(([phase, count]) => {
+    const pct = (count / max) * 100;
+    return `
+      <div class="phase-bar-row">
+        <div class="nm">${phase}</div>
+        <div class="br"><div style="width:${pct}%"></div></div>
+        <div class="ct">${count}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderCardsList() {
+  const search = (document.getElementById('card-search')?.value || '').toLowerCase();
+  let cards = [];
+  if (FILTERS.zombie) cards.push(...TRIAGE.zombies.map(c => ({...c, cat: 'zombie'})));
+  if (FILTERS.atrisk) cards.push(...TRIAGE.atrisk.map(c => ({...c, cat: 'atrisk'})));
+  // Healthy não tem lista detalhada — só contagem
+
+  if (search) {
+    cards = cards.filter(c =>
+      c.n.toLowerCase().includes(search) || c.p.toLowerCase().includes(search)
+    );
+  }
+
+  cards.sort((a, b) => b.d - a.d);
+
+  if (cards.length === 0) {
+    document.getElementById('triage-list').innerHTML =
+      '<div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">Nenhum card visível com os filtros atuais</div>';
+    return;
+  }
+
+  document.getElementById('triage-list').innerHTML = cards.map(c => `
+    <div class="triage-card ${c.cat}">
+      <div class="days">${c.d}d</div>
+      <div class="info">
+        <div class="name">${c.n}</div>
+        <div class="phase">${c.p}</div>
+      </div>
+      <div class="badge-cat">${c.cat === 'zombie' ? '🧟 Zumbi' : '⚠ Risco'}</div>
+    </div>
+  `).join('');
+}
+
+function exportTriageCSV() {
+  const rows = [['Categoria', 'Dias no pipeline', 'Fase atual', 'Cliente']];
+  TRIAGE.zombies.forEach(z => rows.push(['Zumbi', z.d, z.p, z.n]));
+  TRIAGE.atrisk.forEach(a => rows.push(['At-risk', a.d, a.p, a.n]));
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'monofloor-triagem-2026-04-10.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ═══════════════════════════════════════════════════
