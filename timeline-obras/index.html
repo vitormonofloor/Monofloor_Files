@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monofloor — Linha do Tempo de Obras</title>
+<meta name="description" content="Diário de bordo de cada obra Monofloor: timeline IA, alertas, clima da relação com cliente, pendências, mensagens Telegram + WhatsApp unificadas.">
+<meta property="og:title" content="Monofloor · Linha do Tempo de Obras">
+<meta property="og:description" content="Cada obra ganha uma timeline gerada por IA + alertas + clima + mensagens unificadas.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#241d16">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23d4a96e'/%3E%3Ctext x='50' y='66' font-family='Georgia,serif' font-size='56' font-weight='700' fill='%23241d16' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Widescreen';
+  src: url('https://cliente.monofloor.cloud/_next/static/media/Widescreen%20Light-s.p.9717fdaf.otf') format('opentype');
+  font-weight: 300 400; font-style: normal; font-display: swap;
+}
+
+:root {
+  --bg: #1a140e;
+  --bg2: #241d16;
+  --bg3: #2d2519;
+  --surface: #322a1d;
+  --surface-hover: #3a3122;
+  --border: #483a2b;
+  --border2: #5a4935;
+  --border3: #6f5c45;
+  --gold: #e2bb88;
+  --gold2: #d4a96e;
+  --gold-dim: #b8a080;
+  --gold-bg: rgba(226, 187, 136, .08);
+  --green: #6ee7b7;
+  --green-bg: rgba(110, 231, 183, .1);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, .1);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, .1);
+  --blue: #93c5fd;
+  --blue-bg: rgba(147, 197, 253, .1);
+  --text: #faf8f5;
+  --text2: #d6c9b8;
+  --text3: #a89880;
+  --text4: #6f5c45;
+  --fd: 'Fraunces', Georgia, serif;
+  --fb: 'Widescreen', 'Inter', system-ui, sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --shadow-md: 0 8px 24px rgba(0,0,0,.5);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--fb);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold2); }
+button { font-family: inherit; cursor: pointer; }
+code { font-family: var(--fm); font-size: .9em; background: var(--bg3); padding: 1px 5px; border-radius: 3px; color: var(--gold); }
+
+/* ════ NAV ════ */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(26,20,14,.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1480px; margin: 0 auto; padding: 14px 28px;
+  display: flex; align-items: center; gap: 20px;
+}
+.nav-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px; color: var(--bg);
+  flex-shrink: 0;
+}
+.nav-brand {
+  font-size: 14px; font-weight: 600; letter-spacing: -.2px;
+}
+.nav-brand .sub {
+  display: block; font-size: 10px; color: var(--text3);
+  font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px;
+}
+.nav-links { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+.nav-link {
+  font-size: 12px; padding: 8px 14px; border-radius: 8px;
+  color: var(--text3); transition: all .15s;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.nav-back {
+  font-size: 12px; padding: 8px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text2);
+  background: transparent;
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+  transition: all .15s;
+}
+.nav-back:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-bg);
+}
+
+/* ════ HERO ════ */
+.hero {
+  padding: 64px 0 48px;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212,180,131,.06) 0%, transparent 60%), var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.hero-inner { max-width: 1480px; margin: 0 auto; padding: 0 28px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--gold); font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 14px; border: 1px solid var(--gold-dim);
+  border-radius: 100px; background: var(--gold-bg);
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.85); }
+}
+.hero h1 {
+  font-family: var(--fd);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 400;
+  line-height: 1.05; letter-spacing: -1.5px;
+  margin-bottom: 20px; max-width: 900px;
+}
+.hero h1 em { font-style: italic; color: var(--gold); font-weight: 300; }
+.hero-lead {
+  font-size: 16px; color: var(--text2);
+  max-width: 720px; line-height: 1.65;
+}
+.hero-lead strong { color: var(--text); font-weight: 500; }
+
+/* ════ MAIN LAYOUT ════ */
+.main {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px 28px 80px;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+}
+@media (max-width: 1100px) {
+  .main { grid-template-columns: 1fr; }
+}
+
+/* ════ SIDEBAR (lista de obras) ════ */
+.sidebar {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  height: fit-content;
+  position: sticky; top: 100px;
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
+}
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border2); border-radius: 4px;
+}
+.sidebar-title {
+  font-family: var(--fd);
+  font-size: 18px; font-weight: 500;
+  margin-bottom: 4px;
+}
+.sidebar-sub {
+  font-size: 11px; color: var(--text3);
+  margin-bottom: 16px;
+}
+.sidebar-search {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color .15s;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+.sidebar-search:focus { border-color: var(--gold); }
+.sidebar-search::placeholder { color: var(--text4); }
+
+.status-filters {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.status-filter {
+  font-size: 10px;
+  padding: 5px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text3);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.status-filter:hover { border-color: var(--gold-dim); color: var(--text2); }
+.status-filter.active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.obras-list {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.obra-card {
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+  display: block;
+}
+.obra-card:hover {
+  background: var(--bg3);
+  border-color: var(--border3);
+}
+.obra-card.active {
+  background: var(--surface);
+  border-color: var(--gold);
+  border-left-color: var(--gold);
+}
+.obra-card .obra-name {
+  font-size: 13px; font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.obra-card .obra-meta {
+  display: flex; gap: 10px;
+  font-size: 10px;
+  color: var(--text3);
+  font-family: var(--fm);
+  margin-bottom: 8px;
+}
+.obra-card .obra-meta span { display: inline-flex; align-items: center; gap: 3px; }
+.obra-card .obra-status {
+  display: inline-block;
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+.obra-card .obra-alert {
+  display: inline-block;
+  font-size: 9px;
+  margin-left: 4px;
+  color: var(--red);
+}
+
+/* status colors */
+.status-finalizado { background: var(--green-bg); color: var(--green); }
+.status-concluido { background: var(--green-bg); color: var(--green); }
+.status-em_execucao { background: var(--blue-bg); color: var(--blue); }
+.status-aguardando_execucao { background: var(--gold-bg); color: var(--gold); }
+.status-planejamento { background: var(--gold-bg); color: var(--gold); }
+.status-reparo { background: var(--amber-bg); color: var(--amber); }
+.status-aguardando_clima { background: var(--amber-bg); color: var(--amber); }
+.status-marcas_rolo_cera { background: var(--red-bg); color: var(--red); }
+.status-pausado { background: var(--amber-bg); color: var(--amber); }
+.status-cancelado { background: var(--red-bg); color: var(--red); }
+.status-contrato { background: var(--gold-bg); color: var(--gold); }
+
+/* ════ DETAIL PANE ════ */
+.detail {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Detail header */
+.detail-head {
+  padding: 32px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--bg2) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.detail-head .obra-id {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--fm); font-size: 11px; color: var(--text3);
+  margin-bottom: 12px;
+}
+.detail-head h2 {
+  font-family: var(--fd);
+  font-size: 28px; font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.detail-head .endereco {
+  font-size: 13px; color: var(--text3);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px;
+}
+.detail-head .badges {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.detail-head .badge {
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-weight: 500;
+  font-family: var(--fm);
+}
+.badge-status { font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.badge-fase {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+.badge-m2 {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+}
+
+/* KPI strip */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+@media (max-width: 700px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+.kpi-cell {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+}
+.kpi-cell:last-child { border-right: none; }
+@media (max-width: 700px) {
+  .kpi-cell:nth-child(2n) { border-right: none; }
+  .kpi-cell:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+}
+.kpi-cell .label {
+  font-size: 9px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+.kpi-cell .value {
+  font-family: var(--fd); font-size: 26px;
+  font-weight: 400; line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.kpi-cell .value.gold { color: var(--gold); }
+.kpi-cell .value.green { color: var(--green); }
+.kpi-cell .value.amber { color: var(--amber); }
+.kpi-cell .value.red { color: var(--red); }
+.kpi-cell .value .u {
+  font-size: 11px; color: var(--text3);
+  margin-left: 4px;
+}
+.kpi-cell .sub {
+  font-size: 10px; color: var(--text3);
+  margin-top: 4px;
+  font-family: var(--fm);
+}
+
+/* Section blocks */
+.detail-body { padding: 28px 32px 32px; }
+.section-block { margin-bottom: 32px; }
+.section-block:last-child { margin-bottom: 0; }
+.section-block h3 {
+  font-family: var(--fd);
+  font-size: 18px; font-weight: 500;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-block h3 .badge-count {
+  font-size: 11px;
+  padding: 3px 9px;
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-dim);
+  border-radius: 100px;
+  color: var(--gold);
+  font-weight: 600;
+  font-family: var(--fm);
+}
+.section-block .sub-h {
+  font-size: 12px; color: var(--text3);
+  margin-bottom: 16px;
+}
+
+/* Resumo executivo */
+.resumo-box {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-dim);
+  border-left: 3px solid var(--gold);
+  border-radius: 14px;
+  padding: 22px 26px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+.resumo-box strong { color: var(--text); }
+
+/* Timeline vertical */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold-dim) 0%, var(--border) 100%);
+}
+.event {
+  position: relative;
+  padding: 0 0 20px 0;
+}
+.event:last-child { padding-bottom: 0; }
+.event::before {
+  content: '';
+  position: absolute;
+  left: -28px; top: 6px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 0 4px var(--bg2);
+}
+.event.alert::before { border-color: var(--red); }
+.event.warn::before { border-color: var(--amber); }
+.event.good::before { border-color: var(--green); }
+.event-date {
+  font-family: var(--fm);
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 4px;
+}
+.event-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* Alertas e pendências */
+.alert-grid {
+  display: grid;
+  gap: 10px;
+}
+.alert-item {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.alert-item.warn { border-left-color: var(--amber); }
+.alert-item.info { border-left-color: var(--blue); }
+.alert-item .icon { font-size: 18px; line-height: 1.2; }
+.alert-item .text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* Pendências */
+.pend-list {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pend-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+}
+.pend-item .check {
+  width: 18px; height: 18px;
+  border: 2px solid var(--gold-dim);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pend-item .check.done {
+  background: var(--green);
+  border-color: var(--green);
+}
+.pend-item.done .text { color: var(--text3); text-decoration: line-through; }
+
+/* Materiais grid */
+.materiais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.material-card {
+  padding: 14px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  gap: 4px;
+}
+.material-card .ambiente {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.material-card .superficie {
+  font-size: 12px;
+  color: var(--text3);
+}
+.material-card .detail-row {
+  display: flex; justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text2);
+  font-family: var(--fm);
+}
+.material-card .check-icon {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--bg);
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  margin-left: 4px;
+}
+.material-card .check-icon.pending {
+  background: var(--amber);
+}
+
+/* Contatos */
+.contatos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+.contato-card {
+  padding: 18px 22px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.contato-card .role {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+.contato-card .name {
+  font-family: var(--fd);
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.contato-card .info {
+  display: flex; flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text2);
+  font-family: var(--fm);
+}
+.contato-card .info span {
+  display: flex; align-items: center; gap: 6px;
+}
+.contato-card .info .icon {
+  font-size: 14px;
+  width: 16px;
+}
+
+/* Climate strip */
+.climate {
+  display: flex; align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+.climate .emoji { font-size: 36px; }
+.climate .text {
+  flex: 1;
+}
+.climate .text .label {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 4px;
+}
+.climate .text .clima {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.climate .text .desc {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+/* Empty state */
+.empty {
+  padding: 80px 32px;
+  text-align: center;
+  color: var(--text3);
+}
+.empty .ico { font-size: 48px; margin-bottom: 16px; }
+.empty h3 {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+.empty p { font-size: 13px; max-width: 400px; margin: 0 auto; }
+
+/* Footer */
+.footer {
+  padding: 48px 28px 60px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+  margin-top: 40px;
+}
+.footer-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 800px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+}
+.footer h4 {
+  font-family: var(--fd);
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.footer p {
+  font-size: 13px;
+  color: var(--text3);
+  max-width: 360px;
+  line-height: 1.6;
+}
+.footer h5 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+.footer ul {
+  list-style: none;
+  display: flex; flex-direction: column;
+  gap: 8px;
+}
+.footer ul a, .footer ul span {
+  font-size: 13px;
+  color: var(--text2);
+}
+.footer-meta {
+  max-width: 1480px;
+  margin: 32px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--fm);
+  font-size: 11px;
+  color: var(--text4);
+}
+
+/* Disclaimer banner */
+.disclaimer {
+  max-width: 1480px;
+  margin: 0 auto 16px;
+  padding: 14px 24px;
+  background: var(--amber-bg);
+  border: 1px solid rgba(251, 191, 36, .3);
+  border-left: 3px solid var(--amber);
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.55;
+}
+.disclaimer strong { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">M</div>
+    <div class="nav-brand">
+      Monofloor
+      <span class="sub">Linha do Tempo de Obras</span>
+    </div>
+    <div class="nav-links">
+      <a href="../analise-portal/" class="nav-link">📂 Carteira</a>
+      <a href="../analise/" class="nav-link">⏱ Tempo</a>
+      <a href="../" class="nav-link">🏠 Painel</a>
+      <button class="nav-back" onclick="copiarLink()" title="Copiar link">🔗 Compartilhar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Diário de bordo · Snapshot 11/04/2026</div>
+    <h1>
+      Cada obra ganha sua <em>linha do tempo real</em>, com clima, alertas e mensagens.
+    </h1>
+    <p class="hero-lead">
+      Esta página combina dados do portal interno com a timeline gerada por IA a partir
+      das mensagens de WhatsApp e Telegram de cada obra. <strong>Tudo o que o Pipefy não
+      mostra: clima da relação, pendências reais, alertas críticos, materiais por ambiente.</strong>
+      Selecione uma obra à esquerda para ver o diário completo.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════ DISCLAIMER ══════════════ -->
+<div style="max-width:1480px;margin:24px auto 0;padding:0 28px">
+  <div class="disclaimer">
+    <strong>📡 Modo demonstração.</strong>
+    Esta versão usa <b>10 obras de exemplo</b> com dados plausíveis baseados no schema real
+    do <code>cliente.monofloor.cloud/api/projects</code> descoberto via análise técnica.
+    Para conectar dados ao vivo, é necessário um endpoint autenticado (ver
+    <a href="../SECURITY_RECOMMENDATIONS.md" target="_blank" style="color:var(--amber);text-decoration:underline">recomendações de segurança</a>)
+    e um proxy CORS-friendly. A estrutura dos componentes já é a final.
+  </div>
+</div>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Carteira de obras</div>
+    <div class="sidebar-sub" id="sidebar-count">10 obras carregadas</div>
+    <input type="text" class="sidebar-search" id="sidebar-search"
+           placeholder="🔍 Buscar por cliente, cidade, status..."
+           oninput="renderObrasList()">
+    <div class="status-filters" id="status-filters"></div>
+    <div class="obras-list" id="obras-list"></div>
+  </aside>
+
+  <!-- DETAIL PANE -->
+  <main class="detail" id="detail-pane">
+    <div class="empty">
+      <div class="ico">👈</div>
+      <h3>Selecione uma obra</h3>
+      <p>Escolha uma obra na lista ao lado para ver o diário completo, com timeline, alertas, pendências, materiais e contatos.</p>
+    </div>
+  </main>
+
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <h4>Linha do Tempo de Obras</h4>
+      <p>
+        Painel de drill-down de cada obra, baseado nos dados ricos do portal interno.
+        Combina contatos, status, materiais, mensagens unificadas (Telegram + WhatsApp)
+        e timeline gerada por IA a partir das conversas com cliente.
+      </p>
+    </div>
+    <div>
+      <h5>Outros painéis</h5>
+      <ul>
+        <li><a href="../analise/">⏱ Análise de tempo</a></li>
+        <li><a href="../analise-portal/">📂 Análise de carteira</a></li>
+        <li><a href="../">🏠 Painel principal</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Endpoints utilizados</h5>
+      <ul>
+        <li><code>/api/projects</code></li>
+        <li><code>/api/projects/{id}</code></li>
+        <li><code>/api/projects/{id}/messages</code></li>
+        <li><code>/api/projects/{id}/fases</code></li>
+        <li><code>/api/whatsapp/summary</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <span>Monofloor · Linha do Tempo · 2026</span>
+    <span>10 obras de exemplo · schema real do portal</span>
+  </div>
+</footer>
+
+<div id="toast-share" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:var(--bg);padding:12px 24px;border-radius:100px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.4);transition:transform .3s ease;pointer-events:none">
+  ✓ Link copiado
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DADOS DE EXEMPLO — 10 OBRAS
+// Estrutura idêntica ao schema real do cliente.monofloor.cloud
+// (campos: id, clienteNome, clienteTelefone, clienteEmail,
+//  projetoEndereco, projetoCidade, projetoMetragem, status,
+//  faseAtual, consultorNome, consultorTelefone,
+//  whatsappSummary{eventos, alertas, pendencias, climaGeral, ...},
+//  fases{materiais})
+// ═══════════════════════════════════════════════════
+
+const STATUS_LABELS = {
+  finalizado: 'Finalizado',
+  concluido: 'Concluído',
+  em_execucao: 'Em execução',
+  aguardando_execucao: 'Aguardando execução',
+  planejamento: 'Em planejamento',
+  reparo: 'Reparo',
+  aguardando_clima: 'Aguardando clima',
+  marcas_rolo_cera: 'Marcas rolo/cera',
+  pausado: 'Pausado',
+  cancelado: 'Cancelado',
+  contrato: 'Em contrato',
+};
+
+const OBRAS = [
+  {
+    id: 'demo-001',
+    clienteNome: 'Cliente Residencial Jardins',
+    clienteTelefone: '+55 11 9XXXX-1234',
+    clienteEmail: 'cliente1@exemplo.com',
+    projetoEndereco: 'Rua Estados Unidos, 1500 - Jardins',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 142,
+    status: 'em_execucao',
+    faseAtual: 'OBRA EM EXECUÇÃO',
+    cores: ['MIRAGE'],
+    diasNoPipeline: 87,
+    consultorNome: 'Wesley Matheus de Carvalho',
+    consultorTelefone: '+55 11 9XXXX-5678',
+    consultorAtendimento: 'Wesley Matheus',
+    consultorOperacional: 'Pedro Alexandre',
+    consultorProjetos: 'Equipe Projetos SP',
+    totalMensagens: 1166,
+    telegramCount: 1074,
+    whatsappCount: 92,
+    participantes: 8,
+    tempoResposta: '2h 14min',
+    climaGeral: 'Tenso',
+    climaDescricao: 'Cliente reportou atrasos nas últimas duas semanas. Demanda atenção do gestor.',
+    resumoExecutivo: 'Obra de 142m² em fase de execução final, com tensão crescente nas últimas duas semanas devido a atrasos de logística reportados pela equipe. Cliente demonstra preocupação com o cronograma e tem cobrado posição diária. Material foi entregue parcialmente e equipe iniciou aplicação no piso da sala. Pendente conclusão do polimento e aplicação do verniz final.',
+    eventos: [
+      { date: '08/04', text: 'Equipe iniciou aplicação na sala principal (78m²)', type: 'good' },
+      { date: '06/04', text: 'Material chegou parcial — falta complemento de cera', type: 'warn' },
+      { date: '03/04', text: 'Cliente cobrou previsão de início via WhatsApp', type: 'alert' },
+      { date: '01/04', text: 'Reagendamento de equipe por chuva forte na semana anterior', type: 'warn' },
+      { date: '25/03', text: 'Visita técnica de entrada concluída — laudo OK', type: 'good' },
+      { date: '20/03', text: 'Contrato assinado e download arquivado', type: 'good' },
+      { date: '15/03', text: '1º contato operacional com cliente realizado', type: 'good' },
+    ],
+    alertas: [
+      { type: 'critical', icon: '🚨', text: 'Cliente cobrou posição 3 vezes na última semana sem resposta detalhada' },
+      { type: 'warn', icon: '⏰', text: 'Equipe atrasou entrega em 4 dias vs cronograma original' },
+      { type: 'warn', icon: '📦', text: 'Material parcial — cera complementar em rota' },
+    ],
+    pendencias: [
+      { text: 'Finalizar polimento da sala principal', done: false },
+      { text: 'Aplicar verniz final', done: false },
+      { text: 'Agendar visita de entrega', done: false },
+      { text: 'Receber complemento de cera', done: false },
+      { text: 'Visita técnica de aferição', done: true },
+      { text: 'Definição da cor (MIRAGE)', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Sala', superficie: 'Piso', metragem: '78', produto: 'STELION MIRAGE', concluido: false },
+      { ambiente: 'Cozinha', superficie: 'Piso', metragem: '32', produto: 'STELION MIRAGE', concluido: false },
+      { ambiente: 'Hall', superficie: 'Piso', metragem: '18', produto: 'STELION MIRAGE', concluido: true },
+      { ambiente: 'Lavabo', superficie: 'Parede', metragem: '14', produto: 'LILIT GHOST', concluido: false },
+    ],
+  },
+
+  {
+    id: 'demo-002',
+    clienteNome: 'Cliente Industrial Eurofarma',
+    clienteTelefone: '+55 11 4XXX-XXXX',
+    clienteEmail: null,
+    projetoEndereco: 'Av Paulista, KM 30 - Distrito Industrial',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 798,
+    status: 'finalizado',
+    faseAtual: 'CLIENTE FINALIZADO',
+    cores: ['SAARA', 'KALAHARI'],
+    diasNoPipeline: 65,
+    consultorNome: 'Luana Patricia de Andrade Lima',
+    consultorTelefone: '+55 11 9XXXX-9012',
+    consultorAtendimento: 'Luana Patricia',
+    consultorOperacional: 'Equipe Industrial',
+    consultorProjetos: 'Wesley Matheus',
+    totalMensagens: 234,
+    telegramCount: 198,
+    whatsappCount: 36,
+    participantes: 5,
+    tempoResposta: '45min',
+    climaGeral: 'Excelente',
+    climaDescricao: 'Cliente extremamente satisfeito. Pediu orçamento de uma 2ª fase.',
+    resumoExecutivo: 'Obra industrial de grande porte (798m²) finalizada com sucesso em 65 dias — abaixo da média da casa. Cliente reportou satisfação total e já solicitou orçamento de segunda fase para outra unidade. Time operacional manteve comunicação clara, com tempo de resposta médio de 45 minutos. Modelo de execução premium que vale ser estudado para replicar.',
+    eventos: [
+      { date: '02/04', text: '✅ Cliente assinou termo de finalização', type: 'good' },
+      { date: '30/03', text: 'Cliente solicitou orçamento de 2ª fase', type: 'good' },
+      { date: '28/03', text: 'Visita de entrega realizada — aprovação total', type: 'good' },
+      { date: '22/03', text: 'Conclusão da execução — sem retrabalho', type: 'good' },
+      { date: '15/03', text: 'Início da execução — equipe completa em campo', type: 'good' },
+      { date: '10/03', text: 'Material entregue completo (798m²)', type: 'good' },
+      { date: '01/03', text: 'Início do contrato', type: 'good' },
+    ],
+    alertas: [],
+    pendencias: [
+      { text: 'Visita técnica de entrada', done: true },
+      { text: 'Definição de cores (SAARA/KALAHARI)', done: true },
+      { text: 'Produção da indústria', done: true },
+      { text: 'Logística de entrega', done: true },
+      { text: 'Execução completa', done: true },
+      { text: 'Visita de entrega', done: true },
+      { text: 'Termo de finalização', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Galpão A', superficie: 'Piso', metragem: '450', produto: 'STELION SAARA', concluido: true },
+      { ambiente: 'Galpão B', superficie: 'Piso', metragem: '280', produto: 'STELION SAARA', concluido: true },
+      { ambiente: 'Sala técnica', superficie: 'Piso', metragem: '68', produto: 'STELION KALAHARI', concluido: true },
+    ],
+  },
+
+  {
+    id: 'demo-003',
+    clienteNome: 'Cliente Marcas Rolo (defeito)',
+    clienteTelefone: '+55 21 9XXXX-3456',
+    clienteEmail: 'cliente3@exemplo.com',
+    projetoEndereco: 'Rua Visconde de Pirajá, 600 - Ipanema',
+    projetoCidade: 'Rio de Janeiro / RJ',
+    projetoMetragem: 95,
+    status: 'marcas_rolo_cera',
+    faseAtual: 'OBRA PAUSADA',
+    cores: ['GHOST'],
+    diasNoPipeline: 142,
+    consultorNome: 'Pedro Alexandre Santana',
+    consultorTelefone: '+55 21 9XXXX-7890',
+    totalMensagens: 487,
+    telegramCount: 380,
+    whatsappCount: 107,
+    participantes: 6,
+    tempoResposta: '5h 32min',
+    climaGeral: 'Crítico',
+    climaDescricao: 'Cliente reportou defeito visual após aplicação. Aguardando solução técnica.',
+    resumoExecutivo: 'Obra de 95m² apresentou defeito recorrente de marcas de rolo e cera após a aplicação inicial. Cliente está insatisfeito e exige solução. Caso já entrou na fila de retrabalho. Investigação interna identificou possível problema com lote de cera. Equipe técnica vai refazer aplicação completa nas próximas 2 semanas. Risco reputacional alto se não resolvido rapidamente.',
+    eventos: [
+      { date: '09/04', text: 'Reunião com diretoria técnica para definir plano de retrabalho', type: 'alert' },
+      { date: '07/04', text: 'Cliente enviou fotos do defeito por WhatsApp', type: 'alert' },
+      { date: '05/04', text: 'Inspeção técnica confirmou marcas de rolo na sala', type: 'alert' },
+      { date: '02/04', text: 'Cliente reportou problema visual', type: 'alert' },
+      { date: '20/03', text: 'Aplicação concluída', type: 'good' },
+      { date: '15/03', text: 'Início da execução', type: 'good' },
+    ],
+    alertas: [
+      { type: 'critical', icon: '🚨', text: 'Defeito visual confirmado — RETRABALHO COMPLETO necessário' },
+      { type: 'critical', icon: '⚠️', text: 'Cliente extremamente insatisfeito — risco reputacional' },
+      { type: 'warn', icon: '🔬', text: 'Investigação aponta lote de cera específico — verificar estoque' },
+    ],
+    pendencias: [
+      { text: 'Agendar retrabalho com nova equipe', done: false },
+      { text: 'Conferir lote de cera novo', done: false },
+      { text: 'Comunicar plano ao cliente', done: false },
+      { text: 'Análise de causa raiz', done: true },
+      { text: 'Inspeção técnica', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Sala', superficie: 'Piso', metragem: '60', produto: 'STELION GHOST', concluido: false, retrabalho: true },
+      { ambiente: 'Quarto', superficie: 'Piso', metragem: '35', produto: 'STELION GHOST', concluido: false, retrabalho: true },
+    ],
+  },
+
+  {
+    id: 'demo-004',
+    clienteNome: 'Cliente Comercial Curitiba',
+    clienteTelefone: '+55 41 9XXXX-2233',
+    clienteEmail: 'cliente4@exemplo.com',
+    projetoEndereco: 'Av República Argentina, 800',
+    projetoCidade: 'Curitiba / PR',
+    projetoMetragem: 320,
+    status: 'aguardando_clima',
+    faseAtual: 'AGEND. VT - ENTRADA',
+    cores: ['EVEREST'],
+    diasNoPipeline: 54,
+    consultorNome: 'Wesley Matheus de Carvalho',
+    consultorTelefone: '+55 11 9XXXX-5678',
+    totalMensagens: 156,
+    telegramCount: 120,
+    whatsappCount: 36,
+    participantes: 4,
+    tempoResposta: '3h',
+    climaGeral: 'Normal',
+    climaDescricao: 'Cliente compreensivo. Aguardando janela climática para iniciar.',
+    resumoExecutivo: 'Obra comercial de 320m² em Curitiba com início bloqueado pela frente fria que atinge a região há 10 dias. Cliente está ciente e tem se mostrado compreensivo. Material já está produzido e em estoque. Equipe pronta para deslocamento assim que houver janela de 5 dias secos. Previsão meteorológica para semana 15-19/04 é favorável.',
+    eventos: [
+      { date: '09/04', text: 'Atualização ao cliente sobre previsão meteorológica', type: 'good' },
+      { date: '05/04', text: 'Reagendamento por nova frente fria', type: 'warn' },
+      { date: '01/04', text: 'Equipe deveria iniciar — chuva impediu', type: 'warn' },
+      { date: '28/03', text: 'Material chegou na obra', type: 'good' },
+      { date: '20/03', text: 'Produção concluída na fábrica', type: 'good' },
+    ],
+    alertas: [
+      { type: 'warn', icon: '🌧️', text: 'Frente fria há 10 dias bloqueia início da execução' },
+    ],
+    pendencias: [
+      { text: 'Aguardar janela meteorológica (15-19/04)', done: false },
+      { text: 'Confirmar deslocamento de equipe', done: false },
+      { text: 'Material entregue', done: true },
+      { text: 'Cliente alinhado sobre adiamento', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Loja principal', superficie: 'Piso', metragem: '220', produto: 'STELION EVEREST', concluido: false },
+      { ambiente: 'Estoque', superficie: 'Piso', metragem: '100', produto: 'STELION EVEREST', concluido: false },
+    ],
+  },
+
+  {
+    id: 'demo-005',
+    clienteNome: 'Cliente Apartamento Faria Lima',
+    clienteTelefone: '+55 11 9XXXX-4455',
+    clienteEmail: null,
+    projetoEndereco: 'Av Brigadeiro Faria Lima, 2000',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 68,
+    status: 'aguardando_execucao',
+    faseAtual: 'EQUIPE DE EXECUÇÃO',
+    cores: ['ARABIA'],
+    diasNoPipeline: 42,
+    consultorNome: 'Luana Patricia de Andrade Lima',
+    consultorTelefone: '+55 11 9XXXX-9012',
+    totalMensagens: 89,
+    telegramCount: 67,
+    whatsappCount: 22,
+    participantes: 4,
+    tempoResposta: '1h 20min',
+    climaGeral: 'Normal',
+    climaDescricao: 'Cliente focado e prazo definido. Sem ruído.',
+    resumoExecutivo: 'Apartamento pequeno (68m²) totalmente preparado para iniciar. Material entregue, equipe definida, cliente alinhado. Início agendado para 15/04. Sem alertas. Caso típico de fluxo saudável.',
+    eventos: [
+      { date: '08/04', text: 'Equipe confirmada e definida', type: 'good' },
+      { date: '05/04', text: 'Material entregue na portaria', type: 'good' },
+      { date: '02/04', text: 'Visita técnica de entrada — sem pendências', type: 'good' },
+      { date: '28/03', text: 'Definição de cor (ARABIA)', type: 'good' },
+      { date: '20/03', text: '1º contato operacional', type: 'good' },
+    ],
+    alertas: [],
+    pendencias: [
+      { text: 'Iniciar execução em 15/04', done: false },
+      { text: 'Equipe definida', done: true },
+      { text: 'Material entregue', done: true },
+      { text: 'Cor definida', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Sala', superficie: 'Piso', metragem: '32', produto: 'STELION ARABIA', concluido: false },
+      { ambiente: 'Quartos', superficie: 'Piso', metragem: '36', produto: 'STELION ARABIA', concluido: false },
+    ],
+  },
+
+  {
+    id: 'demo-006',
+    clienteNome: 'Cliente Reaplicação Studio',
+    clienteTelefone: '+55 11 9XXXX-6677',
+    clienteEmail: 'cliente6@exemplo.com',
+    projetoEndereco: 'R. Augusta, 1500',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 45,
+    status: 'reparo',
+    faseAtual: 'PROJETOS - 1ª REVISÃO',
+    cores: ['PERSONALIZADA'],
+    diasNoPipeline: 28,
+    consultorNome: 'Juliana Santos',
+    consultorTelefone: '+55 11 9XXXX-3344',
+    totalMensagens: 203,
+    telegramCount: 158,
+    whatsappCount: 45,
+    participantes: 5,
+    tempoResposta: '1h 45min',
+    climaGeral: 'Bom',
+    climaDescricao: 'Cliente repetiu serviço — boa experiência anterior.',
+    resumoExecutivo: 'Reaplicação em studio de 45m². Cliente é da carteira fidelizada (segunda obra com a empresa). Pediu cor personalizada baseada em referência fornecida. Projeto técnico em revisão na equipe de cores. Sem urgência, previsão de execução em 2 semanas.',
+    eventos: [
+      { date: '08/04', text: 'Equipe de cores em desenvolvimento da personalização', type: 'good' },
+      { date: '05/04', text: 'Cliente forneceu referência visual', type: 'good' },
+      { date: '02/04', text: 'Pedido aprovado para reaplicação', type: 'good' },
+      { date: '28/03', text: 'Diagnóstico do piso atual realizado', type: 'good' },
+    ],
+    alertas: [],
+    pendencias: [
+      { text: 'Aprovar amostra de cor personalizada', done: false },
+      { text: 'Definir data de reaplicação', done: false },
+      { text: 'Diagnóstico técnico', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Studio', superficie: 'Piso', metragem: '45', produto: 'STELION CUSTOM', concluido: false },
+    ],
+  },
+
+  {
+    id: 'demo-007',
+    clienteNome: 'Cliente em Planejamento',
+    clienteTelefone: null,
+    clienteEmail: 'cliente7@exemplo.com',
+    projetoEndereco: 'Rua Bandeira Paulista, 200',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 180,
+    status: 'planejamento',
+    faseAtual: '1º CONTATO OP.',
+    cores: [],
+    diasNoPipeline: 12,
+    consultorNome: 'Wesley Matheus de Carvalho',
+    consultorTelefone: '+55 11 9XXXX-5678',
+    totalMensagens: 23,
+    telegramCount: 18,
+    whatsappCount: 5,
+    participantes: 3,
+    tempoResposta: '2h',
+    climaGeral: 'Normal',
+    climaDescricao: 'Recém criado. Aguardando primeira conversa de alinhamento.',
+    resumoExecutivo: 'Projeto recém criado, em fase de planejamento inicial. Cliente foi captado via indicação e ainda não definiu cores ou tipo de obra. Próximo passo é a reunião de alinhamento agendada para a semana que vem.',
+    eventos: [
+      { date: '08/04', text: 'Cliente criado no portal', type: 'good' },
+      { date: '08/04', text: 'Mensagem de boas-vindas enviada', type: 'good' },
+    ],
+    alertas: [],
+    pendencias: [
+      { text: 'Agendar reunião de alinhamento', done: false },
+      { text: 'Definir tipo de obra', done: false },
+      { text: 'Coletar informações do projeto', done: false },
+      { text: 'Cadastro inicial', done: true },
+    ],
+    materiais: [],
+  },
+
+  {
+    id: 'demo-008',
+    clienteNome: 'Cliente Pausado (sem motivo)',
+    clienteTelefone: '+55 11 9XXXX-8899',
+    clienteEmail: null,
+    projetoEndereco: 'Al Santos, 800',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 220,
+    status: 'pausado',
+    faseAtual: 'OBRA PAUSADA',
+    cores: ['TERRACOTA'],
+    diasNoPipeline: 195,
+    consultorNome: 'Luana Patricia de Andrade Lima',
+    consultorTelefone: '+55 11 9XXXX-9012',
+    totalMensagens: 412,
+    telegramCount: 320,
+    whatsappCount: 92,
+    participantes: 6,
+    tempoResposta: '12h 30min',
+    climaGeral: 'Frio',
+    climaDescricao: 'Cliente sumiu há 30 dias. Última mensagem foi vaga.',
+    resumoExecutivo: 'Obra de 220m² pausada há quase 1 mês sem motivo registrado. Última mensagem do cliente foi vaga ("vamos conversar em breve") e desde então sem retorno. 195 dias no pipeline já — cabe na categoria zumbi. Recomenda-se contato direto do consultor para definir continuidade ou cancelamento formal.',
+    eventos: [
+      { date: '15/03', text: 'Última mensagem do cliente: "vamos conversar"', type: 'warn' },
+      { date: '10/03', text: 'Equipe reportou que cliente não atende telefone', type: 'alert' },
+      { date: '02/03', text: 'Pausa solicitada pelo cliente — sem motivo', type: 'warn' },
+      { date: '20/02', text: 'Material já estava produzido', type: 'good' },
+    ],
+    alertas: [
+      { type: 'critical', icon: '🧟', text: 'Card há 195 dias no pipeline — categoria zumbi' },
+      { type: 'warn', icon: '📵', text: 'Cliente não responde mensagens há 30 dias' },
+      { type: 'warn', icon: '💰', text: 'Material produzido ocupando estoque' },
+    ],
+    pendencias: [
+      { text: 'Triagem: definir cancelamento ou retomada', done: false },
+      { text: 'Tentar contato direto via telefone do consultor', done: false },
+      { text: 'Decidir destino do material em estoque', done: false },
+    ],
+    materiais: [
+      { ambiente: 'Hall', superficie: 'Piso', metragem: '40', produto: 'STELION TERRACOTA', concluido: false },
+      { ambiente: 'Sala estar', superficie: 'Piso', metragem: '95', produto: 'STELION TERRACOTA', concluido: false },
+      { ambiente: 'Sala jantar', superficie: 'Piso', metragem: '85', produto: 'STELION TERRACOTA', concluido: false },
+    ],
+  },
+
+  {
+    id: 'demo-009',
+    clienteNome: 'Cliente Concluído (admin pendente)',
+    clienteTelefone: '+55 11 9XXXX-1010',
+    clienteEmail: 'cliente9@exemplo.com',
+    projetoEndereco: 'R. Joaquim Floriano, 500',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 110,
+    status: 'concluido',
+    faseAtual: 'REVISÃO FINAL OP',
+    cores: ['MIRAGE'],
+    diasNoPipeline: 102,
+    consultorNome: 'Wesley Matheus de Carvalho',
+    consultorTelefone: '+55 11 9XXXX-5678',
+    totalMensagens: 198,
+    telegramCount: 156,
+    whatsappCount: 42,
+    participantes: 5,
+    tempoResposta: '1h 30min',
+    climaGeral: 'Excelente',
+    climaDescricao: 'Cliente satisfeito. Aguardando finalização administrativa.',
+    resumoExecutivo: 'Obra de 110m² concluída há 25 dias. Cliente recebeu, aprovou, mas o card ainda está em revisão final operacional para arquivamento. Sem pendências técnicas. Caso típico do gargalo administrativo de "Cliente Finalizado" identificado na análise.',
+    eventos: [
+      { date: '05/04', text: 'Cliente assinou termo de aprovação', type: 'good' },
+      { date: '01/04', text: 'Visita de entrega — aprovação total', type: 'good' },
+      { date: '26/03', text: 'Aplicação finalizada', type: 'good' },
+      { date: '15/03', text: 'Início da execução', type: 'good' },
+    ],
+    alertas: [
+      { type: 'info', icon: '⏳', text: '25 dias em revisão administrativa pós-execução' },
+    ],
+    pendencias: [
+      { text: 'Arquivamento administrativo', done: false },
+      { text: 'Cliente aprovou', done: true },
+      { text: 'Entrega realizada', done: true },
+      { text: 'Pagamento liberado', done: true },
+    ],
+    materiais: [
+      { ambiente: 'Living', superficie: 'Piso', metragem: '60', produto: 'STELION MIRAGE', concluido: true },
+      { ambiente: 'Cozinha', superficie: 'Piso', metragem: '28', produto: 'STELION MIRAGE', concluido: true },
+      { ambiente: 'Suíte', superficie: 'Piso', metragem: '22', produto: 'STELION MIRAGE', concluido: true },
+    ],
+  },
+
+  {
+    id: 'demo-010',
+    clienteNome: 'Cliente Em Contrato',
+    clienteTelefone: '+55 11 9XXXX-2020',
+    clienteEmail: null,
+    projetoEndereco: 'Rua Oscar Freire, 1000',
+    projetoCidade: 'São Paulo / SP',
+    projetoMetragem: 156,
+    status: 'contrato',
+    faseAtual: 'EM CONTRATO',
+    cores: ['JAVIER'],
+    diasNoPipeline: 18,
+    consultorNome: 'Wesley Matheus de Carvalho',
+    consultorTelefone: '+55 11 9XXXX-5678',
+    totalMensagens: 47,
+    telegramCount: 31,
+    whatsappCount: 16,
+    participantes: 4,
+    tempoResposta: '50min',
+    climaGeral: 'Normal',
+    climaDescricao: 'Cliente engajado, processo padrão de contratualização.',
+    resumoExecutivo: 'Obra de 156m² em fase de contratualização. Cliente já recebeu o contrato via D4Sign há 3 dias e ainda não assinou. Equipe está acompanhando. Sem alertas. Fase típica do funil — costuma demorar de 5 a 10 dias.',
+    eventos: [
+      { date: '08/04', text: 'Lembrete de assinatura enviado ao cliente', type: 'good' },
+      { date: '05/04', text: 'Contrato enviado via D4Sign', type: 'good' },
+      { date: '02/04', text: 'Proposta aceita', type: 'good' },
+      { date: '25/03', text: '1º contato operacional', type: 'good' },
+    ],
+    alertas: [],
+    pendencias: [
+      { text: 'Aguardar assinatura do contrato', done: false },
+      { text: 'Após assinatura → liberar OE', done: false },
+      { text: 'Proposta aceita', done: true },
+      { text: 'Contrato enviado', done: true },
+    ],
+    materiais: [],
+  },
+];
+
+let activeStatusFilter = 'all';
+let activeObraId = null;
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+
+function renderStatusFilters() {
+  const statuses = [...new Set(OBRAS.map(o => o.status))];
+  const html = '<button class="status-filter active" data-filter="all" onclick="setStatusFilter(\'all\')">Todas (' + OBRAS.length + ')</button>' +
+    statuses.map(s => {
+      const count = OBRAS.filter(o => o.status === s).length;
+      return `<button class="status-filter" data-filter="${s}" onclick="setStatusFilter('${s}')">${STATUS_LABELS[s] || s} (${count})</button>`;
+    }).join('');
+  document.getElementById('status-filters').innerHTML = html;
+}
+
+function setStatusFilter(filter) {
+  activeStatusFilter = filter;
+  document.querySelectorAll('.status-filter').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === filter);
+  });
+  renderObrasList();
+}
+
+function renderObrasList() {
+  const search = (document.getElementById('sidebar-search')?.value || '').toLowerCase();
+  let filtered = OBRAS;
+  if (activeStatusFilter !== 'all') {
+    filtered = filtered.filter(o => o.status === activeStatusFilter);
+  }
+  if (search) {
+    filtered = filtered.filter(o =>
+      o.clienteNome.toLowerCase().includes(search) ||
+      (o.projetoCidade || '').toLowerCase().includes(search) ||
+      (o.faseAtual || '').toLowerCase().includes(search) ||
+      (o.consultorNome || '').toLowerCase().includes(search)
+    );
+  }
+
+  document.getElementById('sidebar-count').textContent =
+    filtered.length + ' obra' + (filtered.length === 1 ? '' : 's') + ' visível' + (filtered.length === 1 ? '' : 'is');
+
+  const html = filtered.map(o => {
+    const hasAlert = (o.alertas || []).length > 0;
+    const isActive = o.id === activeObraId;
+    return `
+      <button class="obra-card ${isActive ? 'active' : ''}" data-id="${o.id}" onclick="selectObra('${o.id}')">
+        <div class="obra-name">${o.clienteNome}</div>
+        <div class="obra-meta">
+          <span>📍 ${o.projetoCidade || '—'}</span>
+          <span>📐 ${o.projetoMetragem || '—'}m²</span>
+        </div>
+        <span class="obra-status status-${o.status}">${STATUS_LABELS[o.status] || o.status}</span>
+        ${hasAlert ? `<span class="obra-alert">🚨 ${o.alertas.length}</span>` : ''}
+      </button>
+    `;
+  }).join('');
+  document.getElementById('obras-list').innerHTML =
+    html || '<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Nenhuma obra com esses filtros</div>';
+}
+
+function selectObra(id) {
+  activeObraId = id;
+  document.querySelectorAll('.obra-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.id === id);
+  });
+  renderDetail(OBRAS.find(o => o.id === id));
+}
+
+function renderDetail(o) {
+  if (!o) return;
+
+  const climateEmoji = {
+    'Excelente': '🌟', 'Bom': '😊', 'Normal': '😐',
+    'Tenso': '😰', 'Crítico': '🚨', 'Frio': '🥶'
+  }[o.climaGeral] || '😐';
+
+  const eventos = o.eventos.map(e => `
+    <div class="event ${e.type}">
+      <div class="event-date">${e.date}</div>
+      <div class="event-text">${e.text}</div>
+    </div>
+  `).join('');
+
+  const alertas = (o.alertas || []).map(a => `
+    <div class="alert-item ${a.type}">
+      <div class="icon">${a.icon}</div>
+      <div class="text">${a.text}</div>
+    </div>
+  `).join('');
+
+  const pendencias = o.pendencias.map(p => `
+    <div class="pend-item ${p.done ? 'done' : ''}">
+      <div class="check ${p.done ? 'done' : ''}">${p.done ? '✓' : ''}</div>
+      <div class="text">${p.text}</div>
+    </div>
+  `).join('');
+
+  const materiais = o.materiais.length === 0
+    ? '<div style="padding:20px;color:var(--text3);font-size:12px;text-align:center">Nenhum material registrado ainda nesta fase.</div>'
+    : o.materiais.map(m => `
+      <div class="material-card">
+        <div class="ambiente">${m.ambiente}</div>
+        <div class="superficie">${m.superficie}</div>
+        <div class="detail-row">
+          <span>${m.produto}</span>
+          <span>${m.metragem}m²
+            ${m.retrabalho
+              ? '<span class="check-icon pending" title="Retrabalho">⟲</span>'
+              : m.concluido
+                ? '<span class="check-icon" title="Concluído">✓</span>'
+                : '<span class="check-icon pending" title="Pendente">·</span>'}
+          </span>
+        </div>
+      </div>
+    `).join('');
+
+  const contatoCliente = `
+    <div class="contato-card">
+      <div class="role">Cliente</div>
+      <div class="name">${o.clienteNome}</div>
+      <div class="info">
+        ${o.clienteTelefone ? `<span><span class="icon">📞</span>${o.clienteTelefone}</span>` : '<span style="color:var(--text4)"><span class="icon">📞</span>sem telefone</span>'}
+        ${o.clienteEmail ? `<span><span class="icon">✉️</span>${o.clienteEmail}</span>` : '<span style="color:var(--text4)"><span class="icon">✉️</span>sem email</span>'}
+        <span><span class="icon">📍</span>${o.projetoEndereco}</span>
+      </div>
+    </div>
+  `;
+
+  const contatoConsultor = `
+    <div class="contato-card">
+      <div class="role">Consultor responsável</div>
+      <div class="name">${o.consultorNome}</div>
+      <div class="info">
+        <span><span class="icon">📞</span>${o.consultorTelefone || 'sem telefone'}</span>
+        ${o.consultorAtendimento ? `<span><span class="icon">💼</span>Atendimento: ${o.consultorAtendimento}</span>` : ''}
+        ${o.consultorOperacional ? `<span><span class="icon">⚙️</span>Operacional: ${o.consultorOperacional}</span>` : ''}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('detail-pane').innerHTML = `
+    <div class="detail-head">
+      <div class="obra-id">📋 ${o.id} · criado há ${o.diasNoPipeline} dias</div>
+      <h2>${o.clienteNome}</h2>
+      <div class="endereco">📍 ${o.projetoEndereco} · ${o.projetoCidade}</div>
+      <div class="badges">
+        <span class="badge badge-status status-${o.status}">${STATUS_LABELS[o.status] || o.status}</span>
+        <span class="badge badge-fase">📌 ${o.faseAtual}</span>
+        <span class="badge badge-m2">📐 ${o.projetoMetragem} m²</span>
+        ${o.cores.length > 0 ? `<span class="badge badge-fase">🎨 ${o.cores.join(' · ')}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi-cell">
+        <div class="label">Total mensagens</div>
+        <div class="value gold">${o.totalMensagens.toLocaleString('pt-BR')}</div>
+        <div class="sub">${o.telegramCount} TG · ${o.whatsappCount} WA</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Participantes</div>
+        <div class="value">${o.participantes}</div>
+        <div class="sub">no grupo</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Tempo resposta</div>
+        <div class="value">${o.tempoResposta}</div>
+        <div class="sub">médio</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Dias no pipeline</div>
+        <div class="value ${o.diasNoPipeline > 200 ? 'red' : o.diasNoPipeline > 150 ? 'amber' : 'green'}">${o.diasNoPipeline}</div>
+        <div class="sub">desde criação</div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="climate">
+        <div class="emoji">${climateEmoji}</div>
+        <div class="text">
+          <div class="label">Clima da relação com o cliente</div>
+          <div class="clima">${o.climaGeral}</div>
+          <div class="desc">${o.climaDescricao}</div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <h3>📋 Resumo executivo</h3>
+        <div class="sub-h">Gerado por IA a partir das ${o.totalMensagens} mensagens da obra</div>
+        <div class="resumo-box">${o.resumoExecutivo}</div>
+      </div>
+
+      ${o.alertas.length > 0 ? `
+      <div class="section-block">
+        <h3>🚨 Alertas <span class="badge-count">${o.alertas.length}</span></h3>
+        <div class="sub-h">Pontos críticos identificados nas conversas recentes</div>
+        <div class="alert-grid">${alertas}</div>
+      </div>
+      ` : ''}
+
+      <div class="section-block">
+        <h3>📆 Linha do tempo <span class="badge-count">${o.eventos.length} eventos</span></h3>
+        <div class="sub-h">Eventos cronológicos extraídos do diário da obra</div>
+        <div class="timeline">${eventos}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>✓ Pendências e marcos</h3>
+        <div class="sub-h">Estado de avanço dos itens da obra</div>
+        <div class="pend-list">${pendencias}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>🧱 Materiais e ambientes <span class="badge-count">${o.materiais.length}</span></h3>
+        <div class="sub-h">Detalhamento de produto, metragem e ambiente</div>
+        <div class="materiais">${materiais}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>👥 Contatos</h3>
+        <div class="sub-h">Cliente final e equipe responsável Monofloor</div>
+        <div class="contatos">
+          ${contatoCliente}
+          ${contatoConsultor}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function copiarLink() {
+  const url = window.location.href.split('#')[0];
+  const toast = document.getElementById('toast-share');
+  const showToast = (msg) => {
+    toast.textContent = msg;
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { toast.style.transform = 'translateX(-50%) translateY(80px)'; }, 2400);
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(
+      () => showToast('✓ Link copiado'),
+      () => showToast('⚠ Copie manualmente: ' + url)
+    );
+  } else {
+    showToast('⚠ Copie manualmente: ' + url);
+  }
+}
+
+// Init
+renderStatusFilters();
+renderObrasList();
+// Auto-select first obra
+selectObra(OBRAS[0].id);
+</script>
+</body>
+</html>

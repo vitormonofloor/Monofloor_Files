@@ -22,24 +22,55 @@ Este documento traz **código pronto para colar** que corrige cada vulnerabilida
 
 ## 🚨 Vulnerabilidades identificadas
 
+⚠️ **Atualização 11/04**: investigação adicional revelou **mais 7 endpoints expostos** sem autenticação, incluindo um vazamento crítico de **CPF e RG de prestadores**.
+
 | # | Endpoint | Domínio | Método | Impacto |
 |---|---|---|---|---|
 | V1 | `/api/projects` | cliente.monofloor.cloud | GET | Lista 500 projetos com PII completa |
-| V2 | `/api/projects/[id]` | cliente.monofloor.cloud | GET | Projeto único com PII |
+| V2 | `/api/projects/[id]` | cliente.monofloor.cloud | GET | **~90 campos** por projeto, incluindo `whatsappSummary` com resumo IA das mensagens |
 | V3 | `/api/projects` | cliente.monofloor.cloud | POST/PATCH | Criação/edição sem auth |
 | V4 | `/api/alerts` | cliente.monofloor.cloud | GET | Alertas internos |
 | V5 | `/api/checklist` | cliente.monofloor.cloud | GET | Checklist interno |
-| V6 | `/api/obras` | planejamento.monofloor.cloud | GET | 228 obras com endereço residencial |
+| **V6** | **`/api/prestadores`** | cliente.monofloor.cloud | GET | 🔴 **CPF, RG e telefone de prestadores (43KB)** |
+| **V7** | **`/api/contratos`** | cliente.monofloor.cloud | GET | 192KB de contratos completos |
+| **V8** | **`/api/projects/[id]/messages`** | cliente.monofloor.cloud | GET | Mensagens Telegram + WhatsApp por projeto (até 1000+ por obra) |
+| **V9** | **`/api/projects/[id]/fases`** | cliente.monofloor.cloud | GET | Materiais e ambientes por projeto |
+| **V10** | **`/api/whatsapp/conversations`** | cliente.monofloor.cloud | GET | Lista de 299 grupos WhatsApp ativos |
+| **V11** | **`/api/whatsapp/messages?phone=`** | cliente.monofloor.cloud | GET | Mensagens individuais de cada conversa |
+| **V12** | **`/api/whatsapp/summary?projectId=`** | cliente.monofloor.cloud | GET | Resumo IA gerado das conversas |
+| **V13** | **`/api/crm/typeform-responses`** | cliente.monofloor.cloud | GET | Respostas CRM do Typeform |
+| V14 | `/api/obras` | planejamento.monofloor.cloud | GET | 228 obras com endereço residencial |
 
-**Dados expostos confirmados:**
-- Nome completo do cliente
-- Email e telefone do cliente
+### Dados expostos confirmados (consolidado)
+
+**De clientes finais:**
+- Nome completo, email, telefone
 - Endereço completo da obra (rua, número, apto, condomínio, cidade, CEP)
-- Metragem, valor estimado
-- Cores escolhidas, tipo de obra
-- Consultor responsável (nome e contatos internos)
+- Metragem, valor estimado, cores escolhidas, tipo de obra
 - `portalToken` (token de acesso ao portal individual do cliente)
 - Status interno e fases do pipeline
+- **Histórico completo de mensagens WhatsApp e Telegram** (texto, áudio transcrito, foto, vídeo)
+- Resumo IA das conversas (clima da relação, alertas, pendências, eventos)
+
+**De prestadores Monofloor (CRÍTICO LGPD):**
+- 🔴 **CPF**
+- 🔴 **RG**
+- Telefone, nome completo
+
+**De equipe interna:**
+- Nome de consultores, telefones internos
+- Distribuição de carteira por consultor (exposição de performance individual)
+
+### 🚨 Severidade extra: vazamento de PII de prestadores
+
+A exposição de **CPF e RG de prestadores via `/api/prestadores`** é uma violação direta da LGPD (Art. 5º, II — dados pessoais) e pode caracterizar:
+
+- **Violação de dados** sob LGPD (Art. 48)
+- **Notificação obrigatória** à ANPD se houver evidência de acesso indevido
+- **Risco trabalhista** se prestadores souberem que tiveram dados pessoais expostos
+- **Risco contratual** com clientes empresariais que têm cláusulas de proteção de dados
+
+**Ação imediata recomendada**: além das correções de auth abaixo, **rotacionar tokens** e **auditar logs** dos últimos 90 dias para detectar possíveis acessos indevidos antes da correção.
 
 ---
 
