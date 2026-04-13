@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monofloor — Auditoria Timeline</title>
+<meta name="description" content="Auditoria de qualidade no formato timeline: cada obra com diagnostico, problemas, SLAs e eventos em um diario de bordo.">
+<meta name="theme-color" content="#241d16">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23d4a96e'/%3E%3Ctext x='50' y='66' font-family='Georgia,serif' font-size='56' font-weight='700' fill='%23241d16' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Widescreen';
+  src: url('https://cliente.monofloor.cloud/_next/static/media/Widescreen%20Light-s.p.9717fdaf.otf') format('opentype');
+  font-weight: 300 400; font-style: normal; font-display: swap;
+}
+
+:root {
+  --bg: #1a140e;
+  --bg2: #241d16;
+  --bg3: #2d2519;
+  --surface: #322a1d;
+  --surface-hover: #3a3122;
+  --border: #483a2b;
+  --border2: #5a4935;
+  --border3: #6f5c45;
+  --gold: #e2bb88;
+  --gold2: #d4a96e;
+  --gold-dim: #b8a080;
+  --gold-bg: rgba(226, 187, 136, .08);
+  --green: #6ee7b7;
+  --green-bg: rgba(110, 231, 183, .1);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, .1);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, .1);
+  --blue: #93c5fd;
+  --blue-bg: rgba(147, 197, 253, .1);
+  --purple: #c084fc;
+  --purple-bg: rgba(192, 132, 252, .1);
+  --text: #faf8f5;
+  --text2: #d6c9b8;
+  --text3: #a89880;
+  --text4: #6f5c45;
+  --fd: 'Fraunces', Georgia, serif;
+  --fb: 'Widescreen', 'Inter', system-ui, sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --shadow-md: 0 8px 24px rgba(0,0,0,.5);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--fb);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold2); }
+button { font-family: inherit; cursor: pointer; }
+code { font-family: var(--fm); font-size: .9em; background: var(--bg3); padding: 1px 5px; border-radius: 3px; color: var(--gold); }
+
+/* ════ NAV ════ */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(26,20,14,.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1480px; margin: 0 auto; padding: 14px 28px;
+  display: flex; align-items: center; gap: 20px;
+}
+.nav-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px; color: var(--bg);
+  flex-shrink: 0;
+}
+.nav-brand { font-size: 14px; font-weight: 600; letter-spacing: -.2px; }
+.nav-brand .sub {
+  display: block; font-size: 10px; color: var(--text3);
+  font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px;
+}
+.nav-links { margin-left: auto; display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.nav-link {
+  font-size: 12px; padding: 8px 14px; border-radius: 8px;
+  color: var(--text3); transition: all .15s;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.nav-back {
+  font-size: 12px; padding: 8px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 8px; color: var(--text2);
+  background: transparent;
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+  transition: all .15s;
+}
+.nav-back:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-bg);
+}
+
+/* ════ HERO ════ */
+.hero {
+  padding: 64px 0 48px;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(212,180,131,.06) 0%, transparent 60%), var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.hero-inner { max-width: 1480px; margin: 0 auto; padding: 0 28px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--gold); font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 14px; border: 1px solid var(--gold-dim);
+  border-radius: 100px; background: var(--gold-bg);
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.85); }
+}
+.hero h1 {
+  font-family: var(--fd);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 400;
+  line-height: 1.05; letter-spacing: -1.5px;
+  margin-bottom: 20px; max-width: 900px;
+}
+.hero h1 em { font-style: italic; color: var(--gold); font-weight: 300; }
+.hero-lead {
+  font-size: 16px; color: var(--text2);
+  max-width: 720px; line-height: 1.65;
+}
+.hero-lead strong { color: var(--text); font-weight: 500; }
+
+/* ════ KPI STRIP (hero) ════ */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 32px;
+}
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+}
+.kpi-card.g::before { background: var(--green); }
+.kpi-card.r::before { background: var(--red); }
+.kpi-card.a::before { background: var(--amber); }
+.kpi-card.b::before { background: var(--blue); }
+.kpi-card.go::before { background: var(--gold); }
+.kpi-card .v {
+  font-family: var(--fd); font-size: 30px; font-weight: 300; line-height: 1;
+}
+.kpi-card .l {
+  font-size: 10px; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 1px; margin-top: 4px;
+}
+
+/* ════ MAIN LAYOUT ════ */
+.main {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px 28px 80px;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+}
+@media (max-width: 1100px) {
+  .main { grid-template-columns: 1fr; }
+}
+
+/* ════ SIDEBAR ════ */
+.sidebar {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  height: fit-content;
+  position: sticky; top: 100px;
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
+}
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+.sidebar-title {
+  font-family: var(--fd);
+  font-size: 18px; font-weight: 500;
+  margin-bottom: 4px;
+}
+.sidebar-sub {
+  font-size: 11px; color: var(--text3);
+  margin-bottom: 16px;
+}
+.sidebar-search {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color .15s;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+.sidebar-search:focus { border-color: var(--gold); }
+.sidebar-search::placeholder { color: var(--text4); }
+
+.status-filters {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.status-filter {
+  font-size: 10px;
+  padding: 5px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text3);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+}
+.status-filter:hover { border-color: var(--gold-dim); color: var(--text2); }
+.status-filter.active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.obras-list { display: flex; flex-direction: column; gap: 8px; }
+.obra-card {
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+  display: block;
+}
+.obra-card:hover { background: var(--bg3); border-color: var(--border3); }
+.obra-card.active {
+  background: var(--surface);
+  border-color: var(--gold);
+  border-left-color: var(--gold);
+}
+.obra-card .obra-name {
+  font-size: 13px; font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.obra-card .obra-meta {
+  display: flex; gap: 10px;
+  font-size: 10px;
+  color: var(--text3);
+  font-family: var(--fm);
+  margin-bottom: 8px;
+}
+.obra-card .obra-meta span { display: inline-flex; align-items: center; gap: 3px; }
+.obra-card .obra-status {
+  display: inline-block;
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 100px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+.obra-card .obra-alert {
+  display: inline-block;
+  font-size: 9px;
+  margin-left: 4px;
+  color: var(--red);
+}
+
+/* status colors */
+.st-reparo { background: var(--amber-bg); color: var(--amber); }
+.st-em_execucao { background: var(--blue-bg); color: var(--blue); }
+.st-aguardando_execucao { background: var(--gold-bg); color: var(--gold); }
+.st-aguardando_clima { background: var(--amber-bg); color: var(--amber); }
+.st-pausado { background: var(--amber-bg); color: var(--amber); }
+.st-finalizado { background: var(--green-bg); color: var(--green); }
+.st-concluido { background: var(--green-bg); color: var(--green); }
+
+/* ════ DETAIL PANE ════ */
+.detail {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.detail-head {
+  padding: 32px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--bg2) 100%);
+  border-bottom: 1px solid var(--border);
+}
+.detail-head .obra-id {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--fm); font-size: 11px; color: var(--text3);
+  margin-bottom: 12px;
+}
+.detail-head h2 {
+  font-family: var(--fd);
+  font-size: 28px; font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.detail-head .endereco {
+  font-size: 13px; color: var(--text3);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px;
+}
+.detail-head .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.detail-head .badge {
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-weight: 500;
+  font-family: var(--fm);
+}
+.badge-status { font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.badge-fase {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+.badge-m2 {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+}
+.badge-crit {
+  background: var(--red-bg);
+  border: 1px solid rgba(248,113,113,.3);
+  color: var(--red);
+}
+.badge-open {
+  background: var(--amber-bg);
+  border: 1px solid rgba(251,191,36,.3);
+  color: var(--amber);
+}
+
+/* KPI strip */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+@media (max-width: 700px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+.kpi-cell {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+}
+.kpi-cell:last-child { border-right: none; }
+@media (max-width: 700px) {
+  .kpi-cell:nth-child(2n) { border-right: none; }
+  .kpi-cell:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+}
+.kpi-cell .label {
+  font-size: 9px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+.kpi-cell .value {
+  font-family: var(--fd); font-size: 26px;
+  font-weight: 400; line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.kpi-cell .value.gold { color: var(--gold); }
+.kpi-cell .value.green { color: var(--green); }
+.kpi-cell .value.amber { color: var(--amber); }
+.kpi-cell .value.red { color: var(--red); }
+.kpi-cell .sub {
+  font-size: 10px; color: var(--text3);
+  margin-top: 4px;
+  font-family: var(--fm);
+}
+
+/* Section blocks */
+.detail-body { padding: 28px 32px 32px; }
+.section-block { margin-bottom: 32px; }
+.section-block:last-child { margin-bottom: 0; }
+.section-block h3 {
+  font-family: var(--fd);
+  font-size: 18px; font-weight: 500;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-block h3 .badge-count {
+  font-size: 11px;
+  padding: 3px 9px;
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-dim);
+  border-radius: 100px;
+  color: var(--gold);
+  font-weight: 600;
+  font-family: var(--fm);
+}
+.section-block .sub-h {
+  font-size: 12px; color: var(--text3);
+  margin-bottom: 16px;
+}
+
+/* Severity indicator */
+.severity-strip {
+  display: flex; align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+.severity-strip .emoji { font-size: 36px; }
+.severity-strip .text { flex: 1; }
+.severity-strip .text .label {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 4px;
+}
+.severity-strip .text .nivel {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.severity-strip .text .desc {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+/* Diagnostico box */
+.diag-box {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-dim);
+  border-left: 3px solid var(--gold);
+  border-radius: 14px;
+  padding: 22px 26px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+  white-space: pre-wrap;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.diag-box::-webkit-scrollbar { width: 6px; }
+.diag-box::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.diag-box strong { color: var(--text); }
+
+/* Timeline vertical */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold-dim) 0%, var(--border) 100%);
+}
+.event {
+  position: relative;
+  padding: 0 0 20px 0;
+}
+.event:last-child { padding-bottom: 0; }
+.event::before {
+  content: '';
+  position: absolute;
+  left: -28px; top: 6px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 0 4px var(--bg2);
+}
+.event.alert::before { border-color: var(--red); }
+.event.warn::before { border-color: var(--amber); }
+.event.good::before { border-color: var(--green); }
+.event-date {
+  font-family: var(--fm);
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 4px;
+}
+.event-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* Alert items */
+.alert-grid { display: grid; gap: 10px; }
+.alert-item {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.alert-item.warn { border-left-color: var(--amber); }
+.alert-item.info { border-left-color: var(--blue); }
+.alert-item .icon { font-size: 18px; line-height: 1.2; }
+.alert-item .text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* SLA mini bars */
+.sla-mini { display: grid; gap: 8px; }
+.sla-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 50px;
+  gap: 12px; align-items: center;
+  padding: 8px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.sla-row .nm { font-size: 11px; font-weight: 500; }
+.sla-row .track {
+  height: 6px; background: var(--bg); border-radius: 3px;
+  overflow: hidden;
+}
+.sla-row .fill { height: 100%; border-radius: 3px; }
+.sla-row .pct {
+  font-family: var(--fm); font-size: 12px; font-weight: 600;
+  text-align: right;
+}
+
+/* Problems mini grid */
+.prob-mini {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.prob-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.prob-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0; width: 3px;
+}
+.prob-item.cr::before { background: var(--red); }
+.prob-item.wr::before { background: var(--amber); }
+.prob-item.ok::before { background: var(--green); }
+.prob-item .cat { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+.prob-item .ct { font-family: var(--fd); font-size: 24px; font-weight: 300; line-height: 1; }
+.prob-item .cb { font-size: 10px; color: var(--red); margin-top: 2px; }
+
+/* Findings mini */
+.findings-mini { display: grid; gap: 8px; }
+.finding-item {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: start;
+}
+.finding-item .code {
+  font-family: var(--fm); font-size: 11px; font-weight: 700;
+  padding: 3px 6px; border-radius: 5px; text-align: center;
+}
+.finding-item .code.cr { background: var(--red-bg); color: var(--red); }
+.finding-item .code.hi { background: var(--amber-bg); color: var(--amber); }
+.finding-item .desc { font-size: 12px; line-height: 1.45; }
+.finding-item .src { font-size: 10px; color: var(--text4); margin-top: 2px; }
+
+/* Team mini */
+.team-mini { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.team-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.team-card .nm { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.team-card .rl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
+.team-card .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+.team-card .stat { text-align: center; padding: 6px; background: var(--bg); border-radius: 5px; }
+.team-card .stat .v { font-family: var(--fd); font-size: 20px; font-weight: 300; }
+.team-card .stat .l { font-size: 9px; color: var(--text3); text-transform: uppercase; }
+.team-card .bar-wrap { margin-top: 8px; }
+.team-card .bar { height: 4px; background: var(--bg); border-radius: 2px; overflow: hidden; }
+.team-card .bar div { height: 100%; border-radius: 2px; }
+.team-card .bar-label { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+/* Empty state */
+.empty {
+  padding: 80px 32px;
+  text-align: center;
+  color: var(--text3);
+}
+.empty .ico { font-size: 48px; margin-bottom: 16px; }
+.empty h3 {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+.empty p { font-size: 13px; max-width: 400px; margin: 0 auto; }
+
+/* Footer */
+.footer {
+  padding: 48px 28px 60px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+  margin-top: 40px;
+}
+.footer-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 800px) { .footer-inner { grid-template-columns: 1fr; gap: 24px; } }
+.footer h4 { font-family: var(--fd); font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+.footer p { font-size: 13px; color: var(--text3); max-width: 360px; line-height: 1.6; }
+.footer h5 { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+.footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer ul a, .footer ul span { font-size: 13px; color: var(--text2); }
+.footer-meta {
+  max-width: 1480px;
+  margin: 32px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--fm);
+  font-size: 11px;
+  color: var(--text4);
+}
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--gold); color: var(--bg);
+  padding: 12px 24px; border-radius: 100px;
+  font-size: 13px; font-weight: 600;
+  z-index: 999; box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  transition: transform .3s ease; pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">M</div>
+    <div class="nav-brand">
+      Monofloor
+      <span class="sub">Auditoria Timeline</span>
+    </div>
+    <div class="nav-links">
+      <a href="auditoria.html" class="nav-link">Auditoria v2</a>
+      <a href="../timeline-obras/" class="nav-link">Timeline Obras</a>
+      <a href="../" class="nav-link">Painel</a>
+      <button class="nav-back" onclick="copiarLink()">Compartilhar</button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow" id="hero-eye">Carregando...</div>
+    <h1>
+      Cada obra ganha seu <em>diagnostico de auditoria</em>, com timeline e analise de risco.
+    </h1>
+    <p class="hero-lead">
+      Combinacao do formato timeline com os dados de auditoria de qualidade.
+      <strong>Selecione uma obra para ver o diagnostico completo, problemas,
+      SLAs e eventos no formato de diario de bordo.</strong>
+    </p>
+    <div class="kpi-row" id="kpi-row"></div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Obras em auditoria</div>
+    <div class="sidebar-sub" id="sidebar-count">Carregando...</div>
+    <input type="text" class="sidebar-search" id="sidebar-search"
+           placeholder="Buscar por cliente, cidade, status..."
+           oninput="renderList()">
+    <div class="status-filters" id="status-filters"></div>
+    <div class="obras-list" id="obras-list"></div>
+  </aside>
+
+  <!-- DETAIL -->
+  <main class="detail" id="detail-pane">
+    <div class="empty">
+      <div class="ico">&#x1F50D;</div>
+      <h3>Selecione uma obra</h3>
+      <p>Escolha uma obra na lista ao lado para ver o diagnostico completo de auditoria, com timeline, problemas, SLAs e recomendacoes.</p>
+    </div>
+  </main>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <h4>Auditoria Timeline</h4>
+      <p>
+        Painel que combina o formato de linha do tempo com os dados de auditoria
+        de qualidade. Cada obra vira um diario de bordo com diagnostico IA,
+        problemas categorizados, SLAs e eventos recentes.
+      </p>
+    </div>
+    <div>
+      <h5>Outros paineis</h5>
+      <ul>
+        <li><a href="auditoria.html">Auditoria v2 (visao geral)</a></li>
+        <li><a href="../timeline-obras/">Timeline Obras</a></li>
+        <li><a href="../">Painel principal</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Fontes de dados</h5>
+      <ul>
+        <li><code>data.json</code></li>
+        <li><code>/api/projects</code></li>
+        <li><code>/api/analise</code></li>
+        <li><code>/api/dashboard</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <span>Monofloor · Auditoria Timeline · 2026</span>
+    <span id="footer-info">Carregando...</span>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+const STATUS_LABELS = {
+  finalizado:'Finalizado', concluido:'Concluido', em_execucao:'Em execucao',
+  aguardando_execucao:'Aguardando exec.', planejamento:'Planejamento',
+  reparo:'Reparo', aguardando_clima:'Aguardando clima',
+  marcas_rolo_cera:'Marcas rolo/cera', pausado:'Pausado',
+  cancelado:'Cancelado', contrato:'Em contrato'
+};
+
+const SLA_LABELS = {
+  vt:'Visita Tecnica', contrato:'Contrato', cor:'Cor Definida',
+  producao:'Producao', logistica:'Logistica', vt_entrada:'VT Entrada',
+  equipe:'Equipe Definida', material:'Material Entregue'
+};
+
+const FINDINGS = [
+  {c:'cr',code:'C1',t:'SLA geral em 27% — apenas 35 de 132 obras no prazo',s:'Dashboard'},
+  {c:'cr',code:'C2',t:'636 ocorrencias abertas sem tratamento visivel (3,4 por obra)',s:'Dashboard'},
+  {c:'cr',code:'C3',t:'NPS zero — nenhuma pesquisa de satisfacao em 844 obras finalizadas',s:'Dashboard'},
+  {c:'cr',code:'C4',t:'100% WhatsApp sem responsavel atribuido (1.087 conversas)',s:'WhatsApp'},
+  {c:'cr',code:'C5',t:'78% das conversas terminam com mensagem do cliente sem resposta',s:'WhatsApp'},
+  {c:'cr',code:'C6',t:'156 conversas abandonadas ha mais de 48h',s:'WhatsApp'},
+  {c:'cr',code:'C7',t:'5 obras com risco juridico/reputacional',s:'Analise Risco'},
+  {c:'cr',code:'C8',t:'6 prestadores sem CPF cadastrado',s:'Aplicadores'},
+  {c:'cr',code:'C9',t:'71% insumos em ruptura + 100% equipamentos zerados',s:'Estoque'},
+  {c:'cr',code:'C10',t:'Checklist cosmetico: 100% completado em obras com 38-151 dias de atraso',s:'Projetos'},
+  {c:'hi',code:'A1',t:'Abril 125% ocupacao, julho cai para 37%',s:'Planejamento'},
+  {c:'hi',code:'A2',t:'95% obras sem equipe designada no planejamento',s:'Planejamento'},
+  {c:'hi',code:'A3',t:'Luana (88) + Wesley (69) = 85% da carga em 2 pessoas',s:'Equipe'},
+  {c:'hi',code:'A4',t:'282 reparos vs 229 obras ativas',s:'Obras'},
+  {c:'hi',code:'A5',t:'46 obras represadas em Agend. VT Afericao (25% do ativo)',s:'Dashboard'},
+  {c:'hi',code:'A6',t:'45% turnover prestadores (48 novos de 106)',s:'Aplicadores'},
+  {c:'hi',code:'A7',t:'14 prestadores sem encarregado vinculado',s:'Aplicadores'},
+  {c:'hi',code:'A8',t:'80 pessoas sem alocacao (~R$16-20mil/dia ocioso)',s:'Hoje'},
+  {c:'hi',code:'A9',t:'23 OS prontas ha 17 dias sem despacho',s:'Industria'},
+  {c:'hi',code:'A10',t:'47% sem tipo de obra + 30% sem data prevista',s:'Estatistica'},
+  {c:'hi',code:'A11',t:'100% onboardingStatus = pendente (campo morto)',s:'Estatistica'},
+  {c:'hi',code:'A12',t:'Producao com SLA 48% e VT Entrada com 52%',s:'Dashboard'},
+  {c:'hi',code:'A13',t:'Comunicacao lidera problemas criticos com 31%',s:'Risco'},
+  {c:'hi',code:'A14',t:'6.450kg LILIT parado em 60 cores',s:'Estoque'},
+  {c:'hi',code:'A15',t:'Media 78 dias de atraso nos projetos auditados',s:'Projetos'},
+];
+
+let DATA = null;
+let activeFilter = 'all';
+let activeObraId = null;
+
+async function init() {
+  try {
+    const r = await fetch('data.json');
+    if (!r.ok) throw new Error('data.json nao encontrado');
+    DATA = await r.json();
+    render();
+  } catch(e) {
+    document.getElementById('hero-eye').textContent = 'Erro: ' + e.message;
+  }
+}
+
+function render() {
+  const { projects, dashboard, analise, fetchedAt } = DATA;
+  const dt = fetchedAt ? new Date(fetchedAt) : new Date();
+  const t = dashboard.totals || {};
+  const s = analise.summary || {};
+  const sla = dashboard.sla || {};
+
+  document.getElementById('hero-eye').textContent =
+    'Auditoria · ' + dt.toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+
+  // KPIs
+  document.getElementById('kpi-row').innerHTML = [
+    { v: t.active||0, l:'Ativas', c:'go', vc:'color:var(--gold)' },
+    { v: (sla.compliancePercent||0)+'%', l:'SLA Geral', c:'r', vc:'color:var(--red)' },
+    { v: (analise.atRisk||[]).length, l:'Em Risco', c:'r', vc:'color:var(--red)' },
+    { v: s.critical||0, l:'Criticas', c:'r', vc:'color:var(--red)' },
+    { v: s.atrasados||0, l:'Atrasadas', c:'a', vc:'color:var(--amber)' },
+    { v: s.ok||0, l:'Saudaveis', c:'g', vc:'color:var(--green)' },
+    { v: '25', l:'Achados', c:'b', vc:'color:var(--blue)' },
+    { v: (analise.teamPerformance||[]).filter(x=>x.projetosAtivos>0).length, l:'Consultores', c:'go', vc:'color:var(--gold)' },
+  ].map(k => `<div class="kpi-card ${k.c}"><div class="v" style="${k.vc}">${k.v}</div><div class="l">${k.l}</div></div>`).join('');
+
+  // Build combined obras list: atRisk + projects enrichment
+  window._obras = buildObras(projects, analise, dashboard);
+  window._dashboard = dashboard;
+  window._analise = analise;
+
+  renderFilters();
+  renderList();
+  // Auto select first
+  if (window._obras.length > 0) selectObra(window._obras[0].id);
+
+  document.getElementById('footer-info').textContent =
+    projects.length + ' obras · ' + (analise.atRisk||[]).length + ' em risco · ' + dt.toLocaleDateString('pt-BR');
+}
+
+function buildObras(projects, analise, dashboard) {
+  const risks = analise.atRisk || [];
+  const events = analise.recentEvents || [];
+  const team = analise.teamPerformance || [];
+  const probs = analise.problemCategories || [];
+
+  // Map projects by id
+  const projMap = {};
+  projects.forEach(p => projMap[p.id] = p);
+
+  // Build from atRisk (primary list)
+  const obras = risks.map(r => {
+    const proj = projMap[r.id] || {};
+    // Find events for this obra
+    const obraEvents = events.filter(e =>
+      e.clienteNome && r.clienteNome &&
+      e.clienteNome.trim().toLowerCase().includes(r.clienteNome.trim().toLowerCase().substring(0, 15))
+    );
+
+    // Severity
+    let severity = 'medio';
+    let severityEmoji = '&#x26A0;&#xFE0F;';
+    let severityDesc = 'Obra com alertas de atencao';
+    if (r.criticalProblems >= 3) {
+      severity = 'critico';
+      severityEmoji = '&#x1F6A8;';
+      severityDesc = r.criticalProblems + ' problemas criticos, intervencao urgente necessaria';
+    } else if (r.diasAtraso > 100) {
+      severity = 'alto';
+      severityEmoji = '&#x1F525;';
+      severityDesc = r.diasAtraso + ' dias de atraso, risco de perda do cliente';
+    }
+
+    return {
+      id: r.id,
+      clienteNome: (r.clienteNome || '').trim(),
+      cidade: r.cidade || proj.projetoCidade || '',
+      endereco: proj.projetoEndereco || '',
+      metragem: proj.projetoMetragem || '',
+      fase: r.fase || proj.faseAtual || '',
+      status: r.status || proj.status || '',
+      cores: proj.projetoCores || [],
+      diasAtraso: r.diasAtraso || 0,
+      diagnostico: r.diagnostico || '',
+      openProblems: r.openProblems || 0,
+      criticalProblems: r.criticalProblems || 0,
+      consultor: proj.consultorNome || '',
+      dataExec: proj.dataExecucaoPrevista || '',
+      createdAt: proj.createdAt || '',
+      updatedAt: proj.updatedAt || '',
+      events: obraEvents,
+      severity,
+      severityEmoji,
+      severityDesc,
+    };
+  });
+
+  // Sort by severity then dias atraso
+  obras.sort((a, b) => {
+    const sevOrder = { critico: 0, alto: 1, medio: 2 };
+    const diff = (sevOrder[a.severity]||2) - (sevOrder[b.severity]||2);
+    if (diff !== 0) return diff;
+    return b.diasAtraso - a.diasAtraso;
+  });
+
+  return obras;
+}
+
+function renderFilters() {
+  const statuses = [...new Set(window._obras.map(o => o.status).filter(Boolean))];
+  let html = `<button class="status-filter active" data-filter="all" onclick="setFilter('all')">Todas (${window._obras.length})</button>`;
+  html += `<button class="status-filter" data-filter="critico" onclick="setFilter('critico')">Criticos (${window._obras.filter(o=>o.severity==='critico').length})</button>`;
+  statuses.forEach(s => {
+    const ct = window._obras.filter(o => o.status === s).length;
+    html += `<button class="status-filter" data-filter="${s}" onclick="setFilter('${s}')">${STATUS_LABELS[s]||s} (${ct})</button>`;
+  });
+  document.getElementById('status-filters').innerHTML = html;
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.status-filter').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === f);
+  });
+  renderList();
+}
+
+function renderList() {
+  const search = (document.getElementById('sidebar-search')?.value || '').toLowerCase();
+  let filtered = window._obras;
+
+  if (activeFilter === 'critico') {
+    filtered = filtered.filter(o => o.severity === 'critico');
+  } else if (activeFilter !== 'all') {
+    filtered = filtered.filter(o => o.status === activeFilter);
+  }
+
+  if (search) {
+    filtered = filtered.filter(o =>
+      o.clienteNome.toLowerCase().includes(search) ||
+      o.cidade.toLowerCase().includes(search) ||
+      o.consultor.toLowerCase().includes(search) ||
+      o.fase.toLowerCase().includes(search)
+    );
+  }
+
+  document.getElementById('sidebar-count').textContent =
+    filtered.length + ' obra' + (filtered.length !== 1 ? 's' : '') +
+    ' · ordenadas por severidade';
+
+  const html = filtered.map(o => {
+    const isActive = o.id === activeObraId;
+    const sevColor = o.severity==='critico' ? 'var(--red)' : o.severity==='alto' ? 'var(--amber)' : 'var(--gold)';
+    return `
+      <button class="obra-card ${isActive ? 'active' : ''}" data-id="${o.id}" onclick="selectObra('${o.id}')" style="border-left-color:${isActive ? 'var(--gold)' : sevColor}">
+        <div class="obra-name">${esc(o.clienteNome)}</div>
+        <div class="obra-meta">
+          <span>${o.cidade || '—'}</span>
+          <span>${o.diasAtraso}d atraso</span>
+          ${o.metragem ? '<span>'+o.metragem+'m2</span>' : ''}
+        </div>
+        <span class="obra-status st-${o.status}">${STATUS_LABELS[o.status] || o.status || '—'}</span>
+        ${o.criticalProblems > 0 ? `<span class="obra-alert">${o.criticalProblems} crit</span>` : ''}
+      </button>
+    `;
+  }).join('');
+
+  document.getElementById('obras-list').innerHTML =
+    html || '<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px">Nenhuma obra com esses filtros</div>';
+}
+
+function selectObra(id) {
+  activeObraId = id;
+  document.querySelectorAll('.obra-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.id === id);
+  });
+  renderDetail(window._obras.find(o => o.id === id));
+}
+
+function renderDetail(o) {
+  if (!o) return;
+
+  const sevColors = {
+    critico: { bg:'var(--red-bg)', border:'var(--red)', text:'var(--red)' },
+    alto: { bg:'var(--amber-bg)', border:'var(--amber)', text:'var(--amber)' },
+    medio: { bg:'var(--gold-bg)', border:'var(--gold)', text:'var(--gold)' },
+  };
+  const sc = sevColors[o.severity] || sevColors.medio;
+
+  // Parse diagnostico sections
+  const diagSections = parseDiagnostico(o.diagnostico);
+
+  // Events
+  const eventsHtml = o.events.length > 0
+    ? o.events.map(e => {
+        const d = new Date(e.createdAt);
+        const ts = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+        const cls = e.severidade === 'critica' ? 'alert' : e.severidade === 'alta' ? 'warn' : 'good';
+        return `<div class="event ${cls}">
+          <div class="event-date">${ts} · ${e.severidade || ''}</div>
+          <div class="event-text">${esc(e.titulo || '')}</div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--text4);font-size:12px;padding:8px 0">Nenhum evento recente vinculado a esta obra.</div>';
+
+  // SLAs (global for context)
+  const sla = window._dashboard.sla || {};
+  const slaOrder = ['producao','vt_entrada','logistica','vt','material','contrato','equipe','cor'];
+  const slasHtml = slaOrder.map(key => {
+    const it = (sla.byKey||[]).find(x => x.key === key);
+    if (!it) return '';
+    const p = it.percent;
+    const c = p >= 80 ? 'var(--green)' : p >= 50 ? 'var(--amber)' : 'var(--red)';
+    return `<div class="sla-row"><div class="nm">${SLA_LABELS[key]||key}</div><div class="track"><div class="fill" style="width:${p}%;background:${c}"></div></div><div class="pct" style="color:${c}">${p}%</div></div>`;
+  }).join('');
+
+  // Problems (global)
+  const probs = (window._analise.problemCategories || []).sort((a,b) => b.count - a.count).slice(0, 8);
+  const probsHtml = probs.map(p => {
+    const cp = p.count ? Math.round(p.criticos/p.count*100) : 0;
+    const cls = p.criticos > 5 ? 'cr' : p.criticos > 0 ? 'wr' : 'ok';
+    return `<div class="prob-item ${cls}"><div class="cat">${p.categoria}</div><div class="ct">${p.count}</div><div class="cb">${p.criticos} criticos (${cp}%)</div></div>`;
+  }).join('');
+
+  // Alerts from diagnostico
+  const alerts = [];
+  if (o.criticalProblems >= 3)
+    alerts.push({ type:'critical', icon:'&#x1F6A8;', text: o.criticalProblems + ' problemas criticos acumulados — intervencao urgente' });
+  if (o.diasAtraso > 100)
+    alerts.push({ type:'critical', icon:'&#x23F0;', text: o.diasAtraso + ' dias de atraso no pipeline — risco de perda' });
+  if (o.openProblems > 15)
+    alerts.push({ type:'warn', icon:'&#x26A0;&#xFE0F;', text: o.openProblems + ' problemas abertos sem resolucao' });
+  if (o.diagnostico.toLowerCase().includes('juridico') || o.diagnostico.toLowerCase().includes('processo'))
+    alerts.push({ type:'critical', icon:'&#x2696;&#xFE0F;', text: 'Risco juridico/reputacional identificado no diagnostico' });
+
+  const alertsHtml = alerts.map(a =>
+    `<div class="alert-item ${a.type === 'critical' ? '' : 'warn'}"><div class="icon">${a.icon}</div><div class="text">${a.text}</div></div>`
+  ).join('');
+
+  // Team
+  const team = (window._analise.teamPerformance || [])
+    .filter(t => t.projetosAtivos > 0)
+    .sort((a,b) => b.projetosAtivos - a.projetosAtivos)
+    .slice(0, 4);
+  const teamHtml = team.map(t => {
+    const pp = t.projetosAtivos ? Math.round(t.projetosComProblema/t.projetosAtivos*100) : 0;
+    const bc = pp > 40 ? 'var(--red)' : pp > 25 ? 'var(--amber)' : 'var(--green)';
+    const name = t.nome.split(' ').slice(0,2).join(' ');
+    return `<div class="team-card"><div class="nm">${esc(name)}</div><div class="rl">${t.projetosAtivos} projetos ativos</div>
+    <div class="stats"><div class="stat"><div class="v" style="color:var(--gold)">${t.projetosAtivos}</div><div class="l">Ativos</div></div>
+    <div class="stat"><div class="v" style="color:var(--amber)">${t.projetosComProblema}</div><div class="l">Problema</div></div>
+    <div class="stat"><div class="v" style="color:var(--red)">${t.projetosAtrasados}</div><div class="l">Atrasados</div></div></div>
+    <div class="bar-wrap"><div class="bar"><div style="width:${pp}%;background:${bc}"></div></div><div class="bar-label">${pp}% com problema</div></div></div>`;
+  }).join('');
+
+  // Relevant findings
+  const relevantFindings = FINDINGS.slice(0, 10);
+  const findingsHtml = relevantFindings.map(f =>
+    `<div class="finding-item"><div class="code ${f.c}">${f.code}</div><div><div class="desc">${f.t}</div><div class="src">Fonte: ${f.s}</div></div></div>`
+  ).join('');
+
+  document.getElementById('detail-pane').innerHTML = `
+    <div class="detail-head">
+      <div class="obra-id">Auditoria · ${o.id.substring(0,8)}</div>
+      <h2>${esc(o.clienteNome)}</h2>
+      <div class="endereco">${esc(o.cidade)} ${o.endereco ? '· ' + esc(o.endereco.substring(0, 80)) : ''}</div>
+      <div class="badges">
+        <span class="badge badge-status st-${o.status}">${STATUS_LABELS[o.status] || o.status || '—'}</span>
+        <span class="badge badge-fase">${esc(o.fase || '—')}</span>
+        ${o.metragem ? `<span class="badge badge-m2">${o.metragem} m2</span>` : ''}
+        ${o.criticalProblems > 0 ? `<span class="badge badge-crit">${o.criticalProblems} criticos</span>` : ''}
+        ${o.openProblems > 0 ? `<span class="badge badge-open">${o.openProblems} abertos</span>` : ''}
+      </div>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi-cell">
+        <div class="label">Dias de atraso</div>
+        <div class="value ${o.diasAtraso > 60 ? 'red' : o.diasAtraso > 30 ? 'amber' : 'green'}">${o.diasAtraso}</div>
+        <div class="sub">no pipeline</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Problemas abertos</div>
+        <div class="value ${o.openProblems > 15 ? 'red' : o.openProblems > 5 ? 'amber' : 'green'}">${o.openProblems}</div>
+        <div class="sub">sem resolucao</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Criticos</div>
+        <div class="value ${o.criticalProblems > 2 ? 'red' : o.criticalProblems > 0 ? 'amber' : 'green'}">${o.criticalProblems}</div>
+        <div class="sub">prioridade maxima</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Severidade</div>
+        <div class="value" style="color:${sc.text};font-size:20px">${o.severity.toUpperCase()}</div>
+        <div class="sub">classificacao</div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="severity-strip" style="border-left:3px solid ${sc.border}">
+        <div class="emoji">${o.severityEmoji}</div>
+        <div class="text">
+          <div class="label">Nivel de risco da obra</div>
+          <div class="nivel" style="color:${sc.text}">${o.severity.charAt(0).toUpperCase() + o.severity.slice(1)}</div>
+          <div class="desc">${o.severityDesc}</div>
+        </div>
+      </div>
+
+      ${alerts.length > 0 ? `
+      <div class="section-block">
+        <h3>Alertas <span class="badge-count">${alerts.length}</span></h3>
+        <div class="sub-h">Pontos criticos identificados nesta obra</div>
+        <div class="alert-grid">${alertsHtml}</div>
+      </div>` : ''}
+
+      ${o.diagnostico ? `
+      <div class="section-block">
+        <h3>Diagnostico IA</h3>
+        <div class="sub-h">Analise completa gerada a partir dos dados do portal</div>
+        <div class="diag-box">${formatDiag(o.diagnostico)}</div>
+      </div>` : ''}
+
+      <div class="section-block">
+        <h3>Linha do tempo <span class="badge-count">${o.events.length} eventos</span></h3>
+        <div class="sub-h">Eventos recentes vinculados a esta obra</div>
+        <div class="timeline">${eventsHtml}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>SLAs por etapa</h3>
+        <div class="sub-h">Cumprimento de prazos em cada fase do pipeline (geral)</div>
+        <div class="sla-mini">${slasHtml}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>Mapa de problemas <span class="badge-count">${probs.length} categorias</span></h3>
+        <div class="sub-h">Volume e criticidade por categoria (visao geral)</div>
+        <div class="prob-mini">${probsHtml}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>Equipe <span class="badge-count">${team.length} consultores</span></h3>
+        <div class="sub-h">Performance dos consultores com projetos ativos</div>
+        <div class="team-mini">${teamHtml}</div>
+      </div>
+
+      <div class="section-block">
+        <h3>Achados da auditoria <span class="badge-count">${relevantFindings.length}</span></h3>
+        <div class="sub-h">Principais achados criticos e de alta severidade</div>
+        <div class="findings-mini">${findingsHtml}</div>
+      </div>
+    </div>
+  `;
+}
+
+function parseDiagnostico(text) {
+  if (!text) return {};
+  const sections = {};
+  const lines = text.split('\n');
+  let currentSection = 'intro';
+  sections[currentSection] = [];
+  lines.forEach(line => {
+    if (line.match(/^[A-Z][A-Z\s\-]+:/) || line.match(/^[A-Z]{3,}/)) {
+      currentSection = line.trim();
+      sections[currentSection] = [];
+    } else {
+      sections[currentSection] = sections[currentSection] || [];
+      sections[currentSection].push(line);
+    }
+  });
+  return sections;
+}
+
+function formatDiag(text) {
+  return esc(text)
+    .replace(/^(DIAGNÓSTICO|ESTADO REAL|PRINCIPAIS|SENTIMENTO|PERFORMANCE|GAPS|RECOMENDAÇÕES|TEMPO).*$/gm,
+      match => '<strong style="color:var(--gold);display:block;margin-top:12px">' + match + '</strong>')
+    .replace(/^(\d+\.\s)/gm, '<strong>$1</strong>')
+    .replace(/URGENTE/g, '<span style="color:var(--red);font-weight:700">URGENTE</span>')
+    .replace(/FURIOSO/g, '<span style="color:var(--red);font-weight:700">FURIOSO</span>')
+    .replace(/FRACO/g, '<span style="color:var(--red)">FRACO</span>')
+    .replace(/BOM/g, '<span style="color:var(--green)">BOM</span>')
+    .replace(/REGULAR/g, '<span style="color:var(--amber)">REGULAR</span>');
+}
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copiarLink() {
+  const url = window.location.href.split('#')[0];
+  const toast = document.getElementById('toast');
+  const showToast = (msg) => {
+    toast.textContent = msg;
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => { toast.style.transform = 'translateX(-50%) translateY(80px)'; }, 2400);
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(
+      () => showToast('Link copiado!'),
+      () => showToast('Copie: ' + url)
+    );
+  } else {
+    showToast('Copie: ' + url);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
