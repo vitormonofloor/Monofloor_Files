@@ -2,6 +2,8 @@
 
 ## Snapshots
 - `snapshot-2026-04-13.json` — Primeiro snapshot com 200 projetos, dashboard e analise
+- `snapshot-2026-04-13-v2.json` — Snapshot atualizado apos auditoria completa
+- `auditoria-achados-2026-04-13.md` — 25 achados da auditoria (10 criticos, 15 alta) + 15 acoes priorizadas
 
 ## Como atualizar
 ```bash
