@@ -14,9 +14,33 @@
 
 ---
 
-## TEMPOS REAIS MEDIDOS (Fase de Execucao em diante)
+## TEMPOS REAIS MEDIDOS
 
-### Obras Concluidas (3 analisadas via WhatsApp)
+### A. Via API Projects Individual (20 projetos com pipefyCreatedAt)
+
+| Status | Projetos | Pipeline total | Ate VT | VT→Entrada | 
+|--------|----------|---------------|--------|------------|
+| Finalizado | 5 | **183 dias** | 67d | 131d |
+| Em Execucao | 4 | **167 dias** | 25d | 42d |
+| Aguardando Exec | 5 | **155 dias** | 79d | 103d |
+| Concluido | 5 | **238 dias** | 51d | 39d |
+| **MEDIA GERAL** | **20** | **186 dias** | **56d** | **79d** |
+
+### Fluxo real mapeado (186 dias medio):
+
+Pipefy criado --56d--> VT Afericao --79d--> Entrada Obra --17d--> Verniz --3d-- Coleta --5d
+    ONBOARDING           PRE-OBRA (BURACO NEGRO 43%)         EM OBRA (9% do total)
+
+| Fase | Dias | % do total |
+|------|------|-----------|
+| Onboarding → VT Afericao | 56d | 30% |
+| VT Afericao → Entrada | **79d** | **43%** (BURACO NEGRO) |
+| Execucao | 17d | 9% |
+| Verniz + Cura | 3d | 2% (fixo) |
+| Coleta/Encerramento | 5d | 3% |
+| Pos-obra admin | ~26d | 14% |
+
+### B. Via WhatsApp (3 obras concluidas)
 
 | Projeto | Execucao | Verniz+Cura | Coleta | Total |
 |---------|----------|-------------|--------|-------|
@@ -25,7 +49,7 @@
 | Mario Sabino Filho | 10d | 3d | 3d | 18d |
 | **MEDIA** | **17d** | **3d** | **5d** | **31d** |
 
-### Obras em Execucao (3 analisadas)
+### C. Via WhatsApp (3 obras em execucao)
 
 | Projeto | Pre-obra→Exec | Status | Gargalo principal |
 |---------|---------------|--------|-------------------|
