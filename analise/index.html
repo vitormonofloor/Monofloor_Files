@@ -2257,24 +2257,20 @@ button { font-family: inherit; cursor: pointer; }
 <!-- ══════════════ HERO ══════════════ -->
 <section class="hero">
   <div class="wrap">
-    <div class="hero-eyebrow">Snapshot 10 / Abril / 2026</div>
+    <div class="hero-eyebrow" id="hero-eyebrow">Carregando dados ao vivo...</div>
     <h1>
       Quanto tempo leva uma <em>obra Monofloor</em> do primeiro contato até o cliente finalizado?
     </h1>
-    <p class="hero-lead">
-      Analisamos 431 obras concluídas com dados completos de movimentação no Pipefy.
-      Aqui está o que descobrimos sobre tempo, gargalos e diferenças entre projetos.
-      <strong style="color:var(--text);font-weight:500;display:block;margin-top:8px">
-        Todos os números são médias extraídas do cenário atual (ago/2025–mar/2026).
-      </strong>
+    <p class="hero-lead" id="hero-lead">
+      Conectando ao painel Monofloor para buscar dados atualizados em tempo real...
     </p>
 
     <div class="bignum">
-      <div class="bignum-value">143<span class="unit">dias</span></div>
+      <div class="bignum-value" id="hero-bignum">—<span class="unit">dias</span></div>
       <div class="bignum-context">
         <div class="bignum-label">Tempo médio de uma obra</div>
-        <div class="bignum-meta">Média dos últimos 8 meses. Mediana em 106d. P90 em 195d.</div>
-        <div class="status-pill">Meta institucional: 150d · realidade próxima do limite</div>
+        <div class="bignum-meta" id="hero-meta">Calculando...</div>
+        <div class="status-pill" id="hero-pill">Meta institucional: 150d</div>
       </div>
     </div>
 
@@ -2284,12 +2280,12 @@ button { font-family: inherit; cursor: pointer; }
         <span class="target">Meta interna ≤ 150 dias</span>
       </div>
       <div class="target-bar-track">
-        <div class="target-bar-fill" style="width:95%"></div>
-        <div class="target-bar-marker" style="left:52%"></div>
+        <div class="target-bar-fill" id="target-fill" style="width:0%"></div>
+        <div class="target-bar-marker" id="target-marker" style="left:52%"></div>
       </div>
       <div class="target-bar-bottom">
         <span>0 dias</span>
-        <span>290 dias (P95)</span>
+        <span id="target-p95">— dias (P95)</span>
       </div>
     </div>
   </div>
@@ -2303,43 +2299,31 @@ button { font-family: inherit; cursor: pointer; }
       O processo é <em>rápido na execução</em>, mas trava no meio do caminho.
     </h2>
     <p class="story-lead">
-      Quando uma obra finalmente entra em execução, ela é entregue rapidamente.
-      O problema mora nas etapas que <em>antecedem</em> a execução — agendamentos, aprovações
-      e confirmações que se acumulam silenciosamente.
+      Dados carregados ao vivo do painel Monofloor. Os números refletem a situação
+      real e atualizada de todas as obras.
       <span style="color:var(--text4);font-size:12px;display:block;margin-top:8px">
-        💡 Todos os números desta página são <strong>médias extraídas do cenário atual</strong> (ago/2025–mar/2026).
+        💡 Fonte: <strong>cliente.monofloor.cloud</strong> — atualizado em tempo real.
       </span>
     </p>
 
-    <div class="story-grid">
+    <div class="story-grid" id="story-grid">
       <div class="story-card">
         <div class="story-card-num">01</div>
-        <h3 class="story-card-headline">A obra <strong>em si</strong> leva só 33 dias.</h3>
-        <p class="story-card-body">
-          Quando a equipe finalmente está em campo, o trabalho flui. O tempo médio na fase
-          "obra em execução" é de apenas 33 dias.
-        </p>
-        <div class="story-card-stat">Fase: OBRA EM EXECUÇÃO · 201 visitas</div>
+        <h3 class="story-card-headline" id="story-1-title">Carregando...</h3>
+        <p class="story-card-body" id="story-1-body">Aguardando dados do painel.</p>
+        <div class="story-card-stat" id="story-1-stat">—</div>
       </div>
-
       <div class="story-card">
         <div class="story-card-num">02</div>
-        <h3 class="story-card-headline">Mas <strong>chegar lá</strong> demora 110 dias.</h3>
-        <p class="story-card-body">
-          Entre o primeiro contato e o início da obra, são em média 110 dias de
-          agendamentos, visitas técnicas, aprovações e logística. É aqui que está o gargalo.
-        </p>
-        <div class="story-card-stat">Soma das fases pré-obra · meta interna: 60-90d</div>
+        <h3 class="story-card-headline" id="story-2-title">Carregando...</h3>
+        <p class="story-card-body" id="story-2-body">Aguardando dados do painel.</p>
+        <div class="story-card-stat" id="story-2-stat">—</div>
       </div>
-
       <div class="story-card">
         <div class="story-card-num">03</div>
-        <h3 class="story-card-headline">E ainda fica <strong>1 mês parado</strong> depois.</h3>
-        <p class="story-card-body">
-          Mesmo após a obra terminar, o card fica em "Cliente Finalizado" por 32 dias em
-          média até o arquivamento administrativo. Uma cauda longa silenciosa.
-        </p>
-        <div class="story-card-stat">Fase: CLIENTE FINALIZADO · gargalo administrativo</div>
+        <h3 class="story-card-headline" id="story-3-title">Carregando...</h3>
+        <p class="story-card-body" id="story-3-body">Aguardando dados do painel.</p>
+        <div class="story-card-stat" id="story-3-stat">—</div>
       </div>
     </div>
   </div>
@@ -2349,7 +2333,7 @@ button { font-family: inherit; cursor: pointer; }
 <section class="donut-section">
   <div class="wrap">
     <div class="section-eyebrow">Onde mora o tempo</div>
-    <h2 class="section-title">Visualize <em>onde os 143 dias</em> são consumidos.</h2>
+    <h2 class="section-title" id="donut-title">Visualize <em>onde os dias</em> são consumidos.</h2>
     <p class="section-lead">
       Cada parte do gráfico é uma macro-fase da obra. Os números são as médias observadas
       nos últimos 8 meses.
@@ -2374,7 +2358,7 @@ button { font-family: inherit; cursor: pointer; }
                   stroke-dasharray="113 502" stroke-dashoffset="-390"/>
         </svg>
         <div class="donut-center">
-          <div class="donut-center-value">143<span style="font-size:.4em;color:var(--text3)">d</span></div>
+          <div class="donut-center-value" id="donut-center-value">—<span style="font-size:.4em;color:var(--text3)">d</span></div>
           <div class="donut-center-label">Journey médio</div>
         </div>
       </div>
@@ -2383,31 +2367,31 @@ button { font-family: inherit; cursor: pointer; }
         <div class="donut-legend-item">
           <div class="donut-color" style="background:#e2bb88"></div>
           <div class="donut-content">
-            <h4>Pré-obra <span class="donut-num"><span class="pct">54%</span></span></h4>
+            <h4>Pré-obra <span class="donut-num"><span class="pct" id="donut-pre-pct">—%</span></span></h4>
             <p>1º contato, contratos, projetos, agendamentos de VT, aprovações,
             informações financeiras e logística. <strong>O maior gargalo do pipeline.</strong></p>
           </div>
-          <div class="donut-days">78<span class="u">d</span></div>
+          <div class="donut-days" id="donut-pre-days">—<span class="u">d</span></div>
         </div>
 
         <div class="donut-legend-item">
           <div class="donut-color" style="background:#a78757"></div>
           <div class="donut-content">
-            <h4>Execução <span class="donut-num"><span class="pct">23%</span></span></h4>
+            <h4>Execução <span class="donut-num"><span class="pct" id="donut-exec-pct">—%</span></span></h4>
             <p>A obra acontecendo no canteiro. Inclui pausas, refazimentos e finalização.
             <strong>É a fase mais rápida — ironia do processo.</strong></p>
           </div>
-          <div class="donut-days">33<span class="u">d</span></div>
+          <div class="donut-days" id="donut-exec-days">—<span class="u">d</span></div>
         </div>
 
         <div class="donut-legend-item">
           <div class="donut-color" style="background:#7a6038"></div>
           <div class="donut-content">
-            <h4>Pós-obra <span class="donut-num"><span class="pct">22%</span></span></h4>
+            <h4>Pós-obra <span class="donut-num"><span class="pct" id="donut-pos-pct">—%</span></span></h4>
             <p>Obra terminou mas o card fica em "Cliente Finalizado" aguardando arquivamento
             administrativo. <strong>Buraco negro silencioso.</strong></p>
           </div>
-          <div class="donut-days">32<span class="u">d</span></div>
+          <div class="donut-days" id="donut-pos-days">—<span class="u">d</span></div>
         </div>
       </div>
     </div>
@@ -2418,8 +2402,8 @@ button { font-family: inherit; cursor: pointer; }
 <section class="section">
   <div class="wrap">
     <div class="section-eyebrow">De quem é o tempo</div>
-    <h2 class="section-title">
-      Os 78 dias de pré-obra: <em>cliente esperando</em> ou <em>processo interno</em>?
+    <h2 class="section-title" id="culpa-title">
+      Os dias de pré-obra: <em>cliente esperando</em> ou <em>processo interno</em>?
     </h2>
     <p class="section-lead">
       Saber a resposta muda o tipo de solução. Se a maior parte é cliente, a resposta é
@@ -2429,52 +2413,34 @@ button { font-family: inherit; cursor: pointer; }
       </span>
     </p>
 
-    <div class="culpa-grid">
+    <div class="culpa-grid" id="culpa-grid">
       <div class="culpa-card">
         <div class="culpa-card-title">⏳ Espera do cliente</div>
         <div class="culpa-card-sub">Fases bloqueadas aguardando ação externa</div>
-        <ul class="culpa-list">
-          <li><span>Aguardando liberação</span><span class="days">17d</span></li>
-          <li><span>Data à definir</span><span class="days">16d</span></li>
-          <li><span>Resultado VT — confirmações</span><span class="days">14d</span></li>
-          <li><span>Em contrato (aguarda assinatura)</span><span class="days">7d</span></li>
-          <li><span>Informações projetos</span><span class="days">3d</span></li>
-        </ul>
+        <ul class="culpa-list" id="culpa-cliente-list"><li>Carregando...</li></ul>
       </div>
-
       <div class="culpa-card">
         <div class="culpa-card-title">⚙️ Processo interno</div>
         <div class="culpa-card-sub">Fases que dependem de equipe Monofloor</div>
-        <ul class="culpa-list">
-          <li><span>Agendar VT (aferição + entrada)</span><span class="days">21d</span></li>
-          <li><span>Logística (entrega + material)</span><span class="days">26d</span></li>
-          <li><span>1º contato + confirmações OP</span><span class="days">21d</span></li>
-          <li><span>Indústria — em produção</span><span class="days">10d</span></li>
-          <li><span>Projetos — 1ª revisão + equipe</span><span class="days">13d</span></li>
-        </ul>
+        <ul class="culpa-list" id="culpa-interno-list"><li>Carregando...</li></ul>
       </div>
     </div>
 
     <div style="margin-top:32px">
       <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px">Distribuição estimada</div>
-      <div class="culpa-stack">
-        <div class="culpa-seg cliente" style="flex:35">35% cliente</div>
-        <div class="culpa-seg interno" style="flex:65">65% interno</div>
+      <div class="culpa-stack" id="culpa-stack">
+        <div class="culpa-seg cliente" style="flex:35">—% cliente</div>
+        <div class="culpa-seg interno" style="flex:65">—% interno</div>
       </div>
-      <div class="culpa-legend">
-        <span><div class="dot" style="background:#d4a96e"></div>Espera do cliente · ~27 dias</span>
-        <span><div class="dot" style="background:#5a4935"></div>Processo interno · ~51 dias</span>
+      <div class="culpa-legend" id="culpa-legend">
+        <span><div class="dot" style="background:#d4a96e"></div>Espera do cliente</span>
+        <span><div class="dot" style="background:#5a4935"></div>Processo interno</span>
       </div>
     </div>
 
-    <div class="culpa-conclusion">
+    <div class="culpa-conclusion" id="culpa-conclusion">
       <h4>👉 Conclusão</h4>
-      <p>
-        Aproximadamente <strong>2 de cada 3 dias do pré-obra são responsabilidade interna</strong>.
-        Isso significa que <strong>processo e capacidade são as alavancas principais</strong>,
-        não follow-up de cliente. A maior parte do gargalo está em agendamento de visitas técnicas
-        e logística — áreas que dependem de pessoas e ferramentas internas.
-      </p>
+      <p>Calculando com dados ao vivo...</p>
     </div>
   </div>
 </section>
@@ -2511,34 +2477,8 @@ button { font-family: inherit; cursor: pointer; }
         a receita potencial pelo tempo médio de permanência, o tamanho da obra muda tudo.
       </p>
 
-      <div class="revenue-grid">
-        <div class="revenue-cell">
-          <div class="icon">🏠</div>
-          <div class="label">Pequena · 62 m² médio</div>
-          <div class="big">R$ 276<span class="u">/dia</span></div>
-          <div class="meta">Receita: R$ 39 mil<br>Pipeline: 143 dias</div>
-        </div>
-
-        <div class="revenue-cell">
-          <div class="icon">🏡</div>
-          <div class="label">Média · 142 m² médio</div>
-          <div class="big">R$ 665<span class="u">/dia</span></div>
-          <div class="meta">Receita: R$ 90 mil<br>Pipeline: 136 dias</div>
-        </div>
-
-        <div class="revenue-cell">
-          <div class="icon">🏢</div>
-          <div class="label">Grande · 298 m² médio</div>
-          <div class="big">R$ 1.427<span class="u">/dia</span></div>
-          <div class="meta">Receita: R$ 190 mil<br>Pipeline: 133 dias</div>
-        </div>
-
-        <div class="revenue-cell winner">
-          <div class="icon">🏭</div>
-          <div class="label">XLarge · 798 m² médio</div>
-          <div class="big">R$ 5.083<span class="u">/dia</span></div>
-          <div class="meta">Receita: R$ 508 mil<br>Pipeline: 100 dias</div>
-        </div>
+      <div class="revenue-grid" id="revenue-grid">
+        <div style="text-align:center;color:var(--text3);padding:40px">Carregando dados...</div>
       </div>
 
       <div class="revenue-conclusion">
@@ -3100,32 +3040,32 @@ button { font-family: inherit; cursor: pointer; }
       <div class="footer-brand">
         <h4>Sobre esta análise</h4>
         <p>
-          Os dados são extraídos automaticamente do sistema operacional da Monofloor.
-          Cada obra concluída entra no histórico e os indicadores são recalculados semanalmente.
-          Esta versão é um snapshot estático para compartilhamento.
+          Os dados são carregados ao vivo de <strong>cliente.monofloor.cloud</strong>.
+          Cada atualização reflete a situação real do painel operacional.
+          Esta versão busca dados em tempo real a cada acesso.
         </p>
       </div>
       <div class="footer-col">
         <h5>Metodologia</h5>
         <ul>
-          <li><span>431 obras analisadas</span></li>
-          <li><span>~7.080 movimentações</span></li>
+          <li><span id="footer-obras">— obras analisadas</span></li>
+          <li><span>Dados ao vivo do painel</span></li>
           <li><span>Lei de Little para capacidade</span></li>
-          <li><span>Médias do cenário atual</span></li>
+          <li><span>Médias calculadas em tempo real</span></li>
         </ul>
       </div>
       <div class="footer-col">
         <h5>Período</h5>
         <ul>
-          <li><span>Início: agosto/2025</span></li>
-          <li><span>Snapshot: 10/abril/2026</span></li>
-          <li><span>8 meses de operação</span></li>
+          <li><span>Fonte: cliente.monofloor.cloud</span></li>
+          <li><span id="footer-date">Carregando...</span></li>
+          <li><span id="footer-periodo">—</span></li>
         </ul>
       </div>
     </div>
     <div class="footer-meta">
       <span>Monofloor · Análise de Projetos · 2026</span>
-      <span>Snapshot 10/Abr/2026 · 431 obras · 38 fases</span>
+      <span id="footer-meta-bottom">Dados ao vivo · cliente.monofloor.cloud</span>
     </div>
   </div>
 </footer>
@@ -3246,174 +3186,500 @@ button { font-family: inherit; cursor: pointer; }
 
 <script>
 // ═══════════════════════════════════════════════════
-// DADOS — gerados a partir do snapshot 2026-04-10
+// DADOS AO VIVO — carregados de cliente.monofloor.cloud
 // ═══════════════════════════════════════════════════
 
-const BUCKETS = {
-  p: {
-    label: 'Pequena', emoji: '🏠', range: '0-99 m²',
-    description: 'Apartamentos e áreas pequenas',
-    cards: 184, avg_m2: 62,
-    journey_avg: 143, journey_median: 106, journey_max: 1666,
-    phases: [
-      {name:'OBRA EM EXECUÇÃO',n:91,avg:27.1,max:155.9},
-      {name:'OBRA PAUSADA',n:10,avg:25.0,max:61.9},
-      {name:'DATA À DEFINIR',n:27,avg:24.2,max:196.1},
-      {name:'AGUARDANDO LIBERAÇÃO',n:106,avg:18.7,max:165.0},
-      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:93,avg:18.4,max:210.0},
-      {name:'CLIENTE FINALIZADO',n:7,avg:13.9,max:39.3},
-      {name:'RESULTADO VT - ACOMPANHAMENTO',n:14,avg:12.5,max:112.1},
-      {name:'LOGÍSTICA - EM COLETA',n:60,avg:12.3,max:117.9},
-      {name:'LOGÍSTICA - EM ENTREGA',n:103,avg:11.8,max:127.7},
-      {name:'1º CONTATO OP.',n:152,avg:11.2,max:112.9},
-      {name:'OBRA CONCLUÍDA',n:81,avg:10.0,max:118.2},
-      {name:'REVISÃO FINAL OP',n:136,avg:9.8,max:167.0},
-      {name:'CONFIRMAÇÕES OP 1',n:142,avg:9.6,max:135.1},
-      {name:'INDÚSTRIA - EM PRODUÇÃO',n:119,avg:9.4,max:127.9},
-      {name:'AGEND. VT - ENTRADA',n:116,avg:9.1,max:159.3},
-      {name:'LOGÍSTICA - COLETAR',n:79,avg:9.0,max:118.2},
-      {name:'RESULTADO VT - ENTRADA',n:73,avg:8.8,max:128.1},
-      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:138,avg:8.3,max:128.0},
-      {name:'EQUIPE DE EXECUÇÃO',n:111,avg:7.6,max:131.0},
-      {name:'EM CONTRATO',n:98,avg:7.5,max:106.1},
-      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:141,avg:7.3,max:97.7},
-      {name:'PROJETOS - 1ª REVISÃO',n:147,avg:7.1,max:196.0},
-      {name:'AGEND. VT - ACOMPANHAMENTO',n:133,avg:6.4,max:191.0},
-      {name:'ENTRADA',n:183,avg:6.1,max:133.0},
-      {name:'INFORMAÇÕES LOGÍSTICAS',n:111,avg:5.3,max:132.0},
-      {name:'CONFIRMAÇÕES OP 2',n:133,avg:4.6,max:135.1},
-      {name:'FINANCEIRO - EM REVISÃO',n:113,avg:2.5,max:128.1},
-    ],
-    top_cards: [
-      {days:1666,m2:10.45,name:'LOVELY RITA DIAS MENEZES'},
-      {days:1029,m2:98.88,name:'ALEXANDRE BASTOS DA SILVA'},
-      {days:773,m2:99.09,name:'LUIS FERNANDO DE LIMA CARVALHO'},
-      {days:639,m2:84.23,name:'ANA CAROLINA PLACCO FERREIRA'},
-      {days:615,m2:60.36,name:'MARCIA ANDREA SCHMIDT DA SILVA'},
-    ],
-  },
-  m: {
-    label: 'Média', emoji: '🏡', range: '100-199 m²',
-    description: 'Casas e lofts médios',
-    cards: 142, avg_m2: 142,
-    journey_avg: 136, journey_median: 121, journey_max: 455,
-    phases: [
-      {name:'OBRA EM EXECUÇÃO',n:64,avg:33.0,max:130.3},
-      {name:'OBRA PAUSADA',n:11,avg:25.9,max:81.1},
-      {name:'CLIENTE FINALIZADO',n:3,avg:52.9,max:91.8},
-      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:109,avg:20.4,max:181.9},
-      {name:'LOGÍSTICA - EM COLETA',n:51,avg:17.6,max:217.9},
-      {name:'1º CONTATO OP.',n:128,avg:15.2,max:133.0},
-      {name:'AGUARDANDO LIBERAÇÃO',n:74,avg:15.1,max:124.8},
-      {name:'LOGÍSTICA - EM ENTREGA',n:71,avg:11.3,max:188.2},
-      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:65,avg:10.7,max:64.3},
-      {name:'INDÚSTRIA - EM PRODUÇÃO',n:85,avg:10.0,max:103.8},
-      {name:'LOGÍSTICA - COLETAR',n:62,avg:9.5,max:72.8},
-      {name:'CONFIRMAÇÕES OP 1',n:100,avg:8.9,max:97.8},
-      {name:'ENTRADA',n:141,avg:8.7,max:156.3},
-      {name:'EQUIPE DE EXECUÇÃO',n:82,avg:7.7,max:95.2},
-      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:111,avg:7.6,max:91.9},
-      {name:'RESULTADO VT - ACOMPANHAMENTO',n:22,avg:6.6,max:40.0},
-      {name:'OBRA CONCLUÍDA',n:62,avg:6.3,max:67.1},
-      {name:'AGEND. VT - ENTRADA',n:82,avg:6.3,max:63.5},
-      {name:'EM CONTRATO',n:90,avg:6.1,max:80.1},
-      {name:'REVISÃO FINAL OP',n:96,avg:6.0,max:124.8},
-      {name:'DATA À DEFINIR',n:14,avg:5.8,max:26.1},
-      {name:'AGEND. VT - ACOMPANHAMENTO',n:100,avg:4.2,max:69.9},
-      {name:'PROJETOS - 1ª REVISÃO',n:107,avg:3.6,max:44.2},
-      {name:'RESULTADO VT - ENTRADA',n:58,avg:3.6,max:33.8},
-      {name:'INFORMAÇÕES LOGÍSTICAS',n:81,avg:3.4,max:84.1},
-      {name:'CONFIRMAÇÕES OP 2',n:99,avg:3.2,max:84.2},
-      {name:'FINANCEIRO - EM REVISÃO',n:82,avg:1.5,max:17.9},
-    ],
-    top_cards: [
-      {days:455,m2:172.73,name:'SUELI HIGA'},
-      {days:436,m2:112.14,name:'MARIANA SARNO DRUMMOND'},
-      {days:389,m2:148.28,name:'CLÁUDIA RESENDE SOARES DE OLIVEIRA'},
-      {days:362,m2:141.01,name:'ALEXANDRE OSMAN'},
-      {days:327,m2:123.61,name:'FLÁVIA AUGUSTA DE ASSIS ROCHA'},
-    ],
-  },
-  g: {
-    label: 'Grande', emoji: '🏢', range: '200-499 m²',
-    description: 'Casas grandes ou comércio',
-    cards: 82, avg_m2: 298,
-    journey_avg: 133, journey_median: 117, journey_max: 539,
-    phases: [
-      {name:'CLIENTE FINALIZADO',n:4,avg:57.5,max:160.3},
-      {name:'OBRA EM EXECUÇÃO',n:37,avg:47.1,max:163.1},
-      {name:'OBRA PAUSADA',n:12,avg:31.3,max:107.1},
-      {name:'AGUARDANDO LIBERAÇÃO',n:38,avg:17.7,max:164.0},
-      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:58,avg:13.6,max:135.7},
-      {name:'LOGÍSTICA - COLETAR',n:30,avg:12.7,max:80.0},
-      {name:'ENTRADA',n:80,avg:12.4,max:259.1},
-      {name:'1º CONTATO OP.',n:69,avg:12.0,max:89.2},
-      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:31,avg:11.9,max:105.9},
-      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:56,avg:11.2,max:109.2},
-      {name:'INDÚSTRIA - EM PRODUÇÃO',n:45,avg:9.8,max:72.8},
-      {name:'LOGÍSTICA - EM ENTREGA',n:41,avg:9.4,max:48.9},
-      {name:'OBRA CONCLUÍDA',n:33,avg:8.9,max:105.9},
-      {name:'EM CONTRATO',n:42,avg:8.6,max:71.2},
-      {name:'PROJETOS - 1ª REVISÃO',n:55,avg:8.5,max:150.5},
-      {name:'LOGÍSTICA - EM COLETA',n:17,avg:7.4,max:36.8},
-      {name:'AGEND. VT - ENTRADA',n:44,avg:7.2,max:40.9},
-      {name:'CONFIRMAÇÕES OP 2',n:52,avg:5.9,max:90.0},
-      {name:'REVISÃO FINAL OP',n:51,avg:5.8,max:82.0},
-      {name:'CONFIRMAÇÕES OP 1',n:52,avg:5.5,max:35.1},
-      {name:'RESULTADO VT - ENTRADA',n:23,avg:4.5,max:82.0},
-      {name:'EQUIPE DE EXECUÇÃO',n:42,avg:4.4,max:41.0},
-      {name:'AGEND. VT - ACOMPANHAMENTO',n:52,avg:3.1,max:40.0},
-      {name:'INFORMAÇÕES LOGÍSTICAS',n:42,avg:2.0,max:41.1},
-      {name:'FINANCEIRO - EM REVISÃO',n:43,avg:0.9,max:11.4},
-    ],
-    top_cards: [
-      {days:539,m2:465.87,name:'SPE TLMC 29 (EUROFARMA)'},
-      {days:460,m2:379.26,name:'MARCELO ANDRE STEUER'},
-      {days:384,m2:337.74,name:'YAHYA EL HASSAN'},
-      {days:346,m2:472.26,name:'VANESSA AUGUSTA DELGADO PIMENTEL'},
-      {days:318,m2:282.73,name:'FLÁVIO FAVA DITT'},
-    ],
-  },
-  x: {
-    label: 'XLarge', emoji: '🏭', range: '500+ m²',
-    description: 'Comercial / industrial',
-    cards: 23, avg_m2: 798,
-    journey_avg: 100, journey_median: 65, journey_max: 281,
-    phases: [
-      {name:'OBRA EM EXECUÇÃO',n:6,avg:58.7,max:106.8},
-      {name:'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',n:13,avg:38.1,max:159.9},
-      {name:'CLIENTE FINALIZADO',n:3,avg:29.0,max:69.9},
-      {name:'LOGÍSTICA - EM COLETA',n:3,avg:15.7,max:39.4},
-      {name:'LOGÍSTICA - EM ENTREGA',n:6,avg:13.3,max:24.8},
-      {name:'INDÚSTRIA - EM PRODUÇÃO',n:7,avg:12.6,max:31.1},
-      {name:'EQUIPE DE EXECUÇÃO',n:7,avg:11.8,max:75.3},
-      {name:'ENTRADA',n:23,avg:10.8,max:69.9},
-      {name:'LOGÍSTICA - MATERIAL ENTREGUE',n:6,avg:9.5,max:52.7},
-      {name:'CONFIRMAÇÕES OP 1',n:10,avg:9.0,max:27.0},
-      {name:'AGUARDANDO LIBERAÇÃO',n:6,avg:8.5,max:27.1},
-      {name:'1º CONTATO OP.',n:17,avg:8.1,max:28.9},
-      {name:'OBRA CONCLUÍDA',n:5,avg:7.0,max:33.1},
-      {name:'AGEND. VT - ACOMPANHAMENTO',n:10,avg:6.6,max:34.0},
-      {name:'LOGÍSTICA - COLETAR',n:6,avg:5.5,max:33.1},
-      {name:'CONFIRMAÇÕES OP 2',n:10,avg:4.9,max:48.9},
-      {name:'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',n:12,avg:4.8,max:29.2},
-      {name:'PROJETOS - 1ª REVISÃO',n:11,avg:3.8,max:11.8},
-      {name:'EM CONTRATO',n:14,avg:3.5,max:13.1},
-      {name:'AGEND. VT - ENTRADA',n:7,avg:3.1,max:16.1},
-      {name:'REVISÃO FINAL OP',n:9,avg:2.8,max:15.9},
-      {name:'FINANCEIRO - EM REVISÃO',n:7,avg:2.4,max:12.1},
-      {name:'RESULTADO VT - ENTRADA',n:4,avg:2.1,max:8.3},
-      {name:'INFORMAÇÕES LOGÍSTICAS',n:7,avg:1.3,max:5.3},
-    ],
-    top_cards: [
-      {days:281,m2:1202.90,name:'DEPECHE MOVEIS LTDA'},
-      {days:279,m2:525.22,name:'CAROLINA RACHE GUIMARAES'},
-      {days:243,m2:549.91,name:'GUILHERME HAIDAR BERJEAUT'},
-      {days:217,m2:673.73,name:'NATHALIA ROBERTA MACARIO'},
-      {days:207,m2:843.96,name:'RAFAEL GUIMARÃES LIMA'},
-    ],
-  },
-};
+const API_BASE = 'https://cliente.monofloor.cloud/api';
+const PRICE_PER_M2 = 637; // STELION R$/m²
+const META_JOURNEY = 150; // meta institucional em dias
+const TODAY = new Date();
+
+// Variáveis globais preenchidas pelo fetch
+let BUCKETS = {};
+let CAPACITY = {};
+let TRIAGE = {};
+let INSIGHTS = [];
+let ALL_PROJECTS = [];
+let DASHBOARD_DATA = {};
+let ANALYSIS_DATA = {};
+
+// ═══════════════════════════════════════════════════
+// FETCH & PROCESSAMENTO
+// ═══════════════════════════════════════════════════
+
+async function loadAllData() {
+  try {
+    const [projectsRes, dashboardRes, analysisRes] = await Promise.all([
+      fetch(API_BASE + '/projects').then(r => r.json()),
+      fetch(API_BASE + '/dashboard').then(r => r.json()),
+      fetch(API_BASE + '/analise').then(r => r.json()),
+    ]);
+    ALL_PROJECTS = projectsRes;
+    DASHBOARD_DATA = dashboardRes;
+    ANALYSIS_DATA = analysisRes;
+
+    processProjects();
+    renderAll();
+  } catch (err) {
+    console.error('Erro ao carregar dados:', err);
+    document.getElementById('hero-eyebrow').textContent = 'Erro ao carregar dados — verifique a conexão';
+  }
+}
+
+function daysBetween(d1, d2) {
+  return Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+}
+
+function percentile(arr, p) {
+  const sorted = [...arr].sort((a, b) => a - b);
+  const i = Math.ceil(p / 100 * sorted.length) - 1;
+  return sorted[Math.max(0, i)];
+}
+
+function median(arr) { return percentile(arr, 50); }
+
+function classifyBucket(m2) {
+  if (m2 < 100) return 'p';
+  if (m2 < 200) return 'm';
+  if (m2 < 500) return 'g';
+  return 'x';
+}
+
+// Classificação de fases: pré-obra, execução, pós-obra
+const EXEC_PHASES = ['OBRA EM EXECUÇÃO', 'OBRA PAUSADA', 'OBRA CONCLUÍDA'];
+const POS_PHASES = ['CLIENTE FINALIZADO', 'PÓS VENDAS ACIONADO', 'FINANCEIRO PÓS - EM REVISÃO',
+  'RESULTADO VT - QUALIDADE', 'RESULTADO VT - ACOMPANHAMENTO', 'AGEND. VT - QUALIDADE',
+  'AGEND. VT - ACOMPANHAMENTO'];
+
+// Classificação de fases: cliente vs interno
+const CLIENT_PHASES = ['AGUARDANDO LIBERAÇÃO', 'DATA À DEFINIR', 'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',
+  'RESULTADO VT - ENTRADA', 'EM CONTRATO', 'INFORMAÇÕES PROJETOS', 'INFORMAÇÕES FINANCEIRAS',
+  'RESULTADO VT - ACOMPANHAMENTO', 'RESULTADO VT - QUALIDADE'];
+
+function processProjects() {
+  const bucketDefs = {
+    p: { label: 'Pequena', emoji: '🏠', range: '0-99 m²', description: 'Apartamentos e áreas pequenas' },
+    m: { label: 'Média', emoji: '🏡', range: '100-199 m²', description: 'Casas e lofts médios' },
+    g: { label: 'Grande', emoji: '🏢', range: '200-499 m²', description: 'Casas grandes ou comércio' },
+    x: { label: 'XLarge', emoji: '🏭', range: '500+ m²', description: 'Comercial / industrial' },
+  };
+
+  // Prepare bucket accumulators
+  const buckets = {};
+  for (const [key, def] of Object.entries(bucketDefs)) {
+    buckets[key] = { ...def, projects: [], journeys: [], m2_list: [], phases: {} };
+  }
+
+  // Process each project
+  ALL_PROJECTS.forEach(proj => {
+    const m2 = parseFloat(proj.projetoMetragem) || 0;
+    if (m2 <= 0) return;
+
+    const created = new Date(proj.createdAt);
+    const updated = new Date(proj.updatedAt);
+    const isFinalizado = proj.status === 'finalizado' || proj.status === 'cancelado';
+    const endDate = isFinalizado ? updated : TODAY;
+    const journey = daysBetween(created, endDate);
+    if (journey < 0) return;
+
+    const b = classifyBucket(m2);
+    buckets[b].projects.push(proj);
+    buckets[b].journeys.push(journey);
+    buckets[b].m2_list.push(m2);
+
+    // Count by current phase
+    const phase = proj.faseAtual || 'Sem fase';
+    if (!buckets[b].phases[phase]) buckets[b].phases[phase] = { count: 0, journeys: [] };
+    buckets[b].phases[phase].count++;
+    buckets[b].phases[phase].journeys.push(journey);
+  });
+
+  // Build BUCKETS structure
+  for (const [key, b] of Object.entries(buckets)) {
+    const journeys = b.journeys;
+    const avg_m2 = b.m2_list.length ? Math.round(b.m2_list.reduce((s, v) => s + v, 0) / b.m2_list.length) : 0;
+    const journey_avg = journeys.length ? Math.round(journeys.reduce((s, v) => s + v, 0) / journeys.length) : 0;
+    const journey_med = journeys.length ? Math.round(median(journeys)) : 0;
+    const journey_max = journeys.length ? Math.max(...journeys) : 0;
+
+    // Build phases array sorted by avg journey
+    const phaseArr = Object.entries(b.phases).map(([name, data]) => ({
+      name,
+      n: data.count,
+      avg: data.journeys.length ? data.journeys.reduce((s, v) => s + v, 0) / data.journeys.length : 0,
+      max: data.journeys.length ? Math.max(...data.journeys) : 0,
+    })).sort((a, b) => b.avg - a.avg);
+
+    // Top 5 slowest cards
+    const topCards = b.projects
+      .map(p => ({
+        days: daysBetween(new Date(p.createdAt), p.status === 'finalizado' ? new Date(p.updatedAt) : TODAY),
+        m2: parseFloat(p.projetoMetragem) || 0,
+        name: p.clienteNome,
+      }))
+      .sort((a, b) => b.days - a.days)
+      .slice(0, 5);
+
+    BUCKETS[key] = {
+      label: b.label, emoji: b.emoji, range: b.range, description: b.description,
+      cards: b.projects.length, avg_m2,
+      journey_avg, journey_median: journey_med, journey_max,
+      phases: phaseArr,
+      top_cards: topCards,
+    };
+  }
+
+  // Build TRIAGE
+  const allActive = ALL_PROJECTS.filter(p => p.status !== 'finalizado' && p.status !== 'cancelado');
+  const zombies = [];
+  const atrisk = [];
+  let healthyCount = 0;
+
+  allActive.forEach(p => {
+    const journey = daysBetween(new Date(p.createdAt), TODAY);
+    const entry = { d: journey, p: p.faseAtual || 'Sem fase', n: p.clienteNome };
+    if (journey > 200) zombies.push(entry);
+    else if (journey >= 150) atrisk.push(entry);
+    else healthyCount++;
+  });
+
+  zombies.sort((a, b) => b.d - a.d);
+  atrisk.sort((a, b) => b.d - a.d);
+
+  TRIAGE = {
+    baseline_journey: 0,
+    baseline_throughput: 0,
+    zombies,
+    atrisk,
+    healthy_count: healthyCount,
+  };
+
+  // Build CAPACITY
+  const finalized = ALL_PROJECTS.filter(p => p.status === 'finalizado');
+  const finalizedWithM2 = finalized.filter(p => parseFloat(p.projetoMetragem) > 0);
+
+  // Group finalized by month
+  const monthlyHist = {};
+  finalizedWithM2.forEach(p => {
+    const d = new Date(p.updatedAt);
+    const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    if (!monthlyHist[key]) monthlyHist[key] = { p: 0, m: 0, g: 0, x: 0 };
+    const b = classifyBucket(parseFloat(p.projetoMetragem));
+    monthlyHist[key][b]++;
+  });
+
+  const histKeys = Object.keys(monthlyHist).sort();
+  const history = histKeys.map(k => ({ month: k, ...monthlyHist[k] }));
+
+  // Calculate monthly averages
+  const periodMonths = Math.max(1, histKeys.length);
+  const totalByBucket = { p: 0, m: 0, g: 0, x: 0 };
+  const m2ByBucket = { p: 0, m: 0, g: 0, x: 0 };
+  finalizedWithM2.forEach(p => {
+    const b = classifyBucket(parseFloat(p.projetoMetragem));
+    totalByBucket[b]++;
+    m2ByBucket[b] += parseFloat(p.projetoMetragem);
+  });
+
+  const monthly = {};
+  const bucketLabels = { p: 'Pequena', m: 'Média', g: 'Grande', x: 'XLarge' };
+  const bucketEmojis = { p: '🏠', m: '🏡', g: '🏢', x: '🏭' };
+  for (const b of ['p', 'm', 'g', 'x']) {
+    const cards = totalByBucket[b] / periodMonths;
+    const m2 = m2ByBucket[b] / periodMonths;
+    monthly[b] = {
+      cards: Math.round(cards * 100) / 100,
+      m2: Math.round(m2),
+      journey: BUCKETS[b]?.journey_avg || 0,
+      label: bucketLabels[b],
+      emoji: bucketEmojis[b],
+    };
+  }
+
+  const totalMonthly = Object.values(monthly).reduce((s, m) => s + m.cards, 0);
+  const allJourneys = ALL_PROJECTS
+    .filter(p => parseFloat(p.projetoMetragem) > 0)
+    .map(p => {
+      const end = p.status === 'finalizado' ? new Date(p.updatedAt) : TODAY;
+      return daysBetween(new Date(p.createdAt), end);
+    })
+    .filter(d => d > 0);
+  const avgJourney = allJourneys.length ? Math.round(allJourneys.reduce((s, v) => s + v, 0) / allJourneys.length) : 143;
+  const wipTeorico = Math.round((totalMonthly / 30) * avgJourney);
+
+  TRIAGE.baseline_journey = avgJourney;
+  TRIAGE.baseline_throughput = Math.round(totalMonthly);
+
+  CAPACITY = {
+    period_months: periodMonths,
+    total_finalized: finalizedWithM2.length,
+    wip_actual: allActive.length,
+    monthly,
+    history,
+  };
+
+  // Build INSIGHTS from live data
+  const totalActive = DASHBOARD_DATA.totals?.active || allActive.length;
+  const totalFinished = DASHBOARD_DATA.totals?.finished || finalized.length;
+  const slaCompliance = DASHBOARD_DATA.sla?.compliancePercent || 0;
+  const worstSla = DASHBOARD_DATA.sla?.byKey?.sort((a, b) => a.percent - b.percent)?.[0];
+  const bestSla = DASHBOARD_DATA.sla?.byKey?.sort((a, b) => b.percent - a.percent)?.[0];
+  const totalProblems = ANALYSIS_DATA.problemCategories?.reduce((s, c) => s + c.count, 0) || 0;
+  const criticalProblems = ANALYSIS_DATA.problemCategories?.reduce((s, c) => s + c.criticos, 0) || 0;
+  const atrasados = ANALYSIS_DATA.summary?.atrasados || 0;
+
+  INSIGHTS = [
+    {
+      type: allActive.length > wipTeorico * 1.5 ? 'critical' : 'warn',
+      icon: '🚨',
+      title: `Pipeline com ${allActive.length} obras ativas vs ${wipTeorico} teórico`,
+      body: `O pipeline tem <span class="num">${allActive.length} cards</span> ativos, mas pela Lei de Little o teórico seria ${wipTeorico}. Isso representa <strong>+${Math.round((allActive.length / wipTeorico - 1) * 100)}%</strong> acima do esperado — indicando cards zumbi ou excesso de entrada.`
+    },
+    {
+      type: BUCKETS.x?.journey_avg < BUCKETS.p?.journey_avg ? 'good' : 'info',
+      icon: '✅',
+      title: `Obras XL são ${Math.round(BUCKETS.p?.journey_avg - BUCKETS.x?.journey_avg)} dias mais rápidas que pequenas`,
+      body: `XL: <span class="num">${BUCKETS.x?.journey_avg || '—'}d</span> médio vs Pequenas: <span class="num">${BUCKETS.p?.journey_avg || '—'}d</span>. Apesar da complexidade, obras maiores recebem prioridade e fluem melhor.`
+    },
+    {
+      type: slaCompliance < 50 ? 'critical' : slaCompliance < 75 ? 'warn' : 'good',
+      icon: '📊',
+      title: `SLA geral em ${slaCompliance}% de cumprimento`,
+      body: `De ${DASHBOARD_DATA.sla?.total || '—'} obras com data, apenas <strong>${DASHBOARD_DATA.sla?.compliant || '—'}</strong> estão dentro do prazo. ${worstSla ? `Pior etapa: <strong>${worstSla.key}</strong> com ${worstSla.percent}%.` : ''} ${bestSla ? `Melhor: <strong>${bestSla.key}</strong> com ${bestSla.percent}%.` : ''}`
+    },
+    {
+      type: atrasados > 20 ? 'critical' : 'warn',
+      icon: '⏳',
+      title: `${atrasados} obras atrasadas identificadas`,
+      body: `A análise detectou <span class="num">${atrasados} obras</span> com atraso. ${ANALYSIS_DATA.summary?.critical || 0} em estado crítico, ${ANALYSIS_DATA.summary?.high || 0} em risco alto. Dessas, ${TRIAGE.zombies.length} estão há mais de 200 dias no pipeline.`
+    },
+    {
+      type: totalProblems > 100 ? 'critical' : 'warn',
+      icon: '🔧',
+      title: `${totalProblems} problemas registrados (${criticalProblems} críticos)`,
+      body: `${(ANALYSIS_DATA.problemCategories || []).slice(0, 3).map(c => `<strong>${c.categoria}</strong>: ${c.count}`).join(' · ')}. Requerem atenção prioritária para não impactar o pipeline.`
+    },
+    {
+      type: 'info',
+      icon: '👥',
+      title: `Performance da equipe operacional`,
+      body: `${(ANALYSIS_DATA.teamPerformance || []).filter(t => t.projetosAtivos > 5).map(t => `<strong>${t.nome.split(' ')[0]}</strong>: ${t.projetosAtivos} ativos, ${t.projetosComProblema} com problema`).join(' · ') || 'Dados insuficientes'}`
+    },
+    {
+      type: TRIAGE.zombies.length > 50 ? 'critical' : 'warn',
+      icon: '🧟',
+      title: `${TRIAGE.zombies.length} cards zumbi (>200 dias) no pipeline`,
+      body: `Esses cards ocupam espaço no pipeline sem avançar. Removê-los pode reduzir o WIP de ${allActive.length} para <strong>${healthyCount}</strong>, trazendo a operação para um nível saudável sem nenhuma melhoria de processo.`
+    },
+    {
+      type: 'good',
+      icon: '💰',
+      title: `${totalFinished} obras finalizadas · ${totalMonthly.toFixed(1)}/mês`,
+      body: `A Monofloor finalizou <span class="num">${totalFinished} obras</span> no total, entregando em média <strong>${totalMonthly.toFixed(1)} obras/mês</strong> nos últimos ${periodMonths} meses. Projeção anual: ~${Math.round(totalMonthly * 12)} obras.`
+    },
+  ];
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER — atualiza toda a UI com dados ao vivo
+// ═══════════════════════════════════════════════════
+
+function renderAll() {
+  renderHero();
+  renderStory();
+  renderDonut();
+  renderCulpa();
+  renderTipos();
+  renderRevenue();
+  renderGargalos();
+  renderCompare();
+  renderDrill();
+  renderInsights();
+  renderFooter();
+}
+
+function renderHero() {
+  const allJourneys = ALL_PROJECTS
+    .filter(p => parseFloat(p.projetoMetragem) > 0)
+    .map(p => {
+      const end = p.status === 'finalizado' ? new Date(p.updatedAt) : TODAY;
+      return daysBetween(new Date(p.createdAt), end);
+    })
+    .filter(d => d > 0);
+
+  const avg = Math.round(allJourneys.reduce((s, v) => s + v, 0) / allJourneys.length);
+  const med = Math.round(median(allJourneys));
+  const p90 = Math.round(percentile(allJourneys, 90));
+  const p95 = Math.round(percentile(allJourneys, 95));
+  const total = ALL_PROJECTS.length;
+  const active = ALL_PROJECTS.filter(p => p.status !== 'finalizado' && p.status !== 'cancelado').length;
+  const finished = ALL_PROJECTS.filter(p => p.status === 'finalizado').length;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  document.getElementById('hero-eyebrow').textContent = `Ao vivo · ${dateStr}`;
+  document.getElementById('hero-bignum').innerHTML = avg + '<span class="unit">dias</span>';
+  document.getElementById('hero-lead').innerHTML =
+    `Analisando <strong>${total} obras</strong> do painel Monofloor em tempo real (${active} ativas, ${finished} finalizadas). ` +
+    `Dados carregados diretamente de <strong>cliente.monofloor.cloud</strong>.`;
+  document.getElementById('hero-meta').textContent = `Mediana em ${med}d. P90 em ${p90}d.`;
+
+  const pillColor = avg <= META_JOURNEY ? 'green' : avg <= META_JOURNEY * 1.1 ? 'amber' : 'red';
+  const pill = document.getElementById('hero-pill');
+  pill.textContent = avg <= META_JOURNEY
+    ? `Meta institucional: ${META_JOURNEY}d · dentro da meta`
+    : `Meta institucional: ${META_JOURNEY}d · ${avg - META_JOURNEY}d acima`;
+
+  // Target bar
+  const fillPct = Math.min(100, (avg / (p95 * 1.05)) * 100);
+  const markerPct = Math.min(100, (META_JOURNEY / (p95 * 1.05)) * 100);
+  document.getElementById('target-fill').style.width = fillPct + '%';
+  document.getElementById('target-marker').style.left = markerPct + '%';
+  document.getElementById('target-p95').textContent = p95 + ' dias (P95)';
+}
+
+function renderStory() {
+  // Count phases by category
+  const active = ALL_PROJECTS.filter(p => p.status !== 'finalizado' && p.status !== 'cancelado');
+  const execCount = active.filter(p => EXEC_PHASES.includes(p.faseAtual)).length;
+  const posCount = active.filter(p => POS_PHASES.includes(p.faseAtual)).length;
+  const preCount = active.length - execCount - posCount;
+
+  document.getElementById('story-1-title').innerHTML = `<strong>${execCount}</strong> obras em execução agora.`;
+  document.getElementById('story-1-body').textContent = `Quando a equipe está em campo, o trabalho flui. Essas obras estão nas fases de execução, pausa ou conclusão.`;
+  document.getElementById('story-1-stat').textContent = `Fases: EXECUÇÃO + PAUSADA + CONCLUÍDA · ${execCount} obras`;
+
+  document.getElementById('story-2-title').innerHTML = `<strong>${preCount}</strong> obras travadas no pré-obra.`;
+  document.getElementById('story-2-body').textContent = `Agendamentos, visitas técnicas, aprovações e logística. É aqui que está o maior volume de cards parados.`;
+  document.getElementById('story-2-stat').textContent = `${Math.round(preCount / active.length * 100)}% de todas as obras ativas`;
+
+  document.getElementById('story-3-title').innerHTML = `<strong>${posCount}</strong> obras em pós-obra.`;
+  document.getElementById('story-3-body').textContent = `Obras que terminaram mas aguardam finalização administrativa, pesquisa de qualidade ou arquivamento.`;
+  document.getElementById('story-3-stat').textContent = `Fases pós-obra · aguardando fechamento`;
+}
+
+function renderDonut() {
+  const active = ALL_PROJECTS.filter(p => p.status !== 'finalizado' && p.status !== 'cancelado');
+  const execCount = active.filter(p => EXEC_PHASES.includes(p.faseAtual)).length;
+  const posCount = active.filter(p => POS_PHASES.includes(p.faseAtual)).length;
+  const preCount = active.length - execCount - posCount;
+  const total = active.length || 1;
+
+  const prePct = Math.round(preCount / total * 100);
+  const execPct = Math.round(execCount / total * 100);
+  const posPct = 100 - prePct - execPct;
+
+  document.getElementById('donut-title').innerHTML = `Visualize <em>como as ${total} obras ativas</em> se distribuem.`;
+  document.getElementById('donut-center-value').innerHTML = total + '<span style="font-size:.4em;color:var(--text3)"> obras</span>';
+
+  // Update donut segments (circumference = 2πr = 2π×80 ≈ 502)
+  const preArc = Math.round(prePct / 100 * 502);
+  const execArc = Math.round(execPct / 100 * 502);
+  const posArc = 502 - preArc - execArc;
+
+  const segments = document.querySelectorAll('.donut-segment');
+  if (segments[0]) { segments[0].setAttribute('stroke-dasharray', preArc + ' 502'); segments[0].setAttribute('stroke-dashoffset', '0'); }
+  if (segments[1]) { segments[1].setAttribute('stroke-dasharray', execArc + ' 502'); segments[1].setAttribute('stroke-dashoffset', -preArc); }
+  if (segments[2]) { segments[2].setAttribute('stroke-dasharray', posArc + ' 502'); segments[2].setAttribute('stroke-dashoffset', -(preArc + execArc)); }
+
+  document.getElementById('donut-pre-pct').textContent = prePct + '%';
+  document.getElementById('donut-pre-days').innerHTML = preCount + '<span class="u"> obras</span>';
+  document.getElementById('donut-exec-pct').textContent = execPct + '%';
+  document.getElementById('donut-exec-days').innerHTML = execCount + '<span class="u"> obras</span>';
+  document.getElementById('donut-pos-pct').textContent = posPct + '%';
+  document.getElementById('donut-pos-days').innerHTML = posCount + '<span class="u"> obras</span>';
+}
+
+function renderCulpa() {
+  // Classify current phases as client-wait vs internal
+  const active = ALL_PROJECTS.filter(p => p.status !== 'finalizado' && p.status !== 'cancelado' && !EXEC_PHASES.includes(p.faseAtual) && !POS_PHASES.includes(p.faseAtual));
+  const clientPhases = {};
+  const internoPhases = {};
+
+  active.forEach(p => {
+    const phase = p.faseAtual || 'Sem fase';
+    const isClient = CLIENT_PHASES.some(cp => phase.includes(cp) || cp.includes(phase));
+    const target = isClient ? clientPhases : internoPhases;
+    target[phase] = (target[phase] || 0) + 1;
+  });
+
+  const clientTotal = Object.values(clientPhases).reduce((s, v) => s + v, 0);
+  const internoTotal = Object.values(internoPhases).reduce((s, v) => s + v, 0);
+  const grandTotal = clientTotal + internoTotal || 1;
+  const clientPct = Math.round(clientTotal / grandTotal * 100);
+  const internoPct = 100 - clientPct;
+
+  document.getElementById('culpa-title').innerHTML =
+    `As ${active.length} obras pré-obra: <em>cliente esperando</em> ou <em>processo interno</em>?`;
+
+  const topClient = Object.entries(clientPhases).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const topInterno = Object.entries(internoPhases).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+  document.getElementById('culpa-cliente-list').innerHTML = topClient.map(([name, count]) =>
+    `<li><span>${name}</span><span class="days">${count} obras</span></li>`
+  ).join('') || '<li>Nenhuma</li>';
+
+  document.getElementById('culpa-interno-list').innerHTML = topInterno.map(([name, count]) =>
+    `<li><span>${name}</span><span class="days">${count} obras</span></li>`
+  ).join('') || '<li>Nenhuma</li>';
+
+  document.getElementById('culpa-stack').innerHTML = `
+    <div class="culpa-seg cliente" style="flex:${clientPct}">${clientPct}% cliente</div>
+    <div class="culpa-seg interno" style="flex:${internoPct}">${internoPct}% interno</div>
+  `;
+  document.getElementById('culpa-legend').innerHTML = `
+    <span><div class="dot" style="background:#d4a96e"></div>Espera do cliente · ${clientTotal} obras</span>
+    <span><div class="dot" style="background:#5a4935"></div>Processo interno · ${internoTotal} obras</span>
+  `;
+  document.getElementById('culpa-conclusion').innerHTML = `
+    <h4>👉 Conclusão</h4>
+    <p>${internoPct > 60
+      ? `Aproximadamente <strong>${internoPct}% das obras pré-obra são responsabilidade interna</strong>. Processo e capacidade são as alavancas principais.`
+      : `A distribuição é <strong>${clientPct}% cliente / ${internoPct}% interno</strong>. Ambos os lados precisam de atenção.`
+    }</p>
+  `;
+}
+
+function renderRevenue() {
+  const html = ['p', 'm', 'g', 'x'].map((b, i) => {
+    const d = BUCKETS[b];
+    if (!d) return '';
+    const receita = d.avg_m2 * PRICE_PER_M2;
+    const receitaDia = d.journey_avg > 0 ? Math.round(receita / d.journey_avg) : 0;
+    const isWinner = i === 3;
+    return `
+      <div class="revenue-cell ${isWinner ? 'winner' : ''}">
+        <div class="icon">${d.emoji}</div>
+        <div class="label">${d.label} · ${d.avg_m2} m² médio</div>
+        <div class="big">R$ ${receitaDia.toLocaleString('pt-BR')}<span class="u">/dia</span></div>
+        <div class="meta">Receita: R$ ${Math.round(receita / 1000)} mil<br>Pipeline: ${d.journey_avg} dias</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('revenue-grid').innerHTML = html;
+}
+
+function renderFooter() {
+  const now = new Date();
+  document.getElementById('footer-obras').textContent = ALL_PROJECTS.length + ' obras analisadas';
+  document.getElementById('footer-date').textContent = 'Atualizado: ' + now.toLocaleDateString('pt-BR');
+
+  const dates = ALL_PROJECTS.map(p => new Date(p.createdAt)).sort((a, b) => a - b);
+  if (dates.length) {
+    const first = dates[0].toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' });
+    document.getElementById('footer-periodo').textContent = 'Desde ' + first;
+  }
+
+  const phases = new Set(ALL_PROJECTS.map(p => p.faseAtual).filter(Boolean));
+  document.getElementById('footer-meta-bottom').textContent =
+    `Ao vivo · ${ALL_PROJECTS.length} obras · ${phases.size} fases · cliente.monofloor.cloud`;
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER — componentes preservados do original
+// ═══════════════════════════════════════════════════
+
 
 // Tradução de nomes técnicos para linguagem acessível
 const PHASE_TRANSLATIONS = {
@@ -3449,185 +3715,102 @@ const PHASE_TRANSLATIONS = {
   'PÓS VENDAS ACIONADO': 'Pós-vendas foi acionado',
   'RESULTADO VT - QUALIDADE': 'Resultado de visita de qualidade',
   'AGEND. VT - QUALIDADE': 'Agendando visita de qualidade',
+  'Sem fase': 'Sem fase definida no sistema',
+  'CONTRATO': 'Em fase de contrato',
+  'OECT': 'Ordem de execução de contrato',
 };
 
-// ═══════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════
-
-// Top 5 gargalos (média entre todos os buckets, ponderada)
 function getTopGargalos() {
   const phaseTotals = {};
   ['p','m','g','x'].forEach(b => {
+    if (!BUCKETS[b]) return;
     BUCKETS[b].phases.forEach(p => {
       if (!phaseTotals[p.name]) phaseTotals[p.name] = { sum: 0, count: 0, n: 0 };
-      phaseTotals[p.name].sum += p.avg * p.n;
-      phaseTotals[p.name].count += p.n;
+      phaseTotals[p.name].sum += p.n;
+      phaseTotals[p.name].count++;
       phaseTotals[p.name].n += p.n;
     });
   });
   return Object.entries(phaseTotals)
-    .map(([name, t]) => ({ name, avg: t.sum / t.count, n: t.n }))
-    .sort((a, b) => b.avg - a.avg)
+    .map(([name, t]) => ({ name, count: t.n, n: t.n }))
+    .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 }
 
 function renderGargalos() {
   const top = getTopGargalos();
-  const maxAvg = top[0].avg;
+  if (!top.length) return;
+  const maxCount = top[0].count;
   document.getElementById('gargalo-list').innerHTML = top.map((p, i) => {
-    const pct = (p.avg / maxAvg) * 100;
+    const pct = (p.count / maxCount) * 100;
     const translation = PHASE_TRANSLATIONS[p.name] || '';
-    return `
-      <div class="gargalo">
-        <div class="gargalo-rank">${String(i+1).padStart(2,'0')}</div>
-        <div class="gargalo-content">
-          <div class="gargalo-name">${p.name}</div>
-          <div class="gargalo-translation">${translation}</div>
-          <div class="gargalo-bar-wrap">
-            <div class="gargalo-bar" style="width:${pct}%"></div>
-          </div>
-        </div>
-        <div class="gargalo-days">${p.avg.toFixed(0)}<span class="unit">dias</span></div>
-      </div>
-    `;
+    return '<div class="gargalo"><div class="gargalo-rank">' + String(i+1).padStart(2,'0') + '</div><div class="gargalo-content"><div class="gargalo-name">' + p.name + '</div><div class="gargalo-translation">' + translation + '</div><div class="gargalo-bar-wrap"><div class="gargalo-bar" style="width:' + pct + '%"></div></div></div><div class="gargalo-days">' + p.count + '<span class="unit">obras</span></div></div>';
   }).join('');
 }
 
-// Tipos cards
 function renderTipos() {
   const html = ['p','m','g','x'].map(b => {
     const d = BUCKETS[b];
-    const isActive = b === 'p' ? 'active' : '';
-    return `
-      <div class="tipo-card ${isActive}" onclick="document.querySelector('[data-drill=\\'${b}\\']').click(); document.getElementById('explorar').scrollIntoView({behavior:'smooth'})">
-        <span class="icon">${d.emoji}</span>
-        <div class="label">${d.range}</div>
-        <div class="name">${d.label}</div>
-        <div class="range">${d.description}</div>
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-v">${d.cards}</div>
-            <div class="stat-l">obras</div>
-          </div>
-          <div class="stat">
-            <div class="stat-v">${d.journey_avg}<span style="font-size:14px;color:var(--text3)">d</span></div>
-            <div class="stat-l">média</div>
-          </div>
-          <div class="stat">
-            <div class="stat-v">${d.journey_median}<span style="font-size:14px;color:var(--text3)">d</span></div>
-            <div class="stat-l">mediana</div>
-          </div>
-        </div>
-      </div>
-    `;
+    if (!d) return '';
+    return '<div class="tipo-card" onclick="document.querySelector(\'[data-drill=' + b + ']\')&&document.querySelector(\'[data-drill=' + b + ']\').click(); document.getElementById(\'explorar\').scrollIntoView({behavior:\'smooth\'})"><span class="icon">' + d.emoji + '</span><div class="label">' + d.range + '</div><div class="name">' + d.label + '</div><div class="range">' + d.description + '</div><div class="stats"><div class="stat"><div class="stat-v">' + d.cards + '</div><div class="stat-l">obras</div></div><div class="stat"><div class="stat-v">' + d.journey_avg + '<span style="font-size:14px;color:var(--text3)">d</span></div><div class="stat-l">média</div></div><div class="stat"><div class="stat-v">' + d.journey_median + '<span style="font-size:14px;color:var(--text3)">d</span></div><div class="stat-l">mediana</div></div></div></div>';
   }).join('');
   document.getElementById('tipos-grid').innerHTML = html;
 }
 
-// Comparativo (top 12 fases mais relevantes)
 function renderCompare() {
   const allPhases = new Set();
-  ['p','m','g','x'].forEach(b => BUCKETS[b].phases.forEach(p => allPhases.add(p.name)));
-
+  ['p','m','g','x'].forEach(b => { if (BUCKETS[b]) BUCKETS[b].phases.forEach(p => allPhases.add(p.name)); });
   const phaseStats = [];
   allPhases.forEach(name => {
     const vals = ['p','m','g','x'].map(b => {
+      if (!BUCKETS[b]) return null;
       const ph = BUCKETS[b].phases.find(p => p.name === name);
-      return ph ? ph.avg : null;
+      return ph ? ph.n : null;
     });
     const valid = vals.filter(v => v !== null);
-    if (valid.length >= 3) {
+    if (valid.length >= 2) {
       const avgOverall = valid.reduce((s, v) => s + v, 0) / valid.length;
       phaseStats.push({ name, vals, avgOverall });
     }
   });
   phaseStats.sort((a, b) => b.avgOverall - a.avgOverall);
-
   const top = phaseStats.slice(0, 12);
-  const maxValue = Math.max(...top.flatMap(p => p.vals.filter(v => v !== null)));
-
+  const maxValue = Math.max(...top.flatMap(p => p.vals.filter(v => v !== null)), 1);
   document.getElementById('compare-tbody').innerHTML = top.map(p => {
     const cells = p.vals.map(v => {
       if (v === null) return '<td class="compare-cell empty">—</td>';
       const cls = v >= 25 ? 'high' : v >= 12 ? 'med' : v >= 6 ? 'low' : 'ok';
       const barW = (v / maxValue) * 100;
-      return `<td class="compare-cell ${cls}">${v.toFixed(1)}d<span class="compare-cell-bar" style="width:${barW}%"></span></td>`;
+      return '<td class="compare-cell ' + cls + '">' + v + '<span class="compare-cell-bar" style="width:' + barW + '%"></span></td>';
     }).join('');
     const desc = PHASE_TRANSLATIONS[p.name] || '';
-    return `
-      <tr>
-        <td class="phase-cell">
-          ${p.name}
-          ${desc ? `<span class="desc">${desc}</span>` : ''}
-        </td>
-        ${cells}
-      </tr>
-    `;
+    return '<tr><td class="phase-cell">' + p.name + (desc ? '<span class="desc">' + desc + '</span>' : '') + '</td>' + cells + '</tr>';
   }).join('');
 }
 
-// Drill down — tabs + detalhes
 function renderDrill() {
   const tabsHtml = ['p','m','g','x'].map(b => {
     const d = BUCKETS[b];
-    return `
-      <button class="drill-tab ${b==='p'?'active':''}" data-drill="${b}" onclick="showDrill('${b}')">
-        <span class="icon">${d.emoji}</span>
-        ${d.label} <span style="opacity:.6">·</span> ${d.cards} obras
-      </button>
-    `;
+    if (!d) return '';
+    return '<button class="drill-tab ' + (b==='p'?'active':'') + '" data-drill="' + b + '" onclick="showDrill(\'' + b + '\')">' +
+      '<span class="icon">' + d.emoji + '</span> ' + d.label + ' <span style="opacity:.6">·</span> ' + d.cards + ' obras</button>';
   }).join('');
   document.getElementById('drill-tabs').innerHTML = tabsHtml;
 
   const contentHtml = ['p','m','g','x'].map(b => {
     const d = BUCKETS[b];
-    const sortedPhases = [...d.phases].sort((a, b) => b.avg - a.avg).slice(0, 12);
-    const maxAvg = sortedPhases[0].avg;
-
+    if (!d) return '';
+    const sortedPhases = [...d.phases].sort((a, bb) => bb.n - a.n).slice(0, 12);
+    const maxN = sortedPhases.length ? sortedPhases[0].n : 1;
     const phaseList = sortedPhases.map(p => {
-      const pct = (p.avg / maxAvg) * 100;
-      const color = p.avg >= 25 ? 'var(--red)' : p.avg >= 12 ? 'var(--amber)' : 'var(--gold)';
-      return `
-        <div class="mini-phase">
-          <div class="mini-phase-row">
-            <div class="mini-phase-name">${p.name}</div>
-            <div class="mini-phase-meta"><b>${p.avg.toFixed(1)}d</b> · n=${p.n}</div>
-          </div>
-          <div class="mini-phase-bar-wrap">
-            <div class="mini-phase-bar" style="width:${pct}%;background:${color}"></div>
-          </div>
-        </div>
-      `;
+      const pct = (p.n / maxN) * 100;
+      const color = p.n >= 25 ? 'var(--red)' : p.n >= 12 ? 'var(--amber)' : 'var(--gold)';
+      return '<div class="mini-phase"><div class="mini-phase-row"><div class="mini-phase-name">' + p.name + '</div><div class="mini-phase-meta"><b>' + p.n + ' obras</b></div></div><div class="mini-phase-bar-wrap"><div class="mini-phase-bar" style="width:' + pct + '%;background:' + color + '"></div></div></div>';
     }).join('');
-
-    const obras = d.top_cards.map((c, i) => `
-      <div class="obra-item">
-        <div class="obra-num">${String(i+1).padStart(2,'0')}</div>
-        <div class="obra-info">
-          <div class="obra-name">${c.name}</div>
-          <div class="obra-meta">${c.m2.toFixed(0)} m²</div>
-        </div>
-        <div class="obra-days">${c.days}<span class="unit">d</span></div>
-      </div>
-    `).join('');
-
-    return `
-      <div class="drill-content ${b==='p'?'active':''}" data-drill-content="${b}">
-        <div class="drill-grid">
-          <div class="drill-block">
-            <h3>Top 12 fases mais lentas neste segmento</h3>
-            <div class="h-sub">${d.label} · ${d.cards} obras analisadas · journey médio ${d.journey_avg}d</div>
-            <div class="mini-phases">${phaseList}</div>
-          </div>
-          <div class="drill-block">
-            <h3>Obras mais lentas</h3>
-            <div class="h-sub">5 cards com maior tempo total acumulado no pipeline</div>
-            <div class="obra-list">${obras}</div>
-          </div>
-        </div>
-      </div>
-    `;
+    const obras = (d.top_cards || []).map((c, i) =>
+      '<div class="obra-item"><div class="obra-num">' + String(i+1).padStart(2,'0') + '</div><div class="obra-info"><div class="obra-name">' + c.name + '</div><div class="obra-meta">' + c.m2.toFixed(0) + ' m²</div></div><div class="obra-days">' + c.days + '<span class="unit">d</span></div></div>'
+    ).join('');
+    return '<div class="drill-content ' + (b==='p'?'active':'') + '" data-drill-content="' + b + '"><div class="drill-grid"><div class="drill-block"><h3>Top 12 fases com mais obras neste segmento</h3><div class="h-sub">' + d.label + ' · ' + d.cards + ' obras · journey médio ' + d.journey_avg + 'd</div><div class="mini-phases">' + phaseList + '</div></div><div class="drill-block"><h3>Obras mais lentas</h3><div class="h-sub">5 cards com maior tempo no pipeline</div><div class="obra-list">' + obras + '</div></div></div></div>';
   }).join('');
   document.getElementById('drill-content').innerHTML = contentHtml;
 }
@@ -3637,718 +3820,234 @@ function showDrill(b) {
   document.querySelectorAll('.drill-content').forEach(c => c.classList.toggle('active', c.dataset.drillContent === b));
 }
 
-// Insights
-const INSIGHTS = [
-  {
-    type: 'critical',
-    icon: '🚨',
-    title: 'Obras pequenas têm a maior cauda de problemas',
-    body: 'O pior caso é uma obra de <strong>10 m²</strong> que está há <span class="num">1666 dias</span> no pipeline (LOVELY RITA DIAS MENEZES). É 11x mais lenta que a média. Existe um efeito de "obra pequena = baixa prioridade = abandono".'
-  },
-  {
-    type: 'good',
-    icon: '✅',
-    title: 'Obras grandes (XL) são as mais rápidas',
-    body: 'Apesar da complexidade, obras de <strong>500m² ou mais</strong> têm journey médio de <span class="num">100 dias</span>, contra 143 das pequenas. Recebem prioridade institucional e fluem melhor pelo pipeline. Mediana de 65 dias é excelente.'
-  },
-  {
-    type: 'warn',
-    icon: '📅',
-    title: 'Agendar visita técnica trava 5x mais em obras grandes',
-    body: 'Pequenas: 7d. Médias: 20d. <strong>XL: 38 dias</strong>. Quanto maior a obra, mais difícil agendar a equipe técnica especializada — está superalocada. Sinal de necessidade de mais técnicos seniores.'
-  },
-  {
-    type: 'critical',
-    icon: '⏳',
-    title: '"Cliente Finalizado" é um buraco negro silencioso',
-    body: 'Em obras médias e grandes, o card fica em média <span class="num">50-58 dias parado</span> em "Cliente Finalizado" antes de ser arquivado. É puro gargalo administrativo — financeiro/pós-venda que não fecha o ciclo.'
-  },
-  {
-    type: 'warn',
-    icon: '🔄',
-    title: 'A fase 1º Contato OP é mais lenta em obras médias',
-    body: 'Pequenas: 11d. <strong>Médias: 15d</strong>. Grandes: 12d. XL: 8d. Cliente médio é menos definido (sem decoradora/arquiteto, mas obra grande o suficiente pra ter complexidade). Mais ida-e-volta no contato inicial.'
-  },
-  {
-    type: 'info',
-    icon: '🎯',
-    title: 'O caminho feliz já estoura a meta institucional',
-    body: 'Somando o tempo médio de cada fase principal (1 visita por fase), o resultado é <span class="num">~215 dias</span>. A meta interna definida é <strong>≤150 dias</strong>. A meta é fisicamente impossível com a estrutura atual do pipe.'
-  },
-  {
-    type: 'warn',
-    icon: '📦',
-    title: 'Logística agrupa fretes em detrimento de obras pequenas',
-    body: 'Logística de material entregue: <strong>pequenas 18d vs grandes 12d</strong>. Contraintuitivo — obras pequenas demoram MAIS. Causa provável: agrupamento de fretes/coletas para reduzir custo posterga obras pequenas individuais.'
-  },
-  {
-    type: 'good',
-    icon: '💰',
-    title: 'Backoffice financeiro está saudável',
-    body: 'FINANCEIRO - EM REVISÃO leva apenas <span class="num">1.8 dias em média</span>. Informações financeiras: 0.4d. Não é o financeiro que está atrapalhando o ciclo — o problema é operacional, não administrativo.'
-  },
-];
-
 function renderInsights() {
-  document.getElementById('insights-grid').innerHTML = INSIGHTS.map(i => `
-    <div class="insight-card ${i.type}">
-      <span class="insight-icon">${i.icon}</span>
-      <h3>${i.title}</h3>
-      <p>${i.body}</p>
-    </div>
-  `).join('');
+  document.getElementById('insights-grid').innerHTML = INSIGHTS.map(i =>
+    '<div class="insight-card ' + i.type + '"><span class="insight-icon">' + i.icon + '</span><h3>' + i.title + '</h3><p>' + i.body + '</p></div>'
+  ).join('');
 }
 
-// ═══════════════════════════════════════════════════
-// DEEP ANALYSIS — Capacidade operacional
-// ═══════════════════════════════════════════════════
-
-const CAPACITY = {
-  period_months: 8,
-  total_finalized: 210,
-  wip_actual: 243,
-  monthly: {
-    p: { cards: 12.75, m2: 816, journey: 143, label: 'Pequena', emoji: '🏠' },
-    m: { cards: 8.25, m2: 1150, journey: 136, label: 'Média', emoji: '🏡' },
-    g: { cards: 4.5, m2: 1301, journey: 133, label: 'Grande', emoji: '🏢' },
-    x: { cards: 0.75, m2: 696, journey: 100, label: 'XLarge', emoji: '🏭' },
-  },
-  // Histórico mês a mês (cards finalizados)
-  history: [
-    { month: '2025-08', p: 1, m: 2, g: 5, x: 1 },
-    { month: '2025-09', p: 0, m: 3, g: 0, x: 0 },
-    { month: '2025-10', p: 25, m: 17, g: 8, x: 2 },
-    { month: '2025-11', p: 13, m: 3, g: 1, x: 2 },
-    { month: '2025-12', p: 27, m: 13, g: 10, x: 1 },
-    { month: '2026-01', p: 11, m: 5, g: 3, x: 0 },
-    { month: '2026-02', p: 14, m: 13, g: 5, x: 0 },
-    { month: '2026-03', p: 11, m: 10, g: 4, x: 0 },
-  ],
-};
-
-// Render throughput chart
 function renderThroughput() {
-  const buckets = ['p', 'm', 'g', 'x'];
-  const max = Math.max(...buckets.map(b => CAPACITY.monthly[b].cards));
-  const html = buckets.map(b => {
-    const d = CAPACITY.monthly[b];
+  const bk = ['p','m','g','x'];
+  const max = Math.max(...bk.map(b => CAPACITY.monthly[b]?.cards || 0), 1);
+  document.getElementById('throughput-chart').innerHTML = bk.map(b => {
+    const d = CAPACITY.monthly[b]; if (!d) return '';
     const pct = (d.cards / max) * 100;
-    return `
-      <div class="tp-label">
-        <span class="tp-icon">${d.emoji}</span>${d.label}
-      </div>
-      <div class="tp-bar-wrap">
-        <div class="tp-bar" style="width:${pct}%">
-          <span class="tp-bar-label">${d.cards.toFixed(1)}/mês</span>
-        </div>
-        <div class="tp-meta">
-          <b>${d.m2.toFixed(0)} m²</b>/mês · ${(d.cards * 12).toFixed(0)}/ano
-        </div>
-      </div>
-    `;
+    return '<div class="tp-label"><span class="tp-icon">' + d.emoji + '</span>' + d.label + '</div><div class="tp-bar-wrap"><div class="tp-bar" style="width:' + pct + '%"><span class="tp-bar-label">' + d.cards.toFixed(1) + '/mês</span></div><div class="tp-meta"><b>' + d.m2 + ' m²</b>/mês · ' + (d.cards*12).toFixed(0) + '/ano</div></div>';
   }).join('');
-  document.getElementById('throughput-chart').innerHTML = html;
 }
 
-// Capacity table
 function renderCapacity() {
-  const buckets = ['p', 'm', 'g', 'x'];
-  const html = buckets.map(b => {
-    const d = CAPACITY.monthly[b];
-    // L = λ × W = (cards/month / 30 days) × journey days
-    const wipTeorico = Math.round((d.cards / 30) * d.journey);
-    // WIP real proporcional ao share dos buckets (estimativa)
-    const totalThroughput = buckets.reduce((s, x) => s + CAPACITY.monthly[x].cards, 0);
-    const share = d.cards / totalThroughput;
-    const wipReal = Math.round(CAPACITY.wip_actual * share);
-    const ratio = wipReal / wipTeorico;
-    let statusClass = 'gold', statusLabel = '✓ ok';
-    if (ratio > 1.5) { statusClass = 'red'; statusLabel = '+' + Math.round((ratio-1)*100) + '% sobrecarga'; }
-    else if (ratio > 1.2) { statusClass = 'amber'; statusLabel = '+' + Math.round((ratio-1)*100) + '% acima'; }
-    else if (ratio < 0.8) { statusClass = 'green'; statusLabel = 'subutilizado'; }
-    return `
-      <tr>
-        <td>${d.emoji} ${d.label}</td>
-        <td class="num">${d.cards.toFixed(1)}/mês</td>
-        <td class="num">${d.journey}d</td>
-        <td class="num">${wipTeorico}</td>
-        <td class="num ${ratio>1.5?'red':''}">${wipReal}</td>
-        <td class="num ${statusClass}">${statusLabel}</td>
-      </tr>
-    `;
+  const bk = ['p','m','g','x'];
+  const totalTP = bk.reduce((s,b) => s + (CAPACITY.monthly[b]?.cards||0), 0);
+  document.getElementById('capacity-tbody').innerHTML = bk.map(b => {
+    const d = CAPACITY.monthly[b]; if (!d) return '';
+    const wipT = Math.round((d.cards/30)*d.journey);
+    const share = totalTP ? d.cards/totalTP : 0;
+    const wipR = Math.round(CAPACITY.wip_actual*share);
+    const ratio = wipT ? wipR/wipT : 0;
+    let sc='gold',sl='✓ ok';
+    if(ratio>1.5){sc='red';sl='+'+Math.round((ratio-1)*100)+'% sobrecarga';}
+    else if(ratio>1.2){sc='amber';sl='+'+Math.round((ratio-1)*100)+'% acima';}
+    else if(ratio<0.8){sc='green';sl='subutilizado';}
+    return '<tr><td>'+d.emoji+' '+d.label+'</td><td class="num">'+d.cards.toFixed(1)+'/mês</td><td class="num">'+d.journey+'d</td><td class="num">'+wipT+'</td><td class="num '+(ratio>1.5?'red':'')+'">'+wipR+'</td><td class="num '+sc+'">'+sl+'</td></tr>';
   }).join('');
-  document.getElementById('capacity-tbody').innerHTML = html;
 }
 
-// Months chart
 function renderMonths() {
-  const maxTotal = Math.max(...CAPACITY.history.map(m => m.p + m.m + m.g + m.x));
-  const html = CAPACITY.history.map(row => {
-    const total = row.p + row.m + row.g + row.x;
-    const widthPct = (total / maxTotal) * 100;
-    const segments = ['p', 'm', 'g', 'x'].map(b => {
-      const v = row[b];
-      if (v === 0) return '';
-      const pct = (v / total) * 100;
-      return `<div class="month-bar ${b}" style="flex:${v}" title="${v} obras">${v}</div>`;
-    }).join('');
-    return `
-      <div class="months-chart">
-        <div class="month-label">${row.month}</div>
-        <div class="month-bars" style="width:${widthPct}%;min-width:60px">${segments}</div>
-      </div>
-    `;
+  if (!CAPACITY.history||!CAPACITY.history.length) return;
+  const maxT = Math.max(...CAPACITY.history.map(m=>m.p+m.m+m.g+m.x),1);
+  document.getElementById('months-chart').innerHTML = CAPACITY.history.map(row => {
+    const total = row.p+row.m+row.g+row.x;
+    const wPct = (total/maxT)*100;
+    const segs = ['p','m','g','x'].map(b => { const v=row[b]; if(!v) return ''; return '<div class="month-bar '+b+'" style="flex:'+v+'" title="'+v+' obras">'+v+'</div>'; }).join('');
+    return '<div class="months-chart"><div class="month-label">'+row.month+'</div><div class="month-bars" style="width:'+wPct+'%;min-width:60px">'+segs+'</div></div>';
   }).join('');
-  document.getElementById('months-chart').innerHTML = html;
-}
-
-// Simulator (CORRIGIDO: usa scale-from-baseline em vez de WIP/W direto)
-// Razão: WIP=243 inclui zombies, então L=λ×W não fecha. Em vez disso,
-// escalamos a partir do baseline observado (143d → 26 obras/mês)
-const BASELINE_JOURNEY = 143;
-const BASELINE_MONTHLY = 26;
-
-function journeyToThroughput(journeyDays) {
-  // λ_new = λ_base × (W_base / W_new)
-  return BASELINE_MONTHLY * (BASELINE_JOURNEY / journeyDays);
-}
-
-function throughputToJourney(monthlyTarget) {
-  // W_new = W_base × (λ_base / λ_target)
-  return BASELINE_JOURNEY * (BASELINE_MONTHLY / monthlyTarget);
 }
 
 function updateSimulator() {
-  const newJourney = parseInt(document.getElementById('journey-slider').value);
-  document.getElementById('slider-value').textContent = newJourney + 'd';
-
-  const newMonthly = journeyToThroughput(newJourney);
-  const newQuarterly = newMonthly * 3;
-  const newYearly = newMonthly * 12;
-
-  const deltaMonthly = ((newMonthly / BASELINE_MONTHLY) - 1) * 100;
-  const deltaSign = deltaMonthly >= 0 ? '+' : '';
-
-  document.getElementById('sim-monthly').innerHTML =
-    Math.round(newMonthly) + '<span class="u">obras/mês</span>';
-  document.getElementById('sim-quarterly').innerHTML =
-    Math.round(newQuarterly) + '<span class="u">obras</span>';
-  document.getElementById('sim-yearly').innerHTML =
-    Math.round(newYearly) + '<span class="u">obras</span>';
-
-  const deltaText = deltaSign + Math.round(deltaMonthly) + '% vs atual';
-  const deltaClass = deltaMonthly >= 0 ? 'up' : 'down';
-  ['sim-delta-monthly', 'sim-delta-quarterly', 'sim-delta-yearly'].forEach(id => {
-    const el = document.getElementById(id);
-    el.textContent = deltaText;
-    el.className = 'delta ' + deltaClass;
+  const avgJ = TRIAGE.baseline_journey||143;
+  const baseM = TRIAGE.baseline_throughput||26;
+  const newJ = parseInt(document.getElementById('journey-slider').value);
+  document.getElementById('slider-value').textContent = newJ+'d';
+  const newM = baseM*(avgJ/newJ);
+  const dM = ((newM/baseM)-1)*100;
+  const ds = dM>=0?'+':'';
+  document.getElementById('sim-monthly').innerHTML = Math.round(newM)+'<span class="u">obras/mês</span>';
+  document.getElementById('sim-quarterly').innerHTML = Math.round(newM*3)+'<span class="u">obras</span>';
+  document.getElementById('sim-yearly').innerHTML = Math.round(newM*12)+'<span class="u">obras</span>';
+  const dt = ds+Math.round(dM)+'% vs atual';
+  const dc = dM>=0?'up':'down';
+  ['sim-delta-monthly','sim-delta-quarterly','sim-delta-yearly'].forEach(id => {
+    const el=document.getElementById(id); if(el){el.textContent=dt;el.className='delta '+dc;}
   });
 }
 
-// Inverse simulator: target throughput → required journey
 function updateInverseSim() {
-  const target = parseInt(document.getElementById('target-throughput').value) || 26;
-  const requiredJourney = throughputToJourney(target);
-  const reductionPct = ((BASELINE_JOURNEY - requiredJourney) / BASELINE_JOURNEY) * 100;
-
-  document.getElementById('required-journey').innerHTML =
-    '<span class="v">' + Math.round(requiredJourney) + '</span><span class="u">d</span>';
-
-  const feasEl = document.getElementById('inverse-feasibility');
-  let feasMsg = '';
-  if (requiredJourney >= BASELINE_JOURNEY) {
-    feasMsg = `<b>Já é viável hoje</b> sem nenhuma mudança — sua meta está abaixo do que o sistema atual entrega (${BASELINE_MONTHLY} obras/mês).`;
-  } else if (requiredJourney >= 100) {
-    feasMsg = `Requer redução de <span class="feasible">${Math.round(reductionPct)}%</span> no tempo médio. Viável com melhorias moderadas (alvo equivalente ao benchmark XL).`;
-  } else if (requiredJourney >= 70) {
-    feasMsg = `Requer redução de <span class="feasible">${Math.round(reductionPct)}%</span> no tempo médio. Exige otimização significativa de processo + alocação de recursos.`;
-  } else {
-    feasMsg = `Requer redução de <span class="unfeasible">${Math.round(reductionPct)}%</span> — provavelmente <span class="unfeasible">inviável</span> sem aumentar capacidade (mais equipes, mais técnicos).`;
-  }
-  feasEl.innerHTML = feasMsg;
+  const avgJ = TRIAGE.baseline_journey||143;
+  const baseM = TRIAGE.baseline_throughput||26;
+  const target = parseInt(document.getElementById('target-throughput').value)||baseM;
+  const rJ = avgJ*(baseM/target);
+  const rP = ((avgJ-rJ)/avgJ)*100;
+  document.getElementById('required-journey').innerHTML = '<span class="v">'+Math.round(rJ)+'</span><span class="u">d</span>';
+  const f = document.getElementById('inverse-feasibility');
+  if(rJ>=avgJ) f.innerHTML='<b>Já é viável hoje</b> sem nenhuma mudança.';
+  else if(rJ>=100) f.innerHTML='Requer redução de <span class="feasible">'+Math.round(rP)+'%</span>. Viável com melhorias moderadas.';
+  else if(rJ>=70) f.innerHTML='Requer redução de <span class="feasible">'+Math.round(rP)+'%</span>. Exige otimização significativa.';
+  else f.innerHTML='Requer redução de <span class="unfeasible">'+Math.round(rP)+'%</span> — provavelmente <span class="unfeasible">inviável</span> sem aumentar capacidade.';
 }
-
-// ═══════════════════════════════════════════════════
-// SCENARIOS BAR CHART
-// ═══════════════════════════════════════════════════
-const SCENARIOS = [
-  { label: 'Atual', icon: '📍', sub: '143 dias', value: 312, type: 'current', delta: null },
-  { label: 'Meta interna atual', icon: '🎯', sub: '150 dias', value: 300, type: 'below', delta: -4 },
-  { label: 'Melhoria moderada', icon: '⚡', sub: '120 dias', value: 372, type: 'above', delta: 19 },
-  { label: 'Benchmark XL', icon: '🚀', sub: '100 dias', value: 444, type: 'above', delta: 42 },
-  { label: 'Best case', icon: '🏆', sub: '80 dias', value: 552, type: 'best', delta: 77 },
-];
 
 function renderScenarios() {
-  const max = Math.max(...SCENARIOS.map(s => s.value));
-  const html = SCENARIOS.map(s => {
-    const pct = (s.value / max) * 100;
-    const deltaTxt = s.delta === null ? '—' : (s.delta > 0 ? '+' : '') + s.delta + '%';
-    const deltaCls = s.delta === null ? 'same' : s.delta > 0 ? 'up' : 'down';
-    return `
-      <div class="scenario-row">
-        <div class="scenario-name">
-          <span class="icon">${s.icon}</span>
-          <div>
-            <div>${s.label}</div>
-            <div class="sub">${s.sub}</div>
-          </div>
-        </div>
-        <div class="scenario-bar-wrap">
-          <div class="scenario-bar ${s.type}" style="width:${pct}%">
-            ${s.value} obras/ano
-          </div>
-        </div>
-        <div class="scenario-delta ${deltaCls}">${deltaTxt}</div>
-      </div>
-    `;
+  const avgJ = TRIAGE.baseline_journey||143;
+  const baseM = TRIAGE.baseline_throughput||26;
+  const SC = [
+    {label:'Atual',icon:'📍',sub:avgJ+'d',value:Math.round(baseM*12),type:'current',delta:null},
+    {label:'Meta interna',icon:'🎯',sub:'150d',value:Math.round(baseM*(avgJ/150)*12),type:'below',delta:Math.round((avgJ/150-1)*100)},
+    {label:'Melhoria moderada',icon:'⚡',sub:'120d',value:Math.round(baseM*(avgJ/120)*12),type:'above',delta:Math.round((avgJ/120-1)*100)},
+    {label:'Benchmark XL',icon:'🚀',sub:'100d',value:Math.round(baseM*(avgJ/100)*12),type:'above',delta:Math.round((avgJ/100-1)*100)},
+    {label:'Best case',icon:'🏆',sub:'80d',value:Math.round(baseM*(avgJ/80)*12),type:'best',delta:Math.round((avgJ/80-1)*100)},
+  ];
+  const max=Math.max(...SC.map(s=>s.value),1);
+  document.getElementById('scenario-chart').innerHTML = SC.map(s => {
+    const pct=(s.value/max)*100;
+    const dT=s.delta===null?'—':(s.delta>0?'+':'')+s.delta+'%';
+    const dC=s.delta===null?'same':s.delta>0?'up':'down';
+    return '<div class="scenario-row"><div class="scenario-name"><span class="icon">'+s.icon+'</span><div><div>'+s.label+'</div><div class="sub">'+s.sub+'</div></div></div><div class="scenario-bar-wrap"><div class="scenario-bar '+s.type+'" style="width:'+pct+'%">'+s.value+' obras/ano</div></div><div class="scenario-delta '+dC+'">'+dT+'</div></div>';
   }).join('');
-  document.getElementById('scenario-chart').innerHTML = html;
 }
 
-// ═══════════════════════════════════════════════════
-// REWORK SIMULATOR
-// ═══════════════════════════════════════════════════
-
-// Modelo: cada obra reprovada precisa redo de ~50 dias (30 execução + 20 reagendamento)
 const REWORK_PENALTY_DAYS = 50;
-
 function calcRework(rate) {
-  const r = rate / 100;
-  const buckets = ['p', 'm', 'g', 'x'];
-  const result = {};
-  let totalBase = 0, totalInflated = 0, totalCards = 0;
-
-  buckets.forEach(b => {
-    const d = CAPACITY.monthly[b];
-    const inflation = r * REWORK_PENALTY_DAYS;
-    const newJourney = d.journey + inflation;
-    result[b] = {
-      base: d.journey,
-      extra: inflation,
-      total: newJourney,
-      label: d.label,
-      emoji: d.emoji,
-      cards: d.cards,
-    };
-    totalBase += d.journey * d.cards;
-    totalInflated += newJourney * d.cards;
-    totalCards += d.cards;
+  const r=rate/100, bk=['p','m','g','x'], result={};
+  let tB=0,tI=0,tC=0;
+  bk.forEach(b => {
+    const d=CAPACITY.monthly[b]; if(!d) return;
+    const inf=r*REWORK_PENALTY_DAYS, nJ=d.journey+inf;
+    result[b]={base:d.journey,extra:inf,total:nJ,label:d.label,emoji:d.emoji,cards:d.cards};
+    tB+=d.journey*d.cards; tI+=nJ*d.cards; tC+=d.cards;
   });
-
-  const avgBase = totalBase / totalCards;
-  const avgInflated = totalInflated / totalCards;
-  const newDailyThroughput = CAPACITY.wip_actual / avgInflated;
-  const newMonthly = newDailyThroughput * 30;
-
-  return { buckets: result, avgBase, avgInflated, monthlyThroughput: newMonthly };
+  const aB=tC?tB/tC:0, aI=tC?tI/tC:0;
+  const nDT=aI?CAPACITY.wip_actual/aI:0;
+  return {buckets:result,avgBase:aB,avgInflated:aI,monthlyThroughput:nDT*30};
 }
-
-function renderReworkStack(reworkData) {
-  const buckets = ['p', 'm', 'g', 'x'];
-  let maxVal = 0;
-  buckets.forEach(b => {
-    const d = reworkData.buckets[b];
-    if (d.total > maxVal) maxVal = d.total;
-  });
-
-  const html = buckets.map(b => {
-    const d = reworkData.buckets[b];
-    const basePct = (d.base / maxVal) * 100;
-    const extraPct = (d.extra / maxVal) * 100;
-    return `
-      <div class="rework-bar-row">
-        <div class="rework-bar-label">${d.emoji} ${d.label}</div>
-        <div class="rework-bar-track">
-          <div class="rework-bar-base" style="width:${basePct}%">${d.base}d</div>
-          ${d.extra > 0 ? `<div class="rework-bar-extra" style="width:${extraPct}%">+${d.extra.toFixed(0)}d</div>` : ''}
-        </div>
-      </div>
-    `;
+function renderReworkStack(rd) {
+  const bk=['p','m','g','x'];
+  let mx=0; bk.forEach(b=>{const d=rd.buckets[b];if(d&&d.total>mx)mx=d.total;}); if(!mx)mx=1;
+  document.getElementById('rework-stack').innerHTML = bk.map(b=>{
+    const d=rd.buckets[b]; if(!d) return '';
+    return '<div class="rework-bar-row"><div class="rework-bar-label">'+d.emoji+' '+d.label+'</div><div class="rework-bar-track"><div class="rework-bar-base" style="width:'+(d.base/mx*100)+'%">'+d.base+'d</div>'+(d.extra>0?'<div class="rework-bar-extra" style="width:'+(d.extra/mx*100)+'%">+'+d.extra.toFixed(0)+'d</div>':'')+'</div></div>';
   }).join('');
-  document.getElementById('rework-stack').innerHTML = html;
 }
-
 function updateRework() {
-  const rate = parseInt(document.getElementById('rework-slider').value);
-  document.getElementById('rework-slider-value').textContent = rate + '%';
-
-  const data = calcRework(rate);
+  const rate=parseInt(document.getElementById('rework-slider').value);
+  document.getElementById('rework-slider-value').textContent=rate+'%';
+  const data=calcRework(rate);
   renderReworkStack(data);
-
-  document.getElementById('rework-journey').innerHTML =
-    Math.round(data.avgInflated) + '<span class="u">d</span>';
-  document.getElementById('rework-throughput').innerHTML =
-    Math.round(data.monthlyThroughput) + '<span class="u">obras</span>';
-
-  document.querySelectorAll('.rework-preset').forEach(p => {
-    p.classList.toggle('active', parseInt(p.dataset.rate) === rate);
-  });
+  document.getElementById('rework-journey').innerHTML=Math.round(data.avgInflated)+'<span class="u">d</span>';
+  document.getElementById('rework-throughput').innerHTML=Math.round(data.monthlyThroughput)+'<span class="u">obras</span>';
+  document.querySelectorAll('.rework-preset').forEach(p=>{p.classList.toggle('active',parseInt(p.dataset.rate)===rate);});
 }
+function setRework(rate){document.getElementById('rework-slider').value=rate;updateRework();}
 
-function setRework(rate) {
-  document.getElementById('rework-slider').value = rate;
-  updateRework();
-}
-
-// Toggle deep panel
 function toggleDeep() {
-  const btn = document.getElementById('deep-btn');
-  const panel = document.getElementById('deep-panel');
-  const isOpen = panel.classList.toggle('open');
-  btn.classList.toggle('expanded', isOpen);
-  btn.querySelector('span:first-child').textContent = isOpen
-    ? 'Fechar análise de capacidade'
-    : 'Ver análise de capacidade operacional';
-
-  if (isOpen) {
-    // Render charts only when first opened (lazy)
-    if (!btn.dataset.rendered) {
-      renderThroughput();
-      renderCapacity();
-      renderMonths();
-      updateSimulator();
-      updateInverseSim();
-      renderScenarios();
-      updateRework();
-      btn.dataset.rendered = '1';
-    }
-    // Smooth scroll to panel
-    setTimeout(() => {
-      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }
+  const btn=document.getElementById('deep-btn'),panel=document.getElementById('deep-panel');
+  const isOpen=panel.classList.toggle('open');
+  btn.classList.toggle('expanded',isOpen);
+  btn.querySelector('span:first-child').textContent=isOpen?'Fechar análise de capacidade':'Ver análise de capacidade operacional';
+  if(isOpen&&!btn.dataset.rendered){renderThroughput();renderCapacity();renderMonths();updateSimulator();updateInverseSim();renderScenarios();updateRework();btn.dataset.rendered='1';}
+  if(isOpen){setTimeout(()=>{panel.scrollIntoView({behavior:'smooth',block:'start'});},100);}
 }
+if(window.location.hash==='#capacidade'){setTimeout(()=>toggleDeep(),500);}
 
-// Auto-open if anchor matches
-if (window.location.hash === '#capacidade') {
-  setTimeout(() => toggleDeep(), 200);
-}
-
-// ═══════════════════════════════════════════════════
-// TRIAGE MODAL — cards zumbi/at-risk
-// ═══════════════════════════════════════════════════
-
-const TRIAGE = {
-  baseline_journey: 143,
-  baseline_throughput: 26,
-  zombies: [
-    {d:309,p:"LOGÍSTICA - COLETAR",n:"SPE TLMC 29 LTDA (EUROFARMA)"},
-    {d:308,p:"OBRA EM EXECUÇÃO",n:"LUCA BAZURO"},
-    {d:303,p:"LOGÍSTICA - EM COLETA",n:"YAHYA EL HASSAN"},
-    {d:268,p:"LOGÍSTICA - EM COLETA",n:"GUSTAVO DE SOUZA PEREIRA"},
-    {d:267,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"GRIFO PARTICIPACOES E ADMINISTRACAO DE BENS LTDA"},
-    {d:267,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"CAROLINA PIARDI RICCHETTI"},
-    {d:267,p:"LOGÍSTICA - EM COLETA",n:"NATHALIA DE FIGUEIREDO NUNES RABELO"},
-    {d:259,p:"OBRA PAUSADA",n:"PEDRO SAVOI GABBAY"},
-    {d:259,p:"OBRA PAUSADA",n:"ANTONIO CARLOS CANTO PORTO NETO"},
-    {d:256,p:"LOGÍSTICA - EM COLETA",n:"MONICA ESMERALDA BRUCKMANN MAYNETTO"},
-    {d:255,p:"REVISÃO FINAL OP",n:"NATHALIA ROBERTA MACARIO"},
-    {d:255,p:"RESULTADO VT - ENTRADA",n:"RICARDO XAVIER DE OLIVEIRA NETO"},
-    {d:255,p:"PÓS VENDAS ACIONADO",n:"PIERRE JULIEN CHAPRON"},
-    {d:255,p:"PROJETOS - 1ª REVISÃO",n:"NINA RODRIGUES FIALDINI"},
-    {d:255,p:"PROJETOS - 1ª REVISÃO",n:"ALEXANDRE BARCELLOS RAMOS"},
-    {d:255,p:"OBRA PAUSADA",n:"TALLY FELDMAN SINGAL GROSS"},
-    {d:255,p:"OBRA PAUSADA",n:"CD 01 DESENVOLVIMENTO IMOBILIÁRIOS LTDA 1ª fase"},
-    {d:255,p:"OBRA PAUSADA",n:"AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA"},
-    {d:255,p:"OBRA EM EXECUÇÃO",n:"RODRIGO DE FARIA JARDIM"},
-    {d:255,p:"OBRA EM EXECUÇÃO",n:"ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"},
-    {d:255,p:"OBRA CONCLUÍDA",n:"CAROLINA RACHE GUIMARAES"},
-    {d:255,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"FLÁVIO FAVA DITT"},
-    {d:255,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"EDUARDO JOSE SCOTTI"},
-    {d:255,p:"LOGÍSTICA - EM ENTREGA",n:"RAFIK WLADIMIR FREUA"},
-    {d:255,p:"LOGÍSTICA - EM ENTREGA",n:"ALBERTO ALMIR LABAN"},
-    {d:255,p:"LOGÍSTICA - EM COLETA",n:"MARCOS JOSÉ VEIGA GOMES"},
-    {d:255,p:"LOGÍSTICA - EM COLETA",n:"LUIS GUSTAVO ROVARON"},
-    {d:255,p:"LOGÍSTICA - EM COLETA",n:"BERNARD DE CASTRO DALLA BERNARDINA"},
-    {d:255,p:"INFORMAÇÕES PROJETOS",n:"ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO"},
-    {d:255,p:"INFORMAÇÕES PROJETOS",n:"ALINIE MENDES PEIGO"},
-    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"JEAN LUC SENAC"},
-    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"CAMILA MAGALHAES SILVEIRA"},
-    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"BM VAREJO – M. FASHION"},
-    {d:255,p:"INDÚSTRIA - EM PRODUÇÃO",n:"ALEXANDRE BASTOS DA SILVA"},
-    {d:255,p:"FINANCEIRO PÓS - EM REVISÃO",n:"GUILHERME HAIDAR BERJEAUT"},
-    {d:255,p:"EQUIPE DE EXECUÇÃO",n:"ANA CAROLINA RAWET FAGE"},
-    {d:255,p:"CONFIRMAÇÕES OP 2",n:"MARCUS VINICIUS RODRIGUES ELTSCHEMINOV"},
-    {d:255,p:"CONFIRMAÇÕES OP 1",n:"ROBERTA ASSONI BUENO"},
-    {d:255,p:"AGUARDANDO LIBERAÇÃO",n:"CLINGER - JOVELINA CRISTINA DE OLIVEIRA"},
-    {d:255,p:"AGUARDANDO LIBERAÇÃO",n:"ADRIANO DE FIGUEIREDO MACORIN 1ª FASE"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"RICARDO MARQUES MENDES"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"MARCELO PUERTO PERIANES"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"JULIANA DE ARAÚJO SILVA"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"JORGE LUIZ BARBIERI GALLO"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"JONATHAS DE ALMEIDA NUNES LUKAS"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"FREDERICO CUNHA VALIM"},
-    {d:255,p:"AGEND. VT - AFERIÇÃO",n:"EDUARDO PUERTA PERIANES"},
-    {d:255,p:"1º CONTATO OP.",n:"Beatriz"},
-    {d:241,p:"LOGÍSTICA - EM ENTREGA",n:"RODRIGO DE ALMEIDA SCHMIDT"},
-    {d:241,p:"LOGÍSTICA - EM ENTREGA",n:"APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES"},
-    {d:241,p:"LOGÍSTICA - EM COLETA",n:"IOLANDA ODEBRECHT PELTIER DE QUEIROZ"},
-    {d:241,p:"AGUARDANDO LIBERAÇÃO",n:"CLAUDIANE DA SILVA GOMES"},
-    {d:241,p:"AGEND. VT - ENTRADA",n:"VINICIUS MACHADO ARIAS"},
-    {d:241,p:"AGEND. VT - ENTRADA",n:"LC ADMINISTRAÇÃO E PARTICIPAÇÕES LTDA"},
-    {d:241,p:"AGEND. VT - AFERIÇÃO",n:"SILAS AUGUSTO FARIA MARTINS"},
-    {d:240,p:"INFORMAÇÕES PROJETOS",n:"GUSTAVO FONTES VALENTE SALGUEIRO"},
-    {d:239,p:"REVISÃO FINAL OP",n:"IAN GALENO DE ANDRADE"},
-    {d:234,p:"REVISÃO FINAL OP",n:"ESCOLA DO BAIRRO EDUCAÇÃO BÁSICA LTDA - EPP"},
-    {d:233,p:"CONFIRMAÇÕES OP 1",n:"THALES MATZKEIT LEYTON"},
-    {d:231,p:"LOGÍSTICA - EM COLETA",n:"JULIA PAIVA HEYMANN"},
-    {d:231,p:"AGEND. VT - AFERIÇÃO",n:"BRUNO DE SOUSA MENDES PARENTE"},
-    {d:228,p:"LOGÍSTICA - EM COLETA",n:"ARTHUR HADLER FERREIRA MACHADO"},
-    {d:228,p:"AGEND. VT - AFERIÇÃO",n:"MAYARA ULIANA CASAGRANDE"},
-    {d:226,p:"RESULTADO VT - AFERIÇÃO",n:"GABRIEL LEIVAS PROTO"},
-    {d:225,p:"AGEND. VT - AFERIÇÃO",n:"GABRIEL FIGUEIREDO MENEZES"},
-    {d:223,p:"AGEND. VT - AFERIÇÃO",n:"BRUNO FRIGO ZEZZE"},
-    {d:221,p:"CONFIRMAÇÕES OP 1",n:"APARTAMENTO 92 FELIPE SIMAS"},
-    {d:221,p:"AGUARDANDO LIBERAÇÃO",n:"APARTAMENTO 102 FELIPE SIMAS"},
-    {d:219,p:"LOGÍSTICA - COLETAR",n:"MARIO AMATO NETTO"},
-    {d:213,p:"LOGÍSTICA - EM COLETA",n:"BENY MAJTLIS"},
-    {d:213,p:"INFORMAÇÕES FINANCEIRAS",n:"DEPECHE MOVEIS LTDA EPP"},
-    {d:212,p:"LOGÍSTICA - EM ENTREGA",n:"IZABELLA VINCE GARCIA PEDRIALI DALCANALE"},
-    {d:203,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA"},
-  ],
-  atrisk: [
-    {d:200,p:"INDÚSTRIA - EM PRODUÇÃO",n:"GUSTAVO PARRILO DA NOBREGA"},
-    {d:198,p:"OBRA EM EXECUÇÃO",n:"VICENTE PAULO DAS GRACAS PEREIRA"},
-    {d:198,p:"CONFIRMAÇÕES OP 1",n:"FABIO FEDERICI DE CARVALHO"},
-    {d:197,p:"LOGÍSTICA - EM ENTREGA",n:"BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"},
-    {d:196,p:"INDÚSTRIA - EM PRODUÇÃO",n:"SR2 CASAS CONSTRUTORA LTDA - GOLF RESORT"},
-    {d:189,p:"AGEND. VT - AFERIÇÃO",n:"VICTOR PEIXOTO DOS SANTOS"},
-    {d:185,p:"LOGÍSTICA - EM COLETA",n:"BM VAREJO – M. FASHION - 1 FASE"},
-    {d:184,p:"RESULTADO VT - AFERIÇÃO",n:"ANA PAULA JACINTHO JUNQUEIRA GOIAS/RIO"},
-    {d:184,p:"LOGÍSTICA - EM ENTREGA",n:"APTO STUDIO ANA PAULA JACINTHO JUNQUEIRA"},
-    {d:184,p:"LOGÍSTICA - EM COLETA",n:"APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA"},
-    {d:183,p:"LOGÍSTICA - EM COLETA",n:"NEWTON BRIAO MARQUES"},
-    {d:177,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"THIAGO DORIA"},
-    {d:176,p:"OBRA EM EXECUÇÃO",n:"CHRISTIAN KORT CERAVOLO"},
-    {d:176,p:"ENTRADA",n:"PEGORARO ENGENHARIA"},
-    {d:175,p:"OBRA PAUSADA",n:"CD 01 DESENVOLVIMENTO IMOBILIÁRIOS LTDA 2ª fase"},
-    {d:172,p:"LOGÍSTICA - EM ENTREGA",n:"APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES"},
-    {d:172,p:"LOGÍSTICA - EM COLETA",n:"MATEUS HENRIQUE PIENTA FAGUNDES"},
-    {d:172,p:"AGEND. VT - AFERIÇÃO",n:"VALERIA ALVES BELIZARIO"},
-    {d:171,p:"INFORMAÇÕES LOGÍSTICAS",n:"CHANG YU CHENG"},
-    {d:171,p:"CONFIRMAÇÕES OP 1",n:"RAFAEL DE OLIVEIRA BOTELHO CORREA"},
-    {d:170,p:"OBRA PAUSADA",n:"GUILHERME WENTZ"},
-    {d:170,p:"OBRA EM EXECUÇÃO",n:"P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA"},
-    {d:170,p:"LOGÍSTICA - EM ENTREGA",n:"JOAO PEDRO SCANAGATTA DAMACENO"},
-    {d:170,p:"LOGÍSTICA - EM COLETA",n:"ADRIANO CARVALHEDO CASTELLO BRANCO GONCALVES"},
-    {d:170,p:"INFORMAÇÕES FINANCEIRAS",n:"DREAM FARM AGRONEGOCIOS LTDA"},
-    {d:164,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"GN DERMATO LTDA"},
-    {d:162,p:"RESULTADO VT - QUALIDADE",n:"VILA VERTICAL FRADIQUE EMPREENDIMENTO IMOBILIARIO SPE LTDA"},
-    {d:162,p:"OBRA PAUSADA",n:"MISCI BRASIL COMERCIO DE MODA LTDA"},
-    {d:162,p:"AGUARDANDO LIBERAÇÃO",n:"RAFAEL PEREIRA FERNANDES"},
-    {d:162,p:"AGUARDANDO LIBERAÇÃO",n:"JOAO PAULO VERIDIANO PICCOLO"},
-    {d:161,p:"LOGÍSTICA - EM COLETA",n:"AVVA HOUSE LTDA - MOZART RODRIGUES"},
-    {d:158,p:"LOGÍSTICA - EM COLETA",n:"FERNANDO CESAR ALCON DELGADO"},
-    {d:157,p:"LOGÍSTICA - MATERIAL ENTREGUE",n:"LOVELY RITA DIAS MENEZES"},
-    {d:156,p:"ENTRADA",n:"Andrea Almeida"},
-    {d:151,p:"RESULTADO VT - AFERIÇÃO",n:"LEMBECK ADMINISTRADORA DE BENS LTDA"},
-    {d:151,p:"OBRA PAUSADA",n:"CLÁUDIO KUTNIKAS"},
-    {d:151,p:"LOGÍSTICA - EM COLETA",n:"FELIPE GUSTAVO LOPES DE OLIVEIRA"},
-  ],
-  // Healthy: 132 cards (não listamos individualmente — só contagem para os cálculos)
-  healthy_count: 132,
-};
-
-const FILTERS = { zombie: true, atrisk: true, healthy: true };
-
-function openTriage() {
+const FILTERS={zombie:true,atrisk:true,healthy:true};
+function openTriage(){
   document.getElementById('triage-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (!document.getElementById('triage-overlay').dataset.rendered) {
-    renderTriagePhases();
-    renderCardsList();
-    recalculateTriage();
-    document.getElementById('triage-overlay').dataset.rendered = '1';
+  document.body.style.overflow='hidden';
+  if(!document.getElementById('triage-overlay').dataset.rendered){
+    const zC=TRIAGE.zombies.length,aC=TRIAGE.atrisk.length,hC=TRIAGE.healthy_count,tot=zC+aC+hC;
+    document.querySelector('.triage-header h2').innerHTML='Triagem dos <em>'+tot+' cards</em> ativos';
+    document.getElementById('stat-healthy').textContent=hC;
+    document.getElementById('stat-atrisk').textContent=aC;
+    document.getElementById('stat-zombie').textContent=zC;
+    document.getElementById('gauge-pct').textContent=Math.round(hC/tot*100)+'%';
+    document.getElementById('ft-zombie').innerHTML='<span class="check">✓</span> Incluir zumbis ('+zC+')';
+    document.getElementById('ft-atrisk').innerHTML='<span class="check">✓</span> Incluir at-risk ('+aC+')';
+    document.getElementById('ft-healthy').innerHTML='<span class="check">✓</span> Incluir saudáveis ('+hC+')';
+    renderTriagePhases();renderCardsList();recalculateTriage();
+    document.getElementById('triage-overlay').dataset.rendered='1';
   }
 }
-function closeTriage() {
-  document.getElementById('triage-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeTriage();
-});
+function closeTriage(){document.getElementById('triage-overlay').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTriage();});
+function toggleFilter(cat){FILTERS[cat]=!FILTERS[cat];document.getElementById('ft-'+cat).classList.toggle('active');recalculateTriage();renderCardsList();}
 
-function toggleFilter(cat) {
-  FILTERS[cat] = !FILTERS[cat];
-  document.getElementById('ft-' + cat).classList.toggle('active');
-  recalculateTriage();
-  renderCardsList();
-}
-
-function recalculateTriage() {
-  const zCount = TRIAGE.zombies.length;
-  const aCount = TRIAGE.atrisk.length;
-  const hCount = TRIAGE.healthy_count;
-
-  const wip = (FILTERS.zombie ? zCount : 0) +
-              (FILTERS.atrisk ? aCount : 0) +
-              (FILTERS.healthy ? hCount : 0);
-
-  // Throughput potencial: usa baseline scaled
-  // Baseline observado: 26 obras/mês com WIP "real útil" ≈ 132 (apenas saudáveis)
-  // Quando filtramos, estimamos throughput = 26 × (wip / 132) limitado por journey atual
-  // Ou seja, mais cards saudáveis = mais throughput possível
-  let throughputPotential = 26; // default
-  if (hCount > 0) {
-    throughputPotential = TRIAGE.baseline_throughput * (wip / hCount);
-    // limita a um teto razoável
-    if (throughputPotential > 80) throughputPotential = 80;
-  }
-
-  // Status pipeline
-  const teorico = 124; // L = λ×W = 26 × 143/30 ≈ 124
-  let status = '⚠️ Sobrecarga', statusDelta = '';
-  let statusColor = 'var(--red)';
-  if (wip <= teorico * 1.1) {
-    status = '✅ Saudável';
-    statusColor = '#6ee7b7';
-    statusDelta = '≤ 10% do teórico';
-  } else if (wip <= teorico * 1.5) {
-    status = '⚠️ Atenção';
-    statusColor = 'var(--amber)';
-    statusDelta = `+${Math.round((wip/teorico-1)*100)}% acima`;
-  } else {
-    status = '🚨 Sobrecarga';
-    statusColor = 'var(--red)';
-    statusDelta = `+${Math.round((wip/teorico-1)*100)}% acima`;
-  }
-
-  const wipDelta = wip - 243;
-  const wipDeltaStr = wipDelta === 0 ? '—' : (wipDelta > 0 ? '+' : '') + wipDelta + ' vs total';
-  const wipDeltaCls = wipDelta < 0 ? 'down' : '';
-
-  const tpDelta = throughputPotential - 26;
-  const tpDeltaStr = tpDelta >= 0 ? '+' + Math.round(tpDelta) + ' obras/mês' : Math.round(tpDelta) + ' obras/mês';
-
-  document.getElementById('recalc-wip').innerHTML = wip + '<span class="u">cards</span>';
-  document.getElementById('recalc-wip-delta').textContent = wipDeltaStr;
-  document.getElementById('recalc-wip-delta').className = 'delta ' + wipDeltaCls;
-
-  document.getElementById('recalc-throughput').innerHTML =
-    Math.round(throughputPotential) + '<span class="u">obras/mês</span>';
-  document.getElementById('recalc-throughput-delta').textContent = tpDeltaStr;
-  document.getElementById('recalc-throughput-delta').className = 'delta ' + (tpDelta >= 0 ? 'up' : 'down');
-
-  document.getElementById('recalc-status').innerHTML = status;
-  document.getElementById('recalc-status').style.color = statusColor;
-  document.getElementById('recalc-status-delta').textContent = statusDelta;
+function recalculateTriage(){
+  const zC=TRIAGE.zombies.length,aC=TRIAGE.atrisk.length,hC=TRIAGE.healthy_count,totAll=zC+aC+hC;
+  const wip=(FILTERS.zombie?zC:0)+(FILTERS.atrisk?aC:0)+(FILTERS.healthy?hC:0);
+  const baseM=TRIAGE.baseline_throughput||26;
+  let tp=baseM; if(hC>0){tp=baseM*(wip/hC);if(tp>80)tp=80;}
+  const avgJ=TRIAGE.baseline_journey||143;
+  const teo=Math.round((baseM/30)*avgJ);
+  let st,sd,sc;
+  if(wip<=teo*1.1){st='✅ Saudável';sc='#6ee7b7';sd='≤ 10% do teórico';}
+  else if(wip<=teo*1.5){st='⚠️ Atenção';sc='var(--amber)';sd='+'+Math.round((wip/teo-1)*100)+'% acima';}
+  else{st='🚨 Sobrecarga';sc='var(--red)';sd='+'+Math.round((wip/teo-1)*100)+'% acima';}
+  const wD=wip-totAll;
+  document.getElementById('recalc-wip').innerHTML=wip+'<span class="u">cards</span>';
+  document.getElementById('recalc-wip-delta').textContent=wD===0?'—':(wD>0?'+':'')+wD+' vs total';
+  document.getElementById('recalc-throughput').innerHTML=Math.round(tp)+'<span class="u">obras/mês</span>';
+  document.getElementById('recalc-throughput-delta').textContent=(tp-baseM>=0?'+':'')+Math.round(tp-baseM)+' obras/mês';
+  document.getElementById('recalc-status').innerHTML=st;
+  document.getElementById('recalc-status').style.color=sc;
+  document.getElementById('recalc-status-delta').textContent=sd;
 }
 
-function renderTriagePhases() {
-  const phaseCounts = {};
-  TRIAGE.zombies.forEach(z => {
-    phaseCounts[z.p] = (phaseCounts[z.p] || 0) + 1;
-  });
-  const sorted = Object.entries(phaseCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 8);
-  const max = sorted[0][1];
-
-  document.getElementById('phases-bars').innerHTML = sorted.map(([phase, count]) => {
-    const pct = (count / max) * 100;
-    return `
-      <div class="phase-bar-row">
-        <div class="nm">${phase}</div>
-        <div class="br"><div style="width:${pct}%"></div></div>
-        <div class="ct">${count}</div>
-      </div>
-    `;
+function renderTriagePhases(){
+  const pc={};
+  TRIAGE.zombies.forEach(z=>{pc[z.p]=(pc[z.p]||0)+1;});
+  const sorted=Object.entries(pc).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if(!sorted.length) return;
+  const max=sorted[0][1];
+  document.getElementById('phases-bars').innerHTML=sorted.map(([phase,count])=>{
+    return '<div class="phase-bar-row"><div class="nm">'+phase+'</div><div class="br"><div style="width:'+(count/max*100)+'%"></div></div><div class="ct">'+count+'</div></div>';
   }).join('');
 }
 
-function renderCardsList() {
-  const search = (document.getElementById('card-search')?.value || '').toLowerCase();
-  let cards = [];
-  if (FILTERS.zombie) cards.push(...TRIAGE.zombies.map(c => ({...c, cat: 'zombie'})));
-  if (FILTERS.atrisk) cards.push(...TRIAGE.atrisk.map(c => ({...c, cat: 'atrisk'})));
-  // Healthy não tem lista detalhada — só contagem
-
-  if (search) {
-    cards = cards.filter(c =>
-      c.n.toLowerCase().includes(search) || c.p.toLowerCase().includes(search)
-    );
-  }
-
-  cards.sort((a, b) => b.d - a.d);
-
-  if (cards.length === 0) {
-    document.getElementById('triage-list').innerHTML =
-      '<div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">Nenhum card visível com os filtros atuais</div>';
-    return;
-  }
-
-  document.getElementById('triage-list').innerHTML = cards.map(c => `
-    <div class="triage-card ${c.cat}">
-      <div class="days">${c.d}d</div>
-      <div class="info">
-        <div class="name">${c.n}</div>
-        <div class="phase">${c.p}</div>
-      </div>
-      <div class="badge-cat">${c.cat === 'zombie' ? '🧟 Zumbi' : '⚠ Risco'}</div>
-    </div>
-  `).join('');
+function renderCardsList(){
+  const search=(document.getElementById('card-search')?.value||'').toLowerCase();
+  let cards=[];
+  if(FILTERS.zombie) cards.push(...TRIAGE.zombies.map(c=>({...c,cat:'zombie'})));
+  if(FILTERS.atrisk) cards.push(...TRIAGE.atrisk.map(c=>({...c,cat:'atrisk'})));
+  if(search) cards=cards.filter(c=>c.n.toLowerCase().includes(search)||c.p.toLowerCase().includes(search));
+  cards.sort((a,b)=>b.d-a.d);
+  if(!cards.length){document.getElementById('triage-list').innerHTML='<div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">Nenhum card visível</div>';return;}
+  document.getElementById('triage-list').innerHTML=cards.map(c=>
+    '<div class="triage-card '+c.cat+'"><div class="days">'+c.d+'d</div><div class="info"><div class="name">'+c.n+'</div><div class="phase">'+c.p+'</div></div><div class="badge-cat">'+(c.cat==='zombie'?'🧟 Zumbi':'⚠ Risco')+'</div></div>'
+  ).join('');
 }
 
-function exportTriageCSV() {
-  const rows = [['Categoria', 'Dias no pipeline', 'Fase atual', 'Cliente']];
-  TRIAGE.zombies.forEach(z => rows.push(['Zumbi', z.d, z.p, z.n]));
-  TRIAGE.atrisk.forEach(a => rows.push(['At-risk', a.d, a.p, a.n]));
-  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'monofloor-triagem-2026-04-10.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+function exportTriageCSV(){
+  const rows=[['Categoria','Dias no pipeline','Fase atual','Cliente']];
+  TRIAGE.zombies.forEach(z=>rows.push(['Zumbi',z.d,z.p,z.n]));
+  TRIAGE.atrisk.forEach(a=>rows.push(['At-risk',a.d,a.p,a.n]));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='monofloor-triagem-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();URL.revokeObjectURL(url);
 }
 
-// ═══════════════════════════════════════════════════
-// SHARE BUTTON
-// ═══════════════════════════════════════════════════
-function copiarLink() {
-  const url = window.location.href.split('#')[0];
-  const toast = document.getElementById('toast-share');
-
-  const showToast = (msg) => {
-    toast.textContent = msg;
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-    setTimeout(() => {
-      toast.style.transform = 'translateX(-50%) translateY(80px)';
-    }, 2400);
-  };
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(url).then(
-      () => showToast('✓ Link copiado para a área de transferência'),
-      () => showToast('⚠ Não foi possível copiar — copie manualmente: ' + url)
-    );
-  } else {
-    // Fallback para http ou navegadores antigos
-    const ta = document.createElement('textarea');
-    ta.value = url;
-    ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      showToast('✓ Link copiado');
-    } catch (e) {
-      showToast('⚠ Copie manualmente: ' + url);
-    }
-    document.body.removeChild(ta);
-  }
+function copiarLink(){
+  const url=window.location.href.split('#')[0];
+  const toast=document.getElementById('toast-share');
+  const show=msg=>{toast.textContent=msg;toast.style.transform='translateX(-50%) translateY(0)';setTimeout(()=>{toast.style.transform='translateX(-50%) translateY(80px)';},2400);};
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(url).then(()=>show('✓ Link copiado'),()=>show('⚠ Copie manualmente: '+url));}
+  else{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');show('✓ Link copiado');}catch(e){show('⚠ Copie: '+url);}document.body.removeChild(ta);}
 }
 
-// Init
-renderTipos();
-renderGargalos();
-renderCompare();
-renderDrill();
-renderInsights();
+// INIT
+loadAllData();
+
 </script>
 </body>
 </html>
