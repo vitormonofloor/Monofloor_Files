@@ -47,21 +47,54 @@
 
 ## PIPELINE TOTAL (Pipefy → Hoje)
 
-Dado de exemplo: FLAVIO FAVA DITT
+### Dado detalhado: FLAVIO FAVA DITT
 - pipefyCreatedAt: 29/07/2025
 - Hoje: 13/04/2026
 - **Total no pipeline: 259 dias** (meta: 150d)
 
-Marcos Pipefy do FLAVIO:
+Marcos Pipefy do FLAVIO (com intervalos):
 - Envio manual: 29/05/2025
-- VT afericao: 07/08/2025 (70 dias apos criacao)
-- Relatorio VT: 13/08/2025 (6 dias apos VT)
-- 1a visita: 26/08/2025 (13 dias apos relatorio)
-- Nova data: 15/09/2025 (20 dias apos visita)
-- VT entrada: 25/02/2026 (163 dias apos nova data!)
-- Entrada obra: 09/03/2026 (12 dias apos VT entrada)
+- pipefyCreatedAt: 29/07/2025 (dia 0)
+- VT afericao: 07/08/2025 (+9 dias)
+- Relatorio VT: 13/08/2025 (+6 dias)
+- 1a visita: 26/08/2025 (+13 dias)
+- Nova data: 15/09/2025 (+20 dias)
+- VT entrada: 25/02/2026 (+163 dias!) ← GAP CRITICO
+- Entrada obra: 09/03/2026 (+12 dias)
+- Hoje (em execucao): 13/04/2026 (+35 dias)
 
 **GAP CRITICO: 163 dias entre "nova data" e "VT entrada"**
+
+### Descoberta sobre pipefyCreatedAt
+- Campo existe na API individual (/api/projects/{id}) mas NAO na listagem (/api/projects)
+- Diferenca entre pipefyCreatedAt e createdAt (portal): ~7,5 meses
+- Para tempo real no pipeline: SEMPRE usar pipefyCreatedAt
+- Outros marcos Pipefy disponiveis na API individual: envio_do_manuall, data_e_hora_da_visita, data_de_envio_do_relat_rio, 1_visita, visita_de_entrada, data_de_entrada
+
+### Dados confirmados de 3 projetos (API individual)
+
+| Projeto | pipefyCreatedAt | dataExecPrevista | Status | Dias pipeline |
+|---------|-----------------|------------------|--------|---------------|
+| Flavio Fava | 29/07/2025 | 09/03/2026 | em_execucao | 259d |
+| Tally Feldman | 29/07/2025 | 13/11/2025 | aguardando_clima | 259d |
+| Manoela Latini | (importado) | 10/02/2026 | em_execucao | 30d+ |
+
+### Obras problematicas (WhatsApp timeline)
+
+| Projeto | Msgs | Dias analise | Status | Ponto de quebra |
+|---------|------|-------------|--------|-----------------|
+| Petite Fleur | 431 | 35d+ | 80% | Verniz contaminado (cabelo) |
+| Flavio Fava | 370 | 32d+ | 70% | Contrapiso fragil + trincas |
+| Tally Feldman | 304 | 39d+ | 85% int | Banco externo 38d por clima |
+| Fabio Federici | 280 | **59d+** | **0%** | **Cor errada — obra parada** |
+| Manoela Latini | 273 | 48d+ | 75% | Terceiros danificam areas |
+
+### 5 acoes corretivas da analise de timeline
+1. Amostras no material real (nao MDF) — evita travamento de cor
+2. VT com teste de contrapiso obrigatorio — evita retrabalho
+3. Protocolo sala limpa para verniz — evita contaminacao
+4. SLA 4h comunicacao + escalonamento auto — evita abandono
+5. Coberturas provisorias para areas externas — evita parada por clima
 
 ---
 
