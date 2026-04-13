@@ -3,437 +3,505 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monofloor — Auditoria de Qualidade</title>
-<meta name="description" content="Painel de auditoria e qualidade das obras Monofloor. SLAs, problemas, riscos e performance em tempo real.">
+<title>Monofloor — Auditoria de Qualidade v2</title>
 <meta name="theme-color" content="#241d16">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23d4a96e'/%3E%3Ctext x='50' y='66' font-family='Georgia,serif' font-size='56' font-weight='700' fill='%23241d16' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 @font-face{font-family:'Widescreen';src:url('https://cliente.monofloor.cloud/_next/static/media/Widescreen%20Light-s.p.9717fdaf.otf') format('opentype');font-weight:300 400;font-display:swap}
-:root{--bg:#1a140e;--bg2:#241d16;--bg3:#2d2519;--surface:#322a1d;--surface-hover:#3a3122;--border:#483a2b;--border2:#5a4935;--gold:#e2bb88;--gold2:#d4a96e;--gold-dim:#b8a080;--gold-bg:rgba(226,187,136,.08);--green:#6ee7b7;--green-bg:rgba(110,231,183,.1);--red:#f87171;--red-bg:rgba(248,113,113,.1);--amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);--blue:#93c5fd;--blue-bg:rgba(147,197,253,.1);--text:#faf8f5;--text2:#d6c9b8;--text3:#a89880;--text4:#6f5c45;--fd:'Fraunces',Georgia,serif;--fb:'Widescreen','Inter',system-ui,sans-serif;--fm:'JetBrains Mono',monospace}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+:root{--bg:#1a140e;--bg2:#241d16;--bg3:#2d2519;--surface:#322a1d;--surface2:#3a3122;--border:#483a2b;--border2:#5a4935;--gold:#e2bb88;--gold2:#d4a96e;--gold-dim:#b8a080;--gold-bg:rgba(226,187,136,.08);--green:#6ee7b7;--green-bg:rgba(110,231,183,.1);--red:#f87171;--red-bg:rgba(248,113,113,.1);--amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);--blue:#93c5fd;--blue-bg:rgba(147,197,253,.1);--purple:#c084fc;--purple-bg:rgba(192,132,252,.1);--text:#faf8f5;--text2:#d6c9b8;--text3:#a89880;--text4:#6f5c45;--fd:'Fraunces',Georgia,serif;--fb:'Widescreen','Inter',system-ui,sans-serif;--fm:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{font-family:var(--fb);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:var(--gold);text-decoration:none}
-button{font-family:inherit;cursor:pointer}
-.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+a{color:var(--gold);text-decoration:none}button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1320px;margin:0 auto;padding:0 32px}
 
-/* NAV */
-.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:1280px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;gap:16px}
-.nav-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#000;flex-shrink:0}
-.nav-brand{font-size:14px;font-weight:600;letter-spacing:-.2px}
-.nav-brand .sub{display:block;font-size:10px;color:var(--text3);font-weight:400;letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
-.nav-links{margin-left:auto;display:flex;gap:4px;align-items:center}
-.nav-link{font-size:12px;padding:7px 12px;border-radius:8px;color:var(--text3);transition:all .15s}
-.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.88);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1320px;margin:0 auto;padding:12px 32px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.nav-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#000;flex-shrink:0}
+.nav-brand{font-size:13px;font-weight:600}.nav-brand .sub{display:block;font-size:9px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+.nav-link{font-size:11px;padding:6px 10px;border-radius:6px;color:var(--text3);transition:all .15s}.nav-link:hover{color:var(--text);background:var(--surface)}
 
-/* SECTIONS */
-.section{padding:80px 0}
-.section-alt{background:var(--bg2)}
-.section-eyebrow{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px}
-.section-title{font-family:var(--fd);font-weight:400;font-size:clamp(26px,4vw,42px);line-height:1.15;letter-spacing:-.8px;margin-bottom:16px;max-width:720px}
-.section-title em{font-style:italic;color:var(--gold);font-weight:300}
-.section-lead{font-size:15px;color:var(--text2);max-width:600px;line-height:1.65;margin-bottom:48px}
+.sec{padding:72px 0}.sec-alt{background:var(--bg2)}
+.sec-eye{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
+.sec-title{font-family:var(--fd);font-weight:400;font-size:clamp(24px,3.5vw,38px);line-height:1.15;letter-spacing:-.6px;margin-bottom:12px;max-width:700px}
+.sec-title em{font-style:italic;color:var(--gold);font-weight:300}
+.sec-lead{font-size:14px;color:var(--text2);max-width:580px;line-height:1.6;margin-bottom:40px}
 
-/* HERO */
-.hero{padding:80px 0 60px;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(212,180,131,.06) 0%,transparent 50%),var(--bg);position:relative}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--gold);font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border:1px solid var(--gold-dim);border-radius:100px;background:var(--gold-bg);margin-bottom:28px}
-.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
-.hero h1{font-family:var(--fd);font-size:clamp(32px,5vw,56px);font-weight:400;line-height:1.08;letter-spacing:-1.5px;margin-bottom:32px;max-width:800px}
+.hero{padding:64px 0 48px;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(212,180,131,.05) 0%,transparent 50%),var(--bg)}
+.hero-eye{display:inline-flex;align-items:center;gap:8px;font-size:10px;color:var(--gold);font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(226,187,136,.3);border-radius:100px;background:var(--gold-bg);margin-bottom:24px}
+.hero-eye::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.hero h1{font-family:var(--fd);font-size:clamp(28px,4.5vw,48px);font-weight:400;line-height:1.1;letter-spacing:-1.2px;margin-bottom:10px;max-width:750px}
 .hero h1 em{font-style:italic;color:var(--gold);font-weight:300}
+.hero-sub{font-size:14px;color:var(--text3);margin-bottom:32px}
 
-/* KPI STRIP */
-.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:40px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
-.kpi .v{font-family:var(--fd);font-size:36px;font-weight:300;line-height:1;margin-bottom:4px}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-bottom:32px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.g::before{background:var(--green)}.kpi.r::before{background:var(--red)}.kpi.a::before{background:var(--amber)}.kpi.b::before{background:var(--blue)}.kpi.go::before{background:var(--gold)}
+.kpi .v{font-family:var(--fd);font-size:32px;font-weight:300;line-height:1}.kpi .l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
 .kpi .v.green{color:var(--green)}.kpi .v.red{color:var(--red)}.kpi .v.amber{color:var(--amber)}.kpi .v.gold{color:var(--gold)}
-.kpi .l{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px}
 
-/* HEALTH BAR */
-.health-bar{display:flex;height:32px;border-radius:8px;overflow:hidden;margin-bottom:8px}
-.health-bar div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#000;transition:flex .3s}
-.health-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text3)}
-.health-legend span{display:flex;align-items:center;gap:6px}
-.health-legend .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+/* Health */
+.health{display:flex;height:28px;border-radius:6px;overflow:hidden;margin-bottom:6px}
+.health div{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000;transition:flex .4s}
+.health-leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text3)}
+.health-leg span{display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;border-radius:3px;flex-shrink:0}
 
-/* SLA BARS */
-.sla-grid{display:grid;gap:12px}
-.sla-row{display:grid;grid-template-columns:160px 1fr 60px;gap:16px;align-items:center;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
-.sla-name{font-size:13px;font-weight:500}
-.sla-track{height:10px;background:var(--bg3);border-radius:5px;overflow:hidden;position:relative}
-.sla-fill{height:100%;border-radius:5px;transition:width .5s}
-.sla-pct{font-family:var(--fm);font-size:14px;font-weight:600;text-align:right}
+/* GAUGE */
+.gauge-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:32px}
+.gauge{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.gauge svg{width:120px;height:120px;margin-bottom:8px}
+.gauge .gl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.gauge .gv{font-family:var(--fd);font-size:28px;font-weight:300}
 
-/* PROBLEM GRID */
-.prob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.prob-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden}
-.prob-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
-.prob-card.crit::before{background:var(--red)}
-.prob-card.warn::before{background:var(--amber)}
-.prob-card.ok::before{background:var(--green)}
-.prob-card .cat{font-size:13px;font-weight:600;margin-bottom:4px}
-.prob-card .count{font-family:var(--fd);font-size:32px;font-weight:300;line-height:1;margin-bottom:4px}
-.prob-card .crit-badge{font-size:11px;color:var(--red);font-weight:500}
-.prob-card .bar{height:4px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden}
-.prob-card .bar div{height:100%;background:var(--red);border-radius:2px}
+/* SLA */
+.sla-grid{display:grid;gap:10px}
+.sla-row{display:grid;grid-template-columns:150px 1fr 55px;gap:14px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.sla-nm{font-size:12px;font-weight:500}.sla-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.sla-fill{height:100%;border-radius:4px;transition:width .6s}.sla-pct{font-family:var(--fm);font-size:13px;font-weight:600;text-align:right}
 
-/* RISK LIST */
-.risk-list{display:grid;gap:12px}
+/* PROB */
+.prob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.prob{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.prob::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.prob.cr::before{background:var(--red)}.prob.wr::before{background:var(--amber)}.prob.ok::before{background:var(--green)}
+.prob .cat{font-size:12px;font-weight:600;margin-bottom:2px}.prob .ct{font-family:var(--fd);font-size:28px;font-weight:300;line-height:1;margin-bottom:2px}
+.prob .cb{font-size:10px;color:var(--red);font-weight:500}
+.prob .bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:8px;overflow:hidden}.prob .bar div{height:100%;background:var(--red);border-radius:2px}
+
+/* RISK */
+.risk-list{display:grid;gap:10px}
 .risk-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
 .risk-card:hover{border-color:var(--border2)}
-.risk-header{display:grid;grid-template-columns:60px 1fr auto auto;align-items:center;gap:16px;padding:16px 20px;cursor:pointer}
-.risk-days{font-family:var(--fd);font-size:28px;font-weight:300;line-height:1;text-align:center}
-.risk-days .u{font-size:12px;color:var(--text3);display:block}
-.risk-info .name{font-size:14px;font-weight:600;margin-bottom:2px}
-.risk-info .meta{font-size:12px;color:var(--text3)}
-.risk-badges{display:flex;gap:6px}
-.badge{font-size:10px;padding:3px 8px;border-radius:100px;font-weight:600}
-.badge.crit{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,.3)}
-.badge.high{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(251,191,36,.3)}
-.badge.prob{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(147,197,253,.3)}
-.risk-expand{font-size:18px;color:var(--text3);transition:transform .2s;padding:4px}
-.risk-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border)}
-.risk-body.open{display:block}
-.risk-expand.open{transform:rotate(180deg)}
-.diag{font-size:13px;color:var(--text2);line-height:1.7;white-space:pre-wrap;max-height:400px;overflow-y:auto;padding:16px;background:var(--bg2);border-radius:8px;margin-top:12px}
-.diag::-webkit-scrollbar{width:6px}
-.diag::-webkit-scrollbar-track{background:var(--bg3);border-radius:3px}
-.diag::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.risk-hd{display:grid;grid-template-columns:55px 1fr auto auto;align-items:center;gap:14px;padding:14px 18px;cursor:pointer}
+.risk-days{font-family:var(--fd);font-size:26px;font-weight:300;line-height:1;text-align:center}.risk-days .u{font-size:10px;color:var(--text3);display:block}
+.risk-info .nm{font-size:13px;font-weight:600;margin-bottom:1px}.risk-info .mt{font-size:11px;color:var(--text3)}
+.risk-badges{display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:9px;padding:2px 7px;border-radius:100px;font-weight:600}
+.badge.cr{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,.3)}
+.badge.hi{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(251,191,36,.3)}
+.badge.pr{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(147,197,253,.3)}
+.risk-arrow{font-size:16px;color:var(--text4);transition:transform .2s;padding:4px}
+.risk-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border)}.risk-body.open{display:block}
+.risk-arrow.open{transform:rotate(180deg)}
+.diag{font-size:12px;color:var(--text2);line-height:1.65;white-space:pre-wrap;max-height:350px;overflow-y:auto;padding:14px;background:var(--bg2);border-radius:8px;margin-top:10px}
+.diag::-webkit-scrollbar{width:5px}.diag::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
 /* TEAM */
-.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.team-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px}
-.team-card .name{font-size:16px;font-weight:600;margin-bottom:2px}
-.team-card .role{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
-.team-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.team-stat{text-align:center;padding:10px;background:var(--bg2);border-radius:8px}
-.team-stat .v{font-family:var(--fd);font-size:24px;font-weight:300;line-height:1;margin-bottom:2px}
-.team-stat .l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
-.team-bar{height:6px;background:var(--bg3);border-radius:3px;margin-top:14px;overflow:hidden}
-.team-bar div{height:100%;border-radius:3px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.team{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.team .nm{font-size:15px;font-weight:600;margin-bottom:1px}.team .rl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
+.team-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.ts{text-align:center;padding:8px;background:var(--bg2);border-radius:6px}.ts .v{font-family:var(--fd);font-size:22px;font-weight:300;line-height:1;margin-bottom:2px}.ts .l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.team-bar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:6px}.team-bar div{height:100%;border-radius:3px}
+.team-pct{font-size:10px;color:var(--text3)}
 
-/* EVENTS TIMELINE */
-.timeline{display:grid;gap:10px}
-.ev{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
-.ev-sev{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.ev-sev.critica{background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.4)}
-.ev-sev.alta{background:var(--amber);box-shadow:0 0 8px rgba(251,191,36,.3)}
-.ev-title{font-size:13px;font-weight:500}
-.ev-meta{font-size:11px;color:var(--text3)}
-.ev-time{font-family:var(--fm);font-size:11px;color:var(--text4);text-align:right;white-space:nowrap}
+/* EVENTS */
+.timeline{display:grid;gap:8px}
+.ev{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.ev-dot{width:8px;height:8px;border-radius:50%}.ev-dot.critica{background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.4)}.ev-dot.alta{background:var(--amber);box-shadow:0 0 6px rgba(251,191,36,.3)}
+.ev-title{font-size:12px;font-weight:500}.ev-meta{font-size:10px;color:var(--text3)}
+.ev-time{font-family:var(--fm);font-size:10px;color:var(--text4);white-space:nowrap}
 
-/* DISTRIBUTION BARS */
-.dist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px}
-.dist-block h3{font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
-.dist-row{display:grid;grid-template-columns:140px 1fr 40px;gap:10px;align-items:center;padding:6px 0}
-.dist-row .nm{font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dist-row .br{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
-.dist-row .br div{height:100%;border-radius:3px;background:var(--gold2)}
-.dist-row .ct{font-family:var(--fm);font-size:12px;color:var(--text3);text-align:right}
+/* DIST */
+.dist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px}
+.dist-block h3{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+.dist-row{display:grid;grid-template-columns:130px 1fr 36px;gap:8px;align-items:center;padding:4px 0}
+.dist-row .nm{font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dist-row .br{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}.dist-row .br div{height:100%;border-radius:3px;background:var(--gold2)}
+.dist-row .ct{font-family:var(--fm);font-size:11px;color:var(--text3);text-align:right}
 
-/* PIPELINE */
-.pipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.pipe-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
-.pipe-card .v{font-family:var(--fd);font-size:24px;font-weight:300;line-height:1;margin-bottom:4px;color:var(--gold)}
-.pipe-card .l{font-size:10px;color:var(--text3);line-height:1.3}
+/* PIPE */
+.pipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.pipe{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.pipe .v{font-family:var(--fd);font-size:22px;font-weight:300;line-height:1;margin-bottom:3px;color:var(--gold)}.pipe .l{font-size:9px;color:var(--text3);line-height:1.2}
 
-/* FOOTER */
-.footer{padding:48px 0;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text4)}
+/* CHARTS */
+.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:24px}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+.chart-box h3{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px}
+.hbar{display:grid;gap:6px}
+.hbar-row{display:grid;grid-template-columns:90px 1fr 50px;gap:8px;align-items:center}
+.hbar-row .nm{font-size:11px;color:var(--text2);text-align:right}.hbar-row .track{height:20px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.hbar-row .fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:600;color:#000;transition:width .5s}
+.hbar-row .val{font-family:var(--fm);font-size:11px;color:var(--text2)}
 
-/* RESPONSIVE */
-@media(max-width:900px){.wrap{padding:0 20px}.hero{padding:56px 0 40px}.kpi-strip{grid-template-columns:repeat(2,1fr)}.sla-row{grid-template-columns:120px 1fr 50px}.risk-header{grid-template-columns:50px 1fr auto}}
-@media(max-width:600px){.kpi-strip{grid-template-columns:1fr}.sla-row{grid-template-columns:1fr;gap:8px}.risk-header{grid-template-columns:1fr;gap:8px}.team-stats{grid-template-columns:1fr}}
+/* AUDIT FINDINGS */
+.findings{display:grid;gap:10px}
+.finding{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:10px;align-items:start}
+.finding .code{font-family:var(--fm);font-size:12px;font-weight:700;padding:4px 8px;border-radius:6px;text-align:center}
+.finding .code.cr{background:var(--red-bg);color:var(--red)}.finding .code.hi{background:var(--amber-bg);color:var(--amber)}.finding .code.md{background:var(--blue-bg);color:var(--blue)}
+.finding .desc{font-size:13px;line-height:1.5}.finding .src{font-size:10px;color:var(--text4);margin-top:2px}
+
+/* SUPPLY */
+.supply-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.supply{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;position:relative;overflow:hidden}
+.supply::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.supply.ok::before{background:var(--green)}.supply.low::before{background:var(--amber)}.supply.out::before{background:var(--red)}
+.supply .nm{font-size:11px;color:var(--text2);margin-bottom:4px}.supply .v{font-family:var(--fd);font-size:24px;font-weight:300}.supply .u{font-size:10px;color:var(--text3)}
+
+/* FILTER BTNS */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.fbtn{font-size:11px;padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text3);transition:all .15s}
+.fbtn:hover,.fbtn.active{border-color:var(--gold);color:var(--gold);background:var(--gold-bg)}
+
+.footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text4)}
+
+@media(max-width:900px){.wrap{padding:0 18px}.kpi-grid{grid-template-columns:repeat(3,1fr)}.sla-row{grid-template-columns:110px 1fr 45px}.risk-hd{grid-template-columns:45px 1fr auto}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.sla-row,.risk-hd{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<div class="nav">
-  <div class="nav-inner">
-    <div class="nav-logo">M</div>
-    <div class="nav-brand">Monofloor<span class="sub">Auditoria de Qualidade</span></div>
-    <div class="nav-links">
-      <a href="#sla" class="nav-link">SLAs</a>
-      <a href="#problemas" class="nav-link">Problemas</a>
-      <a href="#risco" class="nav-link">Obras em Risco</a>
-      <a href="#equipe" class="nav-link">Equipe</a>
-      <a href="#eventos" class="nav-link">Eventos</a>
-      <a href="#pipeline" class="nav-link">Pipeline</a>
-    </div>
+<div class="nav"><div class="nav-inner">
+  <div class="nav-logo">M</div>
+  <div class="nav-brand">Monofloor<span class="sub">Auditoria de Qualidade</span></div>
+  <div class="nav-links">
+    <a href="#saude" class="nav-link">Saude</a>
+    <a href="#sla" class="nav-link">SLAs</a>
+    <a href="#problemas" class="nav-link">Problemas</a>
+    <a href="#risco" class="nav-link">Risco</a>
+    <a href="#equipe" class="nav-link">Equipe</a>
+    <a href="#supply" class="nav-link">Estoque</a>
+    <a href="#eventos" class="nav-link">Eventos</a>
+    <a href="#pipeline" class="nav-link">Pipeline</a>
+    <a href="#achados" class="nav-link">Achados</a>
   </div>
-</div>
+</div></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="wrap">
-    <div class="hero-eyebrow" id="hero-eyebrow">Carregando...</div>
-    <h1>Painel de <em>Auditoria de Qualidade</em> das obras Monofloor</h1>
-    <div class="kpi-strip" id="kpi-strip"></div>
-    <div id="health-section"></div>
-  </div>
-</section>
+<section class="hero"><div class="wrap">
+  <div class="hero-eye" id="hero-eye">Carregando...</div>
+  <h1>Painel de <em>Auditoria de Qualidade</em> das obras Monofloor</h1>
+  <div class="hero-sub" id="hero-sub">Conectando ao data.json...</div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+  <div id="health-wrap"></div>
+  <div class="gauge-row" id="gauge-row"></div>
+</div></section>
 
-<!-- SLA -->
-<section class="section section-alt" id="sla">
-  <div class="wrap">
-    <div class="section-eyebrow">Cumprimento de prazos</div>
-    <h2 class="section-title">Apenas <em id="sla-pct">—%</em> das obras estao dentro do SLA.</h2>
-    <p class="section-lead">Cada barra mostra o percentual de obras que cumpriram o prazo daquela etapa. Verde acima de 80%, amber entre 50-80%, vermelho abaixo de 50%.</p>
-    <div class="sla-grid" id="sla-grid"></div>
-  </div>
-</section>
+<section class="sec sec-alt" id="sla"><div class="wrap">
+  <div class="sec-eye">Cumprimento de prazos</div>
+  <h2 class="sec-title">Apenas <em id="sla-pct">—%</em> das obras cumprem todos os SLAs.</h2>
+  <p class="sec-lead">Cada barra mostra o percentual de cumprimento por etapa. Producao (48%) e VT Entrada (52%) sao os maiores gargalos.</p>
+  <div class="sla-grid" id="sla-grid"></div>
+  <div class="chart-row" id="sla-charts"></div>
+</div></section>
 
-<!-- PROBLEMAS -->
-<section class="section" id="problemas">
-  <div class="wrap">
-    <div class="section-eyebrow">Mapa de problemas</div>
-    <h2 class="section-title"><em id="prob-total">—</em> problemas registrados em <em id="prob-cats">—</em> categorias.</h2>
-    <p class="section-lead">Cada card mostra uma categoria de problema. A barra vermelha indica a proporc?o de problemas criticos dentro daquela categoria.</p>
-    <div class="prob-grid" id="prob-grid"></div>
-  </div>
-</section>
+<section class="sec" id="problemas"><div class="wrap">
+  <div class="sec-eye">Mapa de problemas</div>
+  <h2 class="sec-title"><em id="prob-total">—</em> problemas em <em id="prob-cats">—</em> categorias.</h2>
+  <p class="sec-lead">Comunicacao lidera com 31% de taxa critica. A barra vermelha mostra a proporcao de criticos dentro de cada categoria.</p>
+  <div class="prob-grid" id="prob-grid"></div>
+  <div class="chart-row" id="prob-charts"></div>
+</div></section>
 
-<!-- OBRAS EM RISCO -->
-<section class="section section-alt" id="risco">
-  <div class="wrap">
-    <div class="section-eyebrow">Obras em risco</div>
-    <h2 class="section-title"><em id="risk-count">—</em> obras precisam de atencao imediata.</h2>
-    <p class="section-lead">Projetos com atraso, problemas criticos ou diagnostico de risco. Clique para expandir o diagnostico completo com causa-raiz, sentimento do cliente e recomendacoes.</p>
-    <div class="risk-list" id="risk-list"></div>
-  </div>
-</section>
+<section class="sec sec-alt" id="risco"><div class="wrap">
+  <div class="sec-eye">Obras em risco</div>
+  <h2 class="sec-title"><em id="risk-count">—</em> obras precisam de atencao imediata.</h2>
+  <p class="sec-lead">Clique para expandir o diagnostico completo com causa-raiz, sentimento do cliente e recomendacoes.</p>
+  <div class="filters" id="risk-filters"></div>
+  <div class="risk-list" id="risk-list"></div>
+</div></section>
 
-<!-- EQUIPE -->
-<section class="section" id="equipe">
-  <div class="wrap">
-    <div class="section-eyebrow">Performance da equipe</div>
-    <h2 class="section-title">Como cada consultor esta <em>gerenciando</em> suas obras.</h2>
-    <p class="section-lead">Taxa de problemas e atrasos por consultor. A barra mostra a proporcao de obras com problema em relacao ao total.</p>
-    <div class="team-grid" id="team-grid"></div>
-  </div>
-</section>
+<section class="sec" id="equipe"><div class="wrap">
+  <div class="sec-eye">Performance da equipe</div>
+  <h2 class="sec-title">Como cada consultor esta <em>gerenciando</em> suas obras.</h2>
+  <p class="sec-lead">Luana (88 obras) e Wesley (69) concentram 85% da carga. Taxa de problemas e atrasos por consultor.</p>
+  <div class="team-grid" id="team-grid"></div>
+</div></section>
 
-<!-- EVENTOS RECENTES -->
-<section class="section section-alt" id="eventos">
-  <div class="wrap">
-    <div class="section-eyebrow">Eventos recentes</div>
-    <h2 class="section-title">Ultimas <em>ocorrencias criticas</em> registradas.</h2>
-    <p class="section-lead">Timeline dos 30 eventos mais recentes com severidade e tipo. Cada ponto vermelho e critico, amber e alto.</p>
-    <div class="timeline" id="timeline"></div>
-  </div>
-</section>
+<section class="sec sec-alt" id="supply"><div class="wrap">
+  <div class="sec-eye">Estoque e suprimentos</div>
+  <h2 class="sec-title">Situacao dos <em>materiais e insumos</em> em campo.</h2>
+  <p class="sec-lead">Dados baseados na auditoria de estoque. Verde = OK, Amber = baixo, Vermelho = ruptura.</p>
+  <div class="supply-grid" id="supply-grid"></div>
+</div></section>
 
-<!-- DISTRIBUICAO -->
-<section class="section" id="pipeline">
-  <div class="wrap">
-    <div class="section-eyebrow">Raio-X do pipeline</div>
-    <h2 class="section-title">Distribuicao das <em id="pipe-total">—</em> obras ativas.</h2>
-    <p class="section-lead">Onde estao as obras agora: por fase, status, cidade e tipo.</p>
-    <div class="pipe-grid" id="pipe-summary"></div>
-    <div style="margin-top:48px">
-      <div class="dist-grid" id="dist-grid"></div>
-    </div>
-  </div>
-</section>
+<section class="sec" id="saude"><div class="wrap">
+  <div class="sec-eye">Balanco mensal e tendencia</div>
+  <h2 class="sec-title">Capacidade operacional e <em>projecao</em>.</h2>
+  <p class="sec-lead">Ocupacao mensal, distribuicao por status e projecao financeira dos proximos 30 dias.</p>
+  <div class="chart-row" id="capacity-charts"></div>
+  <div class="chart-row" id="balance-charts" style="margin-top:20px"></div>
+</div></section>
 
-<footer class="footer">
-  <div class="wrap">
-    <span id="footer-text">Monofloor Auditoria de Qualidade 2026</span>
-  </div>
-</footer>
+<section class="sec sec-alt" id="eventos"><div class="wrap">
+  <div class="sec-eye">Eventos recentes</div>
+  <h2 class="sec-title">Ultimas <em>ocorrencias</em> registradas.</h2>
+  <p class="sec-lead">30 eventos mais recentes. 100% alta ou critica — problema sistemico, nao pontual.</p>
+  <div class="timeline" id="timeline"></div>
+</div></section>
+
+<section class="sec" id="pipeline"><div class="wrap">
+  <div class="sec-eye">Raio-X do pipeline</div>
+  <h2 class="sec-title">Distribuicao das <em id="pipe-total">—</em> obras ativas.</h2>
+  <p class="sec-lead">Por fase, status, cidade e tipo de obra.</p>
+  <div class="pipe-grid" id="pipe-summary"></div>
+  <div class="dist-grid" id="dist-grid" style="margin-top:36px"></div>
+</div></section>
+
+<section class="sec sec-alt" id="achados"><div class="wrap">
+  <div class="sec-eye">Achados da auditoria</div>
+  <h2 class="sec-title"><em>25 achados</em> classificados por severidade.</h2>
+  <p class="sec-lead">10 criticos, 15 de alta severidade. Acoes priorizadas em 3 horizontes: 48h, 30 dias, 90 dias.</p>
+  <div class="filters"><button class="fbtn active" onclick="filterFindings('all')">Todos (25)</button><button class="fbtn" onclick="filterFindings('cr')">Criticos (10)</button><button class="fbtn" onclick="filterFindings('hi')">Alta (15)</button></div>
+  <div class="findings" id="findings"></div>
+</div></section>
+
+<footer class="footer"><div class="wrap"><span id="footer-text">Monofloor Auditoria 2026</span></div></footer>
 
 <script>
-const SLA_LABELS = {vt:'Visita Tecnica',contrato:'Contrato Assinado',cor:'Cor Definida',producao:'Material em Producao',logistica:'Logistica Programada',vt_entrada:'VT de Entrada',equipe:'Equipe Definida',material:'Material Entregue'};
-const SLA_ORDER = ['producao','vt_entrada','logistica','vt','material','contrato','equipe','cor'];
+const SLA_LABELS={vt:'Visita Tecnica',contrato:'Contrato Assinado',cor:'Cor Definida',producao:'Material Producao',logistica:'Logistica Programada',vt_entrada:'VT de Entrada',equipe:'Equipe Definida',material:'Material Entregue'};
+const SLA_ORDER=['producao','vt_entrada','logistica','vt','material','contrato','equipe','cor'];
 
-async function init() {
-  try {
-    const res = await fetch('data.json');
-    if (!res.ok) throw new Error('data.json nao encontrado');
-    const data = await res.json();
-    render(data);
-  } catch(e) {
-    document.getElementById('hero-eyebrow').textContent = 'Erro: ' + e.message;
-  }
+const AUDIT_FINDINGS=[
+{c:'cr',code:'C1',t:'SLA geral em 27% — apenas 35 de 132 obras no prazo',s:'Dashboard'},
+{c:'cr',code:'C2',t:'636 ocorrencias abertas sem tratamento visivel (3,4 por obra ativa)',s:'Dashboard'},
+{c:'cr',code:'C3',t:'NPS zero — nenhuma pesquisa de satisfacao em 844 obras finalizadas',s:'Dashboard'},
+{c:'cr',code:'C4',t:'100% das conversas WhatsApp sem responsavel atribuido (1.087 conversas)',s:'WhatsApp'},
+{c:'cr',code:'C5',t:'78% das conversas terminam com mensagem do cliente sem resposta',s:'WhatsApp'},
+{c:'cr',code:'C6',t:'156 conversas de clientes abandonadas ha mais de 48h',s:'WhatsApp'},
+{c:'cr',code:'C7',t:'5 obras com risco juridico/reputacional (ameaca de processo e ReclameAQUI)',s:'Analise Risco'},
+{c:'cr',code:'C8',t:'6 prestadores sem CPF cadastrado — irregularidade fiscal',s:'Aplicadores'},
+{c:'cr',code:'C9',t:'71% dos insumos em ruptura + 100% dos equipamentos zerados no sistema',s:'Estoque'},
+{c:'cr',code:'C10',t:'Checklist cosmetico: 100% completado em obras com 38-151 dias de atraso',s:'Projetos'},
+{c:'hi',code:'A1',t:'Abril 125% de ocupacao (+572 d-h deficit), julho cai para 37% de ociosidade',s:'Planejamento'},
+{c:'hi',code:'A2',t:'95% das obras sem equipe designada no sistema de planejamento',s:'Planejamento'},
+{c:'hi',code:'A3',t:'Luana (88 obras) + Wesley (69) = 85% da carga em apenas 2 pessoas',s:'Equipe'},
+{c:'hi',code:'A4',t:'282 reparos vs 229 obras ativas — mais reparo que obra nova',s:'Obras'},
+{c:'hi',code:'A5',t:'46 obras represadas em Agend. VT Afericao — 25% de todo o ativo',s:'Dashboard'},
+{c:'hi',code:'A6',t:'45% de turnover nos prestadores (48 novos de 106)',s:'Aplicadores'},
+{c:'hi',code:'A7',t:'14 prestadores sem encarregado vinculado — supervisao inexistente',s:'Aplicadores'},
+{c:'hi',code:'A8',t:'80 pessoas sem alocacao (~R$16-20mil/dia de custo ocioso)',s:'Hoje'},
+{c:'hi',code:'A9',t:'23 OS prontas em estoque ha 17 dias sem despacho',s:'Industria'},
+{c:'hi',code:'A10',t:'47% dos projetos sem tipo de obra + 30% sem data prevista',s:'Estatistica'},
+{c:'hi',code:'A11',t:'100% onboardingStatus = pendente — campo morto no sistema',s:'Estatistica'},
+{c:'hi',code:'A12',t:'Producao com SLA de 48% e VT Entrada com 52% — piores etapas',s:'Dashboard'},
+{c:'hi',code:'A13',t:'Comunicacao lidera problemas criticos com 31% de taxa',s:'Risco'},
+{c:'hi',code:'A14',t:'6.450kg de LILIT parado em 60 cores no estoque',s:'Estoque'},
+{c:'hi',code:'A15',t:'Media de 78 dias de atraso nos 3 projetos auditados individualmente',s:'Projetos'},
+];
+
+const SUPPLY_DATA=[
+{nm:'STELION 292',v:301,u:'kits',s:'ok'},{nm:'STELION 3G',v:189,u:'kits',s:'ok'},{nm:'STELION s/Ti',v:78,u:'kits',s:'ok'},
+{nm:'LEONA',v:170,u:'baldes',s:'ok'},{nm:'LILIT base',v:87,u:'baldes',s:'low'},{nm:'Primer',v:106,u:'bomb.',s:'ok'},
+{nm:'Selador',v:51,u:'bomb.',s:'low'},{nm:'LUMINA A',v:758,u:'un',s:'ok'},{nm:'LUMINA B',v:861,u:'un',s:'ok'},
+{nm:'Fita crepe',v:14,u:'un',s:'low'},{nm:'Rolo',v:5,u:'un',s:'out'},{nm:'Lona',v:0,u:'un',s:'out'},
+{nm:'Macacão',v:0,u:'un',s:'out'},{nm:'Garfo',v:0,u:'un',s:'out'},{nm:'Rolo tela',v:0,u:'un',s:'out'},
+];
+
+const CAPACITY_DATA=[
+{m:'Abril',occ:125,obras:48,dh:2904,cap:2332},
+{m:'Maio',occ:109,obras:43,dh:2436,cap:2226},
+{m:'Junho',occ:75,obras:27,dh:1738,cap:2332},
+{m:'Julho',occ:37,obras:13,dh:897,cap:2438},
+];
+
+async function init(){
+  try{
+    const r=await fetch('data.json');if(!r.ok) throw new Error('data.json nao encontrado');
+    const d=await r.json(); render(d);
+  }catch(e){document.getElementById('hero-eye').textContent='Erro: '+e.message;}
 }
 
-function render(data) {
-  const {projects, dashboard, analise, fetchedAt} = data;
-  const dt = fetchedAt ? new Date(fetchedAt) : new Date();
-  document.getElementById('hero-eyebrow').textContent = 'Dados de ' + dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}) + ' as ' + dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+function render(data){
+  const{projects,dashboard,analise,fetchedAt}=data;
+  const dt=fetchedAt?new Date(fetchedAt):new Date();
+  document.getElementById('hero-eye').textContent='Dados de '+dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})+' as '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const t=dashboard.totals||{};const s=analise.summary||{};
+  document.getElementById('hero-sub').textContent=t.total+' obras no sistema · '+t.active+' ativas · '+t.finished+' finalizadas · Fonte: cliente.monofloor.cloud';
 
   // KPIs
-  const t = dashboard.totals || {};
-  const s = analise.summary || {};
-  document.getElementById('kpi-strip').innerHTML = [
-    {v:t.active||0,l:'Obras Ativas',c:'gold'},
-    {v:t.finished||0,l:'Finalizadas',c:''},
-    {v:(dashboard.sla?.compliancePercent||0)+'%',l:'No Prazo (SLA)',c:(dashboard.sla?.compliancePercent||0)<50?'red':'amber'},
-    {v:s.atrasados||0,l:'Atrasadas',c:(s.atrasados||0)>30?'red':'amber'},
-    {v:s.critical||0,l:'Criticas',c:'red'},
-    {v:s.pausados||0,l:'Pausadas',c:'amber'},
-  ].map(k=>'<div class="kpi"><div class="v '+k.c+'">'+k.v+'</div><div class="l">'+k.l+'</div></div>').join('');
+  document.getElementById('kpi-grid').innerHTML=[
+    {v:t.active||0,l:'Ativas',c:'go',vc:'gold'},{v:t.finished||0,l:'Finalizadas',c:'b',vc:''},
+    {v:(dashboard.sla?.compliancePercent||0)+'%',l:'SLA Geral',c:'r',vc:'red'},
+    {v:s.atrasados||0,l:'Atrasadas',c:'r',vc:'red'},{v:s.critical||0,l:'Criticas',c:'r',vc:'red'},
+    {v:s.pausados||0,l:'Pausadas',c:'a',vc:'amber'},{v:s.ok||0,l:'Saudaveis',c:'g',vc:'green'},
+    {v:'R$411k',l:'Projecao 30d',c:'go',vc:'gold'},
+  ].map(k=>'<div class="kpi '+k.c+'"><div class="v '+k.vc+'">'+k.v+'</div><div class="l">'+k.l+'</div></div>').join('');
 
-  // HEALTH BAR
-  const ok=s.ok||0,med=s.medium||0,hi=s.high||0,cr=s.critical||0,pa=s.pausados||0;
-  const tot=ok+med+hi+cr+pa||1;
-  document.getElementById('health-section').innerHTML = `
-    <div class="health-bar">
-      <div style="flex:${ok};background:var(--green)" title="${ok} OK">${ok}</div>
-      <div style="flex:${med};background:var(--amber)" title="${med} Medio">${med}</div>
-      <div style="flex:${hi};background:#f59e0b" title="${hi} Alto">${hi}</div>
-      <div style="flex:${cr};background:var(--red)" title="${cr} Critico">${cr}</div>
-      <div style="flex:${pa};background:var(--text4)" title="${pa} Pausado">${pa}</div>
-    </div>
-    <div class="health-legend">
-      <span><div class="dot" style="background:var(--green)"></div>${ok} OK (${Math.round(ok/tot*100)}%)</span>
-      <span><div class="dot" style="background:var(--amber)"></div>${med} Medio</span>
-      <span><div class="dot" style="background:#f59e0b"></div>${hi} Alto</span>
-      <span><div class="dot" style="background:var(--red)"></div>${cr} Critico</span>
-      <span><div class="dot" style="background:var(--text4)"></div>${pa} Pausado</span>
-    </div>`;
+  // HEALTH
+  const ok=s.ok||0,md=s.medium||0,hi=s.high||0,cr=s.critical||0,pa=s.pausados||0,tot=ok+md+hi+cr+pa||1;
+  document.getElementById('health-wrap').innerHTML=
+    '<div class="health"><div style="flex:'+ok+';background:var(--green)" title="'+ok+' OK">'+ok+'</div><div style="flex:'+md+';background:var(--amber)">'+md+'</div><div style="flex:'+hi+';background:#f59e0b">'+hi+'</div><div style="flex:'+cr+';background:var(--red)">'+cr+'</div><div style="flex:'+pa+';background:var(--text4)">'+pa+'</div></div>'+
+    '<div class="health-leg"><span><div class="dot" style="background:var(--green)"></div>'+ok+' OK ('+Math.round(ok/tot*100)+'%)</span><span><div class="dot" style="background:var(--amber)"></div>'+md+' Medio</span><span><div class="dot" style="background:#f59e0b"></div>'+hi+' Alto</span><span><div class="dot" style="background:var(--red)"></div>'+cr+' Critico</span><span><div class="dot" style="background:var(--text4)"></div>'+pa+' Pausado</span></div>';
+
+  // GAUGES
+  const slaPct=dashboard.sla?.compliancePercent||0;
+  const readiness=dashboard.readiness?.average||0;
+  const atrasoPct=Math.round((s.atrasados||0)/tot*100);
+  document.getElementById('gauge-row').innerHTML=[
+    {v:slaPct,l:'SLA Compliance',color:slaPct<50?'var(--red)':slaPct<75?'var(--amber)':'var(--green)'},
+    {v:readiness,l:'Preparacao Media',color:readiness<70?'var(--red)':readiness<85?'var(--amber)':'var(--green)'},
+    {v:100-atrasoPct,l:'Obras no Prazo',color:atrasoPct>30?'var(--red)':atrasoPct>15?'var(--amber)':'var(--green)'},
+  ].map(g=>{
+    const a=g.v/100*251;
+    return '<div class="gauge"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--bg3)" stroke-width="8"/><circle cx="50" cy="50" r="40" fill="none" stroke="'+g.color+'" stroke-width="8" stroke-dasharray="'+a+' 251" stroke-dashoffset="0" transform="rotate(-90 50 50)" stroke-linecap="round"/><text x="50" y="54" text-anchor="middle" fill="var(--text)" font-family="var(--fd)" font-size="20" font-weight="300">'+g.v+'%</text></svg><div class="gl">'+g.l+'</div></div>';
+  }).join('');
 
   // SLA
-  const sla = dashboard.sla || {};
-  document.getElementById('sla-pct').textContent = (sla.compliancePercent||0)+'%';
-  document.getElementById('sla-grid').innerHTML = SLA_ORDER.map(key => {
-    const item = (sla.byKey||[]).find(x=>x.key===key);
-    if (!item) return '';
-    const pct = item.percent;
-    const color = pct>=80?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
-    const txtColor = pct>=80?'green':pct>=50?'amber':'red';
-    return `<div class="sla-row">
-      <div class="sla-name">${SLA_LABELS[key]||key}</div>
-      <div class="sla-track"><div class="sla-fill" style="width:${pct}%;background:${color}"></div></div>
-      <div class="sla-pct ${txtColor}">${pct}%</div>
-    </div>`;
+  const sla=dashboard.sla||{};
+  document.getElementById('sla-pct').textContent=(sla.compliancePercent||0)+'%';
+  document.getElementById('sla-grid').innerHTML=SLA_ORDER.map(key=>{
+    const it=(sla.byKey||[]).find(x=>x.key===key);if(!it)return'';
+    const p=it.percent,c=p>=80?'var(--green)':p>=50?'var(--amber)':'var(--red)',tc=p>=80?'green':p>=50?'amber':'red';
+    return '<div class="sla-row"><div class="sla-nm">'+( SLA_LABELS[key]||key)+'</div><div class="sla-track"><div class="sla-fill" style="width:'+p+'%;background:'+c+'"></div></div><div class="sla-pct" style="color:'+c+'">'+p+'%</div></div>';
   }).join('');
 
-  // PROBLEMAS
-  const probs = analise.problemCategories || [];
-  const probTotal = probs.reduce((s,p)=>s+p.count,0);
-  const critTotal = probs.reduce((s,p)=>s+p.criticos,0);
-  document.getElementById('prob-total').textContent = probTotal;
-  document.getElementById('prob-cats').textContent = probs.length;
-  const maxProb = Math.max(...probs.map(p=>p.count),1);
-  document.getElementById('prob-grid').innerHTML = probs
-    .sort((a,b)=>b.count-a.count)
-    .map(p => {
-      const cls = p.criticos>5?'crit':p.criticos>0?'warn':'ok';
-      const critPct = p.count?Math.round(p.criticos/p.count*100):0;
-      return `<div class="prob-card ${cls}">
-        <div class="cat">${p.categoria}</div>
-        <div class="count">${p.count}</div>
-        <div class="crit-badge">${p.criticos} criticos</div>
-        <div class="bar"><div style="width:${critPct}%"></div></div>
-      </div>`;
-    }).join('');
+  // SLA chart
+  document.getElementById('sla-charts').innerHTML='<div class="chart-box"><h3>SLA por etapa — grafico comparativo</h3><div class="hbar">'+
+    SLA_ORDER.map(key=>{const it=(sla.byKey||[]).find(x=>x.key===key);if(!it)return'';const p=it.percent;const c=p>=80?'var(--green)':p>=50?'var(--amber)':'var(--red)';
+      return '<div class="hbar-row"><div class="nm">'+(SLA_LABELS[key]||key)+'</div><div class="track"><div class="fill" style="width:'+p+'%;background:'+c+'">'+p+'%</div></div><div class="val">'+it.met+'/'+it.total+'</div></div>';
+    }).join('')+'</div></div>'+
+    '<div class="chart-box"><h3>Distribuicao por fase atual (top 10)</h3><div class="hbar" id="phase-chart"></div></div>';
 
-  // OBRAS EM RISCO
-  const risks = (analise.atRisk || []).sort((a,b)=>(b.diasAtraso||0)-(a.diasAtraso||0));
-  document.getElementById('risk-count').textContent = risks.length;
-  document.getElementById('risk-list').innerHTML = risks.map((r,i) => {
-    const hasDiag = r.diagnostico && r.diagnostico.length > 10;
-    const sevClass = r.criticalProblems>2?'crit':'high';
-    return `<div class="risk-card">
-      <div class="risk-header" onclick="toggleRisk(${i})">
-        <div class="risk-days">${r.diasAtraso||0}<span class="u">dias</span></div>
-        <div class="risk-info">
-          <div class="name">${r.clienteNome}</div>
-          <div class="meta">${r.fase||'—'} · ${r.cidade||'—'} · ${r.status||'—'}</div>
-        </div>
-        <div class="risk-badges">
-          ${r.criticalProblems?'<span class="badge crit">'+r.criticalProblems+' criticos</span>':''}
-          ${r.openProblems?'<span class="badge prob">'+r.openProblems+' abertos</span>':''}
-        </div>
-        <div class="risk-expand" id="arrow-${i}">${hasDiag?'&#9660;':''}</div>
-      </div>
-      ${hasDiag?'<div class="risk-body" id="risk-body-'+i+'"><div class="diag">'+escapeHtml(r.diagnostico)+'</div></div>':''}
-    </div>`;
+  // Phase chart
+  const phases=dashboard.phases||{};
+  const topP=Object.entries(phases).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxP=topP.length?topP[0][1]:1;
+  document.getElementById('phase-chart').innerHTML=topP.map(([nm,ct])=>{
+    const pct=(ct/maxP)*100;
+    return '<div class="hbar-row"><div class="nm" title="'+nm+'">'+nm.substring(0,15)+'</div><div class="track"><div class="fill" style="width:'+pct+'%;background:var(--gold2)">'+ct+'</div></div><div class="val"></div></div>';
   }).join('');
 
-  // EQUIPE
-  const team = (analise.teamPerformance||[]).filter(t=>t.projetosAtivos>0).sort((a,b)=>b.projetosAtivos-a.projetosAtivos);
-  document.getElementById('team-grid').innerHTML = team.map(t => {
-    const probPct = t.projetosAtivos?Math.round(t.projetosComProblema/t.projetosAtivos*100):0;
-    const atrPct = t.projetosAtivos?Math.round(t.projetosAtrasados/t.projetosAtivos*100):0;
-    const barColor = probPct>40?'var(--red)':probPct>25?'var(--amber)':'var(--green)';
-    return `<div class="team-card">
-      <div class="name">${t.nome.split(' ').slice(0,2).join(' ')}</div>
-      <div class="role">${t.role||'Consultor'}</div>
-      <div class="team-stats">
-        <div class="team-stat"><div class="v">${t.projetosAtivos}</div><div class="l">Ativos</div></div>
-        <div class="team-stat"><div class="v" style="color:var(--amber)">${t.projetosComProblema}</div><div class="l">Problema</div></div>
-        <div class="team-stat"><div class="v" style="color:var(--red)">${t.projetosAtrasados}</div><div class="l">Atrasados</div></div>
-      </div>
-      <div class="team-bar"><div style="width:${probPct}%;background:${barColor}"></div></div>
-      <div style="font-size:11px;color:var(--text3);margin-top:6px">${probPct}% com problema · ${atrPct}% atrasados</div>
-    </div>`;
+  // PROBLEMS
+  const probs=analise.problemCategories||[];
+  const probTot=probs.reduce((s,p)=>s+p.count,0);
+  document.getElementById('prob-total').textContent=probTot;
+  document.getElementById('prob-cats').textContent=probs.length;
+  document.getElementById('prob-grid').innerHTML=probs.sort((a,b)=>b.count-a.count).map(p=>{
+    const cls=p.criticos>5?'cr':p.criticos>0?'wr':'ok';
+    const cp=p.count?Math.round(p.criticos/p.count*100):0;
+    return '<div class="prob '+cls+'"><div class="cat">'+p.categoria+'</div><div class="ct">'+p.count+'</div><div class="cb">'+p.criticos+' criticos ('+cp+'%)</div><div class="bar"><div style="width:'+cp+'%"></div></div></div>';
   }).join('');
 
-  // EVENTOS
-  const events = analise.recentEvents || [];
-  document.getElementById('timeline').innerHTML = events.map(e => {
-    const d = new Date(e.createdAt);
-    const timeStr = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    return `<div class="ev">
-      <div class="ev-sev ${e.severidade}"></div>
-      <div>
-        <div class="ev-title">${e.titulo}</div>
-        <div class="ev-meta">${e.clienteNome} · ${(e.tipo||'').replace(/_/g,' ')}</div>
-      </div>
-      <div class="ev-time">${timeStr}</div>
-    </div>`;
+  // Prob charts
+  document.getElementById('prob-charts').innerHTML='<div class="chart-box"><h3>Problemas por categoria — proporcao de criticos</h3><div class="hbar">'+
+    probs.filter(p=>p.count>2).sort((a,b)=>(b.criticos/b.count)-(a.criticos/a.count)).map(p=>{
+      const cp=p.count?Math.round(p.criticos/p.count*100):0;const c=cp>20?'var(--red)':cp>10?'var(--amber)':'var(--green)';
+      return '<div class="hbar-row"><div class="nm">'+p.categoria+'</div><div class="track"><div class="fill" style="width:'+cp+'%;background:'+c+'">'+cp+'%</div></div><div class="val">'+p.criticos+'/'+p.count+'</div></div>';
+    }).join('')+'</div></div>'+
+    '<div class="chart-box"><h3>Volume total por categoria</h3><div class="hbar">'+
+    probs.sort((a,b)=>b.count-a.count).slice(0,8).map(p=>{
+      const pct=(p.count/(probs[0]?.count||1))*100;
+      return '<div class="hbar-row"><div class="nm">'+p.categoria+'</div><div class="track"><div class="fill" style="width:'+pct+'%;background:var(--gold-dim)">'+p.count+'</div></div><div class="val"></div></div>';
+    }).join('')+'</div></div>';
+
+  // RISK
+  const risks=(analise.atRisk||[]).sort((a,b)=>(b.diasAtraso||0)-(a.diasAtraso||0));
+  document.getElementById('risk-count').textContent=risks.length;
+  document.getElementById('risk-filters').innerHTML='<button class="fbtn active" onclick="filterRisk(\'all\')">Todos ('+risks.length+')</button><button class="fbtn" onclick="filterRisk(\'crit\')">Criticos ('+risks.filter(r=>r.criticalProblems>2).length+')</button><button class="fbtn" onclick="filterRisk(\'diag\')">Com diagnostico ('+risks.filter(r=>r.diagnostico).length+')</button>';
+  window._risks=risks;
+  renderRisks(risks);
+
+  // TEAM
+  const team=(analise.teamPerformance||[]).filter(t=>t.projetosAtivos>0).sort((a,b)=>b.projetosAtivos-a.projetosAtivos);
+  document.getElementById('team-grid').innerHTML=team.map(t=>{
+    const pp=t.projetosAtivos?Math.round(t.projetosComProblema/t.projetosAtivos*100):0;
+    const ap=t.projetosAtivos?Math.round(t.projetosAtrasados/t.projetosAtivos*100):0;
+    const bc=pp>40?'var(--red)':pp>25?'var(--amber)':'var(--green)';
+    const name=t.nome.split(' ').slice(0,2).join(' ');
+    return '<div class="team"><div class="nm">'+name+'</div><div class="rl">'+(t.role||'Consultor')+' · '+t.projetosAtivos+' projetos</div><div class="team-stats"><div class="ts"><div class="v" style="color:var(--gold)">'+t.projetosAtivos+'</div><div class="l">Ativos</div></div><div class="ts"><div class="v" style="color:var(--amber)">'+t.projetosComProblema+'</div><div class="l">Problema</div></div><div class="ts"><div class="v" style="color:var(--red)">'+t.projetosAtrasados+'</div><div class="l">Atrasados</div></div></div><div class="team-bar"><div style="width:'+pp+'%;background:'+bc+'"></div></div><div class="team-pct">'+pp+'% com problema · '+ap+'% atrasados</div></div>';
+  }).join('');
+
+  // SUPPLY
+  document.getElementById('supply-grid').innerHTML=SUPPLY_DATA.map(s=>
+    '<div class="supply '+s.s+'"><div class="nm">'+s.nm+'</div><div class="v">'+(s.v===0?'<span style="color:var(--red)">0</span>':s.v)+'</div><div class="u">'+s.u+'</div></div>'
+  ).join('');
+
+  // CAPACITY
+  const maxDH=Math.max(...CAPACITY_DATA.map(c=>Math.max(c.dh,c.cap)));
+  document.getElementById('capacity-charts').innerHTML='<div class="chart-box"><h3>Ocupacao mensal — capacidade vs alocado</h3><div class="hbar">'+
+    CAPACITY_DATA.map(c=>{
+      const capPct=(c.cap/maxDH)*100,dhPct=(c.dh/maxDH)*100;
+      const oc=c.occ>100?'var(--red)':c.occ>80?'var(--amber)':'var(--green)';
+      return '<div class="hbar-row"><div class="nm">'+c.m+'</div><div class="track" style="height:28px"><div class="fill" style="width:'+dhPct+'%;background:'+oc+';position:absolute;z-index:2">'+c.occ+'% · '+c.dh+' d-h</div><div style="position:absolute;width:'+capPct+'%;height:100%;background:var(--bg3);border-right:2px solid var(--text3)"></div></div><div class="val">'+c.obras+' obras</div></div>';
+    }).join('')+'</div><div style="font-size:11px;color:var(--text4);margin-top:8px">Barra colorida = alocado · Linha cinza = capacidade</div></div>'+
+    '<div class="chart-box"><h3>Projecao de obras e faturamento</h3><div class="hbar">'+
+    CAPACITY_DATA.map(c=>{
+      const recv=Math.round(c.obras*8570);
+      const pct=(c.obras/CAPACITY_DATA[0].obras)*100;
+      return '<div class="hbar-row"><div class="nm">'+c.m+'</div><div class="track"><div class="fill" style="width:'+pct+'%;background:var(--gold2)">'+c.obras+' obras</div></div><div class="val">R$'+Math.round(recv/1000)+'k</div></div>';
+    }).join('')+'</div><div style="font-size:11px;color:var(--text4);margin-top:8px">Ticket medio estimado: R$8.570/obra (baseado em projecao 30d)</div></div>';
+
+  // BALANCE
+  document.getElementById('balance-charts').innerHTML='<div class="chart-box"><h3>Balanco: prestadores alocados vs ociosos (semanal)</h3><div class="hbar">'+
+    [{s:'13-17 Abr',al:52,oc:54},{s:'20-24 Abr',al:70,oc:36},{s:'27-01 Mai',al:71,oc:35},{s:'04-08 Mai',al:58,oc:48}].map(w=>{
+      const tot=w.al+w.oc;return '<div class="hbar-row"><div class="nm">'+w.s+'</div><div class="track" style="height:22px;display:flex"><div style="flex:'+w.al+';background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000">'+w.al+'</div><div style="flex:'+w.oc+';background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--red)">'+w.oc+' ociosos</div></div><div class="val">'+Math.round(w.al/tot*100)+'%</div></div>';
+    }).join('')+'</div></div>'+
+    '<div class="chart-box"><h3>Indicadores de eficiencia operacional</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+    [{l:'Obras por consultor (ideal: 40)',v:'44',d:'Luana:88 Wesley:69 Pedro:7',c:'var(--red)'},
+     {l:'Turnover prestadores',v:'45%',d:'48 novos de 106 ativos',c:'var(--red)'},
+     {l:'SLA producao',v:'48%',d:'Pior etapa do pipeline',c:'var(--red)'},
+     {l:'Ocorrencias/obra ativa',v:'3,4',d:'636 abertas / 187 ativas',c:'var(--amber)'},
+    ].map(i=>'<div style="background:var(--bg2);border-radius:8px;padding:14px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">'+i.l+'</div><div style="font-family:var(--fd);font-size:28px;font-weight:300;color:'+i.c+'">'+i.v+'</div><div style="font-size:10px;color:var(--text4)">'+i.d+'</div></div>').join('')+'</div></div>';
+
+  // EVENTS
+  const events=analise.recentEvents||[];
+  document.getElementById('timeline').innerHTML=events.map(e=>{
+    const d=new Date(e.createdAt);
+    const ts=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="ev"><div class="ev-dot '+e.severidade+'"></div><div><div class="ev-title">'+e.titulo+'</div><div class="ev-meta">'+e.clienteNome+' · '+(e.tipo||'').replace(/_/g,' ')+'</div></div><div class="ev-time">'+ts+'</div></div>';
   }).join('');
 
   // PIPELINE
-  const active = projects.filter(p=>p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido');
-  document.getElementById('pipe-total').textContent = (dashboard.totals?.active||active.length);
+  document.getElementById('pipe-total').textContent=t.active||'—';
+  const topPhases=Object.entries(phases).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  document.getElementById('pipe-summary').innerHTML=topPhases.map(([nm,ct])=>'<div class="pipe"><div class="v">'+ct+'</div><div class="l">'+nm+'</div></div>').join('');
 
-  // Pipeline summary cards
-  const phases = dashboard.phases || {};
-  const topPhases = Object.entries(phases).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  document.getElementById('pipe-summary').innerHTML = topPhases.map(([name,count]) =>
-    '<div class="pipe-card"><div class="v">'+count+'</div><div class="l">'+name+'</div></div>'
-  ).join('');
-
-  // Distribution grids
-  const statusCounts = {};
-  const cidadeCounts = {};
-  const tipoCounts = {};
-  projects.forEach(p => {
-    if(p.status) statusCounts[p.status] = (statusCounts[p.status]||0)+1;
-    if(p.projetoCidade) cidadeCounts[p.projetoCidade] = (cidadeCounts[p.projetoCidade]||0)+1;
-    if(p.tipoObra && p.tipoObra.trim()) tipoCounts[p.tipoObra] = (tipoCounts[p.tipoObra]||0)+1;
+  // DIST
+  const statusC={},cidadeC={},tipoC={};
+  projects.forEach(p=>{
+    if(p.status)statusC[p.status]=(statusC[p.status]||0)+1;
+    if(p.projetoCidade)cidadeC[p.projetoCidade]=(cidadeC[p.projetoCidade]||0)+1;
+    if(p.tipoObra&&p.tipoObra.trim())tipoC[p.tipoObra]=(tipoC[p.tipoObra]||0)+1;
   });
-
-  function distBlock(title, counts, maxItems) {
-    const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,maxItems||10);
-    const max = sorted.length?sorted[0][1]:1;
-    return '<div class="dist-block"><h3>'+title+'</h3>'+sorted.map(([name,count])=>
-      '<div class="dist-row"><div class="nm" title="'+name+'">'+name+'</div><div class="br"><div style="width:'+(count/max*100)+'%"></div></div><div class="ct">'+count+'</div></div>'
-    ).join('')+'</div>';
+  function distB(title,counts,n){
+    const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,n||8);
+    const mx=sorted.length?sorted[0][1]:1;
+    return '<div class="dist-block"><h3>'+title+'</h3>'+sorted.map(([nm,ct])=>'<div class="dist-row"><div class="nm" title="'+nm+'">'+nm+'</div><div class="br"><div style="width:'+(ct/mx*100)+'%"></div></div><div class="ct">'+ct+'</div></div>').join('')+'</div>';
   }
+  document.getElementById('dist-grid').innerHTML=distB('Por Status',statusC)+distB('Por Cidade',cidadeC)+distB('Por Tipo',tipoC);
 
-  document.getElementById('dist-grid').innerHTML =
-    distBlock('Por Status', statusCounts, 8) +
-    distBlock('Por Cidade', cidadeCounts, 8) +
-    distBlock('Por Tipo de Obra', tipoCounts, 8);
+  // FINDINGS
+  renderFindings('all');
 
   // FOOTER
-  document.getElementById('footer-text').textContent = 'Monofloor Auditoria de Qualidade 2026 · '+projects.length+' obras · Dados de '+dt.toLocaleDateString('pt-BR');
+  document.getElementById('footer-text').textContent='Monofloor Auditoria de Qualidade 2026 · '+projects.length+' obras · '+dt.toLocaleDateString('pt-BR')+' · 11 modulos auditados · 25 achados';
 }
 
-function toggleRisk(i) {
-  const body = document.getElementById('risk-body-'+i);
-  const arrow = document.getElementById('arrow-'+i);
-  if(body){body.classList.toggle('open');arrow.classList.toggle('open');}
+function renderRisks(risks){
+  document.getElementById('risk-list').innerHTML=risks.map((r,i)=>{
+    const hd=r.diagnostico&&r.diagnostico.length>10;
+    return '<div class="risk-card" data-crit="'+(r.criticalProblems>2?'crit':'')+ '" data-diag="'+(hd?'yes':'')+'"><div class="risk-hd" onclick="toggleR('+i+')"><div class="risk-days">'+(r.diasAtraso||0)+'<span class="u">dias</span></div><div class="risk-info"><div class="nm">'+r.clienteNome+'</div><div class="mt">'+(r.fase||'—')+' · '+(r.cidade||'—')+' · '+(r.status||'—')+'</div></div><div class="risk-badges">'+(r.criticalProblems?'<span class="badge cr">'+r.criticalProblems+' crit</span>':'')+(r.openProblems?'<span class="badge pr">'+r.openProblems+' abertos</span>':'')+'</div><div class="risk-arrow" id="ra-'+i+'">'+(hd?'&#9660;':'')+'</div></div>'+(hd?'<div class="risk-body" id="rb-'+i+'"><div class="diag">'+esc(r.diagnostico)+'</div></div>':'')+'</div>';
+  }).join('');
 }
 
-function escapeHtml(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+function toggleR(i){const b=document.getElementById('rb-'+i),a=document.getElementById('ra-'+i);if(b){b.classList.toggle('open');a.classList.toggle('open');}}
+
+function filterRisk(f){
+  document.querySelectorAll('#risco .fbtn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  let filtered=window._risks;
+  if(f==='crit')filtered=filtered.filter(r=>r.criticalProblems>2);
+  if(f==='diag')filtered=filtered.filter(r=>r.diagnostico&&r.diagnostico.length>10);
+  renderRisks(filtered);
 }
+
+function renderFindings(f){
+  document.querySelectorAll('#achados .fbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('#achados .fbtn[onclick*="\''+f+'\'"]')?.classList.add('active');
+  const list=f==='all'?AUDIT_FINDINGS:AUDIT_FINDINGS.filter(x=>x.c===(f==='cr'?'cr':'hi'));
+  document.getElementById('findings').innerHTML=list.map(f=>
+    '<div class="finding"><div class="code '+f.c+'">'+f.code+'</div><div><div class="desc">'+f.t+'</div><div class="src">Fonte: '+f.s+'</div></div></div>'
+  ).join('');
+}
+function filterFindings(f){renderFindings(f);}
+
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
 
 init();
 </script>
