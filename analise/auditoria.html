@@ -192,6 +192,36 @@ a{color:var(--gold);text-decoration:none}button{font-family:inherit;cursor:point
 .score-item .bar{height:4px;background:var(--bg3);border-radius:2px;margin-top:8px;overflow:hidden}
 .score-item .bar div{height:100%;border-radius:2px}
 
+/* JOURNEY MAP */
+.journey-wrap{margin-top:32px}
+.journey-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px}
+.journey-bar{display:flex;height:48px;border-radius:8px;overflow:hidden;margin-bottom:4px;position:relative}
+.journey-bar .seg{display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:11px;font-weight:600;color:#000;transition:flex .5s;min-width:30px;position:relative}
+.journey-bar .seg .days{font-family:var(--fm);font-size:14px;font-weight:700}
+.journey-bar .seg .phase-name{font-size:8px;text-transform:uppercase;letter-spacing:.5px;opacity:.8}
+.journey-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.journey-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.journey-card h4{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.journey-card .tag{font-size:9px;padding:2px 8px;border-radius:100px;font-weight:600}
+.journey-card .tag.ideal{background:var(--green-bg);color:var(--green);border:1px solid rgba(110,231,183,.3)}
+.journey-card .tag.real{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,.3)}
+.journey-phases{display:grid;gap:8px}
+.journey-phase{display:grid;grid-template-columns:1fr 60px 50px;gap:8px;align-items:center}
+.journey-phase .nm{font-size:12px;color:var(--text2)}
+.journey-phase .bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.journey-phase .bar div{height:100%;border-radius:3px}
+.journey-phase .val{font-family:var(--fm);font-size:12px;text-align:right}
+.journey-delta{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:20px}
+.journey-delta-card{background:var(--bg2);border-radius:8px;padding:14px;text-align:center}
+.journey-delta-card .v{font-family:var(--fd);font-size:28px;font-weight:300;line-height:1;margin-bottom:2px}
+.journey-delta-card .l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.journey-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:24px}
+.journey-status{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.journey-status h4{font-size:12px;font-weight:600;margin-bottom:8px}
+.journey-status .row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid var(--border)}
+.journey-status .row:last-child{border:none}
+.journey-status .row .k{color:var(--text3)}.journey-status .row .v{font-family:var(--fm);font-weight:600}
+
 .footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text4)}
 
 @media(max-width:900px){.wrap{padding:0 18px}.kpi-grid{grid-template-columns:repeat(3,1fr)}.sla-row{grid-template-columns:110px 1fr 45px}.risk-hd{grid-template-columns:45px 1fr auto}}
@@ -204,6 +234,7 @@ a{color:var(--gold);text-decoration:none}button{font-family:inherit;cursor:point
   <div class="nav-logo">M</div>
   <div class="nav-brand">Monofloor<span class="sub">Auditoria de Qualidade</span></div>
   <div class="nav-links">
+    <a href="#journey" class="nav-link">Jornada</a>
     <a href="#saude" class="nav-link">Saude</a>
     <a href="#sla" class="nav-link">SLAs</a>
     <a href="#problemas" class="nav-link">Problemas</a>
@@ -224,6 +255,29 @@ a{color:var(--gold);text-decoration:none}button{font-family:inherit;cursor:point
   <div class="kpi-grid" id="kpi-grid"></div>
   <div id="health-wrap"></div>
   <div class="gauge-row" id="gauge-row"></div>
+</div></section>
+
+<!-- JOURNEY MAP -->
+<section class="sec" id="journey"><div class="wrap">
+  <div class="sec-eye">Jornada da obra</div>
+  <h2 class="sec-title">Onde os <em>186 dias</em> sao consumidos — e onde deviam ser <em>150</em>.</h2>
+  <p class="sec-lead">73% do pipeline e pre-obra. A execucao real consome apenas 9% do tempo. O buraco negro entre VT Afericao e Entrada em Obra responde por 43% do tempo total.</p>
+
+  <div class="journey-wrap">
+    <div class="journey-label"><span>Criacao Pipefy (dia 0)</span><span>186 dias (media real)</span></div>
+    <div class="journey-bar" id="journey-real"></div>
+    <div style="font-size:10px;color:var(--text4);margin-bottom:16px">Jornada REAL — media de 20 projetos analisados</div>
+
+    <div class="journey-label"><span>Criacao (dia 0)</span><span>150 dias (meta institucional)</span></div>
+    <div class="journey-bar" id="journey-ideal"></div>
+    <div style="font-size:10px;color:var(--text4)">Jornada IDEAL — meta institucional ≤150 dias</div>
+  </div>
+
+  <div class="journey-delta" id="journey-delta"></div>
+
+  <div class="journey-compare" id="journey-compare"></div>
+
+  <div class="journey-status-grid" id="journey-status-grid"></div>
 </div></section>
 
 <section class="sec sec-alt" id="sla"><div class="wrap">
@@ -579,6 +633,9 @@ function render(data){
   }
   document.getElementById('dist-grid').innerHTML=distB('Por Status',statusC)+distB('Por Cidade',cidadeC)+distB('Por Tipo',tipoC);
 
+  // JOURNEY MAP
+  renderJourney();
+
   // CENTRAL INTERATIVA
   renderCentral(dashboard, analise);
 
@@ -627,6 +684,74 @@ function showTab(id){
   document.querySelectorAll('#central .tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// JOURNEY MAP
+// ═══════════════════════════════════════
+function renderJourney(){
+  const REAL=[
+    {name:'Onboarding',days:56,color:'var(--gold)'},
+    {name:'VT→Entrada',days:79,color:'var(--red)'},
+    {name:'Execucao',days:17,color:'var(--green)'},
+    {name:'Verniz',days:3,color:'#6ee7b7'},
+    {name:'Coleta',days:5,color:'var(--gold-dim)'},
+    {name:'Pos-obra',days:26,color:'var(--text4)'},
+  ];
+  const IDEAL=[
+    {name:'Onboarding',days:30,color:'var(--gold)'},
+    {name:'VT→Entrada',days:45,color:'var(--amber)'},
+    {name:'Execucao',days:30,color:'var(--green)'},
+    {name:'Verniz',days:3,color:'#6ee7b7'},
+    {name:'Coleta',days:5,color:'var(--gold-dim)'},
+    {name:'Pos-obra',days:10,color:'var(--text4)'},
+  ];
+  const totalR=REAL.reduce((s,p)=>s+p.days,0);
+  const totalI=IDEAL.reduce((s,p)=>s+p.days,0);
+
+  function renderBar(id,phases,total){
+    document.getElementById(id).innerHTML=phases.map(p=>{
+      const pct=(p.days/total)*100;
+      return '<div class="seg" style="flex:'+p.days+';background:'+p.color+'"><div class="days">'+p.days+'d</div><div class="phase-name">'+p.name+'</div></div>';
+    }).join('');
+  }
+  renderBar('journey-real',REAL,totalR);
+  renderBar('journey-ideal',IDEAL,totalI);
+
+  // Delta cards
+  document.getElementById('journey-delta').innerHTML=REAL.map((r,i)=>{
+    const ideal=IDEAL[i];
+    const diff=r.days-ideal.days;
+    const c=diff>15?'var(--red)':diff>5?'var(--amber)':diff<=0?'var(--green)':'var(--text2)';
+    const sign=diff>0?'+':'';
+    return '<div class="journey-delta-card"><div class="v" style="color:'+c+'">'+sign+diff+'d</div><div class="l">'+r.name+'</div></div>';
+  }).join('')+'<div class="journey-delta-card"><div class="v" style="color:var(--red)">+'+(totalR-totalI)+'d</div><div class="l">Total excedido</div></div>';
+
+  // Compare side by side
+  const maxD=Math.max(...REAL.map(r=>r.days),...IDEAL.map(r=>r.days));
+  document.getElementById('journey-compare').innerHTML=
+    '<div class="journey-card"><h4><span class="tag real">REAL — '+totalR+' dias</span> Media de 20 projetos</h4><div class="journey-phases">'+
+    REAL.map(r=>'<div class="journey-phase"><div class="nm">'+r.name+'</div><div class="bar"><div style="width:'+(r.days/maxD*100)+'%;background:'+r.color+'"></div></div><div class="val" style="color:'+r.color+'">'+r.days+'d</div></div>').join('')+
+    '</div></div>'+
+    '<div class="journey-card"><h4><span class="tag ideal">IDEAL — '+totalI+' dias</span> Meta institucional</h4><div class="journey-phases">'+
+    IDEAL.map(r=>'<div class="journey-phase"><div class="nm">'+r.name+'</div><div class="bar"><div style="width:'+(r.days/maxD*100)+'%;background:'+r.color+'"></div></div><div class="val" style="color:'+r.color+'">'+r.days+'d</div></div>').join('')+
+    '</div></div>';
+
+  // Status por tipo de projeto
+  const statusData=[
+    {title:'Finalizados (5)',pipeline:183,vtDias:67,vtEntrada:131,color:'var(--gold)'},
+    {title:'Em Execucao (4)',pipeline:167,vtDias:25,vtEntrada:42,color:'var(--green)'},
+    {title:'Aguardando (5)',pipeline:155,vtDias:79,vtEntrada:103,color:'var(--amber)'},
+    {title:'Concluidos (5)',pipeline:238,vtDias:51,vtEntrada:39,color:'var(--blue)'},
+  ];
+  document.getElementById('journey-status-grid').innerHTML=statusData.map(s=>
+    '<div class="journey-status"><h4 style="color:'+s.color+'">'+s.title+'</h4>'+
+    '<div class="row"><span class="k">Pipeline total</span><span class="v">'+s.pipeline+'d</span></div>'+
+    '<div class="row"><span class="k">Ate VT Afericao</span><span class="v">'+s.vtDias+'d</span></div>'+
+    '<div class="row"><span class="k">VT → Entrada</span><span class="v">'+s.vtEntrada+'d</span></div>'+
+    '<div class="row"><span class="k">% pre-obra</span><span class="v">'+Math.round((s.vtDias+s.vtEntrada)/s.pipeline*100)+'%</span></div>'+
+    '</div>'
+  ).join('');
 }
 
 // ═══════════════════════════════════════
