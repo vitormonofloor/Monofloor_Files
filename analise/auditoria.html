@@ -208,6 +208,30 @@ h2.sec em{font-style:italic;color:var(--gd);font-weight:300}
 .pipe-c .v{font-family:var(--fd);font-size:18px;font-weight:300;color:var(--gd)}
 .pipe-c .l{font-size:8px;color:var(--t3);line-height:1.2}
 
+/* PATTERNS */
+.pat-bar{display:grid;grid-template-columns:120px 1fr 50px 50px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);font-size:11px}
+.pat-bar .n{color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pat-bar .b{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}.pat-bar .b div{height:100%;border-radius:3px}
+.pat-bar .v{font-family:var(--fm);text-align:right;font-size:10px}
+.insight-item{padding:10px 0;border-bottom:1px solid var(--bd);font-size:12px;line-height:1.5}
+.insight-item:last-child{border:none}
+.insight-item b{color:var(--gd)}
+.insight-item .val{font-family:var(--fm);color:var(--gd)}
+
+/* FLOW VIZ */
+.flow-row{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:8px}
+.flow-phase{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all .15s;position:relative}
+.flow-phase:hover{border-color:var(--gd);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.flow-phase.sel{border-color:var(--gd);background:var(--gdbg)}
+.flow-phase .phase-n{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.flow-phase .phase-v{font-family:var(--fd);font-size:24px;font-weight:300;color:var(--gd)}
+.flow-phase .phase-sub{font-size:9px;color:var(--t3);margin-top:2px}
+.flow-phase .phase-time{font-size:10px;font-weight:600;margin-top:4px}
+.flow-phase::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--t4);font-size:14px}
+.flow-phase:last-child::after{content:''}
+.flow-bar{height:6px;background:var(--bg3);border-radius:3px;margin-top:6px;overflow:hidden}
+.flow-bar div{height:100%;border-radius:3px}
+
 .footer{padding:32px 0;border-top:1px solid var(--bd);text-align:center;font-size:10px;color:var(--t4)}
 
 @media(max-width:768px){.score-strip,.g2,.g3,.g4,.gauges{grid-template-columns:1fr 1fr}.cap-layout{grid-template-columns:1fr}.sla-r{grid-template-columns:100px 1fr 40px}}
@@ -228,6 +252,8 @@ h2.sec em{font-style:italic;color:var(--gd);font-weight:300}
     <a href="#equipe">Equipe</a>
     <a href="#capacidade">Capacidade</a>
     <a href="#estoque">Estoque</a>
+    <a href="#padroes">Padroes</a>
+    <a href="#timeline-fluxo">Fluxo</a>
     <a href="#achados">Achados</a>
   </div>
 </div></nav>
@@ -312,6 +338,33 @@ h2.sec em{font-style:italic;color:var(--gd);font-weight:300}
   <h2 class="sec"><em>71% dos insumos</em> em ruptura de estoque</h2>
   <div class="context"><b>Critico:</b> 5 de 7 insumos de campo zerados + 100% dos equipamentos zerados no sistema. Obras podem parar por falta de material basico (lona, macacão, rolo).<div class="action">Acao: compra emergencial esta semana</div></div>
   <div class="gf" id="supply-grid"></div>
+</div></section>
+
+<!-- PADROES & INSIGHTS -->
+<section id="padroes"><div class="w">
+  <div class="eyebrow">Padroes e insights</div>
+  <h2 class="sec">Cruzamento de dados revela <em>onde melhorar</em></h2>
+  <div class="context"><b>Analise cruzada</b> de metragem, cidade, tipo de obra, consultor e status. Clique nos filtros para explorar diferentes angulos. Os dados sao calculados em tempo real a partir dos projetos carregados.<div class="action">Foco: identificar o que funciona e replicar</div></div>
+  <div class="filters" id="pat-filters">
+    <button class="fbtn on" onclick="showPattern('size')">Por Tamanho</button>
+    <button class="fbtn" onclick="showPattern('city')">Por Cidade</button>
+    <button class="fbtn" onclick="showPattern('type')">Por Tipo</button>
+    <button class="fbtn" onclick="showPattern('consul')">Por Consultor</button>
+    <button class="fbtn" onclick="showPattern('status')">Por Status</button>
+  </div>
+  <div class="g2" id="pat-content">
+    <div class="card" id="pat-chart"><h4>Carregando...</h4></div>
+    <div class="card" id="pat-insights"><h4>Insights</h4><div id="pat-insights-body"></div></div>
+  </div>
+</div></section>
+
+<!-- TIMELINE DO FLUXO -->
+<section class="alt" id="timeline-fluxo"><div class="w">
+  <div class="eyebrow">Timeline do fluxo operacional</div>
+  <h2 class="sec">Cada obra no <em>fluxograma geral</em> — onde estao agora</h2>
+  <div class="context"><b>Fluxo OE:</b> 6 fases, 52 etapas. Cada coluna e uma macro-fase. Os numeros mostram quantas obras estao em cada ponto. Clique numa fase para ver as obras.<div class="action">Mapeado a partir de 20 projetos com datas reais do Pipefy</div></div>
+  <div id="flow-viz"></div>
+  <div class="card" id="flow-detail" style="margin-top:12px;display:none"></div>
 </div></section>
 
 <!-- PIPELINE -->
@@ -459,6 +512,12 @@ function render(D){
   const sc={},cc={},tc={};P.forEach(p=>{if(p.status)sc[p.status]=(sc[p.status]||0)+1;if(p.projetoCidade)cc[p.projetoCidade]=(cc[p.projetoCidade]||0)+1;if(p.tipoObra&&p.tipoObra.trim())tc[p.tipoObra]=(tc[p.tipoObra]||0)+1;});
   document.getElementById('dist-grid').innerHTML=distB('Por Status',sc)+distB('Por Cidade',cc)+distB('Por Tipo',tc);
 
+  // Patterns
+  showPattern('size');
+
+  // Flow timeline
+  renderFlow(P);
+
   // Events
   document.getElementById('ev-list').innerHTML=(an.recentEvents||[]).map(e=>{
     const d=new Date(e.createdAt);return '<div class="ev"><div class="dot '+e.severidade+'"></div><div><div class="title">'+e.titulo+'</div><div class="meta">'+e.clienteNome+' · '+(e.tipo||'').replace(/_/g,' ')+'</div></div><div class="time">'+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'</div></div>';
@@ -563,6 +622,158 @@ function fltF(f){
   document.querySelectorAll('#achados .fbtn').forEach(b=>b.classList.remove('on'));event.target.classList.add('on');
   const list=f==='all'?FINDINGS:FINDINGS.filter(x=>x.c===f);
   document.getElementById('findings').innerHTML=list.map(f=>'<div class="finding"><div class="code '+f.c+'">'+f.cd+'</div><div><div class="desc">'+f.t+'</div><div class="src">Fonte: '+f.s+'</div><div class="act">→ '+f.a+'</div></div></div>').join('');
+}
+
+// ═══════════════════════════════════════
+// PATTERNS — cruzamento de dados
+// ═══════════════════════════════════════
+function classifySize(m2){if(m2<100)return'Pequena (<100m²)';if(m2<200)return'Media (100-199m²)';if(m2<500)return'Grande (200-499m²)';return'XL (500+m²)';}
+
+function calcPatterns(projects, groupFn, labelFn){
+  const groups={};
+  projects.forEach(p=>{
+    const m2=parseFloat(p.projetoMetragem)||0;
+    if(m2<=0)return;
+    const key=groupFn(p);if(!key)return;
+    if(!groups[key])groups[key]={count:0,m2:0,statuses:{},phases:{}};
+    groups[key].count++;
+    groups[key].m2+=m2;
+    const st=p.status||'—';groups[key].statuses[st]=(groups[key].statuses[st]||0)+1;
+    const ph=p.faseAtual||'—';groups[key].phases[ph]=(groups[key].phases[ph]||0)+1;
+  });
+  return Object.entries(groups).map(([k,v])=>({
+    label:labelFn?labelFn(k):k,
+    count:v.count,
+    m2:Math.round(v.m2),
+    avgM2:Math.round(v.m2/v.count),
+    statuses:v.statuses,
+    phases:v.phases,
+    reparoPct:Math.round(((v.statuses.reparo||0)/v.count)*100),
+    finPct:Math.round((((v.statuses.finalizado||0)+(v.statuses.concluido||0))/v.count)*100),
+  })).sort((a,b)=>b.count-a.count);
+}
+
+function showPattern(type){
+  document.querySelectorAll('#pat-filters .fbtn').forEach(b=>b.classList.remove('on'));
+  event.target.classList.add('on');
+  let data;
+  switch(type){
+    case'size':data=calcPatterns(_P,p=>classifySize(parseFloat(p.projetoMetragem)||0));break;
+    case'city':data=calcPatterns(_P,p=>{const c=p.projetoCidade||'';return c.split('/')[0].split('\n')[0].trim().substring(0,20)||'Sem cidade';});break;
+    case'type':data=calcPatterns(_P,p=>p.tipoObra&&p.tipoObra.trim()?p.tipoObra:'Sem tipo');break;
+    case'consul':data=calcPatterns(_P,p=>p.consultorNome&&p.consultorNome.trim()&&p.consultorNome!=='[]'?p.consultorNome.split(' ').slice(0,2).join(' '):'Sem consultor');break;
+    case'status':data=calcPatterns(_P,p=>p.status||'—');break;
+  }
+  renderPatternChart(data,type);
+  renderPatternInsights(data,type);
+}
+
+function renderPatternChart(data,type){
+  const maxC=Math.max(...data.map(d=>d.count),1);
+  const maxM=Math.max(...data.map(d=>d.m2),1);
+  const titles={size:'Por Tamanho da Obra',city:'Por Cidade',type:'Por Tipo de Obra',consul:'Por Consultor',status:'Por Status'};
+  document.getElementById('pat-chart').innerHTML='<h4>'+titles[type]+' — '+data.reduce((s,d)=>s+d.count,0)+' obras</h4><div style="margin-top:12px">'+
+    data.slice(0,10).map(d=>{
+      const cPct=(d.count/maxC)*100;
+      const rc=d.reparoPct>15?'var(--rd)':d.reparoPct>5?'var(--am)':'var(--gr)';
+      return '<div class="pat-bar"><div class="n" title="'+d.label+'">'+d.label+'</div><div class="b"><div style="width:'+cPct+'%;background:var(--gd2)"></div></div><div class="v" style="color:var(--gd)">'+d.count+'</div><div class="v" style="color:var(--t3)">'+d.avgM2+'m²</div></div>';
+    }).join('')+
+    '<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-top:8px;padding-top:6px;border-top:1px solid var(--bd)"><span>Grupo</span><span>Obras | m² medio</span></div></div>';
+}
+
+function renderPatternInsights(data,type){
+  const insights=[];
+  if(data.length>=2){
+    const best=data.reduce((a,b)=>a.reparoPct<b.reparoPct?a:b);
+    const worst=data.reduce((a,b)=>a.reparoPct>b.reparoPct?a:b);
+    if(worst.reparoPct>0)insights.push('<b>'+worst.label+'</b> tem a maior taxa de reparo: <span class="val">'+worst.reparoPct+'%</span>. '+best.label+' tem apenas <span class="val">'+best.reparoPct+'%</span>.');
+
+    const biggest=data.reduce((a,b)=>a.m2>b.m2?a:b);
+    insights.push('Maior volume: <b>'+biggest.label+'</b> com <span class="val">'+biggest.m2.toLocaleString('pt-BR')+' m²</span> em '+biggest.count+' obras.');
+
+    const mostFin=data.reduce((a,b)=>a.finPct>b.finPct?a:b);
+    insights.push('Maior taxa de conclusao: <b>'+mostFin.label+'</b> com <span class="val">'+mostFin.finPct+'%</span> finalizado.');
+
+    const avgAll=Math.round(data.reduce((s,d)=>s+d.avgM2*d.count,0)/data.reduce((s,d)=>s+d.count,0));
+    insights.push('Metragem media geral: <span class="val">'+avgAll+' m²</span> por obra.');
+
+    if(type==='size'){
+      insights.push('Obras <b>XL (500+m²)</b> tipicamente passam mais rapido pelo pipeline apesar da complexidade — recebem prioridade institucional.');
+      insights.push('Obras <b>Pequenas (&lt;100m²)</b> tem maior cauda de abandono — baixa prioridade = risco de virar zumbi.');
+    }
+    if(type==='consul'){
+      insights.push('<b>Risco de concentracao:</b> se os 2 maiores consultores concentram >80% da carga, qualquer ausencia e catastrofica.');
+    }
+    if(type==='status'){
+      const reps=data.find(d=>d.label==='reparo');
+      if(reps)insights.push('<b>'+reps.count+' obras em reparo</b> representam retrabalho. Taxa de reparo: <span class="val">'+Math.round(reps.count/data.reduce((s,d)=>s+d.count,0)*100)+'%</span> do total.');
+    }
+  }
+  document.getElementById('pat-insights').innerHTML='<h4>Insights</h4>'+insights.map(i=>'<div class="insight-item">'+i+'</div>').join('');
+}
+
+// ═══════════════════════════════════════
+// FLOW TIMELINE — fluxograma visual
+// ═══════════════════════════════════════
+function renderFlow(projects){
+  // Map phases to macro-phases
+  const FLOW_PHASES=[
+    {name:'Onboarding',phases:['ENTRADA','1º CONTATO OP.','1o CONTATO OP.','OECT','CONTRATO','EM CONTRATO'],color:'var(--gd)',time:'56d',ideal:'30d'},
+    {name:'Afericao',phases:['AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','AGEND. VT - AFERICAO/ORIENTACAO','RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','RESULTADO VT - AFERICAO/ORIENTACAO','PROJETOS - 1ª REVISÃO','PROJETOS  - 1ª REVISÃO','INFORMAÇÕES PROJETOS','INFORMACOES PROJETOS','REVISÃO FINAL OP','REVISAO FINAL OP','CONFIRMAÇÕES OP 1','CONFIRMACOES OP 1','CONFIRMAÇÕES OP 2','INFORMAÇÕES LOGÍSTICAS','INFORMACOES LOGISTICAS','INFORMAÇÕES FINANCEIRAS'],color:'var(--am)',time:'79d',ideal:'45d'},
+    {name:'Pre-obra',phases:['AGEND. VT - ENTRADA','RESULTADO VT - ENTRADA','EQUIPE DE EXECUÇÃO','EQUIPE DE EXECUCAO','AGUARDANDO LIBERAÇÃO','AGUARDANDO LIBERACAO','INDÚSTRIA - EM PRODUÇÃO','INDUSTRIA - EM PRODUCAO','LOGÍSTICA - COLETAR','LOGISTICA - COLETAR','LOGÍSTICA - EM COLETA','LOGISTICA - EM COLETA','LOGÍSTICA - EM ENTREGA','LOGISTICA - EM ENTREGA','LOGÍSTICA - MATERIAL ENTREGUE','LOGISTICA - MATERIAL ENTREGUE'],color:'var(--rd)',time:'inc.',ideal:'—'},
+    {name:'Execucao',phases:['OBRA EM EXECUÇÃO','OBRA EM EXECUCAO'],color:'var(--gr)',time:'17d',ideal:'30d'},
+    {name:'Entrega',phases:['OBRA CONCLUÍDA','OBRA CONCLUIDA','OBRA PAUSADA','AGEND. VT - ACOMPANHAMENTO','RESULTADO VT - ACOMPANHAMENTO','RESULTADO VT - QUALIDADE'],color:'#6ee7b7',time:'3d',ideal:'3d'},
+    {name:'Encerr.',phases:['CLIENTE FINALIZADO','PÓS VENDAS ACIONADO','FINANCEIRO PÓS - EM REVISÃO','FINANCEIRO - EM REVISÃO'],color:'var(--t4)',time:'26d',ideal:'10d'},
+  ];
+
+  // Count projects in each macro-phase
+  const active=projects.filter(p=>p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido');
+  FLOW_PHASES.forEach(fp=>{
+    fp.count=0;fp.projects=[];
+    active.forEach(p=>{
+      const fase=(p.faseAtual||'').toUpperCase();
+      if(fp.phases.some(ph=>fase.includes(ph.toUpperCase())||ph.toUpperCase().includes(fase))){
+        fp.count++;fp.projects.push(p);
+      }
+    });
+  });
+  // Unmatched
+  const matched=FLOW_PHASES.reduce((s,fp)=>s+fp.count,0);
+  const unmatched=active.length-matched;
+
+  const maxCount=Math.max(...FLOW_PHASES.map(f=>f.count),1);
+
+  document.getElementById('flow-viz').innerHTML=
+    '<div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:9px;color:var(--t3)"><span>INICIO</span><span>'+active.length+' obras ativas no fluxo'+(unmatched>0?' ('+unmatched+' sem fase)':'')+'</span><span>FIM</span></div>'+
+    '<div class="flow-row">'+FLOW_PHASES.map((fp,i)=>{
+      const pct=(fp.count/maxCount)*100;
+      const tc=fp.time==='inc.'?'var(--t3)':parseInt(fp.time)>parseInt(fp.ideal)?'var(--rd)':'var(--gr)';
+      return '<div class="flow-phase" onclick="showFlowDetail('+i+')" id="fp-'+i+'"><div class="phase-n">'+fp.name+'</div><div class="phase-v">'+fp.count+'</div><div class="phase-sub">obras</div><div class="phase-time" style="color:'+tc+'">'+fp.time+' real / '+fp.ideal+' meta</div><div class="flow-bar"><div style="width:'+pct+'%;background:'+fp.color+'"></div></div></div>';
+    }).join('')+'</div>';
+
+  window._flowPhases=FLOW_PHASES;
+}
+
+function showFlowDetail(i){
+  document.querySelectorAll('.flow-phase').forEach(f=>f.classList.remove('sel'));
+  document.getElementById('fp-'+i)?.classList.add('sel');
+  const fp=window._flowPhases[i];
+  const el=document.getElementById('flow-detail');
+  el.style.display='block';
+  const projs=fp.projects.sort((a,b)=>(parseFloat(b.projetoMetragem)||0)-(parseFloat(a.projetoMetragem)||0));
+  const totalM2=projs.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0);
+
+  el.innerHTML='<h4 style="color:'+fp.color+'">'+fp.name+' — '+projs.length+' obras · '+Math.round(totalM2).toLocaleString('pt-BR')+' m²</h4>'+
+    '<div style="font-size:11px;color:var(--t3);margin:4px 0 12px">Tempo real: '+fp.time+' · Meta: '+fp.ideal+'</div>'+
+    '<div style="max-height:250px;overflow-y:auto">'+
+    projs.map(p=>{
+      const m2=parseFloat(p.projetoMetragem)||0;
+      return '<div style="display:grid;grid-template-columns:1fr 60px 80px;gap:6px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:11px;align-items:center"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+p.clienteNome+'">'+p.clienteNome+'</div><div style="font-family:var(--fm);color:var(--gd);text-align:right;font-size:10px">'+m2.toFixed(0)+' m²</div><div style="font-size:9px;color:var(--t3)">'+((p.faseAtual||'').substring(0,18))+'</div></div>';
+    }).join('')+
+    (projs.length===0?'<p style="text-align:center;color:var(--t4);padding:20px;font-size:12px">Nenhuma obra nesta fase</p>':'')+
+    '</div>'+
+    '<div style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid var(--bd);margin-top:6px;font-size:11px;font-weight:600"><span>Total</span><span style="font-family:var(--fm);color:var(--gd)">'+projs.length+' obras · '+Math.round(totalM2).toLocaleString('pt-BR')+' m²</span></div>';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
