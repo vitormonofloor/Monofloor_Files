@@ -192,6 +192,23 @@ a{color:var(--gold);text-decoration:none}button{font-family:inherit;cursor:point
 .score-item .bar{height:4px;background:var(--bg3);border-radius:2px;margin-top:8px;overflow:hidden}
 .score-item .bar div{height:100%;border-radius:2px}
 
+/* CLICKABLE BARS */
+.click-bar{cursor:pointer;transition:all .15s;border:2px solid transparent;border-radius:8px;padding:6px 10px}
+.click-bar:hover{border-color:var(--gold);background:var(--gold-bg)}
+.click-bar.selected{border-color:var(--gold);background:var(--gold-bg)}
+.detail-list{max-height:500px;overflow-y:auto;padding-right:8px}
+.detail-list::-webkit-scrollbar{width:5px}.detail-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.detail-item{display:grid;grid-template-columns:1fr 70px 50px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.detail-item:last-child{border:none}
+.detail-item .nm{font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.detail-item .m2{font-family:var(--fm);font-size:11px;color:var(--gold);text-align:right}
+.detail-item .st{font-size:9px;padding:2px 6px;border-radius:100px;text-align:center;white-space:nowrap}
+.detail-item .st.exec{background:var(--green-bg);color:var(--green)}.detail-item .st.wait{background:var(--amber-bg);color:var(--amber)}
+.detail-item .st.done{background:var(--blue-bg);color:var(--blue)}.detail-item .st.risk{background:var(--red-bg);color:var(--red)}
+.detail-item .st.plan{background:var(--purple-bg);color:var(--purple)}
+.detail-total{display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid var(--border);margin-top:8px;font-weight:600;font-size:13px}
+.detail-total .v{font-family:var(--fm);color:var(--gold)}
+
 /* JOURNEY MAP */
 .journey-wrap{margin-top:32px}
 .journey-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px}
@@ -320,10 +337,19 @@ a{color:var(--gold);text-decoration:none}button{font-family:inherit;cursor:point
 
 <section class="sec" id="saude"><div class="wrap">
   <div class="sec-eye">Balanco mensal e tendencia</div>
-  <h2 class="sec-title">Capacidade operacional e <em>projecao</em>.</h2>
-  <p class="sec-lead">Ocupacao mensal, distribuicao por status e projecao financeira dos proximos 30 dias.</p>
-  <div class="chart-row" id="capacity-charts"></div>
-  <div class="chart-row" id="balance-charts" style="margin-top:20px"></div>
+  <h2 class="sec-title">Capacidade operacional e <em>projecao</em>. Clique no mes para ver obras.</h2>
+  <p class="sec-lead">Clique em qualquer barra para expandir a lista de obras daquele periodo com metragem, status e total m2.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="capacity-layout">
+    <div>
+      <div class="chart-box"><h3>Ocupacao mensal — clique para detalhar</h3><div id="cap-bars"></div></div>
+      <div class="chart-box" style="margin-top:16px"><h3>Prestadores alocados vs ociosos</h3><div id="bal-bars"></div></div>
+    </div>
+    <div class="chart-box" id="cap-detail" style="min-height:400px">
+      <h3 id="cap-detail-title">Selecione um mes para ver as obras</h3>
+      <div id="cap-detail-body" style="font-size:13px;color:var(--text3);padding:20px 0">Clique em uma barra ao lado para ver o detalhamento das obras daquele periodo.</div>
+    </div>
+  </div>
+  <div class="chart-row" style="margin-top:20px" id="efficiency-row"></div>
 </div></section>
 
 <section class="sec sec-alt" id="eventos"><div class="wrap">
@@ -581,30 +607,24 @@ function render(data){
 
   // CAPACITY
   const maxDH=Math.max(...CAPACITY_DATA.map(c=>Math.max(c.dh,c.cap)));
-  document.getElementById('capacity-charts').innerHTML='<div class="chart-box"><h3>Ocupacao mensal — capacidade vs alocado</h3><div class="hbar">'+
-    CAPACITY_DATA.map(c=>{
-      const capPct=(c.cap/maxDH)*100,dhPct=(c.dh/maxDH)*100;
-      const oc=c.occ>100?'var(--red)':c.occ>80?'var(--amber)':'var(--green)';
-      return '<div class="hbar-row"><div class="nm">'+c.m+'</div><div class="track" style="height:28px"><div class="fill" style="width:'+dhPct+'%;background:'+oc+';position:absolute;z-index:2">'+c.occ+'% · '+c.dh+' d-h</div><div style="position:absolute;width:'+capPct+'%;height:100%;background:var(--bg3);border-right:2px solid var(--text3)"></div></div><div class="val">'+c.obras+' obras</div></div>';
-    }).join('')+'</div><div style="font-size:11px;color:var(--text4);margin-top:8px">Barra colorida = alocado · Linha cinza = capacidade</div></div>'+
-    '<div class="chart-box"><h3>Projecao de obras e faturamento</h3><div class="hbar">'+
-    CAPACITY_DATA.map(c=>{
-      const recv=Math.round(c.obras*8570);
-      const pct=(c.obras/CAPACITY_DATA[0].obras)*100;
-      return '<div class="hbar-row"><div class="nm">'+c.m+'</div><div class="track"><div class="fill" style="width:'+pct+'%;background:var(--gold2)">'+c.obras+' obras</div></div><div class="val">R$'+Math.round(recv/1000)+'k</div></div>';
-    }).join('')+'</div><div style="font-size:11px;color:var(--text4);margin-top:8px">Ticket medio estimado: R$8.570/obra (baseado em projecao 30d)</div></div>';
+  // CAPACITY — barras clicaveis
+  renderCapacityBars(projects);
 
   // BALANCE
-  document.getElementById('balance-charts').innerHTML='<div class="chart-box"><h3>Balanco: prestadores alocados vs ociosos (semanal)</h3><div class="hbar">'+
+  document.getElementById('bal-bars').innerHTML=
     [{s:'13-17 Abr',al:52,oc:54},{s:'20-24 Abr',al:70,oc:36},{s:'27-01 Mai',al:71,oc:35},{s:'04-08 Mai',al:58,oc:48}].map(w=>{
-      const tot=w.al+w.oc;return '<div class="hbar-row"><div class="nm">'+w.s+'</div><div class="track" style="height:22px;display:flex"><div style="flex:'+w.al+';background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000">'+w.al+'</div><div style="flex:'+w.oc+';background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--red)">'+w.oc+' ociosos</div></div><div class="val">'+Math.round(w.al/tot*100)+'%</div></div>';
-    }).join('')+'</div></div>'+
-    '<div class="chart-box"><h3>Indicadores de eficiencia operacional</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
-    [{l:'Obras por consultor (ideal: 40)',v:'44',d:'Luana:88 Wesley:69 Pedro:7',c:'var(--red)'},
-     {l:'Turnover prestadores',v:'45%',d:'48 novos de 106 ativos',c:'var(--red)'},
-     {l:'SLA producao',v:'48%',d:'Pior etapa do pipeline',c:'var(--red)'},
-     {l:'Ocorrencias/obra ativa',v:'3,4',d:'636 abertas / 187 ativas',c:'var(--amber)'},
-    ].map(i=>'<div style="background:var(--bg2);border-radius:8px;padding:14px"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">'+i.l+'</div><div style="font-family:var(--fd);font-size:28px;font-weight:300;color:'+i.c+'">'+i.v+'</div><div style="font-size:10px;color:var(--text4)">'+i.d+'</div></div>').join('')+'</div></div>';
+      const tot=w.al+w.oc;return '<div class="hbar-row" style="margin-bottom:6px"><div class="nm">'+w.s+'</div><div class="track" style="height:22px;display:flex"><div style="flex:'+w.al+';background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000">'+w.al+'</div><div style="flex:'+w.oc+';background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--red)">'+w.oc+'</div></div><div class="val">'+Math.round(w.al/tot*100)+'%</div></div>';
+    }).join('');
+
+  // EFFICIENCY
+  document.getElementById('efficiency-row').innerHTML='<div class="chart-box"><h3>Indicadores de eficiencia operacional</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">'+
+    [{l:'Obras/consultor',v:'44',d:'Luana:88 Wesley:69',c:'var(--red)'},
+     {l:'Turnover',v:'45%',d:'48 novos de 106',c:'var(--red)'},
+     {l:'SLA producao',v:'48%',d:'Pior etapa',c:'var(--red)'},
+     {l:'Ocorrencias/obra',v:'3,4',d:'636/187 ativas',c:'var(--amber)'},
+     {l:'Pre-obra',v:'73%',d:'Do pipeline total',c:'var(--amber)'},
+     {l:'Pipeline medio',v:'186d',d:'Meta: 150d',c:'var(--red)'},
+    ].map(i=>'<div style="background:var(--bg2);border-radius:8px;padding:14px"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">'+i.l+'</div><div style="font-family:var(--fd);font-size:26px;font-weight:300;color:'+i.c+'">'+i.v+'</div><div style="font-size:10px;color:var(--text4)">'+i.d+'</div></div>').join('')+'</div></div>';
 
   // EVENTS
   const events=analise.recentEvents||[];
@@ -684,6 +704,81 @@ function showTab(id){
   document.querySelectorAll('#central .tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// CAPACITY — CLICKABLE BARS
+// ═══════════════════════════════════════
+let _allProjects=[];
+
+function renderCapacityBars(projects){
+  _allProjects=projects;
+  const maxDH=Math.max(...CAPACITY_DATA.map(c=>Math.max(c.dh,c.cap)));
+  document.getElementById('cap-bars').innerHTML=CAPACITY_DATA.map((c,i)=>{
+    const dhPct=(c.dh/maxDH)*100;
+    const capPct=(c.cap/maxDH)*100;
+    const oc=c.occ>100?'var(--red)':c.occ>80?'var(--amber)':'var(--green)';
+    return '<div class="click-bar" onclick="showMonthDetail('+i+')" id="cap-bar-'+i+'"><div class="hbar-row"><div class="nm" style="font-weight:600">'+c.m+'</div><div class="track" style="height:28px"><div class="fill" style="width:'+dhPct+'%;background:'+oc+';position:absolute;z-index:2">'+c.occ+'%</div><div style="position:absolute;width:'+capPct+'%;height:100%;background:var(--bg3);border-right:2px solid var(--text3)"></div></div><div class="val">'+c.obras+'</div></div></div>';
+  }).join('')+'<div style="font-size:10px;color:var(--text4);margin-top:4px">Clique no mes para ver obras detalhadas</div>';
+}
+
+function showMonthDetail(idx){
+  // Highlight selected bar
+  document.querySelectorAll('.click-bar').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('cap-bar-'+idx)?.classList.add('selected');
+
+  const cap=CAPACITY_DATA[idx];
+  const monthMap={Abril:'04',Maio:'05',Junho:'06',Julho:'07'};
+  const mm=monthMap[cap.m]||'04';
+  const year='2026';
+
+  // Filter projects by dataExecucaoPrevista in this month
+  const monthProjs=_allProjects.filter(p=>{
+    if(!p.dataExecucaoPrevista) return false;
+    return p.dataExecucaoPrevista.startsWith(year+'-'+mm);
+  });
+
+  // Also add projects without date but in execution during this month
+  const activeNoDate=_allProjects.filter(p=>{
+    if(p.dataExecucaoPrevista) return false;
+    return p.status==='em_execucao';
+  });
+
+  const allMonth=[...monthProjs];
+  if(idx===0) allMonth.push(...activeNoDate); // add undated to current month
+
+  // Sort by metragem descending
+  allMonth.sort((a,b)=>(parseFloat(b.projetoMetragem)||0)-(parseFloat(a.projetoMetragem)||0));
+
+  const totalM2=allMonth.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0);
+  const recv=Math.round(totalM2*637);
+
+  function statusClass(s){
+    if(s==='em_execucao') return 'exec';
+    if(s==='aguardando_execucao'||s==='aguardando_clima') return 'wait';
+    if(s==='finalizado'||s==='concluido') return 'done';
+    if(s==='reparo'||s==='pausado') return 'risk';
+    return 'plan';
+  }
+  function statusLabel(s){
+    const map={em_execucao:'Exec',aguardando_execucao:'Aguard',aguardando_clima:'Clima',finalizado:'Final',concluido:'Concl',reparo:'Reparo',pausado:'Pausa',planejamento:'Plan',contrato:'Contr',reserva:'Reserva',cancelado:'Canc',marcas_rolo_cera:'Rolo'};
+    return map[s]||s||'—';
+  }
+
+  document.getElementById('cap-detail-title').textContent=cap.m+' 2026 — '+allMonth.length+' obras · '+Math.round(totalM2).toLocaleString('pt-BR')+' m2';
+  document.getElementById('cap-detail-body').innerHTML=
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">'+
+    '<div style="background:var(--bg2);border-radius:6px;padding:10px;text-align:center"><div style="font-family:var(--fd);font-size:22px;color:var(--gold)">'+allMonth.length+'</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">obras</div></div>'+
+    '<div style="background:var(--bg2);border-radius:6px;padding:10px;text-align:center"><div style="font-family:var(--fd);font-size:22px;color:var(--green)">'+Math.round(totalM2).toLocaleString('pt-BR')+'</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">m2 total</div></div>'+
+    '<div style="background:var(--bg2);border-radius:6px;padding:10px;text-align:center"><div style="font-family:var(--fd);font-size:22px;color:var(--gold2)">R$'+(recv/1000).toFixed(0)+'k</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase">receita est.</div></div>'+
+    '</div>'+
+    '<div class="detail-list">'+allMonth.map(p=>{
+      const m2=parseFloat(p.projetoMetragem)||0;
+      return '<div class="detail-item"><div class="nm" title="'+p.clienteNome+'">'+p.clienteNome+'</div><div class="m2">'+m2.toFixed(0)+' m2</div><div class="st '+statusClass(p.status)+'">'+statusLabel(p.status)+'</div></div>';
+    }).join('')+
+    (allMonth.length===0?'<div style="padding:20px;text-align:center;color:var(--text4)">Nenhuma obra prevista para este mes</div>':'')+
+    '</div>'+
+    '<div class="detail-total"><span>Total '+cap.m+'</span><span class="v">'+allMonth.length+' obras · '+Math.round(totalM2).toLocaleString('pt-BR')+' m2</span></div>';
 }
 
 // ═══════════════════════════════════════
