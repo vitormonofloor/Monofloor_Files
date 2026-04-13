@@ -3202,6 +3202,7 @@ let INSIGHTS = [];
 let ALL_PROJECTS = [];
 let DASHBOARD_DATA = {};
 let ANALYSIS_DATA = {};
+let DATA_FETCHED_AT = null;
 
 // ═══════════════════════════════════════════════════
 // FETCH & PROCESSAMENTO
@@ -3209,20 +3210,22 @@ let ANALYSIS_DATA = {};
 
 async function loadAllData() {
   try {
-    const [projectsRes, dashboardRes, analysisRes] = await Promise.all([
-      fetch(API_BASE + '/projects').then(r => r.json()),
-      fetch(API_BASE + '/dashboard').then(r => r.json()),
-      fetch(API_BASE + '/analise').then(r => r.json()),
-    ]);
-    ALL_PROJECTS = projectsRes;
-    DASHBOARD_DATA = dashboardRes;
-    ANALYSIS_DATA = analysisRes;
+    // Carrega de data.json local (mesmo domínio = sem CORS)
+    // Para atualizar: rode fetch-data.js ou o comando curl do README
+    const dataRes = await fetch('data.json');
+    if (!dataRes.ok) throw new Error('data.json não encontrado — rode o script de atualização');
+    const data = await dataRes.json();
+    ALL_PROJECTS = data.projects;
+    DASHBOARD_DATA = data.dashboard;
+    ANALYSIS_DATA = data.analise;
+    const fetchedAt = data.fetchedAt ? new Date(data.fetchedAt) : null;
 
+    DATA_FETCHED_AT = fetchedAt;
     processProjects();
     renderAll();
   } catch (err) {
     console.error('Erro ao carregar dados:', err);
-    document.getElementById('hero-eyebrow').textContent = 'Erro ao carregar dados — verifique a conexão';
+    document.getElementById('hero-eyebrow').textContent = 'Erro ao carregar dados — verifique se data.json existe';
   }
 }
 
@@ -3515,10 +3518,11 @@ function renderHero() {
   const active = ALL_PROJECTS.filter(p => p.status !== 'finalizado' && p.status !== 'cancelado').length;
   const finished = ALL_PROJECTS.filter(p => p.status === 'finalizado').length;
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const refDate = DATA_FETCHED_AT || new Date();
+  const dateStr = refDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const timeStr = refDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-  document.getElementById('hero-eyebrow').textContent = `Ao vivo · ${dateStr}`;
+  document.getElementById('hero-eyebrow').textContent = `Dados de ${dateStr} às ${timeStr}`;
   document.getElementById('hero-bignum').innerHTML = avg + '<span class="unit">dias</span>';
   document.getElementById('hero-lead').innerHTML =
     `Analisando <strong>${total} obras</strong> do painel Monofloor em tempo real (${active} ativas, ${finished} finalizadas). ` +
