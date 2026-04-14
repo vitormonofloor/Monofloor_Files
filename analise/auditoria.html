@@ -168,9 +168,54 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
 <!-- ═══ PAINEL ═══ -->
 <div class="pillar on" id="p-painel"><div class="w">
 
-  <!-- PERGUNTA 1: QUAL A SITUACAO? -->
+  <!-- HERO -->
+  <div class="sec" style="text-align:center;padding:40px 0 24px">
+    <div style="font-size:8px;color:var(--a);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:16px" id="h-date"></div>
+    <div id="hero-big" style="font-family:var(--fd);font-size:clamp(64px,12vw,120px);font-weight:300;line-height:.85;letter-spacing:-3px;color:var(--t)">—<span style="font-size:.3em;color:var(--t3);margin-left:4px">dias</span></div>
+    <div style="font-size:12px;color:var(--t2);margin-top:8px" id="hero-sub">Tempo medio de uma obra no pipeline</div>
+    <div style="max-width:400px;margin:16px auto 0" id="hero-bar"></div>
+  </div>
+
+  <!-- DONUT + TIPOS -->
   <div class="sec">
-    <div class="sec-h"><h2>Situacao da operacao</h2><span class="sub" id="h-date"></span></div>
+    <div class="g2 gap">
+      <div class="c" style="display:flex;align-items:center;gap:16px" id="donut-section">
+        <svg viewBox="0 0 200 200" width="140" height="140" id="donut-svg"></svg>
+        <div id="donut-legend"></div>
+      </div>
+      <div>
+        <div class="sec-h" style="margin-bottom:8px"><h2>Tipos de obra</h2></div>
+        <div class="g2" id="tipos-grid" style="gap:6px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPACIDADE OPERACIONAL BUTTON -->
+  <div class="sec" style="padding:16px 0">
+    <div id="cap-cta" style="background:linear-gradient(135deg,var(--s2),rgba(196,167,125,.08));border:1px solid rgba(196,167,125,.2);border-radius:14px;padding:20px 24px;cursor:pointer;transition:all .2s" onclick="toggleCapPanel()">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:13px;font-weight:700">Analise de capacidade operacional</div>
+          <div style="font-size:10px;color:var(--t2);margin-top:2px">Throughput, Lei de Little, ocupacao mensal e projecoes</div>
+        </div>
+        <div style="font-size:11px;color:var(--a);font-weight:600" id="cap-arrow">Expandir →</div>
+      </div>
+    </div>
+    <div id="cap-panel" style="display:none;margin-top:12px">
+      <div class="g2 gap">
+        <div class="c"><div class="h">Throughput observado</div><div id="throughput-cards"></div></div>
+        <div class="c"><div class="h">Lei de Little — WIP teorico vs real</div><div id="little-law"></div></div>
+      </div>
+      <div class="g2">
+        <div class="c"><div class="h">Capacidade mensal — clique no mes</div><div id="cap-bars"></div><div class="det" id="cap-det" style="margin-top:8px"><div id="cd-b" style="font-size:9px;color:var(--t3);text-align:center;padding:20px 0">Clique em um mes</div></div></div>
+        <div class="c"><div class="h">Cenarios de melhoria</div><div id="scenarios"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICAS -->
+  <div class="sec">
+    <div class="sec-h"><h2>Situacao da operacao</h2></div>
     <div class="kpi-row gap" id="kpis"></div>
     <div class="gap" id="health-bar"></div>
     <div class="g3 gap" id="gauges"></div>
@@ -196,10 +241,7 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
   <!-- PERGUNTA 3: A EQUIPE ESTA RENDENDO? -->
   <div class="sec">
     <div class="sec-h"><h2>Rendimento da equipe</h2></div>
-    <div class="g23">
-      <div class="c"><div class="h">Performance por consultor</div><div class="g3" id="team-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div></div>
-      <div class="c"><div class="h">Capacidade mensal — clique no mes</div><div id="cap-bars"></div><div class="det" id="cap-det" style="margin-top:8px"><div id="cd-b" style="font-size:9px;color:var(--t3);text-align:center;padding:20px 0">Clique em um mes</div></div></div>
-    </div>
+    <div class="c"><div class="h">Performance por consultor</div><div class="g3" id="team-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div></div>
   </div>
 
   <!-- PERGUNTA 4: ONDE ESTAO AS OBRAS? -->
@@ -320,6 +362,14 @@ const FIN=[
 ];
 let _P=[],_risks=[],_probs=[],_cs=[];
 
+function toggleCapPanel(){
+var panel=document.getElementById('cap-panel');var arrow=document.getElementById('cap-arrow');
+var isOpen=panel.style.display!=='none';
+panel.style.display=isOpen?'none':'block';
+arrow.textContent=isOpen?'Expandir →':'Fechar ×';
+if(!isOpen)panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function showP(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.pillar').forEach(p=>p.classList.remove('on'));document.getElementById('p-'+id).classList.add('on');event.target.classList.add('on');}
 
 async function init(){
@@ -346,8 +396,53 @@ const atPct=Math.round((s.atrasados||0)/tot*100);
 const active=P.filter(p=>p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido');
 const totalM2=P.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0);
 
-document.getElementById('h-date').textContent=dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+document.getElementById('h-date').textContent='Central de Qualidade · '+dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
 document.getElementById('hoje-date').textContent=dt.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+
+// HERO BIG NUMBER
+document.getElementById('hero-big').innerHTML='186<span style="font-size:.3em;color:var(--t3);margin-left:4px">dias</span>';
+document.getElementById('hero-sub').textContent=t.total+' obras analisadas · '+t.active+' ativas · tempo medio no pipeline · meta: 150 dias';
+var barPct=Math.min(100,(186/290)*100);var markerPct=(150/290)*100;
+document.getElementById('hero-bar').innerHTML='<div style="position:relative;height:6px;background:var(--t4);border-radius:3px"><div style="height:100%;width:'+barPct+'%;background:linear-gradient(90deg,var(--a),var(--r));border-radius:3px"></div><div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--g);left:'+markerPct+'%"></div></div><div style="display:flex;justify-content:space-between;font-size:7px;color:var(--t3);margin-top:2px"><span>0 dias</span><span style="color:var(--g)">Meta 150d</span><span>290 dias (P95)</span></div>';
+
+// DONUT
+var execCount=active.filter(function(p){return['em_execucao','aguardando_clima','marcas_rolo_cera'].indexOf(p.status)>=0;}).length;
+var prepCount=active.filter(function(p){return['aguardando_execucao','planejamento','contrato','reserva'].indexOf(p.status)>=0;}).length;
+var probCount=active.filter(function(p){return['reparo','pausado'].indexOf(p.status)>=0;}).length;
+var donutTotal=execCount+prepCount+probCount||1;
+var d1=Math.round(prepCount/donutTotal*251),d2=Math.round(execCount/donutTotal*251),d3=251-d1-d2;
+document.getElementById('donut-svg').innerHTML='<circle cx="100" cy="100" r="40" fill="none" stroke="var(--t4)" stroke-width="24"/><circle cx="100" cy="100" r="40" fill="none" stroke="var(--a)" stroke-width="24" stroke-dasharray="'+d1+' 251" transform="rotate(-90 100 100)"/><circle cx="100" cy="100" r="40" fill="none" stroke="var(--g)" stroke-width="24" stroke-dasharray="'+d2+' 251" stroke-dashoffset="-'+d1+'" transform="rotate(-90 100 100)"/><circle cx="100" cy="100" r="40" fill="none" stroke="var(--r)" stroke-width="24" stroke-dasharray="'+d3+' 251" stroke-dashoffset="-'+(d1+d2)+'" transform="rotate(-90 100 100)"/><text x="100" y="96" text-anchor="middle" fill="var(--t)" font-family="var(--fm)" font-size="18" font-weight="700">'+active.length+'</text><text x="100" y="110" text-anchor="middle" fill="var(--t3)" font-size="8">ativas</text>';
+document.getElementById('donut-legend').innerHTML=[
+{c:'var(--a)',l:'Pre-obra',v:prepCount,p:Math.round(prepCount/donutTotal*100)},
+{c:'var(--g)',l:'Em execucao',v:execCount,p:Math.round(execCount/donutTotal*100)},
+{c:'var(--r)',l:'Reparo/Pausa',v:probCount,p:Math.round(probCount/donutTotal*100)},
+].map(function(x){return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer" data-drill onclick="drillStatus(\''+x.l+'\')"><div style="width:8px;height:8px;border-radius:2px;background:'+x.c+';flex-shrink:0"></div><div><div style="font-size:10px;font-weight:600">'+x.l+' <span style="color:var(--t3)">'+x.p+'%</span></div><div style="font-family:var(--fm);font-size:14px;font-weight:700">'+x.v+' <span style="font-size:9px;color:var(--t3);font-weight:400">obras</span></div></div></div>';}).join('');
+
+// TIPOS DE OBRA
+var m2Bands=[{l:'Pequena',r:'<100m²',e:'🏠',min:0,max:100},{l:'Media',r:'100-199m²',e:'🏡',min:100,max:200},{l:'Grande',r:'200-499m²',e:'🏢',min:200,max:500},{l:'XLarge',r:'500+m²',e:'🏭',min:500,max:99999}];
+document.getElementById('tipos-grid').innerHTML=m2Bands.map(function(b){
+var inB=P.filter(function(p){var m=parseFloat(p.projetoMetragem)||0;return m>0&&m>=b.min&&m<b.max;});
+var avgM2=inB.length?Math.round(inB.reduce(function(s,p){return s+(parseFloat(p.projetoMetragem)||0);},0)/inB.length):0;
+return '<div class="c" data-drill onclick="drillM2('+b.min+','+b.max+')" style="padding:10px;cursor:pointer"><div style="font-size:16px;margin-bottom:2px">'+b.e+'</div><div style="font-size:9px;color:var(--t3)">'+b.r+'</div><div style="font-size:11px;font-weight:700">'+b.l+'</div><div style="display:flex;gap:8px;margin-top:6px"><div><div style="font-family:var(--fm);font-size:14px;font-weight:700;color:var(--a)">'+inB.length+'</div><div style="font-size:6px;color:var(--t3);text-transform:uppercase">obras</div></div><div><div style="font-family:var(--fm);font-size:14px;font-weight:700">'+avgM2+'</div><div style="font-size:6px;color:var(--t3);text-transform:uppercase">m² med</div></div></div></div>';
+}).join('');
+
+// CAPACIDADE PANEL
+var totalMonthly=Math.round(CAP.reduce(function(s,c){return s+c.ob;},0)/CAP.length);
+var totalM2Monthly=Math.round(totalM2/12);
+document.getElementById('throughput-cards').innerHTML='<div class="g2" style="gap:6px">'+[
+{v:totalMonthly,l:'obras/mes'},{v:totalM2Monthly.toLocaleString('pt-BR'),l:'m²/mes'},
+{v:P.length,l:'total obras'},{v:Math.round(totalM2).toLocaleString('pt-BR'),l:'m² total'},
+].map(function(x){return '<div style="text-align:center;padding:10px;background:rgba(0,0,0,.3);border-radius:6px"><div style="font-family:var(--fm);font-size:18px;font-weight:700;color:var(--a)">'+x.v+'</div><div style="font-size:7px;color:var(--t3);text-transform:uppercase">'+x.l+'</div></div>';}).join('')+'</div>';
+
+var wipTeorico=Math.round((totalMonthly/30)*186);
+document.getElementById('little-law').innerHTML='<div class="g2" style="gap:8px"><div style="text-align:center;padding:12px;background:rgba(0,0,0,.3);border-radius:6px"><div style="font-size:7px;color:var(--t3);text-transform:uppercase;margin-bottom:4px">WIP Teorico</div><div style="font-family:var(--fm);font-size:24px;font-weight:700;color:var(--g)">'+wipTeorico+'</div><div style="font-size:8px;color:var(--t3)">'+totalMonthly+'/mes × 186d ÷ 30</div></div><div style="text-align:center;padding:12px;background:rgba(0,0,0,.3);border-radius:6px"><div style="font-size:7px;color:var(--t3);text-transform:uppercase;margin-bottom:4px">WIP Real</div><div style="font-family:var(--fm);font-size:24px;font-weight:700;color:var(--r)">'+active.length+'</div><div style="font-size:8px;color:var(--r)">+'+Math.round((active.length/wipTeorico-1)*100)+'% acima</div></div></div>';
+
+document.getElementById('scenarios').innerHTML=[
+{l:'Atual',d:'186d',ob:totalMonthly,c:'var(--t2)'},
+{l:'Meta 150d',d:'150d',ob:Math.round(totalMonthly*(186/150)),c:'var(--y)'},
+{l:'Benchmark XL',d:'100d',ob:Math.round(totalMonthly*(186/100)),c:'var(--g)'},
+{l:'Best case',d:'80d',ob:Math.round(totalMonthly*(186/80)),c:'var(--g)'},
+].map(function(s){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bd);font-size:10px"><span>'+s.l+' <span style="color:var(--t3)">'+s.d+'</span></span><span style="font-family:var(--fm);font-weight:700;color:'+s.c+'">'+s.ob+' obras/mes</span></div>';}).join('');
 
 // KPIS — clicaveis
 document.getElementById('kpis').innerHTML=[
