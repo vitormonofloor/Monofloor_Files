@@ -352,35 +352,54 @@ distR('dist-status',stC);distR('dist-city',ciC);distR('dist-type',tiC);
 // FINDINGS
 fltF('all');
 
-// === OBRAS ===
-try{
+document.getElementById('footer').textContent='Monofloor Central de Qualidade · Saude '+saude+'/100 · '+P.length+' obras · '+dt.toLocaleDateString('pt-BR');
+
+// === OBRAS (pilar separado) ===
+renderObras(P, an, active);
+
+// === HOJE (pilar separado) ===
+renderHoje(an, active, cr, atPct, pa);
+}
+
+function renderObras(P, an, active) {
+try {
 _risks=(an.atRisk||[]).sort((a,b)=>(b.diasAtraso||0)-(a.diasAtraso||0));
-const reds=_risks.filter(r=>r.criticalProblems>0).length;const yels=_risks.filter(r=>!r.criticalProblems&&r.openProblems>0).length;const grns=Math.max(0,active.length-reds-yels);
-document.getElementById('o-red-b').textContent=reds+' vermelhas';document.getElementById('o-yel-b').textContent=yels+' amarelas';document.getElementById('o-grn-b').textContent=grns+' verdes';
-const sts=[...new Set(active.map(p=>p.status))].sort();
+const reds=_risks.filter(r=>r.criticalProblems>0).length;
+const yels=_risks.filter(r=>!r.criticalProblems&&r.openProblems>0).length;
+const grns=Math.max(0,active.length-reds-yels);
+document.getElementById('o-red-b').textContent=reds+' vermelhas';
+document.getElementById('o-yel-b').textContent=yels+' amarelas';
+document.getElementById('o-grn-b').textContent=grns+' verdes';
+const sts=[...new Set(active.map(p=>p.status).filter(Boolean))].sort();
 document.getElementById('o-flt').innerHTML='<button class="fb on" onclick="fltO(\'all\')">Todas ('+active.length+')</button>'+sts.map(ss=>'<button class="fb" onclick="fltO(\''+ss+'\')">'+ss+' ('+active.filter(p=>p.status===ss).length+')</button>').join('');
 renderOL(active);
 document.getElementById('r-flt').innerHTML='<button class="fb on" onclick="fltR(\'all\')">Todos ('+_risks.length+')</button><button class="fb" onclick="fltR(\'crit\')">Criticos</button><button class="fb" onclick="fltR(\'diag\')">Com diagnostico</button>';
 renderRL(_risks);
+} catch(e) { console.error('Erro OBRAS:', e); document.getElementById('o-list').innerHTML='<div style="color:var(--r);padding:20px">Erro ao carregar obras: '+e.message+'</div>'; }
+}
 
-// === HOJE ===
+function renderHoje(an, active, cr, atPct, pa) {
+try {
 document.getElementById('hoje-kpis').innerHTML=[{v:'22',l:'Em execucao'},{v:'37',l:'Em campo'},{v:'71',l:'Ociosos'},{v:'50%',l:'Ocupacao sem.'},{v:'121%',l:'Ocupacao mes'},{v:'R$445k',l:'Projecao 30d'}].map(k=>'<div class="kpi"><div class="v">'+k.v+'</div><div class="l">'+k.l+'</div></div>').join('');
 
-document.getElementById('ev-list').innerHTML=(an.recentEvents||[]).map(e=>{const d=new Date(e.createdAt);
-return '<div style="display:grid;grid-template-columns:5px 1fr auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)"><div style="width:5px;height:5px;border-radius:50%;background:'+(e.severidade==='critica'?'var(--r)':'var(--y)')+'"></div><div><div style="font-size:10px;font-weight:500">'+e.titulo+'</div><div style="font-size:8px;color:var(--t3)">'+e.clienteNome+'</div></div><div style="font-family:var(--fm);font-size:7px;color:var(--t4)">'+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</div></div>';}).join('');
+document.getElementById('ev-list').innerHTML=(an.recentEvents||[]).map(e=>{
+const d=new Date(e.createdAt);
+const titulo=san(e.titulo||'');
+const cliente=san(e.clienteNome||'');
+return '<div style="display:grid;grid-template-columns:5px 1fr auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)"><div style="width:5px;height:5px;border-radius:50%;background:'+(e.severidade==='critica'?'var(--r)':'var(--y)')+'"></div><div><div style="font-size:10px;font-weight:500">'+titulo+'</div><div style="font-size:8px;color:var(--t3)">'+cliente+'</div></div><div style="font-family:var(--fm);font-size:7px;color:var(--t4)">'+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</div></div>';
+}).join('');
 
 document.getElementById('h-alerts').innerHTML=[
-{t:cr+' obras criticas',c:'tr'},{t:s.atrasados+' atrasadas ('+atPct+'%)',c:'tr'},
+{t:cr+' obras criticas',c:'tr'},{t:(an.summary?.atrasados||0)+' atrasadas',c:'tr'},
 {t:'300+ conversas sem resposta',c:'tr'},{t:'3 equipes sem material',c:'tr'},
 {t:pa+' pausadas',c:'ty'},{t:'80 prestadores ociosos',c:'ty'},
 ].map(a=>'<div style="display:flex;gap:4px;align-items:center;padding:4px 0;border-bottom:1px solid var(--bd);font-size:9px"><span class="tag '+a.c+'">!</span>'+a.t+'</div>').join('');
 
-const stCh={};active.forEach(p=>{const ss=p.status||'—';stCh[ss]=(stCh[ss]||0)+1;});
-const smx=Math.max(...Object.values(stCh));
-document.getElementById('h-pipe').innerHTML=Object.entries(stCh).sort((a,b)=>b[1]-a[1]).map(([ss,c])=>'<div class="brow"><div class="n">'+ss+'</div><div class="trk"><div class="fl" style="width:'+(c/smx*100)+'%;background:var(--a)"></div></div><div class="v">'+c+'</div></div>').join('');
-
-document.getElementById('footer').textContent='Monofloor Central de Qualidade · Saude '+saude+'/100 · '+P.length+' obras · '+dt.toLocaleDateString('pt-BR');
-}catch(err){console.error('Erro no render de OBRAS/HOJE:',err);document.getElementById('o-list').innerHTML='<div style="color:var(--r);font-size:11px">Erro: '+err.message+'</div>';}
+const stCh={};active.forEach(p=>{const ss=p.status||'sem status';stCh[ss]=(stCh[ss]||0)+1;});
+const vals=Object.values(stCh);
+const smx=vals.length?Math.max(...vals):1;
+document.getElementById('h-pipe').innerHTML=Object.entries(stCh).sort((a,b)=>b[1]-a[1]).map(([ss,c])=>'<div class="brow"><div class="n">'+san(ss)+'</div><div class="trk"><div class="fl" style="width:'+(c/smx*100)+'%;background:var(--a)"></div></div><div class="v">'+c+'</div></div>').join('');
+} catch(e) { console.error('Erro HOJE:', e); document.getElementById('ev-list').innerHTML='<div style="color:var(--r);padding:20px">Erro ao carregar hoje: '+e.message+'</div>'; }
 }
 
 // PROBS
