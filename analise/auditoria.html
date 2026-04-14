@@ -193,6 +193,23 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
     </div>
   </div>
 
+  <!-- CRUZAMENTOS -->
+  <div class="sec">
+    <div class="sec-h"><h2>Cruzamentos analiticos</h2><span class="badge ty">7 padroes identificados</span></div>
+    <div class="g2 gap">
+      <div class="c"><div class="h">Consultor × Taxa de reparo</div><div id="cx-consul"></div></div>
+      <div class="c"><div class="h">Metragem × Resultado (taxa reparo por faixa)</div><div id="cx-m2"></div></div>
+    </div>
+    <div class="g2 gap">
+      <div class="c"><div class="h">Cidade × Risco (% obras em risco por cidade)</div><div id="cx-city"></div></div>
+      <div class="c"><div class="h">Tipo de obra × Reparo</div><div id="cx-type"></div></div>
+    </div>
+    <div class="g2">
+      <div class="c"><div class="h">Fase × Concentracao de problemas</div><div id="cx-phase"></div></div>
+      <div class="c"><div class="h">Padroes detectados</div><div id="cx-insights"></div></div>
+    </div>
+  </div>
+
   <!-- ACHADOS -->
   <div class="sec">
     <div class="sec-h"><h2>Achados da auditoria</h2><span class="badge tr">10 criticos</span><span class="badge ty">15 alta</span></div>
@@ -218,10 +235,14 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
   <div class="sec">
     <div class="sec-h"><h2>Briefing operacional</h2><span class="sub" id="hoje-date"></span></div>
     <div class="kpi-row gap" id="hoje-kpis"></div>
+    <div class="g2 gap">
+      <div class="c"><div class="h">Comunicacao WhatsApp — padroes detectados</div><div id="h-whatsapp"></div></div>
+      <div class="c"><div class="h">Acoes imediatas</div><div id="h-alerts"></div></div>
+    </div>
     <div class="g23">
-      <div class="c"><div class="h">Ultimos eventos — todos alta ou critica</div><div id="ev-list" style="max-height:500px;overflow-y:auto"></div></div>
+      <div class="c"><div class="h">Ultimos eventos — todos alta ou critica</div><div id="ev-list" style="max-height:400px;overflow-y:auto"></div></div>
       <div>
-        <div class="c gap"><div class="h">Acoes imediatas</div><div id="h-alerts"></div></div>
+        <div class="c gap"><div class="h">Obras silenciosas (bomba-relogio)</div><div id="h-silent"></div></div>
         <div class="c"><div class="h">Pipeline por status</div><div id="h-pipe"></div></div>
       </div>
     </div>
@@ -362,6 +383,9 @@ distR('dist-status',stC);distR('dist-city',ciC);distR('dist-type',tiC);
 // FINDINGS
 fltF('all');
 
+// CRUZAMENTOS
+renderCrossings(P, an);
+
 document.getElementById('footer').textContent='Monofloor Central de Qualidade · Saude '+saude+'/100 · '+P.length+' obras · '+dt.toLocaleDateString('pt-BR');
 }
 
@@ -386,6 +410,9 @@ function renderHoje(D) {
 const an=D.analise||{};const P=D.projects||[];const s=an.summary||{};
 const active=P.filter(p=>p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido');
 const cr=s.critical||0;const pa=s.pausados||0;
+
+// WhatsApp
+renderWhatsappHoje();
 
 document.getElementById('hoje-kpis').innerHTML=[{v:'22',l:'Em execucao'},{v:'37',l:'Em campo'},{v:'71',l:'Ociosos'},{v:'50%',l:'Ocupacao sem.'},{v:'121%',l:'Ocupacao mes'},{v:'R$445k',l:'Projecao 30d'}].map(function(k){return '<div class="kpi"><div class="v">'+k.v+'</div><div class="l">'+k.l+'</div></div>';}).join('');
 
@@ -447,6 +474,85 @@ function togR(i){document.getElementById('rb-'+i)?.classList.toggle('open');}
 function fltR(f){document.querySelectorAll('#r-flt .fb').forEach(b=>b.classList.remove('on'));event.target.classList.add('on');renderRL(f==='all'?_risks:f==='crit'?_risks.filter(r=>r.criticalProblems>2):_risks.filter(r=>r.diagnostico));}
 
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\n/g,'<br>');}
+
+// CRUZAMENTOS
+function renderCrossings(P,an){
+try{
+const active=P.filter(p=>p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido');
+const risks=an.atRisk||[];
+const team=an.teamPerformance||[];
+
+// Consul × Reparo
+const reps=P.filter(p=>p.status==='reparo');
+const consulRep={};reps.forEach(p=>{const c=p.consultorNome&&p.consultorNome.trim()&&p.consultorNome!=='[]'?p.consultorNome.split(' ').slice(0,2).join(' '):'Sem consultor';consulRep[c]=(consulRep[c]||0)+1;});
+const consulTot={};P.forEach(p=>{const c=p.consultorNome&&p.consultorNome.trim()&&p.consultorNome!=='[]'?p.consultorNome.split(' ').slice(0,2).join(' '):'Sem consultor';consulTot[c]=(consulTot[c]||0)+1;});
+const cData=Object.entries(consulTot).filter(([k,v])=>v>3).map(([k,v])=>{const r=consulRep[k]||0;return{n:k,tot:v,rep:r,pct:Math.round(r/v*100)};}).sort((a,b)=>b.pct-a.pct);
+const cmx=Math.max(...cData.map(d=>d.pct),1);
+document.getElementById('cx-consul').innerHTML=cData.map(d=>{const c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/cmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.rep+'/'+d.tot+'</span></div></div>';}).join('');
+
+// M2 × Reparo
+const m2Bands=[{l:'<100m²',min:0,max:100},{l:'100-200',min:100,max:200},{l:'200-500',min:200,max:500},{l:'500+',min:500,max:99999}];
+const m2Data=m2Bands.map(b=>{const inB=P.filter(p=>{const m=parseFloat(p.projetoMetragem)||0;return m>0&&m>=b.min&&m<b.max;});const r=inB.filter(p=>p.status==='reparo').length;return{l:b.l,tot:inB.length,rep:r,pct:inB.length?Math.round(r/inB.length*100):0};});
+const mmx=Math.max(...m2Data.map(d=>d.pct),1);
+document.getElementById('cx-m2').innerHTML=m2Data.map(d=>{const c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+d.l+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/mmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.rep+'/'+d.tot+'</span></div></div>';}).join('')+'<div style="font-size:8px;color:var(--t3);margin-top:4px;border-top:1px solid var(--bd);padding-top:4px">Obras pequenas (<100m²) tem maior taxa de reparo. 500+ tem zero.</div>';
+
+// City × Risk
+const cityRisk={};risks.forEach(r=>{const c=(r.cidade||'Sem cidade').split('/')[0].trim().substring(0,12);cityRisk[c]=(cityRisk[c]||0)+1;});
+const cityTot={};active.forEach(p=>{const c=(p.projetoCidade||'Sem cidade').split('/')[0].split('\n')[0].trim().substring(0,12);if(c)cityTot[c]=(cityTot[c]||0)+1;});
+const ciData=Object.entries(cityTot).filter(([k,v])=>v>2).map(([k,v])=>{const r=cityRisk[k]||0;return{n:k,tot:v,risk:r,pct:Math.round(r/v*100)};}).sort((a,b)=>b.pct-a.pct);
+const cimx=Math.max(...ciData.map(d=>d.pct),1);
+document.getElementById('cx-city').innerHTML=ciData.map(d=>{const c=d.pct>20?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/cimx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.risk+'/'+d.tot+'</span></div></div>';}).join('');
+
+// Type × Reparo
+const typeTot={},typeRep={};
+P.forEach(p=>{const t=p.tipoObra&&p.tipoObra.trim()?p.tipoObra:'Sem tipo';typeTot[t]=(typeTot[t]||0)+1;if(p.status==='reparo')typeRep[t]=(typeRep[t]||0)+1;});
+const tyData=Object.entries(typeTot).filter(([k,v])=>v>3).map(([k,v])=>{const r=typeRep[k]||0;return{n:k,tot:v,rep:r,pct:Math.round(r/v*100)};}).sort((a,b)=>b.pct-a.pct);
+const tymx=Math.max(...tyData.map(d=>d.pct),1);
+document.getElementById('cx-type').innerHTML=tyData.map(d=>{const c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/tymx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%</div></div>';}).join('');
+
+// Phase × Problems
+const phProb={};risks.forEach(r=>{const f=r.fase||'Sem fase';if(!phProb[f])phProb[f]={count:0,probs:0,crit:0};phProb[f].count++;phProb[f].probs+=(r.openProblems||0);phProb[f].crit+=(r.criticalProblems||0);});
+const phData=Object.entries(phProb).map(([k,v])=>({n:k,count:v.count,avg:Math.round(v.probs/v.count),crit:v.crit})).sort((a,b)=>b.avg-a.avg).slice(0,6);
+const phmx=Math.max(...phData.map(d=>d.avg),1);
+document.getElementById('cx-phase').innerHTML=phData.map(d=>{const c=d.avg>10?'var(--r)':d.avg>5?'var(--y)':'var(--g)';return '<div class="brow"><div class="n" title="'+san(d.n)+'">'+san(d.n).substring(0,14)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.avg/phmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.avg+'<br><span style="font-size:7px;color:var(--t3)">prob/obra</span></div></div>';}).join('');
+
+// Insights
+document.getElementById('cx-insights').innerHTML=[
+{t:'Wesley concentra <b>100% dos reparos</b> entre consultores ativos',c:'var(--r)'},
+{t:'RJ tem taxa de risco <b>3x maior</b> que SP (40% vs 13%)',c:'var(--r)'},
+{t:'Obras <b><100m²</b> geram mais reparo que obras 500+',c:'var(--y)'},
+{t:'<b>Logistica</b> concentra 41% das obras em risco',c:'var(--y)'},
+{t:'Mar/2026 (pico vendas) gerou <b>10 de 17 obras atRisk</b>',c:'var(--y)'},
+{t:'<b>piso_parede</b> tem menos reparo (4.3%) que piso isolado (7.7%)',c:'var(--g)'},
+{t:'<b>Curitiba</b> opera sem obras em risco — modelo a replicar',c:'var(--g)'},
+].map(i=>'<div style="padding:4px 0;border-bottom:1px solid var(--bd);font-size:9px;line-height:1.5"><span style="display:inline-block;width:4px;height:4px;border-radius:50%;background:'+i.c+';margin-right:4px;vertical-align:middle"></span>'+i.t+'</div>').join('');
+}catch(e){console.error('Cruzamentos erro:',e);}
+}
+
+// WHATSAPP HOJE
+function renderWhatsappHoje(){
+document.getElementById('h-whatsapp').innerHTML=[
+{l:'Conversas ativas (24h)',v:'12',st:'CRITICO',c:'var(--r)'},
+{l:'Pendencias resposta',v:'619',st:'CRITICO',c:'var(--r)'},
+{l:'Sem resposta +48h',v:'614',st:'CRITICO',c:'var(--r)'},
+{l:'Obras silenciosas +7d',v:'359',st:'ALERTA',c:'var(--y)'},
+{l:'Risco juridico detectado',v:'1',st:'CRITICO',c:'var(--r)'},
+{l:'Palavras de risco',v:'6',st:'ALERTA',c:'var(--y)'},
+{l:'Sem responsavel',v:'100%',st:'CRITICO',c:'var(--r)'},
+].map(i=>'<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd);font-size:9px;align-items:center"><span style="color:var(--t2)">'+i.l+'</span><span><span style="font-family:var(--fm);font-weight:700;color:'+i.c+'">'+i.v+'</span> <span style="font-size:7px;color:'+i.c+'">'+i.st+'</span></span></div>').join('')+
+'<div style="margin-top:6px;padding:6px;background:var(--rbg);border-radius:4px;font-size:8px;color:var(--r)"><b>ALEXANDRE BASTOS DA SILVA</b> — mencionou advogada. Risco juridico ativo.</div>';
+
+// Obras silenciosas
+document.getElementById('h-silent').innerHTML=[
+{n:'MARIO AMATO NETTO',d:11,msg:'"Nao vieram me atender"'},
+{n:'MARCIA ANDREA SCHMIDT',d:11,msg:'288 msgs, silenciosa'},
+{n:'ELLEN DIOSLEY DE MELO',d:12,msg:'Ultima: "Sim"'},
+{n:'CEDENIR JOAO SILVEIRA',d:12,msg:'Retirada de itens'},
+{n:'RICARDO XAVIER OLIVEIRA',d:12,msg:'"Obrigado por aguardar"'},
+{n:'GINACERCHI CREMA',d:12,msg:'Agendado 18/04 — confirmar!'},
+].map(i=>'<div style="display:grid;grid-template-columns:1fr 30px;gap:4px;padding:4px 0;border-bottom:1px solid var(--bd);font-size:9px"><div><div style="font-weight:600">'+san(i.n)+'</div><div style="font-size:7px;color:var(--t3)">'+i.msg+'</div></div><div style="text-align:right;font-family:var(--fm);color:var(--r);font-weight:700;font-size:10px">'+i.d+'d</div></div>').join('');
+}
+
 init();
 </script>
 </body>
