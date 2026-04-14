@@ -122,6 +122,31 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
 .sup .nm{font-size:7px;color:var(--t2)}.sup .v{font-family:var(--fm);font-size:14px;font-weight:700}
 .sup .st{font-size:5px;font-weight:800;padding:1px 3px;border-radius:100px;display:inline-block}
 
+/* MODAL OVERLAY */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--s2);border:1px solid var(--bd2);border-radius:14px;width:100%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.modal-head h3{font-size:13px;font-weight:700}.modal-head .sub{font-size:10px;color:var(--t2)}
+.modal-close{background:none;color:var(--t3);font-size:18px;padding:4px 8px;border-radius:4px;transition:all .12s}
+.modal-close:hover{background:rgba(255,255,255,.1);color:var(--t)}
+.modal-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;padding:12px 18px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.modal-kpi{text-align:center;padding:8px;background:rgba(0,0,0,.3);border-radius:6px}
+.modal-kpi .v{font-family:var(--fm);font-size:18px;font-weight:700}.modal-kpi .l{font-size:7px;color:var(--t3);text-transform:uppercase}
+.modal-body{overflow-y:auto;padding:12px 18px;flex:1}
+.modal-body::-webkit-scrollbar{width:4px}.modal-body::-webkit-scrollbar-thumb{background:var(--t4);border-radius:2px}
+.modal-row{display:grid;grid-template-columns:1fr 55px 55px 50px;gap:4px;padding:6px 0;border-bottom:1px solid var(--bd);font-size:10px;align-items:center}
+.modal-row:last-child{border:none}
+.modal-row .nm{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-row .m2{font-family:var(--fm);color:var(--a);text-align:right;font-size:9px}
+.modal-row .fase{font-size:7px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-foot{padding:10px 18px;border-top:2px solid var(--bd);display:flex;justify-content:space-between;font-size:10px;font-weight:700;flex-shrink:0}
+.modal-foot .v{font-family:var(--fm);color:var(--a)}
+
+/* CLICKABLE INDICATORS */
+[data-drill]{cursor:pointer;transition:all .12s}
+[data-drill]:hover{opacity:.8;transform:translateY(-1px)}
+
 .footer{padding:16px 0;text-align:center;font-size:8px;color:var(--t4);border-top:1px solid var(--bd)}
 
 @media(max-width:900px){.g2,.g23{grid-template-columns:1fr}.flow{grid-template-columns:repeat(3,1fr)}}
@@ -249,6 +274,16 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
   </div>
 </div></div>
 
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head"><div><h3 id="modal-title">—</h3><div class="sub" id="modal-sub"></div></div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-kpis" id="modal-kpis"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot"><span id="modal-foot-l"></span><span class="v" id="modal-foot-r"></span></div>
+  </div>
+</div>
+
 <footer class="footer"><div class="w" id="footer"></div></footer>
 
 <script>
@@ -314,16 +349,17 @@ const totalM2=P.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0);
 document.getElementById('h-date').textContent=dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
 document.getElementById('hoje-date').textContent=dt.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
 
-// KPIS
+// KPIS — clicaveis
 document.getElementById('kpis').innerHTML=[
-{v:t.active||0,l:'Ativas',st:'',sc:''},{v:t.finished||0,l:'Entregues',st:'',sc:''},
-{v:slaPct+'%',l:'SLA geral',st:slaPct<50?'CRITICO':'ATENCAO',sc:slaPct<50?'color:var(--r)':'color:var(--y)'},
-{v:ftr+'%',l:'Sem reparo (FTR)',st:ftr>85?'BOM':'ATENCAO',sc:ftr>85?'color:var(--g)':'color:var(--y)'},
-{v:s.atrasados||0,l:'Atrasadas',st:atPct+'% do total',sc:'color:var(--r)'},
-{v:cr,l:'Criticas',st:'Acao imediata',sc:'color:var(--r)'},
-{v:Math.round(totalM2).toLocaleString('pt-BR'),l:'m2 total',st:'',sc:''},
-{v:active.length,l:'No pipeline',st:'',sc:''},
-].map(k=>'<div class="kpi"><div class="v">'+k.v+'</div><div class="l">'+k.l+'</div>'+(k.st?'<div class="status" style="'+k.sc+'">'+k.st+'</div>':'')+'</div>').join('');
+{v:t.active||0,l:'Ativas',st:'',sc:'',dr:'javascript:drillStatus("aguardando_execucao")'},
+{v:t.finished||0,l:'Entregues',st:'',sc:'',dr:'javascript:drillStatus("finalizado")'},
+{v:slaPct+'%',l:'SLA geral',st:slaPct<50?'CRITICO':'ATENCAO',sc:slaPct<50?'color:var(--r)':'color:var(--y)',dr:''},
+{v:ftr+'%',l:'Sem reparo (FTR)',st:ftr>85?'BOM':'ATENCAO',sc:ftr>85?'color:var(--g)':'color:var(--y)',dr:'javascript:drillStatus("reparo")'},
+{v:s.atrasados||0,l:'Atrasadas',st:atPct+'% do total',sc:'color:var(--r)',dr:''},
+{v:cr,l:'Criticas',st:'Acao imediata',sc:'color:var(--r)',dr:''},
+{v:Math.round(totalM2).toLocaleString('pt-BR'),l:'m2 total',st:'',sc:'',dr:''},
+{v:active.length,l:'No pipeline',st:'',sc:'',dr:''},
+].map(function(k){return '<div class="kpi" '+(k.dr?'onclick="'+k.dr.replace('javascript:','')+'" data-drill style="cursor:pointer"':'')+' ><div class="v">'+k.v+'</div><div class="l">'+k.l+'</div>'+(k.st?'<div class="status" style="'+k.sc+'">'+k.st+'</div>':'')+'</div>';}).join('');
 
 // HEALTH BAR
 document.getElementById('health-bar').innerHTML='<div class="hbar"><div style="flex:'+ok+';background:var(--g)"></div><div style="flex:'+md+';background:var(--y)"></div><div style="flex:'+hi+';background:#f59e0b"></div><div style="flex:'+cr+';background:var(--r)"></div><div style="flex:'+pa+';background:var(--t4)"></div></div><div style="display:flex;gap:8px;font-size:8px;color:var(--t3);margin-top:2px"><span>'+ok+' OK ('+Math.round(ok/tot*100)+'%)</span><span>'+md+' med</span><span>'+hi+' alto</span><span style="color:var(--r)">'+cr+' crit</span><span>'+pa+' pausa</span></div>';
@@ -337,9 +373,9 @@ return '<div class="c" style="text-align:center;padding:10px"><svg viewBox="0 0 
 
 // SLA
 document.getElementById('sla-badge').innerHTML='<span class="'+(slaPct<50?'tr':'ty')+'">'+slaPct+'% geral</span>';
-document.getElementById('sla-bars').innerHTML=SLA_O.map(k=>{const it=(sla.byKey||[]).find(x=>x.key===k);if(!it)return'';
-const p=it.percent,c=p>=80?'var(--g)':p>=50?'var(--y)':'var(--r)';
-return '<div class="brow"><div class="n">'+(SLA_L[k]||k)+'</div><div class="trk"><div class="fl" style="width:'+p+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+p+'%</div></div>';}).join('');
+document.getElementById('sla-bars').innerHTML=SLA_O.map(function(k){var it=(sla.byKey||[]).find(function(x){return x.key===k;});if(!it)return'';
+var p=it.percent,c=p>=80?'var(--g)':p>=50?'var(--y)':'var(--r)';
+return '<div class="brow" data-drill onclick="drillSLA(\''+k+'\')" style="cursor:pointer"><div class="n">'+(SLA_L[k]||k)+'</div><div class="trk"><div class="fl" style="width:'+p+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+p+'%</div></div>';}).join('');
 
 // VOLUME
 const mx=Math.max(...CAP.map(c=>c.ob));
@@ -377,8 +413,8 @@ document.getElementById('supply').innerHTML=SUP.map(ss=>'<div class="sup"><div c
 
 // DIST
 const stC={},ciC={},tiC={};P.forEach(p=>{if(p.status)stC[p.status]=(stC[p.status]||0)+1;if(p.projetoCidade){const c=p.projetoCidade.split('/')[0].split('\n')[0].trim().substring(0,16);if(c)ciC[c]=(ciC[c]||0)+1;}if(p.tipoObra&&p.tipoObra.trim())tiC[p.tipoObra]=(tiC[p.tipoObra]||0)+1;});
-function distR(id,counts){const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);const mx=sorted[0]?.[1]||1;document.getElementById(id).innerHTML=sorted.map(([n,c])=>'<div class="brow"><div class="n">'+n+'</div><div class="trk"><div class="fl" style="width:'+(c/mx*100)+'%;background:var(--a)"></div></div><div class="v">'+c+'</div></div>').join('');}
-distR('dist-status',stC);distR('dist-city',ciC);distR('dist-type',tiC);
+function distR(id,counts,drillFn){var sorted=Object.entries(counts).sort(function(a,b){return b[1]-a[1];}).slice(0,6);var mx=sorted.length?sorted[0][1]:1;document.getElementById(id).innerHTML=sorted.map(function(x){return '<div class="brow" data-drill onclick="'+drillFn+'(\''+san(x[0])+'\')" style="cursor:pointer"><div class="n">'+san(x[0])+'</div><div class="trk"><div class="fl" style="width:'+(x[1]/mx*100)+'%;background:var(--a)"></div></div><div class="v">'+x[1]+'</div></div>';}).join('');}
+distR('dist-status',stC,'drillStatus');distR('dist-city',ciC,'drillCity');distR('dist-type',tiC,'drillType');
 
 // FINDINGS
 fltF('all');
@@ -475,6 +511,71 @@ function fltR(f){document.querySelectorAll('#r-flt .fb').forEach(b=>b.classList.
 
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\n/g,'<br>');}
 
+// ═══ MODAL DRILL-DOWN ═══
+function openModal(title, subtitle, obras){
+  const el=document.getElementById('modal-bg');
+  el.classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-sub').textContent=subtitle;
+
+  const totalM2=obras.reduce(function(s,p){return s+(parseFloat(p.projetoMetragem)||0);},0);
+  const reps=obras.filter(function(p){return p.status==='reparo';}).length;
+  const exec=obras.filter(function(p){return p.status==='em_execucao';}).length;
+
+  document.getElementById('modal-kpis').innerHTML=[
+    {v:obras.length,l:'Obras'},{v:Math.round(totalM2).toLocaleString('pt-BR'),l:'m2 total'},
+    {v:exec,l:'Em execucao'},{v:reps,l:'Em reparo'},
+  ].map(function(k){return '<div class="modal-kpi"><div class="v">'+k.v+'</div><div class="l">'+k.l+'</div></div>';}).join('');
+
+  obras.sort(function(a,b){return(parseFloat(b.projetoMetragem)||0)-(parseFloat(a.projetoMetragem)||0);});
+
+  document.getElementById('modal-body').innerHTML=obras.map(function(p){
+    var m2=parseFloat(p.projetoMetragem)||0;
+    var sc=p.status==='em_execucao'?'tg':p.status==='reparo'||p.status==='pausado'?'tr':p.status==='aguardando_execucao'?'ty':'tb';
+    return '<div class="modal-row"><div class="nm" title="'+san(p.clienteNome||'')+'">'+san(p.clienteNome||'')+'</div><div class="m2">'+m2.toFixed(0)+' m2</div><div class="fase">'+san((p.faseAtual||'').substring(0,18))+'</div><div><span class="tag '+sc+'">'+san((p.status||'').substring(0,6))+'</span></div></div>';
+  }).join('')||(obras.length===0?'<div style="padding:30px;text-align:center;color:var(--t3);font-size:11px">Nenhuma obra nesta categoria</div>':'');
+
+  document.getElementById('modal-foot-l').textContent='Total: '+obras.length+' obras';
+  document.getElementById('modal-foot-r').textContent=Math.round(totalM2).toLocaleString('pt-BR')+' m2';
+}
+
+function closeModal(){
+  document.getElementById('modal-bg').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+// Drill functions
+function drillStatus(status){
+  var obras=_P.filter(function(p){return p.status===status;});
+  openModal('Status: '+status, obras.length+' obras com este status', obras);
+}
+function drillConsul(name){
+  var obras=_P.filter(function(p){return(p.consultorNome||'').indexOf(name)>=0;});
+  openModal('Consultor: '+name, obras.length+' obras atribuidas', obras);
+}
+function drillM2(min,max){
+  var label=min===0?'<'+max+'m2':max===99999?min+'+m2':min+'-'+max+'m2';
+  var obras=_P.filter(function(p){var m=parseFloat(p.projetoMetragem)||0;return m>0&&m>=min&&m<max;});
+  openModal('Metragem: '+label, obras.length+' obras nesta faixa', obras);
+}
+function drillCity(city){
+  var obras=_P.filter(function(p){return(p.projetoCidade||'').indexOf(city)>=0;});
+  openModal('Cidade: '+city, obras.length+' obras', obras);
+}
+function drillType(type){
+  var obras=_P.filter(function(p){return p.tipoObra===type;});
+  openModal('Tipo: '+type, obras.length+' obras', obras);
+}
+function drillPhase(phaseName){
+  var obras=_P.filter(function(p){return(p.faseAtual||'').toUpperCase().indexOf(phaseName.toUpperCase())>=0;});
+  openModal('Fase: '+phaseName, obras.length+' obras nesta fase', obras);
+}
+function drillSLA(key){
+  openModal('SLA: '+(SLA_L[key]||key), 'Obras ativas com data definida', _P.filter(function(p){return p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido';}));
+}
+
 // CRUZAMENTOS
 function renderCrossings(P,an){
 try{
@@ -488,27 +589,27 @@ const consulRep={};reps.forEach(p=>{const c=p.consultorNome&&p.consultorNome.tri
 const consulTot={};P.forEach(p=>{const c=p.consultorNome&&p.consultorNome.trim()&&p.consultorNome!=='[]'?p.consultorNome.split(' ').slice(0,2).join(' '):'Sem consultor';consulTot[c]=(consulTot[c]||0)+1;});
 const cData=Object.entries(consulTot).filter(([k,v])=>v>3).map(([k,v])=>{const r=consulRep[k]||0;return{n:k,tot:v,rep:r,pct:Math.round(r/v*100)};}).sort((a,b)=>b.pct-a.pct);
 const cmx=Math.max(...cData.map(d=>d.pct),1);
-document.getElementById('cx-consul').innerHTML=cData.map(d=>{const c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/cmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.rep+'/'+d.tot+'</span></div></div>';}).join('');
+document.getElementById('cx-consul').innerHTML=cData.map(function(d){var c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow" data-drill onclick="drillConsul(\''+san(d.n)+'\')" style="cursor:pointer"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/cmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.rep+'/'+d.tot+'</span></div></div>';}).join('');
 
 // M2 × Reparo
 const m2Bands=[{l:'<100m²',min:0,max:100},{l:'100-200',min:100,max:200},{l:'200-500',min:200,max:500},{l:'500+',min:500,max:99999}];
 const m2Data=m2Bands.map(b=>{const inB=P.filter(p=>{const m=parseFloat(p.projetoMetragem)||0;return m>0&&m>=b.min&&m<b.max;});const r=inB.filter(p=>p.status==='reparo').length;return{l:b.l,tot:inB.length,rep:r,pct:inB.length?Math.round(r/inB.length*100):0};});
 const mmx=Math.max(...m2Data.map(d=>d.pct),1);
-document.getElementById('cx-m2').innerHTML=m2Data.map(d=>{const c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+d.l+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/mmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.rep+'/'+d.tot+'</span></div></div>';}).join('')+'<div style="font-size:8px;color:var(--t3);margin-top:4px;border-top:1px solid var(--bd);padding-top:4px">Obras pequenas (<100m²) tem maior taxa de reparo. 500+ tem zero.</div>';
+document.getElementById('cx-m2').innerHTML=m2Data.map(function(d,i){var c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';var mins=[0,100,200,500];var maxs=[100,200,500,99999];return '<div class="brow" data-drill onclick="drillM2('+mins[i]+','+maxs[i]+')" style="cursor:pointer"><div class="n">'+d.l+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/mmx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.rep+'/'+d.tot+'</span></div></div>';}).join('')+'<div style="font-size:8px;color:var(--t3);margin-top:4px;border-top:1px solid var(--bd);padding-top:4px">Obras pequenas (<100m²) tem maior taxa de reparo. 500+ tem zero.</div>';
 
 // City × Risk
 const cityRisk={};risks.forEach(r=>{const c=(r.cidade||'Sem cidade').split('/')[0].trim().substring(0,12);cityRisk[c]=(cityRisk[c]||0)+1;});
 const cityTot={};active.forEach(p=>{const c=(p.projetoCidade||'Sem cidade').split('/')[0].split('\n')[0].trim().substring(0,12);if(c)cityTot[c]=(cityTot[c]||0)+1;});
 const ciData=Object.entries(cityTot).filter(([k,v])=>v>2).map(([k,v])=>{const r=cityRisk[k]||0;return{n:k,tot:v,risk:r,pct:Math.round(r/v*100)};}).sort((a,b)=>b.pct-a.pct);
 const cimx=Math.max(...ciData.map(d=>d.pct),1);
-document.getElementById('cx-city').innerHTML=ciData.map(d=>{const c=d.pct>20?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/cimx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.risk+'/'+d.tot+'</span></div></div>';}).join('');
+document.getElementById('cx-city').innerHTML=ciData.map(function(d){var c=d.pct>20?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow" data-drill onclick="drillCity(\''+san(d.n)+'\')" style="cursor:pointer"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/cimx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%<br><span style="font-size:7px;color:var(--t3)">'+d.risk+'/'+d.tot+'</span></div></div>';}).join('');
 
 // Type × Reparo
 const typeTot={},typeRep={};
 P.forEach(p=>{const t=p.tipoObra&&p.tipoObra.trim()?p.tipoObra:'Sem tipo';typeTot[t]=(typeTot[t]||0)+1;if(p.status==='reparo')typeRep[t]=(typeRep[t]||0)+1;});
 const tyData=Object.entries(typeTot).filter(([k,v])=>v>3).map(([k,v])=>{const r=typeRep[k]||0;return{n:k,tot:v,rep:r,pct:Math.round(r/v*100)};}).sort((a,b)=>b.pct-a.pct);
 const tymx=Math.max(...tyData.map(d=>d.pct),1);
-document.getElementById('cx-type').innerHTML=tyData.map(d=>{const c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/tymx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%</div></div>';}).join('');
+document.getElementById('cx-type').innerHTML=tyData.map(function(d){var c=d.pct>5?'var(--r)':d.pct>0?'var(--y)':'var(--g)';return '<div class="brow" data-drill onclick="drillType(\''+san(d.n)+'\')" style="cursor:pointer"><div class="n">'+san(d.n)+'</div><div class="trk" style="height:8px"><div class="fl" style="width:'+(d.pct/tymx*100)+'%;background:'+c+'"></div></div><div class="v" style="color:'+c+'">'+d.pct+'%</div></div>';}).join('');
 
 // Phase × Problems
 const phProb={};risks.forEach(r=>{const f=r.fase||'Sem fase';if(!phProb[f])phProb[f]={count:0,probs:0,crit:0};phProb[f].count++;phProb[f].probs+=(r.openProblems||0);phProb[f].crit+=(r.criticalProblems||0);});
