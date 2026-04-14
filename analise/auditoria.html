@@ -353,6 +353,7 @@ distR('dist-status',stC);distR('dist-city',ciC);distR('dist-type',tiC);
 fltF('all');
 
 // === OBRAS ===
+try{
 _risks=(an.atRisk||[]).sort((a,b)=>(b.diasAtraso||0)-(a.diasAtraso||0));
 const reds=_risks.filter(r=>r.criticalProblems>0).length;const yels=_risks.filter(r=>!r.criticalProblems&&r.openProblems>0).length;const grns=Math.max(0,active.length-reds-yels);
 document.getElementById('o-red-b').textContent=reds+' vermelhas';document.getElementById('o-yel-b').textContent=yels+' amarelas';document.getElementById('o-grn-b').textContent=grns+' verdes';
@@ -379,6 +380,7 @@ const smx=Math.max(...Object.values(stCh));
 document.getElementById('h-pipe').innerHTML=Object.entries(stCh).sort((a,b)=>b[1]-a[1]).map(([ss,c])=>'<div class="brow"><div class="n">'+ss+'</div><div class="trk"><div class="fl" style="width:'+(c/smx*100)+'%;background:var(--a)"></div></div><div class="v">'+c+'</div></div>').join('');
 
 document.getElementById('footer').textContent='Monofloor Central de Qualidade · Saude '+saude+'/100 · '+P.length+' obras · '+dt.toLocaleDateString('pt-BR');
+}catch(err){console.error('Erro no render de OBRAS/HOJE:',err);document.getElementById('o-list').innerHTML='<div style="color:var(--r);font-size:11px">Erro: '+err.message+'</div>';}
 }
 
 // PROBS
@@ -411,16 +413,17 @@ function fltF(f){document.querySelectorAll('#p-painel .fb').forEach(b=>b.classLi
 document.getElementById('findings').innerHTML=(f==='all'?FIN:FIN.filter(x=>x.c===f)).map(f=>'<div class="fin"><div class="code '+f.c+'">'+f.cd+'</div><div><div class="desc">'+f.t+'</div><div class="act">→ '+f.a+'</div></div></div>').join('');}
 
 // OBRAS
+function san(s){return(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function renderOL(list){list.sort((a,b)=>(parseFloat(b.projetoMetragem)||0)-(parseFloat(a.projetoMetragem)||0));
-document.getElementById('o-list').innerHTML=list.map(p=>{const m2=parseFloat(p.projetoMetragem)||0;const sc=p.status==='em_execucao'?'tg':p.status==='reparo'||p.status==='pausado'?'tr':'tb';
-return '<div style="display:grid;grid-template-columns:1fr 40px 44px;gap:2px;padding:4px 0;border-bottom:1px solid var(--bd);font-size:9px;align-items:center"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+p.clienteNome+'">'+p.clienteNome+'</div><div style="font-family:var(--fm);color:var(--a);text-align:right;font-size:8px">'+m2.toFixed(0)+'</div><div><span class="tag '+sc+'" style="font-size:6px">'+(p.status||'').substring(0,6)+'</span></div></div>';}).join('')+'<div style="font-size:8px;color:var(--t3);margin-top:4px;font-weight:600">'+list.length+' obras · '+Math.round(list.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0)).toLocaleString('pt-BR')+' m2</div>';}
+document.getElementById('o-list').innerHTML=list.map(p=>{const m2=parseFloat(p.projetoMetragem)||0;const sc=p.status==='em_execucao'?'tg':p.status==='reparo'||p.status==='pausado'?'tr':'tb';const nm=san(p.clienteNome||'');
+return '<div style="display:grid;grid-template-columns:1fr 40px 44px;gap:2px;padding:4px 0;border-bottom:1px solid var(--bd);font-size:9px;align-items:center"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+nm+'">'+nm+'</div><div style="font-family:var(--fm);color:var(--a);text-align:right;font-size:8px">'+m2.toFixed(0)+'</div><div><span class="tag '+sc+'" style="font-size:6px">'+(p.status||'').substring(0,6)+'</span></div></div>';}).join('')+'<div style="font-size:8px;color:var(--t3);margin-top:4px;font-weight:600">'+list.length+' obras · '+Math.round(list.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0)).toLocaleString('pt-BR')+' m2</div>';}
 function fltO(f){document.querySelectorAll('#o-flt .fb').forEach(b=>b.classList.remove('on'));event.target.classList.add('on');const a=_P.filter(p=>p.status!=='finalizado'&&p.status!=='cancelado'&&p.status!=='concluido');renderOL(f==='all'?a:a.filter(p=>p.status===f));}
-function renderRL(list){document.getElementById('r-list').innerHTML=list.map((r,i)=>{const hd=r.diagnostico&&r.diagnostico.length>10;
-return '<div class="risk"><div class="risk-h" onclick="togR('+i+')"><div class="risk-d">'+(r.diasAtraso||0)+'<small>dias</small></div><div class="risk-i"><div class="nm">'+r.clienteNome+'</div><div class="mt">'+(r.fase||'—')+' · '+(r.cidade||'—')+'</div></div><div style="display:flex;gap:2px">'+(r.criticalProblems?'<span class="tag tr">'+r.criticalProblems+'</span>':'')+(r.openProblems?'<span class="tag tb">'+r.openProblems+'</span>':'')+(hd?'<span class="tag ty">diag</span>':'')+'</div></div>'+(hd?'<div class="risk-body" id="rb-'+i+'"><div class="diag">'+esc(r.diagnostico)+'</div></div>':'')+'</div>';}).join('');}
+function renderRL(list){document.getElementById('r-list').innerHTML=list.map((r,i)=>{const hd=r.diagnostico&&r.diagnostico.length>10;const nm=san(r.clienteNome||'');
+return '<div class="risk"><div class="risk-h" onclick="togR('+i+')"><div class="risk-d">'+(r.diasAtraso||0)+'<small>dias</small></div><div class="risk-i"><div class="nm">'+nm+'</div><div class="mt">'+(san(r.fase)||'—')+' · '+(san(r.cidade)||'—')+'</div></div><div style="display:flex;gap:2px">'+(r.criticalProblems?'<span class="tag tr">'+r.criticalProblems+'</span>':'')+(r.openProblems?'<span class="tag tb">'+r.openProblems+'</span>':'')+(hd?'<span class="tag ty">diag</span>':'')+'</div></div>'+(hd?'<div class="risk-body" id="rb-'+i+'"><div class="diag">'+esc(r.diagnostico)+'</div></div>':'')+'</div>';}).join('');}
 function togR(i){document.getElementById('rb-'+i)?.classList.toggle('open');}
 function fltR(f){document.querySelectorAll('#r-flt .fb').forEach(b=>b.classList.remove('on'));event.target.classList.add('on');renderRL(f==='all'?_risks:f==='crit'?_risks.filter(r=>r.criticalProblems>2):_risks.filter(r=>r.diagnostico));}
 
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\n/g,'<br>');}
 init();
 </script>
 </body>
