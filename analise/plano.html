@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Trabalho — Central de Qualidade Monofloor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e8e8e8;line-height:1.5;font-size:13px}
+  .wrap{max-width:1400px;margin:0 auto;padding:32px 24px}
+  header{border-bottom:1px solid #222;padding-bottom:20px;margin-bottom:28px}
+  h1{font-size:22px;font-weight:600;color:#fff;letter-spacing:-0.02em}
+  h1 span{color:#c4a77d}
+  .sub{color:#888;font-size:12px;margin-top:6px}
+  .meta{display:flex;gap:20px;margin-top:12px;font-size:11px;color:#666;flex-wrap:wrap}
+  .meta b{color:#c4a77d;font-weight:500}
+
+  .progress-bar{display:flex;gap:8px;margin:20px 0;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;padding:12px;align-items:center}
+  .prog-step{flex:1;padding:10px 12px;border-radius:6px;background:#141414;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#888;position:relative;text-align:center;border:1px solid transparent}
+  .prog-step.done{background:#1d2a1d;color:#7be8a8;border-color:#2a4a2a}
+  .prog-step.doing{background:#2a221d;color:#e8c87b;border-color:#4a3a2a}
+  .prog-step.pending{background:#141414;color:#555}
+  .prog-step .pct{display:block;font-size:16px;font-weight:600;margin-top:2px;font-family:'JetBrains Mono',monospace}
+
+  section{margin-bottom:36px}
+  h2{font-size:11px;font-weight:600;color:#c4a77d;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:10px}
+  h2 .counter{color:#555;margin-left:auto;font-weight:400;font-size:11px;letter-spacing:normal;text-transform:none}
+
+  .task-list{display:flex;flex-direction:column;gap:6px}
+  .task{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:start;transition:all .15s}
+  .task:hover{border-color:#2a2a2a}
+  .task.done{opacity:.75}
+  .task .check{font-size:16px;line-height:1;font-family:'JetBrains Mono',monospace;margin-top:1px}
+  .task.done .check{color:#7be8a8}
+  .task.doing .check{color:#e8c87b}
+  .task.pending .check{color:#555}
+  .task.backlog .check{color:#7ba8e8}
+  .task .body .title{font-size:13px;color:#fff;font-weight:500;margin-bottom:4px}
+  .task.done .title{color:#aaa;text-decoration:line-through;text-decoration-color:#3a3a3a}
+  .task .desc{color:#888;font-size:11px;line-height:1.5}
+  .task .files{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+  .task .files code{font-family:'JetBrains Mono',monospace;font-size:10px;color:#c4a77d;background:#1a1a1a;padding:2px 6px;border-radius:3px}
+  .task .meta{font-size:10px;color:#666;text-align:right;white-space:nowrap}
+  .pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
+  .pill.done{background:#1d2a1d;color:#7be8a8}
+  .pill.doing{background:#2a221d;color:#e8c87b}
+  .pill.pending{background:#1f1f1f;color:#888}
+  .pill.backlog{background:#1a2330;color:#7ba8e8}
+  .pill.crit{background:#2a1d1d;color:#e87b7b}
+
+  .tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;color:#888;background:#151515;border:1px solid #222;padding:1px 6px;border-radius:3px;margin-right:4px}
+
+  .findings{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:14px 16px;margin-top:8px;font-size:12px;color:#bbb;line-height:1.6}
+  .findings b{color:#c4a77d}
+
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid #1a1a1a;color:#555;font-size:11px;text-align:center}
+  .nav-links{display:flex;gap:14px;margin-top:10px;font-size:11px;justify-content:center}
+  .nav-links a{color:#c4a77d;text-decoration:none}
+  .nav-links a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Plano de Trabalho <span>· Central de Qualidade Monofloor</span></h1>
+  <div class="sub">Mapa único das etapas, cruzamentos entregues e backlog de hipóteses a testar. Atualizado a cada passo concluído.</div>
+  <div class="meta">
+    <span>Última atualização: <b>2026-04-15</b></span>
+    <span>Etapa atual: <b>2 — Cruzamentos</b></span>
+    <span>Cruzamentos entregues: <b>5</b></span>
+    <span>Backlog: <b>16</b></span>
+    <span>Abas mapeadas: <b>3/15</b></span>
+  </div>
+</header>
+
+<div class="progress-bar">
+  <div class="prog-step done">Etapa 1 · Acúmulo<span class="pct">100%</span></div>
+  <div class="prog-step doing">Etapa 2 · Cruzamentos<span class="pct">~25%</span></div>
+  <div class="prog-step pending">Etapa 3 · Consolidação<span class="pct">0%</span></div>
+  <div class="prog-step pending">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
+</div>
+
+<section>
+  <h2>Etapa 1 — Acúmulo de dados <span class="counter">3/3 abas · 16 auditores</span></h2>
+  <div class="task-list">
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">Modelagem da aba /app/projetos (6 auditores)</div>
+        <div class="desc">Inventário completo: ~60 campos, 12 status, 27 fases, datas, pessoas, atributos físicos, geografia, eventos, WhatsApp, checklist allFields, schema fantasma, anomalias.</div>
+        <div class="files"><code>modelagem.html#campos</code></div>
+      </div>
+      <div class="meta">2026-04-15</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">Modelagem da aba /app/hoje (5 auditores)</div>
+        <div class="desc">Veredito byte-a-byte: espelho client-side de /api/projects. Descoberta: /api/escalacao-diaria, polling 10s WhatsApp, Kira decodificada.</div>
+        <div class="files"><code>modelagem.html#hoje</code></div>
+      </div>
+      <div class="meta">2026-04-15</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">Modelagem da aba /app/planejamento (5 auditores)</div>
+        <div class="desc">Backend SEPARADO em planejamento.monofloor.cloud. 2 schemas de equipes incompatíveis. Pipeline COMBINADO com 21+ etapas. Gap total de capacidade produtiva.</div>
+        <div class="files"><code>modelagem.html#planejamento</code></div>
+      </div>
+      <div class="meta">2026-04-15</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">5 concluídos</span></h2>
+  <div class="task-list">
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#1 Tempo de permanência — fonte planejamento <span class="pill done">refutado</span></div>
+        <div class="desc">Rejeição de <code>dataEntrada/dataEntradaOperacoes</code> como fonte confiável. Cobertura 4-46%, datas futuras, mediana zero. Campo não mede latência real.</div>
+        <div class="files"><code>dados/projetos-temporal.json</code></div>
+      </div>
+      <div class="meta">c1</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#2 Extração massiva pipefyCreatedAt (1.028 obras, 95s)</div>
+        <div class="desc">Achado grande: Pipefy da Monofloor começou em 2025-06-04 — não há histórico anterior. Idade máxima possível ~315 dias. 51,46% cobertura na extração inicial.</div>
+        <div class="files"><code>dados/pipefy-temporal.json</code> <code>dados/details/*.json (1028)</code></div>
+      </div>
+      <div class="meta">c2</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#3 Cruzamento com snapshot Pipefy público</div>
+        <div class="desc">591 cards do repo <code>cargo-assistente</code> cruzados com 1.028. Descartado <code>data_entrada</code> (era data prevista). Fontes API e snapshot 100% coerentes quando existem.</div>
+        <div class="files"><code>dados/temporal-consolidado.json</code> <code>dados/painel-temporal.json</code></div>
+      </div>
+      <div class="meta">c3</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#4 Idade × fase (cemitérios do pipeline)</div>
+        <div class="desc">Cemitério por volume: CLIENTE FINALIZADO (n=31, máx 315d) + AGUARDANDO LIBERAÇÃO (n=19) + OBRA PAUSADA (n=10). AGEND. VT é funil de entrada com cauda longa.</div>
+        <div class="files"><code>dados/cruz-idade-fase.json</code></div>
+      </div>
+      <div class="meta">c4</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#5 Idade × consultor (sobrecarga)</div>
+        <div class="desc">Luana 89 ativas (42,79%, mediana 208d), Wesley 88 (42,31%, mediana 175,5d). Top 2 concentra 91% das 180+. Todas as 6 obras 270+ são de Luana.</div>
+        <div class="files"><code>dados/cruz-idade-consultor.json</code></div>
+      </div>
+      <div class="meta">c5</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#6 Idade × geografia <span class="pill crit">hipótese rejeitada</span></div>
+        <div class="desc">Hipótese "RJ mais antigo que SP" derrubada: SP mediana 205d vs RJ 139,5d. SP é 65 dias mais velho. Cidades pequenas (Piracicaba, São Sebastião, Mogi) muito antigas.</div>
+        <div class="files"><code>dados/cruz-idade-geo.json</code></div>
+      </div>
+      <div class="meta">c6</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#7 Descasamento status × faseAtual (limbo)</div>
+        <div class="desc">25 obras ativas em descasamento lógico (5,36%). 10 "zumbi" (fase=CLIENTE FINALIZADO + status aberto). 9 "reparo" em fase errada. Sugere gargalo administrativo, não técnico.</div>
+        <div class="files"><code>dados/cruz-limbo.json</code></div>
+      </div>
+      <div class="meta">c7</div>
+    </div>
+  </div>
+
+  <div class="findings">
+    <b>Insights transversais até aqui:</b>
+    <ul style="margin:8px 0 0 20px;font-size:12px;line-height:1.7">
+      <li>O painel atual não mostra: <b>~30 obras em CLIENTE FINALIZADO nunca fechadas</b> — maior cluster antigo. Gargalo é administrativo, não operacional.</li>
+      <li>Bus factor = 2: Luana + Wesley = 85% das ativas, 91% das 180+. Sem um deles, operação colapsa.</li>
+      <li>49% das obras ativas estão no radar há mais de 6 meses (101 de 208).</li>
+      <li>Pipefy começou em 2025-06-04 — idade máxima possível na nossa base = 315 dias. Para histórico anterior, fonte externa.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">16 ideias</span></h2>
+  <div class="task-list">
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B1 Obras "zumbi" — listar todas e consolidar <span class="pill backlog">quick win</span></div>
+        <div class="desc">Obras com fase=CLIENTE FINALIZADO + status aberto. Quem é consultor, há quanto tempo, qual ação pendente. Alvo de limpeza administrativa imediata.</div>
+        <div class="files"><span class="tag">limbo</span> <span class="tag">quick-win</span></div>
+      </div>
+      <div class="meta">próx.</div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B2 Idade × metragem (obras grandes envelhecem mais?)</div>
+        <div class="desc">Testar correlação entre projetoMetragem e idade_dias. Hipótese: obras grandes > 500 m² têm ciclo maior.</div>
+        <div class="files"><span class="tag">correlação</span></div>
+      </div>
+      <div class="meta">próx.</div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B3 Idade × tipoObra (piso / parede / piso_parede)</div>
+        <div class="desc">Qual tipologia envelhece mais no pipeline. Cuidado com 28,5% NULO + taxonomia dupla (escopo vs natureza).</div>
+        <div class="files"><span class="tag">correlação</span></div>
+      </div>
+      <div class="meta">próx.</div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B4 Obras silenciosas (sem comunicação há X dias)</div>
+        <div class="desc">Cruzar idade_dias com whatsappSummary.geradoEm. Obras antigas + sem atualização recente = alerta vermelho.</div>
+        <div class="files"><span class="tag">comunicação</span> <span class="tag">risco</span></div>
+      </div>
+      <div class="meta">próx.</div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B5 Luana vs Wesley — perfil comparativo de carteira</div>
+        <div class="desc">Mesma carga (88-89), mas qual o perfil? Cidade, metragem, tipo, fase dominante. Por que Luana tem mediana 33d maior e 6 obras 270+?</div>
+        <div class="files"><span class="tag">comparativo</span></div>
+      </div>
+      <div class="meta">próx.</div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B6 Obras sem consultor (18 órfãs)</div>
+        <div class="desc">Listar nome a nome as 18 ativas sem consultor. Por quanto tempo estão órfãs? Qual estado? Alguém está cuidando?</div>
+        <div class="files"><span class="tag">gaps</span></div>
+      </div>
+      <div class="meta">próx.</div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B7 Concentração de fase AGEND. VT - AFERIÇÃO (46 obras, 15 com 180+)</div>
+        <div class="desc">Maior cluster por contagem. Por que tem cauda longa de 15 esquecidos? Quem puxa? Qual o perfil dessas 15?</div>
+        <div class="files"><span class="tag">gargalo</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B8 Ocorrências × obra × idade</div>
+        <div class="desc">690 ocorrências abertas. Estão concentradas em obras antigas ou distribuídas? Cruzar com problemCategories e idade_dias.</div>
+        <div class="files"><span class="tag">qualidade</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B9 Reparo — mapa completo</div>
+        <div class="desc">Todas as obras status=reparo. Quem aplicou originalmente? Quem está reparando? Wesley concentra 100%? Tempo entre entrega e reparo.</div>
+        <div class="files"><span class="tag">qualidade</span> <span class="tag">FTR</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B10 Escalação hoje × obras em execução</div>
+        <div class="desc">25 escalações hoje, 11 em obras em_execucao. Os outros 14? Qual status? Está escalando obra que não está executando?</div>
+        <div class="files"><span class="tag">operação</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B11 Cronograma fossilizado — obras ativas com dataTermino no passado</div>
+        <div class="desc">Planejamento mostrou 33/33 obras ativas com dataTermino &lt; hoje. Cruzar IDs com painel-temporal para ver status real e quem é consultor.</div>
+        <div class="files"><span class="tag">planejamento</span> <span class="tag">fossil</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B12 Aplicadores × carga hoje × carga mensal</div>
+        <div class="desc">70 cadastrados, 31 ativos, 6 equipes. Qual a distribuição real de obras por aplicador? Há aplicador sobrecarregado/ocioso?</div>
+        <div class="files"><span class="tag">equipe</span> <span class="tag">capacidade</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B13 Equipes fantasmas (João, Egberto, Gilmar)</div>
+        <div class="desc">3 de 6 equipes têm líder ou membros 100% inativos. Como estão fazendo obras? Encarregados ocultos (5 IDs em escalação) assumem.</div>
+        <div class="files"><span class="tag">equipe</span> <span class="tag">dados sujos</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B14 Obras com alertas no whatsappSummary</div>
+        <div class="desc">pendenciaManual.whatsappSummary.alertas (ex: "RISCO DE NOVO ADIAMENTO"). Quantas obras têm alertas vermelhos? Quem é consultor?</div>
+        <div class="files"><span class="tag">risco</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B15 Cores placeholder "À DEFINIR" / "PERSONALIZADA" (31 obras)</div>
+        <div class="desc">Obras com cor indefinida há quanto tempo? Está segurando o pipeline? Cruzar com idade.</div>
+        <div class="files"><span class="tag">gaps</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+    <div class="task backlog">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">#B16 Painel integrado de obras antigas (consolidação visual)</div>
+        <div class="desc">Pegar todos os cruzamentos entregues e montar um ranking único com filtros: por consultor, fase, cidade, tipo. Preparação pra Etapa 3.</div>
+        <div class="files"><span class="tag">dashboard</span> <span class="tag">consolidação</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Etapa 3 — Consolidação (ainda não iniciada)</h2>
+  <div class="task-list">
+    <div class="task pending">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">Definir estratégia de espelhamento em tempo real</div>
+        <div class="desc">GitHub Actions cron de 5 min (barato, atraso 5 min) vs Cloudflare Worker proxy (tempo real, free tier) vs server próprio. Decisão pendente.</div>
+        <div class="files"><span class="tag">infra</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+    <div class="task pending">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">Snapshot diário (base para "dias em fase" e adiamentos)</div>
+        <div class="desc">API não tem histórico de transição de fase. Única forma de medir "dias em fase" e contar adiamentos: gravar JSON por dia a partir de hoje.</div>
+        <div class="files"><span class="tag">infra</span> <span class="tag">histórico</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Etapa 4 — Dashboard final (ainda não iniciada)</h2>
+  <div class="task-list">
+    <div class="task pending">
+      <div class="check">○</div>
+      <div class="body">
+        <div class="title">Redesenho do painel Central de Qualidade</div>
+        <div class="desc">Substitui <code>auditoria.html</code> v6 atual. Arquitetura a definir após cruzamentos completos. Deve refletir em tempo real da plataforma cliente.</div>
+        <div class="files"><span class="tag">UI</span></div>
+      </div>
+      <div class="meta"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Plano v1 · atualizado conforme execução
+  <div class="nav-links">
+    <a href="modelagem.html">Modelagem</a> ·
+    <a href="auditoria.html">Dashboard v6 (atual)</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
