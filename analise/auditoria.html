@@ -168,12 +168,44 @@ a{color:var(--a);text-decoration:none}button{font-family:inherit;cursor:pointer;
 <!-- ═══ PAINEL ═══ -->
 <div class="pillar on" id="p-painel"><div class="w">
 
-  <!-- HERO -->
-  <div class="sec" style="text-align:center;padding:40px 0 24px">
-    <div style="font-size:8px;color:var(--a);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:16px" id="h-date"></div>
-    <div id="hero-big" style="font-family:var(--fd);font-size:clamp(64px,12vw,120px);font-weight:300;line-height:.85;letter-spacing:-3px;color:var(--t)">—<span style="font-size:.3em;color:var(--t3);margin-left:4px">dias</span></div>
-    <div style="font-size:12px;color:var(--t2);margin-top:8px" id="hero-sub">Tempo medio de uma obra no pipeline</div>
-    <div style="max-width:400px;margin:16px auto 0" id="hero-bar"></div>
+  <!-- HERO: Este mes vs Proximo -->
+  <div class="sec" style="padding:32px 0 16px">
+    <div style="font-size:8px;color:var(--a);letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:20px;text-align:center" id="h-date"></div>
+    <div class="g3" style="gap:12px">
+      <!-- Mes passado -->
+      <div class="c" id="mes-passado" style="cursor:pointer;text-align:center;padding:20px" data-drill>
+        <div style="font-size:8px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Mes passado</div>
+        <div id="mp-label" style="font-size:11px;color:var(--t2);margin-bottom:8px">—</div>
+        <div style="font-family:var(--fd);font-size:48px;font-weight:300;line-height:1" id="mp-obras">—</div>
+        <div style="font-size:9px;color:var(--t3);margin-top:2px">obras previstas</div>
+        <div style="font-family:var(--fm);font-size:14px;color:var(--a);margin-top:6px" id="mp-m2">— m²</div>
+        <div id="mp-trend" style="font-size:9px;font-weight:600;margin-top:4px"></div>
+      </div>
+      <!-- Este mes (destacado) -->
+      <div class="c" id="mes-atual" style="cursor:pointer;text-align:center;padding:20px;border-color:var(--a);background:linear-gradient(135deg,var(--s2),rgba(196,167,125,.08))" data-drill>
+        <div style="font-size:8px;color:var(--a);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700">Este mes</div>
+        <div id="ma-label" style="font-size:11px;color:var(--t2);margin-bottom:8px">—</div>
+        <div style="font-family:var(--fd);font-size:60px;font-weight:300;line-height:1;color:var(--a)" id="ma-obras">—</div>
+        <div style="font-size:9px;color:var(--t3);margin-top:2px">obras previstas</div>
+        <div style="font-family:var(--fm);font-size:16px;color:var(--a);margin-top:6px" id="ma-m2">— m²</div>
+        <div id="ma-trend" style="font-size:9px;font-weight:600;margin-top:4px"></div>
+      </div>
+      <!-- Proximo mes -->
+      <div class="c" id="mes-prox" style="cursor:pointer;text-align:center;padding:20px" data-drill>
+        <div style="font-size:8px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Proximo mes</div>
+        <div id="mx-label" style="font-size:11px;color:var(--t2);margin-bottom:8px">—</div>
+        <div style="font-family:var(--fd);font-size:48px;font-weight:300;line-height:1" id="mx-obras">—</div>
+        <div style="font-size:9px;color:var(--t3);margin-top:2px">obras previstas</div>
+        <div style="font-family:var(--fm);font-size:14px;color:var(--a);margin-top:6px" id="mx-m2">— m²</div>
+        <div id="mx-trend" style="font-size:9px;font-weight:600;margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE MENSAL -->
+  <div class="sec" style="padding:16px 0">
+    <div class="sec-h"><h2>Volume mensal — ultimos 6 meses + 3 proximos</h2><span class="sub" id="timeline-sub"></span></div>
+    <div class="c"><div id="timeline-chart"></div></div>
   </div>
 
   <!-- DONUT + TIPOS -->
@@ -399,11 +431,93 @@ const totalM2=P.reduce((s,p)=>s+(parseFloat(p.projetoMetragem)||0),0);
 document.getElementById('h-date').textContent='Central de Qualidade · '+dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
 document.getElementById('hoje-date').textContent=dt.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
 
-// HERO BIG NUMBER
-document.getElementById('hero-big').innerHTML='186<span style="font-size:.3em;color:var(--t3);margin-left:4px">dias</span>';
-document.getElementById('hero-sub').textContent=t.total+' obras analisadas · '+t.active+' ativas · tempo medio no pipeline · meta: 150 dias';
-var barPct=Math.min(100,(186/290)*100);var markerPct=(150/290)*100;
-document.getElementById('hero-bar').innerHTML='<div style="position:relative;height:6px;background:var(--t4);border-radius:3px"><div style="height:100%;width:'+barPct+'%;background:linear-gradient(90deg,var(--a),var(--r));border-radius:3px"></div><div style="position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--g);left:'+markerPct+'%"></div></div><div style="display:flex;justify-content:space-between;font-size:7px;color:var(--t3);margin-top:2px"><span>0 dias</span><span style="color:var(--g)">Meta 150d</span><span>290 dias (P95)</span></div>';
+// ═══ COMPARATIVO MENSAL ═══
+var MESES_PT=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function ymKey(y,m){return y+'-'+String(m+1).padStart(2,'0');}
+function mesLabel(key){var p=key.split('-');return MESES_PT[parseInt(p[1])-1]+'/'+p[0].slice(2);}
+
+// Agrupa obras por mes (dataExecucaoPrevista)
+var mData={};
+P.forEach(function(p){
+  if(!p.dataExecucaoPrevista)return;
+  var m=p.dataExecucaoPrevista.substring(0,7);
+  if(!mData[m])mData[m]={obras:0,m2:0,fin:0,rep:0,paus:0,exec:0,aguard:0,list:[]};
+  mData[m].obras++;
+  mData[m].m2+=parseFloat(p.projetoMetragem)||0;
+  mData[m].list.push(p);
+  if(p.status==='finalizado'||p.status==='concluido')mData[m].fin++;
+  if(p.status==='reparo')mData[m].rep++;
+  if(p.status==='pausado')mData[m].paus++;
+  if(p.status==='em_execucao')mData[m].exec++;
+  if(p.status==='aguardando_execucao'||p.status==='aguardando_clima')mData[m].aguard++;
+});
+
+var hoje=new Date();
+var mesAtualKey=ymKey(hoje.getFullYear(),hoje.getMonth());
+var mesAntKey=ymKey(hoje.getFullYear(),hoje.getMonth()-1);
+var mesProxKey=ymKey(hoje.getFullYear(),hoje.getMonth()+1);
+if(hoje.getMonth()===0)mesAntKey=(hoje.getFullYear()-1)+'-12';
+if(hoje.getMonth()===11)mesProxKey=(hoje.getFullYear()+1)+'-01';
+
+var mAt=mData[mesAtualKey]||{obras:0,m2:0,list:[]};
+var mAn=mData[mesAntKey]||{obras:0,m2:0,list:[]};
+var mPx=mData[mesProxKey]||{obras:0,m2:0,list:[]};
+
+function growth(atual,anterior){
+  if(anterior===0)return atual>0?'+∞%':'0%';
+  var pct=Math.round((atual-anterior)/anterior*100);
+  return(pct>=0?'+':'')+pct+'%';
+}
+function growthColor(atual,anterior){
+  if(anterior===0)return atual>0?'var(--g)':'var(--t3)';
+  return atual>=anterior?'var(--g)':'var(--r)';
+}
+
+// Mes passado
+document.getElementById('mp-label').textContent=mesLabel(mesAntKey);
+document.getElementById('mp-obras').textContent=mAn.obras;
+document.getElementById('mp-m2').textContent=Math.round(mAn.m2).toLocaleString('pt-BR')+' m²';
+document.getElementById('mes-passado').onclick=function(){openModal('Obras previstas '+mesLabel(mesAntKey),mAn.obras+' obras',mAn.list);};
+
+// Este mes
+document.getElementById('ma-label').textContent=mesLabel(mesAtualKey);
+document.getElementById('ma-obras').textContent=mAt.obras;
+document.getElementById('ma-m2').textContent=Math.round(mAt.m2).toLocaleString('pt-BR')+' m²';
+document.getElementById('ma-trend').innerHTML='<span style="color:'+growthColor(mAt.obras,mAn.obras)+'">'+growth(mAt.obras,mAn.obras)+'</span> vs mes anterior';
+document.getElementById('mes-atual').onclick=function(){openModal('Obras previstas '+mesLabel(mesAtualKey),mAt.obras+' obras · '+Math.round(mAt.m2)+' m²',mAt.list);};
+
+// Proximo mes
+document.getElementById('mx-label').textContent=mesLabel(mesProxKey);
+document.getElementById('mx-obras').textContent=mPx.obras;
+document.getElementById('mx-m2').textContent=Math.round(mPx.m2).toLocaleString('pt-BR')+' m²';
+document.getElementById('mx-trend').innerHTML='<span style="color:'+growthColor(mPx.obras,mAt.obras)+'">'+growth(mPx.obras,mAt.obras)+'</span> vs este mes';
+document.getElementById('mes-prox').onclick=function(){openModal('Obras previstas '+mesLabel(mesProxKey),mPx.obras+' obras',mPx.list);};
+
+// TIMELINE 9 meses (6 passados + atual + 2 futuros)
+var timelineKeys=[];
+for(var i=-6;i<=2;i++){
+  var d=new Date(hoje.getFullYear(),hoje.getMonth()+i,1);
+  timelineKeys.push(ymKey(d.getFullYear(),d.getMonth()));
+}
+var maxObras=Math.max.apply(null,timelineKeys.map(function(k){return(mData[k]||{obras:0}).obras;}))||1;
+var maxM2=Math.max.apply(null,timelineKeys.map(function(k){return(mData[k]||{m2:0}).m2;}))||1;
+
+document.getElementById('timeline-sub').textContent='Clique no mes para detalhar';
+document.getElementById('timeline-chart').innerHTML='<div style="display:grid;grid-template-columns:repeat('+timelineKeys.length+',1fr);gap:4px;align-items:end;height:140px;padding:0 4px">'+
+timelineKeys.map(function(k){
+  var m=mData[k]||{obras:0,m2:0,list:[]};
+  var h=(m.obras/maxObras)*100;
+  var isAtual=k===mesAtualKey;
+  var cor=isAtual?'var(--a)':k===mesAntKey?'var(--b)':k===mesProxKey?'var(--y)':'var(--t4)';
+  return '<div data-drill onclick="openModal(\'Obras '+mesLabel(k)+'\','+m.obras+'+\' obras · '+Math.round(m.m2)+' m²\', window._mData[\''+k+'\']||[])" style="cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%" title="'+mesLabel(k)+': '+m.obras+' obras, '+Math.round(m.m2)+' m²">'+
+    '<div style="font-family:var(--fm);font-size:10px;font-weight:700;color:'+cor+';margin-bottom:2px">'+m.obras+'</div>'+
+    '<div style="width:100%;background:'+cor+';border-radius:3px 3px 0 0;min-height:2px;height:'+Math.max(h,2)+'%;transition:all .3s"></div>'+
+    '<div style="font-size:8px;color:var(--t3);margin-top:4px;text-transform:uppercase">'+mesLabel(k)+'</div>'+
+    '<div style="font-family:var(--fm);font-size:8px;color:'+cor+';margin-top:1px">'+(m.m2>1000?Math.round(m.m2/1000)+'k':Math.round(m.m2))+'m²</div>'+
+  '</div>';
+}).join('')+'</div>';
+window._mData={};
+Object.keys(mData).forEach(function(k){window._mData[k]=mData[k].list;});
 
 // DONUT
 var execCount=active.filter(function(p){return['em_execucao','aguardando_clima','marcas_rolo_cera'].indexOf(p.status)>=0;}).length;
