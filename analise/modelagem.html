@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelagem de Dados — Aba Obras (Monofloor Cloud)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e8e8e8;line-height:1.5;font-size:13px}
+  .wrap{max-width:1600px;margin:0 auto;padding:32px 24px}
+  header{border-bottom:1px solid #222;padding-bottom:24px;margin-bottom:32px}
+  h1{font-size:24px;font-weight:600;color:#fff;letter-spacing:-0.02em}
+  h1 span{color:#c4a77d}
+  .sub{color:#888;font-size:12px;margin-top:6px}
+  .meta{display:flex;gap:24px;margin-top:16px;font-size:11px;color:#666}
+  .meta span b{color:#c4a77d;font-weight:500}
+
+  nav{position:sticky;top:0;background:#0a0a0a;border-bottom:1px solid #222;padding:12px 0;margin:0 -24px 24px;z-index:10}
+  nav ul{display:flex;gap:4px;list-style:none;padding:0 24px;flex-wrap:wrap}
+  nav a{color:#888;text-decoration:none;font-size:11px;padding:6px 10px;border-radius:4px;transition:all .15s;text-transform:uppercase;letter-spacing:0.05em}
+  nav a:hover{background:#1a1a1a;color:#c4a77d}
+
+  section{margin-bottom:48px;scroll-margin-top:80px}
+  h2{font-size:11px;font-weight:600;color:#c4a77d;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #1a1a1a}
+  h2 .count{color:#555;margin-left:8px;font-weight:400}
+  h3{font-size:13px;font-weight:600;color:#fff;margin:20px 0 10px}
+
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  .g4{grid-template-columns:repeat(4,1fr)}
+
+  .card{background:#101010;border:1px solid #1f1f1f;border-radius:6px;padding:16px}
+  .card h4{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
+  .card .num{font-size:24px;font-weight:600;color:#fff;font-family:'JetBrains Mono',monospace}
+  .card .num.gold{color:#c4a77d}
+  .card .num.red{color:#e87b7b}
+  .card .num.amber{color:#e8c87b}
+  .card .num.green{color:#7be8a8}
+  .card .lbl{font-size:11px;color:#666;margin-top:4px}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;padding:8px 10px;color:#888;font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #222;background:#0d0d0d;position:sticky;top:60px}
+  td{padding:7px 10px;border-bottom:1px solid #161616;vertical-align:top}
+  tr:hover td{background:#0d0d0d}
+  td.mono,th.mono{font-family:'JetBrains Mono',monospace;font-size:11px}
+  td.num{text-align:right;font-family:'JetBrains Mono',monospace}
+  td .tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-family:'JetBrains Mono',monospace;background:#1a1a1a;color:#aaa}
+  td .tag.str{background:#1a2330;color:#7ba8e8}
+  td .tag.num{background:#1d2a1d;color:#7be8a8}
+  td .tag.date{background:#2a221d;color:#e8c87b}
+  td .tag.bool{background:#2a1d2a;color:#d87be8}
+  td .tag.arr{background:#2a2a1d;color:#e8e87b}
+  td .tag.obj{background:#1d2a2a;color:#7be8e8}
+  td .tag.null{background:#2a1d1d;color:#e87b7b}
+
+  .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
+  .pill.ok{background:#1d2a1d;color:#7be8a8}
+  .pill.warn{background:#2a221d;color:#e8c87b}
+  .pill.crit{background:#2a1d1d;color:#e87b7b}
+  .pill.info{background:#1a2330;color:#7ba8e8}
+  .pill.dead{background:#1f1f1f;color:#666;text-decoration:line-through}
+
+  .bar{height:4px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin-top:4px}
+  .bar div{height:100%;background:#c4a77d;border-radius:2px}
+  .bar.red div{background:#e87b7b}
+  .bar.amber div{background:#e8c87b}
+  .bar.green div{background:#7be8a8}
+
+  .anom{background:#1a0f0f;border-left:3px solid #e87b7b;padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:12px}
+  .anom b{color:#e87b7b}
+
+  .deadfield{background:#150e0e;border-left:3px solid #444;padding:8px 12px;border-radius:0 4px 4px 0;margin-bottom:6px;font-size:11px;color:#888;font-family:'JetBrains Mono',monospace}
+
+  .question{background:#0f1518;border-left:3px solid #7ba8e8;padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:12px;color:#bbd}
+
+  details{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;margin-bottom:8px}
+  details summary{padding:12px 16px;cursor:pointer;font-size:12px;color:#ccc;font-weight:500}
+  details summary:hover{background:#141414}
+  details[open]{background:#0a0a0a}
+  details > div{padding:12px 16px;border-top:1px solid #1a1a1a}
+
+  .endpoint{font-family:'JetBrains Mono',monospace;font-size:11px;color:#c4a77d;background:#1a1a1a;padding:2px 6px;border-radius:3px;display:inline-block}
+
+  .legend{display:flex;gap:14px;margin-bottom:14px;font-size:10px;color:#666;flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:4px}
+
+  .funnel{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+  .funnel-row{display:grid;grid-template-columns:160px 1fr 50px;gap:8px;align-items:center;font-size:11px}
+  .funnel-row .name{color:#bbb;font-family:'JetBrains Mono',monospace;font-size:10px}
+  .funnel-row .bar-out{height:18px;background:#141414;border-radius:3px;overflow:hidden;position:relative}
+  .funnel-row .bar-in{height:100%;background:linear-gradient(90deg,#c4a77d,#8a7355)}
+  .funnel-row .v{text-align:right;color:#c4a77d;font-family:'JetBrains Mono',monospace}
+
+  footer{margin-top:48px;padding-top:24px;border-top:1px solid #1a1a1a;color:#555;font-size:11px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Modelagem de Dados <span>· Aba Obras</span></h1>
+  <div class="sub">Inventário completo de campos, estados, atores e eventos extraídos da plataforma <span class="endpoint">cliente.monofloor.cloud</span></div>
+  <div class="meta">
+    <span>Auditores: <b>6</b></span>
+    <span>Endpoints: <b>4</b></span>
+    <span>Campos mapeados: <b>~60</b></span>
+    <span>Status distintos: <b>12</b></span>
+    <span>Fases Pipefy: <b>27</b></span>
+    <span>Anomalias: <b>40+</b></span>
+    <span>Etapa: <b>1 — acúmulo</b></span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#vol">Volume</a></li>
+    <li><a href="#endpoints">Endpoints</a></li>
+    <li><a href="#campos">Campos</a></li>
+    <li><a href="#status">Status</a></li>
+    <li><a href="#fases">Fases</a></li>
+    <li><a href="#datas">Datas</a></li>
+    <li><a href="#pessoas">Pessoas</a></li>
+    <li><a href="#fisico">Físico</a></li>
+    <li><a href="#geo">Geografia</a></li>
+    <li><a href="#eventos">Eventos</a></li>
+    <li><a href="#whatsapp">WhatsApp</a></li>
+    <li><a href="#allfields">Checklist</a></li>
+    <li><a href="#mortos">Schema Fantasma</a></li>
+    <li><a href="#anomalias">Anomalias</a></li>
+    <li><a href="#perguntas">Em Aberto</a></li>
+  </ul>
+</nav>
+
+<section id="vol">
+  <h2>Volume Geral</h2>
+  <div class="grid g4">
+    <div class="card"><h4>Total projetos (dashboard)</h4><div class="num gold">1.028</div><div class="lbl">universo completo</div></div>
+    <div class="card"><h4>Ativos</h4><div class="num">181</div><div class="lbl">17,6% da base</div></div>
+    <div class="card"><h4>Finalizados</h4><div class="num">847</div><div class="lbl">82,4% da base</div></div>
+    <div class="card"><h4>Amostra /api/projects</h4><div class="num">200</div><div class="lbl">paginação não confirmada</div></div>
+    <div class="card"><h4>Em risco (atRisk)</h4><div class="num red">36</div><div class="lbl">/api/analise</div></div>
+    <div class="card"><h4>Ocorrências abertas</h4><div class="num red">690</div><div class="lbl">/api/dashboard</div></div>
+    <div class="card"><h4>Categorias de problema</h4><div class="num">11</div><div class="lbl">67% caem em "Outros"</div></div>
+    <div class="card"><h4>Operadores ativos</h4><div class="num">6</div><div class="lbl">2 concentram 94%</div></div>
+  </div>
+</section>
+
+<section id="endpoints">
+  <h2>Endpoints REST disponíveis</h2>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Retorna</th><th>Volume</th><th>Auth</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/projects</td><td>lista de obras (snapshot raso)</td><td class="num">200</td><td><span class="pill info">público</span></td><td>paginação não declarada</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/projects/{id}</td><td>detalhe individual + acessoDetalhes + allFields + whatsappSummary</td><td class="num">1</td><td><span class="pill info">público</span></td><td>mina de ouro — só carregada sob demanda</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/dashboard</td><td>KPIs agregados, SLAs, fases, ocorrências, NPS</td><td class="num">1 obj</td><td><span class="pill info">público</span></td><td>pausas[] sempre vazio</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/analise</td><td>atRisk, problemCategories, recentEvents, teamPerformance</td><td class="num">1 obj</td><td><span class="pill info">público</span></td><td>recentEvents limitado a ~32</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/whatsapp/conversations</td><td>conversas WhatsApp</td><td class="num">625</td><td><span class="pill info">público</span></td><td>endpoint paralelo, sem join nativo com obra</td></tr>
+      <tr><td><span class="pill crit">404</span></td><td class="mono">/api/whatsapp</td><td>—</td><td>—</td><td>—</td><td>endpoint agregado não existe</td></tr>
+      <tr><td><span class="pill warn">AUTH</span></td><td class="mono">/app/contratos</td><td>contratos</td><td>?</td><td><span class="pill warn">senha</span></td><td>protegido</td></tr>
+      <tr><td><span class="pill warn">AUTH</span></td><td class="mono">/app/financeiro</td><td>financeiro</td><td>?</td><td><span class="pill warn">senha</span></td><td>protegido</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="campos">
+  <h2>Inventário de Campos por Obra <span class="count">~60 campos mapeados</span></h2>
+  <div class="legend">
+    <span><span class="tag str">str</span> string</span>
+    <span><span class="tag num">num</span> número</span>
+    <span><span class="tag date">date</span> data</span>
+    <span><span class="tag bool">bool</span> booleano</span>
+    <span><span class="tag arr">arr</span> array</span>
+    <span><span class="tag obj">obj</span> objeto</span>
+    <span><span class="tag null">∅</span> nulo crônico</span>
+  </div>
+
+  <h3>Raiz — /api/projects + detalhe</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo</th><th>Preench.</th><th>Exemplo</th><th>Origem</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">id</td><td><span class="tag str">uuid</span></td><td class="num">100%</td><td class="mono">08b0d9bd-50d3-...</td><td>list+detail</td><td>chave primária</td></tr>
+      <tr><td class="mono">pipefyCardId</td><td><span class="tag str">str</span></td><td class="num">100%</td><td>—</td><td>detail</td><td>FK Pipefy</td></tr>
+      <tr><td class="mono">clienteNome</td><td><span class="tag str">str</span></td><td class="num">100%</td><td>SR2 CASAS - GOLF RESORT</td><td>list+detail</td><td>exibido</td></tr>
+      <tr><td class="mono">clienteTelefone</td><td><span class="tag str">str</span>/<span class="tag null">∅</span></td><td class="num">~13%</td><td>+55 11 ...</td><td>list+detail</td><td>3 grafias para vazio</td></tr>
+      <tr><td class="mono">clienteEmail</td><td><span class="tag str">str</span>/<span class="tag null">∅</span></td><td class="num">0,5%</td><td>—</td><td>list+detail</td><td>campo praticamente morto</td></tr>
+      <tr><td class="mono">projetoEndereco</td><td><span class="tag str">multi-line</span></td><td class="num">100%</td><td>cidade+rua+CEP+maps</td><td>list+detail</td><td>requer parser</td></tr>
+      <tr><td class="mono">projetoCidade</td><td><span class="tag str">str</span></td><td class="num">100%</td><td>SÃO PAULO/SP</td><td>list+detail</td><td>4 grafias para SP</td></tr>
+      <tr><td class="mono">projetoMetragem</td><td><span class="tag str">decimal-as-str</span></td><td class="num">80%</td><td>295.41</td><td>list+detail</td><td>m²; parse necessário</td></tr>
+      <tr><td class="mono">projetoCores</td><td><span class="tag arr">arr&lt;str&gt;</span></td><td class="num">54%</td><td>["MIRAGE","SAARA"]</td><td>list+detail</td><td>placeholders frequentes</td></tr>
+      <tr><td class="mono">tipoObra</td><td><span class="tag str">enum-misto</span></td><td class="num">71%</td><td>piso_parede / Obra nova</td><td>list+detail</td><td>2 taxonomias misturadas</td></tr>
+      <tr><td class="mono">status</td><td><span class="tag str">enum(12)</span></td><td class="num">100%</td><td>aguardando_execucao</td><td>list+detail</td><td>ver §Status</td></tr>
+      <tr><td class="mono">faseAtual</td><td><span class="tag str">str</span></td><td class="num">98,5%</td><td>INDÚSTRIA - EM PRODUÇÃO</td><td>list+detail</td><td>27 fases distintas</td></tr>
+      <tr><td class="mono">pipefyFase</td><td><span class="tag str">str</span></td><td class="num">80%</td><td>idem faseAtual</td><td>list+detail</td><td>duplica faseAtual</td></tr>
+      <tr><td class="mono">dataExecucaoPrevista</td><td><span class="tag date">YYYY-MM-DD</span></td><td class="num">58%</td><td>2026-05-11</td><td>list+detail</td><td>42% nulo</td></tr>
+      <tr><td class="mono">dataExecucaoConfirmada</td><td><span class="tag date">date</span>/<span class="tag null">∅</span></td><td class="num">baixo</td><td>2026-04-06</td><td>detail</td><td>par com prevista</td></tr>
+      <tr><td class="mono">portalToken</td><td><span class="tag str">hex24</span></td><td class="num">100%</td><td>fe4a8715b71940a6...</td><td>list+detail</td><td>acesso público do cliente</td></tr>
+      <tr><td class="mono">consultorNome</td><td><span class="tag str">str</span></td><td class="num">73%</td><td>LUANA PATRICIA...</td><td>list+detail</td><td>15 com bug "[]"</td></tr>
+      <tr><td class="mono">consultorTelefone</td><td><span class="tag str">str</span>/<span class="tag null">∅</span></td><td class="num">~0%</td><td>—</td><td>detail</td><td>quase nunca preenchido</td></tr>
+      <tr><td class="mono">responsavelAtendimento</td><td><span class="tag str">str-curto</span></td><td class="num">~60%</td><td>Pedro / Mayara</td><td>detail</td><td>só primeiro nome</td></tr>
+      <tr><td class="mono">responsavelOperacoes</td><td><span class="tag str">str-curto</span></td><td class="num">~60%</td><td>Wesley / Luana</td><td>detail</td><td>só primeiro nome</td></tr>
+      <tr><td class="mono">situacaoAtual</td><td><span class="tag str">texto-livre</span></td><td class="num">parcial</td><td>nota humana</td><td>detail</td><td>aparece truncado</td></tr>
+      <tr><td class="mono">tagKira</td><td><span class="tag str">str</span></td><td class="num">~80%</td><td>"1ª demão aplicada"</td><td>detail</td><td>classificação IA</td></tr>
+      <tr><td class="mono">tagKiraUpdatedAt</td><td><span class="tag date">ISO</span></td><td class="num">~80%</td><td>2026-04-14T23:03Z</td><td>detail</td><td>—</td></tr>
+      <tr><td class="mono">metragemPendente</td><td><span class="tag str">decimal</span>/<span class="tag null">∅</span></td><td class="num">parcial</td><td>66.28</td><td>detail</td><td>m² ainda não executados</td></tr>
+      <tr><td class="mono">createdAt</td><td><span class="tag date">ISO</span></td><td class="num">100%</td><td>2026-03-14...</td><td>list+detail</td><td>LIXO — seed de migração</td></tr>
+      <tr><td class="mono">updatedAt</td><td><span class="tag date">ISO</span></td><td class="num">100%</td><td>2026-04-15...</td><td>list+detail</td><td>sync, não atividade real</td></tr>
+    </tbody>
+  </table>
+
+  <h3>acessoDetalhes (objeto Pipefy bruto)</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo</th><th>Exemplo</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">prazo</td><td><span class="tag num">dias</span></td><td>15</td><td>duração prevista da execução</td></tr>
+      <tr><td class="mono">equipe</td><td><span class="tag str">str</span></td><td>MUTIRÃO</td><td>—</td></tr>
+      <tr><td class="mono">labels</td><td><span class="tag arr">arr</span></td><td>["EXTERNA"]</td><td>—</td></tr>
+      <tr><td class="mono">osPronta</td><td><span class="tag bool">bool</span></td><td>true</td><td>OS pronta</td></tr>
+      <tr><td class="mono">vendedor</td><td><span class="tag str">str</span></td><td>Isabela</td><td>—</td></tr>
+      <tr><td class="mono">prestador</td><td><span class="tag str">str</span></td><td>Juliana</td><td>aplicador externo</td></tr>
+      <tr><td class="mono">assignees</td><td><span class="tag arr">arr&lt;str&gt;</span></td><td>[Pedro, Luana, Thaísa]</td><td>—</td></tr>
+      <tr><td class="mono">materiais</td><td><span class="tag arr">arr</span></td><td>["STELION"]</td><td>—</td></tr>
+      <tr><td class="mono">attachments</td><td><span class="tag arr">arr&lt;{url}&gt;</span></td><td>Escopo.png?sig=...</td><td>URLs assinadas</td></tr>
+      <tr><td class="mono">nomeReceber / telefoneReceber</td><td><span class="tag str">str</span></td><td>—</td><td>quem recebe equipe</td></tr>
+      <tr><td class="mono">corConfirmada</td><td><span class="tag bool">bool</span></td><td>true</td><td>—</td></tr>
+      <tr><td class="mono">numPrestadores</td><td><span class="tag num">num</span></td><td>5</td><td>—</td></tr>
+      <tr><td class="mono">pipefyCreatedAt</td><td><span class="tag date">ISO</span></td><td>2025-09-26T15:54Z</td><td><b style="color:#7be8a8">FONTE REAL DE IDADE</b></td></tr>
+      <tr><td class="mono">pipefyUpdatedAt</td><td><span class="tag date">ISO</span></td><td>2026-03-05T13:45Z</td><td>edição real Pipefy</td></tr>
+      <tr><td class="mono">consultorProjetos</td><td><span class="tag str">str</span></td><td>Thaísa de Lara Barbosa</td><td>—</td></tr>
+      <tr><td class="mono">consultorAtendimento</td><td><span class="tag str">str</span></td><td>Pedro Marçal</td><td>—</td></tr>
+      <tr><td class="mono">consultorOperacional</td><td><span class="tag str">str</span></td><td>LUANA PATRICIA...</td><td>—</td></tr>
+      <tr><td class="mono">dataTerminoPrevista</td><td><span class="tag date">date</span></td><td>—</td><td>só em em_execucao</td></tr>
+      <tr><td class="mono">ultimaImportacaoEscopo</td><td><span class="tag date">ISO</span></td><td>—</td><td>só em finalizado</td></tr>
+      <tr><td class="mono">allFields</td><td><span class="tag obj">obj~60</span></td><td>checklist Pipefy bruto</td><td>ver §Checklist</td></tr>
+    </tbody>
+  </table>
+
+  <h3>pendenciaManual.whatsappSummary (resumo IA)</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo</th><th>Exemplo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">periodo</td><td><span class="tag str">str</span></td><td>19/02 a 14/04/2026</td></tr>
+      <tr><td class="mono">geradoEm</td><td><span class="tag date">ISO</span></td><td>2026-04-14T21:54Z</td></tr>
+      <tr><td class="mono">climaGeral</td><td><span class="tag str">enum</span></td><td>Neutro / Tenso / Bom</td></tr>
+      <tr><td class="mono">climaDescricao</td><td><span class="tag str">texto</span></td><td>—</td></tr>
+      <tr><td class="mono">tempoResposta</td><td><span class="tag str">enum</span></td><td>Normal / Lento / Rápido</td></tr>
+      <tr><td class="mono">tempoRespostaDetalhes</td><td><span class="tag str">texto</span></td><td>—</td></tr>
+      <tr><td class="mono">totalMensagens</td><td><span class="tag num">num</span></td><td>40</td></tr>
+      <tr><td class="mono">participantes</td><td><span class="tag arr">arr&lt;str&gt;</span></td><td>['Filipe (cliente)','Juliana...']</td></tr>
+      <tr><td class="mono">eventos</td><td><span class="tag arr">arr&lt;str&gt;</span></td><td>"19/02: cliente solicita VT..."</td></tr>
+      <tr><td class="mono">pendencias</td><td><span class="tag arr">arr&lt;str&gt;</span></td><td>"ADITIVO NÃO APROVADO..."</td></tr>
+      <tr><td class="mono">alertas</td><td><span class="tag arr">arr&lt;str&gt;</span></td><td>"RISCO DE NOVO ADIAMENTO..."</td></tr>
+      <tr><td class="mono">resumoExecutivo</td><td><span class="tag str">texto-longo</span></td><td>—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="status">
+  <h2>Status (12 distintos) <span class="count">amostra de 200</span></h2>
+  <table>
+    <thead><tr><th>Status</th><th>Qtd</th><th>Ordem provável</th><th>Categoria</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">finalizado</td><td class="num">53</td><td class="num">99</td><td><span class="pill ok">terminal</span></td></tr>
+      <tr><td class="mono">planejamento</td><td class="num">38</td><td class="num">10</td><td><span class="pill info">início</span></td></tr>
+      <tr><td class="mono">concluido</td><td class="num">37</td><td class="num">90</td><td><span class="pill ok">terminal</span></td></tr>
+      <tr><td class="mono">aguardando_execucao</td><td class="num">20</td><td class="num">40</td><td><span class="pill warn">espera</span></td></tr>
+      <tr><td class="mono">em_execucao</td><td class="num">15</td><td class="num">60</td><td><span class="pill info">ativo</span></td></tr>
+      <tr><td class="mono">reparo</td><td class="num">15</td><td class="num">80</td><td><span class="pill crit">pós-conclusão</span></td></tr>
+      <tr><td class="mono">cancelado</td><td class="num">10</td><td class="num">98</td><td><span class="pill dead">terminal</span></td></tr>
+      <tr><td class="mono">aguardando_clima</td><td class="num">5</td><td class="num">55</td><td><span class="pill warn">bloqueio externo</span></td></tr>
+      <tr><td class="mono">reserva</td><td class="num">3</td><td class="num">5</td><td><span class="pill info">início</span></td></tr>
+      <tr><td class="mono">pausado</td><td class="num">2</td><td class="num">50</td><td><span class="pill warn">bloqueio</span></td></tr>
+      <tr><td class="mono">contrato</td><td class="num">1</td><td class="num">20</td><td><span class="pill info">início</span></td></tr>
+      <tr><td class="mono">marcas_rolo_cera</td><td class="num">1</td><td class="num">85</td><td><span class="pill crit">defeito específico</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="fases">
+  <h2>Fases Pipefy (27) e Jornada Inferida</h2>
+
+  <h3>Jornada inferida (15 etapas)</h3>
+  <div class="funnel">
+    <div class="funnel-row"><div class="name">1. ENTRADA</div><div class="bar-out"><div class="bar-in" style="width:9%"></div></div><div class="v">9</div></div>
+    <div class="funnel-row"><div class="name">2. 1º CONTATO OP.</div><div class="bar-out"><div class="bar-in" style="width:11%"></div></div><div class="v">11</div></div>
+    <div class="funnel-row"><div class="name">3. INFOS PROJ/FIN/LOG</div><div class="bar-out"><div class="bar-in" style="width:6%"></div></div><div class="v">6</div></div>
+    <div class="funnel-row"><div class="name">4. AGEND. VT - AFERIÇÃO</div><div class="bar-out"><div class="bar-in" style="width:46%"></div></div><div class="v">46</div></div>
+    <div class="funnel-row"><div class="name">5. PROJETOS - 1ª REVISÃO</div><div class="bar-out"><div class="bar-in" style="width:4%"></div></div><div class="v">4</div></div>
+    <div class="funnel-row"><div class="name">6. EM CONTRATO</div><div class="bar-out"><div class="bar-in" style="width:14%"></div></div><div class="v">14</div></div>
+    <div class="funnel-row"><div class="name">7. CONFIRMAÇÕES OP1</div><div class="bar-out"><div class="bar-in" style="width:10%"></div></div><div class="v">10</div></div>
+    <div class="funnel-row"><div class="name">8. INDÚSTRIA - PRODUÇÃO</div><div class="bar-out"><div class="bar-in" style="width:6%"></div></div><div class="v">6</div></div>
+    <div class="funnel-row"><div class="name">9. LOGÍSTICA (3 fases)</div><div class="bar-out"><div class="bar-in" style="width:11%"></div></div><div class="v">11</div></div>
+    <div class="funnel-row"><div class="name">10. AGEND. VT - ENTRADA</div><div class="bar-out"><div class="bar-in" style="width:5%"></div></div><div class="v">5</div></div>
+    <div class="funnel-row"><div class="name">11. AGUARDANDO LIBERAÇÃO</div><div class="bar-out"><div class="bar-in" style="width:19%"></div></div><div class="v">19</div></div>
+    <div class="funnel-row"><div class="name">12. OBRA EM EXECUÇÃO</div><div class="bar-out"><div class="bar-in" style="width:4%"></div></div><div class="v">4</div></div>
+    <div class="funnel-row"><div class="name">13. AGEND. VT ACOMPANH.</div><div class="bar-out"><div class="bar-in" style="width:1%"></div></div><div class="v">1</div></div>
+    <div class="funnel-row"><div class="name">14. OBRA CONCLUÍDA</div><div class="bar-out"><div class="bar-in" style="width:0%"></div></div><div class="v">0</div></div>
+    <div class="funnel-row"><div class="name">15. CLIENTE FINALIZADO</div><div class="bar-out"><div class="bar-in" style="width:64%"></div></div><div class="v">64</div></div>
+  </div>
+  <p style="font-size:11px;color:#666;margin-top:10px">Desvios: OBRA PAUSADA · REPARO · CANCELADO. Volume = ativos no dashboard quando disponível, senão amostra.</p>
+
+  <h3>Lista completa de fases (27)</h3>
+  <table>
+    <thead><tr><th>Fase Pipefy</th><th>Amostra</th><th>Dashboard ativos</th><th>Obs</th></tr></thead>
+    <tbody>
+      <tr><td>CLIENTE FINALIZADO</td><td class="num">64</td><td class="num">—</td><td>terminal</td></tr>
+      <tr><td>OECT</td><td class="num">37</td><td class="num">1</td><td>obra-entregue-com-técnico (pós-entrega)</td></tr>
+      <tr><td>AGEND. VT - AFERIÇÃO/ORIENTAÇÃO</td><td class="num">20</td><td class="num">46</td><td>maior gargalo</td></tr>
+      <tr><td>AGUARDANDO LIBERAÇÃO</td><td class="num">12</td><td class="num">19</td><td>—</td></tr>
+      <tr><td>ENTRADA</td><td class="num">7</td><td class="num">9</td><td>—</td></tr>
+      <tr><td>INDÚSTRIA - EM PRODUÇÃO</td><td class="num">7</td><td class="num">6</td><td>—</td></tr>
+      <tr><td>EM CONTRATO</td><td class="num">6</td><td class="num">10</td><td>—</td></tr>
+      <tr><td>OBRA CONCLUÍDA</td><td class="num">5</td><td class="num">0</td><td>—</td></tr>
+      <tr><td>OBRA EM EXECUÇÃO</td><td class="num">5</td><td class="num">4</td><td>—</td></tr>
+      <tr><td>1º CONTATO OP.</td><td class="num">4</td><td class="num">11</td><td>—</td></tr>
+      <tr><td>OBRA PAUSADA</td><td class="num">4</td><td class="num">12</td><td>—</td></tr>
+      <tr><td>RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO</td><td class="num">3</td><td class="num">9</td><td>—</td></tr>
+      <tr><td>REVISÃO FINAL OP</td><td class="num">3</td><td class="num">6</td><td>—</td></tr>
+      <tr><td>CONFIRMAÇÕES OP 1</td><td class="num">3</td><td class="num">10</td><td>—</td></tr>
+      <tr><td>LOGÍSTICA - EM COLETA</td><td class="num">3</td><td class="num">1</td><td>—</td></tr>
+      <tr><td>LOGÍSTICA - EM ENTREGA</td><td class="num">3</td><td class="num">6</td><td>—</td></tr>
+      <tr><td>AGEND. VT - ENTRADA</td><td class="num">2</td><td class="num">5</td><td>—</td></tr>
+      <tr><td>PROJETOS&nbsp;&nbsp;- 1ª REVISÃO</td><td class="num">2</td><td class="num">4</td><td>typo: espaço duplo</td></tr>
+      <tr><td>INFORMAÇÕES FINANCEIRAS</td><td class="num">1</td><td class="num">1</td><td>—</td></tr>
+      <tr><td>INFORMAÇÕES PROJETOS</td><td class="num">1</td><td class="num">3</td><td>—</td></tr>
+      <tr><td>INFORMAÇÕES LOGÍSTICAS</td><td class="num">1</td><td class="num">2</td><td>—</td></tr>
+      <tr><td>LOGÍSTICA - MATERIAL ENTREGUE</td><td class="num">1</td><td class="num">4</td><td>—</td></tr>
+      <tr><td>EQUIPE DE EXECUÇÃO</td><td class="num">1</td><td class="num">2</td><td>—</td></tr>
+      <tr><td>RESULTADO VT - ENTRADA</td><td class="num">1</td><td class="num">2</td><td>—</td></tr>
+      <tr><td>CONTRATO</td><td class="num">1</td><td class="num">4</td><td>—</td></tr>
+      <tr><td>AGEND. VT - ACOMPANHAMENTO</td><td class="num">0</td><td class="num">1</td><td>—</td></tr>
+      <tr><td>(vazio / sem fase)</td><td class="num">3</td><td class="num">2</td><td>bug de cadastro</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="datas">
+  <h2>Datas, Marcos e Tempo</h2>
+
+  <h3>Campos temporais</h3>
+  <table>
+    <thead><tr><th>Campo</th><th>Origem</th><th>Formato</th><th>Fuso</th><th>Preench.</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">createdAt</td><td>raiz</td><td>ISO UTC ms</td><td>UTC</td><td class="num">100%</td><td class="anom" style="margin:0;padding:4px 8px;font-size:11px">82% têm timestamp idêntico — seed</td></tr>
+      <tr><td class="mono">updatedAt</td><td>raiz</td><td>ISO UTC ms</td><td>UTC</td><td class="num">100%</td><td>sync, não atividade humana</td></tr>
+      <tr><td class="mono">dataExecucaoPrevista</td><td>raiz</td><td>YYYY-MM-DD</td><td>—</td><td class="num">58%</td><td>chave para SLA</td></tr>
+      <tr><td class="mono">dataExecucaoConfirmada</td><td>raiz</td><td>YYYY-MM-DD</td><td>—</td><td class="num">baixo</td><td>diferença = adiamento</td></tr>
+      <tr><td class="mono">acessoDetalhes.pipefyCreatedAt</td><td>detail</td><td>ISO UTC s</td><td>UTC</td><td class="num">~100%</td><td><b style="color:#7be8a8">FONTE REAL de idade</b></td></tr>
+      <tr><td class="mono">acessoDetalhes.pipefyUpdatedAt</td><td>detail</td><td>ISO UTC s</td><td>UTC</td><td class="num">~100%</td><td>edição real Pipefy</td></tr>
+      <tr><td class="mono">allFields.data_de_entrada</td><td>detail</td><td>DD/MM/YYYY HH:mm</td><td>BRT</td><td class="num">parcial</td><td>com hora</td></tr>
+      <tr><td class="mono">allFields.data_e_hora_da_visita</td><td>detail</td><td>DD/MM/YYYY HH:mm</td><td>BRT</td><td class="num">parcial</td><td>marco VT</td></tr>
+      <tr><td class="mono">allFields.data_de_envio_do_relatorio</td><td>detail</td><td>DD/MM/YYYY</td><td>BRT</td><td class="num">parcial</td><td>pós-VT</td></tr>
+      <tr><td class="mono">allFields.envio_do_manuall</td><td>detail</td><td>DD/MM/YYYY</td><td>BRT</td><td class="num">parcial</td><td>typo no nome (manuall)</td></tr>
+      <tr><td class="mono">tagKiraUpdatedAt</td><td>detail</td><td>ISO</td><td>UTC</td><td class="num">~80%</td><td>—</td></tr>
+      <tr><td class="mono">whatsappSummary.geradoEm</td><td>detail</td><td>ISO UTC ms</td><td>UTC</td><td class="num">cond.</td><td>data do resumo IA</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Durações observadas</h3>
+  <div class="grid g3">
+    <div class="card"><h4>pipefyCreatedAt → execução prevista</h4><div class="num">90–230d</div><div class="lbl">ciclo comercial→execução</div></div>
+    <div class="card"><h4>data_visita → data_entrada</h4><div class="num">34–101d</div><div class="lbl">visita→início obra</div></div>
+    <div class="card"><h4>pipefyUpdatedAt vs updatedAt</h4><div class="num red">35–40d</div><div class="lbl">defasagem crônica</div></div>
+    <div class="card"><h4>Vencidas (prevista &lt; hoje)</h4><div class="num red">29</div><div class="lbl">25% da amostra</div></div>
+    <div class="card"><h4>Sem dataExecucaoPrevista</h4><div class="num amber">84</div><div class="lbl">42% da amostra</div></div>
+    <div class="card"><h4>Histórico de transição de fase</h4><div class="num red">∅</div><div class="lbl">não existe — exige snapshot</div></div>
+  </div>
+</section>
+
+<section id="pessoas">
+  <h2>Pessoas, Responsáveis e Equipe</h2>
+
+  <h3>Distribuição por consultorNome (lista, n=200)</h3>
+  <table>
+    <thead><tr><th>Consultor</th><th>Obras</th><th>%</th><th>Bar</th></tr></thead>
+    <tbody>
+      <tr><td>Wesley Matheus de Carvalho</td><td class="num">76</td><td class="num">38,0%</td><td><div class="bar"><div style="width:100%"></div></div></td></tr>
+      <tr><td>LUANA PATRICIA DE ANDRADE LIMA</td><td class="num">45</td><td class="num">22,5%</td><td><div class="bar"><div style="width:59%"></div></div></td></tr>
+      <tr><td>(vazio "")</td><td class="num">43</td><td class="num">21,5%</td><td><div class="bar amber"><div style="width:57%"></div></div></td></tr>
+      <tr><td>(literal "[]")</td><td class="num">15</td><td class="num">7,5%</td><td><div class="bar red"><div style="width:20%"></div></div></td></tr>
+      <tr><td>Pedro Alexandre Santana</td><td class="num">5</td><td class="num">2,5%</td><td><div class="bar"><div style="width:7%"></div></div></td></tr>
+      <tr><td>Thaísa de Lara Barbosa</td><td class="num">2</td><td class="num">1,0%</td><td><div class="bar"><div style="width:3%"></div></div></td></tr>
+      <tr><td>Juliana Santos</td><td class="num">2</td><td class="num">1,0%</td><td><div class="bar"><div style="width:3%"></div></div></td></tr>
+      <tr><td>Renata Garcia Penna</td><td class="num">1</td><td class="num">0,5%</td><td><div class="bar"><div style="width:1%"></div></div></td></tr>
+      <tr><td>Pedro Marçal</td><td class="num">1</td><td class="num">0,5%</td><td><div class="bar"><div style="width:1%"></div></div></td></tr>
+    </tbody>
+  </table>
+
+  <h3>teamPerformance (/api/analise — universo maior)</h3>
+  <table>
+    <thead><tr><th>Operador</th><th>Role</th><th>Ativos</th><th>Com problema</th><th>Atrasados</th></tr></thead>
+    <tbody>
+      <tr><td>LUANA PATRICIA DE ANDRADE LIMA</td><td>Consultor</td><td class="num">87</td><td class="num">35</td><td class="num">18</td></tr>
+      <tr><td>Wesley Matheus de Carvalho</td><td>Consultor</td><td class="num">67</td><td class="num">29</td><td class="num">15</td></tr>
+      <tr><td>Pedro Alexandre Santana</td><td>Consultor</td><td class="num">7</td><td class="num">1</td><td class="num">0</td></tr>
+      <tr><td>Pedro Marçal</td><td>Consultor</td><td class="num">1</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>Renata Garcia Penna</td><td>Consultor</td><td class="num">1</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>Thaísa de Lara Barbosa</td><td>Consultor</td><td class="num">1</td><td class="num">0</td><td class="num">1</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Mapa de papéis (extraído de campos + textos)</h3>
+  <table>
+    <thead><tr><th>Pessoa</th><th>Campo primário</th><th>Função real</th></tr></thead>
+    <tbody>
+      <tr><td>Wesley Matheus de Carvalho</td><td class="mono">consultorOperacional</td><td>Consultor Operacional — dono de obra em execução</td></tr>
+      <tr><td>LUANA PATRICIA DE ANDRADE LIMA</td><td class="mono">consultorOperacional</td><td>Consultora Operacional — também aparece em atendimento</td></tr>
+      <tr><td>Pedro Marçal</td><td class="mono">consultorAtendimento</td><td>Atendimento (pré-obra, cliente)</td></tr>
+      <tr><td>Mayara</td><td class="mono">responsavelAtendimento</td><td>Atendimento — assume projetos transferidos</td></tr>
+      <tr><td>Juliana Zanatta</td><td>texto whatsappSummary</td><td>Diretora Técnica — visitas, aprovação aditivos</td></tr>
+      <tr><td>Juliana Santos</td><td class="mono">consultorNome</td><td>Consultora (baixa carga)</td></tr>
+      <tr><td>Juliana (Agenda)</td><td>texto</td><td>Agendamento</td></tr>
+      <tr><td>Juliana (prestador)</td><td class="mono">acessoDetalhes.prestador</td><td>Aplicadora externa</td></tr>
+      <tr><td>Thaísa de Lara Barbosa</td><td class="mono">consultorProjetos</td><td>Consultora de Projetos (técnico)</td></tr>
+      <tr><td>Pedro Alexandre Santana</td><td class="mono">consultorNome</td><td>Consultor</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="fisico">
+  <h2>Atributos Físicos da Obra</h2>
+
+  <div class="grid g4">
+    <div class="card"><h4>Total amostra</h4><div class="num">200</div></div>
+    <div class="card"><h4>Mediana m²</h4><div class="num gold">120,9</div></div>
+    <div class="card"><h4>Média m²</h4><div class="num">187</div></div>
+    <div class="card"><h4>Máx m²</h4><div class="num">1.500</div></div>
+    <div class="card"><h4>Sem metragem</h4><div class="num amber">40</div><div class="lbl">20%</div></div>
+    <div class="card"><h4>Sem cor</h4><div class="num amber">92</div><div class="lbl">46%</div></div>
+    <div class="card"><h4>Sem tipoObra</h4><div class="num amber">57</div><div class="lbl">28,5%</div></div>
+    <div class="card"><h4>Cores únicas</h4><div class="num">29</div></div>
+  </div>
+
+  <div class="grid g3" style="margin-top:16px">
+    <div>
+      <h3>Faixas de metragem</h3>
+      <table>
+        <tbody>
+          <tr><td>até 50 m²</td><td class="num">17</td></tr>
+          <tr><td>50–200 m²</td><td class="num">103</td></tr>
+          <tr><td>200–500 m²</td><td class="num">30</td></tr>
+          <tr><td>500+ m²</td><td class="num">10</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Top 5 cores</h3>
+      <table>
+        <tbody>
+          <tr><td>MIRAGE</td><td class="num">20</td></tr>
+          <tr><td>À DEFINIR <span class="pill warn">placeholder</span></td><td class="num">16</td></tr>
+          <tr><td>PERSONALIZADA <span class="pill warn">placeholder</span></td><td class="num">15</td></tr>
+          <tr><td>SAARA</td><td class="num">12</td></tr>
+          <tr><td>GHOST</td><td class="num">12</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Tipos de obra</h3>
+      <table>
+        <tbody>
+          <tr><td class="mono">piso_parede</td><td class="num">61</td></tr>
+          <tr><td>NULO</td><td class="num">57</td></tr>
+          <tr><td>Obra nova</td><td class="num">33</td></tr>
+          <tr><td class="mono">piso</td><td class="num">24</td></tr>
+          <tr><td class="mono">parede</td><td class="num">15</td></tr>
+          <tr><td>Reaplicação</td><td class="num">8</td></tr>
+          <tr><td>Nova / Reaplicação</td><td class="num">1</td></tr>
+          <tr><td>NÃO <span class="pill crit">inválido</span></td><td class="num">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="geo">
+  <h2>Geografia</h2>
+  <div class="grid g2">
+    <div>
+      <h3>Top 10 cidades (não normalizado)</h3>
+      <table>
+        <tbody>
+          <tr><td>SÃO PAULO</td><td class="num">66</td></tr>
+          <tr><td>SÃO PAULO/SÃO PAULO</td><td class="num">29</td></tr>
+          <tr><td>RIO DE JANEIRO</td><td class="num">17</td></tr>
+          <tr><td>SÃO PAULO / SP</td><td class="num">9</td></tr>
+          <tr><td>CURITIBA</td><td class="num">7</td></tr>
+          <tr><td>CURITIBA/PARANÁ</td><td class="num">4</td></tr>
+          <tr><td>RIO DE JANEIRO/RIO DE JANEIRO</td><td class="num">4</td></tr>
+          <tr><td>SANTOS/SÃO PAULO</td><td class="num">3</td></tr>
+          <tr><td>SANTOS</td><td class="num">2</td></tr>
+          <tr><td>CAMPINAS</td><td class="num">2</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:#888;margin-top:8px">SP aparece em 4 grafias distintas — sem normalização ~70% da carteira é SP.</p>
+    </div>
+    <div>
+      <h3>UF (extraído via regex do endereço)</h3>
+      <table>
+        <tbody>
+          <tr><td>SP</td><td class="num">103</td><td><div class="bar"><div style="width:100%"></div></div></td></tr>
+          <tr><td>RJ</td><td class="num">20</td><td><div class="bar"><div style="width:19%"></div></div></td></tr>
+          <tr><td>PR</td><td class="num">10</td><td><div class="bar"><div style="width:10%"></div></div></td></tr>
+          <tr><td>SC</td><td class="num">3</td><td><div class="bar"><div style="width:3%"></div></div></td></tr>
+          <tr><td>ES, BA, MG, GO, CE, DF</td><td class="num">1 cada</td><td><div class="bar"><div style="width:1%"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="eventos">
+  <h2>Eventos e Histórico</h2>
+  <table>
+    <thead><tr><th>Tipo</th><th>Fonte</th><th>Volume</th><th>Estrutura</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Reclamação cliente</td><td class="mono">recentEvents</td><td class="num">9</td><td>id, projetoId, severidade(crítica/alta/média/baixa), tipo, createdAt</td><td><span class="pill ok">ativo</span></td></tr>
+      <tr><td>Incidente obra</td><td class="mono">recentEvents</td><td class="num">—</td><td>idem</td><td><span class="pill ok">ativo</span></td></tr>
+      <tr><td>Desvio qualidade</td><td class="mono">recentEvents</td><td class="num">8</td><td>idem</td><td><span class="pill ok">ativo</span></td></tr>
+      <tr><td>Falha comunicação</td><td class="mono">recentEvents</td><td class="num">5</td><td>idem</td><td><span class="pill ok">ativo</span></td></tr>
+      <tr><td>Erro produção</td><td class="mono">recentEvents</td><td class="num">baixa</td><td>idem</td><td><span class="pill ok">ativo</span></td></tr>
+      <tr><td>Problema logístico</td><td class="mono">recentEvents</td><td class="num">4</td><td>idem</td><td><span class="pill ok">ativo</span></td></tr>
+      <tr><td>Ocorrência aberta</td><td class="mono">dashboard.ocorrencias</td><td class="num">690</td><td>só agregado por status</td><td><span class="pill warn">só agregado</span></td></tr>
+      <tr><td>Pausa</td><td class="mono">dashboard.pausas</td><td class="num">0</td><td>array vazio sempre</td><td><span class="pill dead">morto</span></td></tr>
+      <tr><td>Mudança de fase</td><td>—</td><td class="num">∅</td><td>não existe — fase muda in-place</td><td><span class="pill crit">ausente</span></td></tr>
+      <tr><td>WhatsApp summary</td><td class="mono">pendenciaManual</td><td class="num">cond.</td><td>resumo IA por obra</td><td><span class="pill ok">ativo</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid g4" style="margin-top:14px">
+    <div class="card"><h4>recentEvents</h4><div class="num">~32</div><div class="lbl">cobertura ~3%</div></div>
+    <div class="card"><h4>Ocorrências abertas</h4><div class="num red">690</div><div class="lbl">658 invisíveis no feed</div></div>
+    <div class="card"><h4>Categorias problema</h4><div class="num">11</div><div class="lbl">"Outros" = 67%</div></div>
+    <div class="card"><h4>Silenciosas estimadas</h4><div class="num amber">~996</div><div class="lbl">sem evento recente</div></div>
+  </div>
+</section>
+
+<section id="whatsapp">
+  <h2>Integração WhatsApp</h2>
+  <table>
+    <thead><tr><th>Item</th><th>Estado</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">/api/whatsapp/conversations</td><td><span class="pill ok">disponível</span></td><td>625 conversas, sem join nativo com obra</td></tr>
+      <tr><td class="mono">/api/whatsapp/messages?phone=</td><td><span class="pill ok">disponível</span></td><td>mensagens por número</td></tr>
+      <tr><td class="mono">/api/whatsapp/send</td><td><span class="pill ok">POST</span></td><td>envio</td></tr>
+      <tr><td class="mono">/api/whatsapp/suggest</td><td><span class="pill ok">POST</span></td><td>sugestão IA</td></tr>
+      <tr><td class="mono">/api/whatsapp/summary</td><td><span class="pill ok">GET/POST</span></td><td>resumo executivo IA</td></tr>
+      <tr><td class="mono">/api/whatsapp</td><td><span class="pill crit">404</span></td><td>endpoint agregado não existe</td></tr>
+      <tr><td class="mono">clienteTelefone</td><td><span class="pill warn">~13%</span></td><td>3 grafias para vazio (null, "", string vazia)</td></tr>
+      <tr><td class="mono">pendenciaManual.whatsappSummary</td><td><span class="pill ok">ativo</span></td><td>presente em obras críticas, não universal</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="allfields">
+  <h2>acessoDetalhes.allFields — Checklist Pipefy bruto <span class="count">~60 chaves</span></h2>
+  <p style="font-size:12px;color:#888;margin-bottom:12px">Mina de ouro nunca explorada. Valores são YES/NO/enum em português. Várias chaves com typos preservados do Pipefy.</p>
+
+  <details open>
+    <summary><b>Cores & Material</b> (8)</summary>
+    <div>
+      <code>cores</code> · <code>cor_definida</code> · <code>cores_confirmadas</code> · <code>confirmar_cores</code> · <code>recebeu_amostra</code> · <code>materials</code> · <code>material_confirmado</code> · <code>textura</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Endereço & Localidade</b> (5)</summary>
+    <div>
+      <code>endereco</code> · <code>endereco_esta_correto</code> · <code>confirmar_enderecoo</code> <span class="pill warn">typo</span> · <code>localidade</code> (INTERNA/EXTERNA) · <code>nome_do_projeto</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Áreas & Metragem</b> (4)</summary>
+    <div>
+      <code>areas_de_projetos</code> · <code>areas_do_projeto_confirmas</code> · <code>metragem_do_projeto</code> · <code>linear_total</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Tela</b> (3)</summary>
+    <div>
+      <code>tela_contratada</code> · <code>ser_necessario_tela</code> · <code>ter_aplicacao_de_tela</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Tipo de obra & Faseamento</b> (5)</summary>
+    <div>
+      <code>tipo_de_obra_2</code> · <code>tipo_de_obra_3</code> · <code>obra_ser_faseada</code> · <code>obra_ser_faseada_1</code> · <code>obra_noturna</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Visita Técnica</b> (10)</summary>
+    <div>
+      <code>tipo_de_visita</code> · <code>necessidade_de_visita</code> · <code>visita_antes_do_piui</code> · <code>visitou_o_showroom</code> · <code>data_e_hora_da_visita</code> · <code>visita_foi_realizada</code> · <code>responsavel_pela_obra_acompanhou_a_visita</code> · <code>devolutiva_visita</code> · <code>devolutiva_visita_1</code> · <code>anexar_relatorio_de_visita</code> · <code>data_de_envio_do_relatorio</code> · <code>foi_realizada_afericao</code> <span class="pill warn">typo</span>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Escopo</b> (4)</summary>
+    <div>
+      <code>escopo_inicial</code> · <code>escopo_aprovado</code> · <code>escopo_esta_preenchido</code> · <code>estimativa_de_prazo_conforme_escopo</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Prazo & Datas</b> (5)</summary>
+    <div>
+      <code>prazo</code> · <code>preencher_prazo</code> · <code>confirmar_prazo</code> · <code>data_de_entrada</code> · <code>data_confirmada</code> · <code>confirmar_data_de_entradaa</code> <span class="pill warn">typo</span>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Equipe & Consultores</b> (6)</summary>
+    <div>
+      <code>responsavel_1</code> · <code>consultor_de_projetos</code> · <code>consultor_de_atendimento</code> · <code>preencher_consultores_operacionais</code> · <code>prestador</code> · <code>numPrestadores</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Comunicação & Manual</b> (3)</summary>
+    <div>
+      <code>envio_do_manuall</code> <span class="pill warn">typo</span> · <code>apresentacao_alinhamento_whatsappp</code> <span class="pill warn">typo</span> · <code>detalhe_solicitacao_de_materiais</code>
+    </div>
+  </details>
+
+  <details>
+    <summary><b>Confirmações finais (gates)</b> (4)</summary>
+    <div>
+      <code>conferir_dados_do_formulario_inicial_com_os_dados_do_telegram</code> · <code>todas_as_informacoes_estao_corretas_para_envio_desse_card_para_projeto</code> · <code>todas_as_informacoes_estao_corretas_para_envio_desse_card_para_a_industria</code>
+    </div>
+  </details>
+</section>
+
+<section id="mortos">
+  <h2>Schema Fantasma — campos que existem mas não retornam dado</h2>
+  <div class="deadfield"><b>onboardingStatus</b> = "pendente" em 200/200 — enum nunca atualizado</div>
+  <div class="deadfield"><b>pp001</b> = null em 5/5 amostras — nome ofuscado, propósito desconhecido</div>
+  <div class="deadfield"><b>estrela</b> = null em 5/5 — flag de favorito? VIP?</div>
+  <div class="deadfield"><b>clienteEmail</b> = vazio em 99,5% — campo de fato morto</div>
+  <div class="deadfield"><b>consultorTelefone</b> = null em ~100% das amostras</div>
+  <div class="deadfield"><b>phone, whatsapp, lastActivity, eventos, mensagens</b> (raiz) = null sempre — chaves declaradas, nunca populadas</div>
+  <div class="deadfield"><b>dashboard.pausas[]</b> = sempre array vazio — feature morta ou não integrada</div>
+  <div class="deadfield"><b>/api/whatsapp</b> → 404 — endpoint agregado não existe</div>
+  <div class="deadfield"><b>histórico de transição de fase</b> — não existe; faseAtual muda in-place</div>
+</section>
+
+<section id="anomalias">
+  <h2>Anomalias Catalogadas <span class="count">40+</span></h2>
+
+  <h3>Tempo</h3>
+  <div class="anom"><b>createdAt em lote:</b> 165/200 com timestamp idêntico (2026-03-14T18:57:29Z) — seed de migração, não criação real</div>
+  <div class="anom"><b>29 obras vencidas</b> com dataExecucaoPrevista &lt; hoje e status ≠ concluído</div>
+  <div class="anom"><b>2 obras com previsão em 2025-12</b> — 4+ meses no passado, provável abandono</div>
+  <div class="anom"><b>42% sem dataExecucaoPrevista</b> — não permite cálculo de SLA</div>
+  <div class="anom"><b>updatedAt ≠ atividade real</b> — sync automático mascara obras silenciosas</div>
+  <div class="anom"><b>pipefyUpdatedAt 35–40d defasado</b> de updatedAt — pseudo-atividade</div>
+  <div class="anom"><b>Sem timestamp de transição de fase</b> — impossível medir "dias em fase"</div>
+  <div class="anom"><b>3 formatos de data convivendo</b> — ISO UTC ms · ISO UTC s · DD/MM/YYYY BR</div>
+
+  <h3>Status & Fase</h3>
+  <div class="anom"><b>Incoerência status × fase:</b> 2 "finalizado" em AGUARDANDO LIBERAÇÃO; 3 "aguardando_execucao" em CLIENTE FINALIZADO; 9 "reparo" em CLIENTE FINALIZADO (esperado); 3 "cancelado" em CLIENTE FINALIZADO</div>
+  <div class="anom"><b>3 obras com fase vazia</b> — bug de cadastro</div>
+  <div class="anom"><b>Fase com typo:</b> "PROJETOS&nbsp;&nbsp;- 1ª REVISÃO" (espaço duplo) — risco de divergência em filtros</div>
+  <div class="anom"><b>faseAtual vs pipefyFase:</b> divergem; pipefyFase tem 40 vazios. Qual é fonte de verdade?</div>
+  <div class="anom"><b>Status "concluido" (37) vs "finalizado" (53):</b> diferença semântica desconhecida</div>
+  <div class="anom"><b>Status "marcas_rolo_cera":</b> nome de defeito específico em campo enum — não canônico</div>
+
+  <h3>Pessoas</h3>
+  <div class="anom"><b>Bug serialização:</b> 15 obras com consultorNome = "[]" literal (string)</div>
+  <div class="anom"><b>43 obras sem responsável</b> (consultorNome vazio) — 21,5% órfãs</div>
+  <div class="anom"><b>Bus factor = 2:</b> Wesley + Luana = 94% das ativas, 99% dos atrasos</div>
+  <div class="anom"><b>Homonímia Juliana:</b> 4 papéis colidem (Santos consultora, Zanatta diretora, Agenda, prestadora)</div>
+  <div class="anom"><b>Homonímia Pedro:</b> 3 distintos (Marçal, Alexandre Santana, "Pedro" curto)</div>
+  <div class="anom"><b>3 representações do mesmo papel:</b> consultorNome (UPPER), responsavelOperacoes (curto), acessoDetalhes.consultorOperacional (longo)</div>
+  <div class="anom"><b>Aplicador ausente da lista</b> — só em /projects/{id}.acessoDetalhes.prestador</div>
+
+  <h3>Atributos físicos</h3>
+  <div class="anom"><b>40 sem metragem</b> · <b>92 sem cor (46%)</b> · <b>57 sem tipoObra (28,5%)</b></div>
+  <div class="anom"><b>tipoObra mistura 2 taxonomias:</b> escopo (piso/parede) + natureza (Obra nova/Reaplicação)</div>
+  <div class="anom"><b>Cores placeholder:</b> "À DEFINIR" (16) + "PERSONALIZADA" (15) = 31 não são cores reais</div>
+  <div class="anom"><b>tipoObra inválido:</b> "NÃO" em 1 obra</div>
+  <div class="anom"><b>projetoCidade em 4 grafias para SP</b> — sem normalização</div>
+  <div class="anom"><b>UF não estruturado</b> — extraído via regex frágil do endereço</div>
+
+  <h3>Eventos & Comunicação</h3>
+  <div class="anom"><b>Gap de 658 ocorrências:</b> 690 abertas no dashboard vs 32 no feed recentEvents</div>
+  <div class="anom"><b>67% das categorias = "Outros"</b> — taxonomia degradada</div>
+  <div class="anom"><b>whatsappSummary.eventos[] sem timestamp ISO</b> — só "DD/MM: descrição"; inviável para ordenação programática</div>
+  <div class="anom"><b>participantes[] são strings descritivas</b> ("Joyce (cliente)") — impossível cruzar com cadastro</div>
+  <div class="anom"><b>geradoEm é timestamp do RESUMO</b>, não da última mensagem</div>
+
+  <h3>Encoding</h3>
+  <div class="anom"><b>UTF-8 corrompido</b> em vários textos: "MUTIRA O", "NA O", "ThaA-sa"</div>
+  <div class="anom"><b>Typos preservados do Pipefy:</b> enderecoo, entradaa, whatsappp, afericao, manuall</div>
+</section>
+
+<section id="perguntas">
+  <h2>Perguntas em Aberto</h2>
+  <div class="question"><b>O que é "pp001"?</b> Slot de PCP? Parcela de pagamento?</div>
+  <div class="question"><b>O que é "estrela"?</b> Favorito? Destaque? Sempre null nas amostras</div>
+  <div class="question"><b>Quem/o que é "KIRA"?</b> IA interna que classifica estado da obra?</div>
+  <div class="question"><b>Diferença status "finalizado" vs "concluido":</b> qual vem primeiro?</div>
+  <div class="question"><b>"marcas_rolo_cera":</b> etapa do processo? Defeito?</div>
+  <div class="question"><b>Ordem temporal:</b> reserva → contrato → planejamento? Ou outra?</div>
+  <div class="question"><b>osPronta vs allFields.todas_as_informacoes_..._industria:</b> duplicidade?</div>
+  <div class="question"><b>pendenciaManual:</b> tem outras chaves além de whatsappSummary? (emailSummary? telegramSummary?)</div>
+  <div class="question"><b>climaGeral:</b> enum completo? (só vimos "Neutro"; existem Positivo/Negativo/Tenso?)</div>
+  <div class="question"><b>tempoResposta:</b> enum completo? (só vimos "Normal"/"Lento")</div>
+  <div class="question"><b>acessoDetalhes.labels:</b> lista completa? (só vimos "EXTERNA")</div>
+  <div class="question"><b>Endpoint de histórico de status?</b> A API só dá snapshot</div>
+  <div class="question"><b>Endpoint de fotos/timeline?</b> tagKira sugere feed classificado</div>
+  <div class="question"><b>allFields varia por fase:</b> existem fases com campos completamente diferentes?</div>
+  <div class="question"><b>Há campo financeiro?</b> Ausente — possível filtro por permissão</div>
+  <div class="question"><b>Por que todos createdAt iguais?</b> pipefyCreatedAt em acessoDetalhes parece ser o correto — confirmar</div>
+  <div class="question"><b>onboardingStatus:</b> feature morta ou ainda será lançada?</div>
+  <div class="question"><b>Paginação de /api/projects:</b> retorna 200 mas dashboard fala em 1.028 — onde estão os outros 828?</div>
+</section>
+
+<footer>
+  Modelagem v1 · Etapa 1: acúmulo · 6 auditores · 2026-04-15<br>
+  Próxima etapa: cruzamentos e priorização de UI
+</footer>
+
+</div>
+</body>
+</html>
