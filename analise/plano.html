@@ -70,15 +70,15 @@
   <div class="meta">
     <span>Última atualização: <b>2026-04-15</b></span>
     <span>Etapa atual: <b>2 — Cruzamentos</b></span>
-    <span>Cruzamentos entregues: <b>12</b></span>
-    <span>Backlog: <b>11</b></span>
+    <span>Cruzamentos entregues: <b>17</b></span>
+    <span>Backlog: <b>6</b></span>
     <span>Abas mapeadas: <b>3/15</b></span>
   </div>
 </header>
 
 <div class="progress-bar">
   <div class="prog-step done">Etapa 1 · Acúmulo<span class="pct">100%</span></div>
-  <div class="prog-step doing">Etapa 2 · Cruzamentos<span class="pct">~52%</span></div>
+  <div class="prog-step doing">Etapa 2 · Cruzamentos<span class="pct">~74%</span></div>
   <div class="prog-step pending">Etapa 3 · Consolidação<span class="pct">0%</span></div>
   <div class="prog-step pending">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
 </div>
@@ -119,7 +119,7 @@
 </section>
 
 <section>
-  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">12 concluídos</span></h2>
+  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">17 concluídos</span></h2>
   <div class="task-list">
     <div class="task done">
       <div class="check">✓</div>
@@ -240,6 +240,56 @@
       </div>
       <div class="meta">c12</div>
     </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#13 Obras silenciosas no WhatsApp (ex-#B4)</div>
+        <div class="desc"><b>90 de 208 ativas (43%) nunca tiveram resumo WhatsApp</b>. As 118 que têm estão todas atualizadas (&lt;30d — pipeline IA saudável). Gap real é cobertura, não atualização. Clima: 52 Neutro, 34 Tenso, 26 Positivo, 6 Crítico. <b>Alertas perderam poder discriminativo</b> — 117/118 têm alerta (regra, não exceção).</div>
+        <div class="files"><code>dados/cruz-silenciosas.json</code></div>
+      </div>
+      <div class="meta">c13</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#14 AGEND. VT — cauda longa (ex-#B7) <span class="pill crit">achado forte</span></div>
+        <div class="desc"><b>9 das 15 obras da cauda têm EXATAMENTE 260 dias</b> — mesmo lote congelado há 8,5 meses. Luana concentra <b>80% da cauda (12/15)</b> mas só 54% do total → sobre-representada em +25,7 p.p. <b>Todas em status "planejamento"</b>, nenhuma sinalizada como pausada. Interior SP (Piracicaba, Marília, Campinas) concentra 6/15. Possível gargalo: agendamento VT fora do eixo SP capital.</div>
+        <div class="files"><code>dados/cruz-agend-vt.json</code></div>
+      </div>
+      <div class="meta">c14</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#15 Ocorrências × idade (ex-#B8)</div>
+        <div class="desc"><b>691 ocorrências abertas, 67% em "Outros"</b> (taxonomia quebrada). 52% das atRisk &gt;180d. <b>77% das ocorrências recentes (recentEvents) estão em obras 181-365d</b> — eventos novos vêm de obras velhas. 30 recentEvents: 9 desvio_qualidade, 8 reclamação, 6 falha_comunicação. Luana consultor em 6/10 do top10 atRisk mais antigo.</div>
+        <div class="files"><code>dados/cruz-ocorrencias.json</code></div>
+      </div>
+      <div class="meta">c15</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#16 Reparo — mapa completo (ex-#B9) <span class="pill crit">hipótese rejeitada</span></div>
+        <div class="desc">"Wesley concentra 100% dos reparos" <b>FALSA</b>. Wesley é consultor em 11/27 (40,7%). <b>Luana lidera responsavelOperacoes com 12/27 (44,4%)</b>. Aplicador Nathan aparece em 10/14 reparos com prestador registrado (71%). 13/27 sem prestador = gap de rastreabilidade. 11 reparos "zumbi" (fase ≠ CLIENTE FINALIZADO).</div>
+        <div class="files"><code>dados/cruz-reparo.json</code></div>
+      </div>
+      <div class="meta">c16</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#17 Escalação hoje × execução real (ex-#B10)</div>
+        <div class="desc">22/25 escalações corretas (em_execucao). <b>3 anômalas: escalação em obras FINALIZADAS</b> (PLAUTOS CATTALINI, NATHALIA FIGUEIREDO, LEONARDO KAWANO) — cada uma com 4 membros alocados. 2 em_execucao SEM escalação (MONTRELUX em Curitiba e LA PASTINA). Sistema escala equipe em obra que não existe mais.</div>
+        <div class="files"><code>dados/cruz-escalacao.json</code></div>
+      </div>
+      <div class="meta">c17</div>
+    </div>
   </div>
 
   <div class="findings">
@@ -254,58 +304,8 @@
 </section>
 
 <section>
-  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">11 ideias</span></h2>
+  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">6 ideias</span></h2>
   <div class="task-list">
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B4 Obras silenciosas (sem comunicação há X dias)</div>
-        <div class="desc">Cruzar idade_dias com whatsappSummary.geradoEm. Obras antigas + sem atualização recente = alerta vermelho.</div>
-        <div class="files"><span class="tag">comunicação</span> <span class="tag">risco</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B7 Concentração de fase AGEND. VT - AFERIÇÃO (46 obras, 15 com 180+)</div>
-        <div class="desc">Maior cluster por contagem. Por que tem cauda longa de 15 esquecidos? Quem puxa? Qual o perfil dessas 15?</div>
-        <div class="files"><span class="tag">gargalo</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B8 Ocorrências × obra × idade</div>
-        <div class="desc">690 ocorrências abertas. Estão concentradas em obras antigas ou distribuídas? Cruzar com problemCategories e idade_dias.</div>
-        <div class="files"><span class="tag">qualidade</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B9 Reparo — mapa completo</div>
-        <div class="desc">Todas as obras status=reparo. Quem aplicou originalmente? Quem está reparando? Wesley concentra 100%? Tempo entre entrega e reparo.</div>
-        <div class="files"><span class="tag">qualidade</span> <span class="tag">FTR</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B10 Escalação hoje × obras em execução</div>
-        <div class="desc">25 escalações hoje, 11 em obras em_execucao. Os outros 14? Qual status? Está escalando obra que não está executando?</div>
-        <div class="files"><span class="tag">operação</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
 
     <div class="task backlog">
       <div class="check">○</div>
