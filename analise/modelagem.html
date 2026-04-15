@@ -110,6 +110,7 @@
     <span>Status distintos: <b>12</b></span>
     <span>Fases Pipefy: <b>27</b></span>
     <span>Anomalias: <b>40+</b></span>
+    <span>Abas mapeadas: <b>2</b> (Projetos · Hoje)</span>
     <span>Etapa: <b>1 — acúmulo</b></span>
   </div>
 </header>
@@ -127,6 +128,7 @@
     <li><a href="#geo">Geografia</a></li>
     <li><a href="#eventos">Eventos</a></li>
     <li><a href="#whatsapp">WhatsApp</a></li>
+    <li><a href="#hoje">Aba Hoje</a></li>
     <li><a href="#allfields">Checklist</a></li>
     <li><a href="#mortos">Schema Fantasma</a></li>
     <li><a href="#anomalias">Anomalias</a></li>
@@ -157,8 +159,16 @@
       <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/projects/{id}</td><td>detalhe individual + acessoDetalhes + allFields + whatsappSummary</td><td class="num">1</td><td><span class="pill info">público</span></td><td>mina de ouro — só carregada sob demanda</td></tr>
       <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/dashboard</td><td>KPIs agregados, SLAs, fases, ocorrências, NPS</td><td class="num">1 obj</td><td><span class="pill info">público</span></td><td>pausas[] sempre vazio</td></tr>
       <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/analise</td><td>atRisk, problemCategories, recentEvents, teamPerformance</td><td class="num">1 obj</td><td><span class="pill info">público</span></td><td>recentEvents limitado a ~32</td></tr>
-      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/whatsapp/conversations</td><td>conversas WhatsApp</td><td class="num">625</td><td><span class="pill info">público</span></td><td>endpoint paralelo, sem join nativo com obra</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/whatsapp/conversations</td><td>conversas WhatsApp (categoria, lastMessageAt, projectId)</td><td class="num">317</td><td><span class="pill info">público</span></td><td>polling 10s no front (~37 MB/h por usuário)</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/whatsapp/messages?phone=</td><td>histórico por conversa (text/image/video/audio + transcription)</td><td class="num">N</td><td><span class="pill info">público</span></td><td>fotos só aqui — não há endpoint /fotos</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/whatsapp/summary?projectId=</td><td>resumo IA por obra</td><td class="num">1</td><td><span class="pill info">público</span></td><td>retorna null se não populado</td></tr>
+      <tr><td><span class="pill ok">POST</span></td><td class="mono">/api/whatsapp/suggest</td><td>sugestão IA de resposta (Kira Suggest)</td><td>—</td><td><span class="pill info">público</span></td><td>copiloto do inbox</td></tr>
+      <tr><td><span class="pill ok">POST</span></td><td class="mono">/api/whatsapp/send</td><td>envio de mensagem</td><td>—</td><td><span class="pill info">público</span></td><td>—</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/escalacao-diaria</td><td><b style="color:#7be8a8">NOVO</b> — escalações do dia (líder + membros por obra)</td><td class="num">N</td><td><span class="pill info">público</span></td><td>fonte dos chips coloridos da aba HOJE</td></tr>
       <tr><td><span class="pill crit">404</span></td><td class="mono">/api/whatsapp</td><td>—</td><td>—</td><td>—</td><td>endpoint agregado não existe</td></tr>
+      <tr><td><span class="pill crit">404</span></td><td class="mono">/api/hoje, /api/today, /api/agenda, /api/eventos, /api/timeline, /api/atividades, /api/calendar, /api/visitas, /api/execucoes, /api/agendamentos</td><td>—</td><td>—</td><td>—</td><td>aba HOJE não tem backend dedicado</td></tr>
+      <tr><td><span class="pill crit">404</span></td><td class="mono">/api/telegram, /api/fotos, /api/photos, /api/feed, /api/kira, /api/kira/feed</td><td>—</td><td>—</td><td>—</td><td>schema fantasma</td></tr>
+      <tr><td><span class="pill crit">500</span></td><td class="mono">/api/projects/today</td><td>{error:"Failed to fetch project"}</td><td>—</td><td>—</td><td>handler engole "today" como UUID — sem validação</td></tr>
       <tr><td><span class="pill warn">AUTH</span></td><td class="mono">/app/contratos</td><td>contratos</td><td>?</td><td><span class="pill warn">senha</span></td><td>protegido</td></tr>
       <tr><td><span class="pill warn">AUTH</span></td><td class="mono">/app/financeiro</td><td>financeiro</td><td>?</td><td><span class="pill warn">senha</span></td><td>protegido</td></tr>
     </tbody>
@@ -554,6 +564,97 @@
   </table>
 </section>
 
+<section id="hoje">
+  <h2>Aba HOJE — espelho client-side de /api/projects</h2>
+
+  <div class="anom" style="border-color:#7be8a8;background:#0f1a14;color:#cfe">
+    <b style="color:#7be8a8">VEREDITO PROVADO BYTE-A-BYTE:</b> abrir uma obra em /app/hoje retorna o MESMO payload de /app/projetos/{id}. Auditor testou obra ca4b3047... em <code>/api/projects/{id}</code> e <code>/api/projects/{id}?context=hoje</code> — 8.433 bytes, 113 chaves, idênticos. Query <code>?context=hoje</code> é ignorada. Backend único.
+  </div>
+
+  <h3>Como a aba HOJE é montada</h3>
+  <table>
+    <thead><tr><th>Aspecto</th><th>Detalhe</th></tr></thead>
+    <tbody>
+      <tr><td>Renderização</td><td>SSR puro Next.js App Router (1,58 MB de HTML)</td></tr>
+      <tr><td>Sem __NEXT_DATA__</td><td>RSC streaming — não há JSON estruturado exposto na página</td></tr>
+      <tr><td>Fonte de dados</td><td><span class="endpoint">/api/projects</span> + <span class="endpoint">/api/escalacao-diaria</span> + <span class="endpoint">/api/whatsapp/conversations</span></td></tr>
+      <tr><td>Filtro temporal</td><td>derivação client-side de campos já existentes (dataInicio, data_e_hora_da_visita, data_de_entrada, dias_e_hor_rio_para_entrega...)</td></tr>
+      <tr><td>Real-time</td><td>polling setInterval(10s) sobre /api/whatsapp/* — sem WebSocket/SSE</td></tr>
+      <tr><td>Custo</td><td>~104 KB a cada 10s = ~37 MB/h por usuário logado, sem ETag</td></tr>
+      <tr><td>Rota da obra individual</td><td><span class="endpoint">/app/projeto/{uuid}</span> (singular, não plural)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Widgets identificados na página</h3>
+  <div class="grid g3">
+    <div class="card"><h4>5 KPIs no topo</h4><div style="font-size:12px;color:#ccc;margin-top:6px">Atrasados · Em Execução · Escalados Hoje · Sem Alocação · Próximos 30d</div></div>
+    <div class="card"><h4>Filtro por gestora</h4><div style="font-size:12px;color:#ccc;margin-top:6px">Todos · Juliana · Luana · Mayara · Pedro · Wesley</div></div>
+    <div class="card"><h4>Lista de 75+ obras</h4><div style="font-size:12px;color:#ccc;margin-top:6px">cards clicáveis com chips de aplicadores por equipe</div></div>
+  </div>
+
+  <h3>Cores de equipe (chips)</h3>
+  <table>
+    <thead><tr><th>Cor</th><th>Significado</th><th>Exemplos</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill ok">emerald</span></td><td>escalados/ativos hoje</td><td>lista longa Pr/LC/A1/A2/Aj</td></tr>
+      <tr><td><span class="pill warn">amber</span></td><td>equipe 1</td><td>Felipe, Francisco Igor, Júlio, Paulo, Vitor Rodrigues</td></tr>
+      <tr><td><span class="pill info">blue</span></td><td>equipe 2</td><td>Ariosvaldo, Donald, Franklin, Genival, Hudson, Kayky</td></tr>
+      <tr><td><span class="pill dead">gray</span></td><td>standby/inativos</td><td>Leonardo, Lucas, Marcos, Patrik, Ranieri</td></tr>
+      <tr><td><span style="background:#2a1d2a;color:#d87be8;padding:2px 8px;border-radius:10px;font-size:10px">violet</span></td><td>solo</td><td>Bruno Batista Miranda</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Roles de aplicador (decodificados)</h3>
+  <table>
+    <tbody>
+      <tr><td><span class="tag">Pr</span></td><td>Preparador</td></tr>
+      <tr><td><span class="tag">LC</span></td><td>Líder / Colocador</td></tr>
+      <tr><td><span class="tag">A1</span></td><td>Aplicador 1</td></tr>
+      <tr><td><span class="tag">A2</span></td><td>Aplicador 2</td></tr>
+      <tr><td><span class="tag">Aj</span></td><td>Ajudante</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tipos de evento "do dia" (8 categorias derivadas client-side)</h3>
+  <table>
+    <thead><tr><th>Tipo</th><th>Rótulo UI</th><th>Campo-chave</th></tr></thead>
+    <tbody>
+      <tr><td>execucao_em_andamento</td><td>Em obra / Em obra – execução</td><td class="mono">dataInicio ≤ hoje ≤ dataTerminoPrevista</td></tr>
+      <tr><td>chegada_equipe</td><td>Escalados Hoje / Chegadas</td><td class="mono">chegadasHoje · chegouEm · emViagem</td></tr>
+      <tr><td>visita_tecnica</td><td>VT Aferição / Entrada / Acompanhamento / Selador / Verniz</td><td class="mono">data_e_hora_da_visita · tipo_de_visita</td></tr>
+      <tr><td>entrega_logistica</td><td>LOGÍSTICA - EM ENTREGA</td><td class="mono">dias_e_hor_rio_para_entrega</td></tr>
+      <tr><td>coleta_logistica</td><td>LOGÍSTICA - EM COLETA</td><td class="mono">dias_e_hor_rios_para_coleta</td></tr>
+      <tr><td>inicio_execucao</td><td>Início obra / confirmado para...</td><td class="mono">data_de_entrada · dataInicio · nova_data</td></tr>
+      <tr><td>confirmacoes_op</td><td>CONFIRMAÇÕES OP</td><td class="mono">confirmar_endereço · cores · prazo · data</td></tr>
+      <tr><td>finalizacao_obra</td><td>Finalizando detalhes / OBRA CONCLUÍDA</td><td class="mono">dataTermino · data_de_finaliza_o_da_obra</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Kira — decodificada</h3>
+  <table>
+    <thead><tr><th>O que NÃO é</th><th>O que É</th></tr></thead>
+    <tbody>
+      <tr><td>IA que classifica fotos</td><td>(a) Tag textual curta em Project: <code>tagKira</code> + <code>tagKiraUpdatedAt</code> (ex: "início confirmado 22/04")</td></tr>
+      <tr><td>Sistema de visão computacional</td><td>(b) Coluna "Relatório Kira" no cronograma: <code>{etapa, isCura, kira:tag}</code> por dia</td></tr>
+      <tr><td>—</td><td>(c) Kira Suggest: <code>POST /api/whatsapp/suggest</code> — copiloto IA de resposta no inbox</td></tr>
+      <tr><td>—</td><td>(d) Página <code>/app/kira-performance</code> existe (sem API pública mapeada)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Anomalias específicas da aba HOJE</h3>
+  <div class="anom"><b>Vazamento LGPD:</b> /app/hoje retorna 200 em GET anônimo — expõe nomes de clientes, aplicadores e UUIDs publicamente sem auth</div>
+  <div class="anom"><b>Bug 500:</b> /api/projects/today retorna {"error":"Failed to fetch project"} — handler trata "today" como UUID sem validação</div>
+  <div class="anom"><b>Polling pesado:</b> 104 KB a cada 10s sem ETag/If-Modified-Since — ~37 MB/h por usuário só pra atualizar conversas</div>
+  <div class="anom"><b>Duas fontes para a mesma data:</b> dataExecucaoPrevista (top-level) convive com dataInicio/dataTerminoPrevista (obraMap) — risco de divergência silenciosa</div>
+  <div class="anom"><b>Logística depende de string livre:</b> "dias_e_hor_rio_para_entrega" não é timestamp — typo humano remove o evento da aba HOJE</div>
+  <div class="anom"><b>TZ frágil:</b> "chegadasHoje" sem fuso explícito — chegadas após 21h BRT podem virar "amanhã" se query roda em UTC</div>
+  <div class="anom"><b>Typos estruturais duplicados:</b> cofirmar_data_de_entrada (sem 'n') · confirmar_data_de_entradaa (com 'aa') · confirmar_endere_oo — migração Pipefy não limpa</div>
+  <div class="anom"><b>Rótulos UI redundantes:</b> "Em obra - execução" (hífen) vs "Em obra – execução" (travessão) — concatenação de fontes distintas</div>
+  <div class="anom"><b>Não é Telegram, é WhatsApp:</b> stack 100% WhatsApp; nenhuma referência a Telegram nos chunks JS</div>
+  <div class="anom"><b>responsavel = null em 100% das conversas WhatsApp amostradas</b> — roteamento de atendimento não preenchido</div>
+  <div class="anom"><b>Sem feed/galeria de fotos global:</b> imagens só vivem dentro de /api/whatsapp/messages com messageType=image · mediaUrl</div>
+</section>
+
 <section id="allfields">
   <h2>acessoDetalhes.allFields — Checklist Pipefy bruto <span class="count">~60 chaves</span></h2>
   <p style="font-size:12px;color:#888;margin-bottom:12px">Mina de ouro nunca explorada. Valores são YES/NO/enum em português. Várias chaves com typos preservados do Pipefy.</p>
@@ -647,6 +748,12 @@
   <div class="deadfield"><b>dashboard.pausas[]</b> = sempre array vazio — feature morta ou não integrada</div>
   <div class="deadfield"><b>/api/whatsapp</b> → 404 — endpoint agregado não existe</div>
   <div class="deadfield"><b>histórico de transição de fase</b> — não existe; faseAtual muda in-place</div>
+  <div class="deadfield"><b>/api/hoje, /api/today, /api/agenda, /api/eventos, /api/timeline</b> → 404 — aba HOJE não tem backend dedicado</div>
+  <div class="deadfield"><b>/api/telegram, /api/fotos, /api/photos, /api/feed, /api/kira</b> → 404 — schema fantasma</div>
+  <div class="deadfield"><b>/api/projects/today</b> → 500 — handler trata "today" como UUID</div>
+  <div class="deadfield"><b>?context=hoje</b> → ignorado pelo backend (payload byte-idêntico)</div>
+  <div class="deadfield"><b>WebSocket/SSE</b> → não existe; real-time é polling 10s</div>
+  <div class="deadfield"><b>conversation.responsavel</b> → null em 100% das amostras WhatsApp</div>
 </section>
 
 <section id="anomalias">
@@ -719,10 +826,17 @@
   <div class="question"><b>Por que todos createdAt iguais?</b> pipefyCreatedAt em acessoDetalhes parece ser o correto — confirmar</div>
   <div class="question"><b>onboardingStatus:</b> feature morta ou ainda será lançada?</div>
   <div class="question"><b>Paginação de /api/projects:</b> retorna 200 mas dashboard fala em 1.028 — onde estão os outros 828?</div>
+  <div class="question"><b>/api/escalacao-diaria:</b> qual a estrutura completa? aceita ?date=YYYY-MM-DD?</div>
+  <div class="question"><b>/app/kira-performance:</b> qual endpoint alimenta? métricas de quê?</div>
+  <div class="question"><b>climaGeral:</b> agora confirmamos "Tenso" e "Neutro" — existe "Bom"/"Positivo"?</div>
+  <div class="question"><b>Equipes (amber/blue/gray/violet):</b> são definidas onde? endpoint de equipes?</div>
+  <div class="question"><b>Roles Pr/LC/A1/A2/Aj:</b> tabela de roles em algum endpoint?</div>
+  <div class="question"><b>chegadasHoje:</b> como é alimentado? input manual? geolocalização?</div>
+  <div class="question"><b>obraMap (dataInicio/dataTerminoPrevista/diasInstalacao/diasCura):</b> qual endpoint? não vimos no /api/projects</div>
 </section>
 
 <footer>
-  Modelagem v1 · Etapa 1: acúmulo · 6 auditores · 2026-04-15<br>
+  Modelagem v2 · Etapa 1: acúmulo · 11 auditores (Projetos + Hoje) · 2026-04-15<br>
   Próxima etapa: cruzamentos e priorização de UI
 </footer>
 
