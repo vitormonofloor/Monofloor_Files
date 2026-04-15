@@ -110,7 +110,8 @@
     <span>Status distintos: <b>12</b></span>
     <span>Fases Pipefy: <b>27</b></span>
     <span>Anomalias: <b>40+</b></span>
-    <span>Abas mapeadas: <b>2</b> (Projetos · Hoje)</span>
+    <span>Abas mapeadas: <b>3</b> (Projetos · Hoje · Planejamento)</span>
+    <span>Backends: <b>2</b> (cliente + planejamento)</span>
     <span>Etapa: <b>1 — acúmulo</b></span>
   </div>
 </header>
@@ -129,6 +130,8 @@
     <li><a href="#eventos">Eventos</a></li>
     <li><a href="#whatsapp">WhatsApp</a></li>
     <li><a href="#hoje">Aba Hoje</a></li>
+    <li><a href="#planejamento">Aba Planejamento</a></li>
+    <li><a href="#equipes">Equipes</a></li>
     <li><a href="#allfields">Checklist</a></li>
     <li><a href="#mortos">Schema Fantasma</a></li>
     <li><a href="#anomalias">Anomalias</a></li>
@@ -169,6 +172,11 @@
       <tr><td><span class="pill crit">404</span></td><td class="mono">/api/hoje, /api/today, /api/agenda, /api/eventos, /api/timeline, /api/atividades, /api/calendar, /api/visitas, /api/execucoes, /api/agendamentos</td><td>—</td><td>—</td><td>—</td><td>aba HOJE não tem backend dedicado</td></tr>
       <tr><td><span class="pill crit">404</span></td><td class="mono">/api/telegram, /api/fotos, /api/photos, /api/feed, /api/kira, /api/kira/feed</td><td>—</td><td>—</td><td>—</td><td>schema fantasma</td></tr>
       <tr><td><span class="pill crit">500</span></td><td class="mono">/api/projects/today</td><td>{error:"Failed to fetch project"}</td><td>—</td><td>—</td><td>handler engole "today" como UUID — sem validação</td></tr>
+      <tr><td colspan="6" style="background:#1a1a1a;color:#c4a77d;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;font-size:11px">Subdomínio · planejamento.monofloor.cloud (SPA Vite/React separada)</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">planejamento/api/obras</td><td>obras com cronograma (etapas dia a dia em <code>dados_json</code> string)</td><td class="num">40</td><td><span class="pill info">público</span></td><td>só status=ativo</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">planejamento/api/projects</td><td>projetos comerciais (proposta + estimativaPrazo + progress + pipefyFase)</td><td class="num">1.037</td><td><span class="pill info">público</span></td><td>IDs orphan-os-xlsx + pf-mklv (duas fontes)</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">planejamento/api/equipes</td><td>equipes com schema snake_case + IDs textuais</td><td class="num">N</td><td><span class="pill info">público</span></td><td>schema diferente do /api/equipes do cliente</td></tr>
+      <tr><td><span class="pill crit">404</span></td><td class="mono">planejamento/api/cronograma, /aplicadores, /alocacoes</td><td>—</td><td>—</td><td>—</td><td>cálculo é derivado client-side</td></tr>
       <tr><td><span class="pill warn">AUTH</span></td><td class="mono">/app/contratos</td><td>contratos</td><td>?</td><td><span class="pill warn">senha</span></td><td>protegido</td></tr>
       <tr><td><span class="pill warn">AUTH</span></td><td class="mono">/app/financeiro</td><td>financeiro</td><td>?</td><td><span class="pill warn">senha</span></td><td>protegido</td></tr>
     </tbody>
@@ -655,6 +663,155 @@
   <div class="anom"><b>Sem feed/galeria de fotos global:</b> imagens só vivem dentro de /api/whatsapp/messages com messageType=image · mediaUrl</div>
 </section>
 
+<section id="planejamento">
+  <h2>Aba PLANEJAMENTO — backend separado em planejamento.monofloor.cloud</h2>
+
+  <div class="anom" style="border-color:#7be8a8;background:#0f1a14;color:#cfe">
+    <b style="color:#7be8a8">VEREDITO:</b> a rota <code>/app/planejamento</code> em cliente.monofloor.cloud retorna 404 (página não implementada). O planejamento real vive em <code>planejamento.monofloor.cloud</code> — SPA Vite/React standalone com banco e schema próprios. <b>Dois backends, dois bancos de equipes incompatíveis convivem.</b>
+  </div>
+
+  <h3>Arquitetura — dois backends, dois schemas</h3>
+  <table>
+    <thead><tr><th>Aspecto</th><th>cliente.monofloor.cloud</th><th>planejamento.monofloor.cloud</th></tr></thead>
+    <tbody>
+      <tr><td>Stack</td><td>Next.js (App Router, SSR)</td><td>Vite + React (SPA)</td></tr>
+      <tr><td>/api/equipes schema</td><td>camelCase + UUIDs + RH completo (cpf, rg, telegramUserId)</td><td>snake_case + IDs textuais (equipe-10, lider-4)</td></tr>
+      <tr><td>Endpoint cronograma</td><td>—</td><td>/api/obras (40 ativas)</td></tr>
+      <tr><td>Endpoint comercial</td><td>/api/projects (1.028)</td><td>/api/projects (1.037)</td></tr>
+      <tr><td>Auth</td><td><span class="pill crit">público</span></td><td><span class="pill crit">público</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Estrutura de obras.dados_json (string JSON aninhada)</h3>
+  <table>
+    <thead><tr><th>Bloco</th><th>Conteúdo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">contexto</td><td>clienteNome, projetoId, metragemProjeto, cidadeProjeto, enderecoProjeto, telefone</td></tr>
+      <tr><td class="mono">areas</td><td>piso_m2, parede_m2 + 20 campos ML (rodapé, moldura, escada, pilar, viga, borda_piscina...)</td></tr>
+      <tr><td class="mono">prazo</td><td>metragem, tipoProjeto, diasTotal, dataInicio, dataTermino, trabalhaSabado, trabalhaDomingo</td></tr>
+      <tr><td class="mono">etapas[]</td><td>id, nome, fase(PREPARO|APLICACAO|CURA|ACABAMENTO), ordem, isCura, duracao, dataInicio, dataFim, prestadoresIds[], groupWithNext</td></tr>
+      <tr><td class="mono">equipe</td><td>liderId, liderNome, membrosIds[]</td></tr>
+      <tr><td class="mono">alocacoes[]</td><td>etapa, prestador_id, data_inicio, data_fim, horasEstimadas</td></tr>
+      <tr><td class="mono">materiais / insumos / equipamentos / cores / lixas</td><td>listas técnicas</td></tr>
+      <tr><td class="mono">informacoesTecnicas</td><td>granulometria, producaoDiaria, numPrestadores, rendimento</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Distribuição das fases das etapas</h3>
+  <div class="grid g4">
+    <div class="card"><h4>PREPARO</h4><div class="num">421</div><div class="lbl">59% das etapas</div></div>
+    <div class="card"><h4>APLICACAO</h4><div class="num">177</div><div class="lbl">25%</div></div>
+    <div class="card"><h4>ACABAMENTO</h4><div class="num">78</div><div class="lbl">11%</div></div>
+    <div class="card"><h4>CURA</h4><div class="num">42</div><div class="lbl">6%</div></div>
+  </div>
+
+  <h3>Pipeline COMBINADO (21+ etapas típicas)</h3>
+  <p style="font-size:12px;color:#aaa;line-height:1.7">
+    Proteção/Fitamento → Limpeza → Primer → LILIT 1ª demão → LILIT 2ª demão → Lixamento girafa → Leona demão final → Stelion → Cura Stelion → Primer Texturizado → Lixamento fino → Verificação Calafetes
+  </p>
+
+  <h3>Prazos por tipo de obra</h3>
+  <table>
+    <thead><tr><th>Tipo</th><th>Obras</th><th>Dias médios</th><th>Min</th><th>Max</th><th>Etapas típicas</th></tr></thead>
+    <tbody>
+      <tr><td>PISO</td><td class="num">12</td><td class="num">15,1</td><td class="num">6</td><td class="num">20</td><td class="num">8</td></tr>
+      <tr><td>COMBINADO</td><td class="num">24</td><td class="num">19,8</td><td class="num">12</td><td class="num">30</td><td class="num">21</td></tr>
+      <tr><td>PAREDES</td><td class="num">1</td><td class="num">18</td><td class="num">18</td><td class="num">18</td><td>amostra insuficiente</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Lógica de cálculo</h3>
+  <div class="card" style="margin-bottom:8px">
+    <h4>Fórmula observada</h4>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#c4a77d;margin-top:6px">dataFim_obra = dataInicio + diasTotal(úteis), considerando trabalhaSabado/Domingo</div>
+    <div class="lbl" style="margin-top:8px">diasTotal ≠ diasInstalacao + diasCura (campos legados, &lt;17% preenchidos). Verdade vive em etapas[] — cada etapa duração=1d, sequencial sem folga (dataInicio[N] = dataFim[N-1] + 1).</div>
+  </div>
+
+  <h3>Anomalias específicas do Planejamento</h3>
+  <div class="anom"><b>Cronograma fossilizado:</b> 33/33 obras ativas com dataTermino &lt; hoje — nunca re-planejado após atraso</div>
+  <div class="anom"><b>97% das etapas sem prestadoresIds:</b> alocação não persistida; operação feita FORA do sistema</div>
+  <div class="anom"><b>100% dos 1.037 projects com dataExecucaoConfirmada=false</b> — flag nunca atualizado via API</div>
+  <div class="anom"><b>49% dos projects com diasTotal=0</b> — estimativa não calculada</div>
+  <div class="anom"><b>Sem campo de restrição climática</b> (contradiz status aguardando_clima)</div>
+  <div class="anom"><b>Sem feriado/calendário parametrizado</b></div>
+  <div class="anom"><b>Sem dependência entre obras</b> — cada obra é ilha; sem fila/grupo/predecessora</div>
+  <div class="anom"><b>trabalhaSabado/Domingo = false em 100%</b> — parâmetro existe, nunca foi ligado</div>
+  <div class="anom"><b>dados_json é string</b> — exige JSON.parse duplo no cliente (anti-pattern)</div>
+  <div class="anom"><b>IDs orphan-os-xlsx-* misturados com pf-mklv-*</b> — importação XLSX órfã, valorTotal=0, dataPrevista=2023-11-27</div>
+  <div class="anom"><b>Cura Stelion sempre duracao=1d</b> — ignora realidade física (umidade, temperatura)</div>
+  <div class="anom"><b>253 pares de obras com sobreposição temporal</b> entre 33 obras (densidade 0,48) — overbooking severo do cronograma</div>
+  <div class="anom"><b>2 endpoints /api/equipes incompatíveis</b> convivem entre os dois backends</div>
+
+  <h3>Gap para a diretoria — capacidade produtiva</h3>
+  <div class="anom" style="border-color:#e8c87b;background:#1a160e;color:#fed">
+    <b style="color:#e8c87b">A plataforma NÃO tem nenhuma superfície que responda "qual o volume real da operação?":</b>
+    <ul style="margin:8px 0 0 20px;font-size:12px">
+      <li>Sem throughput histórico (obras/m² por mês concluídos)</li>
+      <li>Sem backlog dimensionado (m² em carteira vs capacidade)</li>
+      <li>Sem forecast (obras planejadas próximos 30/60/90 dias)</li>
+      <li>Sem visão por equipe (carga × capacidade)</li>
+      <li>Sem calendário/Gantt/Kanban de obras agendadas</li>
+    </ul>
+  </div>
+</section>
+
+<section id="equipes">
+  <h2>Equipes e Aplicadores <span class="count">6 equipes · 70 cadastrados · 31 ativos</span></h2>
+
+  <table>
+    <thead><tr><th>Equipe</th><th>Líder</th><th>Status líder</th><th>Ativos</th><th>Inativos</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td>Wiguens</td><td>Wiguens Louis</td><td><span class="pill ok">ativo</span></td><td class="num">13</td><td class="num">6</td><td>maior equipe operacional</td></tr>
+      <tr><td>Júlio</td><td>Júlio Miranda</td><td><span class="pill ok">ativo</span></td><td class="num">8</td><td class="num">2</td><td>—</td></tr>
+      <tr><td>Michael</td><td>(Cosme A3 — bug)</td><td><span class="pill crit">liderId errado</span></td><td class="num">9</td><td class="num">3</td><td>líder real é encarregado oculto 6b237d14</td></tr>
+      <tr><td>Gilmar</td><td>Gilmar</td><td><span class="pill crit">inativo</span></td><td class="num">1</td><td class="num">11</td><td>fantasma — só Paulo Henrique ativo</td></tr>
+      <tr><td>João</td><td>João Carlos</td><td><span class="pill ok">ativo</span></td><td class="num">0</td><td class="num">11</td><td>todos membros inativos — usa pool compartilhado via escalação</td></tr>
+      <tr><td>Egberto</td><td>Egberto Sulivan</td><td><span class="pill crit">inativo</span></td><td class="num">0</td><td class="num">12</td><td>totalmente vazia — encarregado oculto 8c9780dd assume</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Roles decodificados (campo .funcao)</h3>
+  <table>
+    <tbody>
+      <tr><td><span class="tag">LIDER</span></td><td>Líder de equipe (Wiguens, João, Júlio...)</td></tr>
+      <tr><td><span class="tag">PREPARADOR</span> (Pr)</td><td>Prepara base/massa</td></tr>
+      <tr><td><span class="tag">APLICADOR_1</span> (A1/LC)</td><td>Aplicador sênior / líder de célula</td></tr>
+      <tr><td><span class="tag">APLICADOR_2</span> (A2)</td><td>Aplicador pleno</td></tr>
+      <tr><td><span class="tag">APLICADOR_3</span> (A3)</td><td>Aplicador júnior</td></tr>
+      <tr><td><span class="tag">AJUDANTE</span> (Aj)</td><td>Ajudante</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Hierarquia oculta — encarregados sem cadastro em /api/equipes</h3>
+  <table>
+    <thead><tr><th>liderId</th><th>Aparece em escalação</th><th>Hipótese</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">26e0b659...</td><td class="num">5</td><td>Encarregado regional / substituto Gilmar</td></tr>
+      <tr><td class="mono">8c9780dd...</td><td class="num">3</td><td>Encarregado regional RJ / substituto Egberto</td></tr>
+      <tr><td class="mono">6b237d14...</td><td class="num">3</td><td>Michael (encarregado real da equipe Michael)</td></tr>
+      <tr><td class="mono">3be92339...</td><td class="num">1</td><td>—</td></tr>
+      <tr><td class="mono">3c66db13...</td><td class="num">1</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Cobertura de escalação</h3>
+  <div class="grid g4">
+    <div class="card"><h4>Obras em execução</h4><div class="num">12</div></div>
+    <div class="card"><h4>Com escalação hoje</h4><div class="num green">11</div><div class="lbl">91,7%</div></div>
+    <div class="card"><h4>Sem escalação</h4><div class="num red">1</div><div class="lbl">ca4b3047...</div></div>
+    <div class="card"><h4>Total escalações hoje</h4><div class="num">25</div><div class="lbl">14 fora de em_execucao</div></div>
+  </div>
+
+  <h3>Anomalias de Equipe</h3>
+  <div class="anom"><b>Cores amber/blue/gray/violet (vistas em /app/hoje) NÃO existem na API</b> — é mapeamento visual client-side. Equipes são identificadas por nome do líder</div>
+  <div class="anom"><b>Equipe Michael:</b> liderId aponta para APLICADOR_3 (Cosme), não para o líder real</div>
+  <div class="anom"><b>Equipes Egberto e Gilmar:</b> ativo=true mas líder e ~100% dos membros inativos</div>
+  <div class="anom"><b>5 liderIds em escalacao-diaria sem cadastro em /api/equipes</b> — encarregados regionais ocultos</div>
+  <div class="anom"><b>Maximiliano (Wiguens) com encarregadoId=João</b> — vínculo de equipe diverge do encarregadoId</div>
+  <div class="anom"><b>Projeto c1621370 com liderId=null + 12 membros mistos</b> — obra multi-equipe ou erro</div>
+  <div class="anom"><b>escalacao-diaria não informa role na obra</b> — só membrosIds[]; role precisa cruzar com .funcao</div>
+</section>
+
 <section id="allfields">
   <h2>acessoDetalhes.allFields — Checklist Pipefy bruto <span class="count">~60 chaves</span></h2>
   <p style="font-size:12px;color:#888;margin-bottom:12px">Mina de ouro nunca explorada. Valores são YES/NO/enum em português. Várias chaves com typos preservados do Pipefy.</p>
@@ -836,7 +993,7 @@
 </section>
 
 <footer>
-  Modelagem v2 · Etapa 1: acúmulo · 11 auditores (Projetos + Hoje) · 2026-04-15<br>
+  Modelagem v3 · Etapa 1: acúmulo · 16 auditores (Projetos + Hoje + Planejamento) · 2026-04-15<br>
   Próxima etapa: cruzamentos e priorização de UI
 </footer>
 
