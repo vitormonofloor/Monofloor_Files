@@ -70,15 +70,15 @@
   <div class="meta">
     <span>Última atualização: <b>2026-04-15</b></span>
     <span>Etapa atual: <b>2 — Cruzamentos</b></span>
-    <span>Cruzamentos entregues: <b>5</b></span>
-    <span>Backlog: <b>16</b></span>
+    <span>Cruzamentos entregues: <b>12</b></span>
+    <span>Backlog: <b>11</b></span>
     <span>Abas mapeadas: <b>3/15</b></span>
   </div>
 </header>
 
 <div class="progress-bar">
   <div class="prog-step done">Etapa 1 · Acúmulo<span class="pct">100%</span></div>
-  <div class="prog-step doing">Etapa 2 · Cruzamentos<span class="pct">~25%</span></div>
+  <div class="prog-step doing">Etapa 2 · Cruzamentos<span class="pct">~52%</span></div>
   <div class="prog-step pending">Etapa 3 · Consolidação<span class="pct">0%</span></div>
   <div class="prog-step pending">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
 </div>
@@ -119,7 +119,7 @@
 </section>
 
 <section>
-  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">5 concluídos</span></h2>
+  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">12 concluídos</span></h2>
   <div class="task-list">
     <div class="task done">
       <div class="check">✓</div>
@@ -190,6 +190,56 @@
       </div>
       <div class="meta">c7</div>
     </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#8 Obras zumbi — consolidação (ex-#B1)</div>
+        <div class="desc">32 candidatas em CLIENTE FINALIZADO/OECT. 16 zumbi_real (status aberto ≠ reparo) + 16 reparo coerente. <b>Wesley concentra 62,5% dos zumbi_real (10/16) e 50% dos reparos coerentes (8/16)</b>. Mais antiga: Vanessa Augusta (313d).</div>
+        <div class="files"><code>dados/cruz-zumbi.json</code></div>
+      </div>
+      <div class="meta">c8</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#9 Idade × metragem <span class="pill crit">hipótese rejeitada</span> (ex-#B2)</div>
+        <div class="desc">Correlação de Pearson = <b>0,076</b> (virtualmente zero). Obras pequenas (≤150m²) têm idade média 168d; grandes (&gt;500m²) têm 180d. Diferença de apenas 12 dias. Metragem NÃO explica envelhecimento.</div>
+        <div class="files"><code>dados/cruz-idade-metragem.json</code></div>
+      </div>
+      <div class="meta">c9</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#10 Idade × tipoObra (ex-#B3)</div>
+        <div class="desc"><b>piso_parede envelhece mais</b>: mediana 238d, 69,9% &gt;180d (n=83). piso sozinho 201d (n=44). parede rejuvenesce: mediana 46d, só 15% &gt;180d (n=20). Campo tipoObra só carrega escopo — natureza (nova/reaplicação) ausente.</div>
+        <div class="files"><code>dados/cruz-idade-tipo.json</code></div>
+      </div>
+      <div class="meta">c10</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#11 Luana vs Wesley — perfil comparativo (ex-#B5) <span class="pill done">achado forte</span></div>
+        <div class="desc">Carteiras ~idênticas (89 vs 88), mas perfis opostos: <b>Wesley tem 5× mais zumbi (10 vs 2) e 2× mais reparo (11 vs 5)</b> — o que "rejuvenesce" a mediana dele. <b>Luana tem 6 obras &gt;270d (Wesley: zero)</b>, metragem mediana +22%, mais dispersa geograficamente, mais travada em AGUARDANDO LIBERAÇÃO. Veredicto: Luana não tem carteira mal cuidada — tem obras genuinamente travadas.</div>
+        <div class="files"><code>dados/cruz-luana-vs-wesley.json</code></div>
+      </div>
+      <div class="meta">c11</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#12 Obras órfãs sem consultor (ex-#B6)</div>
+        <div class="desc">18 ativas sem consultor. <b>4 críticas &gt;180d</b> (Bernardo Magalhães 243d, Gabriela Azevedo 211d, Repullo 205d, Paula Correa 196d) — todas em reparo/pós-entrega sem dono. 3 com bug literal "[]" (todas SP — falha de importação no mesmo lote). 8/18 em status=reparo — padrão: obra entregue → foi pra reparo → perdeu consultor.</div>
+        <div class="files"><code>dados/cruz-orfas.json</code></div>
+      </div>
+      <div class="meta">c12</div>
+    </div>
   </div>
 
   <div class="findings">
@@ -204,38 +254,8 @@
 </section>
 
 <section>
-  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">16 ideias</span></h2>
+  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">11 ideias</span></h2>
   <div class="task-list">
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B1 Obras "zumbi" — listar todas e consolidar <span class="pill backlog">quick win</span></div>
-        <div class="desc">Obras com fase=CLIENTE FINALIZADO + status aberto. Quem é consultor, há quanto tempo, qual ação pendente. Alvo de limpeza administrativa imediata.</div>
-        <div class="files"><span class="tag">limbo</span> <span class="tag">quick-win</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B2 Idade × metragem (obras grandes envelhecem mais?)</div>
-        <div class="desc">Testar correlação entre projetoMetragem e idade_dias. Hipótese: obras grandes > 500 m² têm ciclo maior.</div>
-        <div class="files"><span class="tag">correlação</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B3 Idade × tipoObra (piso / parede / piso_parede)</div>
-        <div class="desc">Qual tipologia envelhece mais no pipeline. Cuidado com 28,5% NULO + taxonomia dupla (escopo vs natureza).</div>
-        <div class="files"><span class="tag">correlação</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
 
     <div class="task backlog">
       <div class="check">○</div>
@@ -243,26 +263,6 @@
         <div class="title">#B4 Obras silenciosas (sem comunicação há X dias)</div>
         <div class="desc">Cruzar idade_dias com whatsappSummary.geradoEm. Obras antigas + sem atualização recente = alerta vermelho.</div>
         <div class="files"><span class="tag">comunicação</span> <span class="tag">risco</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B5 Luana vs Wesley — perfil comparativo de carteira</div>
-        <div class="desc">Mesma carga (88-89), mas qual o perfil? Cidade, metragem, tipo, fase dominante. Por que Luana tem mediana 33d maior e 6 obras 270+?</div>
-        <div class="files"><span class="tag">comparativo</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B6 Obras sem consultor (18 órfãs)</div>
-        <div class="desc">Listar nome a nome as 18 ativas sem consultor. Por quanto tempo estão órfãs? Qual estado? Alguém está cuidando?</div>
-        <div class="files"><span class="tag">gaps</span></div>
       </div>
       <div class="meta">próx.</div>
     </div>
