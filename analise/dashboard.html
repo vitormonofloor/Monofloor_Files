@@ -278,6 +278,26 @@
   .bk-action { font-size: 10px; color: var(--green); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 500; }
   .bk-counter { display: inline-block; font-size: 11px; color: var(--muted); margin-left: 10px; font-weight: 400; letter-spacing: 0.05em; }
 
+  /* delta + sparkline (histórico) */
+  .bk-num-row { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 4px; }
+  .bk-delta { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 3px; }
+  .bk-delta.down { background: #1d2a1d; color: #7be8a8; }
+  .bk-delta.up   { background: #2a1d1d; color: #e87b7b; }
+  .bk-delta.same { background: #1a1a1a; color: #888; }
+  .bk-delta.new  { background: #1a2330; color: #7ba8e8; }
+  .bk-spark { flex: 1; max-width: 100px; height: 24px; }
+  .bk-spark path { fill: none; stroke: #c4a77d; stroke-width: 1.5; }
+  .bk-spark circle { fill: #c4a77d; }
+
+  /* movimentações no modal */
+  .bk-mov { background: #0a0a0a; border: 1px solid #1f1f1f; border-radius: 6px; padding: 12px 14px; margin: 14px 0; }
+  .bk-mov h4 { font-size: 11px; color: #c4a77d; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; font-weight: 500; }
+  .bk-mov ul { list-style: none; padding: 0; font-size: 12px; color: #bbb; line-height: 1.7; }
+  .bk-mov ul li { padding: 4px 0; border-bottom: 1px solid #161616; }
+  .bk-mov ul li:last-child { border: none; }
+  .bk-mov ul li b { color: #fff; }
+  .bk-mov .bk-empty { font-size: 11px; color: #666; font-style: italic; }
+
   .bk-modal {
     display: none; position: fixed; inset: 0; z-index: 1000;
     align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto;
@@ -589,35 +609,55 @@
 
     <div class="backlog-grid">
       <button class="bk-card crit" onclick="openBacklog('zumbi')">
-        <div class="bk-num">16</div>
+        <div class="bk-num-row">
+          <div class="bk-num">16</div>
+          <div class="bk-delta same">=</div>
+          <svg class="bk-spark" viewBox="0 0 80 24"></svg>
+        </div>
         <div class="bk-title">Obras zumbi</div>
         <div class="bk-sub">CLIENTE FINALIZADO sem fechar — mediana 208d · máx 313d</div>
         <div class="bk-action">Encerrar status no sistema</div>
       </button>
 
       <button class="bk-card crit" onclick="openBacklog('lideres')">
-        <div class="bk-num">5</div>
+        <div class="bk-num-row">
+          <div class="bk-num">5</div>
+          <div class="bk-delta same">=</div>
+          <svg class="bk-spark" viewBox="0 0 80 24"></svg>
+        </div>
         <div class="bk-title">Líderes ocultos</div>
         <div class="bk-sub">UUIDs liderando hoje sem cadastro em /api/equipes — 13 obras escaladas</div>
         <div class="bk-action">Identificar pessoa e cadastrar</div>
       </button>
 
       <button class="bk-card warn" onclick="openBacklog('orfas')">
-        <div class="bk-num">18</div>
+        <div class="bk-num-row">
+          <div class="bk-num">18</div>
+          <div class="bk-delta same">=</div>
+          <svg class="bk-spark" viewBox="0 0 80 24"></svg>
+        </div>
         <div class="bk-title">Obras órfãs</div>
         <div class="bk-sub">Sem consultor — mediana 161d · 4 críticas &gt;180d · 3 com bug de cadastro</div>
         <div class="bk-action">Atribuir consultor</div>
       </button>
 
       <button class="bk-card crit" onclick="openBacklog('conflitos')">
-        <div class="bk-num">3</div>
+        <div class="bk-num-row">
+          <div class="bk-num">3</div>
+          <div class="bk-delta same">=</div>
+          <svg class="bk-spark" viewBox="0 0 80 24"></svg>
+        </div>
         <div class="bk-title">Conflitos hoje</div>
         <div class="bk-sub">Aplicadores não-líderes em 2 obras simultâneas no mesmo dia</div>
         <div class="bk-action">Validar escalação com encarregado</div>
       </button>
 
       <button class="bk-card warn" onclick="openBacklog('lotevt')">
-        <div class="bk-num">8</div>
+        <div class="bk-num-row">
+          <div class="bk-num">8</div>
+          <div class="bk-delta same">=</div>
+          <svg class="bk-spark" viewBox="0 0 80 24"></svg>
+        </div>
         <div class="bk-title">Lote VT congelado</div>
         <div class="bk-sub">Obras com idade EXATAMENTE 260d — mesmo evento travado · 87,5% Luana</div>
         <div class="bk-action">Reabrir agendamento</div>
@@ -634,6 +674,11 @@
       <p class="bk-action-detail">
         <strong style="color:#c4a77d">Por que:</strong> CLIENTE FINALIZADO indica que a obra acabou fisicamente, mas o status no CRM continua em aberto (em_execucao, planejamento, aguardando). Resultado: aparece no painel como ativa indevidamente, distorcendo carga e SLA. Mediana de idade 208d, máx 313d (Vanessa Pimentel — Luana, há 10 meses).
       </p>
+      <div class="bk-mov">
+        <h4>Movimentações recentes (últimos 7 dias)</h4>
+        <ul></ul>
+        <p class="bk-empty">Sem movimentações registradas. Histórico começa hoje.</p>
+      </div>
       <table class="t">
         <thead><tr>
           <th>Cliente</th><th>Cidade</th><th>Status</th><th>Consultor</th>
@@ -670,6 +715,11 @@
       <p class="bk-action-detail">
         <strong style="color:#c4a77d">Por que:</strong> 5 IDs aparecem como liderId em escalações hoje mas não existem em /api/equipes. São os encarregados REAIS das ex-equipes Gilmar/Egberto/Michael (líderes oficiais inativos ou divergentes do organograma). Sem nome cadastrado, qualquer relatório de produtividade por equipe sai distorcido.
       </p>
+      <div class="bk-mov">
+        <h4>Movimentações recentes (últimos 7 dias)</h4>
+        <ul></ul>
+        <p class="bk-empty">Sem movimentações registradas. Histórico começa hoje.</p>
+      </div>
       <table class="t">
         <thead><tr>
           <th>UUID curto</th><th class="num">Obras hoje</th><th>Equipe que gerencia de fato</th>
@@ -695,6 +745,11 @@
       <p class="bk-action-detail">
         <strong style="color:#c4a77d">Por que:</strong> 18 obras ativas com consultor vazio, null ou literal "[]". Sem responsável nominal, ninguém é cobrado pela movimentação — viram limbo. 4 obras já passaram de 180 dias órfãs (críticas). 3 têm bug de cadastro (consultor gravado como string "[]" em vez de null) — precisa correção no input do CRM antes de atribuir.
       </p>
+      <div class="bk-mov">
+        <h4>Movimentações recentes (últimos 7 dias)</h4>
+        <ul></ul>
+        <p class="bk-empty">Sem movimentações registradas. Histórico começa hoje.</p>
+      </div>
       <table class="t">
         <thead><tr>
           <th>Cliente</th><th>Cidade</th><th>Status</th><th>Fase</th>
@@ -733,6 +788,11 @@
       <p class="bk-action-detail">
         <strong style="color:#c4a77d">Por que:</strong> 3 aplicadores não-líderes escalados em 2 obras simultâneas no MESMO dia. Adalberto e Otávio estão nas mesmas 2 obras (Adriana Peres + Rafik Freua) — pode ser equipe dividida intencional ou erro de escalação. Líderes em múltiplas obras (João Carlos, Wiguens, Júlio) são esperados e não contam aqui.
       </p>
+      <div class="bk-mov">
+        <h4>Movimentações recentes (últimos 7 dias)</h4>
+        <ul></ul>
+        <p class="bk-empty">Sem movimentações registradas. Histórico começa hoje.</p>
+      </div>
       <table class="t">
         <thead><tr>
           <th>Aplicador</th><th>Função</th><th>Equipe</th>
@@ -768,6 +828,11 @@
       <p class="bk-action-detail">
         <strong style="color:#c4a77d">Por que:</strong> 8 obras com idade EXATAMENTE 260 dias = mesmo lote congelado num único evento (snapshot ou batch que travou). 87,5% Luana, todas em status planejamento, sem sinalização de bloqueio. Pode ser lote esquecido após mudança operacional. Concentração no interior SP (Piracicaba 2x, Marília, Campinas, Paulínia) sugere perda de cobertura territorial.
       </p>
+      <div class="bk-mov">
+        <h4>Movimentações recentes (últimos 7 dias)</h4>
+        <ul></ul>
+        <p class="bk-empty">Sem movimentações registradas. Histórico começa hoje.</p>
+      </div>
       <table class="t">
         <thead><tr>
           <th>Cliente</th><th>Cidade</th><th>Consultor</th>
@@ -1216,6 +1281,118 @@ function closeBacklog(){
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBacklog(); });
+
+// ============== BACKLOG HISTÓRICO ==============
+async function loadBacklogHistory(){
+  try {
+    const r = await fetch('dados/backlog-historico.json?t=' + Date.now());
+    if (!r.ok) return;
+    const hist = await r.json();
+    if (!Array.isArray(hist) || !hist.length) return;
+
+    const last = hist[hist.length - 1];
+    const prev = hist.length > 1 ? hist[hist.length - 2] : null;
+
+    const cats = ['zumbi','lideres_ocultos','orfas','conflitos','lote_vt'];
+    const cardIds = {
+      zumbi: 'zumbi',
+      lideres_ocultos: 'lideres',
+      orfas: 'orfas',
+      conflitos: 'conflitos',
+      lote_vt: 'lotevt'
+    };
+
+    cats.forEach(cat => {
+      const cur = (last.indices && last.indices[cat] && typeof last.indices[cat].total === 'number')
+        ? last.indices[cat].total : 0;
+      const prevVal = prev && prev.indices && prev.indices[cat] ? prev.indices[cat].total : undefined;
+      const delta = (typeof prevVal === 'number') ? (cur - prevVal) : null;
+
+      const cardId = cardIds[cat];
+      const card = document.querySelector(`button.bk-card[onclick*="'${cardId}'"]`);
+      if (card) {
+        const deltaEl = card.querySelector('.bk-delta');
+        if (deltaEl) {
+          if (delta === null)      { deltaEl.textContent = 'novo';            deltaEl.className = 'bk-delta new'; }
+          else if (delta < 0)      { deltaEl.textContent = '▼' + Math.abs(delta); deltaEl.className = 'bk-delta down'; }
+          else if (delta > 0)      { deltaEl.textContent = '▲' + delta;       deltaEl.className = 'bk-delta up'; }
+          else                     { deltaEl.textContent = '=';               deltaEl.className = 'bk-delta same'; }
+        }
+        const spark = card.querySelector('.bk-spark');
+        if (spark) {
+          const series = hist.slice(-14).map(h =>
+            (h.indices && h.indices[cat] && typeof h.indices[cat].total === 'number') ? h.indices[cat].total : 0
+          );
+          spark.innerHTML = renderSparkline(series, 80, 24);
+        }
+      }
+
+      // movimentações no modal
+      const modal = document.getElementById('modal-' + cardId);
+      if (modal) {
+        const movEl   = modal.querySelector('.bk-mov ul');
+        const emptyEl = modal.querySelector('.bk-mov .bk-empty');
+        const movs = collectMoves(hist, cat, 7);
+        if (movs.length === 0) {
+          if (movEl)   movEl.style.display   = 'none';
+          if (emptyEl) emptyEl.style.display = 'block';
+        } else {
+          if (movEl) {
+            movEl.innerHTML = movs.map(m =>
+              `<li>${m.date} — <b>${escHtmlSafe(m.cliente || m.nome || m.id || '?')}</b> ${escHtmlSafe(m.acao)}</li>`
+            ).join('');
+            movEl.style.display = '';
+          }
+          if (emptyEl) emptyEl.style.display = 'none';
+        }
+      }
+    });
+  } catch(e) { console.error('histórico backlog:', e); }
+}
+
+function renderSparkline(values, w, h) {
+  if (!values || !values.length) return '';
+  if (values.length === 1) return `<circle cx="${w/2}" cy="${h/2}" r="3"/>`;
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values);
+  const range = max - min || 1;
+  const step = w / (values.length - 1);
+  const pts = values.map((v, i) => `${(i*step).toFixed(2)},${(h - ((v-min)/range)*(h-4) - 2).toFixed(2)}`);
+  const lastX = ((values.length - 1) * step).toFixed(2);
+  const lastY = (h - ((values[values.length-1] - min)/range) * (h-4) - 2).toFixed(2);
+  return `<path d="M ${pts.join(' L ')}"/><circle cx="${lastX}" cy="${lastY}" r="2.5"/>`;
+}
+
+function collectMoves(hist, cat, days) {
+  const out = [];
+  const recent = hist.slice(-days);
+  recent.forEach(h => {
+    if (!h.mudancas_vs_anterior) return;
+    const m = h.mudancas_vs_anterior;
+    Object.keys(m).filter(k => k.startsWith(cat)).forEach(k => {
+      (m[k] || []).forEach(item => {
+        const acao = describeAcao(k, item);
+        out.push({ date: h.date, ...item, acao });
+      });
+    });
+  });
+  return out.reverse();
+}
+
+function describeAcao(key, item) {
+  if (key.includes('saiu'))         return `saiu do limbo${item.idade_quando_saiu ? ' (era zumbi há ' + item.idade_quando_saiu + 'd)' : ''}`;
+  if (key.includes('atribuida'))    return `recebeu consultor ${item.novo_consultor || ''}`.trim();
+  if (key.includes('formalizado'))  return `cadastrado em /api/equipes`;
+  if (key.includes('resolvido'))    return `conflito resolvido`;
+  if (key.includes('destravada'))   return `destravada (mudou de fase)`;
+  return JSON.stringify(item);
+}
+
+function escHtmlSafe(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+document.addEventListener('DOMContentLoaded', loadBacklogHistory);
 </script>
 
 </body>
