@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Qualidade Monofloor — Dashboard Executivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --card: #0d0d0d;
+    --card-2: #111;
+    --border: #1f1f1f;
+    --border-2: #2a2a2a;
+    --text: #e8e8e8;
+    --muted: #888;
+    --muted-2: #555;
+    --accent: #c4a77d;
+    --green: #7be8a8;
+    --amber: #e8c87b;
+    --red: #e87b7b;
+    --scarlet: #ff5252;
+    --blue: #7ba8e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ============== HEADER ============== */
+  header.top {
+    position: sticky; top: 0; z-index: 30;
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+  }
+  .top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+  .top h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .top h1 span.acc { color: var(--accent); }
+  .top .stamp { font-size: 11px; color: var(--muted); }
+  .stamp .mono { color: var(--text); }
+  .top .links { display: flex; gap: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ============== LAYOUT ============== */
+  .container { max-width: 1480px; margin: 0 auto; padding: 28px; }
+  section { margin-bottom: 56px; }
+  .section-head { margin-bottom: 18px; }
+  .section-kicker {
+    font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.18em;
+    margin-bottom: 6px;
+  }
+  .section-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .section-sub { font-size: 12px; color: var(--muted); margin-top: 4px; max-width: 760px; }
+
+  /* ============== HERO ============== */
+  .hero {
+    display: grid; grid-template-columns: 360px 1fr; gap: 24px;
+    background: linear-gradient(180deg, #0e0e0e, var(--card)); border: 1px solid var(--border);
+    padding: 32px; border-radius: 6px; margin-bottom: 56px;
+  }
+  .health-box {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 8px; border-right: 1px solid var(--border);
+  }
+  .health-svg { width: 220px; height: 220px; }
+  .health-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 56px; font-weight: 600;
+    fill: var(--text); text-anchor: middle; dominant-baseline: central;
+  }
+  .health-pct { font-size: 11px; fill: var(--muted); text-anchor: middle; }
+  .health-lbl {
+    margin-top: 12px; text-align: center;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
+  }
+  .health-veredito { font-size: 13px; color: var(--text); margin-top: 6px; font-weight: 500; }
+  .health-amber { color: var(--amber); }
+  .health-red { color: var(--red); }
+  .health-green { color: var(--green); }
+
+  .hero-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .hero-kpi { padding: 8px 24px; border-right: 1px solid var(--border); }
+  .hero-kpi:last-child { border-right: none; }
+  .hero-kpi .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .hero-kpi .val {
+    font-family: 'JetBrains Mono', monospace; font-size: 38px; font-weight: 600;
+    margin: 6px 0 4px;
+  }
+  .hero-kpi .val.warn { color: var(--amber); }
+  .hero-kpi .val.crit { color: var(--red); }
+  .hero-kpi .val.scarlet { color: var(--scarlet); }
+  .hero-kpi .val.green { color: var(--green); }
+  .hero-kpi .val.blue { color: var(--blue); }
+  .hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
+
+  .hero-summary {
+    grid-column: 2 / 3;
+    margin-top: 8px; padding: 12px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--text);
+    line-height: 1.6;
+  }
+  .hero-summary strong { color: var(--accent); font-weight: 600; }
+
+  /* ============== CARDS ============== */
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 5px;
+    padding: 20px;
+  }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .card-title { font-size: 13px; font-weight: 600; letter-spacing: -0.005em; }
+  .card-sub { font-size: 11px; color: var(--muted); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 1100px) {
+    .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero { grid-template-columns: 1fr; }
+    .health-box { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+    .hero-kpis { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ============== KPIs (small) ============== */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+  .kpi {
+    background: var(--card-2); border: 1px solid var(--border); padding: 14px 16px; border-radius: 4px;
+  }
+  .kpi .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .kpi .val { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600; margin-top: 4px; }
+  .kpi .sub { font-size: 11px; color: var(--muted-2); margin-top: 2px; }
+  .kpi .val.warn { color: var(--amber); }
+  .kpi .val.crit { color: var(--red); }
+  .kpi .val.green { color: var(--green); }
+  .kpi .val.blue { color: var(--blue); }
+  .kpi .val.scarlet { color: var(--scarlet); }
+
+  /* ============== BARS ============== */
+  .barlist { display: flex; flex-direction: column; gap: 8px; }
+  .barlist-row { display: grid; grid-template-columns: 140px 1fr 50px; gap: 10px; align-items: center; font-size: 12px; }
+  .barlist-lbl { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .barlist-bar { height: 8px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .barlist-bar > span { display: block; height: 100%; background: var(--accent); }
+  .barlist-bar.gn > span { background: var(--green); }
+  .barlist-bar.am > span { background: var(--amber); }
+  .barlist-bar.rd > span { background: var(--red); }
+  .barlist-bar.bl > span { background: var(--blue); }
+  .barlist-val { font-family: 'JetBrains Mono', monospace; color: var(--muted); text-align: right; font-size: 11px; }
+
+  /* ============== CHIPS / FLAGS ============== */
+  .chip {
+    display: inline-block; font-size: 9px; padding: 2px 6px;
+    border-radius: 2px; text-transform: uppercase; letter-spacing: 0.07em;
+    font-weight: 500; margin-right: 4px; margin-bottom: 2px;
+    border: 1px solid; white-space: nowrap;
+  }
+  .chip.gn { color: var(--green); border-color: rgba(123,232,168,0.35); background: rgba(123,232,168,0.04); }
+  .chip.am { color: var(--amber); border-color: rgba(232,200,123,0.35); background: rgba(232,200,123,0.04); }
+  .chip.rd { color: var(--red); border-color: rgba(232,123,123,0.35); background: rgba(232,123,123,0.04); }
+  .chip.sc { color: var(--scarlet); border-color: rgba(255,82,82,0.4); background: rgba(255,82,82,0.06); }
+  .chip.bl { color: var(--blue); border-color: rgba(123,168,232,0.35); background: rgba(123,168,232,0.04); }
+  .chip.acc { color: var(--accent); border-color: rgba(196,167,125,0.4); background: rgba(196,167,125,0.04); }
+  .chip.mut { color: var(--muted); border-color: var(--border-2); }
+
+  /* ============== TABLES ============== */
+  table.t {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+  }
+  table.t thead th {
+    background: var(--card-2); color: var(--muted);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 8px 10px; text-align: left; font-weight: 500;
+    border-bottom: 1px solid var(--border-2); white-space: nowrap;
+  }
+  table.t tbody td {
+    padding: 8px 10px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.t tbody tr:last-child td { border-bottom: none; }
+  table.t tbody tr:hover { background: rgba(255,255,255,0.02); }
+  table.t .num { font-family: 'JetBrains Mono', monospace; text-align: right; }
+  table.t .id { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+  table.t .cli { color: var(--text); font-weight: 500; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  table.t .ct { color: var(--muted); font-size: 11px; }
+  table.t td.amber { color: var(--amber); }
+  table.t td.red { color: var(--red); }
+  table.t td.scarlet { color: var(--scarlet); font-weight: 600; }
+
+  /* ============== Q boxes ============== */
+  .question-num {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    color: var(--accent); font-size: 14px; font-weight: 600;
+    margin-right: 12px;
+  }
+  .key-finding {
+    background: rgba(196,167,125,0.05);
+    border-left: 3px solid var(--accent);
+    padding: 12px 16px; margin: 12px 0;
+    font-size: 12px; line-height: 1.55;
+  }
+  .key-finding strong { color: var(--accent); font-weight: 600; }
+  .key-finding.crit { background: rgba(232,123,123,0.05); border-left-color: var(--red); }
+  .key-finding.crit strong { color: var(--red); }
+  .key-finding.warn { background: rgba(232,200,123,0.05); border-left-color: var(--amber); }
+  .key-finding.warn strong { color: var(--amber); }
+
+  /* ============== DONUT ============== */
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut { width: 140px; height: 140px; }
+  .donut-legend { font-size: 11px; display: flex; flex-direction: column; gap: 5px; }
+  .donut-legend .it { display: flex; align-items: center; gap: 8px; }
+  .donut-legend .sw { width: 10px; height: 10px; border-radius: 2px; }
+  .donut-legend .lb { color: var(--text); flex: 1; }
+  .donut-legend .vl { font-family: 'JetBrains Mono', monospace; color: var(--muted); }
+
+  /* ============== Person comparison ============== */
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .vs-cell {
+    background: var(--card-2); border: 1px solid var(--border); padding: 16px; border-radius: 4px;
+  }
+  .vs-name { font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .vs-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vs-stat { font-size: 11px; }
+  .vs-stat .lbl { color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-size: 9px; }
+  .vs-stat .v { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 600; color: var(--text); margin-top: 2px; }
+  .vs-stat .v.warn { color: var(--amber); }
+  .vs-stat .v.crit { color: var(--red); }
+
+  /* ============== Footer ============== */
+  footer {
+    border-top: 1px solid var(--border); padding: 24px 28px;
+    margin-top: 80px; background: var(--card);
+    color: var(--muted); font-size: 11px;
+  }
+  footer .links { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
+  footer .links a { font-size: 12px; }
+
+  details { background: var(--card-2); border: 1px solid var(--border); border-radius: 4px; margin-top: 8px; }
+  details summary {
+    cursor: pointer; padding: 10px 14px; font-size: 12px; color: var(--muted);
+    list-style: none; user-select: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: '+ '; color: var(--accent); margin-right: 4px; }
+  details[open] summary::before { content: '− '; }
+  details[open] summary { color: var(--text); border-bottom: 1px solid var(--border); }
+  details .det-body { padding: 14px; font-size: 12px; }
+
+  .diag-card {
+    background: var(--card-2); border: 1px solid var(--border); border-radius: 4px;
+    padding: 12px 14px; margin-bottom: 8px; font-size: 12px;
+  }
+  .diag-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; align-items: baseline; flex-wrap: wrap; }
+  .diag-cli { font-weight: 600; color: var(--text); }
+  .diag-meta { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .diag-text { color: var(--muted); white-space: pre-wrap; font-size: 11px; line-height: 1.5; max-height: 80px; overflow: hidden; }
+
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <h1>Central de Qualidade Monofloor — <span class="acc">Dashboard Executivo</span></h1>
+    <div class="links">
+      <a href="obras-mapa.html">Mapa detalhado de obras</a>
+      <span class="stamp"><span class="mono">2026-04-15</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ============== HERO ============== -->
+  <section class="hero">
+    <div class="health-box">
+      <svg class="health-svg" viewBox="0 0 200 200" id="health-svg">
+        <circle cx="100" cy="100" r="86" fill="none" stroke="#1f1f1f" stroke-width="14"/>
+        <circle cx="100" cy="100" r="86" fill="none" stroke="#e8c87b" stroke-width="14"
+                stroke-dasharray="540" stroke-dashoffset="540" stroke-linecap="round"
+                transform="rotate(-90 100 100)" id="health-arc"/>
+        <text x="100" y="100" class="health-num" id="health-num">--</text>
+        <text x="100" y="135" class="health-pct">/ 100</text>
+      </svg>
+      <div class="health-lbl">Índice de Saúde Operacional</div>
+      <div class="health-veredito" id="health-veredito">—</div>
+    </div>
+
+    <div>
+      <div class="hero-kpis">
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de 1.028 no painel</div></div>
+        <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div></div>
+        <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div></div>
+        <div class="hero-kpi"><div class="lbl">Órfãs (sem consultor)</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: 4 com 180+</div></div>
+      </div>
+
+      <div class="hero-summary" id="hero-summary">—</div>
+    </div>
+  </section>
+
+  <!-- ============== Q1 — PRAZO ============== -->
+  <section>
+    <div class="section-head">
+      <div class="section-kicker">Pergunta 1 da diretoria</div>
+      <div class="section-title">Quantas entregamos no prazo?</div>
+      <div class="section-sub">Fonte: planejamento.monofloor.cloud — 34 obras categorizadas como "ativas" no sistema de planejamento, comparadas contra o painel real.</div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Cumprimento de prazo</div></div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="lbl">No prazo</div><div class="val green">0</div><div class="sub">0%</div></div>
+          <div class="kpi"><div class="lbl">Atraso leve</div><div class="val" id="q1-leve">—</div><div class="sub">≤ 30 dias</div></div>
+          <div class="kpi"><div class="lbl">Atraso médio</div><div class="val warn" id="q1-medio">—</div><div class="sub">31–90 dias</div></div>
+          <div class="kpi"><div class="lbl">Atraso grave</div><div class="val crit" id="q1-grave">—</div><div class="sub">&gt; 90 dias</div></div>
+        </div>
+        <div class="key-finding crit">
+          <strong>100% das obras "ativas" no planejamento estão atrasadas.</strong>
+          Mediana de atraso: <span class="mono">83 dias</span> · p75: <span class="mono">98d</span> · p90: <span class="mono">111d</span> · máx: <span class="mono">132d</span>.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Status real das "atrasadas"</div><div class="card-sub">no painel temporal</div></div>
+        <div class="barlist" id="q1-status-real"></div>
+        <div class="key-finding warn" style="margin-top:14px;">
+          <strong>58,8% das obras "ativas" no planejamento já foram concluídas no painel.</strong>
+          Sistema de planejamento opera sobre realidade desatualizada — métrica de prazo está corrompida na fonte.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Top 10 mais atrasadas</div><div class="card-sub">vs. data prevista</div></div>
+        <table class="t"><thead><tr><th>Cliente</th><th>Consultor</th><th class="num">Atraso</th><th>Status real</th></tr></thead>
+        <tbody id="q1-top10"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== Q2 — POR QUE PARADO ============== -->
+  <section>
+    <div class="section-head">
+      <div class="section-kicker">Pergunta 2 da diretoria</div>
+      <div class="section-title">Por que a obra X está parada?</div>
+      <div class="section-sub">Top 10 obras ativas mais antigas no painel. Diagnósticos vêm de cruzamentos: zumbi (CLIENTE FINALIZADO sem fechar), órfãs (sem consultor), cores indefinidas, sem WhatsApp, atRisk (com problemas críticos).</div>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 2fr 1fr;">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Top 10 obras ativas mais antigas</div><div class="card-sub">por idade_dias desc</div></div>
+        <table class="t"><thead><tr><th>Cliente</th><th>Cidade</th><th class="num">Idade</th><th>Status</th><th>Fase</th><th>Consultor</th><th>Flags</th></tr></thead>
+        <tbody id="q2-top10"></tbody></table>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Diagnósticos atRisk</div><div class="card-sub">com problemas críticos abertos</div></div>
+        <div id="q2-diag"></div>
+      </div>
+    </div>
+
+    <div class="key-finding crit" style="margin-top:18px;">
+      <strong>Cluster paralisado:</strong>
+      16 obras zumbi (CLIENTE FINALIZADO sem fechar) + 18 órfãs (sem consultor) + cauda VT de 15 obras congeladas há 260 dias.
+      O somatório supera <span class="mono">23%</span> da carteira ativa total — todas paradas por motivo administrativo.
+    </div>
+  </section>
+
+  <!-- ============== Q3 — EQUIPE ============== -->
+  <section>
+    <div class="section-head">
+      <div class="section-kicker">Pergunta 3 da diretoria</div>
+      <div class="section-title">A equipe está rendendo?</div>
+      <div class="section-sub">Concentração de carteira por consultor + utilização real dos aplicadores hoje.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Luana vs Wesley</div><div class="card-sub">consultoras dominantes</div></div>
+        <div class="vs-grid" id="q3-lw"></div>
+        <div class="key-finding crit" style="margin-top:14px;">
+          <strong>Bus factor 2.</strong> Luana + Wesley concentram <span class="mono" id="q3-bus-pct">85%</span> das obras ativas e <span class="mono" id="q3-bus-180">91%</span> das obras 180+. Fragilidade estrutural.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Aplicadores hoje</div><div class="card-sub">escalação real</div></div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="lbl">Total ativos</div><div class="val" id="apl-total">—</div></div>
+          <div class="kpi"><div class="lbl">Escalados hoje</div><div class="val green" id="apl-escal">—</div><div class="sub" id="apl-escal-pct">—</div></div>
+          <div class="kpi"><div class="lbl">Ociosos</div><div class="val warn" id="apl-ocio">—</div></div>
+          <div class="kpi"><div class="lbl">Conflitos físicos</div><div class="val crit">3</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
+        </div>
+        <hr class="div">
+        <div class="card-sub" style="margin-bottom:10px;">Utilização por equipe</div>
+        <div class="barlist" id="q3-equipes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== Q4 — VOLUME ============== -->
+  <section>
+    <div class="section-head">
+      <div class="section-kicker">Pergunta 4 da diretoria</div>
+      <div class="section-title">Qual o volume real da operação?</div>
+      <div class="section-sub">Snapshot das 208 obras ativas no painel temporal — área, geografia e pipeline.</div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:18px;">
+      <div class="kpi"><div class="lbl">m² ativos (total)</div><div class="val" id="vol-m2">—</div><div class="sub">soma das obras com metragem</div></div>
+      <div class="kpi"><div class="lbl">m² mediana</div><div class="val" id="vol-m2-med">—</div><div class="sub">por obra</div></div>
+      <div class="kpi"><div class="lbl">Idade mediana</div><div class="val warn" id="vol-idade">—</div><div class="sub">dias desde abertura</div></div>
+      <div class="kpi"><div class="lbl">Idade média</div><div class="val warn" id="vol-idade-m">—</div><div class="sub">dias</div></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Distribuição por status</div></div>
+        <div class="donut-wrap">
+          <svg class="donut" viewBox="0 0 100 100" id="donut-status"></svg>
+          <div class="donut-legend" id="donut-status-legend"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Pipeline — top fases</div></div>
+        <div class="barlist" id="q4-fases"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Geografia</div><div class="card-sub">top UFs / cidades</div></div>
+        <div class="barlist" id="q4-uf"></div>
+        <hr class="div">
+        <div class="barlist" id="q4-cidades"></div>
+      </div>
+    </div>
+
+    <div class="key-finding" style="margin-top:18px;">
+      <strong>Snapshot diário começou hoje.</strong> Em 7–30 dias o sistema terá throughput mensal, velocity por equipe e taxa real de conclusão. Por enquanto métricas de fluxo (entrada/saída) são estáticas.
+    </div>
+  </section>
+
+  <!-- ============== ACHADOS ESTRUTURAIS ============== -->
+  <section>
+    <div class="section-head">
+      <div class="section-kicker">Achados estruturais</div>
+      <div class="section-title">O que o painel atual não conta</div>
+      <div class="section-sub">Quatro padrões que só aparecem cruzando 4+ fontes (painel, pipefy, mapeamento de equipes, ocorrências). Invisíveis em qualquer visão única.</div>
+    </div>
+
+    <div class="grid-2">
+      <!-- A — ORGANOGRAMA SOMBRA -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">A — Organograma sombra</div><div class="card-sub">quem realmente opera</div></div>
+        <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
+          <div class="kpi"><div class="lbl">Pessoas que operam</div><div class="val" id="org-total">—</div><div class="sub">vs <span id="org-cad">—</span> cadastradas</div></div>
+          <div class="kpi"><div class="lbl">Fantasmas</div><div class="val crit" id="org-fant">—</div><div class="sub" id="org-fant-pct">—</div></div>
+          <div class="kpi"><div class="lbl">Líderes ocultos</div><div class="val warn" id="org-oc">—</div><div class="sub">lideram <span id="org-oc-obras">13/25</span> obras hoje</div></div>
+          <div class="kpi"><div class="lbl">Mismatch consultor x ops</div><div class="val warn" id="org-mis">—</div><div class="sub" id="org-mis-pct">— das obras</div></div>
+        </div>
+        <hr class="div">
+        <div class="card-sub" style="margin-bottom:8px;">Saúde por equipe (líder vs membros ativos)</div>
+        <table class="t" id="org-equipes-tbl"><thead><tr><th>Equipe</th><th>Líder</th><th class="num">Ativos</th><th class="num">Inativos</th><th>Status</th></tr></thead><tbody></tbody></table>
+        <div class="key-finding crit" style="margin-top:12px;">
+          <strong>Equipe Egberto: 100% sombra.</strong> Líder INATIVO + 12 membros INATIVOS no cadastro, mas roda obras hoje via escalação. Equipe Michael: líder oficial não é o líder real (Cosme aparece como APLICADOR_3 mas opera como LIDER).
+        </div>
+      </div>
+
+      <!-- B — CRONOGRAMA FOSSIL -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">B — Cronograma fossilizado</div><div class="card-sub">sistema de planejamento</div></div>
+        <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
+          <div class="kpi"><div class="lbl">Atrasadas</div><div class="val crit">100%</div><div class="sub">34 de 34</div></div>
+          <div class="kpi"><div class="lbl">Já concluídas</div><div class="val warn">58,8%</div><div class="sub">no painel real</div></div>
+          <div class="kpi"><div class="lbl">Mediana atraso</div><div class="val warn"><span class="mono">83d</span></div><div class="sub">desde dataTermino</div></div>
+          <div class="kpi"><div class="lbl">Máx atraso</div><div class="val crit"><span class="mono">132d</span></div><div class="sub">cliente HOUSSEIN</div></div>
+        </div>
+        <div class="key-finding crit" style="margin-top:12px;">
+          <strong>O sistema de planejamento opera sobre realidade desatualizada.</strong>
+          Métrica de "obras no prazo" não é confiável até o sync com painel ser feito. Diretoria não pode tomar decisão de capacidade sobre essa base.
+        </div>
+      </div>
+
+      <!-- C — CLUSTER ADMIN -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">C — Cluster administrativo</div><div class="card-sub">o gargalo não é operacional</div></div>
+        <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
+          <div class="kpi"><div class="lbl">Zumbi</div><div class="val crit">16</div><div class="sub">CLIENTE FINALIZADO sem fechar</div></div>
+          <div class="kpi"><div class="lbl">Órfãs</div><div class="val crit">18</div><div class="sub">sem consultor</div></div>
+          <div class="kpi"><div class="lbl">Sem cor real</div><div class="val warn">87</div><div class="sub">41,8% das ativas</div></div>
+          <div class="kpi"><div class="lbl">Sem WhatsApp</div><div class="val warn">90</div><div class="sub">43% das ativas</div></div>
+        </div>
+        <hr class="div">
+        <div class="card-sub" style="margin-bottom:8px;">Clima distribuído (silenciosas + ativas)</div>
+        <div class="barlist" id="clima-bar"></div>
+        <div class="key-finding warn" style="margin-top:12px;">
+          <strong>O gargalo é administrativo, não operacional.</strong>
+          Aplicadores ociosos (12) + obras paradas por falta de cor / consultor / canal. Capacidade existe, processo não enxerga.
+        </div>
+      </div>
+
+      <!-- D — CAUDA VT -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">D — Cauda longa AGEND. VT</div><div class="card-sub">lote congelado de 8,5 meses</div></div>
+        <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
+          <div class="kpi"><div class="lbl">Obras na fase</div><div class="val warn" id="vt-fase">46</div><div class="sub">AGEND. VT - AFERIÇÃO/ORIENTAÇÃO</div></div>
+          <div class="kpi"><div class="lbl">Cauda &gt;180d</div><div class="val crit" id="vt-cauda-n">—</div><div class="sub">mediana <span class="mono" id="vt-cauda-med">260d</span></div></div>
+          <div class="kpi"><div class="lbl">Em Luana</div><div class="val warn" id="vt-cauda-luana">—</div><div class="sub" id="vt-cauda-luana-pct">— da cauda</div></div>
+          <div class="kpi"><div class="lbl">Interior SP</div><div class="val warn">5</div><div class="sub">Piracicaba/Marília/Campinas/Paulínia</div></div>
+        </div>
+        <div class="key-finding crit" style="margin-top:12px;">
+          <strong>Padrão de lote congelado.</strong> 9+ obras com EXATAMENTE 260 dias indicam um único evento (snapshot ou batch) que travou e nunca destravou. Concentração geográfica (interior SP) sugere perda de cobertura territorial.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== TABELA TOP 30 ============== -->
+  <section>
+    <div class="section-head">
+      <div class="section-kicker">Carteira detalhada</div>
+      <div class="section-title">Top 30 obras ativas mais antigas</div>
+      <div class="section-sub">Ordenadas por idade. Flags cruzadas em tempo real com zumbi / órfãs / sem-cor / sem-WhatsApp / pausadas.</div>
+    </div>
+
+    <div class="card" style="padding:0;">
+      <table class="t">
+        <thead><tr>
+          <th>#</th><th>Cliente</th><th>Cidade</th>
+          <th class="num">Idade</th><th>Status</th><th>Fase</th>
+          <th>Consultor</th><th>Flags</th>
+        </tr></thead>
+        <tbody id="top30-tbl"></tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:14px; text-align:right;">
+      <a href="obras-mapa.html" style="font-size:12px; text-transform:uppercase; letter-spacing:0.06em;">Ver todas as 208 ativas →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="links">
+    <a href="obras-mapa.html">Mapa de obras</a>
+    <a href="modelagem.html">Modelagem</a>
+    <a href="plano.html">Plano</a>
+    <a href="auditoria.html">Auditoria v6 (histórico)</a>
+  </div>
+  <div>
+    Refresh automático a cada 30 min via GitHub Actions ·
+    Fontes: painel-temporal.json (1.028 obras) + 23 cruzamentos sobre 1.028 obras ·
+    Snapshot diário <span class="mono">2026-04-15</span>
+  </div>
+</footer>
+
+<script>
+const AGG = {"n_270_plus":6,"status_dist":{"reserva":3,"reparo":27,"contrato":4,"aguardando_clima":7,"pausado":7,"em_execucao":24,"planejamento":91,"aguardando_execucao":39,"marcas_rolo_cera":6},"top30_antigas":[{"fase":"CLIENTE FINALIZADO","id_curto":"a3ed951f","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"MARCELO ANDRE STEUER","idade":315,"metragem":"14.10","status":"reparo","cidade":"SÃO SEBASTIÃO"},{"fase":"CLIENTE FINALIZADO","id_curto":"db4288be","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL","idade":313,"metragem":"472.26","status":"aguardando_execucao","cidade":"SÃO PAULO"},{"fase":"CLIENTE FINALIZADO","id_curto":"b8fbadd8","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ANDRE KEUNECKE SALERNO","idade":275,"metragem":"182.75","status":"em_execucao","cidade":"SÃO PAULO"},{"fase":"OBRA PAUSADA","id_curto":"687fbc05","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"GUSTAVO DE SOUZA PEREIRA","idade":273,"metragem":"112.01","status":"marcas_rolo_cera","cidade":"SÃO PAULO"},{"fase":"LOGÍSTICA - MATERIAL ENTREGUE","id_curto":"7b3aa422","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"GRIFO PARTICIPACOES E ADMINISTRACAO DE BENS LTDA","idade":272,"metragem":"87.32","status":"aguardando_execucao","cidade":"SÃO SEBASTIÃO"},{"fase":"LOGÍSTICA - MATERIAL ENTREGUE","id_curto":"0c5df046","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"CAROLINA PIARDI RICCHETTI","idade":272,"metragem":"181.17","status":"aguardando_execucao","cidade":"Quadra RH2 Lote 11)"},{"fase":"CLIENTE FINALIZADO","id_curto":"2d00e03f","consultor":"Pedro Alexandre Santana","cliente":"JOÃO EDUARDO MARTINS KUHLMANN","idade":264,"metragem":"305.16","status":"em_execucao","cidade":"CURITIBA"},{"fase":"OBRA PAUSADA","id_curto":"8ad097b9","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"PEDRO SAVOI GABBAY","idade":264,"metragem":"69.35","status":"pausado","cidade":"SÃO PAULO"},{"fase":"OBRA PAUSADA","id_curto":"cecc85af","consultor":"Wesley Matheus de Carvalho","cliente":"ANTONIO CARLOS CANTO PORTO NETO","idade":264,"metragem":"362.65","status":"reparo","cidade":"SÃO PAULO"},{"fase":"LOGÍSTICA - EM COLETA","id_curto":"b58ccbee","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"MONICA ESMERALDA BRUCKMANN MAYNETTO","idade":261,"metragem":"84.26","status":"planejamento","cidade":"RIO DE JANEIRO"},{"fase":"LOGÍSTICA - MATERIAL ENTREGUE","id_curto":"28aa71f9","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"FLÁVIO FAVA DITT","idade":260,"metragem":"186.00","status":"em_execucao","cidade":"SÃO PAULO"},{"fase":"LOGÍSTICA - EM ENTREGA","id_curto":"a1e32eb6","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ALBERTO ALMIR LABAN","idade":260,"metragem":"100.38","status":"aguardando_execucao","cidade":"SÃO PAULO / SP"},{"fase":"CONFIRMAÇÕES OP 1","id_curto":"9e023736","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ROBERTA ASSONI BUENO","idade":260,"metragem":"190","status":"planejamento","cidade":"SÃO PAULO / SP"},{"fase":"AGUARDANDO LIBERAÇÃO","id_curto":"35d65b32","consultor":"Wesley Matheus de Carvalho","cliente":"EDUARDO JOSE SCOTTI","idade":260,"metragem":"207.73","status":"em_execucao","cidade":"CURITIBA"},{"fase":"AGUARDANDO LIBERAÇÃO","id_curto":"b4e7296c","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"CAMILA MAGALHAES SILVEIRA ","idade":260,"metragem":"133.07","status":"aguardando_execucao","cidade":"SÃO PAULO / SP"},{"fase":"AGUARDANDO LIBERAÇÃO","id_curto":"2be08c42","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"CLINGER - JOVELINA CRISTINA DE OLIVEIRA","idade":260,"metragem":"611.65","status":"aguardando_execucao","cidade":"MOGI DAS CRUZES"},{"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","id_curto":"a3cdf7af","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"JONATHAS DE ALMEIDA NUNES LUKAS","idade":260,"metragem":"218.2","status":"planejamento","cidade":"CAMPINAS / SP"},{"fase":"CLIENTE FINALIZADO","id_curto":"abb93b6f","consultor":"Wesley Matheus de Carvalho","cliente":"GUILHERME HAIDAR BERJEAUT","idade":260,"metragem":"194.54","status":"marcas_rolo_cera","cidade":"SÃO PAULO / SP"},{"fase":"OBRA PAUSADA","id_curto":"5ad048b1","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA ","idade":260,"metragem":"489.89","status":"pausado","cidade":"CEP 33400"},{"fase":"OBRA CONCLUÍDA","id_curto":"72379cc1","consultor":"Wesley Matheus de Carvalho","cliente":"BM VAREJO – M. FASHION","idade":260,"metragem":"802.93","status":"em_execucao","cidade":"SÃO PAULO"},{"fase":"AGUARDANDO LIBERAÇÃO","id_curto":"7e9d80dc","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ADRIANO DE FIGUEIREDO MACORIN","idade":260,"metragem":"120.39","status":"aguardando_execucao","cidade":"SÃO PAULO / SP"},{"fase":"AGEND. VT - ENTRADA","id_curto":"63623d90","consultor":"Wesley Matheus de Carvalho","cliente":"LUIS FERNANDO DE LIMA CARVALHO","idade":260,"metragem":"43.46","status":"em_execucao","cidade":"SÃO PAULO"},{"fase":"EQUIPE DE EXECUÇÃO","id_curto":"6765e2aa","consultor":"Wesley Matheus de Carvalho","cliente":"ANA CAROLINA RAWET FAGE","idade":260,"metragem":"101.35","status":"aguardando_execucao","cidade":"SÃO PAULO / SP"},{"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","id_curto":"5b0327a6","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA","idade":260,"metragem":"190.57","status":"planejamento","cidade":"SÃO PAULO"},{"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","id_curto":"880fea7a","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":" JORGE LUIZ BARBIERI GALLO","idade":260,"metragem":"858.71","status":"planejamento","cidade":"MARÍLIA / SP"},{"fase":"PROJETOS  - 1ª REVISÃO","id_curto":"8d7b2b2e","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ALEXANDRE BARCELLOS RAMOS","idade":260,"metragem":"198.06","status":"planejamento","cidade":"PORTO ALEGRE / RS"},{"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","id_curto":"8ddbf80b","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"EDUARDO PUERTA PERIANES ","idade":260,"metragem":"212.35","status":"planejamento","cidade":"PIRACICABA / SP"},{"fase":"OBRA EM EXECUÇÃO","id_curto":"9a409b5e","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ROBERTA MARQUES DO NASCIMENTO (ESTRELA D\u0027ALVA)","idade":260,"metragem":"240.77","status":"aguardando_clima","cidade":"SÃO PAULO"},{"fase":"CONFIRMAÇÕES OP 1","id_curto":"89c99f6b","consultor":"Wesley Matheus de Carvalho","cliente":"MARCUS VINICIUS RODRIGUES ELTSCHEMINOV","idade":260,"metragem":"123","status":"planejamento","cidade":"SÃO PAULO"},{"fase":"INFORMAÇÕES PROJETOS","id_curto":"40e39aac","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ALINIE MENDES PEIGO","idade":260,"metragem":"433.22","status":"marcas_rolo_cera","cidade":"BERTIOGA"}],"top_consultores":[{"n":89,"nome":"LUANA PATRICIA DE ANDRADE LIMA"},{"n":88,"nome":"Wesley Matheus de Carvalho"},{"n":18,"nome":"(sem)"},{"n":7,"nome":"Pedro Alexandre Santana"},{"n":2,"nome":"Juliana Santos"},{"n":2,"nome":"Pedro Marçal"}],"metragem_mediana":129.1,"metragem_total":37223,"n_180_plus":101,"total_obras":1028,"n_lt90":46,"top_ufs":[{"n":116,"uf":"SP"},{"n":49,"uf":"??"},{"n":17,"uf":"RJ"},{"n":13,"uf":"PR"},{"n":5,"uf":"SC"},{"n":3,"uf":"MG"}],"top10_antigas":[{"fase":"CLIENTE FINALIZADO","id_curto":"a3ed951f","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"MARCELO ANDRE STEUER","idade":315,"metragem":"14.10","status":"reparo","cidade":"SÃO SEBASTIÃO"},{"fase":"CLIENTE FINALIZADO","id_curto":"db4288be","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL","idade":313,"metragem":"472.26","status":"aguardando_execucao","cidade":"SÃO PAULO"},{"fase":"CLIENTE FINALIZADO","id_curto":"b8fbadd8","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"ANDRE KEUNECKE SALERNO","idade":275,"metragem":"182.75","status":"em_execucao","cidade":"SÃO PAULO"},{"fase":"OBRA PAUSADA","id_curto":"687fbc05","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"GUSTAVO DE SOUZA PEREIRA","idade":273,"metragem":"112.01","status":"marcas_rolo_cera","cidade":"SÃO PAULO"},{"fase":"LOGÍSTICA - MATERIAL ENTREGUE","id_curto":"7b3aa422","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"GRIFO PARTICIPACOES E ADMINISTRACAO DE BENS LTDA","idade":272,"metragem":"87.32","status":"aguardando_execucao","cidade":"SÃO SEBASTIÃO"},{"fase":"LOGÍSTICA - MATERIAL ENTREGUE","id_curto":"0c5df046","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"CAROLINA PIARDI RICCHETTI","idade":272,"metragem":"181.17","status":"aguardando_execucao","cidade":"Quadra RH2 Lote 11)"},{"fase":"CLIENTE FINALIZADO","id_curto":"2d00e03f","consultor":"Pedro Alexandre Santana","cliente":"JOÃO EDUARDO MARTINS KUHLMANN","idade":264,"metragem":"305.16","status":"em_execucao","cidade":"CURITIBA"},{"fase":"OBRA PAUSADA","id_curto":"8ad097b9","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"PEDRO SAVOI GABBAY","idade":264,"metragem":"69.35","status":"pausado","cidade":"SÃO PAULO"},{"fase":"OBRA PAUSADA","id_curto":"cecc85af","consultor":"Wesley Matheus de Carvalho","cliente":"ANTONIO CARLOS CANTO PORTO NETO","idade":264,"metragem":"362.65","status":"reparo","cidade":"SÃO PAULO"},{"fase":"LOGÍSTICA - EM COLETA","id_curto":"b58ccbee","consultor":"LUANA PATRICIA DE ANDRADE LIMA","cliente":"MONICA ESMERALDA BRUCKMANN MAYNETTO","idade":261,"metragem":"84.26","status":"planejamento","cidade":"RIO DE JANEIRO"}],"sem_consultor_ativas":18,"top_cidades":[{"cidade":"SÃO PAULO","n":91},{"cidade":"RIO DE JANEIRO","n":17},{"cidade":"SÃO PAULO / SP","n":13},{"cidade":"CURITIBA","n":12},{"cidade":"SÃO PAULO/SÃO PAULO","n":4},{"cidade":"EXTERNA","n":4},{"cidade":"SÃO SEBASTIÃO","n":3},{"cidade":"CAMPINAS","n":3}],"idade_mediana":183,"top_fases":[{"n":46,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"n":31,"fase":"CLIENTE FINALIZADO"},{"n":19,"fase":"AGUARDANDO LIBERAÇÃO"},{"n":10,"fase":"OBRA PAUSADA"},{"n":9,"fase":"EM CONTRATO"},{"n":9,"fase":"CONFIRMAÇÕES OP 1"},{"n":8,"fase":"1º CONTATO OP."},{"n":8,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO"}],"total_ativas":208,"n_90_180":50,"idade_media":169.4};
+const EXT = {"vt_por_consultor":{"LUANA PATRICIA DE ANDRADE LIMA":25,"Wesley Matheus de Carvalho":20,"Pedro Marçal":1},"orfas_n":18,"crono_top10":[{"cliente":"HOUSSEIN EL JAROUCHE","consultor":"Wesley Matheus de Carvalho","dias_atraso":132,"dataTermino":"2025-12-04","status_real_painel":"concluido","faseAtual_real":"CLIENTE FINALIZADO","painel_ativa":false},{"cliente":"ÁUREO EUSTÁQUIO BRANDÃO","consultor":"Pedro Alexandre Santana","dias_atraso":121,"dataTermino":"2025-12-15","status_real_painel":"concluido","faseAtual_real":"CLIENTE FINALIZADO","painel_ativa":false},{"cliente":"VILA VERTICAL FRADIQUE EMPREENDIMENTO IMOBILIARIO SPE LTDA","consultor":"Wesley Matheus de Carvalho","dias_atraso":113,"dataTermino":"2025-12-23","status_real_painel":"finalizado","faseAtual_real":"OBRA CONCLUÍDA","painel_ativa":false},{"cliente":"MONALISA PARTICIPACOES LTDA","consultor":"","dias_atraso":111,"dataTermino":"2025-12-25","status_real_painel":"finalizado","faseAtual_real":"OECT","painel_ativa":false},{"cliente":"LUIS FERNANDO DE LIMA CARVALHO","consultor":"Wesley Matheus de Carvalho","dias_atraso":107,"dataTermino":"2025-12-29","status_real_painel":"em_execucao","faseAtual_real":"AGEND. VT - ENTRADA","painel_ativa":true},{"cliente":"ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO","consultor":"LUANA PATRICIA DE ANDRADE LIMA","dias_atraso":105,"dataTermino":"2025-12-31","status_real_painel":"aguardando_clima","faseAtual_real":"INFORMAÇÕES PROJETOS","painel_ativa":true},{"cliente":"TÂMARA NEWMAN LOBATO SOUZA","consultor":"Pedro Alexandre Santana","dias_atraso":103,"dataTermino":"2026-01-02","status_real_painel":"reparo","faseAtual_real":"CLIENTE FINALIZADO","painel_ativa":true},{"cliente":"IOLANDA ODEBRECHT PELTIER DE  QUEIROZ","consultor":"LUANA PATRICIA DE ANDRADE LIMA","dias_atraso":99,"dataTermino":"2026-01-06","status_real_painel":"finalizado","faseAtual_real":"OBRA CONCLUÍDA","painel_ativa":false},{"cliente":"CLAUDIA DOMINGUES CONSENTINO","consultor":"Wesley Matheus de Carvalho","dias_atraso":98,"dataTermino":"2026-01-07","status_real_painel":"concluido","faseAtual_real":"CLIENTE FINALIZADO","painel_ativa":false},{"cliente":"CHRISTIAN KORT CERAVOLO","consultor":"LUANA PATRICIA DE ANDRADE LIMA","dias_atraso":98,"dataTermino":"2026-01-07","status_real_painel":"finalizado","faseAtual_real":"OBRA EM EXECUÇÃO","painel_ativa":false}],"cronograma":{"p90":111,"pct_concluido_finalizado":58.8,"p75":98,"mediana_atraso":83,"distribuicao":{"ATRASADA_GRAVE":14,"ATRASADA_LEVE":2,"ATRASADA_MEDIA":18},"max":132,"status_real":{"finalizado":9,"concluido":11,"aguardando_clima":2,"em_execucao":3,"aguardando_execucao":1,"planejamento":2,"reparo":3,"marcas_rolo_cera":3},"total":34},"reparo":{"idade_mediana":205,"zumbi":11,"total":27,"wesley_pct":40.7,"coerentes":16,"luana_resp":12,"wesley_resp":7},"atRiskTop":[{"cliente":"MANOELA LATINI GAVASSI FRANCISCO 2ª FASE","fase":"OBRA EM EXECUÇÃO","idade":97,"diasAtraso":64,"criticalProblems":3,"id":"c1621370","cidade":"São Paulo","diagnostico":"DIAGNÓSTICO OPERACIONAL — MANOELA LATINI 2a FASE\n=================================================\n\nESTADO REAL DA OBRA:\nObra em execução desde 11/02 com equipe Rafael Ramiro. Fases de aplicação LILIT em camarim, banheiro, sala, lavabo concluídas. Atualmente bloqueada por dependê","openProblems":17,"status":"em_execucao","consultor":"Wesley Matheus de Carvalho"},{"cliente":"FLÁVIO FAVA DITT","fase":"LOGÍSTICA - MATERIAL ENTREGUE","idade":260,"diasAtraso":37,"criticalProblems":2,"id":"28aa71f9","cidade":"SÃO PAULO","diagnostico":"DIAGNÓSTICO 15/03/2026 | Status: LOGÍSTICA - MATERIAL ENTREGUE | Msgs: 300 (máximo, WhatsApp+Telegram). RESUMO: Obra em fase avançada de execução. Equipe Juninho e Márcio Martins atuando. Problema pontual com fechadura eletrônica (senha não comunicada após troca). Lixamento de ra","openProblems":12,"status":"em_execucao","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"cliente":"GUSTAVO PARRILO DA NOBREGA","fase":"AGUARDANDO LIBERAÇÃO","idade":205,"diasAtraso":0,"criticalProblems":2,"id":"4741be3f","cidade":"SÃO PAULO","diagnostico":null,"openProblems":2,"status":"aguardando_execucao","consultor":"Wesley Matheus de Carvalho"},{"cliente":"ANTONIO CARLOS CANTO PORTO NETO","fase":"OBRA PAUSADA","idade":264,"diasAtraso":126,"criticalProblems":1,"id":"cecc85af","cidade":"SÃO PAULO","diagnostico":null,"openProblems":3,"status":"reparo","consultor":"Wesley Matheus de Carvalho"},{"cliente":"AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA ","fase":"OBRA PAUSADA","idade":260,"diasAtraso":51,"criticalProblems":1,"id":"5ad048b1","cidade":"CEP 33400","diagnostico":"DIAGNÓSTICO OPERACIONAL — AMENDOEIRAS\n=================================================\n\nESTADO REAL DA OBRA:\nObra PARALISADA desde 24/02 por infiltração e contaminação do piso. Equipe Julio retirou ferramentas e retornou a SP em 25/02. Cliente precisa resolver infiltrações e imp","openProblems":5,"status":"pausado","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"cliente":"PETITE FLEUR PATISSERIE LTDA","fase":"OBRA PAUSADA","idade":182,"diasAtraso":34,"criticalProblems":1,"id":"063d393e","cidade":"SÃO PAULO","diagnostico":null,"openProblems":10,"status":"marcas_rolo_cera","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"cliente":"JOSE ANTUNES SOBRINHO ","fase":"LOGÍSTICA - EM ENTREGA","idade":86,"diasAtraso":30,"criticalProblems":1,"id":"e9f43227","cidade":"FLORIANÓPOLIS","diagnostico":"DIAGNÓSTICO 15/03/2026 | Status: LOGÍSTICA - EM ENTREGA | Msgs: 188 (WhatsApp+Telegram). RESUMO: Obra em Florianópolis/SC com início amanhã 16/03 às 8h. Logística completa: equipe (Odair, Ronaldo, Kauan), hospedagem Hotel Castelmar 16-20/03, material entregue 11/03. Cliente ansio","openProblems":7,"status":"reparo","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"cliente":"RODRIGO DE FARIA JARDIM","fase":"LOGÍSTICA - MATERIAL ENTREGUE","idade":260,"diasAtraso":22,"criticalProblems":1,"id":"f326dd44","cidade":"SÃO PAULO / SP","diagnostico":null,"openProblems":9,"status":"em_execucao","consultor":"LUANA PATRICIA DE ANDRADE LIMA"}],"ocorrencias":{"n_atRisk":50,"categorias":[{"categoria":"Outros","count":466,"criticos":21},{"categoria":"Comunicação","count":67,"criticos":18},{"categoria":"Material","count":39,"criticos":2},{"categoria":"Substrato","count":24,"criticos":2},{"categoria":"Infiltração","count":23,"criticos":7},{"categoria":"Atraso","count":16,"criticos":3},{"categoria":"Clima","count":16,"criticos":0},{"categoria":"Acesso","count":14,"criticos":1},{"categoria":"Manchas/Defeitos","count":13,"criticos":1},{"categoria":"Terceiros","count":8,"criticos":0},{"categoria":"Logística","count":5,"criticos":0}],"total":691},"sem_wa_top":[],"aplicadores":{"distribuicao_carga":{"em_0_obras":12,"em_1_obra":17,"em_2_obras":4,"em_3_ou_mais":2},"ociosos":12,"total":35,"por_equipe":{"Equipe Wiguens":{"total":14,"escalados":12,"ociosos":2,"pct_escalados":85.7},"Equipe Michael":{"total":10,"escalados":4,"ociosos":6,"pct_escalados":40},"Equipe Gilmar":{"total":1,"escalados":1,"ociosos":0,"pct_escalados":100},"Equipe Júlio":{"total":9,"escalados":5,"ociosos":4,"pct_escalados":55.6},"Equipe João":{"total":1,"escalados":1,"ociosos":0,"pct_escalados":100}},"obras_escala":25,"top10":[{"nObras":5,"nome":"João Carlos","funcao":"LIDER","equipe":"Equipe João"},{"nObras":4,"nome":"Wiguens Louis","funcao":"LIDER","equipe":"Equipe Wiguens"},{"nObras":2,"nome":"Adalberto Carlos Gomes Neto","funcao":"PREPARADOR","equipe":"Equipe Michael"},{"nObras":2,"nome":"Júlio Miranda","funcao":"LIDER","equipe":"Equipe Júlio"},{"nObras":2,"nome":"Luiz Taciano","funcao":"APLICADOR_1","equipe":"Equipe Wiguens"}],"escalados":23},"orfas_ids":["096df7d0","0b692354","1231fb6a","2369c899","249220c9","316cd248","4734a637","501b5b94","5ebc1fc4","6b4e6b8b","6f3e9db1","74ddff0e","8fe98c80","a91c86c9","c6908776","d51326f8","db76891b","e79c60c1"],"alertas":{"total":788,"por_categoria":{"RISCO_ADIAMENTO":13,"ADITIVO":8,"FALTA_MATERIAL":34,"CLIENTE_AUSENTE":31,"CLIMA":12,"OUTROS":690},"por_consultor":{"Wesley Matheus de Carvalho":89,"LUANA PATRICIA DE ANDRADE LIMA":83,"SEM_CONSULTOR":16,"[]":6,"Pedro Alexandre Santana":5,"Juliana Santos":3,"Pedro Marçal":2},"total_obras":204},"organograma":{"obras_escaladas":25,"fantasmas":55,"pessoas_cadastradas":82,"lideres_ocultos":5,"equipes_fantasma":4,"lideres_oficiais":3,"pessoas_total":137,"mismatch":14,"match":11,"equipes":[{"equipe":"Equipe Wiguens","liderId":"a1ec420f-55b9-4765-82d1-4539e2037ad5","liderNome":"Wiguens Louis","liderFuncao":"LIDER","liderAtivo":true,"liderEhOficial":true,"membrosAtivos":13,"membrosInativos":6,"totalMembros":19},{"equipe":"Equipe João","liderId":"f8afb689-6e41-4e81-a1b2-dd94d1845a82","liderNome":"João Carlos","liderFuncao":"LIDER","liderAtivo":true,"liderEhOficial":true,"membrosAtivos":0,"membrosInativos":11,"totalMembros":11},{"equipe":"Equipe Gilmar","liderId":"74bd4572-d00f-4c28-9e77-abd6b6c13d61","liderNome":"Gilmar","liderFuncao":"LIDER","liderAtivo":false,"liderEhOficial":true,"membrosAtivos":1,"membrosInativos":11,"totalMembros":12},{"equipe":"Equipe Júlio","liderId":"a143c4b5-da77-4ea9-9395-d502a4e9ecae","liderNome":"Júlio Miranda","liderFuncao":"LIDER","liderAtivo":true,"liderEhOficial":true,"membrosAtivos":8,"membrosInativos":2,"totalMembros":10},{"equipe":"Equipe Egberto","liderId":"0f02222c-ece8-4e55-8434-3e2c763408d8","liderNome":"Egberto Sulivan","liderFuncao":"LIDER","liderAtivo":false,"liderEhOficial":true,"membrosAtivos":0,"membrosInativos":12,"totalMembros":12},{"equipe":"Equipe Michael","liderId":"fdac068f-61b5-4e1f-ac58-25aadb22bd7b","liderNome":"Cosme Eduardo Soares Ragno","liderFuncao":"APLICADOR_3","liderAtivo":true,"liderEhOficial":false,"membrosAtivos":9,"membrosInativos":3,"totalMembros":12}]},"vt_cauda":{"por_consultor":{"LUANA PATRICIA DE ANDRADE LIMA":12,"Wesley Matheus de Carvalho":3},"idade_mediana":260,"grupo":"cauda_longa_gt180","n":15,"por_cidade":{"RIO DE JANEIRO":2,"SÃO PAULO":4,"PAULÍNIA / SP":1,"CAMPINAS":1,"SÃO JOSÉ DO RIO PRETO / SP":1,"MARÍLIA / SP":1,"PELOTAS":1,"CAMPINAS / SP":1,"PIRACICABA / SP":2,"BRASILIA":1},"idade_media":245.2},"clima_dist":{"Tenso":34,"Positivo":26,"Crítico":6,"Neutro":52},"vt_total_fase":46,"sem_cor_n":87,"zumbi_ids":["097ee21f","0d8b5bb9","0e4e10b2","1231fb6a","1ea08f00","2d00e03f","2ee38aff","559e9123","a8eff05f","a9cf011c","abb93b6f","b8fbadd8","c6908776","c9560bb7","db4288be","ddb7768a"],"zumbi_n":16,"lw":{"luana":{"mediana":208,"zumbi":2,"n":89,"pausadas":7,"reparo":5,"n270":6,"n180":51},"wesley":{"mediana":175,"zumbi":10,"n":88,"pausadas":4,"reparo":11,"n270":0,"n180":41}},"sem_cor_pct":41.8,"sem_wa_n":90,"sem_cor_ids":["a3ed951f","8ddbf80b","02779aa1","dcd9bde5","63623d90","8d7b2b2e","bf16bc8e","0b692354","f0fc12b3","f4f43974","51d5e910","75b4205e","48b04da7","e79c60c1","844322df","c9560bb7","3e5c6392","2369c899","559e9123","d7aa6f08"]};
+
+// ============== HELPERS ==============
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => Number(n).toLocaleString('pt-BR');
+const pct = (a, b) => b > 0 ? ((a/b)*100).toFixed(1) : '0';
+
+const STATUS_COLORS = {
+  planejamento: '#7ba8e8',
+  aguardando_execucao: '#c4a77d',
+  em_execucao: '#7be8a8',
+  reparo: '#e87b7b',
+  pausado: '#888',
+  marcas_rolo_cera: '#e8c87b',
+  reserva: '#555',
+  aguardando_clima: '#7ba8e8',
+  contrato: '#888',
+  finalizado: '#3a3a3a',
+  concluido: '#2a2a2a',
+  cancelado: '#444',
+  default: '#555'
+};
+
+const STATUS_LBL = {
+  planejamento: 'Planejamento',
+  aguardando_execucao: 'Ag. Execução',
+  em_execucao: 'Em Execução',
+  reparo: 'Reparo',
+  pausado: 'Pausado',
+  marcas_rolo_cera: 'Marcas/Rolo/Cera',
+  reserva: 'Reserva',
+  aguardando_clima: 'Ag. Clima',
+  contrato: 'Contrato',
+  finalizado: 'Finalizado',
+  concluido: 'Concluído',
+  cancelado: 'Cancelado'
+};
+
+function ageColor(d) {
+  if (d == null) return 'mut';
+  if (d >= 270) return 'sc';
+  if (d >= 180) return 'rd';
+  if (d >= 90) return 'am';
+  return 'gn';
+}
+
+function ageClass(d) {
+  if (d == null) return '';
+  if (d >= 270) return 'scarlet';
+  if (d >= 180) return 'red';
+  if (d >= 90) return 'amber';
+  return '';
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ============== HEALTH SCORE ==============
+function computeHealth() {
+  const ativas = AGG.total_ativas;
+  const n180 = AGG.n_180_plus;
+  const idade_med = AGG.idade_mediana;
+  const n_atRisk = EXT.ocorrencias.n_atRisk;
+  const n_zumbi = EXT.zumbi_n;
+  const n_orfas = EXT.orfas_n;
+
+  const sla_score = Math.max(0, 1 - (n180 / ativas));         // % NÃO 180+
+  const ftr_score = Math.max(0, 1 - ((EXT.reparo.total + n_zumbi) / ativas));   // % saudável
+  const idade_score = Math.max(0, 1 - (idade_med / 300));       // 0 em 300d, 1 em 0d
+  const risk_score = Math.max(0, 1 - (n_atRisk / ativas));
+
+  const composite = (sla_score * 0.30 + ftr_score * 0.20 + idade_score * 0.30 + risk_score * 0.20) * 100;
+  return Math.round(composite);
+}
+
+function renderHealth() {
+  const score = computeHealth();
+  $('health-num').textContent = score;
+  const arc = document.getElementById('health-arc');
+  const circ = 2 * Math.PI * 86;
+  arc.setAttribute('stroke-dasharray', circ);
+  arc.setAttribute('stroke-dashoffset', circ * (1 - score/100));
+  let color = '#7be8a8';
+  let lbl = 'Saudável';
+  let cls = 'health-green';
+  if (score < 70) { color = '#e8c87b'; lbl = 'Atenção'; cls = 'health-amber'; }
+  if (score < 50) { color = '#e87b7b'; lbl = 'Crítico'; cls = 'health-red'; }
+  arc.setAttribute('stroke', color);
+  $('health-num').setAttribute('fill', color);
+  const v = $('health-veredito');
+  v.textContent = lbl;
+  v.className = 'health-veredito ' + cls;
+}
+
+// ============== HERO KPIs ==============
+function renderHero() {
+  const ativas = AGG.total_ativas;
+  $('kpi-ativas').textContent = ativas;
+  $('kpi-exec').textContent = AGG.status_dist.em_execucao || 0;
+  $('kpi-180').textContent = AGG.n_180_plus;
+  $('kpi-180-pct').textContent = pct(AGG.n_180_plus, ativas) + '% das ativas';
+  $('kpi-orfas').textContent = AGG.sem_consultor_ativas;
+
+  const naoExec = ativas - (AGG.status_dist.em_execucao || 0);
+  $('hero-summary').innerHTML =
+    `<strong>${ativas} obras ativas</strong> · ` +
+    `<strong>${AGG.status_dist.em_execucao || 0}</strong> em execução · ` +
+    `<strong>${AGG.n_180_plus}</strong> com 180+ dias (<span class="mono">${pct(AGG.n_180_plus, ativas)}%</span>) · ` +
+    `<strong>${AGG.n_270_plus}</strong> com 270+ (zona escarlate) · ` +
+    `mediana <span class="mono">${AGG.idade_mediana}d</span>, média <span class="mono">${AGG.idade_media}d</span> · ` +
+    `${EXT.zumbi_n} zumbi · ${EXT.orfas_n} órfãs · ${EXT.ocorrencias.n_atRisk} atRisk`;
+
+  const stamp = new Date();
+  $('stamp-now').textContent = stamp.getHours().toString().padStart(2,'0') + ':' + stamp.getMinutes().toString().padStart(2,'0');
+}
+
+// ============== Q1 ==============
+function renderQ1() {
+  const d = EXT.cronograma.distribuicao;
+  $('q1-leve').textContent = d.ATRASADA_LEVE || 0;
+  $('q1-medio').textContent = d.ATRASADA_MEDIA || 0;
+  $('q1-grave').textContent = d.ATRASADA_GRAVE || 0;
+
+  // status real bar
+  const sr = EXT.cronograma.status_real;
+  const total = Object.values(sr).reduce((a,b) => a+b, 0);
+  const sorted = Object.entries(sr).sort((a,b) => b[1]-a[1]);
+  const max = sorted[0][1];
+  const c = sorted.map(([k,v]) => {
+    const isFin = k === 'finalizado' || k === 'concluido';
+    const cls = isFin ? 'am' : (k === 'reparo' ? 'rd' : '');
+    return `<div class="barlist-row">
+      <div class="barlist-lbl">${STATUS_LBL[k] || k}</div>
+      <div class="barlist-bar ${cls}"><span style="width:${(v/max)*100}%"></span></div>
+      <div class="barlist-val">${v}</div>
+    </div>`;
+  }).join('');
+  $('q1-status-real').innerHTML = c;
+
+  // top10
+  const tb = EXT.crono_top10.slice(0, 10).map(o => {
+    const cl = o.dias_atraso >= 90 ? 'red' : (o.dias_atraso >= 30 ? 'amber' : '');
+    const ativaBadge = o.painel_ativa ? '<span class="chip am">ATIVA</span>' : '<span class="chip mut">FECHADA</span>';
+    return `<tr>
+      <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
+      <td class="ct">${escHtml(o.consultor || '—')}</td>
+      <td class="num ${cl}">${o.dias_atraso}d</td>
+      <td>${ativaBadge} <span class="ct">${escHtml(o.status_real_painel)}</span></td>
+    </tr>`;
+  }).join('');
+  $('q1-top10').innerHTML = tb;
+}
+
+// ============== Q2 ==============
+function flagsForObra(o) {
+  const flags = [];
+  if (EXT.zumbi_ids.includes(o.id_curto)) flags.push('<span class="chip rd">ZUMBI</span>');
+  if (EXT.orfas_ids.includes(o.id_curto)) flags.push('<span class="chip rd">ORFA</span>');
+  if (o.fase === 'OBRA PAUSADA') flags.push('<span class="chip am">PAUSADA</span>');
+  if (o.status === 'reparo') flags.push('<span class="chip rd">REPARO</span>');
+  if (o.idade >= 270) flags.push('<span class="chip sc">270+</span>');
+  else if (o.idade >= 180) flags.push('<span class="chip rd">180+</span>');
+  if (!o.consultor || o.consultor === '' || o.consultor === '[]') flags.push('<span class="chip rd">SEM CONSULTOR</span>');
+  return flags.join(' ') || '<span class="chip mut">—</span>';
+}
+
+function renderQ2() {
+  const tb = AGG.top10_antigas.map(o => `
+    <tr>
+      <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
+      <td class="ct">${escHtml(o.cidade || '—')}</td>
+      <td class="num ${ageClass(o.idade)}">${o.idade}d</td>
+      <td class="ct">${STATUS_LBL[o.status] || o.status}</td>
+      <td class="ct">${escHtml(o.fase || '—')}</td>
+      <td class="ct">${escHtml((o.consultor || '—').split(' ').slice(0,2).join(' '))}</td>
+      <td>${flagsForObra(o)}</td>
+    </tr>
+  `).join('');
+  $('q2-top10').innerHTML = tb;
+
+  const diags = EXT.atRiskTop.filter(d => d.diagnostico).slice(0, 4).map(d => `
+    <div class="diag-card">
+      <div class="diag-head">
+        <span class="diag-cli">${escHtml(d.cliente)}</span>
+        <span class="diag-meta">${d.idade}d · ${d.criticalProblems} crit · ${d.openProblems} abertos</span>
+      </div>
+      <div class="diag-text">${escHtml(d.diagnostico)}…</div>
+    </div>
+  `).join('');
+  $('q2-diag').innerHTML = diags || '<div class="card-sub">Sem diagnósticos detalhados.</div>';
+}
+
+// ============== Q3 ==============
+function renderQ3() {
+  const lw = EXT.lw;
+  const cells = [
+    { name: 'LUANA', d: lw.luana },
+    { name: 'WESLEY', d: lw.wesley }
+  ];
+  $('q3-lw').innerHTML = cells.map(c => `
+    <div class="vs-cell">
+      <div class="vs-name">${c.name}</div>
+      <div class="vs-stats">
+        <div class="vs-stat"><div class="lbl">Obras</div><div class="v">${c.d.n}</div></div>
+        <div class="vs-stat"><div class="lbl">Mediana idade</div><div class="v warn">${c.d.mediana}d</div></div>
+        <div class="vs-stat"><div class="lbl">180+ dias</div><div class="v crit">${c.d.n180}</div></div>
+        <div class="vs-stat"><div class="lbl">270+ dias</div><div class="v ${c.d.n270 > 0 ? 'crit' : ''}">${c.d.n270}</div></div>
+        <div class="vs-stat"><div class="lbl">Zumbi (CF)</div><div class="v ${c.d.zumbi > 5 ? 'crit' : ''}">${c.d.zumbi}</div></div>
+        <div class="vs-stat"><div class="lbl">Em reparo</div><div class="v ${c.d.reparo > 5 ? 'warn' : ''}">${c.d.reparo}</div></div>
+      </div>
+    </div>
+  `).join('');
+
+  const ativas = AGG.total_ativas;
+  const busTotal = lw.luana.n + lw.wesley.n;
+  const bus180 = lw.luana.n180 + lw.wesley.n180;
+  $('q3-bus-pct').textContent = pct(busTotal, ativas) + '%';
+  $('q3-bus-180').textContent = pct(bus180, AGG.n_180_plus) + '%';
+
+  const apl = EXT.aplicadores;
+  $('apl-total').textContent = apl.total;
+  $('apl-escal').textContent = apl.escalados;
+  $('apl-escal-pct').textContent = pct(apl.escalados, apl.total) + '%';
+  $('apl-ocio').textContent = apl.ociosos;
+
+  const eqs = Object.entries(apl.por_equipe).sort((a,b) => b[1].pct_escalados - a[1].pct_escalados);
+  $('q3-equipes').innerHTML = eqs.map(([nome, d]) => {
+    const cls = d.pct_escalados >= 80 ? 'gn' : (d.pct_escalados >= 60 ? '' : 'am');
+    return `<div class="barlist-row">
+      <div class="barlist-lbl">${escHtml(nome)}</div>
+      <div class="barlist-bar ${cls}"><span style="width:${d.pct_escalados}%"></span></div>
+      <div class="barlist-val">${d.pct_escalados}% (${d.escalados}/${d.total})</div>
+    </div>`;
+  }).join('');
+}
+
+// ============== Q4 ==============
+function renderQ4() {
+  $('vol-m2').textContent = fmt(AGG.metragem_total);
+  $('vol-m2-med').textContent = fmt(AGG.metragem_mediana) + ' m²';
+  $('vol-idade').textContent = AGG.idade_mediana + 'd';
+  $('vol-idade-m').textContent = AGG.idade_media + 'd';
+
+  // donut status
+  const sd = AGG.status_dist;
+  const total = Object.values(sd).reduce((a,b) => a+b, 0);
+  const sorted = Object.entries(sd).sort((a,b) => b[1]-a[1]);
+  const svg = $('donut-status');
+  let cum = 0;
+  let paths = '';
+  let legend = '';
+  sorted.forEach(([k, v]) => {
+    const frac = v / total;
+    const color = STATUS_COLORS[k] || STATUS_COLORS.default;
+    const dash = frac * 251.3;
+    paths += `<circle cx="50" cy="50" r="40" fill="none" stroke="${color}" stroke-width="14"
+              stroke-dasharray="${dash} 251.3" stroke-dashoffset="${-cum}"
+              transform="rotate(-90 50 50)" />`;
+    cum += dash;
+    legend += `<div class="it">
+      <span class="sw" style="background:${color}"></span>
+      <span class="lb">${STATUS_LBL[k] || k}</span>
+      <span class="vl">${v}</span>
+    </div>`;
+  });
+  svg.innerHTML = paths + `<text x="50" y="50" class="health-num" style="font-size:18px;dominant-baseline:central;text-anchor:middle;fill:#e8e8e8">${total}</text>`;
+  $('donut-status-legend').innerHTML = legend;
+
+  // fases
+  const maxF = AGG.top_fases[0].n;
+  $('q4-fases').innerHTML = AGG.top_fases.map(f => `
+    <div class="barlist-row">
+      <div class="barlist-lbl" title="${escHtml(f.fase)}">${escHtml(f.fase)}</div>
+      <div class="barlist-bar"><span style="width:${(f.n/maxF)*100}%"></span></div>
+      <div class="barlist-val">${f.n}</div>
+    </div>
+  `).join('');
+
+  const maxU = AGG.top_ufs[0].n;
+  $('q4-uf').innerHTML = AGG.top_ufs.map(u => `
+    <div class="barlist-row" style="grid-template-columns: 50px 1fr 50px;">
+      <div class="barlist-lbl"><span class="mono">${u.uf}</span></div>
+      <div class="barlist-bar bl"><span style="width:${(u.n/maxU)*100}%"></span></div>
+      <div class="barlist-val">${u.n}</div>
+    </div>
+  `).join('');
+
+  const maxC = AGG.top_cidades[0].n;
+  $('q4-cidades').innerHTML = AGG.top_cidades.map(c => `
+    <div class="barlist-row">
+      <div class="barlist-lbl">${escHtml(c.cidade)}</div>
+      <div class="barlist-bar"><span style="width:${(c.n/maxC)*100}%"></span></div>
+      <div class="barlist-val">${c.n}</div>
+    </div>
+  `).join('');
+}
+
+// ============== ACHADOS ==============
+function renderAchados() {
+  const o = EXT.organograma;
+  $('org-total').textContent = o.pessoas_total;
+  $('org-cad').textContent = o.pessoas_cadastradas;
+  $('org-fant').textContent = o.fantasmas;
+  $('org-fant-pct').textContent = pct(o.fantasmas, o.pessoas_total) + '% do total';
+  $('org-oc').textContent = o.lideres_ocultos;
+  $('org-oc-obras').textContent = '13/' + o.obras_escaladas;
+  $('org-mis').textContent = o.mismatch;
+  $('org-mis-pct').textContent = pct(o.mismatch, o.mismatch + o.match) + '% das obras';
+
+  // Equipes table
+  const tb = o.equipes.map(e => {
+    const lider = (e.liderEhOficial ? '' : '⚠ ') + e.liderNome + (e.liderAtivo ? '' : ' (INATIVO)');
+    const status = e.membrosAtivos === 0 ? '<span class="chip rd">SOMBRA</span>' :
+                   (e.liderAtivo && e.liderEhOficial ? '<span class="chip gn">OK</span>' :
+                    '<span class="chip am">PARCIAL</span>');
+    return `<tr>
+      <td>${escHtml(e.equipe)}</td>
+      <td class="ct">${escHtml(lider)}</td>
+      <td class="num">${e.membrosAtivos}</td>
+      <td class="num ct">${e.membrosInativos}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+  $('org-equipes-tbl').querySelector('tbody').innerHTML = tb;
+
+  // Clima
+  const cd = EXT.clima_dist;
+  const ctotal = Object.values(cd).reduce((a,b) => a+b, 0);
+  const climaOrder = ['Positivo', 'Neutro', 'Tenso', 'Crítico'];
+  const climaColor = { Positivo: 'gn', Neutro: 'bl', Tenso: 'am', Crítico: 'rd' };
+  $('clima-bar').innerHTML = climaOrder.filter(k => cd[k]).map(k => `
+    <div class="barlist-row">
+      <div class="barlist-lbl">${k}</div>
+      <div class="barlist-bar ${climaColor[k]}"><span style="width:${(cd[k]/ctotal)*100}%"></span></div>
+      <div class="barlist-val">${cd[k]} · ${pct(cd[k], ctotal)}%</div>
+    </div>
+  `).join('');
+
+  // VT cauda
+  if (EXT.vt_cauda) {
+    $('vt-cauda-n').textContent = EXT.vt_cauda.n;
+    $('vt-cauda-med').textContent = EXT.vt_cauda.idade_mediana + 'd';
+    const luana = EXT.vt_cauda.por_consultor['LUANA PATRICIA DE ANDRADE LIMA'] || 0;
+    $('vt-cauda-luana').textContent = luana;
+    $('vt-cauda-luana-pct').textContent = pct(luana, EXT.vt_cauda.n) + '% da cauda';
+  }
+}
+
+// ============== TOP 30 ==============
+function renderTop30() {
+  const tb = AGG.top30_antigas.map((o, i) => `
+    <tr>
+      <td class="ct mono">${i+1}</td>
+      <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
+      <td class="ct">${escHtml(o.cidade || '—')}</td>
+      <td class="num ${ageClass(o.idade)}">${o.idade}d</td>
+      <td class="ct">${STATUS_LBL[o.status] || o.status}</td>
+      <td class="ct">${escHtml(o.fase || '—')}</td>
+      <td class="ct">${escHtml((o.consultor || '—').split(' ').slice(0,2).join(' '))}</td>
+      <td>${flagsForObra(o)}</td>
+    </tr>
+  `).join('');
+  $('top30-tbl').innerHTML = tb;
+}
+
+// ============== INIT ==============
+renderHealth();
+renderHero();
+renderQ1();
+renderQ2();
+renderQ3();
+renderQ4();
+renderAchados();
+renderTop30();
+</script>
+
+</body>
+</html>
