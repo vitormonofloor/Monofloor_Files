@@ -1612,9 +1612,10 @@ function renderHero() {
 // ============== Q1 ==============
 function renderQ1() {
   const d = EXT.cronograma.distribuicao;
-  $('q1-leve').textContent = d.ATRASADA_LEVE || 0;
-  $('q1-medio').textContent = d.ATRASADA_MEDIA || 0;
-  $('q1-grave').textContent = d.ATRASADA_GRAVE || 0;
+  // KPIs antigos foram substituídos pela stacked bar (q1RenderStacked); leitura defensiva.
+  if ($('q1-leve'))  $('q1-leve').textContent  = d.ATRASADA_LEVE  || 0;
+  if ($('q1-medio')) $('q1-medio').textContent = d.ATRASADA_MEDIA || 0;
+  if ($('q1-grave')) $('q1-grave').textContent = d.ATRASADA_GRAVE || 0;
 
   // status real bar
   const sr = EXT.cronograma.status_real;
