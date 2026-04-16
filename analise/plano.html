@@ -71,15 +71,16 @@
     <span>Última atualização: <b>2026-04-15</b></span>
     <span>Etapa atual: <b>2 — Cruzamentos</b></span>
     <span>Cruzamentos entregues: <b>23</b></span>
-    <span>Backlog: <b>1</b> (consolidação)</span>
+    <span>Backlog: <b>0</b></span>
+    <span>Mapa visual: <b>publicado</b></span>
     <span>Abas mapeadas: <b>3/15</b></span>
   </div>
 </header>
 
 <div class="progress-bar">
   <div class="prog-step done">Etapa 1 · Acúmulo<span class="pct">100%</span></div>
-  <div class="prog-step done">Etapa 2 · Cruzamentos<span class="pct">96%</span></div>
-  <div class="prog-step pending">Etapa 3 · Consolidação<span class="pct">0%</span></div>
+  <div class="prog-step done">Etapa 2 · Cruzamentos<span class="pct">100%</span></div>
+  <div class="prog-step doing">Etapa 3 · Consolidação<span class="pct">~30%</span></div>
   <div class="prog-step pending">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
 </div>
 
@@ -368,23 +369,24 @@
 </section>
 
 <section>
-  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">1 ideia</span></h2>
+  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">vazio · novas ideias bem-vindas</span></h2>
   <div class="task-list">
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B16 Painel integrado de obras antigas (consolidação visual)</div>
-        <div class="desc">Pegar todos os cruzamentos entregues e montar um ranking único com filtros: por consultor, fase, cidade, tipo. <b>Preparação pra Etapa 3 — Consolidação.</b></div>
-        <div class="files"><span class="tag">dashboard</span> <span class="tag">consolidação</span></div>
-      </div>
-      <div class="meta">próx.</div>
-    </div>
+    <div class="task" style="opacity:.5"><div class="check" style="color:#444">—</div><div class="body"><div class="desc" style="color:#666">Backlog limpo. Adicione novas hipóteses a qualquer momento.</div></div><div class="meta"></div></div>
   </div>
 </section>
 
 <section>
-  <h2>Etapa 3 — Consolidação (ainda não iniciada)</h2>
+  <h2>Etapa 3 — Consolidação <span class="counter">1 entregue · 2 pendentes</span></h2>
   <div class="task-list">
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">Mapa visual de obras ativas (#B16)</div>
+        <div class="desc">208 obras ativas em tabela única com 10 flags consolidados (zumbi, reparo, órfã, sem cor, sem WA, cauda VT, atraso grave, alertas, atRisk, escal. anômala). Filtros funcionais (busca, status, fase, consultor, UF, idade, toggles). Ordenação por coluna. Linha expansível com diagnóstico atRisk. <b>163/208 com pelo menos 1 flag</b>; 5 críticas com 4 flags simultâneas (LA PASTINA, ELIZETE, ANTONIO PORTO, Roberto Murakami, LUIS FERNANDO).</div>
+        <div class="files"><code>obras-mapa.html</code> <code>build-mapa.ps1</code> <code>mapa-template.html</code></div>
+      </div>
+      <div class="meta">2026-04-15</div>
+    </div>
     <div class="task pending">
       <div class="check">○</div>
       <div class="body">
@@ -424,6 +426,7 @@
 <footer>
   Plano v1 · atualizado conforme execução
   <div class="nav-links">
+    <a href="obras-mapa.html">Mapa de obras</a> ·
     <a href="modelagem.html">Modelagem</a> ·
     <a href="auditoria.html">Dashboard v6 (atual)</a>
   </div>
