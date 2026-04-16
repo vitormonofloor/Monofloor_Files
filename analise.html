@@ -134,8 +134,6 @@ svg.sparkline{width:100%;height:120px;display:block}
 .drill-close{font-size:10px;color:#888;cursor:pointer;margin-top:6px;text-align:right;padding:4px 0;text-transform:uppercase;letter-spacing:1px}
 .drill-close:hover{color:#c4a77d}
 </style>
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:40px}
-</style>
 </head>
 <body>
 
@@ -148,7 +146,7 @@ svg.sparkline{width:100%;height:120px;display:block}
       <div class="logo">hermes</div>
       <div class="subtitle">análise diária · monofloor</div>
     </div>
-    <h1>Projetos ativos diminuíram para 148</h1>
+    <h1>Atrasos em 32,4% dos projetos</h1>
     <div class="hero-meta">16/04/2026, 13:17:03 · <a href="indicadores.html">ver painel completo →</a></div>
   </div>
 </section>
@@ -158,7 +156,7 @@ svg.sparkline{width:100%;height:120px;display:block}
   <div class="container">
     <div class="slide-eyebrow">o que está acontecendo</div>
     <h2>Contexto operacional</h2>
-    <div class="contexto"><p>A distribuição regional mostra que SP tem a maior quantidade de obras, mensagens e ocorrências. Os projetos silenciosos incluem BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO e Vitor Flammia de Barros Costa.</p></div>
+    <div class="contexto"><p>Os tipos de ocorrência mais frequentes incluem 'outro', 'falha comunicacao' e 'desvio qualidade'. A carga por consultor é desigual, com Wesley Matheus de Carvalho e LUANA PATRICIA DE ANDRADE LIMA lidando com a maioria das obras e ocorrências.</p></div>
   </div>
 </section>
 
@@ -420,40 +418,6 @@ svg.sparkline{width:100%;height:120px;display:block}
 </section>
 
 
-      <section class="slide slide-diff">
-        <div class="container">
-          <div class="slide-eyebrow">comparativo</div>
-          <h2>O que mudou desde a última análise</h2>
-          <div class="diff-grid">
-            <div class="diff-card">
-        <div class="diff-label">Mensagens</div>
-        <div class="diff-valor">6.924</div>
-        <div class="diff-delta" style="color:#888">— 0</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Ocorrências</div>
-        <div class="diff-valor">272</div>
-        <div class="diff-delta" style="color:#888">— 0</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Críticas</div>
-        <div class="diff-valor">25</div>
-        <div class="diff-delta" style="color:#888">— 0</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Atraso</div>
-        <div class="diff-valor">32.4%</div>
-        <div class="diff-delta" style="color:#888">— 0.0pp</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Silêncio</div>
-        <div class="diff-valor">15.5%</div>
-        <div class="diff-delta" style="color:#888">— 0.0pp</div>
-      </div>
-          </div>
-        </div>
-      </section>
-    
 
 <!-- SLIDE: INSIGHTS -->
 <section class="slide">
@@ -462,18 +426,18 @@ svg.sparkline{width:100%;height:120px;display:block}
     <h2>Insights <span class="accent">não-óbvios</span></h2>
     <div class="insights-grid">
     <div class="insight-card">
-      <div class="insight-title">Projetos Silenciosos</div>
-      <div class="insight-text">Os projetos silenciosos, como BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO e Vitor Flammia de Barros Costa, precisam de atenção para entender o motivo do silêncio e agir para evitar atrasos.</div>
+      <div class="insight-title">Atrasos</div>
+      <div class="insight-text">A taxa de atraso de 32,4% é alta e precisa ser reduzida. Isso pode ser feito priorizando os projetos atrasados e alocando recursos adicionais para esses projetos.</div>
     </div>
   
     <div class="insight-card">
-      <div class="insight-title">Carga por Consultor</div>
-      <div class="insight-text">A carga por consultor está desequilibrada, com Wesley Matheus de Carvalho e LUANA PATRICIA DE ANDRADE LIMA tendo a maior carga de trabalho, o que pode afetar a qualidade do serviço.</div>
+      <div class="insight-title">Sobrecarga de Wesley</div>
+      <div class="insight-text">Wesley Matheus de Carvalho está sobrecarregado e precisa de apoio. Isso pode ser feito redistribuindo algumas de suas obras para outros consultores ou contratando mais pessoal.</div>
     </div>
   
     <div class="insight-card">
-      <div class="insight-title">Distribuição Regional</div>
-      <div class="insight-text">A distribuição regional mostra que SP tem a maior quantidade de obras, mensagens e ocorrências, o que pode indicar a necessidade de mais recursos ou atenção nessa região.</div>
+      <div class="insight-title">Projetos silenciosos</div>
+      <div class="insight-text">Os projetos silenciosos, como BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO, precisam ser revisados e atualizados para garantir que estejam no caminho certo.</div>
     </div>
   </div>
   </div>
@@ -487,20 +451,20 @@ svg.sparkline{width:100%;height:120px;display:block}
     <div class="acoes-grid">
     <div class="acao-card prio-alta">
       <div class="acao-prio">ALTA</div>
+      <div class="acao-texto">Priorizar projetos atrasados</div>
+      <div class="acao-ctx">Reduzir a taxa de atraso de 32,4% é crucial para manter a satisfação do cliente e a reputação da empresa.</div>
+    </div>
+  
+    <div class="acao-card prio-media">
+      <div class="acao-prio">MEDIA</div>
+      <div class="acao-texto">Redistribuir obras de Wesley</div>
+      <div class="acao-ctx">Wesley Matheus de Carvalho está sobrecarregado e precisa de apoio para garantir que suas obras sejam concluídas no prazo.</div>
+    </div>
+  
+    <div class="acao-card prio-media">
+      <div class="acao-prio">MEDIA</div>
       <div class="acao-texto">Revisar projetos silenciosos</div>
-      <div class="acao-ctx">Para entender o motivo do silêncio e agir para evitar atrasos.</div>
-    </div>
-  
-    <div class="acao-card prio-media">
-      <div class="acao-prio">MEDIA</div>
-      <div class="acao-texto">Rebalancear carga por consultor</div>
-      <div class="acao-ctx">Para garantir que todos os consultores tenham uma carga de trabalho equilibrada e possam fornecer um serviço de qualidade.</div>
-    </div>
-  
-    <div class="acao-card prio-media">
-      <div class="acao-prio">MEDIA</div>
-      <div class="acao-texto">Alocar mais recursos para SP</div>
-      <div class="acao-ctx">Para atender à demanda crescente de obras, mensagens e ocorrências nessa região.</div>
+      <div class="acao-ctx">Os projetos silenciosos precisam ser revisados e atualizados para garantir que estejam no caminho certo e evitar problemas futuros.</div>
     </div>
   </div>
   </div>
@@ -512,7 +476,7 @@ svg.sparkline{width:100%;height:120px;display:block}
     <div class="slide-eyebrow">próximos 7 dias</div>
     <h2>O que monitorar</h2>
     <div class="semana-box">
-      <p>Nos próximos 7 dias, é importante monitorar a evolução dos projetos silenciosos, a carga por consultor e a distribuição regional, além de acompanhar as ocorrências e mensagens para garantir que os projetos estejam avançando conforme planejado.</p>
+      <p>Nos próximos 7 dias, precisamos monitorar a taxa de atraso, a carga por consultor e a resolução de ocorrências. Além disso, precisamos revisar os projetos silenciosos e garantir que estejam no caminho certo. A priorização dos projetos atrasados e a redistribuição das obras de Wesley também devem ser feitas para garantir a satisfação do cliente e a reputação da empresa.</p>
     </div>
   </div>
 </section>
