@@ -418,6 +418,33 @@
   .q3-obras-empty{color:#666;font-size:12px;font-style:italic;padding:20px;text-align:center}
   .q3-obras-summary{font-size:11px;color:#888;margin-top:10px;padding-top:8px;border-top:1px solid #1f1f1f;display:flex;justify-content:space-between}
   .q3-obras-summary b{color:#c4a77d;font-family:'JetBrains Mono',monospace}
+
+  /* ===== Q4 — Estados operacionais ===== */
+  .q4-estados{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  @media(max-width:900px){.q4-estados{grid-template-columns:1fr}}
+  .q4-est{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;padding:18px 16px;border-left:4px solid #2a2a2a}
+  .q4-est.rodando{border-left-color:#7be8a8}
+  .q4-est.estagnado{border-left-color:#e87b7b}
+  .q4-est.pendente{border-left-color:#e8c87b}
+  .q4-est-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .q4-est-tag{font-size:11px;font-weight:600;letter-spacing:0.1em;color:#888;text-transform:uppercase}
+  .q4-est.rodando .q4-est-tag{color:#7be8a8}
+  .q4-est.estagnado .q4-est-tag{color:#e87b7b}
+  .q4-est.pendente .q4-est-tag{color:#e8c87b}
+  .q4-est-pct{font-family:'JetBrains Mono',monospace;font-size:13px;color:#c4a77d;font-weight:600}
+  .q4-est-num{font-family:'JetBrains Mono',monospace;font-size:24px;color:#fff;font-weight:600;line-height:1}
+  .q4-est-m2{font-family:'JetBrains Mono',monospace;font-size:14px;color:#c4a77d;margin-top:4px;font-weight:500}
+  .q4-est-detail{margin-top:14px;padding-top:12px;border-top:1px solid #1f1f1f;display:flex;flex-direction:column;gap:6px}
+  .q4-est-row{display:flex;justify-content:space-between;font-size:11px;color:#888;font-family:'JetBrains Mono',monospace}
+  .q4-est-row span:first-child{color:#bbb}
+
+  .q4-insight{background:#0a0a0a;border:1px solid #1f1f1f;border-left:3px solid #c4a77d;padding:12px 16px;border-radius:0 4px 4px 0;margin-bottom:20px;font-size:13px;color:#ccc;line-height:1.7}
+  .q4-insight b{color:#c4a77d}
+
+  .q4-grid-sec{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:900px){.q4-grid-sec{grid-template-columns:1fr}}
+  .q4-sec-card{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:14px}
+  .q4-sec-card h4{font-size:11px;color:#c4a77d;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
   </style>
 </head>
 <body>
@@ -585,39 +612,60 @@
   </section>
 
   <!-- ============== Q4 — VOLUME ============== -->
-  <section>
+  <section id="q4">
     <div class="section-head">
       <div class="section-kicker">Pergunta 4 da diretoria</div>
       <div class="section-title">Qual o volume real da operação?</div>
-      <div class="section-sub">Snapshot das 208 obras ativas no painel temporal — área, geografia e pipeline.</div>
+      <div class="section-sub" id="q4-sub">208 obras ativas em carteira. Veja por estado operacional: o que está rodando, o que travou, o que ainda não começou.</div>
     </div>
 
-    <div class="grid-4" style="margin-bottom:18px;">
-      <div class="kpi"><div class="lbl">m² ativos (total)</div><div class="val" id="vol-m2">—</div><div class="sub">soma das obras com metragem</div></div>
-      <div class="kpi"><div class="lbl">m² mediana</div><div class="val" id="vol-m2-med">—</div><div class="sub">por obra</div></div>
-      <div class="kpi"><div class="lbl">Idade mediana</div><div class="val warn" id="vol-idade">—</div><div class="sub">dias desde abertura</div></div>
-      <div class="kpi"><div class="lbl">Idade média</div><div class="val warn" id="vol-idade-m">—</div><div class="sub">dias</div></div>
-    </div>
-
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-head"><div class="card-title">Distribuição por status</div></div>
-        <div class="donut-wrap">
-          <svg class="donut" viewBox="0 0 100 100" id="donut-status"></svg>
-          <div class="donut-legend" id="donut-status-legend"></div>
+    <!-- BLOCO 1: 3 cards grandes por estado operacional -->
+    <div class="q4-estados">
+      <div class="q4-est rodando">
+        <div class="q4-est-head">
+          <div class="q4-est-tag">RODANDO</div>
+          <div class="q4-est-pct">—</div>
         </div>
+        <div class="q4-est-num">—</div>
+        <div class="q4-est-m2">—</div>
+        <div class="q4-est-detail"></div>
       </div>
 
-      <div class="card">
-        <div class="card-head"><div class="card-title">Pipeline — top fases</div></div>
-        <div class="barlist" id="q4-fases"></div>
+      <div class="q4-est estagnado">
+        <div class="q4-est-head">
+          <div class="q4-est-tag">ESTAGNADO</div>
+          <div class="q4-est-pct">—</div>
+        </div>
+        <div class="q4-est-num">—</div>
+        <div class="q4-est-m2">—</div>
+        <div class="q4-est-detail"></div>
       </div>
 
-      <div class="card">
-        <div class="card-head"><div class="card-title">Geografia</div><div class="card-sub">top UFs / cidades</div></div>
-        <div class="barlist" id="q4-uf"></div>
-        <hr class="div">
-        <div class="barlist" id="q4-cidades"></div>
+      <div class="q4-est pendente">
+        <div class="q4-est-head">
+          <div class="q4-est-tag">PENDENTE</div>
+          <div class="q4-est-pct">—</div>
+        </div>
+        <div class="q4-est-num">—</div>
+        <div class="q4-est-m2">—</div>
+        <div class="q4-est-detail"></div>
+      </div>
+    </div>
+
+    <!-- Insight curto consolidando os 3 cards -->
+    <div class="q4-insight">
+      <b>Leitura:</b> calculando estado operacional…
+    </div>
+
+    <!-- BLOCO 2: Distribuição secundária (geografia + pipeline) -->
+    <div class="q4-grid-sec">
+      <div class="q4-sec-card">
+        <h4>Top fases que concentram volume</h4>
+        <div id="q4-fases-bars"></div>
+      </div>
+      <div class="q4-sec-card">
+        <h4>Distribuição geográfica (top UF)</h4>
+        <div id="q4-uf-bars"></div>
       </div>
     </div>
 
@@ -1603,63 +1651,113 @@ function q3StatusColor(s){
 
 // ============== Q4 ==============
 function renderQ4() {
-  $('vol-m2').textContent = fmt(AGG.metragem_total);
-  $('vol-m2-med').textContent = fmt(AGG.metragem_mediana) + ' m²';
-  $('vol-idade').textContent = AGG.idade_mediana + 'd';
-  $('vol-idade-m').textContent = AGG.idade_media + 'd';
+  q4Init();
+}
 
-  // donut status
-  const sd = AGG.status_dist;
-  const total = Object.values(sd).reduce((a,b) => a+b, 0);
-  const sorted = Object.entries(sd).sort((a,b) => b[1]-a[1]);
-  const svg = $('donut-status');
-  let cum = 0;
-  let paths = '';
-  let legend = '';
-  sorted.forEach(([k, v]) => {
-    const frac = v / total;
-    const color = STATUS_COLORS[k] || STATUS_COLORS.default;
-    const dash = frac * 251.3;
-    paths += `<circle cx="50" cy="50" r="40" fill="none" stroke="${color}" stroke-width="14"
-              stroke-dasharray="${dash} 251.3" stroke-dashoffset="${-cum}"
-              transform="rotate(-90 50 50)" />`;
-    cum += dash;
-    legend += `<div class="it">
-      <span class="sw" style="background:${color}"></span>
-      <span class="lb">${STATUS_LBL[k] || k}</span>
-      <span class="vl">${v}</span>
-    </div>`;
+function q4Init(){
+  const obras = Q2_OBRAS;
+
+  const grupos = {
+    RODANDO: ['em_execucao'],
+    ESTAGNADO: ['pausado','reparo','marcas_rolo_cera','aguardando_clima'],
+    PENDENTE: ['planejamento','reserva','contrato','aguardando_execucao']
+  };
+
+  const totalM2 = obras.reduce((a,o)=>a+(o.m2||0), 0);
+  const nFmt = v => v.toLocaleString('pt-BR',{maximumFractionDigits:0});
+
+  // Atualizar sub da seção com total real
+  const subEl = document.getElementById('q4-sub');
+  if (subEl) subEl.textContent = `${obras.length} obras ativas, ${nFmt(totalM2)} m² em carteira. Veja por estado operacional: o que está rodando, o que travou, o que ainda não começou.`;
+
+  // Preencher os 3 cards
+  Object.entries(grupos).forEach(([nome, statuses])=>{
+    const list = obras.filter(o=>statuses.includes(o.status));
+    const m2 = list.reduce((a,o)=>a+(o.m2||0),0);
+    const pct = totalM2 ? (m2/totalM2*100).toFixed(1) : '0';
+    const card = document.querySelector(`.q4-est.${nome.toLowerCase()}`);
+    if (!card) return;
+
+    card.querySelector('.q4-est-num').textContent = `${list.length} obras`;
+    card.querySelector('.q4-est-m2').textContent = `${nFmt(m2)} m²`;
+    card.querySelector('.q4-est-pct').textContent = `${pct}%`;
+
+    // ordenar detail pelos status com maior m² desc
+    const detail = card.querySelector('.q4-est-detail');
+    const rows = statuses.map(s=>{
+      const sub = list.filter(o=>o.status===s);
+      const subM2 = sub.reduce((a,o)=>a+(o.m2||0),0);
+      return { s, n: sub.length, m2: subM2 };
+    }).filter(r=>r.n>0).sort((a,b)=>b.m2-a.m2);
+    detail.innerHTML = rows.map(r=>
+      `<div class="q4-est-row"><span>${r.s}</span><span>${r.n} · ${nFmt(r.m2)} m²</span></div>`
+    ).join('');
   });
-  svg.innerHTML = paths + `<text x="50" y="50" class="health-num" style="font-size:18px;dominant-baseline:central;text-anchor:middle;fill:#e8e8e8">${total}</text>`;
-  $('donut-status-legend').innerHTML = legend;
 
-  // fases
-  const maxF = AGG.top_fases[0].n;
-  $('q4-fases').innerHTML = AGG.top_fases.map(f => `
-    <div class="barlist-row">
-      <div class="barlist-lbl" title="${escHtml(f.fase)}">${escHtml(f.fase)}</div>
-      <div class="barlist-bar"><span style="width:${(f.n/maxF)*100}%"></span></div>
-      <div class="barlist-val">${f.n}</div>
-    </div>
-  `).join('');
+  // Insight dinâmico
+  const rod = obras.filter(o=>grupos.RODANDO.includes(o.status));
+  const est = obras.filter(o=>grupos.ESTAGNADO.includes(o.status));
+  const pen = obras.filter(o=>grupos.PENDENTE.includes(o.status));
+  const rodM2 = rod.reduce((a,o)=>a+(o.m2||0),0);
+  const estM2 = est.reduce((a,o)=>a+(o.m2||0),0);
+  const penM2 = pen.reduce((a,o)=>a+(o.m2||0),0);
+  const insightEl = document.querySelector('.q4-insight');
+  if (insightEl && totalM2>0) {
+    insightEl.innerHTML = `<b>Leitura:</b> Apenas <b>${(rodM2/totalM2*100).toFixed(1)}% do volume ativo está rodando</b>. <b>${(estM2/totalM2*100).toFixed(1)}% travados</b> precisam de ação imediata. <b>${(penM2/totalM2*100).toFixed(1)}% no funil pré-execução</b> — gargalo está em fazer obras saírem do papel, não em executar.`;
+  }
 
-  const maxU = AGG.top_ufs[0].n;
-  $('q4-uf').innerHTML = AGG.top_ufs.map(u => `
-    <div class="barlist-row" style="grid-template-columns: 50px 1fr 50px;">
-      <div class="barlist-lbl"><span class="mono">${u.uf}</span></div>
-      <div class="barlist-bar bl"><span style="width:${(u.n/maxU)*100}%"></span></div>
-      <div class="barlist-val">${u.n}</div>
-    </div>
-  `).join('');
+  q4RenderFases();
+  q4RenderUFs();
+}
 
-  const maxC = AGG.top_cidades[0].n;
-  $('q4-cidades').innerHTML = AGG.top_cidades.map(c => `
-    <div class="barlist-row">
-      <div class="barlist-lbl">${escHtml(c.cidade)}</div>
-      <div class="barlist-bar"><span style="width:${(c.n/maxC)*100}%"></span></div>
-      <div class="barlist-val">${c.n}</div>
-    </div>
-  `).join('');
+function q4RenderFases(){
+  const obras = Q2_OBRAS;
+  const por = {};
+  obras.forEach(o=>{
+    const f = o.fase || '(sem fase)';
+    if (!por[f]) por[f] = {n:0, m2:0};
+    por[f].n++; por[f].m2 += (o.m2||0);
+  });
+  const list = Object.entries(por).sort((a,b)=>b[1].m2-a[1].m2).slice(0,5);
+  const max = list[0]?.[1].m2 || 1;
+  const el = document.getElementById('q4-fases-bars');
+  if (el) el.innerHTML = list.map(([f, v])=>`
+    <div class="q3-cap-row">
+      <div class="nome" title="${escHtml(f)}">${escHtml(f)}</div>
+      <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
+      <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
+    </div>`).join('');
+}
+
+function q4RenderUFs(){
+  const obras = Q2_OBRAS;
+  const por = {};
+  obras.forEach(o=>{
+    let uf = 'OUTROS';
+    const c = (o.cidade||'').toUpperCase();
+    const m = c.match(/\/\s*(SP|RJ|PR|SC|MG|RS|BA|GO|DF|ES|CE|PE|MT|MS|TO|MA|PI|AM|RO|AC|AP|RR|AL|SE|PB|RN)\s*$/);
+    if (m) uf = m[1];
+    else if (c.match(/\bS[ÃA]O PAULO\b/)) uf = 'SP';
+    else if (c.match(/\bRIO DE JANEIRO\b/)) uf = 'RJ';
+    else if (c.match(/\bCURITIBA\b|\bPARAN[ÁA]\b/)) uf = 'PR';
+    else if (c.match(/\bBRAS[ÍI]LIA\b/)) uf = 'DF';
+    else if (c.match(/\bBELO HORIZONTE\b|\bMINAS GERAIS\b|\bDIVIN[ÓO]POLIS\b/)) uf = 'MG';
+    else if (c.match(/\bFLORIAN[ÓO]POLIS\b|\bBALNE[ÁA]RIO CAMBORIU\b|\bPORTO BELO\b/)) uf = 'SC';
+    else if (c.match(/\bPORTO ALEGRE\b|\bPELOTAS\b/)) uf = 'RS';
+    else if (c.match(/\bVIT[ÓO]RIA\b/)) uf = 'ES';
+    else if (c.match(/\bPORTO SEGURO\b/)) uf = 'BA';
+    if (!por[uf]) por[uf] = {n:0, m2:0};
+    por[uf].n++; por[uf].m2 += (o.m2||0);
+  });
+  const list = Object.entries(por).sort((a,b)=>b[1].m2-a[1].m2).slice(0,7);
+  const max = list[0]?.[1].m2 || 1;
+  const el = document.getElementById('q4-uf-bars');
+  if (el) el.innerHTML = list.map(([uf, v])=>`
+    <div class="q3-cap-row">
+      <div class="nome">${uf} <span style="color:#666">(${v.n} obras)</span></div>
+      <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
+      <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
+    </div>`).join('');
 }
 
 // ============== ACHADOS ==============
