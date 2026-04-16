@@ -1,0 +1,46 @@
+name: Refresh Monofloor Data
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # a cada 30 min
+  workflow_dispatch:        # permite rodar manualmente
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run refresh script
+        run: bash analise/refresh.sh
+        env:
+          TZ: America/Sao_Paulo
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "monofloor-bot"
+          git config user.email "bot@monofloor.local"
+          git add analise/data.json \
+                  analise/dados/painel-temporal.json \
+                  analise/dados/snapshots/ \
+                  analise/obras-mapa.html 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Sem mudanças — nada a commitar"
+          else
+            STAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+            git commit -m "🔄 Refresh automático $STAMP"
+            for i in 1 2 3; do
+              git pull --rebase && git push && break || sleep 5
+            done
+          fi

@@ -1,0 +1,21 @@
+# Dados sensíveis — exports de conversas
+telegram_exports/*
+!telegram_exports/.gitkeep
+
+# Tokens e secrets
+.env
+.env.local
+*.token
+.pipefy_token
+
+# Temporários
+*.log
+*.tmp
+
+# Details brutos (1028 arquivos, regerados pelo refresh.sh — não vão pro repo)
+analise/dados/details/
+
+# Listas raw temporárias (são regeradas)
+analise/dados/projects_list_raw.json
+analise/dados/p_limit.json
+
