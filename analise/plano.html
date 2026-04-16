@@ -80,8 +80,8 @@
 <div class="progress-bar">
   <div class="prog-step done">Etapa 1 · Acúmulo<span class="pct">100%</span></div>
   <div class="prog-step done">Etapa 2 · Cruzamentos<span class="pct">100%</span></div>
-  <div class="prog-step doing">Etapa 3 · Consolidação<span class="pct">~30%</span></div>
-  <div class="prog-step pending">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
+  <div class="prog-step done">Etapa 3 · Consolidação<span class="pct">100%</span></div>
+  <div class="prog-step doing">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
 </div>
 
 <section>
@@ -387,23 +387,23 @@
       </div>
       <div class="meta">2026-04-15</div>
     </div>
-    <div class="task pending">
-      <div class="check">○</div>
+    <div class="task done">
+      <div class="check">✓</div>
       <div class="body">
-        <div class="title">Definir estratégia de espelhamento em tempo real</div>
-        <div class="desc">GitHub Actions cron de 5 min (barato, atraso 5 min) vs Cloudflare Worker proxy (tempo real, free tier) vs server próprio. Decisão pendente.</div>
-        <div class="files"><span class="tag">infra</span></div>
+        <div class="title">Espelhamento via GitHub Actions (cron 30 min)</div>
+        <div class="desc">Workflow <code>refresh.yml</code> dispara a cada 30 min. <b>Refresh leve</b>: atualiza data.json com 5 listas em ~5s. <b>Refresh pesado</b> (1ª vez do dia): baixa details das ativas em paralelo, regenera painel-temporal, salva snapshot do dia, regera obras-mapa.html. Atraso máximo: 30 min. Custo: zero. Manual: botão "Run workflow" no Actions.</div>
+        <div class="files"><code>.github/workflows/refresh.yml</code> <code>analise/refresh.sh</code></div>
       </div>
-      <div class="meta"></div>
+      <div class="meta">2026-04-15</div>
     </div>
-    <div class="task pending">
-      <div class="check">○</div>
+    <div class="task done">
+      <div class="check">✓</div>
       <div class="body">
-        <div class="title">Snapshot diário (base para "dias em fase" e adiamentos)</div>
-        <div class="desc">API não tem histórico de transição de fase. Única forma de medir "dias em fase" e contar adiamentos: gravar JSON por dia a partir de hoje.</div>
-        <div class="files"><span class="tag">infra</span> <span class="tag">histórico</span></div>
+        <div class="title">Snapshot diário</div>
+        <div class="desc">A partir de hoje, 1 JSON por dia em <code>analise/dados/snapshots/YYYY-MM-DD.json</code> com obras ativas (id, cliente, status, fase, consultor, idade). Em 7 dias já temos histórico de transição de fase que a API não dá. Em 30 dias dá pra medir adiamentos, tempo médio em cada fase, taxa de movimentação.</div>
+        <div class="files"><code>analise/dados/snapshots/</code></div>
       </div>
-      <div class="meta"></div>
+      <div class="meta">2026-04-15</div>
     </div>
   </div>
 </section>
