@@ -103,7 +103,36 @@ svg.sparkline{width:100%;height:120px;display:block}
   .kpi-val{font-size:32px}
   .chart-stats{gap:24px}
   .chart-stat strong{font-size:18px}
+  .ibar-stats{flex-wrap:wrap;gap:4px}
 }
+/* Interactive bar charts */
+.icharts-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+@media (max-width:900px){.icharts-grid{grid-template-columns:1fr}}
+.ichart-section{background:linear-gradient(180deg, #141414 0%, #0e0e0e 100%);border:1px solid #1f1f1f;border-radius:12px;padding:24px}
+.ichart-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.ichart-title .total{color:#c4a77d;font-size:14px;font-weight:600;letter-spacing:0;text-transform:none}
+.ibar-item{margin-bottom:16px;cursor:pointer;transition:background 0.2s;padding:8px 10px;margin:-8px -10px;border-radius:8px}
+.ibar-item:hover{background:#1a1a1a}
+.ibar-item:last-child{margin-bottom:0}
+.ibar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:12px}
+.ibar-label{font-size:15px;font-weight:600;color:#e8e8e8;letter-spacing:0.5px}
+.ibar-stats{display:flex;align-items:baseline;gap:6px;flex-wrap:nowrap}
+.ibar-main{font-size:20px;font-weight:700;color:#c4a77d;font-variant-numeric:tabular-nums}
+.ibar-sub{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+.ibar-sep{color:#333;font-size:10px}
+.ibar-detail{font-size:11px;color:#888}
+.ibar-bar-wrap{background:#1a1a1a;border-radius:6px;height:8px;overflow:hidden}
+.ibar-bar{height:100%;border-radius:6px;background:linear-gradient(90deg, #c4a77d 0%, #8a6f45 100%);transition:width 0.6s cubic-bezier(0.4, 0, 0.2, 1)}
+/* Drill-down list (hidden by default) */
+.ibar-drilldown{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out, opacity 0.3s;opacity:0}
+.ibar-drilldown.open{max-height:800px;opacity:1;margin-top:12px}
+.drill-table{width:100%;border-collapse:collapse;font-size:11px}
+.drill-table th{text-align:left;color:#666;font-weight:500;padding:5px 8px;border-bottom:1px solid #222;text-transform:uppercase;letter-spacing:0.5px;font-size:9px}
+.drill-table td{padding:5px 8px;border-bottom:1px solid #151515;color:#ccc}
+.drill-table tr:hover{background:#1a1a1a}
+.drill-table .oc{color:#ef4444;font-weight:600}
+.drill-close{font-size:10px;color:#888;cursor:pointer;margin-top:6px;text-align:right;padding:4px 0;text-transform:uppercase;letter-spacing:1px}
+.drill-close:hover{color:#c4a77d}
 </style>
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:40px}
 </style>
@@ -119,7 +148,7 @@ svg.sparkline{width:100%;height:120px;display:block}
       <div class="logo">hermes</div>
       <div class="subtitle">análise diária · monofloor</div>
     </div>
-    <h1>Projetos problemáticos aumentam 20%</h1>
+    <h1>Projetos atrasados em 32,4%</h1>
     <div class="hero-meta">16/04/2026, 13:17:03 · <a href="indicadores.html">ver painel completo →</a></div>
   </div>
 </section>
@@ -129,7 +158,7 @@ svg.sparkline{width:100%;height:120px;display:block}
   <div class="container">
     <div class="slide-eyebrow">o que está acontecendo</div>
     <h2>Contexto operacional</h2>
-    <div class="contexto"><p>A distribuição regional mostra que SP é a região com mais obras, mensagens e ocorrências. Além disso, foram detectadas contradições em projetos pausados com atividade, como ALEXANDRE BASTOS DA SILVA e ANTONIO CARLOS CANTO PORTO NETO.</p></div>
+    <div class="contexto"><p>Os tipos de ocorrência mais frequentes incluem 'outro', 'falha de comunicação' e 'desvio de qualidade'. Além disso, há projetos silenciosos, como BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO, que aguardam liberação.</p></div>
   </div>
 </section>
 
@@ -146,7 +175,196 @@ svg.sparkline{width:100%;height:120px;display:block}
       <div class="kpi-card"><div class="kpi-val amber">15.5%</div><div class="kpi-label">Silêncio</div></div>
       <div class="kpi-card"><div class="kpi-val">148</div><div class="kpi-label">Projetos ativos</div></div>
     </div>
-    <div class="chart-wrap">
+
+    <!-- Gráficos interativos: Região e Consultor lado a lado -->
+    <div class="icharts-grid">
+      <div class="ichart-section">
+        <div class="ichart-title">Obras por região <span class="total">148 projetos</span></div>
+        
+      <div class="ibar-item" data-drill="regiao" data-key="SP">
+        <div class="ibar-head">
+          <div class="ibar-label">SP</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">89</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">4809 msgs</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">186 ocs</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:100%"></div></div>
+        <div class="ibar-drilldown" id="drill-regiao-SP"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="regiao" data-key="OUT">
+        <div class="ibar-head">
+          <div class="ibar-label">OUT</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">38</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">1313 msgs</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">63 ocs</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:43%"></div></div>
+        <div class="ibar-drilldown" id="drill-regiao-OUT"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="regiao" data-key="RJ">
+        <div class="ibar-head">
+          <div class="ibar-label">RJ</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">15</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">612 msgs</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">16 ocs</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:17%"></div></div>
+        <div class="ibar-drilldown" id="drill-regiao-RJ"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="regiao" data-key="CWB">
+        <div class="ibar-head">
+          <div class="ibar-label">CWB</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">6</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">190 msgs</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">7 ocs</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:7%"></div></div>
+        <div class="ibar-drilldown" id="drill-regiao-CWB"></div>
+      </div>
+    
+      </div>
+      <div class="ichart-section">
+        <div class="ichart-title">Carga por consultor <span class="total">7 consultores</span></div>
+        
+      <div class="ibar-item" data-drill="consultor" data-key="Wesley Matheus">
+        <div class="ibar-head">
+          <div class="ibar-label">Wesley Matheus</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">68</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">157 ocs (2.3/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#ef4444">35% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:100%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-Wesley_Matheus"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="consultor" data-key="LUANA PATRICIA">
+        <div class="ibar-head">
+          <div class="ibar-label">LUANA PATRICIA</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">55</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">91 ocs (1.7/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#f59e0b">24% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:81%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-LUANA_PATRICIA"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="consultor" data-key="Pedro Alexandre">
+        <div class="ibar-head">
+          <div class="ibar-label">Pedro Alexandre</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">5</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">13 ocs (2.6/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#f59e0b">20% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:7%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-Pedro_Alexandre"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="consultor" data-key="Juliana Santos">
+        <div class="ibar-head">
+          <div class="ibar-label">Juliana Santos</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">2</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">9 ocs (4.5/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#ef4444">100% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:3%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-Juliana_Santos"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="consultor" data-key="Thaísa de">
+        <div class="ibar-head">
+          <div class="ibar-label">Thaísa de</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">1</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">0 ocs (0.0/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#ef4444">100% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:1%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-Thaísa_de"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="consultor" data-key="Pedro Marçal">
+        <div class="ibar-head">
+          <div class="ibar-label">Pedro Marçal</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">1</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">0 ocs (0.0/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#888">0% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:1%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-Pedro_Marçal"></div>
+      </div>
+    
+      <div class="ibar-item" data-drill="consultor" data-key="Renata Garcia">
+        <div class="ibar-head">
+          <div class="ibar-label">Renata Garcia</div>
+          <div class="ibar-stats">
+            <span class="ibar-main">1</span>
+            <span class="ibar-sub">obras</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail">0 ocs (0.0/obra)</span>
+            <span class="ibar-sep">·</span>
+            <span class="ibar-detail" style="color:#888">0% atraso</span>
+          </div>
+        </div>
+        <div class="ibar-bar-wrap"><div class="ibar-bar" style="width:1%"></div></div>
+        <div class="ibar-drilldown" id="drill-consultor-Renata_Garcia"></div>
+      </div>
+    
+      </div>
+    </div>
+
+    <div class="chart-wrap" style="margin-top:24px">
       <div class="chart-title">Volume diário de mensagens · últimos 30 dias</div>
       <svg class="sparkline" viewBox="0 0 600 100" preserveAspectRatio="none">
         <polygon points="0,100 0,78 21,74 43,76 64,75 86,79 107,73 129,75 150,69 171,65 193,75 214,79 236,80 257,66 279,65 300,59 321,63 343,78 364,79 386,62 407,52 429,49 450,45 471,44 493,73 514,78 536,5 557,18 579,0 600,46 600,100" fill="#c4a77d" opacity="0.12"/>
@@ -158,7 +376,7 @@ svg.sparkline{width:100%;height:120px;display:block}
         <div class="chart-stat">total<strong>6.924</strong></div>
       </div>
     </div>
-    <div class="tipos-chart">
+    <div class="tipos-chart" style="margin-top:24px">
       <div class="chart-title" style="margin-bottom:16px">Tipos de ocorrência mais frequentes</div>
       
       <div class="tipo-row">
@@ -202,40 +420,6 @@ svg.sparkline{width:100%;height:120px;display:block}
 </section>
 
 
-      <section class="slide slide-diff">
-        <div class="container">
-          <div class="slide-eyebrow">comparativo</div>
-          <h2>O que mudou desde a última análise</h2>
-          <div class="diff-grid">
-            <div class="diff-card">
-        <div class="diff-label">Mensagens</div>
-        <div class="diff-valor">6.924</div>
-        <div class="diff-delta" style="color:#22c55e">↑ 20</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Ocorrências</div>
-        <div class="diff-valor">272</div>
-        <div class="diff-delta" style="color:#888">— 0</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Críticas</div>
-        <div class="diff-valor">25</div>
-        <div class="diff-delta" style="color:#888">— 0</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Atraso</div>
-        <div class="diff-valor">32.4%</div>
-        <div class="diff-delta" style="color:#888">— 0.0pp</div>
-      </div>
-            <div class="diff-card">
-        <div class="diff-label">Silêncio</div>
-        <div class="diff-valor">15.5%</div>
-        <div class="diff-delta" style="color:#888">— 0.0pp</div>
-      </div>
-          </div>
-        </div>
-      </section>
-    
 
 <!-- SLIDE: INSIGHTS -->
 <section class="slide">
@@ -244,18 +428,18 @@ svg.sparkline{width:100%;height:120px;display:block}
     <h2>Insights <span class="accent">não-óbvios</span></h2>
     <div class="insights-grid">
     <div class="insight-card">
-      <div class="insight-title">Projetos problemáticos</div>
-      <div class="insight-text">Os projetos mais problemáticos apresentam alta quantidade de mensagens e ocorrências, o que pode indicar falhas na comunicação ou na qualidade dos serviços.</div>
+      <div class="insight-title">Atrasos</div>
+      <div class="insight-text">A taxa de atraso de 32,4% indica que quase um terço dos projetos estão atrasados, o que pode afetar a satisfação do cliente e a reputação da empresa.</div>
     </div>
   
     <div class="insight-card">
       <div class="insight-title">Carga de trabalho</div>
-      <div class="insight-text">Wesley Matheus de Carvalho e LUANA PATRICIA DE ANDRADE LIMA têm uma carga de trabalho alta, o que pode afetar a qualidade dos serviços prestados.</div>
+      <div class="insight-text">A carga de trabalho desigual entre os consultores pode levar a sobrecarga e estresse, afetando a qualidade do trabalho e a satisfação do cliente.</div>
     </div>
   
     <div class="insight-card">
-      <div class="insight-title">Distribuição regional</div>
-      <div class="insight-text">A região de SP apresenta a maior quantidade de obras, mensagens e ocorrências, o que pode indicar uma demanda maior por serviços na região.</div>
+      <div class="insight-title">Comunicação</div>
+      <div class="insight-text">A falta de comunicação eficaz é um problema recorrente, com 'falha de comunicação' sendo um dos tipos de ocorrência mais frequentes.</div>
     </div>
   </div>
   </div>
@@ -269,20 +453,20 @@ svg.sparkline{width:100%;height:120px;display:block}
     <div class="acoes-grid">
     <div class="acao-card prio-alta">
       <div class="acao-prio">ALTA</div>
-      <div class="acao-texto">Revisar projetos problemáticos</div>
-      <div class="acao-ctx">É necessário revisar os projetos mais problemáticos para identificar as causas das falhas e implementar soluções para melhorar a qualidade dos serviços.</div>
+      <div class="acao-texto">Revisar e priorizar os projetos atrasados</div>
+      <div class="acao-ctx">Para reduzir a taxa de atraso e melhorar a satisfação do cliente</div>
     </div>
   
     <div class="acao-card prio-media">
       <div class="acao-prio">MEDIA</div>
-      <div class="acao-texto">Redistribuir carga de trabalho</div>
-      <div class="acao-ctx">É necessário redistribuir a carga de trabalho de Wesley Matheus de Carvalho e LUANA PATRICIA DE ANDRADE LIMA para evitar a sobrecarga e garantir a qualidade dos serviços.</div>
+      <div class="acao-texto">Distribuir a carga de trabalho de forma mais equilibrada</div>
+      <div class="acao-ctx">Para evitar a sobrecarga e o estresse entre os consultores</div>
     </div>
   
     <div class="acao-card prio-media">
       <div class="acao-prio">MEDIA</div>
-      <div class="acao-texto">Aumentar recursos em SP</div>
-      <div class="acao-ctx">É necessário aumentar os recursos na região de SP para atender à demanda maior por serviços na região.</div>
+      <div class="acao-texto">Desenvolver um plano de comunicação eficaz</div>
+      <div class="acao-ctx">Para reduzir as ocorrências de falha de comunicação e melhorar a satisfação do cliente</div>
     </div>
   </div>
   </div>
@@ -294,23 +478,63 @@ svg.sparkline{width:100%;height:120px;display:block}
     <div class="slide-eyebrow">próximos 7 dias</div>
     <h2>O que monitorar</h2>
     <div class="semana-box">
-      <p>Nos próximos 7 dias, é importante monitorar a evolução dos projetos problemáticos e a carga de trabalho dos consultores. Além disso, é necessário implementar soluções para melhorar a qualidade dos serviços e atender à demanda maior por serviços na região de SP.</p>
+      <p>Nos próximos 7 dias, é importante monitorar a taxa de atraso, a carga de trabalho dos consultores e a eficácia do plano de comunicação. Além disso, é fundamental revisar os projetos silenciosos e pausados para garantir que estejam sendo devidamente atendidos.</p>
     </div>
   </div>
 </section>
 
 <div class="footer">
-  Hermes v1.0 · análise gerada em 16/04/2026, 13:17:03 · <a href="indicadores.html">ver painel operacional →</a>
+  Hermes v1.2 · análise gerada em 16/04/2026, 13:17:03 · <a href="indicadores.html">ver painel operacional →</a>
 </div>
 
 <script>
-// Fade-in progressivo nos slides conforme entram na viewport
+// Dados para drill-down
+const DRILL = {"porRegiao":{"OUTROS":[{"nome":"ANA PAULA JACINTHO JUNQUEIRA APARTAMENTO STUDIO","cidade":"CEP 05409","msgs":200,"ocs":1,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"JOAO PEDRO SCANAGATTA DAMACENO","cidade":"CASCAVEL","msgs":27,"ocs":3,"fase":"LOGÍSTICA - EM ENTREGA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"BRUNO FRIGO ZEZZE","cidade":"CAMPINAS","msgs":43,"ocs":1,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"ÁUREO EUSTÁQUIO BRANDÃO","cidade":"NOVA LIMA","msgs":37,"ocs":8,"fase":"CLIENTE FINALIZADO","consultor":"Pedro Alexandre Santana"},{"nome":"JOSUE MONTEDONIO NASCIMENTO 2° FASE","cidade":"SANTOS","msgs":15,"ocs":20,"fase":"OBRA EM EXECUÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"KRYSTAL LURI NUMA","cidade":"R Senador César Lacerda Vergueira 312 ap","msgs":65,"ocs":2,"fase":"CLIENTE FINALIZADO","consultor":""},{"nome":"RIBEIRO DO VALLE CONSTRUTORA E INCORPORADORA LTDA ","cidade":"VITÓRIA","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"CLAUDIA CEZAR ALVES ","cidade":"CARAPICUÍBA","msgs":15,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"HS ENGENHARIA E CONSULTORIA LTDA (Pedro Henning)","cidade":"JAGUARIAÍVA","msgs":10,"ocs":2,"fase":"REVISÃO FINAL OP","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"LC ADMINISTRAÇÃO E PARTICIPAÇÕES LTDA","cidade":"PRESIDENTE PRUDENTE","msgs":0,"ocs":2,"fase":"AGEND. VT - ENTRADA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"PEDRO HENRIQUE SETTI SEIVERS","cidade":"SÃO BERNARDO DO CAMPO","msgs":11,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"SR2 CASAS CONSTRUTORA LTDA - GOLF RESORT","cidade":"PORTO BELO - SC","msgs":22,"ocs":0,"fase":"INDÚSTRIA - EM PRODUÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"SILVANA PANDOLFI JANETE","cidade":"BERTIOGA","msgs":49,"ocs":4,"fase":"REVISÃO FINAL OP","consultor":"Wesley Matheus de Carvalho"},{"nome":"BRUNO DE SOUSA MENDES PARENTE","cidade":"BRASILIA","msgs":20,"ocs":1,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"LEONARDO GUERZONI FURTADO DE OLIVEIRA","cidade":"ITU","msgs":29,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"CARLA ANTONIO ","cidade":"ITANHAÉM","msgs":0,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"ALEXANDRE BUSS VAN DEN MOSSELAAR ","cidade":"BRAGANÇA PAULISTA","msgs":11,"ocs":3,"fase":"REVISÃO FINAL OP","consultor":"Wesley Matheus de Carvalho"},{"nome":" JORGE LUIZ BARBIERI GALLO","cidade":"MARÍLIA / SP","msgs":2,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"BENY MAJTLIS","cidade":"SÃO SEBASTIÃO","msgs":200,"ocs":5,"fase":"OBRA CONCLUÍDA","consultor":"Wesley Matheus de Carvalho"},{"nome":"JOSE ANTUNES SOBRINHO ","cidade":"FLORIANÓPOLIS","msgs":134,"ocs":7,"fase":"LOGÍSTICA - EM ENTREGA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":" LOVELY RITA DIAS MENEZES    SEGUNDA FASE ","cidade":"SP; CEP: 01.532","msgs":125,"ocs":0,"fase":"INFORMAÇÕES LOGÍSTICAS","consultor":"Thaísa de Lara Barbosa"},{"nome":"AVVA HOUSE LTDA - MOZART RODRIGUES","cidade":"FLORIANOPOLIS","msgs":67,"ocs":0,"fase":"OBRA CONCLUÍDA","consultor":"Wesley Matheus de Carvalho"},{"nome":"MONALISA PARTICIPAÇÕES ","cidade":"CAMPINAS","msgs":0,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GUILHERME LANGER","cidade":"EXTERNA","msgs":41,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RONALDO PORTUGAL BACELLAR FILHO","cidade":"EXTERNA","msgs":1,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"FILIPE AUGUSTO MARINI LOPES","cidade":"apartamento 802","msgs":33,"ocs":1,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"Andrea Almeida","cidade":"Belo Horizonte","msgs":0,"ocs":0,"fase":"ENTRADA","consultor":""},{"nome":"Marcelo Edwin (Campinas)","cidade":"Campinas","msgs":0,"ocs":0,"fase":"ENTRADA","consultor":""},{"nome":"Anelise (katharina)","cidade":"Nao informada","msgs":0,"ocs":0,"fase":"ENTRADA","consultor":""},{"nome":"ANDRE SCHECHTMAN    ","cidade":"CEP 01241","msgs":2,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":""},{"nome":"MONTI MARE ADMINISTRACAO DE BENS PROPRIOS LTDA ADITIVO.","cidade":"PORTO SEGURO","msgs":7,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Pedro Marçal"},{"nome":"JULIO CEZAR ENGEL DOS SANTOS","cidade":"Lote 05","msgs":81,"ocs":1,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RODOLFO FRANK MUNHOZ DA ROCHA","cidade":"Curitba","msgs":0,"ocs":0,"fase":"CONTRATO","consultor":"Renata Garcia Penna"},{"nome":"CD 01 DESENVOLVIMENTO IMOBILIÁRIOS LTDA 2ª fase","cidade":"CEP 01449","msgs":1,"ocs":2,"fase":"OBRA PAUSADA","consultor":"Wesley Matheus de Carvalho"},{"nome":"ALINIE MENDES PEIGO","cidade":"BERTIOGA","msgs":35,"ocs":0,"fase":"INFORMAÇÕES PROJETOS","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"MARCELO ANDRE STEUER","cidade":"SÃO SEBASTIÃO","msgs":0,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"GABRIEL LEIVAS PROTO","cidade":"PELOTAS","msgs":21,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"VALERIA ALVES BELIZARIO","cidade":"SÃO CAETANO DO SUL","msgs":8,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"}],"SP":[{"nome":"OFICIO 1934 (JULIA MARANGONI)","cidade":"SÃO PAULO","msgs":21,"ocs":1,"fase":"PROJETOS  - 1ª REVISÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"MICHELLE CRISTINA FREITAS GARDENAL","cidade":"SÃO PAULO","msgs":43,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"JEAN LUC SENAC","cidade":"SÃO PAULO","msgs":12,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES","cidade":"SÃO PAULO","msgs":9,"ocs":1,"fase":"LOGÍSTICA - EM ENTREGA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"CINTIA TIEMI KITA ","cidade":"SÃO PAULO","msgs":200,"ocs":4,"fase":"REVISÃO FINAL OP","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES","cidade":"SÃO PAULO","msgs":23,"ocs":2,"fase":"LOGÍSTICA - EM ENTREGA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA","cidade":"SÃO PAULO","msgs":200,"ocs":5,"fase":"AGEND. VT - ENTRADA","consultor":"Wesley Matheus de Carvalho"},{"nome":"PALLOMA BIANCA RAMIREZ URIZZI","cidade":"SÃO PAULO","msgs":200,"ocs":6,"fase":"LOGÍSTICA - EM ENTREGA","consultor":"Wesley Matheus de Carvalho"},{"nome":"ADRIANA FERNANDES PERES","cidade":"SÃO PAULO","msgs":200,"ocs":5,"fase":"INDÚSTRIA - EM PRODUÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"FLÁVIO FAVA DITT","cidade":"SÃO PAULO","msgs":200,"ocs":13,"fase":"LOGÍSTICA - MATERIAL ENTREGUE","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"RODRIGO DE FARIA JARDIM","cidade":"SÃO PAULO / SP","msgs":200,"ocs":9,"fase":"LOGÍSTICA - MATERIAL ENTREGUE","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"ANDRE KEUNECKE SALERNO","cidade":"SÃO PAULO","msgs":200,"ocs":10,"fase":"CLIENTE FINALIZADO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"MANOELA LATINI GAVASSI FRANCISCO 2ª FASE","cidade":"São Paulo","msgs":200,"ocs":17,"fase":"OBRA EM EXECUÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"CEDENIR JOÃO DA SILVEIRA ","cidade":"SÃO PAULO","msgs":9,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA","cidade":"SÃO PAULO","msgs":67,"ocs":3,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"ANA CAROLINA PLACCO FERREIRA - AREA EXTERNA","cidade":"São Paulo","msgs":15,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"Vitor Flammia de Barros Costa","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"OECT","consultor":""},{"nome":"DANIEL BECKER ","cidade":"SÃO PAULO","msgs":14,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RAFAEL PEREIRA FERNANDES","cidade":"SÃO PAULO","msgs":62,"ocs":1,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"RICARDO XAVIER DE OLIVEIRA NETO","cidade":"SÃO PAULO / SP","msgs":28,"ocs":4,"fase":"RESULTADO VT - ENTRADA","consultor":"Wesley Matheus de Carvalho"},{"nome":"MARIA APARECIDA GONÇALVES MIRANDA ","cidade":"SÃO PAULO","msgs":4,"ocs":0,"fase":"1º CONTATO OP.","consultor":"Pedro Alexandre Santana"},{"nome":"VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL","cidade":"SÃO PAULO","msgs":9,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"GUILHERME RECUPERO ","cidade":"SÃO PAULO","msgs":5,"ocs":0,"fase":"1º CONTATO OP.","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"FABIO FEDERICI DE CARVALHO","cidade":"SÃO PAULO","msgs":91,"ocs":1,"fase":"CONFIRMAÇÕES OP 1","consultor":"Wesley Matheus de Carvalho"},{"nome":"DARIO DA SILVA GARCIA ","cidade":"SÃO PAULO","msgs":3,"ocs":3,"fase":"EQUIPE DE EXECUÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"MARCUS VINICIUS RODRIGUES ELTSCHEMINOV","cidade":"SÃO PAULO","msgs":12,"ocs":0,"fase":"CONFIRMAÇÕES OP 1","consultor":"Wesley Matheus de Carvalho"},{"nome":"DEPECHE MOVEIS LTDA EPP","cidade":"SÃO PAULO","msgs":10,"ocs":3,"fase":"INFORMAÇÕES FINANCEIRAS","consultor":"Wesley Matheus de Carvalho"},{"nome":"MARIA TEREZA DA COSTA AGUIAR LUDERS ","cidade":"SÃO PAULO","msgs":8,"ocs":0,"fase":"EM CONTRATO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RAFAEL WEIL ","cidade":"SÃO PAULO","msgs":63,"ocs":0,"fase":"RESULTADO VT - QUALIDADE","consultor":"Wesley Matheus de Carvalho"},{"nome":"DANIELE DE LIMA KRAMM ","cidade":"SÃO PAULO","msgs":24,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"RICARDO GUIMARAES VIEIRA","cidade":"SÃO PAULO","msgs":47,"ocs":3,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"JOSÉ ROBERTO LEME FERRAZ","cidade":"SÃO PAULO","msgs":24,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"FERNÃO RALSTON BOTELHO BRECHER ","cidade":"SÃO PAULO","msgs":10,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"MARIO KONDO JUNIOR ","cidade":"SÃO PAULO","msgs":6,"ocs":0,"fase":"CONFIRMAÇÕES OP 1","consultor":"Wesley Matheus de Carvalho"},{"nome":"FREDERICO CUNHA VALIM ","cidade":"SÃO PAULO","msgs":14,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"FREDERICO OTAVIO LUZ","cidade":"SÃO PAULO","msgs":5,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)","cidade":"SÃO PAULO","msgs":36,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA","cidade":"SÃO PAULO","msgs":200,"ocs":6,"fase":"RESULTADO VT - ENTRADA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"RODRIGO DE ALMEIDA SCHMIDT","cidade":"SÃO PAULO","msgs":31,"ocs":0,"fase":"INDÚSTRIA - EM PRODUÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"GUSTAVO PARRILO DA NOBREGA","cidade":"SÃO PAULO","msgs":48,"ocs":3,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"PEDRO RUBENS SILVEIRA MELLO BERLINCK","cidade":"SÃO PAULO","msgs":200,"ocs":3,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"ALEXANDRE BASTOS DA SILVA ","cidade":"SÃO PAULO","msgs":40,"ocs":1,"fase":"INDÚSTRIA - EM PRODUÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"PAULA DAYAN","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"ENTRADA","consultor":""},{"nome":"ADRIANO DE FIGUEIREDO MACORIN","cidade":"SÃO PAULO / SP","msgs":28,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"PAULA CORREA NOGUEIRA ","cidade":"SÃO PAULO","msgs":3,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"[]"},{"nome":"LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LTDA (REAL COMERCIAL LTDA)","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"?","consultor":""},{"nome":"ROBERTA ASSONI BUENO","cidade":"SÃO PAULO / SP","msgs":18,"ocs":0,"fase":"CONFIRMAÇÕES OP 1","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"ADRIANA RUTH ADLER","cidade":"SÃO PAULO","msgs":11,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"SUELLEN NASTRI CASTRO","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"SASOJANG PARTICIPAÇÃO SA","cidade":"SÃO PAULO","msgs":4,"ocs":0,"fase":"PROJETOS  - 1ª REVISÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GABRIEL FIGUEIREDO MENEZES","cidade":"SÃO PAULO","msgs":24,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"DANIELA MANASSERO PODKOLINSKI DE ALMEIDA QUEIROZ","cidade":"SÃO PAULO","msgs":6,"ocs":0,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"DIOGO CANTERAS SANTOS","cidade":"SÃO PAULO","msgs":114,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"LUIZ GUSTAVO MIGUEL REBEIS","cidade":"SÃO PAULO / SP","msgs":31,"ocs":5,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"CONSULADO-GERAL DA SUÍÇA ","cidade":"SÃO PAULO","msgs":19,"ocs":1,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GUILHERME HAIDAR BERJEAUT","cidade":"SÃO PAULO / SP","msgs":91,"ocs":1,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GABRIELA AZEVEDO FORLIN","cidade":"SÃO PAULO","msgs":23,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"[]"},{"nome":"MARINA PIRES DE AGUIAR","cidade":"SÃO PAULO","msgs":200,"ocs":4,"fase":"CLIENTE FINALIZADO","consultor":"Juliana Santos"},{"nome":"BM VAREJO – M. FASHION","cidade":"SÃO PAULO","msgs":125,"ocs":0,"fase":"OBRA CONCLUÍDA","consultor":"Wesley Matheus de Carvalho"},{"nome":"ANTONIO CARLOS CANTO PORTO NETO","cidade":"SÃO PAULO","msgs":38,"ocs":4,"fase":"OBRA PAUSADA","consultor":"Wesley Matheus de Carvalho"},{"nome":"TALLY FELDMAN SINGAL GROSS","cidade":"SÃO PAULO","msgs":200,"ocs":33,"fase":"OBRA EM EXECUÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RAFIK WLADIMIR FREUA","cidade":"SÃO PAULO / SP","msgs":108,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"LUIS FERNANDO DE LIMA CARVALHO","cidade":"SÃO PAULO","msgs":153,"ocs":10,"fase":"AGEND. VT - ENTRADA","consultor":"Wesley Matheus de Carvalho"},{"nome":"CRISTIANE TAVARES","cidade":"SÃO PAULO","msgs":21,"ocs":0,"fase":"1º CONTATO OP.","consultor":"Pedro Alexandre Santana"},{"nome":"VITOR FLAMIA DE BARROS COSTA ","cidade":"SÃO PAULO","msgs":0,"ocs":1,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"ANA CAROLINA RAWET FAGE","cidade":"SÃO PAULO / SP","msgs":20,"ocs":4,"fase":"EQUIPE DE EXECUÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"BRUNO SOARES SCALABRIN 2° FASE","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"INDÚSTRIA - EM PRODUÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"MARIA VICTORIA CERVETTO ZUFFO ","cidade":"SÃO PAULO","msgs":5,"ocs":0,"fase":"EM CONTRATO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RAFAEL MOREDO GONÇALVES ","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"PEDRO PRADO CLARO QUARESMA ","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"WILLIAN RIGHETTO PIMENTEL ","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"EM CONTRATO","consultor":"Wesley Matheus de Carvalho"},{"nome":"SHELLY KLEIN COHEN ","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"EM CONTRATO","consultor":"Wesley Matheus de Carvalho"},{"nome":"ESCOLA DO BAIRRO EDUCAÇÃO BASICA LTDA | MARCELO WAJSKOP ABRAMOWICZ","cidade":"SÃO PAULO","msgs":0,"ocs":2,"fase":"REVISÃO FINAL OP","consultor":"Wesley Matheus de Carvalho"},{"nome":"MAURICIO BATEMAN PELA","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"ENTRADA","consultor":""},{"nome":"AMANDA PAGLIARINI MACEDO ","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"1º CONTATO OP.","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"AMANDA NEGRELLI HANNUD","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"TÂMARA NEWMAN LOBATO SOUZA","cidade":"SÃO PAULO","msgs":51,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Pedro Alexandre Santana"},{"nome":"RICARDO FRUGOLI","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"CONTRATO","consultor":""},{"nome":"GETULIO TURATTI OST","cidade":"SÃO PAULO / SP","msgs":144,"ocs":5,"fase":"CLIENTE FINALIZADO","consultor":"Juliana Santos"},{"nome":"PETITE FLEUR PATISSERIE LTDA","cidade":"SÃO PAULO","msgs":200,"ocs":10,"fase":"OBRA PAUSADA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"KATIA MOTA NOGUEIRA  ","cidade":"SÃO PAULO","msgs":41,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"GUILHERME WENTZ","cidade":"São Paulo","msgs":1,"ocs":0,"fase":"OBRA PAUSADA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"VICTOR PEIXOTO DOS SANTOS","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"REYNALDO SOUZA QUEIROZ FIGUEIREDO","cidade":"SÃO PAULO","msgs":41,"ocs":0,"fase":"OBRA CONCLUÍDA","consultor":"Wesley Matheus de Carvalho"},{"nome":"CAMILA MAGALHAES SILVEIRA ","cidade":"SÃO PAULO / SP","msgs":7,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"GN DERMATO LTDA","cidade":"SÃO PAULO","msgs":188,"ocs":2,"fase":"CONFIRMAÇÕES OP 1","consultor":"Wesley Matheus de Carvalho"},{"nome":"NINA RODRIGUES FIALDINI","cidade":"SÃO PAULO / SP","msgs":94,"ocs":0,"fase":"PROJETOS  - 1ª REVISÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"Roberto Tamio Murakami","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"OECT","consultor":""}],"RJ":[{"nome":"BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO","cidade":"RIO DE JANEIRO","msgs":0,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"JULIANA GOMES (RICARDO RANAURO)","cidade":"RIO DE JANEIRO","msgs":200,"ocs":3,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"MONICA ESMERALDA BRUCKMANN MAYNETTO","cidade":"RIO DE JANEIRO","msgs":33,"ocs":4,"fase":"LOGÍSTICA - EM COLETA","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"RAFAEL DE OLIVEIRA BOTELHO CORREA","cidade":"RIO DE JANEIRO","msgs":50,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"MARISA NATALIA PINTO","cidade":"RIO DE JANEIRO","msgs":44,"ocs":2,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"FERNANDO TEMBRA RODRIGUEZ","cidade":"RIO DE JANEIRO","msgs":40,"ocs":0,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA ","cidade":"Av. Visc. do Rio Branco","msgs":11,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":"Wesley Matheus de Carvalho"},{"nome":"RICARDO DIAS DA CRUZ AFFONSO FERREIRA","cidade":"CABO FRIO","msgs":0,"ocs":0,"fase":"EM CONTRATO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"RICARDO MARQUES MENDES","cidade":"SÃO JOSÉ DO RIO PRETO / SP","msgs":25,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"GUSTAVO FONTES VALENTE SALGUEIRO","cidade":"RIO DE JANEIRO","msgs":32,"ocs":0,"fase":"INFORMAÇÕES PROJETOS","consultor":"Wesley Matheus de Carvalho"},{"nome":"JOYCE BAHIENSE GOMES ","cidade":"RIO DE JANEIRO","msgs":125,"ocs":2,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"BERNARDO MAGALHÃES","cidade":"RIO DE JANEIRO","msgs":0,"ocs":0,"fase":"CLIENTE FINALIZADO","consultor":""},{"nome":"MISCI BRASIL COMERCIO DE MODA LTDA ","cidade":"RIO DE JANEIRO","msgs":37,"ocs":5,"fase":"AGEND. VT - ENTRADA","consultor":"Wesley Matheus de Carvalho"},{"nome":"SILAS AUGUSTO FARIA MARTINS","cidade":"RIO DE JANEIRO","msgs":12,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"BRUNO MEIRELLES SELIGMANN","cidade":"RIO DE JANEIRO","msgs":3,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"}],"CWB":[{"nome":"CONRADO MIRANDA GAMA MONTEIRO ","cidade":"CURITIBA","msgs":18,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"IZABELLA VINCE GARCIA PEDRIALI DALCANALE","cidade":"CURITIBA","msgs":3,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO","consultor":"LUANA PATRICIA DE ANDRADE LIMA"},{"nome":"THALES MATZKEIT LEYTON","cidade":"CURITIBA","msgs":2,"ocs":0,"fase":"CONFIRMAÇÕES OP 1","consultor":"Wesley Matheus de Carvalho"},{"nome":"MONTRELUX SOLUÇÕES EM VIDRO LTDA","cidade":"CURITIBA","msgs":44,"ocs":2,"fase":"INDÚSTRIA - EM PRODUÇÃO","consultor":"Wesley Matheus de Carvalho"},{"nome":"JOÃO EDUARDO MARTINS KUHLMANN","cidade":"CURITIBA","msgs":123,"ocs":5,"fase":"CLIENTE FINALIZADO","consultor":"Pedro Alexandre Santana"},{"nome":"ELIZETE DE FÁTIMA MARCONCIN","cidade":"Curitiba/Paraná","msgs":0,"ocs":0,"fase":"?","consultor":""}]},"porConsultor":{"LUANA PATRICIA":[{"nome":"ANA PAULA JACINTHO JUNQUEIRA APARTAMENTO STUDIO","cidade":"CEP 05409","msgs":200,"ocs":1,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"JOAO PEDRO SCANAGATTA DAMACENO","cidade":"CASCAVEL","msgs":27,"ocs":3,"fase":"LOGÍSTICA - EM ENTREGA"},{"nome":"BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO","cidade":"RIO DE JANEIRO","msgs":0,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"BRUNO FRIGO ZEZZE","cidade":"CAMPINAS","msgs":43,"ocs":1,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES","cidade":"SÃO PAULO","msgs":9,"ocs":1,"fase":"LOGÍSTICA - EM ENTREGA"},{"nome":"CINTIA TIEMI KITA ","cidade":"SÃO PAULO","msgs":200,"ocs":4,"fase":"REVISÃO FINAL OP"},{"nome":"APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES","cidade":"SÃO PAULO","msgs":23,"ocs":2,"fase":"LOGÍSTICA - EM ENTREGA"},{"nome":"JULIANA GOMES (RICARDO RANAURO)","cidade":"RIO DE JANEIRO","msgs":200,"ocs":3,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"ADRIANA FERNANDES PERES","cidade":"SÃO PAULO","msgs":200,"ocs":5,"fase":"INDÚSTRIA - EM PRODUÇÃO"},{"nome":"FLÁVIO FAVA DITT","cidade":"SÃO PAULO","msgs":200,"ocs":13,"fase":"LOGÍSTICA - MATERIAL ENTREGUE"},{"nome":"MONICA ESMERALDA BRUCKMANN MAYNETTO","cidade":"RIO DE JANEIRO","msgs":33,"ocs":4,"fase":"LOGÍSTICA - EM COLETA"},{"nome":"RODRIGO DE FARIA JARDIM","cidade":"SÃO PAULO / SP","msgs":200,"ocs":9,"fase":"LOGÍSTICA - MATERIAL ENTREGUE"},{"nome":"ANDRE KEUNECKE SALERNO","cidade":"SÃO PAULO","msgs":200,"ocs":10,"fase":"CLIENTE FINALIZADO"},{"nome":"RIBEIRO DO VALLE CONSTRUTORA E INCORPORADORA LTDA ","cidade":"VITÓRIA","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"RAFAEL DE OLIVEIRA BOTELHO CORREA","cidade":"RIO DE JANEIRO","msgs":50,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"RAFAEL PEREIRA FERNANDES","cidade":"SÃO PAULO","msgs":62,"ocs":1,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL","cidade":"SÃO PAULO","msgs":9,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"GUILHERME RECUPERO ","cidade":"SÃO PAULO","msgs":5,"ocs":0,"fase":"1º CONTATO OP."},{"nome":"CONRADO MIRANDA GAMA MONTEIRO ","cidade":"CURITIBA","msgs":18,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"DARIO DA SILVA GARCIA ","cidade":"SÃO PAULO","msgs":3,"ocs":3,"fase":"EQUIPE DE EXECUÇÃO"},{"nome":"CLAUDIA CEZAR ALVES ","cidade":"CARAPICUÍBA","msgs":15,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"HS ENGENHARIA E CONSULTORIA LTDA (Pedro Henning)","cidade":"JAGUARIAÍVA","msgs":10,"ocs":2,"fase":"REVISÃO FINAL OP"},{"nome":"LC ADMINISTRAÇÃO E PARTICIPAÇÕES LTDA","cidade":"PRESIDENTE PRUDENTE","msgs":0,"ocs":2,"fase":"AGEND. VT - ENTRADA"},{"nome":"IZABELLA VINCE GARCIA PEDRIALI DALCANALE","cidade":"CURITIBA","msgs":3,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"DANIELE DE LIMA KRAMM ","cidade":"SÃO PAULO","msgs":24,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"FERNANDO TEMBRA RODRIGUEZ","cidade":"RIO DE JANEIRO","msgs":40,"ocs":0,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"SR2 CASAS CONSTRUTORA LTDA - GOLF RESORT","cidade":"PORTO BELO - SC","msgs":22,"ocs":0,"fase":"INDÚSTRIA - EM PRODUÇÃO"},{"nome":"FREDERICO CUNHA VALIM ","cidade":"SÃO PAULO","msgs":14,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"FREDERICO OTAVIO LUZ","cidade":"SÃO PAULO","msgs":5,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA","cidade":"SÃO PAULO","msgs":200,"ocs":6,"fase":"RESULTADO VT - ENTRADA"},{"nome":"RODRIGO DE ALMEIDA SCHMIDT","cidade":"SÃO PAULO","msgs":31,"ocs":0,"fase":"INDÚSTRIA - EM PRODUÇÃO"},{"nome":"ALEXANDRE BASTOS DA SILVA ","cidade":"SÃO PAULO","msgs":40,"ocs":1,"fase":"INDÚSTRIA - EM PRODUÇÃO"},{"nome":"ADRIANO DE FIGUEIREDO MACORIN","cidade":"SÃO PAULO / SP","msgs":28,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"ROBERTA ASSONI BUENO","cidade":"SÃO PAULO / SP","msgs":18,"ocs":0,"fase":"CONFIRMAÇÕES OP 1"},{"nome":"RICARDO DIAS DA CRUZ AFFONSO FERREIRA","cidade":"CABO FRIO","msgs":0,"ocs":0,"fase":"EM CONTRATO"},{"nome":"BRUNO DE SOUSA MENDES PARENTE","cidade":"BRASILIA","msgs":20,"ocs":1,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"RICARDO MARQUES MENDES","cidade":"SÃO JOSÉ DO RIO PRETO / SP","msgs":25,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"CARLA ANTONIO ","cidade":"ITANHAÉM","msgs":0,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":" JORGE LUIZ BARBIERI GALLO","cidade":"MARÍLIA / SP","msgs":2,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"JOSE ANTUNES SOBRINHO ","cidade":"FLORIANÓPOLIS","msgs":134,"ocs":7,"fase":"LOGÍSTICA - EM ENTREGA"},{"nome":"JOYCE BAHIENSE GOMES ","cidade":"RIO DE JANEIRO","msgs":125,"ocs":2,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"RAFIK WLADIMIR FREUA","cidade":"SÃO PAULO / SP","msgs":108,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"SILAS AUGUSTO FARIA MARTINS","cidade":"RIO DE JANEIRO","msgs":12,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"BRUNO SOARES SCALABRIN 2° FASE","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"INDÚSTRIA - EM PRODUÇÃO"},{"nome":"BRUNO MEIRELLES SELIGMANN","cidade":"RIO DE JANEIRO","msgs":3,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"RAFAEL MOREDO GONÇALVES ","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"AMANDA PAGLIARINI MACEDO ","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"1º CONTATO OP."},{"nome":"ALINIE MENDES PEIGO","cidade":"BERTIOGA","msgs":35,"ocs":0,"fase":"INFORMAÇÕES PROJETOS"},{"nome":"PETITE FLEUR PATISSERIE LTDA","cidade":"SÃO PAULO","msgs":200,"ocs":10,"fase":"OBRA PAUSADA"},{"nome":"MARCELO ANDRE STEUER","cidade":"SÃO SEBASTIÃO","msgs":0,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"GUILHERME WENTZ","cidade":"São Paulo","msgs":1,"ocs":0,"fase":"OBRA PAUSADA"},{"nome":"CAMILA MAGALHAES SILVEIRA ","cidade":"SÃO PAULO / SP","msgs":7,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"NINA RODRIGUES FIALDINI","cidade":"SÃO PAULO / SP","msgs":94,"ocs":0,"fase":"PROJETOS  - 1ª REVISÃO"},{"nome":"GABRIEL LEIVAS PROTO","cidade":"PELOTAS","msgs":21,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"}],"Wesley Matheus":[{"nome":"OFICIO 1934 (JULIA MARANGONI)","cidade":"SÃO PAULO","msgs":21,"ocs":1,"fase":"PROJETOS  - 1ª REVISÃO"},{"nome":"MICHELLE CRISTINA FREITAS GARDENAL","cidade":"SÃO PAULO","msgs":43,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"JEAN LUC SENAC","cidade":"SÃO PAULO","msgs":12,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA","cidade":"SÃO PAULO","msgs":200,"ocs":5,"fase":"AGEND. VT - ENTRADA"},{"nome":"PALLOMA BIANCA RAMIREZ URIZZI","cidade":"SÃO PAULO","msgs":200,"ocs":6,"fase":"LOGÍSTICA - EM ENTREGA"},{"nome":"JOSUE MONTEDONIO NASCIMENTO 2° FASE","cidade":"SANTOS","msgs":15,"ocs":20,"fase":"OBRA EM EXECUÇÃO"},{"nome":"MANOELA LATINI GAVASSI FRANCISCO 2ª FASE","cidade":"São Paulo","msgs":200,"ocs":17,"fase":"OBRA EM EXECUÇÃO"},{"nome":"CEDENIR JOÃO DA SILVEIRA ","cidade":"SÃO PAULO","msgs":9,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA","cidade":"SÃO PAULO","msgs":67,"ocs":3,"fase":"CLIENTE FINALIZADO"},{"nome":"ANA CAROLINA PLACCO FERREIRA - AREA EXTERNA","cidade":"São Paulo","msgs":15,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"DANIEL BECKER ","cidade":"SÃO PAULO","msgs":14,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"MARISA NATALIA PINTO","cidade":"RIO DE JANEIRO","msgs":44,"ocs":2,"fase":"CLIENTE FINALIZADO"},{"nome":"RICARDO XAVIER DE OLIVEIRA NETO","cidade":"SÃO PAULO / SP","msgs":28,"ocs":4,"fase":"RESULTADO VT - ENTRADA"},{"nome":"FABIO FEDERICI DE CARVALHO","cidade":"SÃO PAULO","msgs":91,"ocs":1,"fase":"CONFIRMAÇÕES OP 1"},{"nome":"MARCUS VINICIUS RODRIGUES ELTSCHEMINOV","cidade":"SÃO PAULO","msgs":12,"ocs":0,"fase":"CONFIRMAÇÕES OP 1"},{"nome":"DEPECHE MOVEIS LTDA EPP","cidade":"SÃO PAULO","msgs":10,"ocs":3,"fase":"INFORMAÇÕES FINANCEIRAS"},{"nome":"MARIA TEREZA DA COSTA AGUIAR LUDERS ","cidade":"SÃO PAULO","msgs":8,"ocs":0,"fase":"EM CONTRATO"},{"nome":"RAFAEL WEIL ","cidade":"SÃO PAULO","msgs":63,"ocs":0,"fase":"RESULTADO VT - QUALIDADE"},{"nome":"PEDRO HENRIQUE SETTI SEIVERS","cidade":"SÃO BERNARDO DO CAMPO","msgs":11,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"RICARDO GUIMARAES VIEIRA","cidade":"SÃO PAULO","msgs":47,"ocs":3,"fase":"CLIENTE FINALIZADO"},{"nome":"JOSÉ ROBERTO LEME FERRAZ","cidade":"SÃO PAULO","msgs":24,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"FERNÃO RALSTON BOTELHO BRECHER ","cidade":"SÃO PAULO","msgs":10,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"MARIO KONDO JUNIOR ","cidade":"SÃO PAULO","msgs":6,"ocs":0,"fase":"CONFIRMAÇÕES OP 1"},{"nome":"CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)","cidade":"SÃO PAULO","msgs":36,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"THALES MATZKEIT LEYTON","cidade":"CURITIBA","msgs":2,"ocs":0,"fase":"CONFIRMAÇÕES OP 1"},{"nome":"SILVANA PANDOLFI JANETE","cidade":"BERTIOGA","msgs":49,"ocs":4,"fase":"REVISÃO FINAL OP"},{"nome":"GUSTAVO PARRILO DA NOBREGA","cidade":"SÃO PAULO","msgs":48,"ocs":3,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"PEDRO RUBENS SILVEIRA MELLO BERLINCK","cidade":"SÃO PAULO","msgs":200,"ocs":3,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA ","cidade":"Av. Visc. do Rio Branco","msgs":11,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"MONTRELUX SOLUÇÕES EM VIDRO LTDA","cidade":"CURITIBA","msgs":44,"ocs":2,"fase":"INDÚSTRIA - EM PRODUÇÃO"},{"nome":"ADRIANA RUTH ADLER","cidade":"SÃO PAULO","msgs":11,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"SUELLEN NASTRI CASTRO","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"LEONARDO GUERZONI FURTADO DE OLIVEIRA","cidade":"ITU","msgs":29,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"SASOJANG PARTICIPAÇÃO SA","cidade":"SÃO PAULO","msgs":4,"ocs":0,"fase":"PROJETOS  - 1ª REVISÃO"},{"nome":"ALEXANDRE BUSS VAN DEN MOSSELAAR ","cidade":"BRAGANÇA PAULISTA","msgs":11,"ocs":3,"fase":"REVISÃO FINAL OP"},{"nome":"GABRIEL FIGUEIREDO MENEZES","cidade":"SÃO PAULO","msgs":24,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"DANIELA MANASSERO PODKOLINSKI DE ALMEIDA QUEIROZ","cidade":"SÃO PAULO","msgs":6,"ocs":0,"fase":"RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"GUSTAVO FONTES VALENTE SALGUEIRO","cidade":"RIO DE JANEIRO","msgs":32,"ocs":0,"fase":"INFORMAÇÕES PROJETOS"},{"nome":"DIOGO CANTERAS SANTOS","cidade":"SÃO PAULO","msgs":114,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"LUIZ GUSTAVO MIGUEL REBEIS","cidade":"SÃO PAULO / SP","msgs":31,"ocs":5,"fase":"CLIENTE FINALIZADO"},{"nome":"CONSULADO-GERAL DA SUÍÇA ","cidade":"SÃO PAULO","msgs":19,"ocs":1,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"GUILHERME HAIDAR BERJEAUT","cidade":"SÃO PAULO / SP","msgs":91,"ocs":1,"fase":"CLIENTE FINALIZADO"},{"nome":"BENY MAJTLIS","cidade":"SÃO SEBASTIÃO","msgs":200,"ocs":5,"fase":"OBRA CONCLUÍDA"},{"nome":"BM VAREJO – M. FASHION","cidade":"SÃO PAULO","msgs":125,"ocs":0,"fase":"OBRA CONCLUÍDA"},{"nome":"AVVA HOUSE LTDA - MOZART RODRIGUES","cidade":"FLORIANOPOLIS","msgs":67,"ocs":0,"fase":"OBRA CONCLUÍDA"},{"nome":"ANTONIO CARLOS CANTO PORTO NETO","cidade":"SÃO PAULO","msgs":38,"ocs":4,"fase":"OBRA PAUSADA"},{"nome":"MONALISA PARTICIPAÇÕES ","cidade":"CAMPINAS","msgs":0,"ocs":0,"fase":"AGUARDANDO LIBERAÇÃO"},{"nome":"GUILHERME LANGER","cidade":"EXTERNA","msgs":41,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"MISCI BRASIL COMERCIO DE MODA LTDA ","cidade":"RIO DE JANEIRO","msgs":37,"ocs":5,"fase":"AGEND. VT - ENTRADA"},{"nome":"RONALDO PORTUGAL BACELLAR FILHO","cidade":"EXTERNA","msgs":1,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"TALLY FELDMAN SINGAL GROSS","cidade":"SÃO PAULO","msgs":200,"ocs":33,"fase":"OBRA EM EXECUÇÃO"},{"nome":"LUIS FERNANDO DE LIMA CARVALHO","cidade":"SÃO PAULO","msgs":153,"ocs":10,"fase":"AGEND. VT - ENTRADA"},{"nome":"FILIPE AUGUSTO MARINI LOPES","cidade":"apartamento 802","msgs":33,"ocs":1,"fase":"CLIENTE FINALIZADO"},{"nome":"JULIO CEZAR ENGEL DOS SANTOS","cidade":"Lote 05","msgs":81,"ocs":1,"fase":"CLIENTE FINALIZADO"},{"nome":"VITOR FLAMIA DE BARROS COSTA ","cidade":"SÃO PAULO","msgs":0,"ocs":1,"fase":"CLIENTE FINALIZADO"},{"nome":"ANA CAROLINA RAWET FAGE","cidade":"SÃO PAULO / SP","msgs":20,"ocs":4,"fase":"EQUIPE DE EXECUÇÃO"},{"nome":"CD 01 DESENVOLVIMENTO IMOBILIÁRIOS LTDA 2ª fase","cidade":"CEP 01449","msgs":1,"ocs":2,"fase":"OBRA PAUSADA"},{"nome":"MARIA VICTORIA CERVETTO ZUFFO ","cidade":"SÃO PAULO","msgs":5,"ocs":0,"fase":"EM CONTRATO"},{"nome":"PEDRO PRADO CLARO QUARESMA ","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"WILLIAN RIGHETTO PIMENTEL ","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"EM CONTRATO"},{"nome":"SHELLY KLEIN COHEN ","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"EM CONTRATO"},{"nome":"ESCOLA DO BAIRRO EDUCAÇÃO BASICA LTDA | MARCELO WAJSKOP ABRAMOWICZ","cidade":"SÃO PAULO","msgs":0,"ocs":2,"fase":"REVISÃO FINAL OP"},{"nome":"AMANDA NEGRELLI HANNUD","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"KATIA MOTA NOGUEIRA  ","cidade":"SÃO PAULO","msgs":41,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"VICTOR PEIXOTO DOS SANTOS","cidade":"SÃO PAULO","msgs":1,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"},{"nome":"REYNALDO SOUZA QUEIROZ FIGUEIREDO","cidade":"SÃO PAULO","msgs":41,"ocs":0,"fase":"OBRA CONCLUÍDA"},{"nome":"GN DERMATO LTDA","cidade":"SÃO PAULO","msgs":188,"ocs":2,"fase":"CONFIRMAÇÕES OP 1"},{"nome":"VALERIA ALVES BELIZARIO","cidade":"SÃO CAETANO DO SUL","msgs":8,"ocs":0,"fase":"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO"}],"Pedro Alexandre":[{"nome":"ÁUREO EUSTÁQUIO BRANDÃO","cidade":"NOVA LIMA","msgs":37,"ocs":8,"fase":"CLIENTE FINALIZADO"},{"nome":"MARIA APARECIDA GONÇALVES MIRANDA ","cidade":"SÃO PAULO","msgs":4,"ocs":0,"fase":"1º CONTATO OP."},{"nome":"JOÃO EDUARDO MARTINS KUHLMANN","cidade":"CURITIBA","msgs":123,"ocs":5,"fase":"CLIENTE FINALIZADO"},{"nome":"CRISTIANE TAVARES","cidade":"SÃO PAULO","msgs":21,"ocs":0,"fase":"1º CONTATO OP."},{"nome":"TÂMARA NEWMAN LOBATO SOUZA","cidade":"SÃO PAULO","msgs":51,"ocs":0,"fase":"CLIENTE FINALIZADO"}],"SEM":[{"nome":"KRYSTAL LURI NUMA","cidade":"R Senador César Lacerda Vergueira 312 ap","msgs":65,"ocs":2,"fase":"CLIENTE FINALIZADO"},{"nome":"Vitor Flammia de Barros Costa","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"OECT"},{"nome":"PAULA DAYAN","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"ENTRADA"},{"nome":"LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LTDA (REAL COMERCIAL LTDA)","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"?"},{"nome":"BERNARDO MAGALHÃES","cidade":"RIO DE JANEIRO","msgs":0,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"ELIZETE DE FÁTIMA MARCONCIN","cidade":"Curitiba/Paraná","msgs":0,"ocs":0,"fase":"?"},{"nome":"Andrea Almeida","cidade":"Belo Horizonte","msgs":0,"ocs":0,"fase":"ENTRADA"},{"nome":"Marcelo Edwin (Campinas)","cidade":"Campinas","msgs":0,"ocs":0,"fase":"ENTRADA"},{"nome":"Anelise (katharina)","cidade":"Nao informada","msgs":0,"ocs":0,"fase":"ENTRADA"},{"nome":"ANDRE SCHECHTMAN    ","cidade":"CEP 01241","msgs":2,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"MAURICIO BATEMAN PELA","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"ENTRADA"},{"nome":"RICARDO FRUGOLI","cidade":"SÃO PAULO","msgs":0,"ocs":0,"fase":"CONTRATO"},{"nome":"Roberto Tamio Murakami","cidade":"São Paulo/São Paulo","msgs":0,"ocs":0,"fase":"OECT"}],"[]":[{"nome":"PAULA CORREA NOGUEIRA ","cidade":"SÃO PAULO","msgs":3,"ocs":0,"fase":"CLIENTE FINALIZADO"},{"nome":"GABRIELA AZEVEDO FORLIN","cidade":"SÃO PAULO","msgs":23,"ocs":0,"fase":"CLIENTE FINALIZADO"}],"Juliana Santos":[{"nome":"MARINA PIRES DE AGUIAR","cidade":"SÃO PAULO","msgs":200,"ocs":4,"fase":"CLIENTE FINALIZADO"},{"nome":"GETULIO TURATTI OST","cidade":"SÃO PAULO / SP","msgs":144,"ocs":5,"fase":"CLIENTE FINALIZADO"}],"Thaísa de":[{"nome":" LOVELY RITA DIAS MENEZES    SEGUNDA FASE ","cidade":"SP; CEP: 01.532","msgs":125,"ocs":0,"fase":"INFORMAÇÕES LOGÍSTICAS"}],"Pedro Marçal":[{"nome":"MONTI MARE ADMINISTRACAO DE BENS PROPRIOS LTDA ADITIVO.","cidade":"PORTO SEGURO","msgs":7,"ocs":0,"fase":"CLIENTE FINALIZADO"}],"Renata Garcia":[{"nome":"RODOLFO FRANK MUNHOZ DA ROCHA","cidade":"Curitba","msgs":0,"ocs":0,"fase":"CONTRATO"}]}};
+
+// Fade-in progressivo
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('visible');
   });
 }, { threshold: 0.15 });
 document.querySelectorAll('.slide').forEach(s => observer.observe(s));
+
+// Drill-down: clicar em barra de região/consultor abre lista de obras
+document.querySelectorAll('.ibar-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const type = item.dataset.drill;
+    const key = item.dataset.key;
+    const drillDiv = item.querySelector('.ibar-drilldown');
+
+    // Se já está aberto, fecha
+    if (drillDiv.classList.contains('open')) {
+      drillDiv.classList.remove('open');
+      return;
+    }
+
+    // Fecha todos os outros do mesmo grupo
+    item.closest('.ichart-section').querySelectorAll('.ibar-drilldown.open').forEach(d => d.classList.remove('open'));
+
+    // Busca projetos
+    const source = type === 'regiao' ? DRILL.porRegiao : DRILL.porConsultor;
+    const projetos = source[key] || [];
+
+    if (!projetos.length) {
+      drillDiv.innerHTML = '<div style="color:#666;font-size:12px;padding:8px 0">Nenhum projeto encontrado.</div>';
+    } else {
+      const rows = projetos
+        .sort((a, b) => b.msgs - a.msgs)
+        .map(p => {
+          const fase = (p.fase || '').substring(0, 18);
+          return '<tr><td>' + (p.nome || '').substring(0, 28) + '</td><td>' + (p.cidade || '').substring(0, 15) + '</td><td>' + (p.msgs || 0) + '</td><td class="oc">' + (p.ocs || 0) + '</td><td>' + fase + '</td></tr>';
+        }).join('');
+
+      drillDiv.innerHTML = '<table class="drill-table"><tr><th>Projeto</th><th>Cidade</th><th>Msgs</th><th>Ocs</th><th>Fase</th></tr>' + rows + '</table><div class="drill-close" onclick="event.stopPropagation();this.parentElement.classList.remove('open')">fechar ✕</div>';
+    }
+
+    drillDiv.classList.add('open');
+  });
+});
 </script>
 
 </body>
