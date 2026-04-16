@@ -261,6 +261,63 @@
 
   hr.div { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
+  /* ============== BACKLOG CRÍTICO ============== */
+  .backlog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 18px; }
+  .bk-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 16px; text-align: left; cursor: pointer; color: inherit; font-family: inherit;
+    transition: all .15s; display: flex; flex-direction: column; gap: 6px;
+    border-left: 4px solid #888;
+  }
+  .bk-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .bk-card.crit { border-left-color: var(--red); }
+  .bk-card.warn { border-left-color: var(--amber); }
+  .bk-num { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 600; color: #fff; line-height: 1; }
+  .bk-title { font-size: 14px; color: var(--accent); font-weight: 600; margin-top: 4px; }
+  .bk-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .bk-action { font-size: 10px; color: var(--green); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; font-weight: 500; }
+  .bk-counter { display: inline-block; font-size: 11px; color: var(--muted); margin-left: 10px; font-weight: 400; letter-spacing: 0.05em; }
+
+  .bk-modal {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto;
+  }
+  .bk-modal.open { display: flex; }
+  .bk-modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+  }
+  .bk-modal-box {
+    position: relative; background: var(--card); border: 1px solid var(--border-2);
+    border-radius: 10px; max-width: 1000px; width: 100%; padding: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .bk-modal-box h3 { font-size: 18px; color: #fff; margin-bottom: 6px; }
+  .bk-modal-box h3 span { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+  .bk-action-detail {
+    font-size: 12px; color: #bbb; line-height: 1.6;
+    background: var(--bg); border-left: 3px solid var(--accent);
+    padding: 10px 14px; margin: 14px 0; border-radius: 0 4px 4px 0;
+  }
+  .bk-close {
+    position: absolute; top: 14px; right: 14px;
+    background: transparent; border: none; color: var(--muted);
+    font-size: 22px; cursor: pointer; line-height: 1; padding: 4px 10px; border-radius: 4px;
+  }
+  .bk-close:hover { background: #1a1a1a; color: #fff; }
+  .bk-modal table.t { width: 100%; font-size: 12px; }
+  .bk-modal table.t thead th { background: var(--bg); position: static; }
+  .bk-modal a.portal {
+    color: var(--accent); text-decoration: none; font-size: 11px;
+    font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+  }
+  .bk-modal a.portal:hover { text-decoration: underline; }
+  .bk-modal .row-crit td { background: rgba(232,123,123,0.04); }
+
+  @media (max-width: 720px) {
+    .bk-modal { padding: 0; align-items: stretch; }
+    .bk-modal-box { border-radius: 0; padding: 20px 16px; min-height: 100vh; }
+  }
+
 </style>
 </head>
 <body>
@@ -269,6 +326,7 @@
   <div class="top-row">
     <h1>Central de Qualidade Monofloor — <span class="acc">Dashboard Executivo</span></h1>
     <div class="links">
+      <a href="#backlog">Backlog crítico</a>
       <a href="obras-mapa.html">Mapa detalhado de obras</a>
       <span class="stamp"><span class="mono">2026-04-15</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
     </div>
@@ -520,6 +578,214 @@
       </div>
     </div>
   </section>
+
+  <!-- ============== BACKLOG CRÍTICO ============== -->
+  <section id="backlog">
+    <div class="section-head">
+      <div class="section-kicker">Backlog Crítico</div>
+      <div class="section-title">Pendências acionáveis <span class="bk-counter">5 frentes · 50 obras + 5 IDs + 3 conflitos</span></div>
+      <div class="section-sub">Pendências que precisam de decisão imediata. Clique para ver lista nominal, idade, ação sugerida e link pro portal da obra.</div>
+    </div>
+
+    <div class="backlog-grid">
+      <button class="bk-card crit" onclick="openBacklog('zumbi')">
+        <div class="bk-num">16</div>
+        <div class="bk-title">Obras zumbi</div>
+        <div class="bk-sub">CLIENTE FINALIZADO sem fechar — mediana 208d · máx 313d</div>
+        <div class="bk-action">Encerrar status no sistema</div>
+      </button>
+
+      <button class="bk-card crit" onclick="openBacklog('lideres')">
+        <div class="bk-num">5</div>
+        <div class="bk-title">Líderes ocultos</div>
+        <div class="bk-sub">UUIDs liderando hoje sem cadastro em /api/equipes — 13 obras escaladas</div>
+        <div class="bk-action">Identificar pessoa e cadastrar</div>
+      </button>
+
+      <button class="bk-card warn" onclick="openBacklog('orfas')">
+        <div class="bk-num">18</div>
+        <div class="bk-title">Obras órfãs</div>
+        <div class="bk-sub">Sem consultor — mediana 161d · 4 críticas &gt;180d · 3 com bug de cadastro</div>
+        <div class="bk-action">Atribuir consultor</div>
+      </button>
+
+      <button class="bk-card crit" onclick="openBacklog('conflitos')">
+        <div class="bk-num">3</div>
+        <div class="bk-title">Conflitos hoje</div>
+        <div class="bk-sub">Aplicadores não-líderes em 2 obras simultâneas no mesmo dia</div>
+        <div class="bk-action">Validar escalação com encarregado</div>
+      </button>
+
+      <button class="bk-card warn" onclick="openBacklog('lotevt')">
+        <div class="bk-num">8</div>
+        <div class="bk-title">Lote VT congelado</div>
+        <div class="bk-sub">Obras com idade EXATAMENTE 260d — mesmo evento travado · 87,5% Luana</div>
+        <div class="bk-action">Reabrir agendamento</div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============== MODAL: ZUMBI ============== -->
+  <div class="bk-modal" id="modal-zumbi">
+    <div class="bk-modal-bg" onclick="closeBacklog()"></div>
+    <div class="bk-modal-box">
+      <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
+      <h3>Obras zumbi <span>16 obras · ação: encerrar status no sistema</span></h3>
+      <p class="bk-action-detail">
+        <strong style="color:#c4a77d">Por que:</strong> CLIENTE FINALIZADO indica que a obra acabou fisicamente, mas o status no CRM continua em aberto (em_execucao, planejamento, aguardando). Resultado: aparece no painel como ativa indevidamente, distorcendo carga e SLA. Mediana de idade 208d, máx 313d (Vanessa Pimentel — Luana, há 10 meses).
+      </p>
+      <table class="t">
+        <thead><tr>
+          <th>Cliente</th><th>Cidade</th><th>Status</th><th>Consultor</th>
+          <th class="num">Idade</th><th>Ação</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="cli">VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL</td><td class="ct">SÃO PAULO</td><td class="ct">Ag. Execução</td><td class="ct">Luana Patricia</td><td class="num scarlet">313d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/db4288be-e19e-4f9e-bca6-5023e1ae8e14" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">ANDRE KEUNECKE SALERNO</td><td class="ct">SÃO PAULO</td><td class="ct">Em Execução</td><td class="ct">Luana Patricia</td><td class="num scarlet">275d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/b8fbadd8-778c-4a3b-9e18-81bba29a6a8e" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">JOÃO EDUARDO MARTINS KUHLMANN</td><td class="ct">CURITIBA</td><td class="ct">Em Execução</td><td class="ct">Pedro Alexandre</td><td class="num red">264d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/2d00e03f-dfab-49fc-83ef-74ed1995e228" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">PEDRO HENRIQUE SETTI SEIVERS</td><td class="ct">SÃO BERNARDO DO CAMPO</td><td class="ct">Ag. Execução</td><td class="ct">Wesley Matheus</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/1ea08f00-3aa7-4cf1-b09b-32e69c9e98bc" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">GETULIO TURATTI OST</td><td class="ct">SÃO PAULO / SP</td><td class="ct">Marcas/Rolo/Cera</td><td class="ct">Juliana Santos</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0e4e10b2-9fbe-49a4-9e42-08ae5624b39c" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">GUILHERME HAIDAR BERJEAUT</td><td class="ct">SÃO PAULO / SP</td><td class="ct">Marcas/Rolo/Cera</td><td class="ct">Wesley Matheus</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/abb93b6f-ef09-4147-b1f2-174c9bc9c80b" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)</td><td class="ct">SÃO PAULO</td><td class="ct">Planejamento</td><td class="ct">Wesley Matheus</td><td class="num red">218d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/097ee21f-3e27-4904-9929-86aa8b1d6fba" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">VITOR FLAMIA DE BARROS COSTA</td><td class="ct">SÃO PAULO</td><td class="ct">Em Execução</td><td class="ct">Wesley Matheus</td><td class="num red">211d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c9560bb7-9049-4b59-b63d-f5b2834eb234" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">RONALDO PORTUGAL BACELLAR FILHO</td><td class="ct">EXTERNA</td><td class="ct">Ag. Clima</td><td class="ct">Wesley Matheus</td><td class="num red">205d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/559e9123-fbf4-48d2-8570-7edb6031c094" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">RICARDO GUIMARAES VIEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Planejamento</td><td class="ct">Wesley Matheus</td><td class="num red">205d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/ddb7768a-521e-4164-9714-120250376edd" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">GUILHERME LANGER</td><td class="ct">EXTERNA</td><td class="ct">Ag. Clima</td><td class="ct">Wesley Matheus</td><td class="num red">202d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a9cf011c-d305-4cc5-8d04-fe65e00b6c09" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">PAULA CORREA NOGUEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Ag. Clima</td><td class="ct">[bug array]</td><td class="num red">196d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c6908776-f200-4b20-87eb-0e9d9a80eda7" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">MARISA NATALIA PINTO</td><td class="ct">RIO DE JANEIRO</td><td class="ct">Planejamento</td><td class="ct">Wesley Matheus</td><td class="num">176d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a8eff05f-a2f9-473e-96b1-5a0cc39e371b" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">MAJORELLE HOLDINGS LTDA</td><td class="ct">CEP 80420</td><td class="ct">Em Execução</td><td class="ct">Wesley Matheus</td><td class="num">159d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/2ee38aff-9782-4504-b322-10cb7da6626a" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">CASA VIK ADM. SALOES DE BELEZA KUKLIK LTDA</td><td class="ct">Av. Visc. do Rio Branco</td><td class="ct">Ag. Execução</td><td class="ct">Wesley Matheus</td><td class="num">154d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">Roberto Tamio Murakami</td><td class="ct">São Paulo/São Paulo</td><td class="ct">Reparo</td><td class="ct">(sem)</td><td class="num ct">s/data</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/1231fb6a-8d41-4ff1-a98c-635cc35a577c" target="_blank">Encerrar →</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============== MODAL: LÍDERES OCULTOS ============== -->
+  <div class="bk-modal" id="modal-lideres">
+    <div class="bk-modal-bg" onclick="closeBacklog()"></div>
+    <div class="bk-modal-box">
+      <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
+      <h3>Líderes ocultos <span>5 IDs · ação: identificar e cadastrar como LIDER</span></h3>
+      <p class="bk-action-detail">
+        <strong style="color:#c4a77d">Por que:</strong> 5 IDs aparecem como liderId em escalações hoje mas não existem em /api/equipes. São os encarregados REAIS das ex-equipes Gilmar/Egberto/Michael (líderes oficiais inativos ou divergentes do organograma). Sem nome cadastrado, qualquer relatório de produtividade por equipe sai distorcido.
+      </p>
+      <table class="t">
+        <thead><tr>
+          <th>UUID curto</th><th class="num">Obras hoje</th><th>Equipe que gerencia de fato</th>
+          <th>Hipótese</th><th>Ação</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row-crit"><td class="id">26e0b659</td><td class="num">5</td><td class="ct">Equipe Gilmar (líder oficial INATIVO)</td><td class="ct">Encarregado regional substituto da ex-equipe Gilmar</td><td><span class="chip am">Cadastrar LIDER</span></td></tr>
+          <tr class="row-crit"><td class="id">6b237d14</td><td class="num">3</td><td class="ct">Equipe Michael (membros origem Michael)</td><td class="ct">Líder real da Equipe Michael (Cosme aparece como APLICADOR_3)</td><td><span class="chip am">Cadastrar LIDER</span></td></tr>
+          <tr class="row-crit"><td class="id">8c9780dd</td><td class="num">3</td><td class="ct">Equipe Egberto (líder oficial INATIVO)</td><td class="ct">Encarregado regional substituto Egberto Sulivan</td><td><span class="chip am">Cadastrar LIDER</span></td></tr>
+          <tr><td class="id">3be92339</td><td class="num">1</td><td class="ct">(não mapeado)</td><td class="ct">Líder pontual de uma obra finalizada (75cd8441 — PLAUTOS CATTALINI)</td><td><span class="chip am">Cadastrar LIDER</span></td></tr>
+          <tr><td class="id">3c66db13</td><td class="num">1</td><td class="ct">(não mapeado)</td><td class="ct">Líder pontual de uma obra (b8fbadd8 — Andre Keunecke)</td><td><span class="chip am">Cadastrar LIDER</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============== MODAL: ÓRFÃS ============== -->
+  <div class="bk-modal" id="modal-orfas">
+    <div class="bk-modal-bg" onclick="closeBacklog()"></div>
+    <div class="bk-modal-box">
+      <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
+      <h3>Obras órfãs <span>18 obras · ação: atribuir consultor</span></h3>
+      <p class="bk-action-detail">
+        <strong style="color:#c4a77d">Por que:</strong> 18 obras ativas com consultor vazio, null ou literal "[]". Sem responsável nominal, ninguém é cobrado pela movimentação — viram limbo. 4 obras já passaram de 180 dias órfãs (críticas). 3 têm bug de cadastro (consultor gravado como string "[]" em vez de null) — precisa correção no input do CRM antes de atribuir.
+      </p>
+      <table class="t">
+        <thead><tr>
+          <th>Cliente</th><th>Cidade</th><th>Status</th><th>Fase</th>
+          <th class="num">Idade</th><th>Bug?</th><th>Ação</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row-crit"><td class="cli">BERNARDO MAGALHÃES</td><td class="ct">RIO DE JANEIRO</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">243d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0b692354-92ec-4168-8b74-3ab4b6400a2b" target="_blank">Atribuir →</a></td></tr>
+          <tr class="row-crit"><td class="cli">GABRIELA AZEVEDO FORLIN</td><td class="ct">SÃO PAULO</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">211d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/e79c60c1-4169-4df5-b856-220fe82510db" target="_blank">Atribuir →</a></td></tr>
+          <tr class="row-crit"><td class="cli">REPULLO ASSESSORIA EM INFORMATICA LTDA</td><td class="ct">SÃO PAULO</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">205d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/2369c899-509f-4deb-a767-03f244854492" target="_blank">Atribuir →</a></td></tr>
+          <tr class="row-crit"><td class="cli">PAULA CORREA NOGUEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Ag. Clima</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">196d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c6908776-f200-4b20-87eb-0e9d9a80eda7" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">Andrea Almeida</td><td class="ct">Belo Horizonte</td><td class="ct">Reserva</td><td class="ct">ENTRADA</td><td class="num">161d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/096df7d0-a179-4a82-b719-0d392eec4bab" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">ANDRE SCHECHTMAN</td><td class="ct">CEP 01241</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num">154d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/5ebc1fc4-4c57-4075-96a7-53cf46970b61" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">Anelise (katharina)</td><td class="ct">Não informada</td><td class="ct">Reserva</td><td class="ct">ENTRADA</td><td class="num">119d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/8fe98c80-78f2-437f-b39e-976fc46e6f18" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">Marcelo Edwin (Campinas)</td><td class="ct">Campinas</td><td class="ct">Reserva</td><td class="ct">ENTRADA</td><td class="num">118d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a91c86c9-3f32-4d37-9470-891dd7214c3a" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">Agatha Moreira e Rodrigo Simas</td><td class="ct">Humaitá CEP 22260</td><td class="ct">Planejamento</td><td class="ct">ENTRADA</td><td class="num">28d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/74ddff0e-d7d0-4b8d-92bd-d566496205ab" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">Roberto Tamio Murakami</td><td class="ct">São Paulo/São Paulo</td><td class="ct">Reparo</td><td class="ct">OECT</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/1231fb6a-8d41-4ff1-a98c-635cc35a577c" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">ELIZETE DE FÁTIMA MARCONCIN</td><td class="ct">Curitiba/Paraná</td><td class="ct">Reparo</td><td class="ct">(vazio)</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/249220c9-61de-4336-b923-f75c320f1339" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">PAULA DAYAN</td><td class="ct">São Paulo/São Paulo</td><td class="ct">Planejamento</td><td class="ct">ENTRADA</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/316cd248-95c7-4fee-a81c-736540d627c3" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">RICARDO FRUGOLI</td><td class="ct">SÃO PAULO</td><td class="ct">Contrato</td><td class="ct">CONTRATO</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/4734a637-a15d-4830-9096-a60fcd1d5b08" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">GLAUCIA ALVES</td><td class="ct">Divinópolis/Minas Gerais</td><td class="ct">Reparo</td><td class="ct">ENTRADA</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/501b5b94-7185-4c88-a990-da23a069b7d5" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LTDA</td><td class="ct">São Paulo/São Paulo</td><td class="ct">Em Execução</td><td class="ct">(vazio)</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/6b4e6b8b-0f46-48bd-9a72-c72c1450f223" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">MARIANA KLUMB</td><td class="ct">São Paulo SP</td><td class="ct">Contrato</td><td class="ct">CONTRATO</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/6f3e9db1-98e6-4feb-b0b7-27c0a9aa8894" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">MAURICIO BATEMAN PELA</td><td class="ct">São Paulo/São Paulo</td><td class="ct">Reparo</td><td class="ct">ENTRADA</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/d51326f8-e34e-45dd-a355-669d10df3182" target="_blank">Atribuir →</a></td></tr>
+          <tr><td class="cli">MARIA H M COMPANY</td><td class="ct">São Caetano do Sul</td><td class="ct">Contrato</td><td class="ct">CONTRATO</td><td class="num ct">s/data</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/db76891b-3385-45fe-8899-550517789ae1" target="_blank">Atribuir →</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============== MODAL: CONFLITOS HOJE ============== -->
+  <div class="bk-modal" id="modal-conflitos">
+    <div class="bk-modal-bg" onclick="closeBacklog()"></div>
+    <div class="bk-modal-box">
+      <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
+      <h3>Conflitos físicos hoje <span>3 aplicadores · ação: validar escalação</span></h3>
+      <p class="bk-action-detail">
+        <strong style="color:#c4a77d">Por que:</strong> 3 aplicadores não-líderes escalados em 2 obras simultâneas no MESMO dia. Adalberto e Otávio estão nas mesmas 2 obras (Adriana Peres + Rafik Freua) — pode ser equipe dividida intencional ou erro de escalação. Líderes em múltiplas obras (João Carlos, Wiguens, Júlio) são esperados e não contam aqui.
+      </p>
+      <table class="t">
+        <thead><tr>
+          <th>Aplicador</th><th>Função</th><th>Equipe</th>
+          <th>Obra 1</th><th>Obra 2</th><th>Ação</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Adalberto Carlos Gomes Neto</td><td class="ct">PREPARADOR</td><td class="ct">Equipe Michael</td>
+            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/71a54604-b018-477e-9e72-231a345dc4de" target="_blank">71a54604</a> Adriana Peres</td>
+            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/feb975f6-4192-48b5-9b2a-ba62eaa779f1" target="_blank">feb975f6</a> Rafik Freua</td>
+            <td><span class="chip am">Validar com encarregado</span></td>
+          </tr>
+          <tr><td>Otávio Alves de Almeida</td><td class="ct">APLICADOR_2</td><td class="ct">Equipe Michael</td>
+            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/71a54604-b018-477e-9e72-231a345dc4de" target="_blank">71a54604</a> Adriana Peres</td>
+            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/feb975f6-4192-48b5-9b2a-ba62eaa779f1" target="_blank">feb975f6</a> Rafik Freua</td>
+            <td><span class="chip am">Validar com encarregado</span></td>
+          </tr>
+          <tr><td>Luiz Taciano</td><td class="ct">APLICADOR_1</td><td class="ct">Equipe Wiguens</td>
+            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/28aa71f9-beb1-404c-9fb3-0955f1daa8a9" target="_blank">28aa71f9</a> Flávio Fava</td>
+            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c1621370-4f28-4e9b-9f02-10032f9bf7a0" target="_blank">c1621370</a> Manoela Latini 2ª fase</td>
+            <td><span class="chip am">Validar com encarregado</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============== MODAL: LOTE VT CONGELADO ============== -->
+  <div class="bk-modal" id="modal-lotevt">
+    <div class="bk-modal-bg" onclick="closeBacklog()"></div>
+    <div class="bk-modal-box">
+      <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
+      <h3>Lote VT congelado <span>8 obras com idade=260d · ação: reabrir agendamento</span></h3>
+      <p class="bk-action-detail">
+        <strong style="color:#c4a77d">Por que:</strong> 8 obras com idade EXATAMENTE 260 dias = mesmo lote congelado num único evento (snapshot ou batch que travou). 87,5% Luana, todas em status planejamento, sem sinalização de bloqueio. Pode ser lote esquecido após mudança operacional. Concentração no interior SP (Piracicaba 2x, Marília, Campinas, Paulínia) sugere perda de cobertura territorial.
+      </p>
+      <table class="t">
+        <thead><tr>
+          <th>Cliente</th><th>Cidade</th><th>Consultor</th>
+          <th class="num">m²</th><th class="num">Idade</th><th>Ação</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="cli">EDUARDO PUERTA PERIANES</td><td class="ct">PIRACICABA / SP</td><td class="ct">Luana Patricia</td><td class="num">212,35</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/8ddbf80b-8bf6-4401-9a32-748141b8adf7" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">JORGE LUIZ BARBIERI GALLO</td><td class="ct">MARÍLIA / SP</td><td class="ct">Luana Patricia</td><td class="num">858,71</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/880fea7a-b169-45e7-851f-beefe4f47c76" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">JONATHAS DE ALMEIDA NUNES LUKAS</td><td class="ct">CAMPINAS / SP</td><td class="ct">Luana Patricia</td><td class="num">218,20</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a3cdf7af-c4f3-456d-ae7d-bc2d369b9dce" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">FREDERICO CUNHA VALIM</td><td class="ct">SÃO PAULO</td><td class="ct">Luana Patricia</td><td class="num">101,39</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/f2a24b2c-84f1-48fb-93e6-342c2136a1d4" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">MARCELO PUERTO PERIANES</td><td class="ct">PIRACICABA / SP</td><td class="ct">Luana Patricia</td><td class="num">222,05</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/dcd9bde5-1e7e-4ecc-ad18-b274ab9e6502" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">JULIANA DE ARAÚJO SILVA</td><td class="ct">PAULÍNIA / SP</td><td class="ct">Luana Patricia</td><td class="num">150,00</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/02779aa1-3848-40a3-a7f8-dc6e9ac2edb4" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA</td><td class="ct">SÃO PAULO</td><td class="ct">Luana Patricia</td><td class="num">190,57</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/5b0327a6-d35e-43b8-8fb7-4d2c9947d247" target="_blank">Reabrir VT →</a></td></tr>
+          <tr><td class="cli">RICARDO MARQUES MENDES</td><td class="ct">SÃO JOSÉ DO RIO PRETO / SP</td><td class="ct">Luana Patricia</td><td class="num">494,62</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/3f8df331-a86c-4563-bd18-33a2da9d6c48" target="_blank">Reabrir VT →</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- ============== TABELA TOP 30 ============== -->
   <section>
@@ -939,6 +1205,17 @@ renderQ3();
 renderQ4();
 renderAchados();
 renderTop30();
+
+// ============== BACKLOG MODAL ==============
+function openBacklog(id){
+  const m = document.getElementById('modal-' + id);
+  if (m) { m.classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+function closeBacklog(){
+  document.querySelectorAll('.bk-modal.open').forEach(m => m.classList.remove('open'));
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBacklog(); });
 </script>
 
 </body>
