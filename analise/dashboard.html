@@ -604,6 +604,32 @@
   .q1-seg.empty .q1-seg-num{color:#444}
   .q1-seg.empty:hover{filter:none;transform:none;cursor:default}
   .q1-stacked-legenda{font-size:11px;color:#666;text-align:right;margin-top:8px;font-style:italic}
+
+  /* ===== FALHAS DE SINCRONIZAÇÃO ===== */
+  #sync{margin-bottom:36px}
+  #sync .q-head{margin-bottom:18px}
+  #sync .q-head h2{font-size:22px;color:#fff;margin:0 0 6px;font-weight:600}
+  #sync .q-head .sub{font-size:12px;color:#888;line-height:1.6;max-width:760px;margin:0}
+  .sync-tag{display:inline-block;background:#e87b7b;color:#0a0a0a;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border-radius:3px;letter-spacing:0.12em;margin-bottom:8px;animation:syncPulse 2.5s ease-in-out infinite}
+  @keyframes syncPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,123,123,0.4)}50%{box-shadow:0 0 0 6px rgba(232,123,123,0)}}
+
+  .sync-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0}
+  .sync-card{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;padding:16px;cursor:pointer;text-align:left;color:inherit;font-family:inherit;transition:all .15s;border-left:3px solid #2a2a2a;display:flex;flex-direction:column;gap:8px}
+  .sync-card:hover{border-color:#c4a77d;transform:translateY(-2px)}
+  .sync-card.crit{border-left-color:#e87b7b}
+  .sync-card.warn{border-left-color:#e8c87b}
+  .sync-num-row{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
+  .sync-num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:#fff;line-height:1}
+  .sync-tag-tipo{font-size:10px;font-weight:600;letter-spacing:0.1em;color:#c4a77d;text-transform:uppercase}
+  .sync-card.crit .sync-tag-tipo{color:#e87b7b}
+  .sync-card.warn .sync-tag-tipo{color:#e8c87b}
+  .sync-desc{font-size:11px;color:#888;line-height:1.5}
+  .sync-action{font-size:10px;color:#7be8a8;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;margin-top:auto;padding-top:6px;border-top:1px solid #1a1a1a}
+
+  .sync-resumo{display:flex;align-items:center;gap:18px;padding:16px 20px;background:#0a0a0a;border:1px solid #1f1f1f;border-left:3px solid #c4a77d;border-radius:0 6px 6px 0;margin-top:14px}
+  .sync-resumo-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:#c4a77d;line-height:1}
+  .sync-resumo-text{font-size:13px;color:#bbb;line-height:1.6}
+  .sync-resumo-text b{color:#fff}
   </style>
 </head>
 <body>
@@ -992,6 +1018,82 @@
         <table class="q4-modal-tbl">
           <thead><tr><th>Cliente</th><th>Cidade</th><th class="num">m²</th><th>Quando</th><th>Equipe operacional</th></tr></thead>
           <tbody id="q4-fase-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FALHAS DE SINCRONIZAÇÃO ============== -->
+  <section id="sync">
+    <div class="q-head">
+      <div class="sync-tag">FALHAS DE SINCRONIZAÇÃO</div>
+      <h2>Obras com inconsistência entre sistemas</h2>
+      <p class="sub">5 tipos de drift detectados entre planejamento × painel × CRM. Estas obras poluem métricas porque aparecem como "ativas" em algum sistema mas já mudaram de estado em outro.</p>
+    </div>
+
+    <div class="sync-grid">
+      <button class="sync-card crit" onclick="openSyncModal('fossil')">
+        <div class="sync-num-row">
+          <div class="sync-num">20</div>
+          <div class="sync-tag-tipo">CRONOGRAMA FOSSILIZADO</div>
+        </div>
+        <div class="sync-desc">Planejamento marca como "ativa" mas painel já mostra concluída/finalizada. Sistema de planejamento não foi atualizado.</div>
+        <div class="sync-action">Atualizar planejamento</div>
+      </button>
+
+      <button class="sync-card crit" onclick="openSyncModal('zumbi')">
+        <div class="sync-num-row">
+          <div class="sync-num">16</div>
+          <div class="sync-tag-tipo">ZUMBI</div>
+        </div>
+        <div class="sync-desc">Fase = CLIENTE FINALIZADO mas status continua em aberto (em_execução, planejamento, aguardando). Operacionalmente terminada, administrativamente aberta.</div>
+        <div class="sync-action">Encerrar status no painel</div>
+      </button>
+
+      <button class="sync-card warn" onclick="openSyncModal('limbo')">
+        <div class="sync-num-row">
+          <div class="sync-num">22</div>
+          <div class="sync-tag-tipo">LIMBO STATUS × FASE</div>
+        </div>
+        <div class="sync-desc">Descasamento lógico geral entre status e faseAtual. Inclui zumbis + reparos em fase errada + obras sem fase + outros.</div>
+        <div class="sync-action">Auditar caso a caso</div>
+      </button>
+
+      <button class="sync-card warn" onclick="openSyncModal('escalacao')">
+        <div class="sync-num-row">
+          <div class="sync-num">3</div>
+          <div class="sync-tag-tipo">ESCALAÇÃO INVÁLIDA</div>
+        </div>
+        <div class="sync-desc">Escalação operacional do dia em obras já finalizadas. Equipe está sendo alocada em projeto que não existe mais.</div>
+        <div class="sync-action">Remover escalação</div>
+      </button>
+
+      <button class="sync-card warn" onclick="openSyncModal('bugarray')">
+        <div class="sync-num-row">
+          <div class="sync-num">3</div>
+          <div class="sync-tag-tipo">BUG ARRAY LITERAL</div>
+        </div>
+        <div class="sync-desc">Campo consultorNome serializado como string "[]" em vez de array vazio. Falha de importação — afeta obras de São Paulo no mesmo lote.</div>
+        <div class="sync-action">Corrigir importação</div>
+      </button>
+    </div>
+
+    <div class="sync-resumo">
+      <div class="sync-resumo-num">~43</div>
+      <div class="sync-resumo-text">obras únicas afetadas por algum tipo de drift entre as <b>208 ativas</b>. Aproximadamente <b>20%</b> da carteira tem inconsistência sistêmica que distorce as métricas reais.</div>
+    </div>
+
+    <div class="q4-modal" id="sync-modal">
+      <div class="q4-modal-bg" onclick="closeQ4Modal()"></div>
+      <div class="q4-modal-box">
+        <button class="q4-close" onclick="closeQ4Modal()">×</button>
+        <div class="q4-modal-head">
+          <h3 id="sync-modal-title">—</h3>
+        </div>
+        <p class="q4-fase-help" id="sync-modal-help"></p>
+        <table class="q4-modal-tbl">
+          <thead id="sync-modal-head"></thead>
+          <tbody id="sync-modal-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -1684,6 +1786,119 @@ const Q1_PLAN_OBRAS = [
   {cliente:"ÁUREO EUSTÁQUIO BRANDÃO",consultor:"Pedro Alexandre Santana",dias_atraso:121,dataTermino:"2025-12-15",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"GRAVE"},
   {cliente:"AMANDA CAROLINA FELICIO VANTINI",consultor:"Wesley Matheus de Carvalho",dias_atraso:54,dataTermino:"2026-02-20",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"MEDIA"}
 ];
+
+// ============== FALHAS DE SINCRONIZAÇÃO ==============
+// Limbo status × fase (cruz-limbo.json/descasamentos_suspeitos — 22 obras nas 12 combinações detectadas)
+const SYNC_LIMBO = [
+  {id_curto:"2d00e03f",cliente:"JOÃO EDUARDO MARTINS KUHLMANN",cidade:"CURITIBA",status:"em_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"Pedro Alexandre Santana",idade_dias:264},
+  {id_curto:"2ee38aff",cliente:"MAJORELLE HOLDINGS LTDA",cidade:"CEP 80420",status:"em_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:159},
+  {id_curto:"b8fbadd8",cliente:"ANDRE KEUNECKE SALERNO",cidade:"SÃO PAULO",status:"em_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:275},
+  {id_curto:"c9560bb7",cliente:"VITOR FLAMIA DE BARROS COSTA",cidade:"SÃO PAULO",status:"em_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:211},
+  {id_curto:"097ee21f",cliente:"CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)",cidade:"SÃO PAULO",status:"planejamento",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:218},
+  {id_curto:"a8eff05f",cliente:"MARISA NATALIA PINTO",cidade:"RIO DE JANEIRO",status:"planejamento",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:176},
+  {id_curto:"ddb7768a",cliente:"RICARDO GUIMARAES VIEIRA",cidade:"SÃO PAULO",status:"planejamento",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:205},
+  {id_curto:"0d8b5bb9",cliente:"CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA",cidade:"Av. Visc. do Rio Branco",status:"aguardando_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:154},
+  {id_curto:"1ea08f00",cliente:"PEDRO HENRIQUE SETTI SEIVERS",cidade:"SÃO BERNARDO DO CAMPO",status:"aguardando_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:260},
+  {id_curto:"db4288be",cliente:"VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL",cidade:"SÃO PAULO",status:"aguardando_execucao",faseAtual:"CLIENTE FINALIZADO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:313},
+  {id_curto:"192ee017",cliente:"GUILHERME WENTZ",cidade:"São Paulo",status:"reparo",faseAtual:"OBRA PAUSADA",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:175},
+  {id_curto:"cecc85af",cliente:"ANTONIO CARLOS CANTO PORTO NETO",cidade:"SÃO PAULO",status:"reparo",faseAtual:"OBRA PAUSADA",consultor:"Wesley Matheus de Carvalho",idade_dias:264},
+  {id_curto:"1ad11198",cliente:"PIERRE JULIEN CHAPRON",cidade:"SÃO PAULO",status:"reparo",faseAtual:"PÓS VENDAS ACIONADO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:260},
+  {id_curto:"906f9000",cliente:"NEWTON BRIAO MARQUES",cidade:"ARAUCARIA",status:"reparo",faseAtual:"PÓS VENDAS ACIONADO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:188},
+  {id_curto:"501b5b94",cliente:"GLAUCIA ALVES",cidade:"Divinópolis/Minas Gerais",status:"reparo",faseAtual:"ENTRADA",consultor:"",idade_dias:null},
+  {id_curto:"d51326f8",cliente:"MAURICIO BATEMAN PELA",cidade:"São Paulo/São Paulo",status:"reparo",faseAtual:"ENTRADA",consultor:"",idade_dias:null},
+  {id_curto:"249220c9",cliente:"ELIZETE DE FÁTIMA MARCONCIN",cidade:"Curitiba/Paraná",status:"reparo",faseAtual:"",consultor:"",idade_dias:null},
+  {id_curto:"e9f43227",cliente:"JOSE ANTUNES SOBRINHO",cidade:"FLORIANÓPOLIS",status:"reparo",faseAtual:"LOGÍSTICA - EM ENTREGA",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:86},
+  {id_curto:"1a869e86",cliente:"MISCI BRASIL COMERCIO DE MODA LTDA",cidade:"RIO DE JANEIRO",status:"reparo",faseAtual:"AGEND. VT - ENTRADA",consultor:"Wesley Matheus de Carvalho",idade_dias:70},
+  {id_curto:"6b4e6b8b",cliente:"LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LTDA (REAL COMERCIAL LTDA)",cidade:"São Paulo/São Paulo",status:"em_execucao",faseAtual:"",consultor:"",idade_dias:null},
+  {id_curto:"868406f1",cliente:"AVVA HOUSE LTDA - MOZART RODRIGUES",cidade:"FLORIANOPOLIS",status:"reparo",faseAtual:"OBRA CONCLUÍDA",consultor:"Wesley Matheus de Carvalho",idade_dias:166},
+  {id_curto:"1231fb6a",cliente:"Roberto Tamio Murakami",cidade:"São Paulo/São Paulo",status:"reparo",faseAtual:"OECT",consultor:"",idade_dias:null}
+];
+
+// Escalação inválida (cruz-escalacao.json/anomalas — escalações em obras finalizadas)
+const SYNC_ESCALACAO_INV = [
+  {cliente:"PLAUTOS CATTALINI LINS (ALETHA)",cidade:"CEP 81200",status:"finalizado",faseAtual:"AGUARDANDO LIBERAÇÃO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",idade_dias:72,n_membros:4},
+  {cliente:"NATHALIA DE FIGUEIREDO NUNES RABELO",cidade:"RIO DE JANEIRO",status:"finalizado",faseAtual:"LOGÍSTICA - EM COLETA",consultor:"Wesley Matheus de Carvalho",idade_dias:272,n_membros:4},
+  {cliente:"LEONARDO KAWANO",cidade:"SÃO PAULO",status:"finalizado",faseAtual:"CLIENTE FINALIZADO",consultor:"Wesley Matheus de Carvalho",idade_dias:203,n_membros:4}
+];
+
+// Bug array literal (cruz-orfas.json filtrado por bug_literal_array=true)
+const SYNC_BUGARRAY = [
+  {cliente:"REPULLO ASSESSORIA EM INFORMATICA LTDA",cidade:"SÃO PAULO",status:"reparo",faseAtual:"CLIENTE FINALIZADO",idade_dias:205},
+  {cliente:"PAULA CORREA NOGUEIRA",cidade:"SÃO PAULO",status:"aguardando_clima",faseAtual:"CLIENTE FINALIZADO",idade_dias:196},
+  {cliente:"GABRIELA AZEVEDO FORLIN",cidade:"SÃO PAULO",status:"reparo",faseAtual:"CLIENTE FINALIZADO",idade_dias:211}
+];
+
+function openSyncModal(tipo) {
+  if (tipo === 'zumbi') {
+    if (typeof openBacklog === 'function') {
+      openBacklog('zumbi');
+      return;
+    }
+  }
+
+  let title, help, columns, rows;
+
+  if (tipo === 'fossil') {
+    title = 'Cronograma fossilizado';
+    help = '20 obras que o sistema de planejamento ainda lista como ativas, mas o painel já marcou como finalizadas/concluídas. Essas obras puxam o atraso médio do planejamento (mediana 83d) sem refletir trabalho real pendente.';
+    columns = ['Cliente', 'Consultor', 'Atraso', 'Data prevista', 'Status real (painel)'];
+    rows = Q1_PLAN_OBRAS.filter(o => o.painel_ativa === false).sort((a,b) => b.dias_atraso - a.dias_atraso).map(o => [
+      q4EscHtml(o.cliente),
+      q4EscHtml(o.consultor || 'sem consultor'),
+      `<span class="num idade-esc">+${o.dias_atraso}d</span>`,
+      q4EscHtml(o.dataTermino),
+      q4EscHtml(o.status_real)
+    ]);
+  } else if (tipo === 'limbo') {
+    title = 'Limbo status × fase';
+    help = 'Obras com descasamento lógico entre o campo status e o faseAtual. Cada uma indica que algum sistema não foi atualizado quando outro mudou.';
+    columns = ['Cliente', 'Cidade', 'Status', 'Fase atual', 'Consultor', 'Idade'];
+    rows = SYNC_LIMBO.map(o => [
+      q4EscHtml(o.cliente),
+      q4EscHtml(o.cidade || ''),
+      `<span class="pill">${q4EscHtml(o.status || '')}</span>`,
+      q4EscHtml(o.faseAtual || ''),
+      q4EscHtml(o.consultor || '—'),
+      o.idade_dias != null ? `<span class="num">${o.idade_dias}d</span>` : '—'
+    ]);
+  } else if (tipo === 'escalacao') {
+    title = 'Escalação inválida';
+    help = '3 obras com escalação operacional do dia mas já marcadas como finalizadas no painel. Equipe está sendo alocada em projeto encerrado.';
+    columns = ['Cliente', 'Cidade', 'Status (painel)', 'Fase atual', 'Membros escalados'];
+    rows = SYNC_ESCALACAO_INV.map(o => [
+      q4EscHtml(o.cliente),
+      q4EscHtml(o.cidade || ''),
+      `<span class="pill">${q4EscHtml(o.status || '')}</span>`,
+      q4EscHtml(o.faseAtual || ''),
+      `<span class="num">${o.n_membros || '—'}</span>`
+    ]);
+  } else if (tipo === 'bugarray') {
+    title = 'Bug array literal';
+    help = '3 obras onde o campo consultorNome foi serializado como string literal "[]" em vez de array. Bug de importação no mesmo lote (provavelmente afeta lote SP). Corrigir na origem da importação.';
+    columns = ['Cliente', 'Cidade', 'Status', 'Fase atual', 'Idade'];
+    rows = SYNC_BUGARRAY.map(o => [
+      q4EscHtml(o.cliente),
+      q4EscHtml(o.cidade || ''),
+      `<span class="pill">${q4EscHtml(o.status || '')}</span>`,
+      q4EscHtml(o.faseAtual || ''),
+      o.idade_dias != null ? `<span class="num">${o.idade_dias}d</span>` : '—'
+    ]);
+  } else {
+    return;
+  }
+
+  document.getElementById('sync-modal-title').textContent = `${title} (${rows.length})`;
+  document.getElementById('sync-modal-help').textContent = help;
+
+  const head = document.getElementById('sync-modal-head');
+  head.innerHTML = '<tr>' + columns.map(c => `<th>${c}</th>`).join('') + '</tr>';
+
+  const tbody = document.getElementById('sync-modal-tbody');
+  tbody.innerHTML = rows.map(r => '<tr>' + r.map(cell => `<td>${cell}</td>`).join('') + '</tr>').join('') || `<tr><td colspan="${columns.length}" style="text-align:center;color:#666;padding:30px;font-style:italic">Sem obras nesta categoria.</td></tr>`;
+
+  document.getElementById('sync-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
 const Q1_TOTAIS = {
   NO_PRAZO: 0,
