@@ -70,15 +70,15 @@
   <div class="meta">
     <span>Última atualização: <b>2026-04-15</b></span>
     <span>Etapa atual: <b>2 — Cruzamentos</b></span>
-    <span>Cruzamentos entregues: <b>17</b></span>
-    <span>Backlog: <b>6</b></span>
+    <span>Cruzamentos entregues: <b>22</b></span>
+    <span>Backlog: <b>1</b> (consolidação)</span>
     <span>Abas mapeadas: <b>3/15</b></span>
   </div>
 </header>
 
 <div class="progress-bar">
   <div class="prog-step done">Etapa 1 · Acúmulo<span class="pct">100%</span></div>
-  <div class="prog-step doing">Etapa 2 · Cruzamentos<span class="pct">~74%</span></div>
+  <div class="prog-step done">Etapa 2 · Cruzamentos<span class="pct">96%</span></div>
   <div class="prog-step pending">Etapa 3 · Consolidação<span class="pct">0%</span></div>
   <div class="prog-step pending">Etapa 4 · Dashboard final<span class="pct">0%</span></div>
 </div>
@@ -119,7 +119,7 @@
 </section>
 
 <section>
-  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">17 concluídos</span></h2>
+  <h2>Etapa 2 — Cruzamentos entregues <span class="counter">22 concluídos</span></h2>
   <div class="task-list">
     <div class="task done">
       <div class="check">✓</div>
@@ -290,83 +290,85 @@
       </div>
       <div class="meta">c17</div>
     </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#18 Cronograma fossilizado (ex-#B11) <span class="pill crit">100% atrasado</span></div>
+        <div class="desc"><b>34/34 obras "ativas" no planejamento estão atrasadas</b> (mediana: 83 dias de atraso, máx 132d). <b>20/34 (58,8%) já foram concluídas/finalizadas</b> no painel — cronograma opera sobre realidade desatualizada. Wesley concentra metade das atrasadas-graves (7/14). 3 obras nem começaram apesar da dataTermino vencida.</div>
+        <div class="files"><code>dados/cruz-cronograma-fossil.json</code></div>
+      </div>
+      <div class="meta">c18</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#19 Aplicadores × carga real (ex-#B12)</div>
+        <div class="desc">82 cadastrados, <b>apenas 35 ativos (43%)</b>. 23 escalados hoje (65,7%), 12 ociosos. Desbalanceamento por equipe: <b>Wiguens 85,7% utilização vs Michael 40%</b>. <b>3 alertas críticos</b>: Adalberto, Otávio e Luiz Taciano escalados em 2 obras no MESMO dia — conflito físico potencial.</div>
+        <div class="files"><code>dados/cruz-aplicadores-carga.json</code></div>
+      </div>
+      <div class="meta">c19</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#20 Equipes fantasmas + líderes ocultos (ex-#B13) <span class="pill crit">achado grave</span></div>
+        <div class="desc"><b>5 líderes ocultos</b> que escalam obras mas NÃO existem em /api/equipes. <b>13/24 obras (54%) lideradas por IDs fantasma</b>. Equipe Egberto: líder + 12 membros inativos, mas operação 100% sombra (3 obras hoje, 12 aplicadores não cadastrados). Equipe João: líder ativo + 0 membros ativos (usa pool da Wiguens). Equipe Michael: "líder" Cosme tem função APLICADOR_3, não LIDER. <b>29 pessoas operam hoje sem cadastro</b>.</div>
+        <div class="files"><code>dados/cruz-equipes-fantasma.json</code></div>
+      </div>
+      <div class="meta">c20</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#21 Alertas de risco — análise textual (ex-#B14)</div>
+        <div class="desc">204 obras ativas com alertas, 788 alertas no total. <b>Categorização por keyword é fraca</b>: 87% caem em OUTROS (vocabulário real usa "silêncio/abandono/pendência" que escapam às regex). Top 2 consultores = 84% das obras com alerta. Apenas <b>10 obras críticas (RISCO_ADIAMENTO + idade&gt;180d)</b>. Idade mediana das obras com alerta: 203d — alertas são sintoma de antiguidade.</div>
+        <div class="files"><code>dados/cruz-alertas.json</code></div>
+      </div>
+      <div class="meta">c21</div>
+    </div>
+
+    <div class="task done">
+      <div class="check">✓</div>
+      <div class="body">
+        <div class="title">#22 Cores indefinidas (ex-#B15)</div>
+        <div class="desc"><b>41,8% das ativas (87/208) sem cor real</b>. 40 SEM_COR + 47 PLACEHOLDER. Travamento em 2 pontos: <b>AGEND. VT - AFERIÇÃO (25 obras, 116d)</b> antes do VT, e <b>CLIENTE FINALIZADO (16 obras, 207d)</b> pós-obra (abandono de campo). <b>0 críticas em fase avançada</b> (indústria/logística/execução) — gargalo nas pontas, não no meio.</div>
+        <div class="files"><code>dados/cruz-cores.json</code></div>
+      </div>
+      <div class="meta">c22</div>
+    </div>
   </div>
 
   <div class="findings">
-    <b>Insights transversais até aqui:</b>
+    <b>Insights transversais consolidados:</b>
     <ul style="margin:8px 0 0 20px;font-size:12px;line-height:1.7">
-      <li>O painel atual não mostra: <b>~30 obras em CLIENTE FINALIZADO nunca fechadas</b> — maior cluster antigo. Gargalo é administrativo, não operacional.</li>
-      <li>Bus factor = 2: Luana + Wesley = 85% das ativas, 91% das 180+. Sem um deles, operação colapsa.</li>
-      <li>49% das obras ativas estão no radar há mais de 6 meses (101 de 208).</li>
-      <li>Pipefy começou em 2025-06-04 — idade máxima possível na nossa base = 315 dias. Para histórico anterior, fonte externa.</li>
+      <li><b>Cronograma fossilizado:</b> 100% das obras "ativas" no planejamento estão atrasadas, 58,8% já foram concluídas mas continuam no plano. Sistema opera sobre realidade desatualizada.</li>
+      <li><b>Operação sombra:</b> 5 líderes ocultos lideram 54% das obras escaladas hoje. 29 pessoas operam sem cadastro em equipe. Equipe Egberto roda 100% por fora do CRM.</li>
+      <li><b>Conflito físico:</b> 3 aplicadores escalados em 2 obras no MESMO dia (Adalberto, Otávio, Luiz Taciano).</li>
+      <li><b>Cluster antigo no fim do funil:</b> 16 obras em CLIENTE FINALIZADO sem cor (207d média) + ~30 nunca fechadas. Gargalo é administrativo.</li>
+      <li><b>Bus factor = 2:</b> Luana + Wesley = 85% das ativas, 91% das 180+. Wesley concentra 62,5% dos zumbi; Luana concentra 80% da cauda longa de AGEND. VT.</li>
+      <li><b>Cobertura de comunicação:</b> 43% das ativas nunca tiveram resumo WhatsApp; alertas perderam discriminação (117/118 têm alerta).</li>
+      <li><b>Taxonomia quebrada:</b> 67% das ocorrências em "Outros"; 41,8% das obras sem cor real; alertas em texto livre escapam às regex.</li>
+      <li><b>Pipefy começou em 2025-06-04</b> — idade máxima possível = 315 dias. Histórico anterior precisa de fonte externa.</li>
     </ul>
   </div>
 </section>
 
 <section>
-  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">6 ideias</span></h2>
+  <h2>Backlog — cruzamentos e análises pendentes <span class="counter">1 ideia</span></h2>
   <div class="task-list">
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B11 Cronograma fossilizado — obras ativas com dataTermino no passado</div>
-        <div class="desc">Planejamento mostrou 33/33 obras ativas com dataTermino &lt; hoje. Cruzar IDs com painel-temporal para ver status real e quem é consultor.</div>
-        <div class="files"><span class="tag">planejamento</span> <span class="tag">fossil</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B12 Aplicadores × carga hoje × carga mensal</div>
-        <div class="desc">70 cadastrados, 31 ativos, 6 equipes. Qual a distribuição real de obras por aplicador? Há aplicador sobrecarregado/ocioso?</div>
-        <div class="files"><span class="tag">equipe</span> <span class="tag">capacidade</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B13 Equipes fantasmas (João, Egberto, Gilmar)</div>
-        <div class="desc">3 de 6 equipes têm líder ou membros 100% inativos. Como estão fazendo obras? Encarregados ocultos (5 IDs em escalação) assumem.</div>
-        <div class="files"><span class="tag">equipe</span> <span class="tag">dados sujos</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B14 Obras com alertas no whatsappSummary</div>
-        <div class="desc">pendenciaManual.whatsappSummary.alertas (ex: "RISCO DE NOVO ADIAMENTO"). Quantas obras têm alertas vermelhos? Quem é consultor?</div>
-        <div class="files"><span class="tag">risco</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
-    <div class="task backlog">
-      <div class="check">○</div>
-      <div class="body">
-        <div class="title">#B15 Cores placeholder "À DEFINIR" / "PERSONALIZADA" (31 obras)</div>
-        <div class="desc">Obras com cor indefinida há quanto tempo? Está segurando o pipeline? Cruzar com idade.</div>
-        <div class="files"><span class="tag">gaps</span></div>
-      </div>
-      <div class="meta"></div>
-    </div>
-
     <div class="task backlog">
       <div class="check">○</div>
       <div class="body">
         <div class="title">#B16 Painel integrado de obras antigas (consolidação visual)</div>
-        <div class="desc">Pegar todos os cruzamentos entregues e montar um ranking único com filtros: por consultor, fase, cidade, tipo. Preparação pra Etapa 3.</div>
+        <div class="desc">Pegar todos os cruzamentos entregues e montar um ranking único com filtros: por consultor, fase, cidade, tipo. <b>Preparação pra Etapa 3 — Consolidação.</b></div>
         <div class="files"><span class="tag">dashboard</span> <span class="tag">consolidação</span></div>
       </div>
-      <div class="meta"></div>
+      <div class="meta">próx.</div>
     </div>
-
   </div>
 </section>
 
