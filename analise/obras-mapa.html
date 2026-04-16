@@ -39,6 +39,8 @@
   .top h1 { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
   .top h1 span.acc { color: var(--accent); }
   .top .stamp { font-size: 11px; color: var(--muted); }
+  .top .back { font-size: 11px; color: var(--accent); text-decoration: none; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; display: inline-block; margin-bottom: 10px; transition: all .15s; }
+  .top .back:hover { background: #1a1a1a; border-color: var(--accent); }
   .stamp .mono { color: var(--text); }
 
   .metrics { display: flex; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
@@ -190,6 +192,7 @@
 <body>
 
 <header class="top">
+  <a href="dashboard.html" class="back">← Voltar ao Dashboard Executivo</a>
   <div class="top-row">
     <h1>Mapa de Obras Ativas <span class="acc">— 208 obras, 23 cruzamentos consolidados</span></h1>
     <div class="stamp">última atualização <span class="mono">2026-04-15</span></div>
@@ -239,6 +242,7 @@
 </div>
 
 <footer>
+  <a href="dashboard.html">← dashboard executivo</a> ·
   <a href="plano.html">plano.html</a> ·
   <a href="modelagem.html">modelagem.html</a> ·
   <a href="index.html">índice</a>
