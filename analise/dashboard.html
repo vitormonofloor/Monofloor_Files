@@ -371,6 +371,53 @@
   .q2-diag-card .text{color:#bbb;white-space:pre-wrap}
 
   .idade-ok{color:#7be8a8} .idade-warn{color:#e8c87b} .idade-crit{color:#e87b7b} .idade-esc{color:#ff5555;font-weight:600}
+
+  /* ===== Q3 — Equipes operacionais ===== */
+  .q3-equipes-head{display:flex;justify-content:space-between;align-items:baseline;margin:24px 0 10px;flex-wrap:wrap;gap:8px}
+  .q3-equipes-head h3{font-size:13px;color:#c4a77d;text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+  .q3-equipes-head .legenda{font-size:11px;color:#666;font-style:italic}
+
+  .q3-grid{display:grid;grid-template-columns:280px 1fr;gap:16px}
+  @media(max-width:900px){.q3-grid{grid-template-columns:1fr}}
+
+  .q3-eq-list{display:flex;flex-direction:column;gap:8px}
+  .q3-eq-card{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:12px;cursor:pointer;transition:all .15s;border-left:3px solid #2a2a2a;text-align:left;color:inherit;font:inherit;width:100%}
+  .q3-eq-card:hover{border-color:#c4a77d}
+  .q3-eq-card.active{border-color:#c4a77d;border-left-color:#c4a77d;background:#161616}
+  .q3-eq-card.fantasma{border-left-color:#e87b7b}
+  .q3-eq-card.saudavel{border-left-color:#7be8a8}
+  .q3-eq-card.parcial{border-left-color:#e8c87b}
+  .q3-eq-card.sombra{border-left-color:#9c7be8;border-style:solid}
+  .q3-eq-name{font-size:13px;color:#fff;font-weight:600;margin-bottom:2px}
+  .q3-eq-leader{font-size:11px;color:#c4a77d;margin-bottom:8px}
+  .q3-eq-leader.oculto{color:#e87b7b;font-style:italic}
+  .q3-eq-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#888}
+  .q3-eq-stats div{display:flex;flex-direction:column}
+  .q3-eq-stats b{color:#fff;font-size:14px;font-weight:600}
+  .q3-eq-stats .lbl{color:#666;font-size:9px;text-transform:uppercase;letter-spacing:0.06em}
+  .q3-eq-util-bar{height:3px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin-top:8px}
+  .q3-eq-util-bar div{height:100%;border-radius:2px}
+
+  .q3-eq-detail{display:flex;flex-direction:column;gap:14px}
+  .q3-eq-cap, .q3-eq-obras{background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px;padding:14px}
+  .q3-eq-cap h4, .q3-eq-obras h4{font-size:11px;color:#c4a77d;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
+
+  .q3-cap-row{display:grid;grid-template-columns:120px 1fr 70px;gap:8px;align-items:center;font-size:11px;margin-bottom:6px}
+  .q3-cap-row .nome{color:#bbb;font-family:'JetBrains Mono',monospace;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .q3-cap-row .bar-out{height:14px;background:#141414;border-radius:3px;overflow:hidden;position:relative}
+  .q3-cap-row .bar-cap{position:absolute;inset:0;border:1px dashed #2a2a2a;border-radius:3px;background:rgba(196,167,125,0.05)}
+  .q3-cap-row .bar-use{position:relative;height:100%;background:linear-gradient(90deg,#c4a77d,#8a7355);border-radius:3px}
+  .q3-cap-row .pct{text-align:right;color:#c4a77d;font-family:'JetBrains Mono',monospace}
+  .q3-cap-row.crit .bar-use{background:linear-gradient(90deg,#e87b7b,#a55757)}
+
+  .q3-obras-table{width:100%;font-size:12px;border-collapse:collapse}
+  .q3-obras-table th{background:transparent;padding:6px 8px;font-size:10px;color:#666;text-transform:uppercase;letter-spacing:0.06em;text-align:left;border-bottom:1px solid #1f1f1f}
+  .q3-obras-table td{padding:8px;border-bottom:1px solid #161616;color:#bbb}
+  .q3-obras-table td .pill{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;text-transform:uppercase;letter-spacing:0.05em;color:#fff}
+  .q3-obras-table .num{text-align:right;font-family:'JetBrains Mono',monospace;color:#c4a77d}
+  .q3-obras-empty{color:#666;font-size:12px;font-style:italic;padding:20px;text-align:center}
+  .q3-obras-summary{font-size:11px;color:#888;margin-top:10px;padding-top:8px;border-top:1px solid #1f1f1f;display:flex;justify-content:space-between}
+  .q3-obras-summary b{color:#c4a77d;font-family:'JetBrains Mono',monospace}
   </style>
 </head>
 <body>
@@ -489,13 +536,14 @@
   </section>
 
   <!-- ============== Q3 — EQUIPE ============== -->
-  <section>
+  <section id="q3">
     <div class="section-head">
       <div class="section-kicker">Pergunta 3 da diretoria</div>
       <div class="section-title">A equipe está rendendo?</div>
-      <div class="section-sub">Concentração de carteira por consultor + utilização real dos aplicadores hoje.</div>
+      <div class="section-sub">Comparativo individual + utilização real dos aplicadores + drill-down por equipe. Clique numa equipe para ver as obras escaladas hoje.</div>
     </div>
 
+    <!-- Bloco 1: Luana vs Wesley + KPIs aplicadores -->
     <div class="grid-2">
       <div class="card">
         <div class="card-head"><div class="card-title">Luana vs Wesley</div><div class="card-sub">consultoras dominantes</div></div>
@@ -513,9 +561,25 @@
           <div class="kpi"><div class="lbl">Ociosos</div><div class="val warn" id="apl-ocio">—</div></div>
           <div class="kpi"><div class="lbl">Conflitos físicos</div><div class="val crit">3</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
         </div>
-        <hr class="div">
-        <div class="card-sub" style="margin-bottom:10px;">Utilização por equipe</div>
-        <div class="barlist" id="q3-equipes"></div>
+      </div>
+    </div>
+
+    <!-- Bloco 2: Equipes operacionais com drill-down -->
+    <div class="q3-equipes-head">
+      <h3>Equipes operacionais</h3>
+      <div class="legenda">utilização = escalados hoje / aplicadores ativos · clique numa equipe</div>
+    </div>
+    <div class="q3-grid">
+      <div class="q3-eq-list" id="q3-eq-list"></div>
+      <div class="q3-eq-detail">
+        <div class="q3-eq-cap">
+          <h4>Capacidade vs Uso · todas as equipes</h4>
+          <div id="q3-cap-bars"></div>
+        </div>
+        <div class="q3-eq-obras">
+          <h4 id="q3-obras-title">Selecione uma equipe</h4>
+          <div id="q3-obras-content"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1259,15 +1323,282 @@ function renderQ3() {
   $('apl-escal-pct').textContent = pct(apl.escalados, apl.total) + '%';
   $('apl-ocio').textContent = apl.ociosos;
 
-  const eqs = Object.entries(apl.por_equipe).sort((a,b) => b[1].pct_escalados - a[1].pct_escalados);
-  $('q3-equipes').innerHTML = eqs.map(([nome, d]) => {
-    const cls = d.pct_escalados >= 80 ? 'gn' : (d.pct_escalados >= 60 ? '' : 'am');
-    return `<div class="barlist-row">
-      <div class="barlist-lbl">${escHtml(nome)}</div>
-      <div class="barlist-bar ${cls}"><span style="width:${d.pct_escalados}%"></span></div>
-      <div class="barlist-val">${d.pct_escalados}% (${d.escalados}/${d.total})</div>
-    </div>`;
+  // Drill-down de equipes: render cards + capacidade + obras
+  q3Init();
+}
+
+// ===== Q3 — Drill-down equipes operacionais =====
+const Q3_EQUIPES = [
+  {
+    id: 'wiguens',
+    nome: 'Equipe Wiguens',
+    lider: 'Wiguens Louis',
+    lider_oculto: false,
+    estado: 'saudavel',
+    ativos: 14,
+    escalados_hoje: 12,
+    util_pct: 85.7,
+    obras_ids: [
+      '2ee38aff-9782-4504-b322-10cb7da6626a',
+      '7ddf797f-1edc-4af9-a8ef-e9a95cee9876',
+      'b8fbadd8-778c-4a3b-9e18-81bba29a6a8e',
+      '28aa71f9-beb1-404c-9fb3-0955f1daa8a9'
+    ]
+  },
+  {
+    id: 'joao',
+    nome: 'Equipe João',
+    lider: 'João Carlos',
+    lider_oculto: false,
+    estado: 'parcial',
+    ativos: 1,
+    escalados_hoje: 1,
+    util_pct: 100,
+    obras_ids: [
+      'f326dd44-3240-4d28-b411-15d574efaa9b',
+      'ea04728a-4ce4-4189-8936-236e6c743339',
+      'c9560bb7-9049-4b59-b63d-f5b2834eb234',
+      '4f79b468-f013-4da9-9eed-594bf150f89a',
+      'bd0894c1-95cc-4d42-ab81-861d97dbcfa7'
+    ]
+  },
+  {
+    id: 'julio',
+    nome: 'Equipe Júlio',
+    lider: 'Júlio Miranda',
+    lider_oculto: false,
+    estado: 'parcial',
+    ativos: 9,
+    escalados_hoje: 5,
+    util_pct: 55.6,
+    obras_ids: [
+      '0f3e836e-8e36-4436-bac8-51ef678b17c9',
+      'e6b38375-4075-4f79-9319-f15566722963'
+    ]
+  },
+  {
+    id: 'gilmar',
+    nome: 'Equipe Gilmar',
+    lider: 'Gilmar (líder INATIVO no cadastro)',
+    lider_oculto: false,
+    estado: 'parcial',
+    ativos: 1,
+    escalados_hoje: 1,
+    util_pct: 100,
+    obras_ids: []
+  },
+  {
+    id: 'michael',
+    nome: 'Equipe Michael',
+    lider: 'Cosme Eduardo (cadastrado APLICADOR_3)',
+    lider_oculto: false,
+    estado: 'fantasma',
+    ativos: 10,
+    escalados_hoje: 4,
+    util_pct: 40,
+    obras_ids: []
+  },
+  {
+    id: 'egberto',
+    nome: 'Equipe Egberto',
+    lider: 'Egberto Sulivan (INATIVO + 0 ativos)',
+    lider_oculto: false,
+    estado: 'fantasma',
+    ativos: 0,
+    escalados_hoje: 0,
+    util_pct: 0,
+    obras_ids: []
+  },
+  {
+    id: 'sombra-26e0b659',
+    nome: 'Sombra · 26e0b659',
+    lider: 'líder oculto (sem cadastro)',
+    lider_oculto: true,
+    estado: 'sombra',
+    ativos: 0,
+    escalados_hoje: 5,
+    util_pct: 0,
+    obras_ids: [
+      '0f32c116-96c2-4026-a17e-e0a92feacf7d',
+      '0d0c35bd-3b00-4de2-b898-4dfc61e6fdae',
+      '72379cc1-66cb-4016-b2da-ff8027ff606d',
+      '63623d90-e0c0-48e7-bc9d-eb45cc923af5',
+      '2d00e03f-dfab-49fc-83ef-74ed1995e228'
+    ]
+  },
+  {
+    id: 'sombra-6b237d14',
+    nome: 'Sombra · 6b237d14',
+    lider: 'líder oculto (sem cadastro)',
+    lider_oculto: true,
+    estado: 'sombra',
+    ativos: 0,
+    escalados_hoje: 3,
+    util_pct: 0,
+    obras_ids: [
+      '71a54604-b018-477e-9e72-231a345dc4de',
+      'feb975f6-4192-48b5-9b2a-ba62eaa779f1',
+      '3e5c6392-af93-427a-9e29-3a927e6d5dc6'
+    ]
+  },
+  {
+    id: 'sombra-8c9780dd',
+    nome: 'Sombra · 8c9780dd',
+    lider: 'líder oculto (sem cadastro)',
+    lider_oculto: true,
+    estado: 'sombra',
+    ativos: 0,
+    escalados_hoje: 3,
+    util_pct: 0,
+    obras_ids: [
+      'a932e81c-6e2d-4fab-926c-04f74bc5c2be',
+      'edc779fb-2dca-4d1a-864a-6234236cf145',
+      '210669e6-c8a4-4e88-93d9-291011a7b51b'
+    ]
+  },
+  {
+    id: 'sombra-outros',
+    nome: 'Sombras pontuais',
+    lider: '2 líderes ocultos + 1 sem id (3 obras)',
+    lider_oculto: true,
+    estado: 'sombra',
+    ativos: 0,
+    escalados_hoje: 3,
+    util_pct: 0,
+    obras_ids: [
+      '75cd8441-c75d-4b2a-9b61-3890647cba69',
+      '35d65b32-0c6e-47b0-91dd-f3fc3a8524d4',
+      'c1621370-4f28-4e9b-9f02-10032f9bf7a0'
+    ]
+  }
+];
+
+const Q3_OBRAS_HOJE = {
+  'f326dd44-3240-4d28-b411-15d574efaa9b': {cliente:'RODRIGO DE FARIA JARDIM', cidade:'SÃO PAULO / SP', status:'em_execucao', fase:'LOGÍSTICA - MATERIAL ENTREGUE', m2:105.63, n_membros:5},
+  '0f32c116-96c2-4026-a17e-e0a92feacf7d': {cliente:'GN DERMATO LTDA', cidade:'SÃO PAULO', status:'em_execucao', fase:'CONFIRMAÇÕES OP 1', m2:97.53, n_membros:5},
+  '71a54604-b018-477e-9e72-231a345dc4de': {cliente:'ADRIANA FERNANDES PERES', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:150.04, n_membros:4},
+  'ea04728a-4ce4-4189-8936-236e6c743339': {cliente:'CINTIA TIEMI KITA', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:37.33, n_membros:4},
+  'a932e81c-6e2d-4fab-926c-04f74bc5c2be': {cliente:'JULIANA GOMES (RICARDO RANAURO)', cidade:'RIO DE JANEIRO', status:'em_execucao', fase:'', m2:107.97, n_membros:6},
+  '75cd8441-c75d-4b2a-9b61-3890647cba69': {cliente:'PLAUTOS CATTALINI LINS (ALETHA)', cidade:'CEP 81200', status:'finalizado', fase:'', m2:195.16, n_membros:4},
+  'edc779fb-2dca-4d1a-864a-6234236cf145': {cliente:'NATHALIA DE FIGUEIREDO NUNES RABELO', cidade:'RIO DE JANEIRO', status:'finalizado', fase:'', m2:108.79, n_membros:4},
+  '0d0c35bd-3b00-4de2-b898-4dfc61e6fdae': {cliente:'LEONARDO KAWANO', cidade:'SÃO PAULO', status:'finalizado', fase:'', m2:null, n_membros:4},
+  '2ee38aff-9782-4504-b322-10cb7da6626a': {cliente:'MAJORELLE HOLDINGS LTDA', cidade:'CEP 80420', status:'em_execucao', fase:'', m2:1009, n_membros:2},
+  '0f3e836e-8e36-4436-bac8-51ef678b17c9': {cliente:'P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:65.55, n_membros:5},
+  'c9560bb7-9049-4b59-b63d-f5b2834eb234': {cliente:'VITOR FLAMIA DE BARROS COSTA', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:null, n_membros:4},
+  '7ddf797f-1edc-4af9-a8ef-e9a95cee9876': {cliente:'BENY MAJTLIS', cidade:'SÃO SEBASTIÃO', status:'em_execucao', fase:'', m2:186.78, n_membros:3},
+  'feb975f6-4192-48b5-9b2a-ba62eaa779f1': {cliente:'RAFIK WLADIMIR FREUA', cidade:'SÃO PAULO / SP', status:'em_execucao', fase:'', m2:113.15, n_membros:5},
+  'e6b38375-4075-4f79-9319-f15566722963': {cliente:'TALLY FELDMAN SINGAL GROSS', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:99.83, n_membros:5},
+  '72379cc1-66cb-4016-b2da-ff8027ff606d': {cliente:'BM VAREJO — M. FASHION', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:802.93, n_membros:7},
+  '63623d90-e0c0-48e7-bc9d-eb45cc923af5': {cliente:'LUIS FERNANDO DE LIMA CARVALHO', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:43.46, n_membros:3},
+  '2d00e03f-dfab-49fc-83ef-74ed1995e228': {cliente:'JOÃO EDUARDO MARTINS KUHLMANN', cidade:'CURITIBA', status:'em_execucao', fase:'', m2:305.16, n_membros:3},
+  '4f79b468-f013-4da9-9eed-594bf150f89a': {cliente:'LOVELY RITA DIAS MENEZES (2ª FASE)', cidade:'SP; CEP: 01.532', status:'em_execucao', fase:'', m2:57.66, n_membros:4},
+  '210669e6-c8a4-4e88-93d9-291011a7b51b': {cliente:'JOYCE BAHIENSE GOMES', cidade:'RIO DE JANEIRO', status:'em_execucao', fase:'', m2:93.24, n_membros:5},
+  '3e5c6392-af93-427a-9e29-3a927e6d5dc6': {cliente:'GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:66.28, n_membros:3},
+  '35d65b32-0c6e-47b0-91dd-f3fc3a8524d4': {cliente:'EDUARDO JOSE SCOTTI', cidade:'CURITIBA', status:'em_execucao', fase:'', m2:207.73, n_membros:4},
+  'b8fbadd8-778c-4a3b-9e18-81bba29a6a8e': {cliente:'ANDRE KEUNECKE SALERNO', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:182.75, n_membros:4},
+  '28aa71f9-beb1-404c-9fb3-0955f1daa8a9': {cliente:'FLÁVIO FAVA DITT', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:186.00, n_membros:4},
+  'c1621370-4f28-4e9b-9f02-10032f9bf7a0': {cliente:'MANOELA LATINI GAVASSI FRANCISCO 2ª FASE', cidade:'São Paulo', status:'em_execucao', fase:'', m2:484.95, n_membros:12},
+  'bd0894c1-95cc-4d42-ab81-861d97dbcfa7': {cliente:'PALLOMA BIANCA RAMIREZ URIZZI', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:200.10, n_membros:4}
+};
+
+function q3Init(){
+  const list = document.getElementById('q3-eq-list');
+  if (!list) return;
+  list.innerHTML = Q3_EQUIPES.map(e => {
+    const utilColor = e.util_pct >= 70 ? '#7be8a8' : e.util_pct >= 40 ? '#e8c87b' : '#e87b7b';
+    const liderCls = e.lider_oculto ? 'oculto' : '';
+    return `<button type="button" class="q3-eq-card ${e.estado}" data-id="${e.id}">
+      <div class="q3-eq-name">${escHtml(e.nome)}</div>
+      <div class="q3-eq-leader ${liderCls}">líder: ${escHtml(e.lider)}</div>
+      <div class="q3-eq-stats">
+        <div><span class="lbl">Ativos</span><b>${e.ativos}</b></div>
+        <div><span class="lbl">Escalados</span><b>${e.escalados_hoje}</b></div>
+        <div><span class="lbl">Util</span><b>${e.util_pct.toFixed(0)}%</b></div>
+      </div>
+      <div class="q3-eq-util-bar"><div style="width:${Math.min(e.util_pct,100)}%;background:${utilColor}"></div></div>
+    </button>`;
   }).join('');
+
+  list.querySelectorAll('.q3-eq-card').forEach(b => {
+    b.addEventListener('click', () => {
+      list.querySelectorAll('.q3-eq-card').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      q3ShowObras(b.dataset.id);
+    });
+  });
+
+  q3RenderCap();
+  // Selecionar Wiguens por padrão
+  const def = list.querySelector('.q3-eq-card[data-id="wiguens"]');
+  if (def) def.click();
+}
+
+function q3RenderCap(){
+  const el = document.getElementById('q3-cap-bars');
+  if (!el) return;
+  el.innerHTML = Q3_EQUIPES.map(e => {
+    const cls = e.util_pct < 40 ? 'crit' : '';
+    return `<div class="q3-cap-row ${cls}">
+      <div class="nome" title="${escHtml(e.nome)}">${escHtml(e.nome.replace('Equipe ',''))}</div>
+      <div class="bar-out"><div class="bar-cap"></div><div class="bar-use" style="width:${Math.min(e.util_pct,100)}%"></div></div>
+      <div class="pct">${e.util_pct.toFixed(0)}%</div>
+    </div>`;
+  }).join('') + `<div style="font-size:10px;color:#666;margin-top:8px;font-style:italic">Capacidade nominal = aplicadores ativos cadastrados. Uso = % escalados hoje. Linha tracejada = teto da equipe. Sombras não têm capacidade cadastrada.</div>`;
+}
+
+function q3ShowObras(equipeId){
+  const eq = Q3_EQUIPES.find(e => e.id === equipeId);
+  if (!eq) return;
+  const titleEl = document.getElementById('q3-obras-title');
+  const el = document.getElementById('q3-obras-content');
+  if (!titleEl || !el) return;
+
+  titleEl.textContent = `${eq.nome} — ${eq.obras_ids.length} obra${eq.obras_ids.length !== 1 ? 's' : ''} liderada${eq.obras_ids.length !== 1 ? 's' : ''} hoje`;
+
+  if (!eq.obras_ids.length) {
+    el.innerHTML = '<div class="q3-obras-empty">Sem obras lideradas por esta equipe hoje. Aplicadores podem estar emprestados a outras equipes.</div>';
+    return;
+  }
+
+  const obras = eq.obras_ids.map(id => Q3_OBRAS_HOJE[id]).filter(Boolean);
+  const totalM2 = obras.reduce((a,o) => a + (o.m2 || 0), 0);
+  const totalMembros = obras.reduce((a,o) => a + (o.n_membros || 0), 0);
+
+  el.innerHTML = `
+    <table class="q3-obras-table">
+      <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th><th class="num">Membros</th><th class="num">m²</th></tr></thead>
+      <tbody>
+        ${obras.map(o => `
+          <tr>
+            <td>${escHtml(o.cliente)}</td>
+            <td>${escHtml(o.cidade || '')}</td>
+            <td><span class="pill" style="background:${q3StatusColor(o.status)}">${escHtml(STATUS_LBL[o.status] || o.status || '')}</span></td>
+            <td class="num">${o.n_membros || '—'}</td>
+            <td class="num">${o.m2 ? o.m2.toLocaleString('pt-BR',{maximumFractionDigits:2}) : '—'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    <div class="q3-obras-summary">
+      <span>Total escalado para esta equipe hoje · ${totalMembros} aplicadores</span>
+      <span><b>${totalM2.toLocaleString('pt-BR',{maximumFractionDigits:0})} m²</b></span>
+    </div>
+  `;
+}
+
+function q3StatusColor(s){
+  const map = {
+    em_execucao:'#1d2a1d',
+    aguardando_execucao:'#2a221d',
+    planejamento:'#1a2330',
+    reparo:'#2a1d1d',
+    pausado:'#2a221d',
+    aguardando_clima:'#2a221d',
+    marcas_rolo_cera:'#2a1d1d',
+    concluido:'#1f1f1f',
+    finalizado:'#1f1f1f'
+  };
+  return map[s] || '#1a1a1a';
 }
 
 // ============== Q4 ==============
