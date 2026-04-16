@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monofloor — Indicadores Operacionais</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:Inter,-apple-system,sans-serif;padding:20px;max-width:1400px;margin:0 auto}
+h1{font-size:22px;font-weight:600;color:#c4a77d;margin-bottom:4px}
+.sub{font-size:12px;color:#888;margin-bottom:24px}
+.grid{display:grid;gap:16px;margin-bottom:24px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:#141414;border:1px solid #222;border-radius:10px;padding:16px}
+.card h3{font-size:13px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.kpi{text-align:center;padding:20px 12px}
+.kpi .val{font-size:32px;font-weight:700;line-height:1}
+.kpi .label{font-size:11px;color:#888;margin-top:6px}
+.kpi.red .val{color:#ef4444}
+.kpi.green .val{color:#22c55e}
+.kpi.amber .val{color:#f59e0b}
+.kpi.blue .val{color:#3b82f6}
+.kpi.gold .val{color:#c4a77d}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:#888;font-weight:500;padding:8px 10px;border-bottom:1px solid #333}
+td{padding:8px 10px;border-bottom:1px solid #1a1a1a}
+tr:hover{background:#1a1a1a}
+.oc-cell{color:#ef4444;font-weight:600}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;background:#222;color:#aaa}
+.badge.em_execucao{background:#1a3a1a;color:#4ade80}
+.badge.reparo{background:#3a1a1a;color:#f87171}
+.bar{height:8px;background:#c4a77d;border-radius:4px;min-width:2px}
+.act-wrap{display:flex;align-items:flex-end;gap:2px;height:120px;padding:0 4px}
+.act-col{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
+.act-col.weekend .act-bar{background:#333}
+.act-bar{width:100%;background:#c4a77d;border-radius:3px 3px 0 0;min-height:2px;display:flex;align-items:flex-start;justify-content:center;transition:height .5s}
+.act-val{font-size:8px;color:#0a0a0a;font-weight:600;padding-top:2px;display:none}
+.act-col:hover .act-val{display:block}
+.act-label{font-size:9px;color:#555;margin-top:4px;white-space:nowrap}
+.alert-box{background:#1a1010;border:1px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:16px}
+.alert-box h4{color:#ef4444;font-size:14px;margin-bottom:6px}
+.alert-box p{font-size:12px;color:#ccc}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.logo-text{font-size:28px;font-weight:300;letter-spacing:6px;color:#c4a77d;text-transform:uppercase}
+.logo-tag{font-size:9px;letter-spacing:3px;color:#666;text-transform:uppercase}
+.section{margin-bottom:32px}
+.section-title{font-size:15px;font-weight:600;color:#c4a77d;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #222}
+</style>
+</head>
+<body>
+<div class="logo">
+  <div>
+    <div class="logo-text">monofloor</div>
+    <div class="logo-tag">Premium Unique Surfaces™</div>
+  </div>
+</div>
+
+<h1>Painel de Indicadores Operacionais</h1>
+<div class="sub">Atualizado: 16/04/2026, 10:49:51 · Extração: 77s · 144 projetos ativos de 500</div>
+
+<div class="alert-box"><h4>⚠ 23 ocorrências CRÍTICAS sem resolução</h4><p>248 de 248 ocorrências abertas (100%). Taxa de resolução: 0%.</p></div>
+
+<div class="section">
+<div class="grid g4">
+  <div class="card kpi gold"><div class="val">6.227</div><div class="label">Mensagens 30d</div></div>
+  <div class="card kpi blue"><div class="val">120</div><div class="label">Projetos com msgs</div></div>
+  <div class="card kpi amber"><div class="val">16.7%</div><div class="label">Taxa silêncio</div></div>
+  <div class="card kpi red"><div class="val">248</div><div class="label">Ocorrências abertas</div></div>
+  <div class="card kpi red"><div class="val">31.9%</div><div class="label">Taxa atraso</div></div>
+  <div class="card kpi blue"><div class="val">3883</div><div class="label">Telegram</div></div>
+  <div class="card kpi green"><div class="val">2344</div><div class="label">WhatsApp</div></div>
+  <div class="card kpi red"><div class="val">23</div><div class="label">Críticas</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Atividade Diária (30d)</div>
+<div class="card"><div class="act-wrap"><div class="act-col"><div class="act-bar" style="height:4%"><span class="act-val">42</span></div><div class="act-label">03-17</div></div><div class="act-col"><div class="act-bar" style="height:9%"><span class="act-val">80</span></div><div class="act-label">03-18</div></div><div class="act-col"><div class="act-bar" style="height:5%"><span class="act-val">45</span></div><div class="act-label">03-19</div></div><div class="act-col"><div class="act-bar" style="height:7%"><span class="act-val">62</span></div><div class="act-label">03-20</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">11</span></div><div class="act-label">03-21</div></div><div class="act-col"><div class="act-bar" style="height:8%"><span class="act-val">75</span></div><div class="act-label">03-23</div></div><div class="act-col"><div class="act-bar" style="height:7%"><span class="act-val">67</span></div><div class="act-label">03-24</div></div><div class="act-col"><div class="act-bar" style="height:16%"><span class="act-val">146</span></div><div class="act-label">03-25</div></div><div class="act-col"><div class="act-bar" style="height:20%"><span class="act-val">191</span></div><div class="act-label">03-26</div></div><div class="act-col"><div class="act-bar" style="height:7%"><span class="act-val">65</span></div><div class="act-label">03-27</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">11</span></div><div class="act-label">03-28</div></div><div class="act-col weekend"><div class="act-bar" style="height:0%"><span class="act-val">1</span></div><div class="act-label">03-29</div></div><div class="act-col"><div class="act-bar" style="height:18%"><span class="act-val">169</span></div><div class="act-label">03-30</div></div><div class="act-col"><div class="act-bar" style="height:21%"><span class="act-val">198</span></div><div class="act-label">03-31</div></div><div class="act-col"><div class="act-bar" style="height:27%"><span class="act-val">255</span></div><div class="act-label">04-01</div></div><div class="act-col"><div class="act-bar" style="height:22%"><span class="act-val">211</span></div><div class="act-label">04-02</div></div><div class="act-col"><div class="act-bar" style="height:3%"><span class="act-val">26</span></div><div class="act-label">04-03</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">9</span></div><div class="act-label">04-04</div></div><div class="act-col"><div class="act-bar" style="height:23%"><span class="act-val">216</span></div><div class="act-label">04-06</div></div><div class="act-col"><div class="act-bar" style="height:31%"><span class="act-val">296</span></div><div class="act-label">04-07</div></div><div class="act-col"><div class="act-bar" style="height:32%"><span class="act-val">303</span></div><div class="act-label">04-08</div></div><div class="act-col"><div class="act-bar" style="height:45%"><span class="act-val">421</span></div><div class="act-label">04-09</div></div><div class="act-col"><div class="act-bar" style="height:42%"><span class="act-val">393</span></div><div class="act-label">04-10</div></div><div class="act-col weekend"><div class="act-bar" style="height:10%"><span class="act-val">98</span></div><div class="act-label">04-11</div></div><div class="act-col weekend"><div class="act-bar" style="height:2%"><span class="act-val">23</span></div><div class="act-label">04-12</div></div><div class="act-col"><div class="act-bar" style="height:100%"><span class="act-val">941</span></div><div class="act-label">04-13</div></div><div class="act-col"><div class="act-bar" style="height:80%"><span class="act-val">750</span></div><div class="act-label">04-14</div></div><div class="act-col"><div class="act-bar" style="height:97%"><span class="act-val">911</span></div><div class="act-label">04-15</div></div><div class="act-col"><div class="act-bar" style="height:22%"><span class="act-val">211</span></div><div class="act-label">04-16</div></div></div></div>
+</div>
+
+<div class="section">
+<div class="grid g2">
+  <div class="card">
+    <h3>Por Consultor</h3>
+    <table><tr><th>Consultor</th><th>Obras</th><th>Msgs</th><th>Ocs</th><th>Ocs/obra</th><th>Atraso</th></tr><tr><td>Wesley Matheus</td><td>66</td><td>2762</td><td>145</td><td>2.2</td><td>35%</td></tr><tr><td>LUANA PATRICIA</td><td>54</td><td>2699</td><td>87</td><td>1.6</td><td>22%</td></tr><tr><td>Pedro Alexandre</td><td>4</td><td>199</td><td>5</td><td>1.3</td><td>25%</td></tr><tr><td>Juliana Santos</td><td>2</td><td>344</td><td>9</td><td>4.5</td><td>100%</td></tr><tr><td>Thaísa de</td><td>1</td><td>123</td><td>0</td><td>0.0</td><td>100%</td></tr><tr><td>Pedro Marçal</td><td>1</td><td>7</td><td>0</td><td>0.0</td><td>0%</td></tr><tr><td>Renata Garcia</td><td>1</td><td>0</td><td>0</td><td>0.0</td><td>0%</td></tr></table>
+  </div>
+  <div class="card">
+    <h3>Por Região</h3>
+    <table><tr><th>Região</th><th>Obras</th><th>Msgs</th><th>Msgs/obra</th><th>Ocs</th></tr><tr><td>SP</td><td>86</td><td>4162</td><td>48</td><td>170</td></tr><tr><td>OUT</td><td>37</td><td>1262</td><td>34</td><td>55</td></tr><tr><td>RJ</td><td>15</td><td>613</td><td>41</td><td>16</td></tr><tr><td>CWB</td><td>6</td><td>190</td><td>32</td><td>7</td></tr></table>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Projetos Problemáticos (alta msg + alta ocorrência)</div>
+<div class="card">
+  <table><tr><th>Projeto</th><th>Msgs</th><th>Ocs</th><th>Autores</th><th>Consultor</th><th>Fase</th></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td>200</td><td class="oc-cell">32</td><td>9</td><td>Wesley</td><td><span class="badge em_execucao">OBRA EM EXECUÇÃO</span></td></tr><tr><td>MANOELA LATINI GAVASSI FRANCIS</td><td>200</td><td class="oc-cell">17</td><td>12</td><td>Wesley</td><td><span class="badge em_execucao">OBRA EM EXECUÇÃO</span></td></tr><tr><td>FLÁVIO FAVA DITT</td><td>200</td><td class="oc-cell">13</td><td>8</td><td>LUANA</td><td><span class="badge em_execucao">LOGÍSTICA - MATERIAL</span></td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td>200</td><td class="oc-cell">10</td><td>8</td><td>LUANA</td><td><span class="badge em_execucao">CLIENTE FINALIZADO</span></td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td>153</td><td class="oc-cell">10</td><td>12</td><td>Wesley</td><td><span class="badge em_execucao">AGEND. VT - ENTRADA</span></td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td>200</td><td class="oc-cell">10</td><td>11</td><td>LUANA</td><td><span class="badge marcas_rolo_cera">OBRA PAUSADA</span></td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td>200</td><td class="oc-cell">9</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">LOGÍSTICA - MATERIAL</span></td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td>135</td><td class="oc-cell">7</td><td>13</td><td>LUANA</td><td><span class="badge reparo">LOGÍSTICA - EM ENTRE</span></td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E </td><td>200</td><td class="oc-cell">6</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">RESULTADO VT - ENTRA</span></td></tr><tr><td>ADRIANA FERNANDES PERES</td><td>200</td><td class="oc-cell">5</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">INDÚSTRIA - EM PRODU</span></td></tr><tr><td>BENY MAJTLIS</td><td>200</td><td class="oc-cell">5</td><td>10</td><td>Wesley</td><td><span class="badge em_execucao">OBRA CONCLUÍDA</span></td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td>123</td><td class="oc-cell">5</td><td>9</td><td>Pedro</td><td><span class="badge em_execucao">CLIENTE FINALIZADO</span></td></tr><tr><td>GETULIO TURATTI OST</td><td>144</td><td class="oc-cell">5</td><td>8</td><td>Juliana</td><td><span class="badge marcas_rolo_cera">CLIENTE FINALIZADO</span></td></tr></table>
+</div>
+</div>
+
+<div class="section">
+<div class="grid g2">
+  <div class="card">
+    <h3>Tipos de Ocorrência</h3>
+    <table><tr><th>Tipo</th><th>Qtd</th><th></th></tr><tr><td>outro</td><td>51</td><td><div class="bar" style="width:21%"></div></td></tr><tr><td>falha comunicacao</td><td>40</td><td><div class="bar" style="width:16%"></div></td></tr><tr><td>desvio qualidade</td><td>25</td><td><div class="bar" style="width:10%"></div></td></tr><tr><td>relatorio diario</td><td>25</td><td><div class="bar" style="width:10%"></div></td></tr><tr><td>marco operacional</td><td>21</td><td><div class="bar" style="width:8%"></div></td></tr><tr><td>incidente obra</td><td>16</td><td><div class="bar" style="width:6%"></div></td></tr><tr><td>atraso entrega</td><td>14</td><td><div class="bar" style="width:6%"></div></td></tr><tr><td>reclamacao cliente</td><td>13</td><td><div class="bar" style="width:5%"></div></td></tr><tr><td>problema logistico</td><td>10</td><td><div class="bar" style="width:4%"></div></td></tr><tr><td>atraso</td><td>8</td><td><div class="bar" style="width:3%"></div></td></tr></table>
+  </div>
+  <div class="card">
+    <h3>Projetos Silenciosos (24)</h3>
+    <table><tr><th>Projeto</th><th>Status</th><th>Fase</th></tr><tr><td>BRENO SILVEIRO DE ANDRADE LIMA</td><td>aguardando_execucao</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td>reparo</td><td>OECT</td></tr><tr><td>LC ADMINISTRAÇÃO E PARTICIPAÇÕ</td><td>aguardando_execucao</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>PAULA DAYAN</td><td>planejamento</td><td>ENTRADA</td></tr><tr><td>LA PASTINA IMPORTAÇÃO EXPORTAÇ</td><td>em_execucao</td><td>?</td></tr><tr><td>RICARDO DIAS DA CRUZ AFFONSO F</td><td>planejamento</td><td>EM CONTRATO</td></tr><tr><td>CARLA ANTONIO </td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>GAMA EMPREENDIMENTOS E PARTICI</td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>BERNARDO MAGALHÃES</td><td>reparo</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MONALISA PARTICIPAÇÕES </td><td>aguardando_clima</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>ELIZETE DE FÁTIMA MARCONCIN</td><td>reparo</td><td>?</td></tr><tr><td>Andrea Almeida</td><td>reserva</td><td>ENTRADA</td></tr><tr><td>Marcelo Edwin (Campinas)</td><td>reserva</td><td>ENTRADA</td></tr><tr><td>Anelise (katharina)</td><td>reserva</td><td>ENTRADA</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td>em_execucao</td><td>CLIENTE FINALIZADO</td></tr></table>
+  </div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#444;font-size:11px">
+  Agente Indicadores Monofloor v1.0 · Atualização automática a cada 6h · Dados: KIRA API
+</div>
+</body></html>
