@@ -581,6 +581,29 @@
   .ag-lista li .ag-li-fase{color:#888;font-size:10px;text-transform:uppercase;letter-spacing:0.06em}
   .ag-lista li .ag-li-m2{font-family:'JetBrains Mono',monospace;color:#c4a77d;font-size:12px;text-align:right}
   .ag-lista .ag-empty{color:#666;font-size:12px;font-style:italic;text-align:center;padding:20px}
+  /* Q1 — Stacked bar de prazo */
+  .q1-stacked-wrap{margin:18px 0 24px}
+  .q1-stacked-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-weight:500}
+  .q1-stacked{display:flex;height:64px;border-radius:6px;overflow:hidden;border:1px solid #1f1f1f;background:#0a0a0a;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+  .q1-seg{display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;transition:all .15s;border-right:1px solid rgba(0,0,0,0.3);position:relative;text-align:center;padding:6px 4px}
+  .q1-seg:last-child{border-right:none}
+  .q1-seg:hover{filter:brightness(1.15);transform:scaleY(1.04)}
+  .q1-seg.no-prazo{background:linear-gradient(180deg,#1d3a1d,#163216)}
+  .q1-seg.leve{background:linear-gradient(180deg,#3a3a1d,#2a2a16)}
+  .q1-seg.media{background:linear-gradient(180deg,#3a2a1d,#2a1f16)}
+  .q1-seg.grave{background:linear-gradient(180deg,#3a1d1d,#2a1616)}
+  .q1-seg-tag{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;line-height:1;margin-bottom:4px;font-family:'Inter',sans-serif}
+  .q1-seg.no-prazo .q1-seg-tag{color:#7be8a8}
+  .q1-seg.leve .q1-seg-tag{color:#e8c87b}
+  .q1-seg.media .q1-seg-tag{color:#e8a87b}
+  .q1-seg.grave .q1-seg-tag{color:#e87b7b}
+  .q1-seg-num{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:#fff;line-height:1}
+  .q1-seg-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:#bbb;margin-top:2px}
+  .q1-seg.empty{background:linear-gradient(180deg,#1a1a1a,#141414)}
+  .q1-seg.empty .q1-seg-tag{color:#555}
+  .q1-seg.empty .q1-seg-num{color:#444}
+  .q1-seg.empty:hover{filter:none;transform:none;cursor:default}
+  .q1-stacked-legenda{font-size:11px;color:#666;text-align:right;margin-top:8px;font-style:italic}
   </style>
 </head>
 <body>
@@ -687,15 +710,15 @@
       <div class="section-sub">Fonte: planejamento.monofloor.cloud — 34 obras categorizadas como "ativas" no sistema de planejamento, comparadas contra o painel real.</div>
     </div>
 
+    <div class="q1-stacked-wrap">
+      <div class="q1-stacked-label">Distribuição das 34 obras "ativas" no planejamento por situação de prazo</div>
+      <div class="q1-stacked" id="q1-stacked"></div>
+      <div class="q1-stacked-legenda">Clique em uma faixa para ver as obras daquela categoria</div>
+    </div>
+
     <div class="grid-3">
       <div class="card">
         <div class="card-head"><div class="card-title">Cumprimento de prazo</div></div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="lbl">No prazo</div><div class="val green">0</div><div class="sub">0%</div></div>
-          <div class="kpi"><div class="lbl">Atraso leve</div><div class="val" id="q1-leve">—</div><div class="sub">≤ 30 dias</div></div>
-          <div class="kpi"><div class="lbl">Atraso médio</div><div class="val warn" id="q1-medio">—</div><div class="sub">31–90 dias</div></div>
-          <div class="kpi"><div class="lbl">Atraso grave</div><div class="val crit" id="q1-grave">—</div><div class="sub">&gt; 90 dias</div></div>
-        </div>
         <div class="key-finding crit">
           <strong>100% das obras "ativas" no planejamento estão atrasadas.</strong>
           Mediana de atraso: <span class="mono">83 dias</span> · p75: <span class="mono">98d</span> · p90: <span class="mono">111d</span> · máx: <span class="mono">132d</span>.
@@ -715,6 +738,23 @@
         <div class="card-head"><div class="card-title">Top 10 mais atrasadas</div><div class="card-sub">vs. data prevista</div></div>
         <table class="t"><thead><tr><th>Cliente</th><th>Consultor</th><th class="num">Atraso</th><th>Status real</th></tr></thead>
         <tbody id="q1-top10"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Modal Q1 — drill por categoria de prazo -->
+    <div class="q4-modal" id="q1-modal" role="dialog" aria-modal="true">
+      <div class="q4-modal-bg" onclick="closeQ4Modal()"></div>
+      <div class="q4-modal-box">
+        <button class="q4-close" onclick="closeQ4Modal()" aria-label="Fechar">×</button>
+        <div class="q4-modal-head">
+          <h3 id="q1-modal-title">—</h3>
+          <div class="q4-modal-stats" id="q1-modal-stats"></div>
+        </div>
+        <p class="q4-fase-help" id="q1-modal-help"></p>
+        <table class="q4-modal-tbl">
+          <thead><tr><th>Cliente</th><th>Consultor</th><th class="num">Atraso</th><th>Data prevista</th><th>Status real (painel)</th><th>Fase real</th></tr></thead>
+          <tbody id="q1-modal-tbody"></tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -1604,6 +1644,120 @@ function renderQ1() {
     </tr>`;
   }).join('');
   $('q1-top10').innerHTML = tb;
+}
+
+// ============== Q1 — Stacked bar (drill por categoria de prazo) ==============
+const Q1_PLAN_OBRAS = [
+  {cliente:"FELIPE GUSTAVO LOPES DE OLIVEIRA",consultor:"Wesley Matheus de Carvalho",dias_atraso:35,dataTermino:"2026-03-11",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"VINICIUS COTTA SENTIN",consultor:"Wesley Matheus de Carvalho",dias_atraso:33,dataTermino:"2026-03-13",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"FELIPE NAVARRO DE ARAÚJO SANTOS",consultor:"Wesley Matheus de Carvalho",dias_atraso:26,dataTermino:"2026-03-20",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"LEVE"},
+  {cliente:"AVVA HOUSE LTDA - MOZART RODRIGUES",consultor:"Wesley Matheus de Carvalho",dias_atraso:41,dataTermino:"2026-03-05",status_real:"reparo",fase_real:"OBRA CONCLUÍDA",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"CAROLINA RACHE GUIMARAES",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:43,dataTermino:"2026-03-03",status_real:"planejamento",fase_real:"CONFIRMAÇÕES OP 1",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"ARIANE RIBEIRO DOS SANTOS CUNHA",consultor:"Wesley Matheus de Carvalho",dias_atraso:47,dataTermino:"2026-02-27",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"(BOOMBAN) THOMAZ TRINDADE VIDAL",consultor:"Wesley Matheus de Carvalho",dias_atraso:98,dataTermino:"2026-01-07",status_real:"concluido",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"AMANDA NEGRELLI HANNUD 2º fase",consultor:"Wesley Matheus de Carvalho",dias_atraso:70,dataTermino:"2026-02-04",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:105,dataTermino:"2025-12-31",status_real:"aguardando_clima",fase_real:"INFORMAÇÕES PROJETOS",painel_ativa:true,categoria:"GRAVE"},
+  {cliente:"ANTONIO CARLOS CANTO PORTO NETO",consultor:"Wesley Matheus de Carvalho",dias_atraso:96,dataTermino:"2026-01-09",status_real:"reparo",fase_real:"OBRA PAUSADA",painel_ativa:true,categoria:"GRAVE"},
+  {cliente:"BENY MAJTLIS",consultor:"Wesley Matheus de Carvalho",dias_atraso:63,dataTermino:"2026-02-11",status_real:"em_execucao",fase_real:"OBRA CONCLUÍDA",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"BERNARD DE CASTRO DALLA BERNARDINA",consultor:"Wesley Matheus de Carvalho",dias_atraso:83,dataTermino:"2026-01-22",status_real:"concluido",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"CARLOS EDUARDO ERMIRIO DE MORAES PASTORIZA",consultor:"Wesley Matheus de Carvalho",dias_atraso:96,dataTermino:"2026-01-09",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"CHANG YU CHENG",consultor:"Wesley Matheus de Carvalho",dias_atraso:28,dataTermino:"2026-03-18",status_real:"aguardando_execucao",fase_real:"INFORMAÇÕES LOGÍSTICAS",painel_ativa:true,categoria:"LEVE"},
+  {cliente:"CHRISTIAN KORT CERAVOLO",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:98,dataTermino:"2026-01-07",status_real:"finalizado",fase_real:"OBRA EM EXECUÇÃO",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"CLAUDIA DOMINGUES CONSENTINO",consultor:"Wesley Matheus de Carvalho",dias_atraso:98,dataTermino:"2026-01-07",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)",consultor:"Wesley Matheus de Carvalho",dias_atraso:58,dataTermino:"2026-02-16",status_real:"planejamento",fase_real:"CLIENTE FINALIZADO",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"FELIPE CARLOS ARSLAN",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:54,dataTermino:"2026-02-20",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"FLÁVIA AUGUSTA DE ASSIS ROCHA",consultor:"Pedro Alexandre Santana",dias_atraso:68,dataTermino:"2026-02-06",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"GETULIO TURATTI OST",consultor:"Juliana Santos",dias_atraso:89,dataTermino:"2026-01-16",status_real:"marcas_rolo_cera",fase_real:"CLIENTE FINALIZADO",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"GUILHERME HAIDAR BERJEAUT",consultor:"Wesley Matheus de Carvalho",dias_atraso:64,dataTermino:"2026-02-10",status_real:"marcas_rolo_cera",fase_real:"CLIENTE FINALIZADO",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"GUSTAVO DE SOUZA PEREIRA",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:84,dataTermino:"2026-01-21",status_real:"marcas_rolo_cera",fase_real:"OBRA PAUSADA",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"HOUSSEIN EL JAROUCHE",consultor:"Wesley Matheus de Carvalho",dias_atraso:132,dataTermino:"2025-12-04",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"IOLANDA ODEBRECHT PELTIER DE  QUEIROZ",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:99,dataTermino:"2026-01-06",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"LUIS FERNANDO DE LIMA CARVALHO",consultor:"Wesley Matheus de Carvalho",dias_atraso:107,dataTermino:"2025-12-29",status_real:"em_execucao",fase_real:"AGEND. VT - ENTRADA",painel_ativa:true,categoria:"GRAVE"},
+  {cliente:"MANOELA LATINI GAVASSI FRANCISCO 2ª FASE",consultor:"Wesley Matheus de Carvalho",dias_atraso:57,dataTermino:"2026-02-17",status_real:"em_execucao",fase_real:"OBRA EM EXECUÇÃO",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"MARCOS JOSÉ VEIGA GOMES",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:96,dataTermino:"2026-01-09",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"MARIO SABINO FILHO",consultor:"Wesley Matheus de Carvalho",dias_atraso:56,dataTermino:"2026-02-18",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"MEDIA"},
+  {cliente:"MONALISA PARTICIPACOES LTDA",consultor:"",dias_atraso:111,dataTermino:"2025-12-25",status_real:"finalizado",fase_real:"OECT",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)",consultor:"LUANA PATRICIA DE ANDRADE LIMA",dias_atraso:78,dataTermino:"2026-01-27",status_real:"aguardando_clima",fase_real:"OBRA EM EXECUÇÃO",painel_ativa:true,categoria:"MEDIA"},
+  {cliente:"TÂMARA NEWMAN LOBATO SOUZA",consultor:"Pedro Alexandre Santana",dias_atraso:103,dataTermino:"2026-01-02",status_real:"reparo",fase_real:"CLIENTE FINALIZADO",painel_ativa:true,categoria:"GRAVE"},
+  {cliente:"VILA VERTICAL FRADIQUE EMPREENDIMENTO IMOBILIARIO SPE LTDA",consultor:"Wesley Matheus de Carvalho",dias_atraso:113,dataTermino:"2025-12-23",status_real:"finalizado",fase_real:"OBRA CONCLUÍDA",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"ÁUREO EUSTÁQUIO BRANDÃO",consultor:"Pedro Alexandre Santana",dias_atraso:121,dataTermino:"2025-12-15",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"GRAVE"},
+  {cliente:"AMANDA CAROLINA FELICIO VANTINI",consultor:"Wesley Matheus de Carvalho",dias_atraso:54,dataTermino:"2026-02-20",status_real:"concluido",fase_real:"CLIENTE FINALIZADO",painel_ativa:false,categoria:"MEDIA"}
+];
+
+const Q1_TOTAIS = {
+  NO_PRAZO: 0,
+  LEVE: 2,
+  MEDIA: 18,
+  GRAVE: 14,
+  TOTAL: 34
+};
+
+function q1RenderStacked() {
+  const el = document.getElementById('q1-stacked');
+  if (!el) return;
+
+  const cats = [
+    {key:'NO_PRAZO', cls:'no-prazo', label:'No prazo'},
+    {key:'LEVE',     cls:'leve',     label:'Leve (\u226430d)'},
+    {key:'MEDIA',    cls:'media',    label:'Média (31-90d)'},
+    {key:'GRAVE',    cls:'grave',    label:'Grave (>90d)'}
+  ];
+
+  const total = Q1_TOTAIS.TOTAL;
+
+  el.innerHTML = cats.map(c => {
+    const n = Q1_TOTAIS[c.key];
+    const pct = total ? (n/total*100) : 0;
+    const flexBasis = n === 0 ? 'flex:0 1 80px' : `flex:${Math.max(pct, 5)} 1 0`;
+    const cls = n === 0 ? `${c.cls} empty` : c.cls;
+    const onclick = n === 0 ? '' : `onclick="openQ1Modal('${c.key}')"`;
+    return `<div class="q1-seg ${cls}" style="${flexBasis}" ${onclick}>
+      <div class="q1-seg-tag">${c.label}</div>
+      <div class="q1-seg-num">${n}</div>
+      <div class="q1-seg-pct">${pct.toFixed(0)}%</div>
+    </div>`;
+  }).join('');
+}
+
+function openQ1Modal(cat) {
+  const labels = {
+    NO_PRAZO: {title:'Obras NO PRAZO', help:'Obras cuja dataTermino do planejamento ainda não foi atingida.'},
+    LEVE:     {title:'Obras com ATRASO LEVE', help:'Obras com até 30 dias de atraso na dataTermino do planejamento.'},
+    MEDIA:    {title:'Obras com ATRASO MÉDIO', help:'Obras com 31 a 90 dias de atraso na dataTermino do planejamento.'},
+    GRAVE:    {title:'Obras com ATRASO GRAVE', help:'Obras com mais de 90 dias de atraso na dataTermino do planejamento.'}
+  };
+
+  const obras = Q1_PLAN_OBRAS.filter(o => o.categoria === cat).sort((a,b)=>b.dias_atraso-a.dias_atraso);
+  const totalCat = Q1_TOTAIS[cat] || obras.length;
+  const detalhadas = obras.length;
+
+  document.getElementById('q1-modal-title').textContent = labels[cat].title + ` (${totalCat})`;
+  document.getElementById('q1-modal-stats').innerHTML = `
+    <span>${totalCat} obra${totalCat===1?'':'s'} nesta categoria</span>
+    ${detalhadas < totalCat ? `<span style="color:#888">${detalhadas} detalhadas</span>` : ''}
+  `;
+  document.getElementById('q1-modal-help').innerHTML = labels[cat].help + (detalhadas < totalCat ? ` <span style="color:#e8c87b">Mostrando apenas as ${detalhadas} obras com diagnóstico detalhado disponível. Total real da categoria: ${totalCat}.</span>` : '');
+
+  const tbody = document.getElementById('q1-modal-tbody');
+  if (obras.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#666;padding:30px;font-style:italic">Sem obras detalhadas nesta categoria.</td></tr>`;
+  } else {
+    tbody.innerHTML = obras.map(o => {
+      const atrasoCls = o.dias_atraso > 90 ? 'idade-esc' : o.dias_atraso > 30 ? 'idade-crit' : o.dias_atraso > 0 ? 'idade-warn' : 'idade-ok';
+      const fantasma = o.painel_ativa === false ? `<small style="color:#e87b7b">já concluída no painel</small>` : '';
+      return `<tr>
+        <td>${q4EscHtml(o.cliente||'')}</td>
+        <td>${q4EscHtml(o.consultor||'sem consultor')}</td>
+        <td class="num ${atrasoCls}">${o.dias_atraso > 0 ? '+' : ''}${o.dias_atraso}d</td>
+        <td>${q4EscHtml(o.dataTermino||'—')}</td>
+        <td>${q4EscHtml(o.status_real||'—')}${fantasma}</td>
+        <td>${q4EscHtml(o.fase_real||'—')}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  document.getElementById('q1-modal').classList.add('open');
+  document.body.style.overflow='hidden';
 }
 
 // ============== Q2 ==============
@@ -2771,6 +2925,7 @@ function renderTop30() {
 renderHealth();
 renderHero();
 renderQ1();
+q1RenderStacked();
 renderQ2();
 renderQ3();
 renderQ4();
