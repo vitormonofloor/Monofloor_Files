@@ -630,6 +630,65 @@
   .sync-resumo-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:#c4a77d;line-height:1}
   .sync-resumo-text{font-size:13px;color:#bbb;line-height:1.6}
   .sync-resumo-text b{color:#fff}
+
+  /* ============== HERMES PORTAL — botão + animação cinematográfica ============== */
+  .hermes-btn{display:inline-flex;align-items:center;gap:12px;padding:8px 14px;background:linear-gradient(135deg, #1a1510 0%, #141414 100%);border:1px solid #2a2015;border-radius:8px;text-decoration:none;color:#e0e0e0;transition:all 0.25s;position:relative;overflow:hidden;cursor:pointer;font-family:'Inter',system-ui,sans-serif}
+  .hermes-btn:hover{border-color:#c4a77d;background:linear-gradient(135deg, #2a1f10 0%, #1a1510 100%);transform:translateY(-1px);box-shadow:0 4px 20px #c4a77d15;text-decoration:none}
+  .hermes-btn:hover .hermes-arrow{transform:translateX(4px)}
+  .hermes-icon{font-size:16px;color:#c4a77d}
+  .hermes-label{display:flex;flex-direction:column;line-height:1.2}
+  .hermes-name{font-size:12px;font-weight:600;color:#c4a77d;letter-spacing:0.5px;text-transform:none}
+  .hermes-sub{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+  .hermes-arrow{color:#666;transition:transform 0.25s;font-size:14px}
+  @media (max-width:600px){.hermes-sub{display:none}}
+
+  .hermes-portal{position:fixed;inset:0;background:#0a0a0a;z-index:9999;display:block;opacity:0;pointer-events:none;transition:opacity 0.5s ease}
+  .hermes-portal.active{opacity:1;pointer-events:auto}
+  .hermes-portal::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 75% 60% at 50% 50%, #3a2810 0%, transparent 65%);opacity:0;animation:portal-glow 2.8s ease-in-out forwards}
+  .portal-title{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:56px;letter-spacing:24px;padding-left:24px;color:#f5d890;text-transform:uppercase;font-weight:200;opacity:0;animation:portal-title-fade 2.8s ease-out forwards;text-shadow:0 0 60px #c4a77d80, 0 0 120px #c4a77d50;pointer-events:none;white-space:nowrap;z-index:10;font-family:'Inter',system-ui,sans-serif}
+  .portal-tagline{position:absolute;top:calc(50% + 50px);left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;animation:portal-tagline-fade 2.8s ease-out forwards;white-space:nowrap;z-index:10;font-family:'Inter',system-ui,sans-serif}
+  .wing-anchor{position:absolute;top:calc(50% + 62px);width:0;height:0;z-index:5}
+  .anchor-left{left:calc(50% - 220px)}
+  .anchor-right{left:calc(50% + 220px)}
+  .wing-img{position:absolute;width:220px;height:220px;background-image:url('../hermes-wing.png');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;filter:drop-shadow(0 8px 30px #c4a77d50) drop-shadow(0 0 20px #e8c36840);left:-33px;top:-172px;transform-origin:33px 172px}
+  .wing-right-img{animation:wing-flap-right 2.8s cubic-bezier(0.37, 0, 0.63, 1) forwards}
+  .wing-left-img{animation:wing-flap-left 2.8s cubic-bezier(0.37, 0, 0.63, 1) forwards}
+  @keyframes portal-glow{0%{opacity:0}30%{opacity:1}75%{opacity:1}100%{opacity:0.3}}
+  @keyframes wing-flap-right{
+    0%   {opacity:0;transform:rotate(5deg) scale(0.75) translateY(10px)}
+    15%  {opacity:1;transform:rotate(-5deg) scale(1) translateY(0)}
+    30%  {transform:rotate(-22deg) scale(1) translateY(-4px)}
+    45%  {transform:rotate(-12deg) scale(1) translateY(0)}
+    60%  {transform:rotate(-24deg) scale(1) translateY(-4px)}
+    75%  {transform:rotate(-14deg) scale(1) translateY(-2px)}
+    88%  {transform:rotate(-18deg) scale(1.02) translateY(-3px)}
+    100% {opacity:0;transform:rotate(-15deg) scale(1.15) translateY(-8px)}
+  }
+  @keyframes wing-flap-left{
+    0%   {opacity:0;transform:scaleX(-1) rotate(5deg) scale(0.75) translateY(10px)}
+    15%  {opacity:1;transform:scaleX(-1) rotate(-5deg) scale(1) translateY(0)}
+    30%  {transform:scaleX(-1) rotate(-22deg) scale(1) translateY(-4px)}
+    45%  {transform:scaleX(-1) rotate(-12deg) scale(1) translateY(0)}
+    60%  {transform:scaleX(-1) rotate(-24deg) scale(1) translateY(-4px)}
+    75%  {transform:scaleX(-1) rotate(-14deg) scale(1) translateY(-2px)}
+    88%  {transform:scaleX(-1) rotate(-18deg) scale(1.02) translateY(-3px)}
+    100% {opacity:0;transform:scaleX(-1) rotate(-15deg) scale(1.15) translateY(-8px)}
+  }
+  @keyframes portal-title-fade{
+    0%,30% {opacity:0;letter-spacing:14px}
+    55%    {opacity:1;letter-spacing:24px}
+    85%    {opacity:1;letter-spacing:28px}
+    100%   {opacity:0;letter-spacing:36px}
+  }
+  @keyframes portal-tagline-fade{
+    0%,50%{opacity:0}
+    70%,88%{opacity:0.85}
+    100%{opacity:0}
+  }
+
+  /* Cross-ref nota no header */
+  .top .cross-ref{font-size:10px;color:#777;margin-top:4px;letter-spacing:0.02em}
+  .top .cross-ref b{color:#c4a77d;font-weight:500}
   </style>
 </head>
 <body>
@@ -640,8 +699,19 @@
     <div class="links">
       <a href="#backlog">Backlog crítico</a>
       <a href="obras-mapa.html">Mapa detalhado de obras</a>
+      <a href="../indicadores.html" class="hermes-btn">
+        <span class="hermes-icon">◆</span>
+        <span class="hermes-label">
+          <span class="hermes-name">Hermes</span>
+          <span class="hermes-sub">Indicadores de comunicação</span>
+        </span>
+        <span class="hermes-arrow">→</span>
+      </a>
       <span class="stamp"><span class="mono">2026-04-15</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
     </div>
+  </div>
+  <div class="cross-ref">
+    Indicadores de comunicação (mensagens, ocorrências, taxa de silêncio) → use o <b>Hermes</b> ao lado.
   </div>
 </header>
 
@@ -3270,7 +3340,32 @@ function escHtmlSafe(s) {
 }
 
 document.addEventListener('DOMContentLoaded', loadBacklogHistory);
+
+// ============== HERMES PORTAL — animação de asas antes da navegação ==============
+document.querySelectorAll('.hermes-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const portal = document.getElementById('hermesPortal');
+    const target = btn.getAttribute('href');
+    if (!portal) { window.location.href = target; return; }
+    document.body.style.overflow = 'hidden';
+    portal.classList.add('active');
+    setTimeout(() => { window.location.href = target; }, 2200);
+  });
+});
 </script>
+
+<!-- HERMES PORTAL — animação de asa dourada -->
+<div class="hermes-portal" id="hermesPortal">
+  <div class="wing-anchor anchor-left">
+    <div class="wing-img wing-left-img"></div>
+  </div>
+  <div class="wing-anchor anchor-right">
+    <div class="wing-img wing-right-img"></div>
+  </div>
+  <div class="portal-title">Hermes</div>
+  <div class="portal-tagline">indicadores de comunicação · monofloor</div>
+</div>
 
 </body>
 </html>

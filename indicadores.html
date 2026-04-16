@@ -111,6 +111,12 @@ tr:hover{background:#1a1a1a}
 .hermes-sub{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
 .hermes-arrow{color:#666;transition:transform 0.25s;font-size:16px}
 @media (max-width:600px){.hermes-sub{display:none}}
+.cross-nav{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:10px 14px;margin-bottom:14px;border:1px solid #1f1a12;background:linear-gradient(180deg,#0f0d0a,#0a0a0a);border-radius:8px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.04em}
+.cross-nav a{color:#c4a77d;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .15s,border-color .15s;padding:4px 0;border-bottom:1px solid transparent}
+.cross-nav a:hover{color:#f5d890;border-bottom-color:#c4a77d}
+.cross-nav .sep{color:#3a3025;font-size:10px}
+.cross-note{font-size:11px;color:#888;margin:8px 0 18px;line-height:1.55;padding:10px 12px;border-left:2px solid #c4a77d;background:#0d0d0d;border-radius:0 4px 4px 0}
+.cross-note b{color:#c4a77d;font-weight:600}
 .section{margin-bottom:32px}
 .section-title{font-size:15px;font-weight:600;color:#c4a77d;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #222}
 /* MODAL */
@@ -199,8 +205,21 @@ tr:hover{background:#1a1a1a}
   </a>
 </div>
 
+<nav class="cross-nav" aria-label="Navegação cruzada Monofloor">
+  <a href="analise/dashboard.html">← Dashboard Executivo</a>
+  <span class="sep">·</span>
+  <a href="analise/obras-mapa.html">Mapa de Obras (208 ativas)</a>
+  <span class="sep">·</span>
+  <a href="analise/modelagem.html">Modelagem técnica</a>
+</nav>
+
 <h1>Painel de Indicadores Operacionais</h1>
 <div class="sub">Atualizado: 16/04/2026, 13:17:03 · Extração: 80.4s · 148 projetos ativos de 500 · <span style="color:#c4a77d">clique nos cards para detalhes</span></div>
+
+<div class="cross-note">
+  Este painel mostra <b>Comunicação Operacional</b> (148 projetos monitorados, atualização ~6h). Para visão completa da carteira (208 obras ativas, refresh 30 min), abra o <b>Dashboard Executivo</b>.
+  <br>Visão completa da carteira (208 obras ativas, drill-down por flag) → <b>Dashboard Executivo</b> acima.
+</div>
 
 <div class="alert-box" data-modal="criticas"><h4>⚠ 25 ocorrências CRÍTICAS sem resolução</h4><p>272 de 272 ocorrências abertas (100%). Taxa de resolução: 0%. Clique para ver detalhes.</p></div>
 
