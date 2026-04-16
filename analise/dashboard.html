@@ -468,6 +468,19 @@
   .q4-resp .vazio{color:#555;font-style:italic}
   .q4-resp small{display:block;color:#666;font-size:10px;margin-top:2px}
   @media(max-width:720px){.q4-modal{padding:0;align-items:stretch}.q4-modal-box{border-radius:0;padding:20px 16px;min-height:100vh}}
+  .q4-filtros{margin:14px 0 18px;padding:12px 14px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px}
+  .q4-filtros-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:8px;font-weight:500}
+  .q4-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .q4-chip{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;border-radius:14px;background:#141414;border:1px solid #1f1f1f;color:#bbb;cursor:pointer;transition:all .12s;font-weight:500}
+  .q4-chip:hover{border-color:#c4a77d;color:#fff}
+  .q4-chip.active{background:#c4a77d;color:#0a0a0a;border-color:#c4a77d}
+  .q4-chip.todos{font-weight:600}
+  .q4-chip-equipe{border-left:2px solid #7be8a8}
+  .q4-chip-op{border-left:2px solid #c4a77d}
+  .q4-chip-crm{border-left:2px solid #888}
+  .q4-chip-vazio{border-left:2px solid #555;font-style:italic}
+  .q4-chip .ct{color:#666;margin-left:4px}
+  .q4-chip.active .ct{color:#0a0a0a;opacity:0.7}
 
   .q4-insight{background:#0a0a0a;border:1px solid #1f1f1f;border-left:3px solid #c4a77d;padding:12px 16px;border-radius:0 4px 4px 0;margin-bottom:20px;font-size:13px;color:#ccc;line-height:1.7}
   .q4-insight b{color:#c4a77d}
@@ -713,6 +726,10 @@
           <h3>Obras RODANDO <span>em execução agora</span></h3>
           <div class="q4-modal-stats"></div>
         </div>
+        <div class="q4-filtros">
+          <span class="q4-filtros-label">Filtrar por equipe operacional:</span>
+          <div class="q4-chips" id="q4-chips-rodando"></div>
+        </div>
         <table class="q4-modal-tbl" id="q4-tbl-rodando">
           <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th><th class="num">m²</th><th>Equipe operacional</th></tr></thead>
           <tbody></tbody>
@@ -728,6 +745,10 @@
           <h3>Obras ESTAGNADAS <span>travadas — precisam destravar</span></h3>
           <div class="q4-modal-stats"></div>
         </div>
+        <div class="q4-filtros">
+          <span class="q4-filtros-label">Filtrar por equipe operacional:</span>
+          <div class="q4-chips" id="q4-chips-estagnado"></div>
+        </div>
         <table class="q4-modal-tbl" id="q4-tbl-estagnado">
           <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th><th class="num">m²</th><th>Equipe operacional</th></tr></thead>
           <tbody></tbody>
@@ -742,6 +763,10 @@
         <div class="q4-modal-head">
           <h3>Obras PENDENTES <span>no funil pré-execução</span></h3>
           <div class="q4-modal-stats"></div>
+        </div>
+        <div class="q4-filtros">
+          <span class="q4-filtros-label">Filtrar por equipe operacional:</span>
+          <div class="q4-chips" id="q4-chips-pendente"></div>
         </div>
         <table class="q4-modal-tbl" id="q4-tbl-pendente">
           <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th><th class="num">m²</th><th>Equipe operacional</th></tr></thead>
@@ -1852,18 +1877,79 @@ function q4EscHtml(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+function q4ResponsavelKey(o){
+  const escal  = Q4_ESCALACAO[o.id];
+  const respOp = Q4_RESP_OPS[o.id];
+  const crm    = (o.consultor||'').trim();
+  if (escal)  return {key:'eq:'+escal.equipe, label:'Equipe '+escal.equipe, tipo:'equipe'};
+  if (respOp) return {key:'op:'+respOp,       label:'Op: '+respOp,           tipo:'op'};
+  if (crm && crm !== '' && crm !== '[]')
+              return {key:'crm:'+crm,         label:'CRM: '+crm.split(' ')[0], tipo:'crm'};
+  return     {key:'vazio',                    label:'sem responsável',         tipo:'vazio'};
+}
+
 function openQ4Modal(grupoId){
   const g = Q4_GRUPOS[grupoId];
   if (!g) return;
+
   const obras = Q2_OBRAS.filter(o => g.statuses.includes(o.status));
-  const totalM2 = obras.reduce((a,o)=>a+(o.m2||0),0);
-  const totalGlobalM2 = Q2_OBRAS.reduce((a,o)=>a+(o.m2||0),0);
-  const pct = totalGlobalM2 ? (totalM2/totalGlobalM2*100).toFixed(1) : '0';
   obras.sort((a,b)=>(b.m2||0)-(a.m2||0));
 
   const modal = document.getElementById('q4-modal-'+grupoId);
   if (!modal) return;
   modal.querySelector('.q4-modal-head h3').innerHTML = 'Obras '+g.label+' <span>'+q4EscHtml(g.sub)+'</span>';
+
+  // Agrupar responsáveis (contagem + m²)
+  const respMap = {};
+  obras.forEach(o => {
+    const r = q4ResponsavelKey(o);
+    if (!respMap[r.key]) respMap[r.key] = {key:r.key, label:r.label, tipo:r.tipo, count:0, m2:0};
+    respMap[r.key].count++;
+    respMap[r.key].m2 += (o.m2||0);
+  });
+  const respList = Object.values(respMap).sort((a,b)=>b.count-a.count);
+
+  // Render chips
+  const chipsEl = document.getElementById('q4-chips-'+grupoId);
+  if (chipsEl) {
+    chipsEl.innerHTML =
+      '<button class="q4-chip todos active" data-key="__all__">Todas <span class="ct">('+obras.length+')</span></button>' +
+      respList.map(r =>
+        '<button class="q4-chip q4-chip-'+r.tipo+'" data-key="'+q4EscHtml(r.key)+'">'+
+          q4EscHtml(r.label)+' <span class="ct">('+r.count+')</span>'+
+        '</button>'
+      ).join('');
+
+    chipsEl.querySelectorAll('.q4-chip').forEach(c => {
+      c.addEventListener('click', () => {
+        chipsEl.querySelectorAll('.q4-chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        q4ModalApplyFilter(grupoId, c.dataset.key, obras);
+      });
+    });
+  }
+
+  // Render inicial — todas
+  q4ModalRender(grupoId, obras);
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function q4ModalApplyFilter(grupoId, key, obrasBase){
+  const filtered = key === '__all__'
+    ? obrasBase
+    : obrasBase.filter(o => q4ResponsavelKey(o).key === key);
+  q4ModalRender(grupoId, filtered);
+}
+
+function q4ModalRender(grupoId, obras){
+  const totalGlobalM2 = Q2_OBRAS.reduce((a,o)=>a+(o.m2||0),0);
+  const totalM2 = obras.reduce((a,o)=>a+(o.m2||0),0);
+  const pct = totalGlobalM2 ? (totalM2/totalGlobalM2*100).toFixed(1) : '0';
+
+  const modal = document.getElementById('q4-modal-'+grupoId);
+  if (!modal) return;
   modal.querySelector('.q4-modal-stats').innerHTML =
     '<span>'+obras.length+' obras</span>'+
     '<span>'+totalM2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²</span>'+
@@ -1898,9 +1984,6 @@ function openQ4Modal(grupoId){
       '<td class="q4-resp">'+respHtml+'</td>'+
     '</tr>';
   }).join('');
-
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
 
 function closeQ4Modal(){
