@@ -475,6 +475,30 @@
   .q4-data-chip{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;border-radius:3px;background:#141414;border-left:2px solid #888}
   .q4-data-chip.passada{color:#e87b7b;border-left-color:#e87b7b}
   .q4-data-chip small{display:block;color:#666;font-size:9px;margin-top:1px}
+  /* Timeline arrastável dentro do modal de fase */
+  .q4-tl-bar{background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px;padding:14px;margin:8px 0 16px}
+  .q4-tl-controls{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+  .q4-tl-dates{display:flex;gap:14px;align-items:center}
+  .q4-tl-dates label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;display:flex;gap:6px;align-items:center}
+  .q4-tl-dates input[type="date"]{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:5px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color-scheme:dark}
+  .q4-tl-quick{display:flex;gap:4px}
+  .q4-tl-quick button{background:#141414;border:1px solid #2a2a2a;color:#bbb;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;transition:all .12s}
+  .q4-tl-quick button:hover{border-color:#c4a77d;color:#fff}
+  .q4-tl-quick button.active{background:#c4a77d;color:#0a0a0a;border-color:#c4a77d}
+  .q4-tl-stats{font-family:'JetBrains Mono',monospace;font-size:12px;color:#c4a77d;font-weight:600;margin-left:auto}
+  .q4-tl-svg-wrap{position:relative;width:100%;height:60px;background:#080808;border-radius:4px;overflow:hidden}
+  #q4-tl-svg{width:100%;height:100%;display:block}
+  .q4-tl-tick{stroke:#222;stroke-width:1}
+  .q4-tl-tick.week{stroke:#333;stroke-width:1.5}
+  .q4-tl-today{stroke:#c4a77d;stroke-width:2;stroke-dasharray:3,2}
+  .q4-tl-range{fill:rgba(196,167,125,0.15);stroke:#c4a77d;stroke-width:1}
+  .q4-tl-pt{cursor:pointer;transition:all .15s}
+  .q4-tl-pt:hover{r:5}
+  .q4-tl-label{fill:#666;font-size:9px;font-family:'JetBrains Mono',monospace}
+  .q4-tl-label.month{fill:#c4a77d;font-weight:600}
+  .q4-tl-tooltip{position:absolute;background:#1a1a1a;border:1px solid #c4a77d;border-radius:4px;padding:6px 10px;font-size:11px;color:#fff;pointer-events:none;z-index:10;white-space:nowrap;font-family:'JetBrains Mono',monospace;display:none}
+  .q4-tl-tooltip.show{display:block}
+  .q4-tl-tooltip small{display:block;color:#888;font-size:10px;margin-top:2px}
   .q4-filtros{margin:14px 0 18px;padding:12px 14px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px}
   .q4-filtros-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:8px;font-weight:500}
   .q4-chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -792,6 +816,24 @@
           <div class="q4-modal-stats" id="q4-fase-stats"></div>
         </div>
         <p class="q4-fase-help">Mostrando a próxima data prevista por obra (visita técnica para fases de VT, entrada para fases pré-execução, execução para obras em andamento). <span style="color:#e87b7b">Vermelho = data já passou.</span></p>
+        <div class="q4-tl-bar">
+          <div class="q4-tl-controls">
+            <div class="q4-tl-dates">
+              <label>De <input type="date" id="q4-tl-de"></label>
+              <label>Até <input type="date" id="q4-tl-ate"></label>
+            </div>
+            <div class="q4-tl-quick">
+              <button type="button" data-dias="7">+7d</button>
+              <button type="button" data-dias="15">+15d</button>
+              <button type="button" data-dias="30">+30d</button>
+              <button type="button" data-dias="mes">Mês todo</button>
+            </div>
+            <div class="q4-tl-stats" id="q4-tl-stats">— · —</div>
+          </div>
+          <div class="q4-tl-svg-wrap">
+            <svg id="q4-tl-svg" viewBox="0 0 1200 60" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
         <table class="q4-modal-tbl">
           <thead><tr><th>Cliente</th><th>Cidade</th><th class="num">m²</th><th>Quando</th><th>Equipe operacional</th></tr></thead>
           <tbody id="q4-fase-tbody"></tbody>
@@ -2101,8 +2143,197 @@ function openFaseModal(fase){
     '<span>'+totalM2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²</span>'+
     '<span>'+pct+'% do volume</span>';
 
+  // Inicializa timeline com as linhas calculadas (a tabela é renderizada dentro do init)
+  q4TimelineInit(linhas, fase);
+
+  document.getElementById('q4-modal-fase').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// ============== TIMELINE ARRASTÁVEL DO MODAL DE FASE ==============
+let _q4TlState = { linhas: [], faseAtual: '', deISO: '', ateISO: '' };
+
+function q4DataParaISO(valor, tipo){
+  if (!valor) return null;
+  if (tipo === 'dataExec') return valor; // já YYYY-MM-DD
+  const m = valor.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (!m) return null;
+  return m[3]+'-'+m[2]+'-'+m[1];
+}
+
+function q4TimelineInit(linhas, fase){
+  const hoje = new Date();
+  const hojeISO    = hoje.toISOString().slice(0,10);
+  const ateDefault = new Date(hoje.getTime() + 15*86400000).toISOString().slice(0,10);
+
+  _q4TlState = { linhas: linhas, faseAtual: fase, deISO: hojeISO, ateISO: ateDefault };
+
+  document.getElementById('q4-tl-de').value  = hojeISO;
+  document.getElementById('q4-tl-ate').value = ateDefault;
+
+  document.getElementById('q4-tl-de').oninput = function(e){
+    _q4TlState.deISO = e.target.value;
+    q4TlSetActiveQuick(null);
+    q4TlRender();
+  };
+  document.getElementById('q4-tl-ate').oninput = function(e){
+    _q4TlState.ateISO = e.target.value;
+    q4TlSetActiveQuick(null);
+    q4TlRender();
+  };
+
+  document.querySelectorAll('.q4-tl-quick button').forEach(function(b){
+    b.onclick = function(){
+      const d = b.dataset.dias;
+      const hojeRef = new Date();
+      _q4TlState.deISO = hojeRef.toISOString().slice(0,10);
+      if (d === 'mes'){
+        const fimMes = new Date(hojeRef.getFullYear(), hojeRef.getMonth()+1, 0);
+        _q4TlState.ateISO = fimMes.toISOString().slice(0,10);
+      } else {
+        const ate = new Date(hojeRef.getTime() + parseInt(d)*86400000);
+        _q4TlState.ateISO = ate.toISOString().slice(0,10);
+      }
+      document.getElementById('q4-tl-de').value  = _q4TlState.deISO;
+      document.getElementById('q4-tl-ate').value = _q4TlState.ateISO;
+      q4TlSetActiveQuick(b);
+      q4TlRender();
+    };
+  });
+
+  // Botão +15d ativo por padrão
+  q4TlSetActiveQuick(document.querySelector('.q4-tl-quick button[data-dias="15"]'));
+  q4TlRender();
+}
+
+function q4TlSetActiveQuick(btn){
+  document.querySelectorAll('.q4-tl-quick button').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+}
+
+function q4TlRender(){
+  q4TlRenderSVG();
+  q4TlRenderStats();
+  q4TlRenderTable();
+}
+
+function q4TlRenderSVG(){
+  const svg = document.getElementById('q4-tl-svg');
+  const W = 1200, H = 60;
+  const hoje = new Date();
+  const inicio = new Date(hoje.getTime() - 15*86400000);
+  const totalDias = 60;
+  const xPorDia = W / totalDias;
+
+  let html = '';
+
+  // Tick marks (cada dia, semanas mais grossas)
+  for (let i = 0; i <= totalDias; i++){
+    const x = i * xPorDia;
+    const isWeek = i % 7 === 0;
+    html += '<line class="q4-tl-tick '+(isWeek?'week':'')+'" x1="'+x+'" y1="35" x2="'+x+'" y2="'+(isWeek?42:38)+'"/>';
+  }
+
+  // Labels (mês no início ou primeiros 7 dias do mês, dia caso contrário)
+  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  for (let i = 0; i < totalDias; i += 7){
+    const d = new Date(inicio.getTime() + i*86400000);
+    if (i === 0 || d.getDate() <= 7){
+      html += '<text class="q4-tl-label month" x="'+(i*xPorDia + 2)+'" y="55">'+meses[d.getMonth()]+'</text>';
+    } else {
+      html += '<text class="q4-tl-label" x="'+(i*xPorDia + 2)+'" y="55">'+d.getDate()+'</text>';
+    }
+  }
+
+  // Linha do hoje
+  const xHoje = 15 * xPorDia;
+  html += '<line class="q4-tl-today" x1="'+xHoje+'" y1="0" x2="'+xHoje+'" y2="42"/>';
+  html += '<text class="q4-tl-label month" x="'+(xHoje + 3)+'" y="9">hoje</text>';
+
+  // Faixa selecionada (range)
+  const deD  = new Date(_q4TlState.deISO  + 'T00:00:00');
+  const ateD = new Date(_q4TlState.ateISO + 'T23:59:59');
+  const xDe  = ((deD  - inicio) / 86400000) * xPorDia;
+  const xAte = ((ateD - inicio) / 86400000) * xPorDia;
+  if (xAte > 0 && xDe < W){
+    const x0 = Math.max(0, xDe);
+    const x1 = Math.min(W, xAte);
+    html += '<rect class="q4-tl-range" x="'+x0+'" y="12" width="'+(x1-x0)+'" height="22" rx="2"/>';
+  }
+
+  // Pontos por obra
+  _q4TlState.linhas.forEach(function(l){
+    const o = l.obra, data = l.data, tipo = l.tipo;
+    if (!data) return;
+    const iso = q4DataParaISO(data, tipo);
+    if (!iso) return;
+    const d = new Date(iso + 'T12:00:00');
+    const x = ((d - inicio) / 86400000) * xPorDia;
+    if (x < 0 || x > W) return;
+    const cor = q4TipoColor(tipo);
+    html += '<circle class="q4-tl-pt" cx="'+x+'" cy="23" r="3.5" fill="'+cor+'"'+
+            ' data-cliente="'+q4EscHtml(o.cliente||'')+'"'+
+            ' data-data="'+q4EscHtml(data)+'"'+
+            ' data-tipo="'+q4EscHtml(q4TipoLabel(tipo))+'"'+
+            ' data-m2="'+(o.m2||0)+'"/>';
+  });
+
+  svg.innerHTML = html;
+
+  // Tooltip nos pontos
+  const wrap = svg.parentElement;
+  let tooltip = wrap.querySelector('.q4-tl-tooltip');
+  if (!tooltip){
+    tooltip = document.createElement('div');
+    tooltip.className = 'q4-tl-tooltip';
+    wrap.appendChild(tooltip);
+  }
+  svg.querySelectorAll('.q4-tl-pt').forEach(function(pt){
+    pt.addEventListener('mouseenter', function(){
+      const r   = wrap.getBoundingClientRect();
+      const ptR = pt.getBoundingClientRect();
+      const m2  = parseInt(pt.dataset.m2) || 0;
+      tooltip.innerHTML = pt.dataset.cliente +
+        '<small>'+pt.dataset.data+' · '+pt.dataset.tipo+' · '+m2.toLocaleString('pt-BR')+' m²</small>';
+      tooltip.style.left = (ptR.left - r.left + 8) + 'px';
+      tooltip.style.top  = (ptR.top  - r.top  - 5) + 'px';
+      tooltip.classList.add('show');
+    });
+    pt.addEventListener('mouseleave', function(){ tooltip.classList.remove('show'); });
+  });
+}
+
+function q4TlFiltroLinhas(){
+  const de  = new Date(_q4TlState.deISO  + 'T00:00:00').getTime();
+  const ate = new Date(_q4TlState.ateISO + 'T23:59:59').getTime();
+  return _q4TlState.linhas.filter(function(l){
+    if (!l.data) return false;
+    const iso = q4DataParaISO(l.data, l.tipo);
+    if (!iso) return false;
+    const t = new Date(iso + 'T12:00:00').getTime();
+    return t >= de && t <= ate;
+  });
+}
+
+function q4TlRenderStats(){
+  const filt = q4TlFiltroLinhas();
+  const totalM2 = filt.reduce(function(a, l){ return a + (l.obra.m2 || 0); }, 0);
+  document.getElementById('q4-tl-stats').textContent =
+    filt.length + ' obra' + (filt.length===1?'':'s') + ' · ' +
+    totalM2.toLocaleString('pt-BR',{maximumFractionDigits:0}) + ' m² no intervalo';
+}
+
+function q4TlRenderTable(){
+  const linhas = q4TlFiltroLinhas();
   const tbody = document.getElementById('q4-fase-tbody');
-  tbody.innerHTML = linhas.map(({obra: o, data, tipo}) => {
+
+  if (linhas.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;padding:30px;font-style:italic">Nenhuma obra desta fase no intervalo selecionado.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = linhas.map(function(l){
+    const o = l.obra, data = l.data, tipo = l.tipo;
     let dataHtml;
     if (data){
       const passada = q4DataPassada(data, tipo);
@@ -2141,9 +2372,6 @@ function openFaseModal(fase){
       '<td class="q4-resp">'+respHtml+'</td>'+
     '</tr>';
   }).join('');
-
-  document.getElementById('q4-modal-fase').classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
 
 
