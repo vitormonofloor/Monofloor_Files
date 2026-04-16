@@ -520,6 +520,67 @@
   @media(max-width:900px){.q4-grid-sec{grid-template-columns:1fr}}
   .q4-sec-card{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:14px}
   .q4-sec-card h4{font-size:11px;color:#c4a77d;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
+
+  /* ============== AGENDA OPERACIONAL (home highlight) ============== */
+  #agenda{margin-bottom:36px;background:linear-gradient(180deg,#0d0d0d 0%,#0a0a0a 100%);border:1px solid #2a2a2a;border-radius:10px;padding:24px;box-shadow:0 4px 20px rgba(196,167,125,0.05)}
+  .ag-head{margin-bottom:18px}
+  .ag-tag{display:inline-block;background:#c4a77d;color:#0a0a0a;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border-radius:3px;letter-spacing:0.12em;margin-bottom:8px;animation:agPulse 2.5s ease-in-out infinite}
+  @keyframes agPulse{0%,100%{box-shadow:0 0 0 0 rgba(196,167,125,0.4)}50%{box-shadow:0 0 0 6px rgba(196,167,125,0)}}
+  .ag-head h2{font-size:22px;color:#fff;font-weight:600;letter-spacing:-0.01em;margin-bottom:6px}
+  .ag-head .sub{color:#888;font-size:13px;line-height:1.5;max-width:680px}
+
+  .ag-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+  @media(max-width:720px){.ag-kpis{grid-template-columns:1fr}}
+  .ag-kpi{background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;padding:14px 16px;border-left:3px solid #2a2a2a}
+  .ag-kpi.visita{border-left-color:#7be8a8}
+  .ag-kpi.entrada{border-left-color:#7ba8e8}
+  .ag-kpi.exec{border-left-color:#c4a77d}
+  .ag-kpi-tag{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:8px}
+  .ag-kpi.visita .ag-kpi-tag{color:#7be8a8}
+  .ag-kpi.entrada .ag-kpi-tag{color:#7ba8e8}
+  .ag-kpi.exec .ag-kpi-tag{color:#c4a77d}
+  .ag-kpi-num{font-family:'JetBrains Mono',monospace;font-size:32px;color:#fff;font-weight:600;line-height:1}
+  .ag-kpi-m2{font-family:'JetBrains Mono',monospace;font-size:13px;color:#c4a77d;margin-top:4px}
+
+  .ag-controls{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;padding:12px 14px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px}
+  .ag-dates{display:flex;gap:14px;align-items:center}
+  .ag-dates label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;display:flex;gap:6px;align-items:center}
+  .ag-dates input[type="date"]{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:5px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color-scheme:dark}
+  .ag-quick{display:flex;gap:4px}
+  .ag-quick button{background:#141414;border:1px solid #2a2a2a;color:#bbb;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;transition:all .12s}
+  .ag-quick button:hover{border-color:#c4a77d;color:#fff}
+  .ag-quick button.active{background:#c4a77d;color:#0a0a0a;border-color:#c4a77d}
+  .ag-toggles{display:flex;gap:6px}
+  .ag-tog{background:#141414;border:1px solid #2a2a2a;color:#bbb;padding:5px 10px;border-radius:14px;cursor:pointer;font-size:10px;font-weight:500;transition:all .12s;display:flex;align-items:center;gap:6px}
+  .ag-tog:hover{border-color:#c4a77d}
+  .ag-tog.active{border-color:#c4a77d;background:#1a1a1a;color:#fff}
+  .ag-tog:not(.active) .ag-tog-dot{opacity:0.3}
+  .ag-tog-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+  .ag-tl-wrap{position:relative;width:100%;height:90px;background:#080808;border:1px solid #1f1f1f;border-radius:6px;overflow:hidden;margin-bottom:18px}
+  #ag-tl-svg{width:100%;height:100%;display:block}
+  .ag-tl-tick{stroke:#222;stroke-width:1}
+  .ag-tl-tick.week{stroke:#333;stroke-width:1.5}
+  .ag-tl-today{stroke:#c4a77d;stroke-width:2;stroke-dasharray:3,2}
+  .ag-tl-range{fill:rgba(196,167,125,0.15);stroke:#c4a77d;stroke-width:1}
+  .ag-tl-pt{cursor:pointer;transition:all .15s}
+  .ag-tl-pt:hover{r:6;filter:drop-shadow(0 0 4px currentColor)}
+  .ag-tl-label{fill:#666;font-size:10px;font-family:'JetBrains Mono',monospace}
+  .ag-tl-label.month{fill:#c4a77d;font-weight:600;font-size:11px}
+  .ag-tl-tooltip{position:absolute;background:#1a1a1a;border:1px solid #c4a77d;border-radius:4px;padding:8px 12px;font-size:11px;color:#fff;pointer-events:none;z-index:10;white-space:nowrap;font-family:'JetBrains Mono',monospace;display:none;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+  .ag-tl-tooltip.show{display:block}
+  .ag-tl-tooltip small{display:block;color:#888;font-size:10px;margin-top:3px}
+
+  .ag-lista h4{font-size:11px;color:#c4a77d;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
+  .ag-lista ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+  .ag-lista li{display:grid;grid-template-columns:90px 1fr auto auto;gap:12px;padding:10px 14px;background:#0a0a0a;border:1px solid #161616;border-radius:5px;font-size:12px;align-items:center;transition:all .12s}
+  .ag-lista li:hover{border-color:#c4a77d;transform:translateX(2px)}
+  .ag-lista li .ag-li-data{font-family:'JetBrains Mono',monospace;color:#c4a77d;font-size:11px}
+  .ag-lista li .ag-li-tipo{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .ag-lista li .ag-li-cliente{color:#fff;font-weight:500}
+  .ag-lista li .ag-li-fase{color:#888;font-size:10px;text-transform:uppercase;letter-spacing:0.06em}
+  .ag-lista li .ag-li-m2{font-family:'JetBrains Mono',monospace;color:#c4a77d;font-size:12px;text-align:right}
+  .ag-lista .ag-empty{color:#666;font-size:12px;font-style:italic;text-align:center;padding:20px}
   </style>
 </head>
 <body>
@@ -561,6 +622,60 @@
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
+    </div>
+  </section>
+
+  <!-- ============== AGENDA OPERACIONAL — destaque home ============== -->
+  <section id="agenda">
+    <div class="ag-head">
+      <div class="ag-tag">AGENDA OPERACIONAL</div>
+      <h2>Próximos marcos da operação</h2>
+      <p class="sub">O que vai acontecer nas obras nos próximos dias — visitas técnicas, entradas em obra, execuções previstas. Clique nos pontos pra ver detalhe de cada obra.</p>
+    </div>
+
+    <div class="ag-kpis">
+      <div class="ag-kpi visita">
+        <div class="ag-kpi-tag">VISITAS TÉCNICAS</div>
+        <div class="ag-kpi-num" id="ag-kpi-visita-n">—</div>
+        <div class="ag-kpi-m2" id="ag-kpi-visita-m2">— m²</div>
+      </div>
+      <div class="ag-kpi entrada">
+        <div class="ag-kpi-tag">ENTRADAS EM OBRA</div>
+        <div class="ag-kpi-num" id="ag-kpi-entrada-n">—</div>
+        <div class="ag-kpi-m2" id="ag-kpi-entrada-m2">— m²</div>
+      </div>
+      <div class="ag-kpi exec">
+        <div class="ag-kpi-tag">EXECUÇÕES PREVISTAS</div>
+        <div class="ag-kpi-num" id="ag-kpi-exec-n">—</div>
+        <div class="ag-kpi-m2" id="ag-kpi-exec-m2">— m²</div>
+      </div>
+    </div>
+
+    <div class="ag-controls">
+      <div class="ag-dates">
+        <label>De <input type="date" id="ag-de"></label>
+        <label>Até <input type="date" id="ag-ate"></label>
+      </div>
+      <div class="ag-quick">
+        <button type="button" data-dias="7">+7d</button>
+        <button type="button" data-dias="15">+15d</button>
+        <button type="button" data-dias="30">+30d</button>
+        <button type="button" data-dias="mes">Mês todo</button>
+      </div>
+      <div class="ag-toggles">
+        <button type="button" class="ag-tog active" data-tipo="dataVisita"><span class="ag-tog-dot" style="background:#7be8a8"></span>visitas</button>
+        <button type="button" class="ag-tog active" data-tipo="dataEntrada"><span class="ag-tog-dot" style="background:#7ba8e8"></span>entradas</button>
+        <button type="button" class="ag-tog active" data-tipo="dataExec"><span class="ag-tog-dot" style="background:#c4a77d"></span>execuções</button>
+      </div>
+    </div>
+
+    <div class="ag-tl-wrap">
+      <svg id="ag-tl-svg" viewBox="0 0 1200 90" preserveAspectRatio="none"></svg>
+    </div>
+
+    <div class="ag-lista">
+      <h4>Próximos 10 marcos</h4>
+      <ul id="ag-lista-ul"></ul>
     </div>
   </section>
 
@@ -2374,6 +2489,214 @@ function q4TlRenderTable(){
   }).join('');
 }
 
+
+// ============== AGENDA OPERACIONAL (home highlight) ==============
+let _agState = { deISO: '', ateISO: '', tiposAtivos: new Set(['dataVisita','dataEntrada','dataExec']) };
+
+function agInit() {
+  if (!document.getElementById('ag-de')) return;
+  const hoje = new Date();
+  const hojeISO = hoje.toISOString().slice(0,10);
+  const ateDefault = new Date(hoje.getTime() + 15*86400000).toISOString().slice(0,10);
+  _agState.deISO = hojeISO;
+  _agState.ateISO = ateDefault;
+
+  document.getElementById('ag-de').value = hojeISO;
+  document.getElementById('ag-ate').value = ateDefault;
+
+  document.getElementById('ag-de').oninput = e => { _agState.deISO = e.target.value; agQuickSet(null); agRender(); };
+  document.getElementById('ag-ate').oninput = e => { _agState.ateISO = e.target.value; agQuickSet(null); agRender(); };
+
+  document.querySelectorAll('.ag-quick button').forEach(b => {
+    b.onclick = () => {
+      const d = b.dataset.dias;
+      const h = new Date();
+      _agState.deISO = h.toISOString().slice(0,10);
+      if (d === 'mes') {
+        const fim = new Date(h.getFullYear(), h.getMonth()+1, 0);
+        _agState.ateISO = fim.toISOString().slice(0,10);
+      } else {
+        const a = new Date(h.getTime() + parseInt(d)*86400000);
+        _agState.ateISO = a.toISOString().slice(0,10);
+      }
+      document.getElementById('ag-de').value = _agState.deISO;
+      document.getElementById('ag-ate').value = _agState.ateISO;
+      agQuickSet(b);
+      agRender();
+    };
+  });
+  agQuickSet(document.querySelector('.ag-quick button[data-dias="15"]'));
+
+  document.querySelectorAll('.ag-tog').forEach(t => {
+    t.onclick = () => {
+      const tipo = t.dataset.tipo;
+      if (_agState.tiposAtivos.has(tipo)) {
+        _agState.tiposAtivos.delete(tipo);
+        t.classList.remove('active');
+      } else {
+        _agState.tiposAtivos.add(tipo);
+        t.classList.add('active');
+      }
+      agRender();
+    };
+  });
+
+  agRender();
+}
+
+function agQuickSet(btn) {
+  document.querySelectorAll('.ag-quick button').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// Pra cada obra ativa, gerar UM ponto da data contextual mais relevante
+function agObrasComMarco() {
+  const out = [];
+  Q2_OBRAS.forEach(o => {
+    if (!o.fase) return;
+    const datas = Q4_DATAS[o.id] || {};
+    const ctx = q4DataContextual(o.fase, datas);
+    if (!ctx.valor || !ctx.tipo) return;
+    const iso = q4DataParaISO(ctx.valor, ctx.tipo);
+    if (!iso) return;
+    out.push({obra: o, dataValor: ctx.valor, tipo: ctx.tipo, iso: iso});
+  });
+  return out;
+}
+
+function agFiltroRange(linhas) {
+  const de = new Date(_agState.deISO + 'T00:00:00').getTime();
+  const ate = new Date(_agState.ateISO + 'T23:59:59').getTime();
+  return linhas.filter(l => {
+    if (!_agState.tiposAtivos.has(l.tipo)) return false;
+    const t = new Date(l.iso + 'T12:00:00').getTime();
+    return t >= de && t <= ate;
+  });
+}
+
+function agRender() {
+  const todas = agObrasComMarco();
+  const filt = agFiltroRange(todas);
+
+  ['dataVisita','dataEntrada','dataExec'].forEach(tipo => {
+    const kn = {'dataVisita':'visita','dataEntrada':'entrada','dataExec':'exec'}[tipo];
+    const list = filt.filter(l => l.tipo === tipo);
+    const m2 = list.reduce((a,l) => a + (l.obra.m2 || 0), 0);
+    document.getElementById('ag-kpi-'+kn+'-n').textContent = list.length;
+    document.getElementById('ag-kpi-'+kn+'-m2').textContent = m2.toLocaleString('pt-BR',{maximumFractionDigits:0}) + ' m²';
+  });
+
+  agRenderSVG(todas);
+  agRenderLista(filt);
+}
+
+function agRenderSVG(linhas) {
+  const svg = document.getElementById('ag-tl-svg');
+  if (!svg) return;
+  const W = 1200, H = 90;
+  const hoje = new Date();
+  const inicio = new Date(hoje.getTime() - 15*86400000);
+  const totalDias = 60;
+  const xPorDia = W / totalDias;
+
+  let html = '';
+
+  for (let i = 0; i <= totalDias; i++) {
+    const x = i * xPorDia;
+    const isWeek = i % 7 === 0;
+    html += '<line class="ag-tl-tick '+(isWeek?'week':'')+'" x1="'+x+'" y1="55" x2="'+x+'" y2="'+(isWeek?64:60)+'"/>';
+  }
+
+  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  for (let i = 0; i < totalDias; i += 7) {
+    const d = new Date(inicio.getTime() + i*86400000);
+    if (i === 0 || d.getDate() <= 7) {
+      html += '<text class="ag-tl-label month" x="'+(i*xPorDia + 2)+'" y="80">'+meses[d.getMonth()]+'</text>';
+    } else {
+      html += '<text class="ag-tl-label" x="'+(i*xPorDia + 2)+'" y="80">'+d.getDate()+'</text>';
+    }
+  }
+
+  const xHoje = 15 * xPorDia;
+  html += '<line class="ag-tl-today" x1="'+xHoje+'" y1="0" x2="'+xHoje+'" y2="64"/>';
+  html += '<text class="ag-tl-label month" x="'+(xHoje + 4)+'" y="11">hoje</text>';
+
+  const deD = new Date(_agState.deISO + 'T00:00:00');
+  const ateD = new Date(_agState.ateISO + 'T23:59:59');
+  const xDe = ((deD - inicio) / 86400000) * xPorDia;
+  const xAte = ((ateD - inicio) / 86400000) * xPorDia;
+  if (xAte > 0 && xDe < W) {
+    html += '<rect class="ag-tl-range" x="'+Math.max(0,xDe)+'" y="18" width="'+(Math.min(W,xAte)-Math.max(0,xDe))+'" height="38" rx="3"/>';
+  }
+
+  const yPorTipo = {'dataVisita': 26, 'dataEntrada': 37, 'dataExec': 48};
+
+  linhas.forEach(function(l){
+    const o = l.obra, dataValor = l.dataValor, tipo = l.tipo, iso = l.iso;
+    if (!_agState.tiposAtivos.has(tipo)) return;
+    const d = new Date(iso + 'T12:00:00');
+    const x = ((d - inicio) / 86400000) * xPorDia;
+    if (x < 0 || x > W) return;
+    const cor = q4TipoColor(tipo);
+    const y = yPorTipo[tipo] || 37;
+    html += '<circle class="ag-tl-pt" cx="'+x+'" cy="'+y+'" r="4" fill="'+cor+'"'+
+            ' data-cliente="'+escHtml(o.cliente||'')+'"'+
+            ' data-fase="'+escHtml(o.fase||'')+'"'+
+            ' data-data="'+escHtml(dataValor)+'"'+
+            ' data-tipo="'+escHtml(q4TipoLabel(tipo))+'"'+
+            ' data-m2="'+(o.m2||0)+'"/>';
+  });
+
+  svg.innerHTML = html;
+
+  const wrap = svg.parentElement;
+  let tooltip = wrap.querySelector('.ag-tl-tooltip');
+  if (!tooltip) {
+    tooltip = document.createElement('div');
+    tooltip.className = 'ag-tl-tooltip';
+    wrap.appendChild(tooltip);
+  }
+  svg.querySelectorAll('.ag-tl-pt').forEach(function(pt){
+    pt.addEventListener('mouseenter', function(){
+      const r = wrap.getBoundingClientRect();
+      const ptR = pt.getBoundingClientRect();
+      tooltip.innerHTML = pt.dataset.cliente + '<small>'+pt.dataset.fase+'<br>'+pt.dataset.data+' · '+pt.dataset.tipo+' · '+parseInt(pt.dataset.m2).toLocaleString('pt-BR')+' m²</small>';
+      tooltip.style.left = (ptR.left - r.left + 10) + 'px';
+      tooltip.style.top = (ptR.top - r.top - 10) + 'px';
+      tooltip.classList.add('show');
+    });
+    pt.addEventListener('mouseleave', function(){ tooltip.classList.remove('show'); });
+  });
+}
+
+function agRenderLista(filt) {
+  filt.sort(function(a,b){ return new Date(a.iso) - new Date(b.iso); });
+  const top = filt.slice(0, 10);
+
+  const ul = document.getElementById('ag-lista-ul');
+  if (!ul) return;
+  if (top.length === 0) {
+    ul.innerHTML = '<li class="ag-empty">Nenhum marco no intervalo selecionado.</li>';
+    return;
+  }
+
+  ul.innerHTML = top.map(function(l){
+    const o = l.obra, dataValor = l.dataValor, tipo = l.tipo;
+    const cor = q4TipoColor(tipo);
+    return '<li>'+
+      '<div class="ag-li-data">'+escHtml(dataValor)+'</div>'+
+      '<div>'+
+        '<span class="ag-li-tipo" style="background:'+cor+'"></span>'+
+        '<span class="ag-li-cliente">'+escHtml(o.cliente||'')+'</span>'+
+        '<div class="ag-li-fase">'+escHtml(o.fase||'')+'</div>'+
+      '</div>'+
+      '<div class="ag-li-tipo-label" style="color:'+cor+';font-size:10px;text-transform:uppercase;font-weight:500">'+escHtml(q4TipoLabel(tipo))+'</div>'+
+      '<div class="ag-li-m2">'+(o.m2 ? o.m2.toLocaleString('pt-BR') : '—')+' m²</div>'+
+    '</li>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', agInit);
 
 
 // ============== ACHADOS ==============
