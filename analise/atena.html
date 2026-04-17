@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATENA + HERMES — Intelig&ecirc;ncia Monofloor</title>
+<title>Briefing Executivo — Monofloor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -127,7 +127,7 @@ a:hover { text-decoration: underline; }
 .atena-tab.active .atena-tab-icon{opacity:1;color:#b8a080}
 .atena-panel{display:none}
 .atena-panel.active{display:block}
-.hermes-frame{width:100%;border:none;border-radius:8px;min-height:600px;background:#f8f5f0}
+.hermes-frame{width:100%;border:none;border-radius:0;min-height:700px;background:transparent}
 
 /* ============== MONO-NAV ============== */
 .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#f0ebe3,rgba(240,235,227,0.97));border-bottom:1px solid #e0d8cc;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -191,14 +191,6 @@ a:hover { text-decoration: underline; }
   </a>
 </nav>
 
-<div class="atena-evo-bar">
-  <button class="evo-btn" onclick="openEvolucao()">
-    <span class="evo-icon">&#9719;</span>
-    <span class="evo-label">EVOLU&Ccedil;&Atilde;O</span>
-    <span class="evo-sub">rastreio de indicadores ao longo do tempo</span>
-  </button>
-</div>
-
 <div class="atena-wrap">
 
   <!-- HEADER -->
@@ -206,7 +198,7 @@ a:hover { text-decoration: underline; }
     <div class="atena-brand">
       <div>
         <div class="atena-logo-text">monofloor</div>
-        <div class="atena-logo-sub">Atena &middot; Briefing Executivo</div>
+        <div class="atena-logo-sub">Briefing Executivo</div>
       </div>
     </div>
     <div class="atena-date" id="atena-date">carregando...</div>
@@ -216,6 +208,7 @@ a:hover { text-decoration: underline; }
   <div class="atena-tabs">
     <button class="atena-tab active" onclick="switchTab('atena')"><span class="atena-tab-icon">&#9672;</span> ATENA</button>
     <button class="atena-tab" onclick="switchTab('hermes')"><span class="atena-tab-icon">&#9671;</span> HERMES</button>
+    <button class="atena-tab" onclick="openEvolucao()"><span class="atena-tab-icon">&#9719;</span> EVOLU&Ccedil;&Atilde;O</button>
   </div>
 
   <!-- PANEL: ATENA -->
