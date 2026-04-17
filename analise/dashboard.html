@@ -672,6 +672,40 @@
   @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 
   /* ============== LEITURA DO DIA ============== */
+
+  /* ============== BALDES (Carteira Detalhada) ============== */
+  .baldes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:18px 0}
+  .balde{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;border-left:3px solid #2a2a2a;margin:0}
+  .balde.crit{border-left-color:#e87b7b}
+  .balde.warn{border-left-color:#e8c87b}
+  .balde.info{border-left-color:#7ba8e8}
+  .balde summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;transition:all .15s;user-select:none;border-bottom:none;color:#fff;font-size:13px;background:transparent}
+  .balde summary::-webkit-details-marker{display:none}
+  .balde summary::before{content:'▸';color:#c4a77d;font-size:14px;transition:transform .2s;flex-shrink:0;margin-right:0}
+  .balde[open] summary::before{transform:rotate(90deg);content:'▸'}
+  .balde[open] summary{border-bottom:1px solid #1a1a1a}
+  .balde summary:hover{background:#141414}
+  .balde-icon{font-size:18px;line-height:1;flex-shrink:0}
+  .balde-info{flex:1;min-width:0}
+  .balde-nome{font-size:13px;color:#fff;font-weight:600}
+  .balde-meta{font-size:11px;color:#888;margin-top:2px;font-family:'JetBrains Mono',monospace}
+  .balde-meta b{color:#c4a77d}
+  .balde-count{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:#fff;line-height:1;margin-left:auto;flex-shrink:0}
+  .balde.crit .balde-count{color:#e87b7b}
+  .balde.warn .balde-count{color:#e8c87b}
+  .balde-content{border-top:1px solid #1a1a1a;padding:0}
+  .balde-content table{width:100%;font-size:11px;border-collapse:collapse}
+  .balde-content th{background:#080808;padding:6px 10px;text-align:left;font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.06em;font-weight:500;position:static}
+  .balde-content td{padding:7px 10px;border-bottom:1px solid #111;color:#ccc}
+  .balde-content tr:hover td{background:#0f0f0f}
+  .balde-content td.num{text-align:right;font-family:'JetBrains Mono',monospace;color:#c4a77d}
+  .balde-content td .idade-crit{color:#e87b7b}
+  .balde-content td .idade-warn{color:#e8c87b}
+  .balde-content td .idade-ok{color:#7be8a8}
+  .baldes-footer{text-align:center;margin-top:20px}
+  .baldes-cta{display:inline-block;padding:12px 24px;border:1px solid #c4a77d;border-radius:6px;color:#c4a77d;text-decoration:none;font-size:13px;font-weight:500;transition:all .15s}
+  .baldes-cta:hover{background:rgba(196,167,125,0.1);transform:translateY(-1px);box-shadow:0 4px 12px rgba(196,167,125,0.1)}
+
   </style>
 </head>
 <body>
@@ -1510,27 +1544,18 @@
     </div>
   </div>
 
-  <!-- ============== TABELA TOP 30 ============== -->
-  <section>
+  <!-- ============== CARTEIRA DETALHADA — BALDES ============== -->
+  <section id="carteira">
     <div class="section-head">
       <div class="section-kicker">Carteira detalhada</div>
-      <div class="section-title">Top 30 obras ativas mais antigas</div>
-      <div class="section-sub">Ordenadas por idade. Flags cruzadas em tempo real com zumbi / órfãs / sem-cor / sem-WhatsApp / pausadas.</div>
+      <div class="section-title">Baldes de Classificação</div>
+      <div class="section-sub" id="baldes-sub">208 obras ativas classificadas por tipo de flag. Clique num balde para ver as obras daquela categoria. Uma obra pode aparecer em mais de um balde.</div>
     </div>
-
-    <div class="card" style="padding:0;">
-      <table class="t">
-        <thead><tr>
-          <th>#</th><th>Cliente</th><th>Cidade</th>
-          <th class="num">Idade</th><th>Status</th><th>Fase</th>
-          <th>Consultor</th><th>Flags</th>
-        </tr></thead>
-        <tbody id="top30-tbl"></tbody>
-      </table>
+    <div class="baldes-grid" id="baldes-grid">
+      <!-- gerado por JS -->
     </div>
-
-    <div style="margin-top:14px; text-align:right;">
-      <a href="obras-mapa.html" style="font-size:12px; text-transform:uppercase; letter-spacing:0.06em;">Ver todas as 208 ativas →</a>
+    <div class="baldes-footer">
+      <a href="obras-mapa.html" class="baldes-cta">Ver todas as 208 ativas com filtros avançados →</a>
     </div>
   </section>
 
@@ -3216,21 +3241,92 @@ function renderAchados() {
   }
 }
 
-// ============== TOP 30 ==============
-function renderTop30() {
-  const tb = AGG.top30_antigas.map((o, i) => `
-    <tr>
-      <td class="ct mono">${i+1}</td>
-      <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
-      <td class="ct">${escHtml(o.cidade || '—')}</td>
-      <td class="num ${ageClass(o.idade)}">${o.idade}d</td>
-      <td class="ct">${STATUS_LBL[o.status] || o.status}</td>
-      <td class="ct">${escHtml(o.fase || '—')}</td>
-      <td class="ct">${escHtml((o.consultor || '—').split(' ').slice(0,2).join(' '))}</td>
-      <td>${flagsForObra(o)}</td>
-    </tr>
-  `).join('');
-  $('top30-tbl').innerHTML = tb;
+// ============== BALDES (Carteira Detalhada) ==============
+function renderBaldes() {
+  const obras = Q2_OBRAS;
+  const esc = typeof escHtml === 'function' ? escHtml : (s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])));
+
+  // IDs auxiliares
+  const zumbiIds = new Set((EXT.zumbi_ids || []).map(String));
+  const orfaIds = new Set((EXT.orfas_ids || []).map(String));
+  const semCorIds = new Set((EXT.sem_cor_ids || []).map(String));
+  const atRiskIds = (EXT.atRiskTop && EXT.atRiskTop.length) ? new Set(EXT.atRiskTop.map(o => String(o.id || ''))) : null;
+
+  // Helpers
+  const idCurto = o => (o.id || '').slice(0,8);
+  const finalizadoSemFechar = o => {
+    const fase = (o.fase || '').toUpperCase();
+    const st = (o.status || '').toLowerCase();
+    return fase.includes('CLIENTE FINALIZADO') && !['finalizado','concluido','cancelado','reparo'].includes(st);
+  };
+
+  // 10 Baldes — do mais crítico ao mais informativo
+  const baldes = [
+    {id:'zumbi', nome:'Zumbi', desc:'CLIENTE FINALIZADO sem fechar', sev:'crit', icon:'\u2298',
+      filter: o => zumbiIds.size ? zumbiIds.has(idCurto(o)) : finalizadoSemFechar(o)},
+    {id:'reparo', nome:'Reparo', desc:'obras em retrabalho', sev:'crit', icon:'\u27F2',
+      filter: o => o.status === 'reparo'},
+    {id:'orfa', nome:'\u00D3rf\u00E3', desc:'sem consultor atribu\u00EDdo', sev:'warn', icon:'\u2299',
+      filter: o => orfaIds.size ? orfaIds.has(idCurto(o)) : (!o.consultor || o.consultor === '' || o.consultor === '[]')},
+    {id:'sem-cor', nome:'Sem Cor', desc:'amostra de cor n\u00E3o definida', sev:'warn', icon:'\u25D1',
+      filter: semCorIds.size ? (o => semCorIds.has(idCurto(o))) : null},
+    {id:'sem-wa', nome:'Sem WhatsApp', desc:'grupo WA n\u00E3o criado', sev:'warn', icon:'\u2709',
+      filter: null}, // sem dados de IDs disponíveis — será omitido
+    {id:'cauda-vt', nome:'Cauda VT', desc:'AGEND. VT h\u00E1 180+ dias', sev:'warn', icon:'\u25D4',
+      filter: o => (o.fase||'').toUpperCase().includes('AGEND. VT') && (o.idade||0) >= 180},
+    {id:'atraso-grave', nome:'Atraso Grave', desc:'planejamento >90d atrasado', sev:'crit', icon:'\u2297',
+      filter: o => {
+        if (typeof Q1_PLAN_OBRAS === 'undefined') return false;
+        return Q1_PLAN_OBRAS.some(p => p.cliente === o.cliente && p.painel_ativa === true && p.categoria === 'GRAVE');
+      }},
+    {id:'atrisk', nome:'atRisk', desc:'flagadas pelo sistema de risco', sev:'crit', icon:'\u25B2',
+      filter: atRiskIds ? (o => atRiskIds.has(idCurto(o))) : null},
+    {id:'180plus', nome:'180+ dias', desc:'mais de 6 meses no radar', sev:'warn', icon:'\u25CE',
+      filter: o => (o.idade||0) >= 180},
+    {id:'270plus', nome:'270+ dias', desc:'mais de 9 meses no radar', sev:'crit', icon:'\u25C9',
+      filter: o => (o.idade||0) >= 270}
+  ];
+
+  const grid = document.getElementById('baldes-grid');
+  if (!grid) return;
+
+  // Atualizar subtítulo com contagem real
+  const subEl = document.getElementById('baldes-sub');
+  if (subEl) subEl.textContent = obras.length + ' obras ativas classificadas por tipo de flag. Clique num balde para ver as obras daquela categoria. Uma obra pode aparecer em mais de um balde.';
+
+  grid.innerHTML = baldes.filter(b => b.filter).map(b => {
+    const list = obras.filter(b.filter).sort((a,c) => (c.idade||0) - (a.idade||0));
+    if (list.length === 0) return '';
+    const m2 = list.reduce((a,o) => a + (o.m2||0), 0);
+
+    const rows = list.map(o => {
+      const idadeCls = (o.idade||0) >= 270 ? 'idade-crit' : (o.idade||0) >= 180 ? 'idade-warn' : 'idade-ok';
+      return '<tr>' +
+        '<td>' + esc(o.cliente) + '</td>' +
+        '<td>' + esc(o.cidade||'') + '</td>' +
+        '<td>' + esc(o.consultor||'\u2014') + '</td>' +
+        '<td class="num">' + (o.m2 ? o.m2.toLocaleString('pt-BR') : '\u2014') + '</td>' +
+        '<td class="num"><span class="' + idadeCls + '">' + (o.idade != null ? o.idade+'d' : '\u2014') + '</span></td>' +
+        '</tr>';
+    }).join('');
+
+    return '<details class="balde ' + b.sev + '">' +
+      '<summary>' +
+        '<span class="balde-icon">' + b.icon + '</span>' +
+        '<div class="balde-info">' +
+          '<div class="balde-nome">' + b.nome + '</div>' +
+          '<div class="balde-meta">' + b.desc + ' \u00B7 <b>' + m2.toLocaleString('pt-BR',{maximumFractionDigits:0}) + ' m\u00B2</b></div>' +
+        '</div>' +
+        '<div class="balde-count">' + list.length + '</div>' +
+      '</summary>' +
+      '<div class="balde-content">' +
+        '<table>' +
+          '<thead><tr><th>Cliente</th><th>Cidade</th><th>Consultor</th><th>m\u00B2</th><th>Idade</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+        '</table>' +
+      '</div>' +
+    '</details>';
+  }).join('');
 }
 
 // ============== SNAPSHOT DATE + BADGE ==============
@@ -3469,7 +3565,7 @@ renderVtCaudaInterior();
 renderBacklogCounter();
 renderAlertas();
 renderAtRiskTop();
-renderTop30();
+renderBaldes();
 
 // ============== BACKLOG MODAL ==============
 function openBacklog(id){
