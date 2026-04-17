@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monofloor</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;align-items:center;justify-content:center}
+
+.splash{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+
+/* ═══ SPATULA STROKE ANIMATION ═══ */
+
+/* The "surface" being revealed — a warm concrete-like texture band */
+.stroke-container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:520px;height:140px;overflow:hidden;opacity:0;animation:fadeStroke 0.3s ease 0.8s forwards}
+@keyframes fadeStroke{to{opacity:1}}
+
+/* The stroke itself — a wide band that sweeps left to right */
+.stroke{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background:linear-gradient(
+    180deg,
+    transparent 0%,
+    #d8cdbf 8%,
+    #c9bca8 20%,
+    #bfb09a 35%,
+    #c4b5a0 50%,
+    #bfb09a 65%,
+    #c9bca8 80%,
+    #d8cdbf 92%,
+    transparent 100%
+  );
+  border-radius:4px;
+  transform:translateX(-110%);
+  animation:spatulaSwipe 1.4s cubic-bezier(0.22,0.61,0.36,1) 1s forwards;
+  opacity:0.6;
+}
+
+/* Subtle texture lines within the stroke (like trowel marks) */
+.stroke::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    95deg,
+    transparent,
+    transparent 18px,
+    rgba(255,255,255,0.08) 18px,
+    rgba(255,255,255,0.08) 19px
+  );
+}
+
+@keyframes spatulaSwipe{
+  0%{transform:translateX(-110%);opacity:0}
+  15%{opacity:0.5}
+  50%{opacity:0.7}
+  85%{opacity:0.5}
+  100%{transform:translateX(110%);opacity:0}
+}
+
+/* Second pass — thinner, slightly delayed, more transparent */
+.stroke-2{
+  position:absolute;top:15%;left:0;width:100%;height:70%;
+  background:linear-gradient(
+    180deg,
+    transparent 0%,
+    #c9bca8 15%,
+    #b8a892 50%,
+    #c9bca8 85%,
+    transparent 100%
+  );
+  border-radius:2px;
+  transform:translateX(-110%);
+  animation:spatulaSwipe2 1.6s cubic-bezier(0.22,0.61,0.36,1) 1.3s forwards;
+  opacity:0.4;
+}
+.stroke-2::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    92deg,
+    transparent,
+    transparent 24px,
+    rgba(255,255,255,0.06) 24px,
+    rgba(255,255,255,0.06) 25px
+  );
+}
+@keyframes spatulaSwipe2{
+  0%{transform:translateX(-110%);opacity:0}
+  20%{opacity:0.4}
+  50%{opacity:0.5}
+  80%{opacity:0.3}
+  100%{transform:translateX(110%);opacity:0}
+}
+
+/* Residual surface left behind — faint warm band */
+.surface-residue{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:480px;height:2px;
+  background:linear-gradient(90deg, transparent 0%, #c4b5a020 15%, #c4b5a040 50%, #c4b5a020 85%, transparent 100%);
+  opacity:0;
+  animation:residueIn 0.8s ease 2.2s forwards;
+}
+@keyframes residueIn{to{opacity:1}}
+
+/* ═══ BRAND ═══ */
+.brand{
+  position:relative;z-index:2;
+  text-align:center;
+  opacity:0;
+  animation:brandReveal 1.2s cubic-bezier(0.22,0.61,0.36,1) 2s forwards;
+}
+@keyframes brandReveal{
+  0%{opacity:0;transform:translateY(8px) scale(0.95)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.brand-logo{
+  height:48px;
+  width:auto;
+  margin-bottom:10px;
+  filter:brightness(0) sepia(1) saturate(0.3) hue-rotate(350deg) brightness(0.25);
+}
+
+.brand-tagline{
+  font-size:10px;
+  font-weight:400;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  color:#a89e92;
+  opacity:0;
+  animation:taglineIn 0.8s ease 2.6s forwards;
+}
+@keyframes taglineIn{to{opacity:1}}
+
+/* ═══ DIVIDER — thin line expanding from center ═══ */
+.divider{
+  width:0;
+  height:1px;
+  background:linear-gradient(90deg, transparent, #c4b5a0, transparent);
+  margin:28px 0;
+  opacity:0;
+  animation:dividerExpand 1s cubic-bezier(0.22,0.61,0.36,1) 3s forwards;
+}
+@keyframes dividerExpand{to{width:120px;opacity:1}}
+
+/* ═══ ENTER BUTTON ═══ */
+.enter-btn{
+  position:relative;z-index:2;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 32px;
+  background:transparent;
+  border:1px solid #c4b5a060;
+  border-radius:30px;
+  color:#6b6156;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:pointer;
+  opacity:0;
+  animation:btnIn 0.8s ease 3.2s forwards;
+  transition:all 0.4s;
+}
+@keyframes btnIn{to{opacity:1}}
+
+.enter-btn:hover{
+  background:#2a2520;
+  border-color:#2a2520;
+  color:#f0ebe3;
+  transform:translateY(-1px);
+  box-shadow:0 4px 20px rgba(42,37,32,0.15);
+}
+
+.enter-btn svg{
+  width:14px;height:14px;
+  stroke:currentColor;
+  transition:transform 0.3s;
+}
+.enter-btn:hover svg{transform:translateX(3px)}
+
+/* ═══ AMBIENT PARTICLES (subtle floating dots) ═══ */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{
+  position:absolute;
+  width:2px;height:2px;
+  background:#c4b5a0;
+  border-radius:50%;
+  opacity:0;
+  animation:float linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) translateX(0);opacity:0}
+  10%{opacity:0.15}
+  90%{opacity:0.1}
+  100%{transform:translateY(-20vh) translateX(var(--drift));opacity:0}
+}
+
+/* ═══ BOTTOM MARK ═══ */
+.bottom-mark{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:8px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#c8bfb4;
+  opacity:0;
+  animation:bottomIn 0.6s ease 3.6s forwards;
+}
+@keyframes bottomIn{to{opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="splash">
+  <!-- Ambient particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Spatula stroke animation -->
+  <div class="stroke-container">
+    <div class="stroke"></div>
+    <div class="stroke-2"></div>
+  </div>
+  <div class="surface-residue"></div>
+
+  <!-- Brand -->
+  <div class="brand">
+    <img src="https://static.wixstatic.com/media/2bc4fe_d7fd788ceb094e96b86315e020950bda~mv2.png/v1/fill/w_506,h_156,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Artboard%201.png" alt="monofloor" class="brand-logo">
+    <div class="brand-tagline">Premium Unique Surfaces™</div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Enter button -->
+  <a href="indicadores-v2.html" class="enter-btn">
+    Indicadores
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </svg>
+  </a>
+</div>
+
+<div class="bottom-mark">Indicadores Operacionais · 2026</div>
+
+<script>
+// Generate ambient particles
+var container = document.getElementById('particles');
+for (var i = 0; i < 12; i++) {
+  var p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = (Math.random() * 100) + '%';
+  p.style.animationDuration = (8 + Math.random() * 12) + 's';
+  p.style.animationDelay = (Math.random() * 8) + 's';
+  p.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+  p.style.width = p.style.height = (1.5 + Math.random() * 1.5) + 'px';
+  container.appendChild(p);
+}
+</script>
+
+</body>
+</html>
