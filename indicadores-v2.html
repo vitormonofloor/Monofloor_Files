@@ -199,7 +199,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
       <div class="fire-unit">ocorrências abertas</div>
       <div class="fire-insight">26 são críticas — nenhuma foi resolvida</div>
       <div class="fire-detail">Desvios de qualidade, reclamações e abandonos acumulando sem tratamento.</div>
-      <a class="fire-action" onclick="document.querySelectorAll('.kpi-card')[1].click();document.querySelectorAll('.kpi-card')[1].scrollIntoView({behavior:'smooth',block:'center'})">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="fire-action" href="javascript:void(0)" onclick="event.stopPropagation();openKPI(1)">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
     <div class="fire-card">
       <span class="fire-pill warn">meta ≤15%</span>
@@ -208,7 +208,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
       <div class="fire-unit">taxa de atraso</div>
       <div class="fire-insight">Uma em cada três obras está atrasada</div>
       <div class="fire-detail">O dobro da meta de 15%. Piorou 2.3pp nas últimas 6 horas.</div>
-      <a class="fire-action" onclick="document.querySelectorAll('.kpi-card')[2].click();document.querySelectorAll('.kpi-card')[2].scrollIntoView({behavior:'smooth',block:'center'})">Ver obras atrasadas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="fire-action" href="javascript:void(0)" onclick="event.stopPropagation();openKPI(2)">Ver obras atrasadas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </div>
 </div>
@@ -378,6 +378,21 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
 </footer>
 
 <script>
+// ═══ FIRE ACTIONS ═══
+function openKPI(idx) {
+  var cards = document.querySelectorAll('.kpi-card');
+  if (!cards[idx]) return;
+  // Close all
+  cards.forEach(function(c) { c.classList.remove('open'); });
+  // Open target
+  cards[idx].classList.add('open');
+  // Scroll after a brief delay to let the expand animation start
+  setTimeout(function() {
+    cards[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 150);
+}
+
+// ═══ SPARKLINE ═══
 (function(){
   var c=document.getElementById('sparkChart');
   var today=new Date(2026,3,16);
