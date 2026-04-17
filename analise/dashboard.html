@@ -93,6 +93,7 @@
   .hero-kpi .val.green { color: var(--green); }
   .hero-kpi .val.blue { color: var(--blue); }
   .hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
+  .kpi-edai{font-size:10px;color:#666;margin-top:4px;font-style:italic;line-height:1.3}
 
   .hero-summary {
     grid-column: 2 / 3;
@@ -782,10 +783,10 @@
 
     <div>
       <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de 1.028 no painel</div></div>
-        <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div></div>
-        <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div></div>
-        <div class="hero-kpi"><div class="lbl">Órfãs (sem consultor)</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: 4 com 180+</div></div>
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de 1.028 no painel</div><div class="kpi-edai">do total de 1.028 obras no sistema</div></div>
+        <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai">apenas 12% da carteira ativa</div></div>
+        <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai">quase metade da carteira — acima de 6 meses</div></div>
+        <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: 4 com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
@@ -876,7 +877,7 @@
 
     <div class="key-finding crit" style="margin-top:18px;">
       <strong>Cluster paralisado:</strong>
-      16 obras zumbi (CLIENTE FINALIZADO sem fechar) + 18 órfãs (sem consultor) + cauda VT de 15 obras congeladas há 260 dias.
+      16 obras encerradas sem fechar (CLIENTE FINALIZADO sem fechar) + 18 sem responsável (sem consultor) + VT travada de 15 obras congeladas há 260 dias.
       O somatório supera <span class="mono">23%</span> da carteira ativa total — todas paradas por motivo administrativo.
     </div>
   </section>
@@ -1163,7 +1164,7 @@
       <button class="sync-card crit" onclick="openSyncModal('zumbi')">
         <div class="sync-num-row">
           <div class="sync-num">16</div>
-          <div class="sync-tag-tipo">ZUMBI</div>
+          <div class="sync-tag-tipo">ENCERRADAS SEM FECHAR</div>
         </div>
         <div class="sync-desc">Fase = CLIENTE FINALIZADO mas status continua em aberto (em_execução, planejamento, aguardando). Operacionalmente terminada, administrativamente aberta.</div>
         <div class="sync-action">Encerrar status no painel</div>
@@ -1174,7 +1175,7 @@
           <div class="sync-num">22</div>
           <div class="sync-tag-tipo">LIMBO STATUS × FASE</div>
         </div>
-        <div class="sync-desc">Descasamento lógico geral entre status e faseAtual. Inclui zumbis + reparos em fase errada + obras sem fase + outros.</div>
+        <div class="sync-desc">Descasamento lógico geral entre status e faseAtual. Inclui encerradas sem fechar + reparos em fase errada + obras sem fase + outros.</div>
         <div class="sync-action">Auditar caso a caso</div>
       </button>
 
@@ -1260,8 +1261,8 @@
       <div class="card">
         <div class="card-head"><div class="card-title">C — Pendências de cadastro e comunicação</div><div class="card-sub">o gargalo não é operacional</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
-          <div class="kpi"><div class="lbl">Zumbi</div><div class="val crit" id="cluster-zumbi">—</div><div class="sub">CLIENTE FINALIZADO sem fechar</div></div>
-          <div class="kpi"><div class="lbl">Órfãs</div><div class="val crit" id="cluster-orfas">—</div><div class="sub">sem consultor</div></div>
+          <div class="kpi"><div class="lbl">Encerradas sem fechar</div><div class="val crit" id="cluster-zumbi">—</div><div class="sub">CLIENTE FINALIZADO sem fechar</div></div>
+          <div class="kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="cluster-orfas">—</div><div class="sub">sem consultor</div></div>
           <div class="kpi"><div class="lbl">Sem cor real</div><div class="val warn" id="cluster-sem-cor">—</div><div class="sub" id="cluster-sem-cor-pct">—</div></div>
           <div class="kpi"><div class="lbl">Sem WhatsApp</div><div class="val warn" id="cluster-sem-wa">—</div><div class="sub" id="cluster-sem-wa-pct">—</div></div>
         </div>
@@ -1276,7 +1277,7 @@
 
       <!-- D — CAUDA VT -->
       <div class="card">
-        <div class="card-head"><div class="card-title">D — Cauda longa AGEND. VT</div><div class="card-sub">lote congelado de 8,5 meses</div></div>
+        <div class="card-head"><div class="card-title">D — VT travada há 180+ dias</div><div class="card-sub">lote congelado de 8,5 meses</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
           <div class="kpi"><div class="lbl">Obras na fase</div><div class="val warn" id="vt-fase">46</div><div class="sub">AGEND. VT - AFERIÇÃO/ORIENTAÇÃO</div></div>
           <div class="kpi"><div class="lbl">Cauda &gt;180d</div><div class="val crit" id="vt-cauda-n">—</div><div class="sub">mediana <span class="mono" id="vt-cauda-med">260d</span></div></div>
@@ -1297,7 +1298,7 @@
 
     <!-- OBRAS EM RISCO COM DIAGNÓSTICO -->
     <div class="card" style="margin-top:24px;" id="card-atrisk">
-      <div class="card-head"><div class="card-title">Obras em risco com diagnóstico</div><div class="card-sub">EXT.atRiskTop — obras priorizadas por problemas críticos</div></div>
+      <div class="card-head"><div class="card-title">Obras em risco com diagnóstico</div><div class="card-sub">Obras em risco — priorizadas por problemas críticos</div></div>
       <div id="atrisk-list"></div>
     </div>
     </div><!-- /diag-bloco achados -->
@@ -1314,7 +1315,7 @@
           <div class="bk-delta same">=</div>
           <svg class="bk-spark" viewBox="0 0 80 24"></svg>
         </div>
-        <div class="bk-title">Obras zumbi</div>
+        <div class="bk-title">Encerradas sem fechar</div>
         <div class="bk-sub">CLIENTE FINALIZADO sem fechar — mediana 208d · máx 313d</div>
         <div class="bk-action">Encerrar status no sistema</div>
       </button>
@@ -1336,7 +1337,7 @@
           <div class="bk-delta same">=</div>
           <svg class="bk-spark" viewBox="0 0 80 24"></svg>
         </div>
-        <div class="bk-title">Obras órfãs</div>
+        <div class="bk-title">Sem responsável</div>
         <div class="bk-sub">Sem consultor — mediana 161d · 4 críticas &gt;180d · 3 com bug de cadastro</div>
         <div class="bk-action">Atribuir consultor</div>
       </button>
@@ -1366,12 +1367,12 @@
     </div><!-- /diag-bloco backlog -->
   </section><!-- /diagnostico -->
 
-  <!-- ============== MODAL: ZUMBI ============== -->
+  <!-- ============== MODAL: ENCERRADAS SEM FECHAR ============== -->
   <div class="bk-modal" id="modal-zumbi">
     <div class="bk-modal-bg" onclick="closeBacklog()"></div>
     <div class="bk-modal-box">
       <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
-      <h3>Obras zumbi <span>16 obras · ação: encerrar status no sistema</span></h3>
+      <h3>Encerradas sem fechar <span>16 obras · ação: encerrar status no sistema</span></h3>
       <p class="bk-action-detail">
         <strong style="color:#c4a77d">Por que:</strong> CLIENTE FINALIZADO indica que a obra acabou fisicamente, mas o status no CRM continua em aberto (em_execucao, planejamento, aguardando). Resultado: aparece no painel como ativa indevidamente, distorcendo carga e SLA. Mediana de idade 208d, máx 313d (Vanessa Pimentel — Luana, há 10 meses).
       </p>
@@ -1437,14 +1438,14 @@
     </div>
   </div>
 
-  <!-- ============== MODAL: ÓRFÃS ============== -->
+  <!-- ============== MODAL: SEM RESPONSÁVEL ============== -->
   <div class="bk-modal" id="modal-orfas">
     <div class="bk-modal-bg" onclick="closeBacklog()"></div>
     <div class="bk-modal-box">
       <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
-      <h3>Obras órfãs <span>18 obras · ação: atribuir consultor</span></h3>
+      <h3>Sem responsável <span>18 obras · ação: atribuir consultor</span></h3>
       <p class="bk-action-detail">
-        <strong style="color:#c4a77d">Por que:</strong> 18 obras ativas com consultor vazio, null ou literal "[]". Sem responsável nominal, ninguém é cobrado pela movimentação — viram limbo. 4 obras já passaram de 180 dias órfãs (críticas). 3 têm bug de cadastro (consultor gravado como string "[]" em vez de null) — precisa correção no input do CRM antes de atribuir.
+        <strong style="color:#c4a77d">Por que:</strong> 18 obras ativas com consultor vazio, null ou literal "[]". Sem responsável nominal, ninguém é cobrado pela movimentação — viram limbo. 4 obras já passaram de 180 dias sem responsável (críticas). 3 têm bug de cadastro (consultor gravado como string "[]" em vez de null) — precisa correção no input do CRM antes de atribuir.
       </p>
       <div class="bk-mov">
         <h4>Movimentações recentes (últimos 7 dias)</h4>
@@ -1678,7 +1679,7 @@ function q2ShowDiagFiltered(list){
     .filter(x => x.diag);
   const el = document.getElementById('q2-diag-content');
   if (!diags.length) {
-    el.innerHTML = '<div class="q2-diag-empty">Nenhuma obra desta categoria tem diagnóstico atRisk registrado. Selecione uma obra na lista para ver detalhes.</div>';
+    el.innerHTML = '<div class="q2-diag-empty">Nenhuma obra desta categoria tem diagnóstico de risco registrado. Selecione uma obra na lista para ver detalhes.</div>';
     return;
   }
   el.innerHTML = diags.slice(0, 5).map(function(item){
@@ -1699,7 +1700,7 @@ function q2ShowDiag(id, cliente){
     el.innerHTML = '<div class="q2-diag-card">'
       + '<h4>' + q2EscHtml(cliente) + '</h4>'
       + '<div class="meta">' + q2EscHtml(obra.cidade||'') + ' · ' + q2EscHtml(obra.fase||'') + ' · ' + (obra.idade != null ? (obra.idade + 'd') : '?d') + '</div>'
-      + '<div class="text q2-diag-empty">Sem diagnóstico atRisk para esta obra. Veja flags em <a href="obras-mapa.html" style="color:#c4a77d">Mapa de obras</a>.</div>'
+      + '<div class="text q2-diag-empty">Sem diagnóstico de risco para esta obra. Veja flags em <a href="obras-mapa.html" style="color:#c4a77d">Mapa de obras</a>.</div>'
       + '</div>';
   } else {
     el.innerHTML = '<div class="q2-diag-card">'
@@ -1823,7 +1824,7 @@ function renderHero() {
     `<strong>${AGG.n_180_plus}</strong> com 180+ dias (<span class="mono">${pct(AGG.n_180_plus, ativas)}%</span>) · ` +
     `<strong>${AGG.n_270_plus}</strong> com 270+ (zona escarlate) · ` +
     `mediana <span class="mono">${AGG.idade_mediana}d</span>, média <span class="mono">${AGG.idade_media}d</span> · ` +
-    `${EXT.zumbi_n} zumbi · ${EXT.orfas_n} órfãs · ${EXT.ocorrencias.n_atRisk} atRisk`;
+    `${EXT.zumbi_n} encerradas sem fechar · ${EXT.orfas_n} sem responsável · ${EXT.ocorrencias.n_atRisk} em risco`;
 
   const stamp = new Date();
   $('stamp-now').textContent = stamp.getHours().toString().padStart(2,'0') + ':' + stamp.getMinutes().toString().padStart(2,'0');
@@ -2097,8 +2098,8 @@ function openQ1Modal(cat) {
 // ============== Q2 ==============
 function flagsForObra(o) {
   const flags = [];
-  if (EXT.zumbi_ids.includes(o.id_curto)) flags.push('<span class="chip rd">ZUMBI</span>');
-  if (EXT.orfas_ids.includes(o.id_curto)) flags.push('<span class="chip rd">ORFA</span>');
+  if (EXT.zumbi_ids.includes(o.id_curto)) flags.push('<span class="chip rd">ENC. S/ FECHAR</span>');
+  if (EXT.orfas_ids.includes(o.id_curto)) flags.push('<span class="chip rd">SEM RESP.</span>');
   if (o.fase === 'OBRA PAUSADA') flags.push('<span class="chip am">PAUSADA</span>');
   if (o.status === 'reparo') flags.push('<span class="chip rd">REPARO</span>');
   if (o.idade >= 270) flags.push('<span class="chip sc">270+</span>');
@@ -2124,7 +2125,7 @@ function renderQ3() {
         <div class="vs-stat"><div class="lbl">Mediana idade</div><div class="v warn">${c.d.mediana}d</div></div>
         <div class="vs-stat"><div class="lbl">180+ dias</div><div class="v crit">${c.d.n180}</div></div>
         <div class="vs-stat"><div class="lbl">270+ dias</div><div class="v ${c.d.n270 > 0 ? 'crit' : ''}">${c.d.n270}</div></div>
-        <div class="vs-stat"><div class="lbl">Zumbi (CF)</div><div class="v ${c.d.zumbi > 5 ? 'crit' : ''}">${c.d.zumbi}</div></div>
+        <div class="vs-stat"><div class="lbl">Enc. sem fechar</div><div class="v ${c.d.zumbi > 5 ? 'crit' : ''}">${c.d.zumbi}</div></div>
         <div class="vs-stat"><div class="lbl">Em reparo</div><div class="v ${c.d.reparo > 5 ? 'warn' : ''}">${c.d.reparo}</div></div>
       </div>
     </div>
@@ -3272,28 +3273,28 @@ function renderBaldes() {
 
   // 10 Baldes — do mais crítico ao mais informativo
   const baldes = [
-    {id:'zumbi', nome:'Zumbi', desc:'CLIENTE FINALIZADO sem fechar', sev:'crit', icon:'\u2298',
+    {id:'zumbi', nome:'Encerradas sem fechar', desc:'Obras que terminaram na pr\u00E1tica mas continuam aparecendo como ativas, distorcendo os n\u00FAmeros do painel', sev:'crit', icon:'\u2298',
       filter: o => zumbiIds.size ? zumbiIds.has(idCurto(o)) : finalizadoSemFechar(o)},
-    {id:'reparo', nome:'Reparo', desc:'obras em retrabalho', sev:'crit', icon:'\u27F2',
+    {id:'reparo', nome:'Em reparo', desc:'Obras que voltaram depois de entregues \u2014 indica problema de qualidade na execu\u00E7\u00E3o original', sev:'crit', icon:'\u27F2',
       filter: o => o.status === 'reparo'},
-    {id:'orfa', nome:'\u00D3rf\u00E3', desc:'sem consultor atribu\u00EDdo', sev:'warn', icon:'\u2299',
+    {id:'orfa', nome:'Sem respons\u00E1vel', desc:'Ningu\u00E9m est\u00E1 oficialmente cuidando dessas obras \u2014 risco de abandono e atraso silencioso', sev:'warn', icon:'\u2299',
       filter: o => orfaIds.size ? orfaIds.has(idCurto(o)) : (!o.consultor || o.consultor === '' || o.consultor === '[]')},
-    {id:'sem-cor', nome:'Sem Cor', desc:'amostra de cor n\u00E3o definida', sev:'warn', icon:'\u25D1',
+    {id:'sem-cor', nome:'Sem cor definida', desc:'Cor do piso ainda n\u00E3o foi escolhida \u2014 pode travar produ\u00E7\u00E3o industrial e log\u00EDstica', sev:'warn', icon:'\u25D1',
       filter: semCorIds.size ? (o => semCorIds.has(idCurto(o))) : null},
     {id:'sem-wa', nome:'Sem WhatsApp', desc:'grupo WA n\u00E3o criado', sev:'warn', icon:'\u2709',
       filter: null}, // sem dados de IDs disponíveis — será omitido
-    {id:'cauda-vt', nome:'Cauda VT', desc:'AGEND. VT h\u00E1 180+ dias', sev:'warn', icon:'\u25D4',
+    {id:'cauda-vt', nome:'VT travada h\u00E1 180+ dias', desc:'Visitas t\u00E9cnicas que nunca foram agendadas \u2014 obras paradas antes mesmo de come\u00E7ar', sev:'warn', icon:'\u25D4',
       filter: o => (o.fase||'').toUpperCase().includes('AGEND. VT') && (o.idade||0) >= 180},
-    {id:'atraso-grave', nome:'Atraso Grave', desc:'planejamento >90d atrasado', sev:'crit', icon:'\u2297',
+    {id:'atraso-grave', nome:'Atraso grave no planejamento', desc:'Planejamento previa t\u00E9rmino h\u00E1 mais de 90 dias \u2014 cronograma completamente desatualizado', sev:'crit', icon:'\u2297',
       filter: o => {
         if (typeof Q1_PLAN_OBRAS === 'undefined') return false;
         return Q1_PLAN_OBRAS.some(p => p.cliente === o.cliente && p.painel_ativa === true && p.categoria === 'GRAVE');
       }},
-    {id:'atrisk', nome:'atRisk', desc:'flagadas pelo sistema de risco', sev:'crit', icon:'\u25B2',
+    {id:'atrisk', nome:'Em risco', desc:'Flagadas pelo sistema por combina\u00E7\u00E3o de problemas, atrasos ou reclama\u00E7\u00F5es de cliente', sev:'crit', icon:'\u25B2',
       filter: atRiskIds ? (o => atRiskIds.has(idCurto(o))) : null},
-    {id:'180plus', nome:'180+ dias', desc:'mais de 6 meses no radar', sev:'warn', icon:'\u25CE',
+    {id:'180plus', nome:'180+ dias', desc:'Mais de 6 meses no radar \u2014 passaram do ciclo normal de uma obra Monofloor', sev:'warn', icon:'\u25CE',
       filter: o => (o.idade||0) >= 180},
-    {id:'270plus', nome:'270+ dias', desc:'mais de 9 meses no radar', sev:'crit', icon:'\u25C9',
+    {id:'270plus', nome:'270+ dias', desc:'No radar h\u00E1 mais de 9 meses sem resolu\u00E7\u00E3o \u2014 as mais antigas da carteira', sev:'crit', icon:'\u25C9',
       filter: o => (o.idade||0) >= 270}
   ];
 
@@ -3427,7 +3428,7 @@ function renderHeroZumbiChip() {
   const reais = execTotal - zumbiExec;
   const el = $('kpi-exec');
   if (el && zumbiExec > 0) {
-    el.innerHTML = execTotal + ' <span style="font-size:11px;color:var(--muted);font-weight:400;">(' + reais + ' reais + ' + zumbiExec + ' zumbi)</span>';
+    el.innerHTML = execTotal + ' <span style="font-size:11px;color:var(--muted);font-weight:400;">(' + reais + ' reais + ' + zumbiExec + ' enc. sem fechar)</span>';
   }
 }
 
@@ -3552,7 +3553,7 @@ function renderLeituraDia() {
   }
 
   // Frase 6: prioridade
-  frases.push('<b>Prioridade:</b> fechar as <b class="num">' + nZumbi + '</b> obras zumbi e destravar o lote de <b class="num">' + loteVT + '</b> VTs congelado há ' + ((EXT.vt_cauda || {}).idade_mediana || 260) + ' dias.');
+  frases.push('<b>Prioridade:</b> fechar as <b class="num">' + nZumbi + '</b> obras encerradas sem fechar e destravar o lote de <b class="num">' + loteVT + '</b> VTs congelado há ' + ((EXT.vt_cauda || {}).idade_mediana || 260) + ' dias.');
 
   document.getElementById('leitura-texto').innerHTML = frases.join(' ');
 }
@@ -3686,7 +3687,7 @@ function collectMoves(hist, cat, days) {
 }
 
 function describeAcao(key, item) {
-  if (key.includes('saiu'))         return `saiu do limbo${item.idade_quando_saiu ? ' (era zumbi há ' + item.idade_quando_saiu + 'd)' : ''}`;
+  if (key.includes('saiu'))         return `saiu do limbo${item.idade_quando_saiu ? ' (encerrada sem fechar há ' + item.idade_quando_saiu + 'd)' : ''}`;
   if (key.includes('atribuida'))    return `recebeu consultor ${item.novo_consultor || ''}`.trim();
   if (key.includes('formalizado'))  return `cadastrado em /api/equipes`;
   if (key.includes('resolvido'))    return `conflito resolvido`;
