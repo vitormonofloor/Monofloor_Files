@@ -362,6 +362,7 @@
   .q2-fcard.crit{border-left-color:#c45a5a}
   .q2-fcard.warn{border-left-color:#b89a4a}
   .q2-fcard.ok{border-left-color:#3d8a5a}
+  .q2-ficon{font-size:24px;line-height:1;margin-bottom:6px}
   .q2-fnum{font-family:'JetBrains Mono',monospace;font-size:22px;color:#2a2520;font-weight:600;line-height:1}
   .q2-flabel{font-size:11px;color:#b8a080;text-transform:uppercase;letter-spacing:0.08em;margin-top:6px;font-weight:500}
   .q2-fmeta{font-size:10px;color:#8a7e72;margin-top:6px;display:flex;flex-direction:column;gap:2px;font-family:'JetBrains Mono',monospace}
@@ -1756,16 +1757,16 @@ function q2EscHtml(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&'
 function q2Init(){
   const ativas = Q2_OBRAS;
   const statuses = [
-    {id:'TODAS', label:'Todas', sev:'ok'},
-    {id:'reparo', label:'Em reparo', sev:'crit'},
-    {id:'pausado', label:'Pausada', sev:'crit'},
-    {id:'marcas_rolo_cera', label:'Defeito de acabamento', sev:'crit'},
-    {id:'aguardando_clima', label:'Esperando clima', sev:'warn'},
-    {id:'aguardando_execucao', label:'Aguardando início', sev:'warn'},
-    {id:'planejamento', label:'Em planejamento', sev:'ok'},
-    {id:'em_execucao', label:'Em execução', sev:'ok'},
-    {id:'contrato', label:'Em contrato', sev:'ok'},
-    {id:'reserva', label:'Em reserva', sev:'ok'}
+    {id:'TODAS', label:'Todas', sev:'ok', icon:'📊'},
+    {id:'reparo', label:'Em reparo', sev:'crit', icon:'🔧'},
+    {id:'pausado', label:'Pausada', sev:'crit', icon:'⏸️'},
+    {id:'marcas_rolo_cera', label:'Defeito de acabamento', sev:'crit', icon:'⚠️'},
+    {id:'aguardando_clima', label:'Esperando clima', sev:'warn', icon:'🌧️'},
+    {id:'aguardando_execucao', label:'Aguardando início', sev:'warn', icon:'⏳'},
+    {id:'planejamento', label:'Em planejamento', sev:'ok', icon:'📐'},
+    {id:'em_execucao', label:'Em execução', sev:'ok', icon:'🔨'},
+    {id:'contrato', label:'Em contrato', sev:'ok', icon:'📄'},
+    {id:'reserva', label:'Em reserva', sev:'ok', icon:'📌'}
   ];
 
   const totalAtivas = ativas.length;
@@ -1777,6 +1778,7 @@ function q2Init(){
     const withAge = list.filter(o => o.idade != null);
     const ageAvg = withAge.length ? Math.round(withAge.reduce((a,o) => a + o.idade, 0) / withAge.length) : 0;
     return '<button class="q2-fcard ' + s.sev + '" data-status="' + s.id + '">'
+      + '<div class="q2-ficon">' + (s.icon||'') + '</div>'
       + '<div class="q2-fnum">' + list.length + '</div>'
       + '<div class="q2-flabel">' + s.label + '</div>'
       + '<div class="q2-fmeta"><span>' + m2.toLocaleString('pt-BR',{maximumFractionDigits:0}) + ' m²</span><span>' + pctv + '% do total</span></div>'
