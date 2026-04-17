@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATENA — Auditor Estrategico Monofloor</title>
+<title>ATENA + HERMES — Intelig&ecirc;ncia Monofloor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -119,6 +119,17 @@ a:hover { text-decoration: underline; }
 .evo-snap-header{background:transparent;border:none;font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:0.06em;font-weight:500}
 @media(max-width:720px){.evo-modal-box{padding:20px}.evo-snap{grid-template-columns:70px repeat(3,1fr);font-size:10px}}
 
+/* ============== TABS ATENA/HERMES ============== */
+.atena-tabs{display:flex;gap:4px;margin-bottom:28px;padding:4px;background:#f8f5f0;border-radius:10px;border:1px solid #e8e0d4}
+.atena-tab{flex:1;padding:10px 16px;border:none;border-radius:8px;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;color:#a89e92;cursor:pointer;transition:all 0.25s;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px}
+.atena-tab:hover{color:#6b6156}
+.atena-tab.active{background:#ffffff;color:#2a2520;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-weight:600}
+.atena-tab-icon{font-size:14px;opacity:0.6}
+.atena-tab.active .atena-tab-icon{opacity:1;color:#b8a080}
+.atena-panel{display:none}
+.atena-panel.active{display:block}
+.hermes-frame{width:100%;border:none;border-radius:8px;min-height:600px;background:#f8f5f0}
+
 /* ============== MONO-NAV ============== */
 .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#f0ebe3,rgba(240,235,227,0.97));border-bottom:1px solid #e0d8cc;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .mono-nav-inner{display:flex;gap:6px;max-width:1600px;margin:0 auto;padding:0 24px;flex-wrap:wrap;justify-content:center}
@@ -197,11 +208,20 @@ a:hover { text-decoration: underline; }
       <span class="atena-symbol">&#9672;</span>
       <div>
         <h1>ATENA</h1>
-        <p class="atena-tagline">briefing executivo &middot; o que mudou e o que precisa de aten&ccedil;&atilde;o</p>
+        <p class="atena-tagline">intelig&ecirc;ncia operacional &middot; auditoria + narrativa di&aacute;ria</p>
       </div>
     </div>
     <div class="atena-date" id="atena-date">carregando...</div>
   </div>
+
+  <!-- TABS -->
+  <div class="atena-tabs">
+    <button class="atena-tab active" onclick="switchTab('atena')"><span class="atena-tab-icon">&#9672;</span> ATENA</button>
+    <button class="atena-tab" onclick="switchTab('hermes')"><span class="atena-tab-icon">&#9671;</span> HERMES</button>
+  </div>
+
+  <!-- PANEL: ATENA -->
+  <div class="atena-panel active" id="panel-atena">
 
   <!-- BLOCO 1: O QUE MUDOU (delta 24h) -->
   <section class="atena-section" id="atena-mudou">
@@ -238,9 +258,35 @@ a:hover { text-decoration: underline; }
     <a href="dashboard.html" class="atena-dash-link">Ver dashboard completo &rarr;</a>
   </div>
 
+  </div><!-- /panel-atena -->
+
+  <!-- PANEL: HERMES -->
+  <div class="atena-panel" id="panel-hermes">
+    <section class="atena-section">
+      <h2>An&aacute;lise Narrativa</h2>
+      <p class="atena-section-sub">Gerada pelo Hermes (Groq LLM) &middot; atualizada diariamente &agrave;s 8h &middot; na voz do Vitor</p>
+    </section>
+    <iframe src="../analise.html" class="hermes-frame" id="hermes-iframe" loading="lazy"></iframe>
+  </div>
+
 </div>
 
 <script>
+// Tab switching
+function switchTab(tab) {
+  document.querySelectorAll('.atena-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.atena-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  event.target.closest('.atena-tab').classList.add('active');
+  // Auto-resize iframe
+  if (tab === 'hermes') {
+    var iframe = document.getElementById('hermes-iframe');
+    iframe.onload = function() {
+      try { iframe.style.height = iframe.contentDocument.body.scrollHeight + 40 + 'px'; } catch(e) { iframe.style.height = '800px'; }
+    };
+  }
+}
+
 async function atenaInit() {
   const hoje = new Date();
   const hojeStr = hoje.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
