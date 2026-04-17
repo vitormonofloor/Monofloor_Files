@@ -19,8 +19,7 @@
   // Já autenticado nesta sessão?
   if (sessionStorage.getItem(SESSION_KEY) === TOKEN_VALUE) return;
 
-  // Esconder conteúdo da página
-  document.documentElement.style.visibility = 'hidden';
+  // Bloquear scroll enquanto não autenticado
   document.documentElement.style.overflow = 'hidden';
 
   // SHA-256 async
@@ -78,7 +77,6 @@
         overlay.style.opacity = '0';
         setTimeout(function() {
           overlay.remove();
-          document.documentElement.style.visibility = '';
           document.documentElement.style.overflow = '';
         }, 400);
       } else {
