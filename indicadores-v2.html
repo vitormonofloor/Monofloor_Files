@@ -569,25 +569,25 @@ var TDEFS={
   'material':{def:'Material errado, atraso de entrega, consumo acima do estimado.',como:'<code>KIRA</code>: "material errado", "falta de", cruza com pipe PRODUÇÃO.'}
 };
 var CONS=[
-  {id:'wesley',nome:'Wesley Matheus',ini:'WM',obras:42,msgs:2814,ocs:98,crit:12,atraso:38,
-    tipos:[{t:'desvio qualidade',n:28,sev:{critica:{n:5,items:[{tit:'Manchas extensas após cura',proj:'TALLY FELDMAN'},{tit:'Cor diferente do aprovado',proj:'TALLY FELDMAN'},{tit:'Retrabalho completo — piso rejeitado',proj:'ANDRE KEUNECKE'},{tit:'Desplacamento em alto tráfego',proj:'GETULIO TURATTI'},{tit:'Ondulações visíveis',proj:'LUIZ GUSTAVO'}]},alta:{n:10,items:[{tit:'Irregularidade no corredor',proj:'LUIZ GUSTAVO'},{tit:'Bolhas após PU',proj:'FLAVIO FAVA'},{tit:'Tonalidade desigual',proj:'TALLY FELDMAN'},{tit:'Micro fissuras na entrada',proj:'TRESPONTOZERO'}]},media:{n:8,items:[{tit:'Consumo resina 20% acima',proj:'ANDRE KEUNECKE'}]},baixa:{n:5,items:[{tit:'Arranhão superficial removível',proj:'CONDOMÍNIO CORIN'}]}}},
-      {t:'falha comunicação',n:22,sev:{critica:{n:2,items:[{tit:'Cliente sem retorno há 12 dias',proj:'TALLY FELDMAN'}]},alta:{n:8,items:[{tit:'Não comunicou mudança de cronograma',proj:'TALLY FELDMAN'}]},media:{n:8,items:[]},baixa:{n:4,items:[]}}},
-      {t:'atraso',n:18,sev:{critica:{n:3,items:[{tit:'131 dias na fase (prazo: 15d)',proj:'TALLY FELDMAN'},{tit:'Reprogramada 5 vezes',proj:'ANDRE KEUNECKE'}]},alta:{n:6,items:[{tit:'45 dias sobre cronograma',proj:'GETULIO TURATTI'}]},media:{n:6,items:[]},baixa:{n:3,items:[]}}},
-      {t:'reclamação cliente',n:16,sev:{critica:{n:4,items:[{tit:'Ameaça ação judicial',proj:'TALLY FELDMAN'},{tit:'Recusa receber obra',proj:'FLAVIO FAVA'}]},alta:{n:6,items:[]},media:{n:4,items:[]},baixa:{n:2,items:[]}}},
-      {t:'abandono obra',n:6,sev:{critica:{n:4,items:[{tit:'Abandonou obra 5 dias sem aviso',proj:'TALLY FELDMAN'},{tit:'Não apareceu 3 dias',proj:'FLAVIO FAVA'}]},alta:{n:2,items:[]},media:{n:0,items:[]},baixa:{n:0,items:[]}}}],
-    topObras:[{n:'TALLY FELDMAN SINGAL GROSS',m:200,o:32},{n:'ANDRE KEUNECKE SALERNO',m:200,o:10},{n:'FLAVIO FAVA DITT',m:89,o:13},{n:'GUILHERME HAIDAR BERJEAUT',m:91,o:1}]},
-  {id:'luana',nome:'Luana Patricia',ini:'LP',obras:35,msgs:1950,ocs:62,crit:8,atraso:22,
+  {id:'cons_a',nome:'Consultor A',ini:'CA',obras:42,msgs:2814,ocs:98,crit:12,atraso:38,
+    tipos:[{t:'desvio qualidade',n:28,sev:{critica:{n:5,items:[{tit:'Manchas extensas após cura',proj:'PROJETO ALFA'},{tit:'Cor diferente do aprovado',proj:'PROJETO ALFA'},{tit:'Retrabalho completo — piso rejeitado',proj:'PROJETO BETA'},{tit:'Desplacamento em alto tráfego',proj:'PROJETO DELTA'},{tit:'Ondulações visíveis',proj:'PROJETO EPSILON'}]},alta:{n:10,items:[{tit:'Irregularidade no corredor',proj:'PROJETO EPSILON'},{tit:'Bolhas após PU',proj:'PROJETO GAMA'},{tit:'Tonalidade desigual',proj:'PROJETO ALFA'},{tit:'Micro fissuras na entrada',proj:'PROJETO ZETA'}]},media:{n:8,items:[{tit:'Consumo resina 20% acima',proj:'PROJETO BETA'}]},baixa:{n:5,items:[{tit:'Arranhão superficial removível',proj:'PROJETO ETA'}]}}},
+      {t:'falha comunicação',n:22,sev:{critica:{n:2,items:[{tit:'Cliente sem retorno há 12 dias',proj:'PROJETO ALFA'}]},alta:{n:8,items:[{tit:'Não comunicou mudança de cronograma',proj:'PROJETO ALFA'}]},media:{n:8,items:[]},baixa:{n:4,items:[]}}},
+      {t:'atraso',n:18,sev:{critica:{n:3,items:[{tit:'131 dias na fase (prazo: 15d)',proj:'PROJETO ALFA'},{tit:'Reprogramada 5 vezes',proj:'PROJETO BETA'}]},alta:{n:6,items:[{tit:'45 dias sobre cronograma',proj:'PROJETO DELTA'}]},media:{n:6,items:[]},baixa:{n:3,items:[]}}},
+      {t:'reclamação cliente',n:16,sev:{critica:{n:4,items:[{tit:'Ameaça ação judicial',proj:'PROJETO ALFA'},{tit:'Recusa receber obra',proj:'PROJETO GAMA'}]},alta:{n:6,items:[]},media:{n:4,items:[]},baixa:{n:2,items:[]}}},
+      {t:'abandono obra',n:6,sev:{critica:{n:4,items:[{tit:'Abandonou obra 5 dias sem aviso',proj:'PROJETO ALFA'},{tit:'Não apareceu 3 dias',proj:'PROJETO GAMA'}]},alta:{n:2,items:[]},media:{n:0,items:[]},baixa:{n:0,items:[]}}}],
+    topObras:[{n:'PROJETO ALFA-001',m:200,o:32},{n:'PROJETO BETA-002',m:200,o:10},{n:'PROJETO GAMA-003',m:89,o:13},{n:'PROJETO THETA-005',m:91,o:1}]},
+  {id:'cons_b',nome:'Consultor B',ini:'CB',obras:35,msgs:1950,ocs:62,crit:8,atraso:22,
     tipos:[{t:'desvio qualidade',n:20,sev:{critica:{n:3,items:[]},alta:{n:8,items:[]},media:{n:6,items:[]},baixa:{n:3,items:[]}}},{t:'atraso',n:15,sev:{critica:{n:2,items:[]},alta:{n:5,items:[]},media:{n:5,items:[]},baixa:{n:3,items:[]}}},{t:'falha comunicação',n:12,sev:{critica:{n:1,items:[]},alta:{n:4,items:[]},media:{n:5,items:[]},baixa:{n:2,items:[]}}},],
-    topObras:[{n:'PETITE FLEUR',m:210,o:8},{n:'ANDRE KEUNECKE SALERNO',m:200,o:10},{n:'FLAVIO FAVA DITT',m:89,o:13}]},
-  {id:'juliana',nome:'Juliana',ini:'JL',obras:28,msgs:1200,ocs:45,crit:4,atraso:18,
+    topObras:[{n:'PROJETO IOTA-006',m:210,o:8},{n:'PROJETO BETA-002',m:200,o:10},{n:'PROJETO GAMA-003',m:89,o:13}]},
+  {id:'cons_c',nome:'Consultor C',ini:'CC',obras:28,msgs:1200,ocs:45,crit:4,atraso:18,
     tipos:[{t:'desvio qualidade',n:14,sev:{critica:{n:1,items:[]},alta:{n:5,items:[]},media:{n:5,items:[]},baixa:{n:3,items:[]}}},{t:'reclamação cliente',n:12,sev:{critica:{n:2,items:[]},alta:{n:4,items:[]},media:{n:4,items:[]},baixa:{n:2,items:[]}}},],
-    topObras:[{n:'GETULIO TURATTI OST',m:144,o:5},{n:'MARINA PIRES DE AGUIAR',m:200,o:4}]},
-  {id:'pedro',nome:'Pedro Marçal',ini:'PM',obras:18,msgs:680,ocs:32,crit:3,atraso:28,
+    topObras:[{n:'PROJETO DELTA-004',m:144,o:5},{n:'PROJETO KAPPA-007',m:200,o:4}]},
+  {id:'cons_d',nome:'Consultor D',ini:'CD',obras:18,msgs:680,ocs:32,crit:3,atraso:28,
     tipos:[{t:'atraso',n:12,sev:{critica:{n:1,items:[]},alta:{n:4,items:[]},media:{n:5,items:[]},baixa:{n:2,items:[]}}},{t:'desvio qualidade',n:8,sev:{critica:{n:1,items:[]},alta:{n:3,items:[]},media:{n:3,items:[]},baixa:{n:1,items:[]}}},],
-    topObras:[{n:'TÂMARA NEWMAN LOBATO',m:51,o:3}]},
+    topObras:[{n:'PROJETO LAMBDA-008',m:51,o:3}]},
   {id:'orfas',nome:'Sem consultor',ini:'?',obras:18,msgs:0,ocs:12,crit:2,atraso:0,isOrfa:true,
     tipos:[{t:'falha comunicação',n:5,sev:{critica:{n:1,items:[]},alta:{n:2,items:[]},media:{n:2,items:[]},baixa:{n:0,items:[]}}},{t:'desvio qualidade',n:4,sev:{critica:{n:1,items:[]},alta:{n:1,items:[]},media:{n:1,items:[]},baixa:{n:1,items:[]}}},],
-    topObras:[{n:'OBRA ÓRFÃ 1',m:0,o:4},{n:'OBRA ÓRFÃ 2',m:0,o:3}]}
+    topObras:[{n:'PROJETO ÓRFÃO 1',m:0,o:4},{n:'PROJETO ÓRFÃO 2',m:0,o:3}]}
 ];
 (function(){
   document.getElementById('consBtns').innerHTML=CONS.map(function(c,i){
