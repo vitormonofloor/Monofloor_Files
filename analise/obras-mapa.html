@@ -187,12 +187,57 @@
     .filters input, .filters select { min-width: 0; width: 100%; }
     .counter { margin-left: 0; margin-top: 8px; }
   }
+
+  /* ============== MONO-NAV ============== */
+  .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#0a0a0a 0%,rgba(10,10,10,0.95) 100%);border-bottom:1px solid #1f1f1f;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .mono-nav-inner{display:flex;gap:6px;max-width:1600px;margin:0 auto;padding:0 24px;flex-wrap:wrap;justify-content:center}
+  .mono-nav-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;text-decoration:none;color:#888;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;border:1px solid transparent;transition:all .2s;position:relative;overflow:hidden}
+  .mono-nav-btn::before{content:'';position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .3s;box-shadow:0 0 12px 2px rgba(196,167,125,0.15) inset,0 0 20px 4px rgba(196,167,125,0.08)}
+  .mono-nav-btn:hover{color:#e8e8e8;border-color:#2a2015;background:rgba(196,167,125,0.05);text-decoration:none}
+  .mono-nav-btn:hover::before{opacity:1}
+  .mono-nav-btn.active{color:#c4a77d;border-color:#c4a77d;background:rgba(196,167,125,0.08);font-weight:600}
+  .mono-nav-btn.active::before{opacity:1;box-shadow:0 0 16px 3px rgba(196,167,125,0.2) inset,0 0 24px 6px rgba(196,167,125,0.1)}
+  .mono-nav-btn.active .mono-nav-icon{animation:navGlow 2s ease-in-out infinite}
+  @keyframes navGlow{0%,100%{text-shadow:0 0 6px rgba(196,167,125,0.4)}50%{text-shadow:0 0 14px rgba(196,167,125,0.7),0 0 28px rgba(196,167,125,0.3)}}
+  .mono-nav-icon{font-size:14px;line-height:1;color:#c4a77d;opacity:0.6;transition:opacity .2s}
+  .mono-nav-btn:hover .mono-nav-icon{opacity:1}
+  .mono-nav-btn.active .mono-nav-icon{opacity:1}
+  .mono-nav-label{white-space:nowrap}
+  @media(max-width:600px){.mono-nav-label{display:none}.mono-nav-icon{font-size:18px}.mono-nav-btn{padding:10px 12px}}
 </style>
 </head>
 <body>
 
+<nav class="mono-nav" id="mono-nav">
+  <div class="mono-nav-inner">
+    <a href="dashboard.html" class="mono-nav-btn" data-page="dashboard">
+      <span class="mono-nav-icon">&#9671;</span>
+      <span class="mono-nav-label">Dashboard</span>
+    </a>
+    <a href="atena.html" class="mono-nav-btn" data-page="atena">
+      <span class="mono-nav-icon">&#9672;</span>
+      <span class="mono-nav-label">ATENA</span>
+    </a>
+    <a href="obras-mapa.html" class="mono-nav-btn active" data-page="mapa">
+      <span class="mono-nav-icon">&#9638;</span>
+      <span class="mono-nav-label">Mapa de Obras</span>
+    </a>
+    <a href="../indicadores.html" class="mono-nav-btn" data-page="indicadores">
+      <span class="mono-nav-icon">&#9670;</span>
+      <span class="mono-nav-label">Indicadores</span>
+    </a>
+    <a href="modelagem.html" class="mono-nav-btn" data-page="modelagem">
+      <span class="mono-nav-icon">&equiv;</span>
+      <span class="mono-nav-label">Modelagem</span>
+    </a>
+    <a href="plano.html" class="mono-nav-btn" data-page="plano">
+      <span class="mono-nav-icon">&#9776;</span>
+      <span class="mono-nav-label">Plano</span>
+    </a>
+  </div>
+</nav>
+
 <header class="top">
-  <a href="dashboard.html" class="back">← Voltar ao Dashboard Executivo</a>
   <div class="top-row">
     <h1>Mapa de Obras Ativas <span class="acc">— 208 obras, 23 cruzamentos consolidados</span></h1>
     <div class="stamp">última atualização <span class="mono">2026-04-15</span></div>
