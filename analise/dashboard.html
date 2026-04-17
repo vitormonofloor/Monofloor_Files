@@ -36,9 +36,10 @@
     background: var(--card); border-bottom: 1px solid var(--border);
     padding: 14px 28px;
   }
-  .top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
-  .top h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-  .top h1 span.acc { color: var(--accent); }
+  .top-row { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .top .logo { display: flex; align-items: center; gap: 12px; }
+  .top .logo-text { font-size: 15px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; color: var(--text); }
+  .top .logo-sub { font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
   .top .stamp { font-size: 11px; color: var(--muted); }
   .stamp .mono { color: var(--text); }
   .top .links { display: flex; gap: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -894,10 +895,14 @@
 
 <header class="top">
   <div class="top-row">
-    <h1>Central de Qualidade Monofloor — <span class="acc">Dashboard Executivo</span></h1>
+    <div class="logo">
+      <div>
+        <div class="logo-text">monofloor</div>
+        <div class="logo-sub">Dashboard Executivo</div>
+      </div>
+    </div>
     <div class="links">
-      <a href="#diagnostico">Diagnóstico</a>
-      <span class="stamp"><span id="snapshot-badge"></span>Snapshot em <span class="mono" id="stamp-snapshot">—</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
+      <span class="stamp"><span id="snapshot-badge"></span><span class="mono" id="stamp-snapshot">—</span> · <span class="mono" id="stamp-now">—</span></span>
     </div>
   </div>
 </header>
