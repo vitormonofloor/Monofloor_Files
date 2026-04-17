@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATENA — Auditor Estrategico Monofloor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --card: #0d0d0d;
+  --card-2: #111;
+  --border: #1f1f1f;
+  --border-2: #2a2a2a;
+  --text: #e8e8e8;
+  --muted: #888;
+  --muted-2: #555;
+  --accent: #c4a77d;
+  --green: #7be8a8;
+  --amber: #e8c87b;
+  --red: #e87b7b;
+  --scarlet: #ff5252;
+  --blue: #7ba8e8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============== HEADER ============== */
+header.top {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+}
+.top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+.top h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.top h1 span.acc { color: var(--accent); }
+.top .tagline { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.top .links { display: flex; gap: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+.top .status-bar {
+  display: flex; gap: 20px; font-size: 11px; color: var(--muted); margin-top: 6px;
+  padding-top: 6px; border-top: 1px solid var(--border);
+}
+.top .status-bar .val { color: var(--text); font-family: 'JetBrains Mono', monospace; }
+.top .status-bar .val.crit { color: var(--red); }
+.top .status-bar .val.warn { color: var(--amber); }
+
+/* ============== CONTAINER ============== */
+.container { max-width: 1480px; margin: 0 auto; padding: 28px; }
+section { margin-bottom: 56px; }
+.section-head { margin-bottom: 18px; }
+.section-kicker {
+  font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.18em;
+  margin-bottom: 6px;
+}
+.section-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.section-sub { font-size: 12px; color: var(--muted); margin-top: 4px; max-width: 760px; }
+
+/* ============== HERO ============== */
+.hero {
+  display: grid; grid-template-columns: 300px 1fr; gap: 24px;
+  background: linear-gradient(180deg, #0e0e0e, var(--card)); border: 1px solid var(--border);
+  padding: 32px; border-radius: 6px; margin-bottom: 56px;
+}
+.health-box {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 8px; border-right: 1px solid var(--border);
+}
+.health-svg { width: 200px; height: 200px; }
+.health-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 600;
+  fill: var(--text); text-anchor: middle; dominant-baseline: central;
+}
+.health-pct { font-size: 11px; fill: var(--muted); text-anchor: middle; }
+.health-lbl {
+  margin-top: 12px; text-align: center;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
+}
+
+.hero-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.hero-kpi { padding: 8px 24px; border-right: 1px solid var(--border); }
+.hero-kpi:last-child { border-right: none; }
+.hero-kpi .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.hero-kpi .val {
+  font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 600; margin: 6px 0 4px;
+}
+.hero-kpi .val.warn { color: var(--amber); }
+.hero-kpi .val.crit { color: var(--red); }
+.hero-kpi .val.green { color: var(--green); }
+.hero-kpi .val.blue { color: var(--blue); }
+.hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
+
+/* ============== OLHOS TABS ============== */
+.olhos-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px;
+}
+.olhos-tab {
+  padding: 10px 20px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s; background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'Inter', sans-serif;
+}
+.olhos-tab:hover { color: var(--text); }
+.olhos-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.olhos-tab .badge {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  padding: 1px 5px; border-radius: 3px; margin-left: 6px;
+  background: var(--border); color: var(--muted);
+}
+.olhos-tab .badge.alta { background: rgba(232,123,123,0.15); color: var(--red); }
+.olhos-tab .badge.media { background: rgba(232,200,123,0.15); color: var(--amber); }
+
+/* ============== OLHO PANEL ============== */
+.olho-panel { display: none; }
+.olho-panel.active { display: block; }
+
+.olho-meta {
+  display: flex; gap: 24px; font-size: 11px; color: var(--muted); margin-bottom: 18px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.olho-meta .val { color: var(--text); font-family: 'JetBrains Mono', monospace; }
+
+/* ============== ACHADO CARD ============== */
+.achado {
+  background: var(--card-2); border: 1px solid var(--border); border-radius: 4px;
+  padding: 16px 20px; margin-bottom: 10px;
+}
+.achado-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.achado .sev {
+  display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 2px;
+  text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500;
+  border: 1px solid; white-space: nowrap;
+}
+.achado .sev.alta { color: var(--red); border-color: rgba(232,123,123,0.35); background: rgba(232,123,123,0.04); }
+.achado .sev.media { color: var(--amber); border-color: rgba(232,200,123,0.35); background: rgba(232,200,123,0.04); }
+.achado .sev.baixa { color: var(--muted); border-color: var(--border-2); }
+.achado .titulo { font-size: 13px; font-weight: 600; }
+.achado .descricao { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.achado .evidencia {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted-2);
+  background: rgba(0,0,0,0.3); padding: 6px 10px; border-radius: 3px; margin-top: 6px;
+  overflow-x: auto; white-space: pre-wrap; word-break: break-all;
+}
+
+/* ============== METRICAS ============== */
+.metricas-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.metrica {
+  background: var(--card); border: 1px solid var(--border); padding: 12px 14px; border-radius: 4px;
+}
+.metrica .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.metrica .val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600; margin-top: 4px; }
+
+/* ============== HISTORICO ============== */
+.timeline { display: flex; flex-direction: column; gap: 8px; }
+.timeline-row {
+  display: grid; grid-template-columns: 100px 1fr 80px; gap: 14px;
+  align-items: center; font-size: 12px; padding: 8px 14px;
+  background: var(--card-2); border: 1px solid var(--border); border-radius: 4px;
+}
+.timeline-date { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+.timeline-olhos { display: flex; gap: 4px; }
+.timeline-olho {
+  font-size: 9px; padding: 2px 6px; border-radius: 2px;
+  background: rgba(196,167,125,0.08); color: var(--accent); border: 1px solid rgba(196,167,125,0.2);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.timeline-status { font-size: 11px; color: var(--green); text-align: right; }
+
+/* ============== EMPTY STATE ============== */
+.empty-state {
+  text-align: center; padding: 80px 40px; color: var(--muted);
+}
+.empty-state .icon { font-size: 48px; color: var(--accent); margin-bottom: 16px; opacity: 0.4; }
+.empty-state .title { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+.empty-state .desc { font-size: 13px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+/* ============== RESPONSIVE ============== */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .health-box { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  .hero-kpis { grid-template-columns: 1fr 1fr; }
+  .olhos-tabs { flex-wrap: wrap; }
+}
+@media (max-width: 600px) {
+  .hero-kpis { grid-template-columns: 1fr; }
+  .timeline-row { grid-template-columns: 1fr; gap: 6px; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <div>
+      <h1>ATENA — <span class="acc">Auditor Estrategico</span></h1>
+      <div class="tagline">deusa da sabedoria -- varredura diaria da Central de Qualidade</div>
+    </div>
+    <div class="links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="../indicadores.html">Indicadores</a>
+      <a href="modelagem.html">Modelagem</a>
+    </div>
+  </div>
+  <div class="status-bar" id="status-bar">
+    <span>Ultima varredura: <span class="val" id="st-ultima">--</span></span>
+    <span>Proxima: <span class="val" id="st-proxima">--</span></span>
+    <span>Achados: <span class="val" id="st-achados">--</span></span>
+    <span>Alta severidade: <span class="val crit" id="st-alta">--</span></span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ============== HERO ============== -->
+  <section class="hero" id="hero-section">
+    <div class="health-box">
+      <svg class="health-svg" viewBox="0 0 200 200" id="health-svg">
+        <circle cx="100" cy="100" r="86" fill="none" stroke="#1f1f1f" stroke-width="14"/>
+        <circle cx="100" cy="100" r="86" fill="none" stroke="#c4a77d" stroke-width="14"
+                stroke-dasharray="540" stroke-dashoffset="540" stroke-linecap="round"
+                transform="rotate(-90 100 100)" id="health-arc"/>
+        <text x="100" y="100" class="health-num" id="health-num">--</text>
+        <text x="100" y="135" class="health-pct">/ 100</text>
+      </svg>
+      <div class="health-lbl">Indice de Saude (via Bugs)</div>
+    </div>
+    <div>
+      <div class="hero-kpis">
+        <div class="hero-kpi">
+          <div class="lbl">Total achados</div>
+          <div class="val" id="kpi-total">--</div>
+          <div class="sub">todos os olhos</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="lbl">Alta severidade</div>
+          <div class="val crit" id="kpi-alta">--</div>
+          <div class="sub">requerem atencao</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="lbl">Novos hoje</div>
+          <div class="val blue" id="kpi-novos">--</div>
+          <div class="sub">vs varredura anterior</div>
+        </div>
+        <div class="hero-kpi">
+          <div class="lbl">Varreduras</div>
+          <div class="val green" id="kpi-varreduras">--</div>
+          <div class="sub">no historico</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== 5 OLHOS ============== -->
+  <section id="olhos">
+    <div class="section-head">
+      <div class="section-kicker">5 Olhos</div>
+      <div class="section-title">Analises heuristicas</div>
+      <div class="section-sub">Cada olho varre um aspecto da Central de Qualidade: UX do dashboard, insights operacionais, lacunas de dados, bugs de coerencia e oportunidades de melhoria.</div>
+    </div>
+
+    <div class="olhos-tabs" id="olhos-tabs"></div>
+    <div id="olhos-panels"></div>
+  </section>
+
+  <!-- ============== HISTORICO ============== -->
+  <section id="historico">
+    <div class="section-head">
+      <div class="section-kicker">Historico</div>
+      <div class="section-title">Linha do tempo das varreduras</div>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+</div>
+
+<script>
+const OLHO_NAMES = ['ux', 'insights', 'lacunas', 'bugs', 'oportunidades'];
+const OLHO_LABELS = {
+  ux: 'UX',
+  insights: 'Insights',
+  lacunas: 'Lacunas',
+  bugs: 'Bugs',
+  oportunidades: 'Oportunidades'
+};
+
+let indexData = null;
+let olhoCache = {};
+
+async function loadIndex() {
+  try {
+    const r = await fetch('dados/atena/index.json');
+    if (!r.ok) throw new Error('index.json nao encontrado');
+    indexData = await r.json();
+    renderHeader();
+    renderHero();
+    renderTabs();
+    renderTimeline();
+    // Auto-load first tab
+    switchTab(OLHO_NAMES[0]);
+  } catch(e) {
+    renderEmpty();
+  }
+}
+
+function renderHeader() {
+  if (!indexData) return;
+  const d = indexData;
+  document.getElementById('st-ultima').textContent = formatDate(d.ultima_varredura);
+  document.getElementById('st-proxima').textContent = formatDate(d.proxima_varredura);
+  document.getElementById('st-achados').textContent = d.total_achados || 0;
+  document.getElementById('st-alta').textContent = d.achados_alta || 0;
+}
+
+function renderHero() {
+  if (!indexData) return;
+  const d = indexData;
+  const saude = d.indice_saude;
+
+  // Arc
+  if (saude != null) {
+    const arc = document.getElementById('health-arc');
+    const offset = 540 - (540 * saude / 100);
+    arc.style.transition = 'stroke-dashoffset 1.2s ease-out';
+    arc.setAttribute('stroke-dashoffset', offset);
+    const color = saude >= 70 ? '#7be8a8' : saude >= 40 ? '#e8c87b' : '#e87b7b';
+    arc.setAttribute('stroke', color);
+    document.getElementById('health-num').textContent = saude;
+  }
+
+  document.getElementById('kpi-total').textContent = d.total_achados || 0;
+  document.getElementById('kpi-alta').textContent = d.achados_alta || 0;
+  document.getElementById('kpi-varreduras').textContent = (d.varreduras || []).length;
+
+  // "Novos hoje" = total achados (para primeira varredura)
+  document.getElementById('kpi-novos').textContent = d.total_achados || 0;
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('olhos-tabs');
+  const panels = document.getElementById('olhos-panels');
+  tabs.innerHTML = '';
+  panels.innerHTML = '';
+
+  OLHO_NAMES.forEach(nome => {
+    const sumario = (indexData.sumario_hoje || {})[nome] || {};
+    const btn = document.createElement('button');
+    btn.className = 'olhos-tab';
+    btn.dataset.olho = nome;
+
+    let badgeClass = '';
+    let badgeText = String(sumario.achados || 0);
+    if (sumario.alta > 0) badgeClass = 'alta';
+    else if (sumario.media > 0) badgeClass = 'media';
+
+    btn.innerHTML = OLHO_LABELS[nome] + ' <span class="badge ' + badgeClass + '">' + badgeText + '</span>';
+    btn.onclick = () => switchTab(nome);
+    tabs.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'olho-panel';
+    panel.id = 'panel-' + nome;
+    panel.innerHTML = '<div style="color:var(--muted);padding:20px;">Carregando...</div>';
+    panels.appendChild(panel);
+  });
+}
+
+async function switchTab(nome) {
+  // Update tab active state
+  document.querySelectorAll('.olhos-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.olho === nome);
+  });
+  document.querySelectorAll('.olho-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-' + nome);
+  });
+
+  // Load data if not cached
+  if (!olhoCache[nome]) {
+    const lastVar = (indexData.varreduras || []).slice(-1)[0];
+    if (lastVar) {
+      try {
+        const r = await fetch('dados/atena/' + lastVar.date + '-' + nome + '.json');
+        if (r.ok) olhoCache[nome] = await r.json();
+      } catch(e) {}
+    }
+  }
+
+  renderOlhoPanel(nome);
+}
+
+function renderOlhoPanel(nome) {
+  const panel = document.getElementById('panel-' + nome);
+  const data = olhoCache[nome];
+
+  if (!data) {
+    panel.innerHTML = '<div class="empty-state"><div class="icon">--</div><div class="title">Sem dados para ' + OLHO_LABELS[nome] + '</div><div class="desc">A varredura ainda nao foi executada para este olho.</div></div>';
+    return;
+  }
+
+  let html = '';
+
+  // Meta
+  html += '<div class="olho-meta">';
+  html += '<span>Executado: <span class="val">' + formatDate(data.executado_em) + '</span></span>';
+  html += '<span>Achados: <span class="val">' + (data.achados || []).length + '</span></span>';
+  if (data.comparativo_vs_anterior) {
+    html += '<span>Delta: <span class="val">' + esc(data.comparativo_vs_anterior) + '</span></span>';
+  }
+  html += '</div>';
+
+  // Achados
+  const achados = data.achados || [];
+  // Sort: alta first, then media, then baixa
+  const sevOrder = {alta: 0, media: 1, baixa: 2};
+  achados.sort((a, b) => (sevOrder[a.severidade] || 9) - (sevOrder[b.severidade] || 9));
+
+  achados.forEach(a => {
+    html += '<div class="achado">';
+    html += '<div class="achado-head">';
+    html += '<span class="sev ' + (a.severidade || '') + '">' + (a.severidade || '?') + '</span>';
+    html += '<span class="titulo">' + esc(a.titulo) + '</span>';
+    html += '</div>';
+    html += '<div class="descricao">' + esc(a.descricao) + '</div>';
+    if (a.evidencia) {
+      html += '<div class="evidencia">' + esc(a.evidencia) + '</div>';
+    }
+    html += '</div>';
+  });
+
+  if (achados.length === 0) {
+    html += '<div style="color:var(--green);padding:20px;text-align:center;">Nenhum achado neste olho. Tudo limpo.</div>';
+  }
+
+  // Metricas
+  const metricas = data.metricas || {};
+  const metricKeys = Object.keys(metricas);
+  if (metricKeys.length > 0) {
+    html += '<div class="metricas-grid">';
+    metricKeys.forEach(k => {
+      const v = metricas[k];
+      html += '<div class="metrica">';
+      html += '<div class="lbl">' + esc(k.replace(/_/g, ' ')) + '</div>';
+      html += '<div class="val">' + (v != null ? v : '--') + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  panel.innerHTML = html;
+}
+
+function renderTimeline() {
+  const el = document.getElementById('timeline');
+  const varreduras = (indexData.varreduras || []).slice().reverse();
+
+  if (varreduras.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;">Nenhuma varredura no historico.</div>';
+    return;
+  }
+
+  let html = '';
+  varreduras.forEach(v => {
+    html += '<div class="timeline-row">';
+    html += '<div class="timeline-date">' + v.date + '</div>';
+    html += '<div class="timeline-olhos">';
+    (v.olhos || []).forEach(o => {
+      html += '<span class="timeline-olho">' + o + '</span>';
+    });
+    html += '</div>';
+    html += '<div class="timeline-status">' + (v.completa ? 'completa' : 'parcial') + '</div>';
+    html += '</div>';
+  });
+
+  el.innerHTML = html;
+}
+
+function renderEmpty() {
+  document.querySelector('.container').innerHTML = '<div class="empty-state">' +
+    '<div class="icon">&#9670;</div>' +
+    '<div class="title">ATENA aguarda primeira varredura</div>' +
+    '<div class="desc">A varredura diaria roda as 07h (Brasilia) via GitHub Actions. ' +
+    'Quando a primeira execucao completar, os 5 olhos serao exibidos aqui com achados, metricas e historico comparativo.' +
+    '<br><br>Voce tambem pode disparar manualmente via <code style="color:var(--accent)">workflow_dispatch</code> no GitHub Actions.</div>' +
+    '</div>';
+}
+
+function formatDate(s) {
+  if (!s) return '--';
+  try {
+    const d = new Date(s);
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  } catch(e) {
+    return s;
+  }
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.addEventListener('DOMContentLoaded', loadIndex);
+</script>
+
+</body>
+</html>

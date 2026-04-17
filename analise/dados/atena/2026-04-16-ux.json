@@ -1,0 +1,34 @@
+﻿{
+    "comparativo_vs_anterior":  null,
+    "olho":  "ux",
+    "executado_em":  "2026-04-17T01:50:56Z",
+    "metricas":  {
+                     "linhas":  3458,
+                     "todos_fixme":  0,
+                     "scripts_inline":  1,
+                     "ids_unicos":  123,
+                     "ids_duplicados":  0,
+                     "console_logs":  1,
+                     "tamanho_kb":  309.4
+                 },
+    "achados":  [
+                    {
+                        "descricao":  "Arquivo monolitico. Paginas acima de 250KB impactam carregamento.",
+                        "titulo":  "Dashboard com 309KB",
+                        "severidade":  "media",
+                        "evidencia":  "dashboard.html = 309.4KB, 3458 linhas"
+                    },
+                    {
+                        "descricao":  "Scripts inline extensos dificultam cache e manutencao.",
+                        "titulo":  "1 blocos script inline com \u003e100 chars",
+                        "severidade":  "baixa",
+                        "evidencia":  "1 blocos encontrados"
+                    },
+                    {
+                        "descricao":  "Console.log residuais devem ser removidos em producao.",
+                        "titulo":  "1 chamadas console.* no codigo",
+                        "severidade":  "baixa",
+                        "evidencia":  "1 ocorrencias"
+                    }
+                ]
+}

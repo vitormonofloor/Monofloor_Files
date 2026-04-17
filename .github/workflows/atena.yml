@@ -1,0 +1,43 @@
+name: ATENA — Varredura Diária
+
+on:
+  schedule:
+    - cron: "0 10 * * *"  # 10h UTC = 07h BR
+  workflow_dispatch:        # permite rodar manualmente
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atena
+  cancel-in-progress: false
+
+jobs:
+  varredura:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run ATENA scan
+        run: bash analise/atena-scan.sh
+        env:
+          TZ: America/Sao_Paulo
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "monofloor-bot"
+          git config user.email "bot@monofloor.local"
+          git add analise/dados/atena/ 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Sem mudancas — nada a commitar"
+          else
+            STAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+            git commit -m "ATENA varredura diaria $STAMP"
+            for i in 1 2 3; do
+              git pull --rebase && git push && break || sleep 5
+            done
+          fi

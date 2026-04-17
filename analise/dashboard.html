@@ -630,6 +630,13 @@
   .sync-resumo-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:#c4a77d;line-height:1}
   .sync-resumo-text{font-size:13px;color:#bbb;line-height:1.6}
   .sync-resumo-text b{color:#fff}
+
+  /* ATENA link */
+  .atena-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#888;transition:color 0.2s}
+  .atena-link:hover{color:#c4a77d;text-decoration:none}
+  .atena-icon{color:#c4a77d;font-size:13px}
+  .atena-badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(232,123,123,0.12);color:#e87b7b;border:1px solid rgba(232,123,123,0.25);min-width:16px;text-align:center}
+  .atena-badge.zero{background:rgba(123,232,168,0.08);color:#7be8a8;border-color:rgba(123,232,168,0.2)}
   </style>
 </head>
 <body>
@@ -640,7 +647,8 @@
     <div class="links">
       <a href="#backlog">Backlog crítico</a>
       <a href="obras-mapa.html">Mapa detalhado de obras</a>
-      <span class="stamp"><span class="mono">2026-04-15</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
+      <a href="atena.html" class="atena-link"><span class="atena-icon">&#9670;</span>ATENA<span class="atena-badge" id="atena-badge">--</span></a>
+      <span class="stamp"><span id="snapshot-badge"></span>Snapshot em <span class="mono" id="stamp-snapshot">—</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
     </div>
   </div>
 </header>
@@ -1121,7 +1129,7 @@
         <div class="card-sub" style="margin-bottom:8px;">Saúde por equipe (líder vs membros ativos)</div>
         <table class="t" id="org-equipes-tbl"><thead><tr><th>Equipe</th><th>Líder</th><th class="num">Ativos</th><th class="num">Inativos</th><th>Status</th></tr></thead><tbody></tbody></table>
         <div class="key-finding crit" style="margin-top:12px;">
-          <strong>Equipe Egberto: 100% sombra.</strong> Líder INATIVO + 12 membros INATIVOS no cadastro, mas roda obras hoje via escalação. Equipe Michael: líder oficial não é o líder real (Cosme aparece como APLICADOR_3 mas opera como LIDER).
+          <strong>Equipe Egberto: líder + 12 membros INATIVOS no cadastro.</strong> Operação real (3 obras hoje) é feita pelo encarregado oculto 8c9780dd, NÃO pela equipe cadastrada. Equipe Michael: líder oficial não é o líder real (Cosme aparece como APLICADOR_3 mas opera como LIDER).
         </div>
       </div>
 
@@ -1129,10 +1137,10 @@
       <div class="card">
         <div class="card-head"><div class="card-title">B — Cronograma fossilizado</div><div class="card-sub">sistema de planejamento</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
-          <div class="kpi"><div class="lbl">Atrasadas</div><div class="val crit">100%</div><div class="sub">34 de 34</div></div>
-          <div class="kpi"><div class="lbl">Já concluídas</div><div class="val warn">58,8%</div><div class="sub">no painel real</div></div>
-          <div class="kpi"><div class="lbl">Mediana atraso</div><div class="val warn"><span class="mono">83d</span></div><div class="sub">desde dataTermino</div></div>
-          <div class="kpi"><div class="lbl">Máx atraso</div><div class="val crit"><span class="mono">132d</span></div><div class="sub">cliente HOUSSEIN</div></div>
+          <div class="kpi"><div class="lbl">Atrasadas</div><div class="val crit">100%</div><div class="sub"><span id="crono-total">—</span> de <span id="crono-total2">—</span></div></div>
+          <div class="kpi"><div class="lbl">Já concluídas</div><div class="val warn" id="crono-pct-concl">—</div><div class="sub">no painel real</div></div>
+          <div class="kpi"><div class="lbl">Mediana atraso</div><div class="val warn"><span class="mono" id="crono-mediana">—</span></div><div class="sub">desde dataTermino</div></div>
+          <div class="kpi"><div class="lbl">Máx atraso</div><div class="val crit"><span class="mono" id="crono-max">—</span></div><div class="sub" id="crono-max-cliente">—</div></div>
         </div>
         <div class="key-finding crit" style="margin-top:12px;">
           <strong>O sistema de planejamento opera sobre realidade desatualizada.</strong>
@@ -1144,10 +1152,10 @@
       <div class="card">
         <div class="card-head"><div class="card-title">C — Cluster administrativo</div><div class="card-sub">o gargalo não é operacional</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
-          <div class="kpi"><div class="lbl">Zumbi</div><div class="val crit">16</div><div class="sub">CLIENTE FINALIZADO sem fechar</div></div>
-          <div class="kpi"><div class="lbl">Órfãs</div><div class="val crit">18</div><div class="sub">sem consultor</div></div>
-          <div class="kpi"><div class="lbl">Sem cor real</div><div class="val warn">87</div><div class="sub">41,8% das ativas</div></div>
-          <div class="kpi"><div class="lbl">Sem WhatsApp</div><div class="val warn">90</div><div class="sub">43% das ativas</div></div>
+          <div class="kpi"><div class="lbl">Zumbi</div><div class="val crit" id="cluster-zumbi">—</div><div class="sub">CLIENTE FINALIZADO sem fechar</div></div>
+          <div class="kpi"><div class="lbl">Órfãs</div><div class="val crit" id="cluster-orfas">—</div><div class="sub">sem consultor</div></div>
+          <div class="kpi"><div class="lbl">Sem cor real</div><div class="val warn" id="cluster-sem-cor">—</div><div class="sub" id="cluster-sem-cor-pct">—</div></div>
+          <div class="kpi"><div class="lbl">Sem WhatsApp</div><div class="val warn" id="cluster-sem-wa">—</div><div class="sub" id="cluster-sem-wa-pct">—</div></div>
         </div>
         <hr class="div">
         <div class="card-sub" style="margin-bottom:8px;">Clima distribuído (silenciosas + ativas)</div>
@@ -1165,20 +1173,33 @@
           <div class="kpi"><div class="lbl">Obras na fase</div><div class="val warn" id="vt-fase">46</div><div class="sub">AGEND. VT - AFERIÇÃO/ORIENTAÇÃO</div></div>
           <div class="kpi"><div class="lbl">Cauda &gt;180d</div><div class="val crit" id="vt-cauda-n">—</div><div class="sub">mediana <span class="mono" id="vt-cauda-med">260d</span></div></div>
           <div class="kpi"><div class="lbl">Em Luana</div><div class="val warn" id="vt-cauda-luana">—</div><div class="sub" id="vt-cauda-luana-pct">— da cauda</div></div>
-          <div class="kpi"><div class="lbl">Interior SP</div><div class="val warn">5</div><div class="sub">Piracicaba/Marília/Campinas/Paulínia</div></div>
+          <div class="kpi"><div class="lbl">Interior SP</div><div class="val warn" id="vt-cauda-interior">—</div><div class="sub" id="vt-cauda-interior-cidades">—</div></div>
         </div>
         <div class="key-finding crit" style="margin-top:12px;">
           <strong>Padrão de lote congelado.</strong> 9+ obras com EXATAMENTE 260 dias indicam um único evento (snapshot ou batch) que travou e nunca destravou. Concentração geográfica (interior SP) sugere perda de cobertura territorial.
         </div>
       </div>
     </div>
+
+    <!-- ALERTAS OPERACIONAIS -->
+    <div class="card" style="margin-top:24px;" id="card-alertas">
+      <div class="card-head"><div class="card-title">Alertas operacionais</div><div class="card-sub">categorias extraídas de EXT.alertas (exceto OUTROS)</div></div>
+      <div class="barlist" id="alertas-bar"></div>
+    </div>
+
+    <!-- OBRAS EM RISCO COM DIAGNÓSTICO -->
+    <div class="card" style="margin-top:24px;" id="card-atrisk">
+      <div class="card-head"><div class="card-title">Obras em risco com diagnóstico</div><div class="card-sub">EXT.atRiskTop — obras priorizadas por problemas críticos</div></div>
+      <div id="atrisk-list"></div>
+    </div>
+
   </section>
 
   <!-- ============== BACKLOG CRÍTICO ============== -->
   <section id="backlog">
     <div class="section-head">
       <div class="section-kicker">Backlog Crítico</div>
-      <div class="section-title">Pendências acionáveis <span class="bk-counter">5 frentes · 50 obras + 5 IDs + 3 conflitos</span></div>
+      <div class="section-title">Pendências acionáveis <span class="bk-counter" id="bk-counter-header">—</span></div>
       <div class="section-sub">Pendências que precisam de decisão imediata. Clique para ver lista nominal, idade, ação sugerida e link pro portal da obra.</div>
     </div>
 
@@ -1201,7 +1222,7 @@
           <svg class="bk-spark" viewBox="0 0 80 24"></svg>
         </div>
         <div class="bk-title">Líderes ocultos</div>
-        <div class="bk-sub">UUIDs liderando hoje sem cadastro em /api/equipes — 13 obras escaladas</div>
+        <div class="bk-sub" id="bk-lideres-sub">UUIDs liderando hoje sem cadastro em /api/equipes</div>
         <div class="bk-action">Identificar pessoa e cadastrar</div>
       </button>
 
@@ -1463,7 +1484,7 @@
   <div>
     Refresh automático a cada 30 min via GitHub Actions ·
     Fontes: painel-temporal.json (1.028 obras) + 23 cruzamentos sobre 1.028 obras ·
-    Snapshot diário <span class="mono">2026-04-15</span>
+    Snapshot diário <span class="mono" id="stamp-snapshot-footer">—</span>
   </div>
 </footer>
 
@@ -2189,7 +2210,7 @@ const Q3_OBRAS_HOJE = {
   '7ddf797f-1edc-4af9-a8ef-e9a95cee9876': {cliente:'BENY MAJTLIS', cidade:'SÃO SEBASTIÃO', status:'em_execucao', fase:'', m2:186.78, n_membros:3},
   'feb975f6-4192-48b5-9b2a-ba62eaa779f1': {cliente:'RAFIK WLADIMIR FREUA', cidade:'SÃO PAULO / SP', status:'em_execucao', fase:'', m2:113.15, n_membros:5},
   'e6b38375-4075-4f79-9319-f15566722963': {cliente:'TALLY FELDMAN SINGAL GROSS', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:99.83, n_membros:5},
-  '72379cc1-66cb-4016-b2da-ff8027ff606d': {cliente:'BM VAREJO — M. FASHION', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:802.93, n_membros:7},
+  '72379cc1-66cb-4016-b2da-ff8027ff606d': {cliente:'BM VAREJO – M. FASHION', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:802.93, n_membros:7},
   '63623d90-e0c0-48e7-bc9d-eb45cc923af5': {cliente:'LUIS FERNANDO DE LIMA CARVALHO', cidade:'SÃO PAULO', status:'em_execucao', fase:'', m2:43.46, n_membros:3},
   '2d00e03f-dfab-49fc-83ef-74ed1995e228': {cliente:'JOÃO EDUARDO MARTINS KUHLMANN', cidade:'CURITIBA', status:'em_execucao', fase:'', m2:305.16, n_membros:3},
   '4f79b468-f013-4da9-9eed-594bf150f89a': {cliente:'LOVELY RITA DIAS MENEZES (2ª FASE)', cidade:'SP; CEP: 01.532', status:'em_execucao', fase:'', m2:57.66, n_membros:4},
@@ -2549,7 +2570,7 @@ function closeQ4Modal(){
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeQ4Modal(); });
 
 // ============== Q4 — drill-down por fase (Top fases que concentram volume) ==============
-const Q4_DATAS = {"00b858b3-428e-4318-8e37-ad7f3638cbec":{"dataExec":"2026-05-05","dataVisita":"03/07/2025 14:30","dataEntrada":"10/04/2026 13:00"},"02779aa1-3848-40a3-a7f8-dc6e9ac2edb4":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"02e37e72-46fc-445d-ad95-b50dc5ed2c49":{"dataExec":"2026-07-08","dataVisita":null,"dataEntrada":"13/05/2026 12:00"},"041e3ee4-489c-458d-bed9-54186c8d4150":{"dataExec":"2026-07-01","dataVisita":null,"dataEntrada":null},"06229071-0486-4445-93c5-b0098df64840":{"dataExec":"2026-02-23","dataVisita":"30/09/2025 16:00","dataEntrada":"23/02/2026 12:00"},"063d393e-c338-4fb7-877f-fcd7516bba48":{"dataExec":"2026-03-12","dataVisita":"13/11/2025 15:00","dataEntrada":"12/03/2026 12:00"},"06b665b3-591d-4eb7-a63f-53908dc22000":{"dataExec":"2026-05-04","dataVisita":"09/10/2025 13:30","dataEntrada":"30/03/2026 12:00"},"08b0d9bd-50d3-414e-a62a-e852259c4997":{"dataExec":"2026-05-11","dataVisita":"09/01/2026 16:00","dataEntrada":"20/04/2026 12:00"},"08d96e8b-f428-41a3-b224-3935b63ef2ca":{"dataExec":"2026-05-18","dataVisita":"02/03/2026 16:00","dataEntrada":"18/05/2026 12:00"},"096df7d0-a179-4a82-b719-0d392eec4bab":{"dataExec":"2026-03-25","dataVisita":null,"dataEntrada":"25/03/2026 09:00"},"097ee21f-3e27-4904-9929-86aa8b1d6fba":{"dataExec":"2026-04-22","dataVisita":"16/10/2025 18:00","dataEntrada":"11/02/2026 13:00"},"0b4d6460-270a-47fd-8594-065dd852f6b3":{"dataExec":null,"dataVisita":"30/07/2025 16:00","dataEntrada":null},"0b692354-92ec-4168-8b74-3ab4b6400a2b":{"dataExec":"2026-04-13","dataVisita":null,"dataEntrada":null},"0c5df046-ee4d-4e3e-9b4a-dc991cbb753f":{"dataExec":"2026-07-13","dataVisita":"07/04/2025 14:00","dataEntrada":"04/05/2026 13:01"},"0d0e33a6-9c6d-44ff-8628-23741612643b":{"dataExec":"2026-03-02","dataVisita":"14/10/2025 15:30","dataEntrada":"02/03/2026 12:09"},"0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"0e4e10b2-9fbe-49a4-9e42-08ae5624b39c":{"dataExec":"2026-04-08","dataVisita":"23/07/2025 15:30","dataEntrada":"17/12/2025 12:00"},"0f32c116-96c2-4026-a17e-e0a92feacf7d":{"dataExec":"2026-04-08","dataVisita":"02/03/2026 13:00","dataEntrada":"06/04/2026 13:00"},"0f3e836e-8e36-4436-bac8-51ef678b17c9":{"dataExec":"2026-04-06","dataVisita":"05/11/2025 13:00","dataEntrada":"06/04/2026 13:00"},"1231fb6a-8d41-4ff1-a98c-635cc35a577c":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"13cfa0d9-13e2-4978-aa89-07f7d5904b87":{"dataExec":"2026-05-06","dataVisita":"03/03/2026 13:30","dataEntrada":"01/04/2026 09:00"},"1541645c-c586-46d3-b40e-c4b7b7436b6d":{"dataExec":"2026-06-15","dataVisita":"13/03/2026 17:00","dataEntrada":"04/05/2026 12:00"},"1624ef33-fd4c-4b13-a68d-ade47e8acd7d":{"dataExec":"2026-04-27","dataVisita":"20/02/2026 14:30","dataEntrada":"20/04/2026 12:00"},"192ee017-933d-49ae-970c-89d15981e18b":{"dataExec":"2025-11-12","dataVisita":"27/10/2025 13:30","dataEntrada":"12/11/2025 12:00"},"1a869e86-5caa-4b5a-89cb-dbbda0d104eb":{"dataExec":"2026-03-25","dataVisita":"27/11/2025 13:00","dataEntrada":"25/03/2026 09:00"},"1a8f4624-ba4b-4490-a46f-91d255973c26":{"dataExec":"2026-06-29","dataVisita":null,"dataEntrada":"06/04/2026 18:02"},"1ad11198-a062-41a3-86e6-5f5a6cfd699c":{"dataExec":null,"dataVisita":"29/09/2025 14:00","dataEntrada":null},"1d47abff-8552-4440-a2a2-fde0cb858763":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"1ea08f00-3aa7-4cf1-b09b-32e69c9e98bc":{"dataExec":"2026-04-29","dataVisita":"14/05/2025 13:30","dataEntrada":null},"1fb7cf86-f8d6-4792-b74e-15170c20f7ed":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"2088ab88-2d39-41a1-95e8-33f5ebfbb9d2":{"dataExec":"2026-04-27","dataVisita":"17/03/2026 14:00","dataEntrada":"20/04/2026 10:00"},"210669e6-c8a4-4e88-93d9-291011a7b51b":{"dataExec":"2026-04-13","dataVisita":"17/03/2026 12:45","dataEntrada":"13/04/2026 10:00"},"2369c899-509f-4deb-a767-03f244854492":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"249220c9-61de-4336-b923-f75c320f1339":{"dataExec":"2026-04-14","dataVisita":null,"dataEntrada":null},"28aa71f9-beb1-404c-9fb3-0955f1daa8a9":{"dataExec":"2026-03-09","dataVisita":"07/08/2025 17:00","dataEntrada":"09/03/2026 06:00"},"2be08c42-3d40-4aba-96bd-f712d4a947b7":{"dataExec":null,"dataVisita":"09/01/2025 13:00","dataEntrada":null},"2d00e03f-dfab-49fc-83ef-74ed1995e228":{"dataExec":"2026-04-13","dataVisita":"11/06/2025 11:30","dataEntrada":"27/01/2026 12:00"},"2d17b8ae-fef0-43b0-996e-accba3c3b709":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"2ec3d2e3-279b-40f0-a443-2d8e855cf855":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":"15/06/2026 10:00"},"2ee38aff-9782-4504-b322-10cb7da6626a":{"dataExec":"2026-04-08","dataVisita":null,"dataEntrada":null},"30ec7ea2-cca6-4246-9695-4747617e0a9f":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"3122610b-9d7b-461d-af0c-c9f7cba808e1":{"dataExec":"2026-11-02","dataVisita":null,"dataEntrada":"02/11/2026 13:00"},"316cd248-95c7-4fee-a81c-736540d627c3":{"dataExec":"2026-05-15","dataVisita":null,"dataEntrada":null},"31e1c618-04bc-411c-89bc-55fca2b773b7":{"dataExec":null,"dataVisita":"23/01/2026 15:00","dataEntrada":null},"346d54a3-1011-491a-89d8-6a205d1e54c2":{"dataExec":"2026-05-18","dataVisita":null,"dataEntrada":"18/05/2026 12:00"},"35d65b32-0c6e-47b0-91dd-f3fc3a8524d4":{"dataExec":"2026-04-08","dataVisita":"02/09/2025 08:30","dataEntrada":"06/04/2026 11:00"},"3656dec5-ba56-4ee8-bfe6-e84a218f0113":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"380613f4-212c-462d-8b38-aae8b73cf3f4":{"dataExec":"2026-07-13","dataVisita":null,"dataEntrada":"27/04/2026 13:00"},"3992a42f-62d6-4384-b5fe-6fa8755d978b":{"dataExec":"2026-05-25","dataVisita":"11/12/2025 11:00","dataEntrada":"13/04/2026 12:00"},"3a093fcb-383c-49c7-b2ec-aa2bac3e07fc":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"3a1c50a6-8d0b-49c8-a2a1-ccc857a3df96":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"3c1ea187-e235-4b77-bf1d-920dba0d305e":{"dataExec":"2027-02-15","dataVisita":null,"dataEntrada":"15/02/2027 09:00"},"3e5c6392-af93-427a-9e29-3a927e6d5dc6":{"dataExec":"2026-04-13","dataVisita":"25/09/2025 16:30","dataEntrada":"30/03/2026 13:00"},"3f8df331-a86c-4563-bd18-33a2da9d6c48":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"40e39aac-9ab5-4fb1-8d48-05899984a0f2":{"dataExec":"2026-04-28","dataVisita":"29/04/2025 13:00","dataEntrada":"04/12/2025 13:00"},"4734a637-a15d-4830-9096-a60fcd1d5b08":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":null},"4741be3f-c279-4894-83e4-44e30dfbbdb6":{"dataExec":"2026-04-20","dataVisita":"16/10/2025 15:30","dataEntrada":"20/04/2026 13:00"},"48b04da7-5596-4a5a-9b73-6b9f8c665c65":{"dataExec":"2026-04-09","dataVisita":null,"dataEntrada":null},"4a98d62e-fb16-4b71-b845-32d6d5ec90f6":{"dataExec":"2026-06-16","dataVisita":"30/03/2026 16:00","dataEntrada":"16/06/2026 04:00"},"4cbde0f6-89fc-46ac-ab5f-b3f933c08ccc":{"dataExec":"2026-04-23","dataVisita":"29/10/2025 16:15","dataEntrada":"23/04/2026 12:00"},"4d2edaaa-8e35-4c0d-a020-388bf2c32d3f":{"dataExec":"2026-05-19","dataVisita":"03/02/2026 13:30","dataEntrada":"20/04/2026 13:00"},"4f79b468-f013-4da9-9eed-594bf150f89a":{"dataExec":"2026-04-13","dataVisita":null,"dataEntrada":null},"501b5b94-7185-4c88-a990-da23a069b7d5":{"dataExec":"2026-04-30","dataVisita":null,"dataEntrada":null},"51d5e910-79c5-4b4d-816b-4c179c8497ed":{"dataExec":"2026-08-03","dataVisita":null,"dataEntrada":"03/08/2026 12:00"},"54c74ab7-0f1d-4b1a-bc5c-972b70523044":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"559e9123-fbf4-48d2-8570-7edb6031c094":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"59d058b0-a8fd-419e-9ef7-6e2526fe9d69":{"dataExec":"2026-05-20","dataVisita":null,"dataEntrada":"02/05/2026 10:00"},"5ad048b1-7d25-4e1c-91c1-96c180e5b272":{"dataExec":"2026-02-23","dataVisita":"24/06/2025 00:00","dataEntrada":"23/02/2026 11:00"},"5afbb2c8-13a7-4d72-94a8-08fdff81835a":{"dataExec":"2026-05-04","dataVisita":"30/09/2025 17:30","dataEntrada":null},"5b0327a6-d35e-43b8-8fb7-4d2c9947d247":{"dataExec":"2026-05-25","dataVisita":null,"dataEntrada":null},"5e450298-c972-4cbd-bd25-820792d10d7c":{"dataExec":null,"dataVisita":"11/08/2026 14:00","dataEntrada":null},"5ebc1fc4-4c57-4075-96a7-53cf46970b61":{"dataExec":"2026-07-15","dataVisita":null,"dataEntrada":null},"5f1da635-275f-40f8-962b-d7f6f6b496d9":{"dataExec":"2025-12-10","dataVisita":"10/01/2025 13:00","dataEntrada":"10/12/2025 13:00"},"5f8aef5a-cb27-4432-949d-fa4f6f15c0d3":{"dataExec":"2026-05-27","dataVisita":"03/02/2026 12:00","dataEntrada":"20/04/2026 11:00"},"60bbb228-b6fe-4b58-9fa9-8ce14982cd7a":{"dataExec":"2027-06-03","dataVisita":null,"dataEntrada":"03/06/2027 00:00"},"61bc509c-1a5e-494e-afb2-e63d6a261f05":{"dataExec":"2026-04-27","dataVisita":"06/01/2026 15:30","dataEntrada":"27/04/2026 13:00"},"623dbe47-ba18-48cd-9445-848fb267985e":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"63048196-6e11-4d7b-8c5a-a2a31d60ff30":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"63623d90-e0c0-48e7-bc9d-eb45cc923af5":{"dataExec":"2026-04-13","dataVisita":"21/08/2025 12:00","dataEntrada":"24/02/2026 11:00"},"6765e2aa-787f-43f6-9594-de2d56e6caae":{"dataExec":"2026-05-18","dataVisita":"09/09/2025 10:30","dataEntrada":"13/04/2026 09:00"},"687fbc05-b847-4c52-8af1-d7833b3a4590":{"dataExec":"2026-02-20","dataVisita":"21/07/2025 18:30","dataEntrada":"20/02/2026 11:00"},"6b4e6b8b-0f46-48bd-9a72-c72c1450f223":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"6bb762a4-303e-484c-a9f6-33068cabafee":{"dataExec":"2026-04-27","dataVisita":"09/03/2025 15:30","dataEntrada":"14/04/2026 10:00"},"6c0eb41d-8af5-4d80-8505-c8a46404f295":{"dataExec":"2026-05-11","dataVisita":null,"dataEntrada":"11/05/2026 12:00"},"6dc04755-5c42-437a-a4a1-c0e81b900eeb":{"dataExec":"2026-05-11","dataVisita":"18/02/2025 13:00","dataEntrada":"11/05/2026 13:00"},"6f3e9db1-98e6-4feb-b0b7-27c0a9aa8894":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"717091d9-438d-4aa8-983c-40692a14d450":{"dataExec":"2026-07-13","dataVisita":null,"dataEntrada":"13/07/2026 12:00"},"71a54604-b018-477e-9e72-231a345dc4de":{"dataExec":"2026-03-25","dataVisita":"04/02/2026 13:00","dataEntrada":"25/03/2026 13:00"},"72379cc1-66cb-4016-b2da-ff8027ff606d":{"dataExec":"2026-04-13","dataVisita":"21/07/2025 15:30","dataEntrada":"25/08/2025 12:00"},"72caa099-eb8a-487e-9bf1-602c5341f0ba":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":"15/06/2026 10:00"},"74ddff0e-d7d0-4b8d-92bd-d566496205ab":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"75b4205e-4f83-43f7-a14e-fbfbd221bc65":{"dataExec":null,"dataVisita":"12/09/2025 15:30","dataEntrada":null},"76643c95-c198-4fd9-be8b-c083e0b211ae":{"dataExec":"2026-04-16","dataVisita":"12/02/2026 19:00","dataEntrada":"13/04/2026 11:00"},"780a3ef9-6467-4724-847d-19b1936cae49":{"dataExec":"2026-05-12","dataVisita":null,"dataEntrada":"20/04/2026 12:00"},"798ec1f6-c2a4-4437-a82b-a6592549a20a":{"dataExec":"2026-05-25","dataVisita":null,"dataEntrada":null},"7acbd385-8ff7-4045-91f8-dc4a24404213":{"dataExec":null,"dataVisita":"22/08/2025 13:00","dataEntrada":null},"7b3aa422-281a-4a83-ae53-a0230d2349bf":{"dataExec":"2026-05-18","dataVisita":"11/06/2025 15:00","dataEntrada":"23/03/2026 12:20"},"7ddf797f-1edc-4af9-a8ef-e9a95cee9876":{"dataExec":"2026-04-08","dataVisita":"03/11/2025 16:00","dataEntrada":"12/01/2026 12:00"},"7e6528c5-d868-4a21-9fca-79cea7702cd0":{"dataExec":null,"dataVisita":"21/01/2026 18:30","dataEntrada":null},"7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2":{"dataExec":"2026-05-04","dataVisita":"11/04/2025 14:00","dataEntrada":"20/04/2026 13:00"},"7f084908-d129-4a66-a412-7ec370ddfd54":{"dataExec":"2026-05-25","dataVisita":null,"dataEntrada":"25/05/2026 13:00"},"8001bd7a-7121-4fca-ac8d-3641765382f1":{"dataExec":"2026-04-23","dataVisita":"26/02/2026 16:30","dataEntrada":"30/03/2026 13:00"},"81a6c270-7fde-42dd-841f-120a8005922d":{"dataExec":"2026-07-08","dataVisita":"12/12/2025 12:00","dataEntrada":"06/05/2026 20:01"},"83695e2d-a79e-41ed-816a-40be98015398":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"844322df-fd76-4011-a439-a83c73b0c1af":{"dataExec":"2026-04-06","dataVisita":null,"dataEntrada":null},"868406f1-a1eb-4ab3-88a0-b83402150225":{"dataExec":"2026-01-28","dataVisita":"01/12/2025 16:30","dataEntrada":"28/01/2026 13:16"},"8783b584-ce9e-4632-873f-bb2697b02f4a":{"dataExec":"2026-07-15","dataVisita":null,"dataEntrada":null},"880fea7a-b169-45e7-851f-beefe4f47c76":{"dataExec":"2026-09-01","dataVisita":null,"dataEntrada":null},"897343f5-ac4b-47a7-91be-b38fc54cca82":{"dataExec":"2026-06-14","dataVisita":"12/08/2025 10:00","dataEntrada":null},"89c99f6b-1eb9-4cae-9b1b-37e742bfe644":{"dataExec":"2026-05-04","dataVisita":"02/02/2026 19:00","dataEntrada":"04/05/2026 13:00"},"8aa16139-44d8-46a7-87b3-1e2ad8451963":{"dataExec":"2026-06-01","dataVisita":"06/11/2025 13:00","dataEntrada":"15/04/2026 13:00"},"8ad097b9-766a-4959-8bef-b23c9cdd182b":{"dataExec":"2026-02-02","dataVisita":"21/05/2025 15:30","dataEntrada":"02/02/2026 09:00"},"8beb35b1-722e-4084-9fb7-405dc72c4b2a":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"8d76376d-f9da-48e2-929d-47303258150c":{"dataExec":"2026-06-14","dataVisita":"04/03/2026 15:45","dataEntrada":null},"8d7b2b2e-434d-4a19-a02c-92a006105508":{"dataExec":"2026-07-06","dataVisita":"11/09/2025 14:00","dataEntrada":"06/07/2026 03:00"},"8dd1d92a-7736-483c-8540-16196aadebf0":{"dataExec":"2026-05-16","dataVisita":null,"dataEntrada":null},"8ddbf80b-8bf6-4401-9a32-748141b8adf7":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"8f81a5c5-f7fa-4f3d-9da0-938f0f248d4a":{"dataExec":"2026-06-22","dataVisita":null,"dataEntrada":"22/06/2026 09:00"},"8fa22cd4-28fa-4d79-938c-1bad6bfee50e":{"dataExec":"2026-06-08","dataVisita":"30/03/2026 13:00","dataEntrada":"11/05/2026 11:00"},"8fe98c80-78f2-437f-b39e-976fc46e6f18":{"dataExec":"2026-03-02","dataVisita":null,"dataEntrada":"02/03/2026 08:00"},"906f9000-ca41-4104-ba3b-87ede936480e":{"dataExec":"2026-01-05","dataVisita":"04/11/2025 13:00","dataEntrada":"05/01/2026 13:00"},"91e4fbd5-0039-40a7-981b-710389e73eb6":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"9a190357-99d5-4a25-bba2-436ab65542ed":{"dataExec":"2026-04-20","dataVisita":"04/02/2026 16:00","dataEntrada":"20/04/2026 13:00"},"9a409b5e-e4dd-43f6-a530-4b85d6a55b2b":{"dataExec":"2026-04-21","dataVisita":"20/08/2025 10:00","dataEntrada":"22/12/2025 09:00"},"9c297cab-bc3c-488d-9848-4d8c96c656a2":{"dataExec":"2026-06-08","dataVisita":"19/08/2025 11:30","dataEntrada":"06/04/2026 14:19"},"9dcac3bd-3bba-42e6-a080-a4059d1969b0":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"9e023736-2ebb-43cd-97a1-1673bc4a56ae":{"dataExec":"2026-06-14","dataVisita":"27/02/2025 15:00","dataEntrada":null},"a191fd53-f639-4288-a379-215b3202f58b":{"dataExec":"2026-03-02","dataVisita":"23/09/2025 16:00","dataEntrada":"02/03/2026 12:00"},"a1e32eb6-7cde-4f08-a56f-4faac1683a7d":{"dataExec":"2026-05-18","dataVisita":"01/10/2025 16:00","dataEntrada":"23/03/2026 19:00"},"a28bb8e3-07dd-4ece-9f58-cda9de5aa34a":{"dataExec":"2026-03-09","dataVisita":null,"dataEntrada":"09/03/2026 08:00"},"a3cdf7af-c4f3-456d-ae7d-bc2d369b9dce":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":"04/05/2026 03:00"},"a3ed951f-616c-449a-b3ca-502615d4ba19":{"dataExec":null,"dataVisita":"02/05/2025 13:00","dataEntrada":null},"a8eff05f-a2f9-473e-96b1-5a0cc39e371b":{"dataExec":"2026-04-22","dataVisita":null,"dataEntrada":null},"a91c86c9-3f32-4d37-9470-891dd7214c3a":{"dataExec":"2026-03-06","dataVisita":null,"dataEntrada":"06/03/2026 08:00"},"a932e81c-6e2d-4fab-926c-04f74bc5c2be":{"dataExec":"2026-04-06","dataVisita":"05/03/2026 20:00","dataEntrada":"06/04/2026 11:00"},"a9cf011c-d305-4cc5-8d04-fe65e00b6c09":{"dataExec":"2026-04-22","dataVisita":null,"dataEntrada":null},"ab817a19-54ef-4fcd-bd3f-3bd2cfa4c56d":{"dataExec":"2026-07-06","dataVisita":null,"dataEntrada":"20/04/2026 13:28"},"abb93b6f-ef09-4147-b1f2-174c9bc9c80b":{"dataExec":"2026-01-05","dataVisita":"05/09/2025 12:00","dataEntrada":"05/01/2026 12:00"},"ad1f8e34-3a2b-4dfe-836f-f88a3f9e5dfc":{"dataExec":"2026-05-06","dataVisita":"21/01/2026 17:00","dataEntrada":"06/05/2026 04:00"},"ad2c9413-d9e2-47cb-93c2-cf396ca17db4":{"dataExec":"2026-04-20","dataVisita":"18/09/2025 13:00","dataEntrada":"17/12/2025 12:00"},"b4e7296c-1393-4eaf-aef8-3097b0e0c46b":{"dataExec":"2026-06-01","dataVisita":"30/10/2025 15:00","dataEntrada":"13/04/2026 09:00"},"b58ccbee-7eb5-47c8-abf9-87cd44855898":{"dataExec":"2026-04-20","dataVisita":"22/07/2025 13:00","dataEntrada":"03/11/2025 03:00"},"b793e477-6791-429c-9102-c1b5abee95f8":{"dataExec":"2026-05-01","dataVisita":null,"dataEntrada":null},"b825a98d-42e7-4844-97fe-8b6578a4c2f0":{"dataExec":"2026-05-11","dataVisita":"05/02/2026 19:00","dataEntrada":"11/05/2026 10:00"},"b871feb1-11b6-4cfc-9251-20e1910cdbf8":{"dataExec":"2026-06-22","dataVisita":null,"dataEntrada":"13/04/2026 13:00"},"b8fbadd8-778c-4a3b-9e18-81bba29a6a8e":{"dataExec":"2026-03-22","dataVisita":"11/07/2025 13:00","dataEntrada":null},"bac65d40-2297-4aa0-9424-079d41b14d2c":{"dataExec":"2026-06-01","dataVisita":null,"dataEntrada":"01/06/2026 10:00"},"bbedc8ae-7665-47ba-83ca-49e6ca0431d3":{"dataExec":"2026-06-15","dataVisita":"30/01/2026 17:00","dataEntrada":"15/06/2026 03:00"},"bc1fc5d6-8cb1-4178-9b28-f4cd01ccbd40":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"bc9f4a63-c577-409a-bdd9-afdde312880a":{"dataExec":"2026-05-18","dataVisita":null,"dataEntrada":"18/05/2026 13:00"},"bd0894c1-95cc-4d42-ab81-861d97dbcfa7":{"dataExec":"2026-03-31","dataVisita":"03/12/2025 15:15","dataEntrada":"16/03/2026 13:00"},"bd36b984-1c5a-4f9c-9050-a4632317d1da":{"dataExec":"2026-05-06","dataVisita":null,"dataEntrada":"06/05/2026 13:00"},"bf16bc8e-562e-46b1-9158-c690eb1ea259":{"dataExec":"2026-01-05","dataVisita":"11/08/2025 12:30","dataEntrada":"05/01/2026 11:00"},"c1621370-4f28-4e9b-9f02-10032f9bf7a0":{"dataExec":"2026-02-10","dataVisita":"07/01/2026 12:00","dataEntrada":"10/02/2026 13:00"},"c26eecec-2e3a-4411-8bd1-060c34f605af":{"dataExec":"2026-07-01","dataVisita":"21/01/2026 13:00","dataEntrada":null},"c29fc4b3-f8e3-4c07-ade0-cb0351adca2b":{"dataExec":"2026-06-01","dataVisita":"17/09/2025 13:00","dataEntrada":"06/04/2026 09:00"},"c302100b-e1b4-4ecc-9ac2-7d7f64467e72":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"c46c7238-e82c-4258-957f-927f93303191":{"dataExec":"2026-02-23","dataVisita":"08/07/2025 12:00","dataEntrada":"23/02/2026 12:00"},"c4e21062-7915-4b8b-8cba-912471e6b72d":{"dataExec":"2026-07-14","dataVisita":null,"dataEntrada":null},"c6908776-f200-4b20-87eb-0e9d9a80eda7":{"dataExec":"2026-05-06","dataVisita":null,"dataEntrada":null},"c9560bb7-9049-4b59-b63d-f5b2834eb234":{"dataExec":"2026-04-08","dataVisita":null,"dataEntrada":null},"c99144e7-a27f-4e49-9ffa-5399d97bafce":{"dataExec":"2026-05-18","dataVisita":null,"dataEntrada":"18/05/2026 13:00"},"ca4b3047-28d7-44b3-8c39-e0cf4f71bcaf":{"dataExec":"2026-04-15","dataVisita":"08/01/2026 17:00","dataEntrada":"13/04/2026 13:00"},"cba19133-0050-41e0-8161-78e6287d71b5":{"dataExec":"2026-06-01","dataVisita":null,"dataEntrada":null},"cecc85af-d8bc-4874-969a-e4866c98611d":{"dataExec":"2025-12-10","dataVisita":"23/06/2025 17:30","dataEntrada":"10/12/2025 13:00"},"d0dd8566-813f-4d0a-bc9e-e8619a07c750":{"dataExec":"2026-05-06","dataVisita":"04/12/2025 11:15","dataEntrada":"06/04/2026 10:00"},"d15ee100-e3a2-4ca5-a838-8c9e9c7af2f8":{"dataExec":"2026-05-12","dataVisita":"04/11/2025 14:00","dataEntrada":"06/04/2026 12:00"},"d1efa528-a5d8-484a-a211-04d29f66e866":{"dataExec":"2026-05-18","dataVisita":"13/01/2026 13:15","dataEntrada":"06/04/2026 13:00"},"d294c8c5-4be7-45fe-99f0-128643ce36f7":{"dataExec":"2026-04-20","dataVisita":"13/08/2025 13:00","dataEntrada":"01/04/2026 13:00"},"d35088b9-99cc-4c4b-9e56-d25cd29494a1":{"dataExec":"2026-04-23","dataVisita":"27/01/2026 12:00","dataEntrada":"06/04/2026 04:00"},"d3a54616-dc96-4634-9cdf-c0c1ee45ed1b":{"dataExec":"2026-05-27","dataVisita":null,"dataEntrada":null},"d4b3ea28-e546-4065-b5c5-8950bb53ef39":{"dataExec":"2026-01-19","dataVisita":"01/10/2025 18:30","dataEntrada":"19/01/2026 09:00"},"d51326f8-e34e-45dd-a355-669d10df3182":{"dataExec":"2026-07-01","dataVisita":null,"dataEntrada":null},"d569a799-4ddf-44b0-aa3a-1507cc75e799":{"dataExec":"2026-04-20","dataVisita":"25/11/2025 14:00","dataEntrada":"20/04/2026 09:00"},"d660b215-1d80-4416-87dc-aebccc42bfe2":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"d68c16a2-d17d-4d76-adea-e52b110eb136":{"dataExec":"2026-07-06","dataVisita":null,"dataEntrada":"06/07/2026 10:00"},"d73999fc-43a2-4c9d-9e54-ceb926c04fc0":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"d7aa6f08-e73c-4dce-aa59-0ed1c9aa3f33":{"dataExec":"2026-05-11","dataVisita":"06/11/2025 13:00","dataEntrada":"23/03/0206 04:06"},"d7b1c726-10f3-4de5-8a52-c569033990a6":{"dataExec":"2026-04-23","dataVisita":"26/08/2025 17:30","dataEntrada":"23/04/2026 12:00"},"d7ce4263-27d6-4541-a958-5e56d6375d43":{"dataExec":"2026-06-15","dataVisita":"13/11/2025 16:15","dataEntrada":"04/05/2026 04:00"},"db4288be-e19e-4f9e-bca6-5023e1ae8e14":{"dataExec":"2026-05-12","dataVisita":"19/05/2025 13:30","dataEntrada":"18/09/2025 03:00"},"db76891b-3385-45fe-8899-550517789ae1":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"dcd9bde5-1e7e-4ecc-ad18-b274ab9e6502":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"ddb7768a-521e-4164-9714-120250376edd":{"dataExec":"2026-04-28","dataVisita":"08/10/2025 13:00","dataEntrada":"10/12/2025 13:00"},"dec2480f-fc69-4d44-9dbc-d3820badf218":{"dataExec":"2026-04-15","dataVisita":"07/05/2025 13:00","dataEntrada":null},"e199e0bb-6a4e-4a9c-a8e8-c3229b24f322":{"dataExec":"2026-08-01","dataVisita":null,"dataEntrada":"01/08/2026 10:00"},"e1d06882-ff4e-4aff-8817-cc3c57b621d9":{"dataExec":"2026-07-06","dataVisita":null,"dataEntrada":"06/07/2026 12:00"},"e1e81955-d559-4311-a005-a5aeaf801dd7":{"dataExec":"2026-06-01","dataVisita":"27/11/2025 15:00","dataEntrada":"30/03/2026 03:00"},"e31a51cd-64ba-4c24-baea-ce80b14e0076":{"dataExec":"2026-05-11","dataVisita":null,"dataEntrada":"11/05/2026 12:00"},"e37268a3-80e1-4e76-9ecc-345ea775600d":{"dataExec":"2026-06-19","dataVisita":null,"dataEntrada":"19/05/2026 10:00"},"e648fd2b-e067-4561-a358-1c2988673ccb":{"dataExec":"2026-07-14","dataVisita":"04/03/2026 17:00","dataEntrada":null},"e6b38375-4075-4f79-9319-f15566722963":{"dataExec":"2026-04-13","dataVisita":"18/06/2025 18:00","dataEntrada":"13/11/2025 12:00"},"e79c60c1-4169-4df5-b856-220fe82510db":{"dataExec":"2026-04-29","dataVisita":null,"dataEntrada":null},"e9457a2f-2973-468d-8191-c5b268d3e892":{"dataExec":"2026-05-13","dataVisita":null,"dataEntrada":"13/05/2026 10:00"},"e9cfed37-fe20-42c0-877a-3a55b1476fbc":{"dataExec":"2026-04-14","dataVisita":"12/06/2025 13:30","dataEntrada":"30/03/2026 12:00"},"e9f43227-bbad-41e5-947f-57c192c83f0f":{"dataExec":"2026-03-16","dataVisita":"20/02/2026 12:00","dataEntrada":"16/03/2026 23:00"},"e9ff9980-b507-4ae0-929f-9b7b5fc395d0":{"dataExec":"2026-05-14","dataVisita":null,"dataEntrada":null},"ea04728a-4ce4-4189-8936-236e6c743339":{"dataExec":"2026-04-06","dataVisita":"04/02/2026 14:30","dataEntrada":"23/03/2026 13:00"},"f05608da-8c47-4a7c-9b50-e2f254eda2e0":{"dataExec":"2026-06-08","dataVisita":null,"dataEntrada":"08/06/2026 10:00"},"f0fc12b3-562c-48ac-85a7-420609299b16":{"dataExec":"2026-04-27","dataVisita":"13/02/2026 10:00","dataEntrada":null},"f2a24b2c-84f1-48fb-93e6-342c2136a1d4":{"dataExec":"2026-06-29","dataVisita":null,"dataEntrada":"20/04/2026 13:00"},"f326dd44-3240-4d28-b411-15d574efaa9b":{"dataExec":"2026-03-24","dataVisita":"23/07/2025 14:00","dataEntrada":"24/03/2026 13:00"},"f4bc18f9-4955-456f-ade5-8c0c75dadb9f":{"dataExec":"2026-10-05","dataVisita":null,"dataEntrada":"05/10/2026 10:00"},"f4f43974-f455-4691-8276-68b3567c1b78":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"f93b63d6-7bf8-4957-b831-c43a5009ddb0":{"dataExec":"2026-05-20","dataVisita":"29/05/2025 13:30","dataEntrada":"30/04/2026 12:00"},"fb35d2a0-afb2-428b-bd5c-997178f784ef":{"dataExec":"2026-07-14","dataVisita":"09/04/2026 14:46","dataEntrada":null},"fdbb659f-7073-4139-a3ee-8333a217f03c":{"dataExec":"2026-04-21","dataVisita":"01/12/2025 15:00","dataEntrada":"21/04/2026 00:00"},"feb975f6-4192-48b5-9b2a-ba62eaa779f1":{"dataExec":"2026-04-13","dataVisita":"10/02/2026 13:00","dataEntrada":"13/04/2026 12:00"}};
+const Q4_DATAS = {"00b858b3-428e-4318-8e37-ad7f3638cbec":{"dataExec":"2026-05-05","dataVisita":"03/07/2025 14:30","dataEntrada":"10/04/2026 13:00"},"02779aa1-3848-40a3-a7f8-dc6e9ac2edb4":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"02e37e72-46fc-445d-ad95-b50dc5ed2c49":{"dataExec":"2026-07-08","dataVisita":null,"dataEntrada":"13/05/2026 12:00"},"041e3ee4-489c-458d-bed9-54186c8d4150":{"dataExec":"2026-07-01","dataVisita":null,"dataEntrada":null},"06229071-0486-4445-93c5-b0098df64840":{"dataExec":"2026-02-23","dataVisita":"30/09/2025 16:00","dataEntrada":"23/02/2026 12:00"},"063d393e-c338-4fb7-877f-fcd7516bba48":{"dataExec":"2026-03-12","dataVisita":"13/11/2025 15:00","dataEntrada":"12/03/2026 12:00"},"06b665b3-591d-4eb7-a63f-53908dc22000":{"dataExec":"2026-05-04","dataVisita":"09/10/2025 13:30","dataEntrada":"30/03/2026 12:00"},"08b0d9bd-50d3-414e-a62a-e852259c4997":{"dataExec":"2026-05-11","dataVisita":"09/01/2026 16:00","dataEntrada":"20/04/2026 12:00"},"08d96e8b-f428-41a3-b224-3935b63ef2ca":{"dataExec":"2026-05-18","dataVisita":"02/03/2026 16:00","dataEntrada":"18/05/2026 12:00"},"096df7d0-a179-4a82-b719-0d392eec4bab":{"dataExec":"2026-03-25","dataVisita":null,"dataEntrada":"25/03/2026 09:00"},"097ee21f-3e27-4904-9929-86aa8b1d6fba":{"dataExec":"2026-04-22","dataVisita":"16/10/2025 18:00","dataEntrada":"11/02/2026 13:00"},"0b4d6460-270a-47fd-8594-065dd852f6b3":{"dataExec":null,"dataVisita":"30/07/2025 16:00","dataEntrada":null},"0b692354-92ec-4168-8b74-3ab4b6400a2b":{"dataExec":"2026-04-13","dataVisita":null,"dataEntrada":null},"0c5df046-ee4d-4e3e-9b4a-dc991cbb753f":{"dataExec":"2026-07-13","dataVisita":"07/04/2025 14:00","dataEntrada":"04/05/2026 13:01"},"0d0e33a6-9c6d-44ff-8628-23741612643b":{"dataExec":"2026-03-02","dataVisita":"14/10/2025 15:30","dataEntrada":"02/03/2026 12:09"},"0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"0e4e10b2-9fbe-49a4-9e42-08ae5624b39c":{"dataExec":"2026-04-08","dataVisita":"23/07/2025 15:30","dataEntrada":"17/12/2025 12:00"},"0f32c116-96c2-4026-a17e-e0a92feacf7d":{"dataExec":"2026-04-08","dataVisita":"02/03/2026 13:00","dataEntrada":"06/04/2026 13:00"},"0f3e836e-8e36-4436-bac8-51ef678b17c9":{"dataExec":"2026-04-06","dataVisita":"05/11/2025 13:00","dataEntrada":"06/04/2026 13:00"},"1231fb6a-8d41-4ff1-a98c-635cc35a577c":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"13cfa0d9-13e2-4978-aa89-07f7d5904b87":{"dataExec":"2026-05-06","dataVisita":"03/03/2026 13:30","dataEntrada":"01/04/2026 09:00"},"1541645c-c586-46d3-b40e-c4b7b7436b6d":{"dataExec":"2026-06-15","dataVisita":"13/03/2026 17:00","dataEntrada":"04/05/2026 12:00"},"1624ef33-fd4c-4b13-a68d-ade47e8acd7d":{"dataExec":"2026-04-27","dataVisita":"20/02/2026 14:30","dataEntrada":"20/04/2026 12:00"},"192ee017-933d-49ae-970c-89d15981e18b":{"dataExec":"2025-11-12","dataVisita":"27/10/2025 13:30","dataEntrada":"12/11/2025 12:00"},"1a869e86-5caa-4b5a-89cb-dbbda0d104eb":{"dataExec":"2026-03-25","dataVisita":"27/11/2025 13:00","dataEntrada":"25/03/2026 09:00"},"1a8f4624-ba4b-4490-a46f-91d255973c26":{"dataExec":"2026-06-29","dataVisita":null,"dataEntrada":"06/04/2026 18:02"},"1ad11198-a062-41a3-86e6-5f5a6cfd699c":{"dataExec":null,"dataVisita":"29/09/2025 14:00","dataEntrada":null},"1d47abff-8552-4440-a2a2-fde0cb858763":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"1ea08f00-3aa7-4cf1-b09b-32e69c9e98bc":{"dataExec":"2026-04-29","dataVisita":"14/05/2025 13:30","dataEntrada":null},"1fb7cf86-f8d6-4792-b74e-15170c20f7ed":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"2088ab88-2d39-41a1-95e8-33f5ebfbb9d2":{"dataExec":"2026-04-27","dataVisita":"17/03/2026 14:00","dataEntrada":"20/04/2026 10:00"},"210669e6-c8a4-4e88-93d9-291011a7b51b":{"dataExec":"2026-04-13","dataVisita":"17/03/2026 12:45","dataEntrada":"13/04/2026 10:00"},"2369c899-509f-4deb-a767-03f244854492":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"249220c9-61de-4336-b923-f75c320f1339":{"dataExec":"2026-04-14","dataVisita":null,"dataEntrada":null},"28aa71f9-beb1-404c-9fb3-0955f1daa8a9":{"dataExec":"2026-03-09","dataVisita":"07/08/2025 17:00","dataEntrada":"09/03/2026 06:00"},"2be08c42-3d40-4aba-96bd-f712d4a947b7":{"dataExec":null,"dataVisita":"09/01/2025 13:00","dataEntrada":null},"2d00e03f-dfab-49fc-83ef-74ed1995e228":{"dataExec":"2026-04-13","dataVisita":"11/06/2025 11:30","dataEntrada":"27/01/2026 12:00"},"2d17b8ae-fef0-43b0-996e-accba3c3b709":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"2ec3d2e3-279b-40f0-a443-2d8e855cf855":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":"15/06/2026 10:00"},"2ee38aff-9782-4504-b322-10cb7da6626a":{"dataExec":"2026-04-08","dataVisita":null,"dataEntrada":null},"30ec7ea2-cca6-4246-9695-4747617e0a9f":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"3122610b-9d7b-461d-af0c-c9f7cba808e1":{"dataExec":"2026-11-02","dataVisita":null,"dataEntrada":"02/11/2026 13:00"},"316cd248-95c7-4fee-a81c-736540d627c3":{"dataExec":"2026-05-15","dataVisita":null,"dataEntrada":null},"31e1c618-04bc-411c-89bc-55fca2b773b7":{"dataExec":null,"dataVisita":"23/01/2026 15:00","dataEntrada":null},"346d54a3-1011-491a-89d8-6a205d1e54c2":{"dataExec":"2026-05-18","dataVisita":null,"dataEntrada":"18/05/2026 12:00"},"35d65b32-0c6e-47b0-91dd-f3fc3a8524d4":{"dataExec":"2026-04-08","dataVisita":"02/09/2025 08:30","dataEntrada":"06/04/2026 11:00"},"3656dec5-ba56-4ee8-bfe6-e84a218f0113":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"380613f4-212c-462d-8b38-aae8b73cf3f4":{"dataExec":"2026-07-13","dataVisita":null,"dataEntrada":"27/04/2026 13:00"},"3992a42f-62d6-4384-b5fe-6fa8755d978b":{"dataExec":"2026-05-25","dataVisita":"11/12/2025 11:00","dataEntrada":"13/04/2026 12:00"},"3a093fcb-383c-49c7-b2ec-aa2bac3e07fc":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"3a1c50a6-8d0b-49c8-a2a1-ccc857a3df96":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"3c1ea187-e235-4b77-bf1d-920dba0d305e":{"dataExec":"2027-02-15","dataVisita":null,"dataEntrada":"15/02/2027 09:00"},"3e5c6392-af93-427a-9e29-3a927e6d5dc6":{"dataExec":"2026-04-13","dataVisita":"25/09/2025 16:30","dataEntrada":"30/03/2026 13:00"},"3f8df331-a86c-4563-bd18-33a2da9d6c48":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"40e39aac-9ab5-4fb1-8d48-05899984a0f2":{"dataExec":"2026-04-28","dataVisita":"29/04/2025 13:00","dataEntrada":"04/12/2025 13:00"},"4734a637-a15d-4830-9096-a60fcd1d5b08":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":null},"4741be3f-c279-4894-83e4-44e30dfbbdb6":{"dataExec":"2026-04-20","dataVisita":"16/10/2025 15:30","dataEntrada":"20/04/2026 13:00"},"48b04da7-5596-4a5a-9b73-6b9f8c665c65":{"dataExec":"2026-04-09","dataVisita":null,"dataEntrada":null},"4a98d62e-fb16-4b71-b845-32d6d5ec90f6":{"dataExec":"2026-06-16","dataVisita":"30/03/2026 16:00","dataEntrada":"16/06/2026 04:00"},"4cbde0f6-89fc-46ac-ab5f-b3f933c08ccc":{"dataExec":"2026-04-23","dataVisita":"29/10/2025 16:15","dataEntrada":"23/04/2026 12:00"},"4d2edaaa-8e35-4c0d-a020-388bf2c32d3f":{"dataExec":"2026-05-19","dataVisita":"03/02/2026 13:30","dataEntrada":"20/04/2026 13:00"},"4f79b468-f013-4da9-9eed-594bf150f89a":{"dataExec":"2026-04-13","dataVisita":null,"dataEntrada":null},"501b5b94-7185-4c88-a990-da23a069b7d5":{"dataExec":"2026-04-30","dataVisita":null,"dataEntrada":null},"51d5e910-79c5-4b4d-816b-4c179c8497ed":{"dataExec":"2026-08-03","dataVisita":null,"dataEntrada":"03/08/2026 12:00"},"54c74ab7-0f1d-4b1a-bc5c-972b70523044":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"559e9123-fbf4-48d2-8570-7edb6031c094":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"59d058b0-a8fd-419e-9ef7-6e2526fe9d69":{"dataExec":"2026-05-20","dataVisita":null,"dataEntrada":"02/05/2026 10:00"},"5ad048b1-7d25-4e1c-91c1-96c180e5b272":{"dataExec":"2026-02-23","dataVisita":"24/06/2025 00:00","dataEntrada":"23/02/2026 11:00"},"5afbb2c8-13a7-4d72-94a8-08fdff81835a":{"dataExec":"2026-05-04","dataVisita":"30/09/2025 17:30","dataEntrada":null},"5b0327a6-d35e-43b8-8fb7-4d2c9947d247":{"dataExec":"2026-05-25","dataVisita":null,"dataEntrada":null},"5e450298-c972-4cbd-bd25-820792d10d7c":{"dataExec":null,"dataVisita":"11/08/2026 14:00","dataEntrada":null},"5ebc1fc4-4c57-4075-96a7-53cf46970b61":{"dataExec":"2026-07-15","dataVisita":null,"dataEntrada":null},"5f1da635-275f-40f8-962b-d7f6f6b496d9":{"dataExec":"2025-12-10","dataVisita":"10/01/2025 13:00","dataEntrada":"10/12/2025 13:00"},"5f8aef5a-cb27-4432-949d-fa4f6f15c0d3":{"dataExec":"2026-05-27","dataVisita":"03/02/2026 12:00","dataEntrada":"20/04/2026 11:00"},"60bbb228-b6fe-4b58-9fa9-8ce14982cd7a":{"dataExec":"2027-06-03","dataVisita":null,"dataEntrada":"03/06/2027 00:00"},"61bc509c-1a5e-494e-afb2-e63d6a261f05":{"dataExec":"2026-04-27","dataVisita":"06/01/2026 15:30","dataEntrada":"27/04/2026 13:00"},"623dbe47-ba18-48cd-9445-848fb267985e":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"63048196-6e11-4d7b-8c5a-a2a31d60ff30":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"63623d90-e0c0-48e7-bc9d-eb45cc923af5":{"dataExec":"2026-04-13","dataVisita":"21/08/2025 12:00","dataEntrada":"24/02/2026 11:00"},"6765e2aa-787f-43f6-9594-de2d56e6caae":{"dataExec":"2026-05-18","dataVisita":"09/09/2025 10:30","dataEntrada":"13/04/2026 09:00"},"687fbc05-b847-4c52-8af1-d7833b3a4590":{"dataExec":"2026-02-20","dataVisita":"21/07/2025 18:30","dataEntrada":"20/02/2026 11:00"},"6b4e6b8b-0f46-48bd-9a72-c72c1450f223":{"dataExec":"2026-04-15","dataVisita":null,"dataEntrada":null},"6bb762a4-303e-484c-a9f6-33068cabafee":{"dataExec":"2026-04-27","dataVisita":"09/03/2025 15:30","dataEntrada":"14/04/2026 10:00"},"6c0eb41d-8af5-4d80-8505-c8a46404f295":{"dataExec":"2026-05-11","dataVisita":null,"dataEntrada":"11/05/2026 12:00"},"6dc04755-5c42-437a-a4a1-c0e81b900eeb":{"dataExec":"2026-05-11","dataVisita":"18/02/2025 13:00","dataEntrada":"11/05/2026 13:00"},"6f3e9db1-98e6-4feb-b0b7-27c0a9aa8894":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"717091d9-438d-4aa8-983c-40692a14d450":{"dataExec":"2026-07-13","dataVisita":null,"dataEntrada":"13/07/2026 12:00"},"71a54604-b018-477e-9e72-231a345dc4de":{"dataExec":"2026-03-25","dataVisita":"04/02/2026 13:00","dataEntrada":"25/03/2026 13:00"},"72379cc1-66cb-4016-b2da-ff8027ff606d":{"dataExec":"2026-04-13","dataVisita":"21/07/2025 15:30","dataEntrada":"25/08/2025 12:00"},"72caa099-eb8a-487e-9bf1-602c5341f0ba":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":"15/06/2026 10:00"},"74ddff0e-d7d0-4b8d-92bd-d566496205ab":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"75b4205e-4f83-43f7-a14e-fbfbd221bc65":{"dataExec":null,"dataVisita":"12/09/2025 15:30","dataEntrada":null},"76643c95-c198-4fd9-be8b-c083e0b211ae":{"dataExec":"2026-04-16","dataVisita":"12/02/2026 19:00","dataEntrada":"13/04/2026 11:00"},"780a3ef9-6467-4724-847d-19b1936cae49":{"dataExec":"2026-05-12","dataVisita":null,"dataEntrada":"20/04/2026 12:00"},"798ec1f6-c2a4-4437-a82b-a6592549a20a":{"dataExec":"2026-05-25","dataVisita":null,"dataEntrada":null},"7acbd385-8ff7-4045-91f8-dc4a24404213":{"dataExec":null,"dataVisita":"22/08/2025 13:00","dataEntrada":null},"7b3aa422-281a-4a83-ae53-a0230d2349bf":{"dataExec":"2026-05-18","dataVisita":"11/06/2025 15:00","dataEntrada":"23/03/2026 12:20"},"7ddf797f-1edc-4af9-a8ef-e9a95cee9876":{"dataExec":"2026-04-08","dataVisita":"03/11/2025 16:00","dataEntrada":"12/01/2026 12:00"},"7e6528c5-d868-4a21-9fca-79cea7702cd0":{"dataExec":null,"dataVisita":"21/01/2026 18:30","dataEntrada":null},"7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2":{"dataExec":"2026-05-04","dataVisita":"11/04/2025 14:00","dataEntrada":"20/04/2026 13:00"},"7f084908-d129-4a66-a412-7ec370ddfd54":{"dataExec":"2026-05-25","dataVisita":null,"dataEntrada":"25/05/2026 13:00"},"8001bd7a-7121-4fca-ac8d-3641765382f1":{"dataExec":"2026-04-23","dataVisita":"26/02/2026 16:30","dataEntrada":"30/03/2026 13:00"},"81a6c270-7fde-42dd-841f-120a8005922d":{"dataExec":"2026-07-08","dataVisita":"12/12/2025 12:00","dataEntrada":"06/05/2026 20:01"},"83695e2d-a79e-41ed-816a-40be98015398":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"844322df-fd76-4011-a439-a83c73b0c1af":{"dataExec":"2026-04-06","dataVisita":null,"dataEntrada":null},"868406f1-a1eb-4ab3-88a0-b83402150225":{"dataExec":"2026-01-28","dataVisita":"01/12/2025 16:30","dataEntrada":"28/01/2026 13:16"},"8783b584-ce9e-4632-873f-bb2697b02f4a":{"dataExec":"2026-07-15","dataVisita":null,"dataEntrada":null},"880fea7a-b169-45e7-851f-beefe4f47c76":{"dataExec":"2026-09-01","dataVisita":null,"dataEntrada":null},"897343f5-ac4b-47a7-91be-b38fc54cca82":{"dataExec":"2026-06-14","dataVisita":"12/08/2025 10:00","dataEntrada":null},"89c99f6b-1eb9-4cae-9b1b-37e742bfe644":{"dataExec":"2026-05-04","dataVisita":"02/02/2026 19:00","dataEntrada":"04/05/2026 13:00"},"8aa16139-44d8-46a7-87b3-1e2ad8451963":{"dataExec":"2026-06-01","dataVisita":"06/11/2025 13:00","dataEntrada":"15/04/2026 13:00"},"8ad097b9-766a-4959-8bef-b23c9cdd182b":{"dataExec":"2026-02-02","dataVisita":"21/05/2025 15:30","dataEntrada":"02/02/2026 09:00"},"8beb35b1-722e-4084-9fb7-405dc72c4b2a":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"8d76376d-f9da-48e2-929d-47303258150c":{"dataExec":"2026-06-14","dataVisita":"04/03/2026 15:45","dataEntrada":null},"8d7b2b2e-434d-4a19-a02c-92a006105508":{"dataExec":"2026-07-06","dataVisita":"11/09/2025 14:00","dataEntrada":"06/07/2026 03:00"},"8dd1d92a-7736-483c-8540-16196aadebf0":{"dataExec":"2026-05-16","dataVisita":null,"dataEntrada":null},"8ddbf80b-8bf6-4401-9a32-748141b8adf7":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"8f81a5c5-f7fa-4f3d-9da0-938f0f248d4a":{"dataExec":"2026-06-22","dataVisita":null,"dataEntrada":"22/06/2026 09:00"},"8fa22cd4-28fa-4d79-938c-1bad6bfee50e":{"dataExec":"2026-06-08","dataVisita":"30/03/2026 13:00","dataEntrada":"11/05/2026 11:00"},"8fe98c80-78f2-437f-b39e-976fc46e6f18":{"dataExec":"2026-03-02","dataVisita":null,"dataEntrada":"02/03/2026 08:00"},"906f9000-ca41-4104-ba3b-87ede936480e":{"dataExec":"2026-01-05","dataVisita":"04/11/2025 13:00","dataEntrada":"05/01/2026 13:00"},"91e4fbd5-0039-40a7-981b-710389e73eb6":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"9a190357-99d5-4a25-bba2-436ab65542ed":{"dataExec":"2026-04-20","dataVisita":"04/02/2026 16:00","dataEntrada":"20/04/2026 13:00"},"9a409b5e-e4dd-43f6-a530-4b85d6a55b2b":{"dataExec":"2026-04-21","dataVisita":"20/08/2025 10:00","dataEntrada":"22/12/2025 09:00"},"9c297cab-bc3c-488d-9848-4d8c96c656a2":{"dataExec":"2026-06-08","dataVisita":"19/08/2025 11:30","dataEntrada":"06/04/2026 14:19"},"9dcac3bd-3bba-42e6-a080-a4059d1969b0":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"9e023736-2ebb-43cd-97a1-1673bc4a56ae":{"dataExec":"2026-06-14","dataVisita":"27/02/2025 15:00","dataEntrada":null},"a191fd53-f639-4288-a379-215b3202f58b":{"dataExec":"2026-03-02","dataVisita":"23/09/2025 16:00","dataEntrada":"02/03/2026 12:00"},"a1e32eb6-7cde-4f08-a56f-4faac1683a7d":{"dataExec":"2026-05-18","dataVisita":"01/10/2025 16:00","dataEntrada":"23/03/2026 19:00"},"a28bb8e3-07dd-4ece-9f58-cda9de5aa34a":{"dataExec":"2026-03-09","dataVisita":null,"dataEntrada":"09/03/2026 08:00"},"a3cdf7af-c4f3-456d-ae7d-bc2d369b9dce":{"dataExec":"2026-06-15","dataVisita":null,"dataEntrada":"04/05/2026 03:00"},"a3ed951f-616c-449a-b3ca-502615d4ba19":{"dataExec":null,"dataVisita":"02/05/2025 13:00","dataEntrada":null},"a8eff05f-a2f9-473e-96b1-5a0cc39e371b":{"dataExec":"2026-04-22","dataVisita":null,"dataEntrada":null},"a91c86c9-3f32-4d37-9470-891dd7214c3a":{"dataExec":"2026-03-06","dataVisita":null,"dataEntrada":"06/03/2026 08:00"},"a932e81c-6e2d-4fab-926c-04f74bc5c2be":{"dataExec":"2026-04-06","dataVisita":"05/03/2026 20:00","dataEntrada":"06/04/2026 11:00"},"a9cf011c-d305-4cc5-8d04-fe65e00b6c09":{"dataExec":"2026-04-22","dataVisita":null,"dataEntrada":null},"ab817a19-54ef-4fcd-bd3f-3bd2cfa4c56d":{"dataExec":"2026-07-06","dataVisita":null,"dataEntrada":"20/04/2026 13:28"},"abb93b6f-ef09-4147-b1f2-174c9bc9c80b":{"dataExec":"2026-01-05","dataVisita":"05/09/2025 12:00","dataEntrada":"05/01/2026 12:00"},"ad1f8e34-3a2b-4dfe-836f-f88a3f9e5dfc":{"dataExec":"2026-05-06","dataVisita":"21/01/2026 17:00","dataEntrada":"06/05/2026 04:00"},"ad2c9413-d9e2-47cb-93c2-cf396ca17db4":{"dataExec":"2026-04-20","dataVisita":"18/09/2025 13:00","dataEntrada":"17/12/2025 12:00"},"b4e7296c-1393-4eaf-aef8-3097b0e0c46b":{"dataExec":"2026-06-01","dataVisita":"30/10/2025 15:00","dataEntrada":"13/04/2026 09:00"},"b58ccbee-7eb5-47c8-abf9-87cd44855898":{"dataExec":"2026-04-20","dataVisita":"22/07/2025 13:00","dataEntrada":"03/11/2025 03:00"},"b793e477-6791-429c-9102-c1b5abee95f8":{"dataExec":"2026-05-01","dataVisita":null,"dataEntrada":null},"b825a98d-42e7-4844-97fe-8b6578a4c2f0":{"dataExec":"2026-05-11","dataVisita":"05/02/2026 19:00","dataEntrada":"11/05/2026 10:00"},"b871feb1-11b6-4cfc-9251-20e1910cdbf8":{"dataExec":"2026-06-22","dataVisita":null,"dataEntrada":"13/04/2026 13:00"},"b8fbadd8-778c-4a3b-9e18-81bba29a6a8e":{"dataExec":"2026-03-22","dataVisita":"11/07/2025 13:00","dataEntrada":null},"bac65d40-2297-4aa0-9424-079d41b14d2c":{"dataExec":"2026-06-01","dataVisita":null,"dataEntrada":"01/06/2026 10:00"},"bbedc8ae-7665-47ba-83ca-49e6ca0431d3":{"dataExec":"2026-06-15","dataVisita":"30/01/2026 17:00","dataEntrada":"15/06/2026 03:00"},"bc1fc5d6-8cb1-4178-9b28-f4cd01ccbd40":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"bc9f4a63-c577-409a-bdd9-afdde312880a":{"dataExec":"2026-05-18","dataVisita":null,"dataEntrada":"18/05/2026 13:00"},"bd0894c1-95cc-4d42-ab81-861d97dbcfa7":{"dataExec":"2026-03-31","dataVisita":"03/12/2025 15:15","dataEntrada":"16/03/2026 13:00"},"bd36b984-1c5a-4f9c-9050-a4632317d1da":{"dataExec":"2026-05-06","dataVisita":null,"dataEntrada":"06/05/2026 13:00"},"bf16bc8e-562e-46b1-9158-c690eb1ea259":{"dataExec":"2026-01-05","dataVisita":"11/08/2025 12:30","dataEntrada":"05/01/2026 11:00"},"c1621370-4f28-4e9b-9f02-10032f9bf7a0":{"dataExec":"2026-02-10","dataVisita":"07/01/2026 12:00","dataEntrada":"10/02/2026 13:00"},"c26eecec-2e3a-4411-8bd1-060c34f605af":{"dataExec":"2026-07-01","dataVisita":"21/01/2026 13:00","dataEntrada":null},"c29fc4b3-f8e3-4c07-ade0-cb0351adca2b":{"dataExec":"2026-06-01","dataVisita":"17/09/2025 13:00","dataEntrada":"06/04/2026 09:00"},"c302100b-e1b4-4ecc-9ac2-7d7f64467e72":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"c46c7238-e82c-4258-957f-927f93303191":{"dataExec":"2026-02-23","dataVisita":"08/07/2025 12:00","dataEntrada":"23/02/2026 12:00"},"c4e21062-7915-4b8b-8cba-912471e6b72d":{"dataExec":"2026-07-14","dataVisita":null,"dataEntrada":null},"c6908776-f200-4b20-87eb-0e9d9a80eda7":{"dataExec":"2026-05-06","dataVisita":null,"dataEntrada":null},"c9560bb7-9049-4b59-b63d-f5b2834eb234":{"dataExec":"2026-04-08","dataVisita":null,"dataEntrada":null},"c99144e7-a27f-4e49-9ffa-5399d97bafce":{"dataExec":"2026-05-18","dataVisita":null,"dataEntrada":"18/05/2026 13:00"},"ca4b3047-28d7-44b3-8c39-e0cf4f71bcaf":{"dataExec":"2026-04-15","dataVisita":"08/01/2026 17:00","dataEntrada":"13/04/2026 13:00"},"cba19133-0050-41e0-8161-78e6287d71b5":{"dataExec":"2026-06-01","dataVisita":null,"dataEntrada":null},"cecc85af-d8bc-4874-969a-e4866c98611d":{"dataExec":"2025-12-10","dataVisita":"23/06/2025 17:30","dataEntrada":"10/12/2025 13:00"},"d0dd8566-813f-4d0a-bc9e-e8619a07c750":{"dataExec":"2026-05-06","dataVisita":"04/12/2025 11:15","dataEntrada":"06/04/2026 10:00"},"d15ee100-e3a2-4ca5-a838-8c9e9c7af2f8":{"dataExec":"2026-05-12","dataVisita":"04/11/2025 14:00","dataEntrada":"06/04/2026 12:00"},"d1efa528-a5d8-484a-a211-04d29f66e866":{"dataExec":"2026-05-18","dataVisita":"13/01/2026 13:15","dataEntrada":"06/04/2026 13:00"},"d294c8c5-4be7-45fe-99f0-128643ce36f7":{"dataExec":"2026-04-20","dataVisita":"13/08/2025 13:00","dataEntrada":"01/04/2026 13:00"},"d35088b9-99cc-4c4b-9e56-d25cd29494a1":{"dataExec":"2026-04-23","dataVisita":"27/01/2026 12:00","dataEntrada":"06/04/2026 04:00"},"d3a54616-dc96-4634-9cdf-c0c1ee45ed1b":{"dataExec":"2026-05-27","dataVisita":null,"dataEntrada":null},"d4b3ea28-e546-4065-b5c5-8950bb53ef39":{"dataExec":"2026-01-19","dataVisita":"01/10/2025 18:30","dataEntrada":"19/01/2026 09:00"},"d51326f8-e34e-45dd-a355-669d10df3182":{"dataExec":"2026-07-01","dataVisita":null,"dataEntrada":null},"d569a799-4ddf-44b0-aa3a-1507cc75e799":{"dataExec":"2026-04-20","dataVisita":"25/11/2025 14:00","dataEntrada":"20/04/2026 09:00"},"d660b215-1d80-4416-87dc-aebccc42bfe2":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"d68c16a2-d17d-4d76-adea-e52b110eb136":{"dataExec":"2026-07-06","dataVisita":null,"dataEntrada":"06/07/2026 10:00"},"d73999fc-43a2-4c9d-9e54-ceb926c04fc0":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"d7aa6f08-e73c-4dce-aa59-0ed1c9aa3f33":{"dataExec":"2026-05-11","dataVisita":"06/11/2025 13:00","dataEntrada":"23/03/2026 04:06"},"d7b1c726-10f3-4de5-8a52-c569033990a6":{"dataExec":"2026-04-23","dataVisita":"26/08/2025 17:30","dataEntrada":"23/04/2026 12:00"},"d7ce4263-27d6-4541-a958-5e56d6375d43":{"dataExec":"2026-06-15","dataVisita":"13/11/2025 16:15","dataEntrada":"04/05/2026 04:00"},"db4288be-e19e-4f9e-bca6-5023e1ae8e14":{"dataExec":"2026-05-12","dataVisita":"19/05/2025 13:30","dataEntrada":"18/09/2025 03:00"},"db76891b-3385-45fe-8899-550517789ae1":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"dcd9bde5-1e7e-4ecc-ad18-b274ab9e6502":{"dataExec":null,"dataVisita":null,"dataEntrada":null},"ddb7768a-521e-4164-9714-120250376edd":{"dataExec":"2026-04-28","dataVisita":"08/10/2025 13:00","dataEntrada":"10/12/2025 13:00"},"dec2480f-fc69-4d44-9dbc-d3820badf218":{"dataExec":"2026-04-15","dataVisita":"07/05/2025 13:00","dataEntrada":null},"e199e0bb-6a4e-4a9c-a8e8-c3229b24f322":{"dataExec":"2026-08-01","dataVisita":null,"dataEntrada":"01/08/2026 10:00"},"e1d06882-ff4e-4aff-8817-cc3c57b621d9":{"dataExec":"2026-07-06","dataVisita":null,"dataEntrada":"06/07/2026 12:00"},"e1e81955-d559-4311-a005-a5aeaf801dd7":{"dataExec":"2026-06-01","dataVisita":"27/11/2025 15:00","dataEntrada":"30/03/2026 03:00"},"e31a51cd-64ba-4c24-baea-ce80b14e0076":{"dataExec":"2026-05-11","dataVisita":null,"dataEntrada":"11/05/2026 12:00"},"e37268a3-80e1-4e76-9ecc-345ea775600d":{"dataExec":"2026-06-19","dataVisita":null,"dataEntrada":"19/05/2026 10:00"},"e648fd2b-e067-4561-a358-1c2988673ccb":{"dataExec":"2026-07-14","dataVisita":"04/03/2026 17:00","dataEntrada":null},"e6b38375-4075-4f79-9319-f15566722963":{"dataExec":"2026-04-13","dataVisita":"18/06/2025 18:00","dataEntrada":"13/11/2025 12:00"},"e79c60c1-4169-4df5-b856-220fe82510db":{"dataExec":"2026-04-29","dataVisita":null,"dataEntrada":null},"e9457a2f-2973-468d-8191-c5b268d3e892":{"dataExec":"2026-05-13","dataVisita":null,"dataEntrada":"13/05/2026 10:00"},"e9cfed37-fe20-42c0-877a-3a55b1476fbc":{"dataExec":"2026-04-14","dataVisita":"12/06/2025 13:30","dataEntrada":"30/03/2026 12:00"},"e9f43227-bbad-41e5-947f-57c192c83f0f":{"dataExec":"2026-03-16","dataVisita":"20/02/2026 12:00","dataEntrada":"16/03/2026 23:00"},"e9ff9980-b507-4ae0-929f-9b7b5fc395d0":{"dataExec":"2026-05-14","dataVisita":null,"dataEntrada":null},"ea04728a-4ce4-4189-8936-236e6c743339":{"dataExec":"2026-04-06","dataVisita":"04/02/2026 14:30","dataEntrada":"23/03/2026 13:00"},"f05608da-8c47-4a7c-9b50-e2f254eda2e0":{"dataExec":"2026-06-08","dataVisita":null,"dataEntrada":"08/06/2026 10:00"},"f0fc12b3-562c-48ac-85a7-420609299b16":{"dataExec":"2026-04-27","dataVisita":"13/02/2026 10:00","dataEntrada":null},"f2a24b2c-84f1-48fb-93e6-342c2136a1d4":{"dataExec":"2026-06-29","dataVisita":null,"dataEntrada":"20/04/2026 13:00"},"f326dd44-3240-4d28-b411-15d574efaa9b":{"dataExec":"2026-03-24","dataVisita":"23/07/2025 14:00","dataEntrada":"24/03/2026 13:00"},"f4bc18f9-4955-456f-ade5-8c0c75dadb9f":{"dataExec":"2026-10-05","dataVisita":null,"dataEntrada":"05/10/2026 10:00"},"f4f43974-f455-4691-8276-68b3567c1b78":{"dataExec":"2026-06-14","dataVisita":null,"dataEntrada":null},"f93b63d6-7bf8-4957-b831-c43a5009ddb0":{"dataExec":"2026-05-20","dataVisita":"29/05/2025 13:30","dataEntrada":"30/04/2026 12:00"},"fb35d2a0-afb2-428b-bd5c-997178f784ef":{"dataExec":"2026-07-14","dataVisita":"09/04/2026 14:46","dataEntrada":null},"fdbb659f-7073-4139-a3ee-8333a217f03c":{"dataExec":"2026-04-21","dataVisita":"01/12/2025 15:00","dataEntrada":"21/04/2026 00:00"},"feb975f6-4192-48b5-9b2a-ba62eaa779f1":{"dataExec":"2026-04-13","dataVisita":"10/02/2026 13:00","dataEntrada":"13/04/2026 12:00"}};
 
 const FASE_DATA_PRIORIDADE = {
   'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO': ['dataVisita', 'dataExec'],
@@ -2574,14 +2595,20 @@ function q4DataContextual(fase, datas){
   return {valor: null, tipo: null};
 }
 
+function _anoValido(ano) { return ano >= 2020 && ano <= 2030; }
+
 function q4DataPassada(valor, tipo){
   if (!valor) return false;
   let d;
   if (tipo === 'dataExec'){
+    const y = parseInt(valor.slice(0,4), 10);
+    if (!_anoValido(y)) return false;
     d = new Date(valor + 'T23:59:59');
   } else {
     const m = valor.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
     if (!m) return false;
+    const y = parseInt(m[3], 10);
+    if (!_anoValido(y)) return false;
     d = new Date(m[3]+'-'+m[2]+'-'+m[1]+'T'+m[4]+':'+m[5]+':00');
   }
   return d < new Date();
@@ -2610,9 +2637,15 @@ function openFaseModal(fase){
     if (!a.data) return 1;
     if (!b.data) return -1;
     const parse = (v, t) => {
-      if (t === 'dataExec') return new Date(v + 'T00:00:00').getTime();
+      if (t === 'dataExec') {
+        const y = parseInt(v.slice(0,4), 10);
+        if (!_anoValido(y)) return Infinity;
+        return new Date(v + 'T00:00:00').getTime();
+      }
       const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
       if (!m) return Infinity;
+      const y = parseInt(m[3], 10);
+      if (!_anoValido(y)) return Infinity;
       return new Date(m[3]+'-'+m[2]+'-'+m[1]+'T'+m[4]+':'+m[5]+':00').getTime();
     };
     return parse(a.data, a.tipo) - parse(b.data, b.tipo);
@@ -3077,7 +3110,8 @@ function renderAchados() {
   $('org-fant').textContent = o.fantasmas;
   $('org-fant-pct').textContent = pct(o.fantasmas, o.pessoas_total) + '% do total';
   $('org-oc').textContent = o.lideres_ocultos;
-  $('org-oc-obras').textContent = '13/' + o.obras_escaladas;
+  const obrasOcultos = Q3_EQUIPES.filter(e => e.lider_oculto).reduce((s, e) => s + e.obras_ids.length, 0);
+  $('org-oc-obras').textContent = obrasOcultos + '/' + o.obras_escaladas;
   $('org-mis').textContent = o.mismatch;
   $('org-mis-pct').textContent = pct(o.mismatch, o.mismatch + o.match) + '% das obras';
 
@@ -3137,15 +3171,151 @@ function renderTop30() {
   $('top30-tbl').innerHTML = tb;
 }
 
+// ============== SNAPSHOT DATE + BADGE ==============
+function renderSnapshotDate() {
+  // Tentar extrair snapshot_date do AGG; fallback: data hardcoded como constante
+  const snapISO = AGG.snapshot_date || '2026-04-15';
+  const parts = snapISO.split('-');
+  const fmt = parts[2] + '/' + parts[1] + '/' + parts[0];
+  if ($('stamp-snapshot')) $('stamp-snapshot').textContent = fmt;
+  if ($('stamp-snapshot-footer')) $('stamp-snapshot-footer').textContent = fmt;
+
+  // Badge de defasagem
+  const snapDate = new Date(snapISO + 'T00:00:00');
+  const hoje = new Date();
+  const diffDias = Math.floor((hoje - snapDate) / 86400000);
+  if (diffDias > 2 && $('snapshot-badge')) {
+    const cor = diffDias > 7 ? 'var(--red)' : 'var(--amber)';
+    $('snapshot-badge').innerHTML = '<span style="background:' + cor + ';color:#000;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:8px;">Snapshot h\u00e1 ' + diffDias + ' dias \u2014 pode estar defasado</span>';
+  }
+}
+
+// ============== CRONOGRAMA DYNAMIC ==============
+function renderCronogramaDynamic() {
+  const c = EXT.cronograma;
+  if ($('crono-total')) $('crono-total').textContent = c.total;
+  if ($('crono-total2')) $('crono-total2').textContent = c.total;
+  if ($('crono-pct-concl')) $('crono-pct-concl').textContent = c.pct_concluido_finalizado.toFixed(1).replace('.', ',') + '%';
+  if ($('crono-mediana')) $('crono-mediana').textContent = c.mediana_atraso + 'd';
+  if ($('crono-max')) $('crono-max').textContent = c.max + 'd';
+  // Top atraso cliente
+  if ($('crono-max-cliente') && EXT.crono_top10 && EXT.crono_top10.length) {
+    $('crono-max-cliente').textContent = 'cliente ' + EXT.crono_top10[0].cliente.split(' ')[0].toUpperCase();
+  }
+}
+
+// ============== CLUSTER ADMIN DYNAMIC ==============
+function renderClusterDynamic() {
+  if ($('cluster-zumbi')) $('cluster-zumbi').textContent = EXT.zumbi_n;
+  if ($('cluster-orfas')) $('cluster-orfas').textContent = EXT.orfas_n;
+  if ($('cluster-sem-cor')) $('cluster-sem-cor').textContent = EXT.sem_cor_n;
+  if ($('cluster-sem-cor-pct')) $('cluster-sem-cor-pct').textContent = EXT.sem_cor_pct.toFixed(1).replace('.', ',') + '% das ativas';
+  if ($('cluster-sem-wa')) $('cluster-sem-wa').textContent = EXT.sem_wa_n;
+  const waPct = AGG.total_ativas > 0 ? ((EXT.sem_wa_n / AGG.total_ativas) * 100).toFixed(1).replace('.', ',') : '0';
+  if ($('cluster-sem-wa-pct')) $('cluster-sem-wa-pct').textContent = waPct + '% das ativas';
+}
+
+// ============== VT CAUDA INTERIOR SP DYNAMIC ==============
+function renderVtCaudaInterior() {
+  if (!EXT.vt_cauda || !EXT.vt_cauda.por_cidade) return;
+  const interiorKeywords = ['CAMPINAS', 'PIRACICABA', 'PAULÍNIA', 'MARÍLIA', 'RIO PRETO', 'SOROCABA', 'JUNDIAÍ', 'RIBEIRÃO'];
+  const cidades = EXT.vt_cauda.por_cidade;
+  let total = 0;
+  const nomes = [];
+  Object.entries(cidades).forEach(([nome, n]) => {
+    const upper = nome.toUpperCase();
+    if (interiorKeywords.some(k => upper.includes(k))) {
+      total += n;
+      nomes.push(nome.replace(/ \/ SP$/i, '').replace(/ \/ SP/i, ''));
+    }
+  });
+  if ($('vt-cauda-interior')) $('vt-cauda-interior').textContent = total;
+  if ($('vt-cauda-interior-cidades')) $('vt-cauda-interior-cidades').textContent = nomes.join('/') || '—';
+}
+
+// ============== BACKLOG COUNTER DYNAMIC ==============
+function renderBacklogCounter() {
+  const nZumbi = EXT.zumbi_n || 0;
+  const nLideres = (EXT.organograma && EXT.organograma.lideres_ocultos) || 0;
+  const nOrfas = EXT.orfas_n || 0;
+  // conflitos: 3 hardcoded no HTML, mas vamos pegar do Q3 se possivel
+  const nConflitos = 3; // sem campo dinamico disponivel
+  const nLoteVT = (EXT.vt_cauda && EXT.vt_cauda.n) || 0;
+  const totalObras = nZumbi + nOrfas + nLoteVT;
+  if ($('bk-counter-header')) $('bk-counter-header').textContent = '5 frentes \u00b7 ' + totalObras + ' obras + ' + nLideres + ' IDs + ' + nConflitos + ' conflitos';
+
+  // Sub do card lideres ocultos
+  const obrasOcultos = Q3_EQUIPES.filter(e => e.lider_oculto).reduce((s, e) => s + e.obras_ids.length, 0);
+  if ($('bk-lideres-sub')) $('bk-lideres-sub').textContent = 'UUIDs liderando hoje sem cadastro em /api/equipes \u2014 ' + obrasOcultos + ' obras escaladas';
+}
+
+// ============== HERO ZUMBI CHIP (item 4) ==============
+function renderHeroZumbiChip() {
+  // Contar obras com status em_execucao que estao na lista de zumbi_ids
+  const execTotal = AGG.status_dist.em_execucao || 0;
+  const zumbiIds = EXT.zumbi_ids || [];
+  const execObras = Q2_OBRAS.filter(o => o.status === 'em_execucao');
+  const zumbiExec = execObras.filter(o => zumbiIds.includes(o.id.slice(0, 8))).length;
+  const reais = execTotal - zumbiExec;
+  const el = $('kpi-exec');
+  if (el && zumbiExec > 0) {
+    el.innerHTML = execTotal + ' <span style="font-size:11px;color:var(--muted);font-weight:400;">(' + reais + ' reais + ' + zumbiExec + ' zumbi)</span>';
+  }
+}
+
+// ============== ALERTAS RENDER (item 7) ==============
+function renderAlertas() {
+  if (!EXT.alertas || !EXT.alertas.por_categoria) return;
+  const cats = EXT.alertas.por_categoria;
+  const order = ['FALTA_MATERIAL', 'CLIENTE_AUSENTE', 'RISCO_ADIAMENTO', 'CLIMA', 'ADITIVO'];
+  const labels = {FALTA_MATERIAL:'Falta material', CLIENTE_AUSENTE:'Cliente ausente', RISCO_ADIAMENTO:'Risco adiamento', CLIMA:'Clima', ADITIVO:'Aditivo'};
+  const colors = {FALTA_MATERIAL:'rd', CLIENTE_AUSENTE:'am', RISCO_ADIAMENTO:'rd', CLIMA:'bl', ADITIVO:'am'};
+  const maxVal = Math.max(...order.map(k => cats[k] || 0));
+  const html = order.filter(k => cats[k]).map(k => `
+    <div class="barlist-row">
+      <div class="barlist-lbl">${labels[k] || k}</div>
+      <div class="barlist-bar ${colors[k] || ''}"><span style="width:${maxVal > 0 ? ((cats[k]/maxVal)*100) : 0}%"></span></div>
+      <div class="barlist-val">${cats[k]} obras</div>
+    </div>
+  `).join('');
+  if ($('alertas-bar')) $('alertas-bar').innerHTML = html;
+}
+
+// ============== AT RISK TOP RENDER (item 8) ==============
+function renderAtRiskTop() {
+  if (!EXT.atRiskTop || !EXT.atRiskTop.length) return;
+  const html = EXT.atRiskTop.map(o => {
+    const diag = o.diagnostico ? o.diagnostico.slice(0, 120) + '...' : 'Sem diagnóstico';
+    const link = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
+    return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="flex:1;">
+        <div style="font-weight:500;font-size:12px;">${escHtml(o.cliente)} <span style="color:var(--muted);font-size:11px;">\u00b7 ${escHtml(o.cidade || '')}</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(o.fase)} \u00b7 ${o.idade}d \u00b7 ${o.criticalProblems} problemas cr\u00edticos</div>
+        <div style="font-size:11px;color:var(--muted-2);margin-top:2px;max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(diag)}</div>
+      </div>
+      <a href="${link}" target="_blank" style="font-size:11px;white-space:nowrap;margin-left:12px;">Mapa \u2192</a>
+    </div>`;
+  }).join('');
+  if ($('atrisk-list')) $('atrisk-list').innerHTML = html;
+}
+
 // ============== INIT ==============
+renderSnapshotDate();
 renderHealth();
 renderHero();
+renderHeroZumbiChip();
 renderQ1();
 q1RenderStacked();
+renderCronogramaDynamic();
 renderQ2();
 renderQ3();
 renderQ4();
 renderAchados();
+renderClusterDynamic();
+renderVtCaudaInterior();
+renderBacklogCounter();
+renderAlertas();
+renderAtRiskTop();
 renderTop30();
 
 // ============== BACKLOG MODAL ==============
@@ -3270,6 +3440,18 @@ function escHtmlSafe(s) {
 }
 
 document.addEventListener('DOMContentLoaded', loadBacklogHistory);
+
+// ATENA badge
+(function(){
+  fetch('dados/atena/index.json').then(function(r){return r.ok?r.json():null}).then(function(d){
+    if(!d)return;
+    var badge=document.getElementById('atena-badge');
+    if(!badge)return;
+    var n=d.achados_alta||0;
+    badge.textContent=n;
+    if(n===0)badge.classList.add('zero');
+  }).catch(function(){});
+})();
 </script>
 
 </body>

@@ -1,0 +1,40 @@
+﻿{
+    "comparativo_vs_anterior":  null,
+    "olho":  "bugs",
+    "executado_em":  "2026-04-17T01:50:56Z",
+    "metricas":  {
+                     "idades_extremas_500":  0,
+                     "zumbis":  31,
+                     "orfas":  18,
+                     "obras_ativas":  208,
+                     "datas_estranhas":  0,
+                     "indice_saude":  76,
+                     "idades_negativas":  0
+                 },
+    "achados":  [
+                    {
+                        "descricao":  "Obras com status ativo mas fase terminal.",
+                        "titulo":  "31 obras zumbi (ativas + CLIENTE FINALIZADO)",
+                        "severidade":  "alta",
+                        "evidencia":  "097ee21f (CONDOMINIO EDIFICIO DONA ); 0b4d6460 (CAROLINA RODRIGUES GALIND); 0b692354 (BERNARDO MAGALHÃES); 0d8b5bb9 (CASA VIK ADMINISTRADORA D); 0e4e10b2 (GETULIO TURATTI OST)"
+                    },
+                    {
+                        "descricao":  "Obras ativas sem consultor responsavel.",
+                        "titulo":  "18 obras orfas (sem consultor atribuido)",
+                        "severidade":  "media",
+                        "evidencia":  "096df7d0; 0b692354; 1231fb6a; 2369c899; 249220c9; 316cd248; 4734a637; 501b5b94"
+                    },
+                    {
+                        "descricao":  "55 ocorrencias de datas fixas no HTML.",
+                        "titulo":  "Strings hardcoded no HTML: datas fixas 2026-04-xx",
+                        "severidade":  "media",
+                        "evidencia":  "2026-04-06, 2026-04-08, 2026-04-09, 2026-04-13, 2026-04-14, 2026-04-15, 2026-04-16, 2026-04-20, 2026-04-21, 2026-04-22, 2026-04-23, 2026-04-27, 2026-04-28, 2026-04-29, 2026-04-30"
+                    },
+                    {
+                        "descricao":  "2 ocorrencias de contagens hardcoded.",
+                        "titulo":  "Strings hardcoded no HTML: contagens fixas",
+                        "severidade":  "media",
+                        "evidencia":  "de 1.028, de 208"
+                    }
+                ]
+}

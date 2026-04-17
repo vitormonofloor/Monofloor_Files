@@ -1,0 +1,43 @@
+﻿{
+    "comparativo_vs_anterior":  null,
+    "olho":  "oportunidades",
+    "executado_em":  "2026-04-17T01:50:56Z",
+    "metricas":  {
+                     "cruzamentos_nao_explorados":  16,
+                     "cidades_distintas":  61,
+                     "obras_sem_radar":  11,
+                     "fases_gargalo":  8
+                 },
+    "achados":  [
+                    {
+                        "descricao":  "Combinacoes de dimensoes que poderiam revelar padroes.",
+                        "titulo":  "16 cruzamentos bidimensionais nao explorados",
+                        "severidade":  "baixa",
+                        "evidencia":  "idade-status, fase-consultor, fase-geo, fase-metragem, fase-tipo, fase-status, consultor-geo, consultor-metragem"
+                    },
+                    {
+                        "descricao":  "Oportunidade de redistribuicao.",
+                        "titulo":  "Consultores com acumulo de obras antigas (\u003e180d)",
+                        "severidade":  "media",
+                        "evidencia":  "LUANA PATRICIA DE ANDRADE LIMA: 51 obras (media 248d); Wesley Matheus de Carvalho: 40 obras (media 234d); Juliana Santos: 2 obras (media 260d)"
+                    },
+                    {
+                        "descricao":  "Fases onde obras acumulam com idade elevada.",
+                        "titulo":  "8 fases com gargalo (\u003e=5 obras + media \u003e150d)",
+                        "severidade":  "alta",
+                        "evidencia":  "OBRA PAUSADA: 10 obras, media 225d; CLIENTE FINALIZADO: 31 obras, media 225d; AGEND. VT - ENTRADA: 5 obras, media 199d; AGUARDANDO LIBERAÇÃO: 19 obras, media 188d; LOGÍSTICA - EM ENTREGA: 6 obras, media 183d"
+                    },
+                    {
+                        "descricao":  "Sem data, nao eh possivel calcular SLAs.",
+                        "titulo":  "11 obras ativas sem data_radar",
+                        "severidade":  "media",
+                        "evidencia":  "1231fb6a; 249220c9; 316cd248; 4734a637; 4f79b468; 501b5b94; 6b4e6b8b; 6f3e9db1"
+                    },
+                    {
+                        "descricao":  "Distribuicao geografica das obras ativas.",
+                        "titulo":  "Concentracao regional: 61 cidades",
+                        "severidade":  "baixa",
+                        "evidencia":  "SÃO PAULO: 91; RIO DE JANEIRO: 17; SÃO PAULO / SP: 13; CURITIBA: 12; São Paulo/São Paulo: 4"
+                    }
+                ]
+}

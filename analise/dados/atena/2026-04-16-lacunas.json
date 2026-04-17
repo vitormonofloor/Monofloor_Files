@@ -1,0 +1,27 @@
+﻿{
+    "comparativo_vs_anterior":  null,
+    "olho":  "lacunas",
+    "executado_em":  "2026-04-17T01:50:56Z",
+    "metricas":  {
+                     "campos_nao_usados":  9,
+                     "cruzamentos_total":  20,
+                     "campos_painel":  14,
+                     "cruzamentos_ausentes":  12,
+                     "cruzamentos_no_dashboard":  8,
+                     "campos_referenciados_html":  371
+                 },
+    "achados":  [
+                    {
+                        "descricao":  "Campos disponiveis nos dados mas nao referenciados no HTML.",
+                        "titulo":  "9 campos do painel-temporal nao usados no dashboard",
+                        "severidade":  "media",
+                        "evidencia":  "clienteNome, projetoCidade, consultorNome, projetoMetragem, pipefyCardId, pipefy_created_at, pipefyCreatedAt_api, data_radar, data_radar_fonte"
+                    },
+                    {
+                        "descricao":  "Cruzamentos que existem nos dados mas nao sao carregados pelo dashboard.",
+                        "titulo":  "12 cruzamentos sem referencia no dashboard",
+                        "severidade":  "media",
+                        "evidencia":  "organograma-real, idade-metragem, agend-vt, equipes-fantasma, idade-consultor, idade-geo, idade-tipo, aplicadores-carga, cronograma-fossil, idade-fase, luana-vs-wesley, cores"
+                    }
+                ]
+}
