@@ -109,12 +109,24 @@
   .hero-context{font-size:11px;color:#a89e92;text-align:center;margin-top:8px}
   .score-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
   @media(max-width:600px){.score-breakdown{grid-template-columns:repeat(2,1fr)}}
-  .score-pillar{background:#ffffff;border:1px solid #e0d8cc;border-radius:4px;padding:8px 10px;text-align:center}
+  .score-pillar{background:#ffffff;border:1px solid #e0d8cc;border-radius:4px;padding:8px 10px;text-align:center;cursor:pointer;transition:all .2s}
+  .score-pillar:hover{border-color:#b8a080;transform:translateY(-1px);box-shadow:0 2px 8px rgba(42,37,32,0.06)}
+  .score-pillar.active{border-color:#b8a080;box-shadow:0 2px 12px rgba(184,160,128,0.15)}
   .score-pillar-label{font-size:8px;color:#8a7e72;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
   .score-pillar-bar{height:3px;background:#ede6dc;border-radius:2px;overflow:hidden;margin-bottom:3px}
-  .score-pillar-bar div{height:100%;border-radius:2px}
+  .score-pillar-bar div{height:100%;border-radius:2px;width:0;transition:width 0.8s ease-out}
   .score-pillar-value{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#2a2520}
   .score-pillar-max{font-size:9px;color:#a89e92}
+  .score-detail{margin-top:10px;overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease}
+  .score-detail.open{max-height:200px;opacity:1}
+  .score-detail-inner{background:#ffffff;border:1px solid #e0d8cc;border-radius:6px;padding:14px 16px}
+  .score-detail-title{font-size:12px;font-weight:600;color:#2a2520;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .score-detail-title .sd-dot{width:10px;height:10px;border-radius:2px}
+  .score-detail-bigbar{height:8px;background:#ede6dc;border-radius:4px;overflow:hidden;margin-bottom:8px}
+  .score-detail-bigbar div{height:100%;border-radius:4px;width:0;transition:width 1s cubic-bezier(.22,.61,.36,1)}
+  .score-detail-text{font-size:11px;color:#6b6156;line-height:1.6}
+  .score-detail-text b{color:#c45a5a}
+  .score-detail-metric{font-family:'JetBrains Mono',monospace;font-size:12px;color:#b8a080;margin-top:6px;font-weight:500}
 
   /* ============== SIDE NAV ============== */
   .side-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:14px}
@@ -943,6 +955,9 @@
       <p class="hero-context">Abaixo de 65 = atenção operacional. Meta saudável: acima de 80.</p>
       <div class="score-breakdown" id="score-breakdown">
         <!-- gerado por JS -->
+      </div>
+      <div class="score-detail" id="score-detail">
+        <div class="score-detail-inner" id="score-detail-inner"></div>
       </div>
     </div>
 
@@ -3771,6 +3786,7 @@ function renderScoreBreakdown() {
   const n_atRisk = EXT.ocorrencias.n_atRisk;
   const n_zumbi = EXT.zumbi_n;
   const nReparo = EXT.reparo.total;
+  const nOrfas = EXT.orfas_n;
 
   const slaScore = Math.round(Math.max(0, 1 - (n180 / ativas)) * 30);
   const ftrScore = Math.round(Math.max(0, 1 - ((nReparo + n_zumbi) / ativas)) * 20);
@@ -3778,19 +3794,85 @@ function renderScoreBreakdown() {
   const riskScore = Math.round(Math.max(0, 1 - (n_atRisk / ativas)) * 20);
 
   const pillars = [
-    {label: 'SLA/Prazo', value: slaScore, max: 30, color: slaScore < 15 ? '#c45a5a' : slaScore < 22 ? '#b89a4a' : '#3d8a5a'},
-    {label: 'Qualidade', value: ftrScore, max: 20, color: ftrScore < 10 ? '#c45a5a' : ftrScore < 15 ? '#b89a4a' : '#3d8a5a'},
-    {label: 'Idade', value: idadeScore, max: 30, color: idadeScore < 15 ? '#c45a5a' : idadeScore < 22 ? '#b89a4a' : '#3d8a5a'},
-    {label: 'Risco', value: riskScore, max: 20, color: riskScore < 10 ? '#c45a5a' : riskScore < 15 ? '#b89a4a' : '#3d8a5a'}
+    {label: 'SLA/Prazo', value: slaScore, max: 30,
+     color: slaScore < 15 ? '#c45a5a' : slaScore < 22 ? '#b89a4a' : '#3d8a5a',
+     titulo: 'SLA / Prazo',
+     texto: `Mede quantas obras estão dentro do ciclo saudável (<180 dias). Hoje <b>${n180} de ${ativas} obras</b> (${(n180/ativas*100).toFixed(0)}%) passaram de 6 meses no radar — cada uma puxa este pilar pra baixo.`,
+     metrica: `${n180} obras com 180+ dias · mediana ${idade_med}d`},
+    {label: 'Qualidade', value: ftrScore, max: 20,
+     color: ftrScore < 10 ? '#c45a5a' : ftrScore < 15 ? '#b89a4a' : '#3d8a5a',
+     titulo: 'Qualidade (FTR)',
+     texto: `Taxa de entrega sem retrabalho. Conta obras em <b>reparo (${nReparo})</b> e <b>encerradas sem fechar (${n_zumbi})</b> como falhas. Quanto mais reparos e zumbis, mais este pilar cai.`,
+     metrica: `${nReparo} reparos + ${n_zumbi} enc. sem fechar = ${nReparo+n_zumbi} falhas de ${ativas}`},
+    {label: 'Idade', value: idadeScore, max: 30,
+     color: idadeScore < 15 ? '#c45a5a' : idadeScore < 22 ? '#b89a4a' : '#3d8a5a',
+     titulo: 'Idade da carteira',
+     texto: `Mede a idade média das obras ativas. Uma carteira saudável tem mediana <b>abaixo de 150 dias</b>. Hoje a mediana é <b>${idade_med} dias</b> — quanto mais antiga a carteira, mais este pilar cai.`,
+     metrica: `Idade mediana ${idade_med}d · referência saudável <150d`},
+    {label: 'Risco', value: riskScore, max: 20,
+     color: riskScore < 10 ? '#c45a5a' : riskScore < 15 ? '#b89a4a' : '#3d8a5a',
+     titulo: 'Risco operacional',
+     texto: `Proporção de obras flagadas como "em risco" pelo sistema (alta ocorrência + atraso + reclamação). Hoje <b>${n_atRisk} de ${ativas}</b> (${(n_atRisk/ativas*100).toFixed(0)}%) estão em risco.`,
+     metrica: `${n_atRisk} obras em risco · ${EXT.ocorrencias.total} ocorrências abertas`}
   ];
 
-  el.innerHTML = pillars.map(p => `
-    <div class="score-pillar">
+  el.innerHTML = pillars.map((p, i) => `
+    <div class="score-pillar" data-idx="${i}" onclick="toggleScoreDetail(${i})">
       <div class="score-pillar-label">${p.label}</div>
-      <div class="score-pillar-bar"><div style="width:${(p.value/p.max*100).toFixed(0)}%;background:${p.color}"></div></div>
+      <div class="score-pillar-bar"><div id="spbar-${i}" style="background:${p.color}"></div></div>
       <div class="score-pillar-value">${p.value}<span class="score-pillar-max">/${p.max}</span></div>
     </div>
   `).join('');
+
+  // Animar barras de entrada
+  requestAnimationFrame(() => {
+    pillars.forEach((p, i) => {
+      const bar = document.getElementById('spbar-' + i);
+      if (bar) bar.style.width = (p.value/p.max*100).toFixed(0) + '%';
+    });
+  });
+
+  // Guardar dados pra uso no toggle
+  window._scorePillars = pillars;
+}
+
+function toggleScoreDetail(idx) {
+  const pillars = window._scorePillars;
+  if (!pillars) return;
+  const p = pillars[idx];
+  const detail = document.getElementById('score-detail');
+  const inner = document.getElementById('score-detail-inner');
+
+  // Toggle: se já está aberto no mesmo pilar, fecha
+  const allCards = document.querySelectorAll('.score-pillar');
+  const wasActive = allCards[idx]?.classList.contains('active');
+
+  allCards.forEach(c => c.classList.remove('active'));
+
+  if (wasActive) {
+    detail.classList.remove('open');
+    return;
+  }
+
+  allCards[idx].classList.add('active');
+
+  inner.innerHTML = `
+    <div class="score-detail-title">
+      <div class="sd-dot" style="background:${p.color}"></div>
+      ${p.titulo} — <span style="font-family:'JetBrains Mono',monospace">${p.value}/${p.max}</span>
+    </div>
+    <div class="score-detail-bigbar"><div id="sd-bigbar" style="background:${p.color}"></div></div>
+    <div class="score-detail-text">${p.texto}</div>
+    <div class="score-detail-metric">${p.metrica}</div>
+  `;
+
+  detail.classList.add('open');
+
+  // Animar barra grande
+  requestAnimationFrame(() => {
+    const bigbar = document.getElementById('sd-bigbar');
+    if (bigbar) bigbar.style.width = (p.value/p.max*100).toFixed(0) + '%';
+  });
 }
 
 // ============== INIT ==============
