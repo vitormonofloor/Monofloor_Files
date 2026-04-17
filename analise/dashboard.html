@@ -274,8 +274,15 @@
     margin-top: 80px; background: var(--card);
     color: var(--muted); font-size: 11px;
   }
-  footer .links { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
-  footer .links a { font-size: 12px; }
+  .footer-tech{margin-top:14px}
+  .footer-tech summary{font-size:10px;color:#c8bfb4;cursor:pointer;letter-spacing:0.06em;list-style:none;text-transform:uppercase}
+  .footer-tech summary:hover{color:#a89e92}
+  .footer-tech summary::-webkit-details-marker{display:none}
+  .footer-tech summary::before{content:'▸ ';transition:transform .2s}
+  .footer-tech[open] summary::before{content:'▾ '}
+  .footer-tech-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid #e8e0d4}
+  .footer-tech-links a{font-size:10px;color:#b8b0a4;text-decoration:none;transition:color .2s}
+  .footer-tech-links a:hover{color:#b8a080}
 
   details { background: var(--card-2); border: 1px solid var(--border); border-radius: 4px; margin-top: 8px; }
   details summary {
@@ -857,21 +864,9 @@
       <span class="mono-nav-icon">&#9672;</span>
       <span class="mono-nav-label">ATENA</span>
     </a>
-    <a href="obras-mapa.html" class="mono-nav-btn" data-page="mapa">
-      <span class="mono-nav-icon">&#9638;</span>
-      <span class="mono-nav-label">Mapa de Obras</span>
-    </a>
     <a href="../indicadores-v2.html" class="mono-nav-btn" data-page="indicadores">
       <span class="mono-nav-icon">&#9670;</span>
       <span class="mono-nav-label">Indicadores</span>
-    </a>
-    <a href="modelagem.html" class="mono-nav-btn" data-page="modelagem">
-      <span class="mono-nav-icon">&equiv;</span>
-      <span class="mono-nav-label">Modelagem</span>
-    </a>
-    <a href="plano.html" class="mono-nav-btn" data-page="plano">
-      <span class="mono-nav-icon">&#9776;</span>
-      <span class="mono-nav-label">Plano</span>
     </a>
   </div>
 </nav>
@@ -1764,17 +1759,19 @@
 </div>
 
 <footer>
-  <div class="links">
-    <a href="obras-mapa.html">Mapa de obras</a>
-    <a href="modelagem.html">Modelagem</a>
-    <a href="plano.html">Plano</a>
-    <a href="auditoria.html">Auditoria v6 (histórico)</a>
-  </div>
   <div>
     Refresh automático a cada 30 min via GitHub Actions ·
-    Fontes: painel-temporal.json (1.028 obras) + 23 cruzamentos sobre 1.028 obras ·
     Snapshot diário <span class="mono" id="stamp-snapshot-footer">—</span>
   </div>
+  <details class="footer-tech">
+    <summary>Área técnica</summary>
+    <div class="footer-tech-links">
+      <a href="obras-mapa.html">Mapa de obras (208 ativas · filtros)</a>
+      <a href="modelagem.html">Modelagem de dados (campos · APIs)</a>
+      <a href="plano.html">Plano de trabalho (etapas · cruzamentos)</a>
+      <a href="auditoria.html">Auditoria v6 (versão anterior)</a>
+    </div>
+  </details>
 </footer>
 
 <script>
