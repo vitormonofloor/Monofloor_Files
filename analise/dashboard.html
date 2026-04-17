@@ -106,6 +106,17 @@
   .hero-guide{font-size:12px;color:#a89e92;text-align:center;margin-top:16px;font-style:italic;letter-spacing:0.02em}
   .hero-context{font-size:11px;color:#8a7e72;text-align:center;margin-top:8px}
 
+  /* ============== SIDE NAV ============== */
+  .side-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:14px}
+  @media(max-width:900px){.side-nav{display:none}}
+  .side-dot{display:flex;align-items:center;justify-content:flex-end;gap:8px;text-decoration:none;position:relative}
+  .side-dot span{width:10px;height:10px;border-radius:50%;background:#d8d0c4;border:2px solid #e0d8cc;transition:all .2s;flex-shrink:0}
+  .side-dot:hover span{background:#b8a080;border-color:#b8a080;transform:scale(1.3)}
+  .side-dot.active span{background:#b8a080;border-color:#b8a080;box-shadow:0 0 8px rgba(184,160,128,0.4)}
+  .side-dot::before{content:attr(data-label);font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;color:transparent;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:all .2s;white-space:nowrap;pointer-events:none}
+  .side-dot:hover::before{color:#8a7e72}
+  .side-dot.active::before{color:#b8a080}
+
   /* ============== CARDS ============== */
   .card {
     background: var(--card); border: 1px solid var(--border); border-radius: 5px;
@@ -722,6 +733,12 @@
 
   /* ============== AUTO-AGENTS ============== */
   .auto-agents{padding:14px 24px;background:linear-gradient(135deg,#f0ebe3 0%,#faf7f2 100%);border-bottom:1px solid #e8e0d4;max-width:1600px;margin:0 auto}
+  .auto-fonte{font-size:11px;color:#a89e92;margin-top:12px;padding-top:10px;border-top:1px solid #e8e0d4;line-height:1.5}
+  .auto-fonte b{color:#8a7e72;font-weight:500}
+  .auto-fonte a{color:#b8a080;text-decoration:none}
+  .auto-fonte a:hover{text-decoration:underline}
+  .scope-note{font-size:10px;color:#b8b0a4;margin-top:6px;font-style:italic;line-height:1.4}
+  .scope-note a{color:#b8a080}
   .auto-agents-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
   .auto-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.18em;color:#b8a080;text-transform:uppercase}
   .auto-sub{font-size:11px;color:#b8b0a4;font-style:italic}
@@ -773,6 +790,17 @@
   </div>
 </nav>
 
+<nav class="side-nav" id="side-nav">
+  <a href="#hero" class="side-dot active" data-label="Sa&uacute;de"><span></span></a>
+  <a href="#q1" class="side-dot" data-label="Prazo"><span></span></a>
+  <a href="#q2" class="side-dot" data-label="Paradas"><span></span></a>
+  <a href="#q3" class="side-dot" data-label="Equipe"><span></span></a>
+  <a href="#q4" class="side-dot" data-label="Volume"><span></span></a>
+  <a href="#agenda" class="side-dot" data-label="Agenda"><span></span></a>
+  <a href="#diagnostico" class="side-dot" data-label="Diagn&oacute;stico"><span></span></a>
+  <a href="#carteira" class="side-dot" data-label="Carteira"><span></span></a>
+</nav>
+
 <header class="top">
   <div class="top-row">
     <h1>Central de Qualidade Monofloor — <span class="acc">Dashboard Executivo</span></h1>
@@ -822,12 +850,13 @@
       <div class="auto-freq">a cada 30 min</div>
     </div>
   </div>
+  <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para indicadores em tempo real via KIRA, use <a href="../indicadores.html">Indicadores</a> na nav acima. Bases distintas, métricas complementares.</div>
 </div>
 
 <div class="container">
 
   <!-- ============== HERO ============== -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="health-box">
       <svg class="health-svg" viewBox="0 0 200 200" id="health-svg">
         <circle cx="100" cy="100" r="86" fill="none" stroke="#e0d8cc" stroke-width="14"/>
@@ -840,6 +869,9 @@
       <div class="health-lbl">Índice de Saúde Operacional</div>
       <div class="health-veredito" id="health-veredito">—</div>
       <p class="hero-context">Abaixo de 65 = atenção operacional. Meta saudável: acima de 80.</p>
+      <div class="score-breakdown" id="score-breakdown">
+        <!-- gerado por JS -->
+      </div>
     </div>
 
     <div>
@@ -852,7 +884,6 @@
 
       <div class="hero-summary" id="hero-summary">—</div>
     </div>
-    <p class="hero-guide">Este painel responde 4 perguntas da diretoria. Role para explorar.</p>
   </section>
 
   <!-- ============== Q1 — PRAZO ============== -->
@@ -860,6 +891,7 @@
     <div class="q-head">
       <h2>PRAZO</h2>
       <p class="sub">Das 34 obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
+      <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja <a href="../indicadores.html">Indicadores</a>.</p>
     </div>
 
     <div class="q1-stacked-wrap">
@@ -916,6 +948,7 @@
     <div class="q-head">
       <h2>OBRAS PARADAS</h2>
       <p class="sub">Todas as 208 obras ativas agrupadas por situação. Clique numa categoria para ver quais obras estão ali e o diagnóstico.</p>
+      <p class="scope-note">Base: carteira completa (208 ativas de 1.028 no sistema). Métricas complementares nos <a href="../indicadores.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
     </div>
 
     <!-- Mini-dashboard de filtros -->
@@ -3619,9 +3652,78 @@ function renderLeituraDia() {
   document.getElementById('leitura-texto').innerHTML = frases.join(' ');
 }
 
+// ============== SIDE NAV (scroll spy) ==============
+function initSideNav() {
+  const dots = document.querySelectorAll('.side-dot');
+  const sections = [];
+  dots.forEach(d => {
+    const id = d.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({id, el, dot: d});
+  });
+
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        dots.forEach(d => d.classList.remove('active'));
+        const match = sections.find(s => s.el === entry.target);
+        if (match) match.dot.classList.add('active');
+      }
+    });
+  }, {rootMargin: '-30% 0px -60% 0px'});
+
+  sections.forEach(s => observer.observe(s.el));
+
+  // Smooth scroll
+  dots.forEach(d => {
+    d.addEventListener('click', e => {
+      e.preventDefault();
+      const id = d.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  });
+}
+
+// ============== SCORE BREAKDOWN ==============
+function renderScoreBreakdown() {
+  const el = document.getElementById('score-breakdown');
+  if (!el) return;
+
+  const ativas = AGG.total_ativas || 208;
+  const n180 = AGG.n_180_plus;
+  const idade_med = AGG.idade_mediana;
+  const n_atRisk = EXT.ocorrencias.n_atRisk;
+  const n_zumbi = EXT.zumbi_n;
+  const nReparo = EXT.reparo.total;
+
+  const slaScore = Math.round(Math.max(0, 1 - (n180 / ativas)) * 30);
+  const ftrScore = Math.round(Math.max(0, 1 - ((nReparo + n_zumbi) / ativas)) * 20);
+  const idadeScore = Math.round(Math.max(0, 1 - (idade_med / 300)) * 30);
+  const riskScore = Math.round(Math.max(0, 1 - (n_atRisk / ativas)) * 20);
+
+  const pillars = [
+    {label: 'SLA/Prazo', value: slaScore, max: 30, color: slaScore < 15 ? '#c45a5a' : slaScore < 22 ? '#b89a4a' : '#3d8a5a'},
+    {label: 'Qualidade', value: ftrScore, max: 20, color: ftrScore < 10 ? '#c45a5a' : ftrScore < 15 ? '#b89a4a' : '#3d8a5a'},
+    {label: 'Idade', value: idadeScore, max: 30, color: idadeScore < 15 ? '#c45a5a' : idadeScore < 22 ? '#b89a4a' : '#3d8a5a'},
+    {label: 'Risco', value: riskScore, max: 20, color: riskScore < 10 ? '#c45a5a' : riskScore < 15 ? '#b89a4a' : '#3d8a5a'}
+  ];
+
+  el.innerHTML = pillars.map(p => `
+    <div class="score-pillar">
+      <div class="score-pillar-label">${p.label}</div>
+      <div class="score-pillar-bar"><div style="width:${(p.value/p.max*100).toFixed(0)}%;background:${p.color}"></div></div>
+      <div class="score-pillar-value">${p.value}<span class="score-pillar-max">/${p.max}</span></div>
+    </div>
+  `).join('');
+}
+
 // ============== INIT ==============
 renderSnapshotDate();
 renderHealth();
+renderScoreBreakdown();
 renderHero();
 // renderLeituraDia() removido a pedido do Vitor
 renderHeroZumbiChip();
@@ -3638,6 +3740,7 @@ renderBacklogCounter();
 renderAlertas();
 renderAtRiskTop();
 renderBaldes();
+initSideNav();
 
 // ============== BACKLOG MODAL ==============
 function openBacklog(id){
