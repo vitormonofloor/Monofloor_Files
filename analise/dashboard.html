@@ -45,7 +45,7 @@
 
   /* ============== LAYOUT ============== */
   .container { max-width: 1480px; margin: 0 auto; padding: 28px; }
-  section { margin-bottom: 56px; }
+  section { margin-bottom: 36px; }
   .section-head { margin-bottom: 18px; }
   .section-kicker {
     font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.18em;
@@ -62,16 +62,18 @@
   }
   .health-box {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 8px; border-right: 1px solid var(--border);
+    padding: 16px; border-right: 1px solid var(--border);
+    background: linear-gradient(180deg, #2a2520 0%, #3a3530 100%);
+    border-radius: 6px;
   }
   .health-svg { width: 220px; height: 220px; }
   .health-num {
     font-family: 'JetBrains Mono', monospace; font-size: 56px; font-weight: 600;
-    fill: var(--text); text-anchor: middle; dominant-baseline: central;
+    fill: #f0ebe3; text-anchor: middle; dominant-baseline: central;
   }
-  .health-pct { font-size: 11px; fill: var(--muted); text-anchor: middle; }
+  .health-pct { font-size: 11px; fill: #a89e92; text-anchor: middle; }
   .health-lbl {
-    margin-top: 12px; text-align: center;
+    margin-top: 12px; text-align: center; color: #c8bfb4;
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
   }
   .health-veredito { font-size: 13px; color: var(--text); margin-top: 6px; font-weight: 500; }
@@ -104,7 +106,7 @@
   }
   .hero-summary strong { color: var(--accent); font-weight: 600; }
   .hero-guide{font-size:12px;color:#a89e92;text-align:center;margin-top:16px;font-style:italic;letter-spacing:0.02em}
-  .hero-context{font-size:11px;color:#8a7e72;text-align:center;margin-top:8px}
+  .hero-context{font-size:11px;color:#a89e92;text-align:center;margin-top:8px}
 
   /* ============== SIDE NAV ============== */
   .side-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:14px}
@@ -775,7 +777,7 @@
       <span class="mono-nav-icon">&#9638;</span>
       <span class="mono-nav-label">Mapa de Obras</span>
     </a>
-    <a href="../indicadores.html" class="mono-nav-btn" data-page="indicadores">
+    <a href="../indicadores-v2.html" class="mono-nav-btn" data-page="indicadores">
       <span class="mono-nav-icon">&#9670;</span>
       <span class="mono-nav-label">Indicadores</span>
     </a>
@@ -820,7 +822,7 @@
     <div class="auto-agent">
       <div class="auto-dot ativo"></div>
       <div class="auto-info">
-        <div class="auto-nome"><a href="../indicadores.html">ARGOS</a></div>
+        <div class="auto-nome"><a href="../indicadores-v2.html">ARGOS</a></div>
         <div class="auto-papel">Extra&ccedil;&atilde;o de indicadores</div>
       </div>
       <div class="auto-freq">a cada 6h</div>
@@ -850,7 +852,7 @@
       <div class="auto-freq">a cada 30 min</div>
     </div>
   </div>
-  <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para indicadores em tempo real via KIRA, use <a href="../indicadores.html">Indicadores</a> na nav acima. Bases distintas, métricas complementares.</div>
+  <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para indicadores em tempo real via KIRA, use <a href="../indicadores-v2.html">Indicadores</a> na nav acima. Bases distintas, métricas complementares.</div>
 </div>
 
 <div class="container">
@@ -891,7 +893,7 @@
     <div class="q-head">
       <h2>PRAZO</h2>
       <p class="sub">Das 34 obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
-      <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja <a href="../indicadores.html">Indicadores</a>.</p>
+      <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja <a href="../indicadores-v2.html">Indicadores</a>.</p>
     </div>
 
     <div class="q1-stacked-wrap">
@@ -948,7 +950,7 @@
     <div class="q-head">
       <h2>OBRAS PARADAS</h2>
       <p class="sub">Todas as 208 obras ativas agrupadas por situação. Clique numa categoria para ver quais obras estão ali e o diagnóstico.</p>
-      <p class="scope-note">Base: carteira completa (208 ativas de 1.028 no sistema). Métricas complementares nos <a href="../indicadores.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
+      <p class="scope-note">Base: carteira completa (208 ativas de 1.028 no sistema). Métricas complementares nos <a href="../indicadores-v2.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
     </div>
 
     <!-- Mini-dashboard de filtros -->
