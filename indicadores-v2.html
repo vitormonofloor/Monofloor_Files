@@ -21,8 +21,8 @@ html{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',syst
 body{max-width:1120px;margin:0 auto;padding:0 32px 80px}
 
 /* ═══ BACK BUTTON ═══ */
-.back-link{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--text-lightest);text-decoration:none;letter-spacing:1px;text-transform:uppercase;transition:color 0.2s;font-weight:400}
-.back-link:hover{color:var(--gold)}
+.back-link{position:fixed;top:16px;left:20px;z-index:999;display:inline-flex;align-items:center;gap:5px;font-size:10px;color:#a89e92;text-decoration:none;letter-spacing:1px;text-transform:uppercase;transition:color 0.2s;font-weight:500;background:rgba(240,235,227,0.85);padding:6px 14px 6px 10px;border-radius:20px;border:1px solid #e0d8cc;backdrop-filter:blur(8px)}
+.back-link:hover{color:#8b6d44;border-color:#d4c4a8}
 .back-link svg{width:14px;height:14px;stroke:currentColor}
 
 /* ═══ HEADER ═══ */
@@ -296,13 +296,12 @@ body{animation:pageIn 0.6s ease-out}
 </head>
 <body>
 
+<a href="hub.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Central</a>
+
 <header>
-  <div>
-    <a href="hub.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Central</a>
-    <div class="logo">
-      <span class="logo-text">monofloor</span>
-      <div class="logo-sub">Indicadores Operacionais</div>
-    </div>
+  <div class="logo">
+    <span class="logo-text">monofloor</span>
+    <div class="logo-sub">Indicadores Operacionais</div>
   </div>
   <div class="header-meta"><strong>16 abr 2026</strong> · 18:06<br>159 projetos ativos · atualizado a cada 6h</div>
 </header>
