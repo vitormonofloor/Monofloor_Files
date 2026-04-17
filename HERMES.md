@@ -73,8 +73,8 @@ O Hermes gera narrativa na personalidade do Vitor:
 - Slides com `padding: 80px`, fade-in progressivo via IntersectionObserver
 - Eyebrow com background sutil (pill dourada)
 - KPIs com gradiente e hover
-- Back-link com `backdrop-filter: blur(8px)` → volta pro indicadores.html
-- Branding: #c4a77d, Inter, #0a0a0a bg
+- Back-link com `backdrop-filter: blur(8px)` → volta pro indicadores-v2.html
+- Branding v2: #b8976a gold, Plus Jakarta Sans, #f0ebe3 bg (light/bege)
 
 ## Evolução
 
@@ -82,6 +82,7 @@ O Hermes gera narrativa na personalidade do Vitor:
 |---|---|---|
 | v1.0 | 16/04/2026 | Apresentação com slides verticais scroll-snap |
 | v1.1 | 16/04/2026 | Layout denso, tipografia equilibrada, fade-in progressivo |
+| v1.2 | 17/04/2026 | Integração com Indicadores v2 (visual light/bege), CTA dourado no painel |
 
 ## Conexões
 
@@ -89,7 +90,7 @@ O Hermes gera narrativa na personalidade do Vitor:
 - **LLM**: Groq (gratuito, sem cartão)
 - **Notifica**: Telegram (VITOR_CHAT_ID)
 - **Publica em**: GitHub Pages (`Monofloor_Files/analise.html`)
-- **Acessível via**: Botão ◆ Hermes no painel do [[ARGOS]] (com animação de asas douradas)
+- **Acessível via**: Botão ◆ Hermes no painel do [[ARGOS]] indicadores-v2.html (CTA dourado com seta)
 
 ---
 
@@ -100,7 +101,7 @@ KIRA (alheia, cliente.monofloor.cloud)
   ↓ classifica mensagens TG/WA → ocorrências
   
 ARGOS (Railway, 6h)
-  ↓ extrai KIRA → publica indicadores.html
+  ↓ extrai KIRA → publica indicadores-v2.html (+ splash.html)
   ↓                ↘
 TELEGRAM           HERMES (Railway, 8h BR)
                      ↓ lê Argos → Groq LLM → analise.html

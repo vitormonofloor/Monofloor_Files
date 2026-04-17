@@ -13,7 +13,9 @@
 | **URL pública** | `argos-monofloor-production.up.railway.app` |
 | **Ciclo** | A cada 6h (0h, 6h, 12h, 18h BR) |
 | **Versão atual** | v1.5 |
-| **Dashboard** | `vitormonofloor.github.io/Monofloor_Files/indicadores.html` |
+| **Dashboard** | `vitormonofloor.github.io/Monofloor_Files/indicadores-v2.html` |
+| **Splash** | `vitormonofloor.github.io/Monofloor_Files/splash.html` |
+| **Design** | Light/bege (#f0ebe3), Plus Jakarta Sans, identidade cliente.monofloor.cloud |
 
 ## Endpoints
 
@@ -56,14 +58,26 @@
 | v1.3 | 16/04/2026 | Botão Hermes no header |
 | v1.4 | 16/04/2026 | Portal Hermes com animação de asas SVG |
 | v1.5 | 16/04/2026 | Animação definitiva com asa dourada real (PNG), 2.8s fluida |
+| v2.0 | 17/04/2026 | Redesign completo: visual light/bege, 4 níveis (Fogo→Panorama→Consultores→Hermes), KPIs autoexplicativos clicáveis, semáforo automático (Régua de Saúde), consultores interativos com severidades animadas, sparkline com tooltip, splash page com animação espátula |
 
 ## Conexões
 
 - **Fonte de dados**: [[KIRA]] (alheia, sem auth)
 - **Consumidor**: [[HERMES]] (lê `/api/dados`)
 - **Notifica**: Telegram (VITOR_CHAT_ID)
-- **Publica em**: GitHub Pages (`Monofloor_Files/indicadores.html`)
+- **Publica em**: GitHub Pages (`Monofloor_Files/indicadores-v2.html` + `splash.html`)
 - **Asset**: `hermes-wing.png` hospedada em Monofloor_Files
+- **Logo**: Wixstatic `2bc4fe_d7fd788ceb094e96b86315e020950bda~mv2.png`
+
+## Indicadores v2 — Funcionalidades
+
+- **Nível 1 — Fogo**: Cards gigantes (problemas detectados + taxa atraso) com micro-ações clicáveis
+- **Nível 2 — Panorama**: 12 KPIs em 6 grupos (Comunicação, Qualidade, Performance, Operações, Logística, Comercial), semáforo auto, pulso variação, explicações clicáveis (O que é, Por que importa, Escala, Analogia, Como calcula)
+- **Nível 3 — Consultores**: Botões individuais (Wesley, Luana, Juliana, Pedro, Sem consultor), painel interativo com 4 KPIs, tipos expandíveis com definição+metodologia, severidades animadas pulsantes com drill-down
+- **Nível 4 — Hermes CTA**: Link para analise.html
+- **Sparkline**: Interativo com tooltip (dia da semana + data + valor), eixos X/Y
+- **Splash**: Animação espátula (2 passadas), logo Monofloor original, fade-out ao clicar
+- **Bloco de contexto**: 4 bullets com ícones (📡🤖🎯🔄) explicando o painel, agente Argos, frequência 4x/dia, período 30 dias
 
 ---
 
