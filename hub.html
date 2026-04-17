@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monofloor — Central de Qualidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;align-items:center;justify-content:center;-webkit-font-smoothing:antialiased}
+
+.hub{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;position:relative}
+
+/* ═══ BRAND ═══ */
+.brand{text-align:center;margin-bottom:48px;opacity:0;animation:fadeUp 0.8s ease 0.3s forwards}
+.brand-logo{height:40px;width:auto;filter:brightness(0) sepia(1) saturate(0.3) hue-rotate(350deg) brightness(0.25);margin-bottom:8px}
+.brand-tagline{font-size:9px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:#a89e92}
+
+/* ═══ CARDS ═══ */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:780px;width:100%;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
+
+.card{background:#f8f5f0;border:1px solid #e8e2d8;border-radius:20px;padding:36px 32px;cursor:pointer;transition:all 0.4s cubic-bezier(0.22,0.61,0.36,1);position:relative;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08);border-color:#d4c4a8}
+.card::before{content:"";position:absolute;top:0;left:32px;right:32px;height:2px;border-radius:0 0 2px 2px;background:linear-gradient(90deg,#b8976a,#d4c4a8);opacity:0.3;transition:opacity 0.3s}
+.card:hover::before{opacity:0.8}
+
+/* ═══ PULSE ANIMATION ═══ */
+.anim-container{width:100%;height:72px;margin-bottom:20px;position:relative;overflow:hidden}
+
+/* Continuous cardiac monitor — fades in from the start */
+.pulse-monitor{position:absolute;inset:0;opacity:0;animation:monitorIn 2s ease 1s forwards}
+@keyframes monitorIn{0%{opacity:0}100%{opacity:1}}
+.pulse-scroll{animation:scrollLeft 3.5s linear infinite}
+@keyframes scrollLeft{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.monitor-line{fill:none;stroke:#b8976a;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0.4}
+.monitor-glow{fill:none;stroke:#b8976a;stroke-width:5;opacity:0.08;filter:blur(3px)}
+
+/* Scanning glow dot — fades in slower, arrives after line */
+.scan-dot{position:absolute;inset:0;opacity:0;animation:dotIn 1.5s ease 2s forwards}
+@keyframes dotIn{to{opacity:1}}
+.scan-dot circle{animation:scanPulse 1.5s ease-in-out infinite}
+@keyframes scanPulse{0%,100%{opacity:0.5;r:3}50%{opacity:1;r:4.5}}
+
+.anim-label{position:absolute;bottom:0;right:0;font-size:13px;font-weight:400;letter-spacing:1px;opacity:0;transform:translateX(-8px);animation:labelIn 0.8s ease forwards;z-index:2}
+.anim-label.gold{color:#b8976a;animation-delay:2.8s}
+@keyframes labelIn{to{opacity:1;transform:translateX(0)}}
+
+/* ═══ DASHBOARD ANIMATION — delayed 1s after pulse ═══ */
+/* Thin tablet frame — minimal, recognizable */
+.dash-screen{fill:none;stroke:#9a8a6a;stroke-width:1;opacity:0;animation:screenIn 0.6s ease 2s forwards}
+@keyframes screenIn{to{opacity:0.35}}
+.dash-chin{fill:#9a8a6a;opacity:0;animation:chinIn 0.4s ease 2s forwards}
+@keyframes chinIn{to{opacity:0.06}}
+
+/* Content inside the screen */
+.dash-line{fill:#9a8a6a;opacity:0;transform-origin:left center;transform:scaleX(0)}
+.dl-1{animation:lFill 0.4s ease 2.4s forwards}
+.dl-2{animation:lFill 0.4s ease 2.55s forwards}
+@keyframes lFill{to{opacity:0.12;transform:scaleX(1)}}
+
+/* Gauge */
+.dash-gauge{fill:none;stroke:#9a8a6a;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:40;stroke-dashoffset:40;animation:gArc 0.6s ease 2.7s forwards}
+@keyframes gArc{to{stroke-dashoffset:12;opacity:0.3}}
+.dash-score{font-family:'JetBrains Mono',monospace;font-size:10px;fill:#9a8a6a;opacity:0;animation:sIn 0.3s ease 3.2s forwards}
+@keyframes sIn{to{opacity:0.4}}
+
+/* Chart bars */
+.dash-bar{fill:#9a8a6a;opacity:0;transform-origin:bottom center;transform:scaleY(0)}
+.db1{animation:bGrow 0.35s ease 2.8s forwards, bB1 3.0s ease-in-out 3.8s infinite}
+.db2{animation:bGrow 0.35s ease 2.9s forwards, bB2 3.4s ease-in-out 3.9s infinite}
+.db3{animation:bGrow 0.35s ease 3.0s forwards, bB3 2.8s ease-in-out 4.0s infinite}
+.db4{animation:bGrow 0.35s ease 3.1s forwards, bB4 3.6s ease-in-out 4.1s infinite}
+.db5{animation:bGrow 0.35s ease 3.2s forwards, bB5 3.2s ease-in-out 4.2s infinite}
+@keyframes bGrow{to{opacity:0.22;transform:scaleY(1)}}
+@keyframes bB1{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.75)}}
+@keyframes bB2{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.22)}}
+@keyframes bB3{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.78)}}
+@keyframes bB4{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.2)}}
+@keyframes bB5{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.82)}}
+
+/* "208" number that fades in — meaningful data */
+.dash-num{font-family:'JetBrains Mono',monospace;font-size:14px;fill:#9a8a6a;opacity:0;animation:numIn 0.5s ease 3.4s forwards}
+@keyframes numIn{to{opacity:0.25}}
+.dash-num-label{font-family:'Plus Jakarta Sans',sans-serif;font-size:7px;fill:#9a8a6a;opacity:0;animation:numIn 0.5s ease 3.5s forwards;letter-spacing:1px}
+
+.anim-label.dash{color:#9a8a6a;animation-delay:3.6s}
+
+/* ═══ CARD CONTENT ═══ */
+.card-desc{font-size:12px;color:#6b6156;line-height:1.5;font-weight:300;margin-bottom:16px;flex:1}
+.card-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.pill{font-size:9px;font-weight:500;padding:4px 10px;border-radius:20px;letter-spacing:0.5px;font-family:'JetBrains Mono',monospace;color:#8b6d44;background:#f7f2eb;border:1px solid #e8dfd2}
+.card-go{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#b8976a;transition:gap 0.3s}
+.card:hover .card-go{gap:14px}
+.card-go svg{width:16px;height:16px;stroke:currentColor;transition:transform 0.3s}
+.card:hover .card-go svg{transform:translateX(3px)}
+
+/* ═══ FOOTER ═══ */
+.hub-foot{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#c8bfb4;opacity:0;animation:fadeUp 0.6s ease 1s forwards}
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;width:2px;height:2px;background:#c4b5a0;border-radius:50%;opacity:0;animation:pFloat linear infinite}
+@keyframes pFloat{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:0.12}90%{opacity:0.08}100%{transform:translateY(-20vh) translateX(var(--drift));opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:640px){.cards{grid-template-columns:1fr;max-width:380px}.card{padding:28px 24px}.anim-container{height:56px}}
+</style>
+</head>
+<body>
+
+<div class="hub">
+  <div class="particles" id="particles"></div>
+
+  <div class="brand">
+    <img src="https://static.wixstatic.com/media/2bc4fe_d7fd788ceb094e96b86315e020950bda~mv2.png/v1/fill/w_506,h_156,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Artboard%201.png" alt="monofloor" class="brand-logo">
+    <div class="brand-tagline">Central de Qualidade</div>
+  </div>
+
+  <div class="cards">
+
+    <!-- ═══ INDICADORES ═══ -->
+    <a href="indicadores-v2.html" class="card" onclick="event.preventDefault();document.body.style.transition='opacity 0.4s';document.body.style.opacity='0';setTimeout(function(){window.location.href='indicadores-v2.html'},400)">
+      <div class="anim-container">
+        <!-- Continuous cardiac monitor -->
+        <div class="pulse-monitor">
+          <svg viewBox="0 0 600 60" style="width:200%;height:100%;overflow:visible" class="pulse-scroll">
+            <path class="monitor-glow" d="M0,35 L60,35 L76,35 L84,32 L92,35 L112,35 L124,38 L134,45 L144,8 L156,48 L168,28 L180,35 L216,35 L228,30 L240,35 L300,35 L360,35 L376,35 L384,32 L392,35 L412,35 L424,38 L434,45 L444,8 L456,48 L468,28 L480,35 L516,35 L528,30 L540,35 L600,35"/>
+            <path class="monitor-line" d="M0,35 L60,35 L76,35 L84,32 L92,35 L112,35 L124,38 L134,45 L144,8 L156,48 L168,28 L180,35 L216,35 L228,30 L240,35 L300,35 L360,35 L376,35 L384,32 L392,35 L412,35 L424,38 L434,45 L444,8 L456,48 L468,28 L480,35 L516,35 L528,30 L540,35 L600,35"/>
+          </svg>
+          <svg class="scan-dot" viewBox="0 0 300 60" style="width:100%;height:100%;position:absolute;top:0;left:0">
+            <circle cx="295" cy="35" r="3" fill="#b8976a"/>
+          </svg>
+        </div>
+        <div class="anim-label gold">indicadores</div>
+      </div>
+      <div class="card-desc">Pulso operacional em tempo real — atualizado 4× ao dia via análise automática de mensagens.</div>
+      <div class="card-pills">
+        <span class="pill">KIRA · Telegram + WhatsApp</span>
+        <span class="pill">Argos · 4×/dia</span>
+      </div>
+      <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </a>
+
+    <!-- ═══ DASHBOARD EXECUTIVO ═══ -->
+    <a href="analise/dashboard.html" class="card" onclick="event.preventDefault();document.body.style.transition='opacity 0.4s';document.body.style.opacity='0';setTimeout(function(){window.location.href='analise/dashboard.html'},400)">
+      <div class="anim-container">
+        <svg viewBox="0 0 300 60" style="width:100%;height:100%">
+          <!-- Thin tablet frame -->
+          <rect class="dash-screen" x="40" y="2" width="220" height="50" rx="5"/>
+          <rect class="dash-chin" x="40" y="48" width="220" height="6" rx="0 0 5 5"/>
+
+          <!-- Left: text lines + gauge inside screen -->
+          <rect class="dash-line dl-1" x="52" y="10" width="50" height="2.5" rx="1.5"/>
+          <rect class="dash-line dl-2" x="52" y="17" width="36" height="2.5" rx="1.5"/>
+          <path class="dash-gauge" d="M62,42 A14,14 0 0,1 90,42"/>
+          <text class="dash-score" x="76" y="39" text-anchor="middle">58</text>
+
+          <!-- Center: chart bars -->
+          <rect class="dash-bar db1" x="115" y="24" width="9" height="22" rx="2"/>
+          <rect class="dash-bar db2" x="129" y="16" width="9" height="30" rx="2"/>
+          <rect class="dash-bar db3" x="143" y="28" width="9" height="18" rx="2"/>
+          <rect class="dash-bar db4" x="157" y="12" width="9" height="34" rx="2"/>
+          <rect class="dash-bar db5" x="171" y="20" width="9" height="26" rx="2"/>
+
+          <!-- Right: "208" as meaningful number -->
+          <text class="dash-num" x="215" y="28" text-anchor="middle">208</text>
+          <text class="dash-num-label" x="215" y="38" text-anchor="middle">OBRAS</text>
+        </svg>
+        <div class="anim-label dash">dashboard executivo</div>
+      </div>
+      <div class="card-desc">Análise profunda da carteira — diagnóstico de prazo, equipe, volume e pendências acionáveis.</div>
+      <div class="card-pills">
+        <span class="pill">208 obras · 1.028 no sistema</span>
+        <span class="pill">Refresh · 30 min</span>
+      </div>
+      <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </a>
+
+  </div>
+</div>
+
+<div class="hub-foot">Monofloor · Central de Qualidade · 2026</div>
+
+<script>
+var c = document.getElementById('particles');
+for (var i = 0; i < 10; i++) {
+  var p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = (Math.random() * 100) + '%';
+  p.style.animationDuration = (10 + Math.random() * 14) + 's';
+  p.style.animationDelay = (Math.random() * 8) + 's';
+  p.style.setProperty('--drift', (Math.random() * 30 - 15) + 'px');
+  p.style.width = p.style.height = (1.5 + Math.random() * 1) + 'px';
+  c.appendChild(p);
+}
+</script>
+</body>
+</html>
