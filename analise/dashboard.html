@@ -103,6 +103,7 @@
   }
   .hero-summary strong { color: var(--accent); font-weight: 600; }
   .hero-guide{font-size:12px;color:#666;text-align:center;margin-top:16px;font-style:italic;letter-spacing:0.02em}
+  .hero-context{font-size:11px;color:#888;text-align:center;margin-top:8px}
 
   /* ============== CARDS ============== */
   .card {
@@ -776,6 +777,7 @@
       </svg>
       <div class="health-lbl">Índice de Saúde Operacional</div>
       <div class="health-veredito" id="health-veredito">—</div>
+      <p class="hero-context">Abaixo de 65 = atenção operacional. Meta saudável: acima de 80.</p>
     </div>
 
     <div>
@@ -795,7 +797,7 @@
   <section id="q1">
     <div class="q-head">
       <h2>PRAZO</h2>
-      <p class="sub">Quantas obras entregamos dentro do cronograma previsto?</p>
+      <p class="sub">Das 34 obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
     </div>
 
     <div class="q1-stacked-wrap">
@@ -851,7 +853,7 @@
   <section id="q2">
     <div class="q-head">
       <h2>OBRAS PARADAS</h2>
-      <p class="sub">Composição por status e diagnóstico das obras que não estão avançando</p>
+      <p class="sub">Todas as 208 obras ativas agrupadas por situação. Clique numa categoria para ver quais obras estão ali e o diagnóstico.</p>
     </div>
 
     <!-- Mini-dashboard de filtros -->
@@ -883,7 +885,7 @@
   <section id="q3">
     <div class="q-head">
       <h2>EQUIPE</h2>
-      <p class="sub">Distribuição de carga entre consultores e equipes operacionais</p>
+      <p class="sub">Dois consultores (Luana e Wesley) concentram 85% de todas as obras ativas. Veja a distribuição de carga e as equipes operacionais.</p>
     </div>
 
     <!-- Bloco 1: Luana vs Wesley + KPIs aplicadores -->
@@ -892,7 +894,7 @@
         <div class="card-head"><div class="card-title">Luana vs Wesley</div><div class="card-sub">consultoras dominantes</div></div>
         <div class="vs-grid" id="q3-lw"></div>
         <div class="key-finding crit" style="margin-top:14px;">
-          <strong>Bus factor 2.</strong> Luana + Wesley concentram <span class="mono" id="q3-bus-pct">85%</span> das obras ativas e <span class="mono" id="q3-bus-180">91%</span> das obras 180+. Fragilidade estrutural.
+          <strong>Dependência de 2 pessoas.</strong> Luana + Wesley concentram <span class="mono" id="q3-bus-pct">85%</span> das obras ativas e <span class="mono" id="q3-bus-180">91%</span> das obras 180+. Se uma dessas duas pessoas sair, a operação colapsa.
         </div>
       </div>
 
@@ -931,7 +933,7 @@
   <section id="q4">
     <div class="q-head">
       <h2>VOLUME</h2>
-      <p class="sub" id="q4-sub">Metragem e receita por estado operacional, fase e geografia</p>
+      <p class="sub" id="q4-sub">O que está efetivamente em obra (rodando), o que travou (estagnado) e o que ainda não começou (pendente). Clique nos cards para ver as obras.</p>
     </div>
 
     <!-- BLOCO 1: 3 cards grandes por estado operacional (clicáveis → modal) -->
@@ -1087,7 +1089,7 @@
     <div class="ag-head">
       <div class="ag-tag">AGENDA OPERACIONAL</div>
       <h2>Próximos marcos da operação</h2>
-      <p class="sub">O que vai acontecer nas obras nos próximos dias — visitas técnicas, entradas em obra, execuções previstas. Clique nos pontos pra ver detalhe de cada obra.</p>
+      <p class="sub">Próximos marcos da operação nos próximos dias — visitas técnicas agendadas, entradas em obra e execuções previstas. Ajuste o período para ver mais.</p>
     </div>
 
     <div class="ag-kpis">
@@ -1140,7 +1142,7 @@
   <section id="diagnostico">
     <div class="q-head">
       <h2>DIAGNÓSTICO OPERACIONAL</h2>
-      <p class="sub">Visão consolidada: o que descobrimos, onde os sistemas divergem, e o que precisa de ação imediata.</p>
+      <p class="sub">Consolidação de tudo que encontramos: padrões invisíveis, inconsistências entre sistemas, e ações que precisam de decisão imediata.</p>
     </div>
 
     <!-- Sub-bloco B: Inconsistências (antigo Falhas de Sincronização) -->
@@ -1152,7 +1154,7 @@
       <button class="sync-card crit" onclick="openSyncModal('fossil')">
         <div class="sync-num-row">
           <div class="sync-num">20</div>
-          <div class="sync-tag-tipo">CRONOGRAMA FOSSILIZADO</div>
+          <div class="sync-tag-tipo">PLANEJAMENTO DESATUALIZADO</div>
         </div>
         <div class="sync-desc">Planejamento marca como "ativa" mas painel já mostra concluída/finalizada. Sistema de planejamento não foi atualizado.</div>
         <div class="sync-action">Atualizar planejamento</div>
@@ -1188,7 +1190,7 @@
       <button class="sync-card warn" onclick="openSyncModal('bugarray')">
         <div class="sync-num-row">
           <div class="sync-num">3</div>
-          <div class="sync-tag-tipo">BUG ARRAY LITERAL</div>
+          <div class="sync-tag-tipo">ERRO DE IMPORTAÇÃO</div>
         </div>
         <div class="sync-desc">Campo consultorNome serializado como string "[]" em vez de array vazio. Falha de importação — afeta obras de São Paulo no mesmo lote.</div>
         <div class="sync-action">Corrigir importação</div>
@@ -1197,7 +1199,7 @@
 
     <div class="sync-resumo">
       <div class="sync-resumo-num">~43</div>
-      <div class="sync-resumo-text">obras únicas afetadas por algum tipo de drift entre as <b>208 ativas</b>. Aproximadamente <b>20%</b> da carteira tem inconsistência sistêmica que distorce as métricas reais.</div>
+      <div class="sync-resumo-text">obras únicas afetadas por algum tipo de inconsistência entre as <b>208 ativas</b>. Aproximadamente <b>20%</b> da carteira tem inconsistência sistêmica que distorce as métricas reais.</div>
     </div>
 
     <div class="q4-modal" id="sync-modal">
@@ -1224,7 +1226,7 @@
     <div class="grid-2">
       <!-- A — ORGANOGRAMA SOMBRA -->
       <div class="card">
-        <div class="card-head"><div class="card-title">A — Organograma sombra</div><div class="card-sub">quem realmente opera</div></div>
+        <div class="card-head"><div class="card-title">A — Pessoas trabalhando sem cadastro</div><div class="card-sub">hierarquia operacional real não registrada no sistema</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
           <div class="kpi"><div class="lbl">Pessoas que operam</div><div class="val" id="org-total">—</div><div class="sub">vs <span id="org-cad">—</span> cadastradas</div></div>
           <div class="kpi"><div class="lbl">Fantasmas</div><div class="val crit" id="org-fant">—</div><div class="sub" id="org-fant-pct">—</div></div>
@@ -1241,7 +1243,7 @@
 
       <!-- B — CRONOGRAMA FOSSIL -->
       <div class="card">
-        <div class="card-head"><div class="card-title">B — Cronograma fossilizado</div><div class="card-sub">sistema de planejamento</div></div>
+        <div class="card-head"><div class="card-title">B — Planejamento desatualizado</div><div class="card-sub">congelado — não reflete o que aconteceu na prática</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
           <div class="kpi"><div class="lbl">Atrasadas</div><div class="val crit">100%</div><div class="sub"><span id="crono-total">—</span> de <span id="crono-total2">—</span></div></div>
           <div class="kpi"><div class="lbl">Já concluídas</div><div class="val warn" id="crono-pct-concl">—</div><div class="sub">no painel real</div></div>
@@ -1256,7 +1258,7 @@
 
       <!-- C — CLUSTER ADMIN -->
       <div class="card">
-        <div class="card-head"><div class="card-title">C — Cluster administrativo</div><div class="card-sub">o gargalo não é operacional</div></div>
+        <div class="card-head"><div class="card-title">C — Pendências de cadastro e comunicação</div><div class="card-sub">o gargalo não é operacional</div></div>
         <div class="kpi-row" style="grid-template-columns: 1fr 1fr;">
           <div class="kpi"><div class="lbl">Zumbi</div><div class="val crit" id="cluster-zumbi">—</div><div class="sub">CLIENTE FINALIZADO sem fechar</div></div>
           <div class="kpi"><div class="lbl">Órfãs</div><div class="val crit" id="cluster-orfas">—</div><div class="sub">sem consultor</div></div>
@@ -1384,21 +1386,21 @@
           <th class="num">Idade</th><th>Ação</th>
         </tr></thead>
         <tbody>
-          <tr><td class="cli">VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL</td><td class="ct">SÃO PAULO</td><td class="ct">Ag. Execução</td><td class="ct">Luana Patricia</td><td class="num scarlet">313d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/db4288be-e19e-4f9e-bca6-5023e1ae8e14" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL</td><td class="ct">SÃO PAULO</td><td class="ct">Aguardando início</td><td class="ct">Luana Patricia</td><td class="num scarlet">313d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/db4288be-e19e-4f9e-bca6-5023e1ae8e14" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">ANDRE KEUNECKE SALERNO</td><td class="ct">SÃO PAULO</td><td class="ct">Em Execução</td><td class="ct">Luana Patricia</td><td class="num scarlet">275d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/b8fbadd8-778c-4a3b-9e18-81bba29a6a8e" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">JOÃO EDUARDO MARTINS KUHLMANN</td><td class="ct">CURITIBA</td><td class="ct">Em Execução</td><td class="ct">Pedro Alexandre</td><td class="num red">264d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/2d00e03f-dfab-49fc-83ef-74ed1995e228" target="_blank">Encerrar →</a></td></tr>
-          <tr><td class="cli">PEDRO HENRIQUE SETTI SEIVERS</td><td class="ct">SÃO BERNARDO DO CAMPO</td><td class="ct">Ag. Execução</td><td class="ct">Wesley Matheus</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/1ea08f00-3aa7-4cf1-b09b-32e69c9e98bc" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">PEDRO HENRIQUE SETTI SEIVERS</td><td class="ct">SÃO BERNARDO DO CAMPO</td><td class="ct">Aguardando início</td><td class="ct">Wesley Matheus</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/1ea08f00-3aa7-4cf1-b09b-32e69c9e98bc" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">GETULIO TURATTI OST</td><td class="ct">SÃO PAULO / SP</td><td class="ct">Marcas/Rolo/Cera</td><td class="ct">Juliana Santos</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0e4e10b2-9fbe-49a4-9e42-08ae5624b39c" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">GUILHERME HAIDAR BERJEAUT</td><td class="ct">SÃO PAULO / SP</td><td class="ct">Marcas/Rolo/Cera</td><td class="ct">Wesley Matheus</td><td class="num red">260d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/abb93b6f-ef09-4147-b1f2-174c9bc9c80b" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)</td><td class="ct">SÃO PAULO</td><td class="ct">Planejamento</td><td class="ct">Wesley Matheus</td><td class="num red">218d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/097ee21f-3e27-4904-9929-86aa8b1d6fba" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">VITOR FLAMIA DE BARROS COSTA</td><td class="ct">SÃO PAULO</td><td class="ct">Em Execução</td><td class="ct">Wesley Matheus</td><td class="num red">211d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c9560bb7-9049-4b59-b63d-f5b2834eb234" target="_blank">Encerrar →</a></td></tr>
-          <tr><td class="cli">RONALDO PORTUGAL BACELLAR FILHO</td><td class="ct">EXTERNA</td><td class="ct">Ag. Clima</td><td class="ct">Wesley Matheus</td><td class="num red">205d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/559e9123-fbf4-48d2-8570-7edb6031c094" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">RONALDO PORTUGAL BACELLAR FILHO</td><td class="ct">EXTERNA</td><td class="ct">Esperando clima</td><td class="ct">Wesley Matheus</td><td class="num red">205d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/559e9123-fbf4-48d2-8570-7edb6031c094" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">RICARDO GUIMARAES VIEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Planejamento</td><td class="ct">Wesley Matheus</td><td class="num red">205d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/ddb7768a-521e-4164-9714-120250376edd" target="_blank">Encerrar →</a></td></tr>
-          <tr><td class="cli">GUILHERME LANGER</td><td class="ct">EXTERNA</td><td class="ct">Ag. Clima</td><td class="ct">Wesley Matheus</td><td class="num red">202d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a9cf011c-d305-4cc5-8d04-fe65e00b6c09" target="_blank">Encerrar →</a></td></tr>
-          <tr><td class="cli">PAULA CORREA NOGUEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Ag. Clima</td><td class="ct">[bug array]</td><td class="num red">196d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c6908776-f200-4b20-87eb-0e9d9a80eda7" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">GUILHERME LANGER</td><td class="ct">EXTERNA</td><td class="ct">Esperando clima</td><td class="ct">Wesley Matheus</td><td class="num red">202d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a9cf011c-d305-4cc5-8d04-fe65e00b6c09" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">PAULA CORREA NOGUEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Esperando clima</td><td class="ct">[erro importação]</td><td class="num red">196d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c6908776-f200-4b20-87eb-0e9d9a80eda7" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">MARISA NATALIA PINTO</td><td class="ct">RIO DE JANEIRO</td><td class="ct">Planejamento</td><td class="ct">Wesley Matheus</td><td class="num">176d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/a8eff05f-a2f9-473e-96b1-5a0cc39e371b" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">MAJORELLE HOLDINGS LTDA</td><td class="ct">CEP 80420</td><td class="ct">Em Execução</td><td class="ct">Wesley Matheus</td><td class="num">159d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/2ee38aff-9782-4504-b322-10cb7da6626a" target="_blank">Encerrar →</a></td></tr>
-          <tr><td class="cli">CASA VIK ADM. SALOES DE BELEZA KUKLIK LTDA</td><td class="ct">Av. Visc. do Rio Branco</td><td class="ct">Ag. Execução</td><td class="ct">Wesley Matheus</td><td class="num">154d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0" target="_blank">Encerrar →</a></td></tr>
+          <tr><td class="cli">CASA VIK ADM. SALOES DE BELEZA KUKLIK LTDA</td><td class="ct">Av. Visc. do Rio Branco</td><td class="ct">Aguardando início</td><td class="ct">Wesley Matheus</td><td class="num">154d</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0" target="_blank">Encerrar →</a></td></tr>
           <tr><td class="cli">Roberto Tamio Murakami</td><td class="ct">São Paulo/São Paulo</td><td class="ct">Reparo</td><td class="ct">(sem)</td><td class="num ct">s/data</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/1231fb6a-8d41-4ff1-a98c-635cc35a577c" target="_blank">Encerrar →</a></td></tr>
         </tbody>
       </table>
@@ -1458,7 +1460,7 @@
           <tr class="row-crit"><td class="cli">BERNARDO MAGALHÃES</td><td class="ct">RIO DE JANEIRO</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">243d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/0b692354-92ec-4168-8b74-3ab4b6400a2b" target="_blank">Atribuir →</a></td></tr>
           <tr class="row-crit"><td class="cli">GABRIELA AZEVEDO FORLIN</td><td class="ct">SÃO PAULO</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">211d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/e79c60c1-4169-4df5-b856-220fe82510db" target="_blank">Atribuir →</a></td></tr>
           <tr class="row-crit"><td class="cli">REPULLO ASSESSORIA EM INFORMATICA LTDA</td><td class="ct">SÃO PAULO</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">205d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/2369c899-509f-4deb-a767-03f244854492" target="_blank">Atribuir →</a></td></tr>
-          <tr class="row-crit"><td class="cli">PAULA CORREA NOGUEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Ag. Clima</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">196d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c6908776-f200-4b20-87eb-0e9d9a80eda7" target="_blank">Atribuir →</a></td></tr>
+          <tr class="row-crit"><td class="cli">PAULA CORREA NOGUEIRA</td><td class="ct">SÃO PAULO</td><td class="ct">Esperando clima</td><td class="ct">CLIENTE FINALIZADO</td><td class="num red">196d</td><td><span class="chip rd">BUG_ARRAY</span></td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c6908776-f200-4b20-87eb-0e9d9a80eda7" target="_blank">Atribuir →</a></td></tr>
           <tr><td class="cli">Andrea Almeida</td><td class="ct">Belo Horizonte</td><td class="ct">Reserva</td><td class="ct">ENTRADA</td><td class="num">161d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/096df7d0-a179-4a82-b719-0d392eec4bab" target="_blank">Atribuir →</a></td></tr>
           <tr><td class="cli">ANDRE SCHECHTMAN</td><td class="ct">CEP 01241</td><td class="ct">Reparo</td><td class="ct">CLIENTE FINALIZADO</td><td class="num">154d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/5ebc1fc4-4c57-4075-96a7-53cf46970b61" target="_blank">Atribuir →</a></td></tr>
           <tr><td class="cli">Anelise (katharina)</td><td class="ct">Não informada</td><td class="ct">Reserva</td><td class="ct">ENTRADA</td><td class="num">119d</td><td>—</td><td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/8fe98c80-78f2-437f-b39e-976fc46e6f18" target="_blank">Atribuir →</a></td></tr>
@@ -1556,7 +1558,7 @@
     <div class="section-head">
       <div class="section-kicker">Carteira detalhada</div>
       <div class="section-title">Baldes de Classificação</div>
-      <div class="section-sub" id="baldes-sub">208 obras ativas classificadas por tipo de flag. Clique num balde para ver as obras daquela categoria. Uma obra pode aparecer em mais de um balde.</div>
+      <div class="section-sub" id="baldes-sub">Todas as obras ativas classificadas por tipo de problema. Uma obra pode aparecer em mais de um balde. Clique para abrir.</div>
     </div>
     <div class="baldes-grid" id="baldes-grid">
       <!-- gerado por JS -->
@@ -1597,15 +1599,15 @@ function q2Init(){
   const ativas = Q2_OBRAS;
   const statuses = [
     {id:'TODAS', label:'Todas', sev:'ok'},
-    {id:'reparo', label:'Reparo', sev:'crit'},
-    {id:'pausado', label:'Pausado', sev:'crit'},
-    {id:'marcas_rolo_cera', label:'Marcas/Rolo/Cera', sev:'crit'},
-    {id:'aguardando_clima', label:'Aguardando clima', sev:'warn'},
-    {id:'aguardando_execucao', label:'Aguardando execução', sev:'warn'},
-    {id:'planejamento', label:'Planejamento', sev:'ok'},
+    {id:'reparo', label:'Em reparo', sev:'crit'},
+    {id:'pausado', label:'Pausada', sev:'crit'},
+    {id:'marcas_rolo_cera', label:'Defeito de acabamento', sev:'crit'},
+    {id:'aguardando_clima', label:'Esperando clima', sev:'warn'},
+    {id:'aguardando_execucao', label:'Aguardando início', sev:'warn'},
+    {id:'planejamento', label:'Em planejamento', sev:'ok'},
     {id:'em_execucao', label:'Em execução', sev:'ok'},
-    {id:'contrato', label:'Contrato', sev:'ok'},
-    {id:'reserva', label:'Reserva', sev:'ok'}
+    {id:'contrato', label:'Em contrato', sev:'ok'},
+    {id:'reserva', label:'Em reserva', sev:'ok'}
   ];
 
   const totalAtivas = ativas.length;
@@ -1732,19 +1734,20 @@ const STATUS_COLORS = {
 };
 
 const STATUS_LBL = {
-  planejamento: 'Planejamento',
-  aguardando_execucao: 'Ag. Execução',
-  em_execucao: 'Em Execução',
-  reparo: 'Reparo',
-  pausado: 'Pausado',
-  marcas_rolo_cera: 'Marcas/Rolo/Cera',
-  reserva: 'Reserva',
-  aguardando_clima: 'Ag. Clima',
-  contrato: 'Contrato',
-  finalizado: 'Finalizado',
-  concluido: 'Concluído',
-  cancelado: 'Cancelado'
+  planejamento: 'Em planejamento',
+  aguardando_execucao: 'Aguardando início',
+  em_execucao: 'Em execução',
+  reparo: 'Em reparo',
+  pausado: 'Pausada',
+  marcas_rolo_cera: 'Defeito de acabamento',
+  reserva: 'Em reserva',
+  aguardando_clima: 'Esperando clima',
+  contrato: 'Em contrato',
+  finalizado: 'Finalizada',
+  concluido: 'Concluída',
+  cancelado: 'Cancelada'
 };
+function statusHumano(s) { return STATUS_LBL[s] || s; }
 
 function ageColor(d) {
   if (d == null) return 'mut';
@@ -1858,7 +1861,7 @@ function renderQ1() {
       <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
       <td class="ct">${escHtml(o.consultor || '—')}</td>
       <td class="num ${cl}">${o.dias_atraso}d</td>
-      <td>${ativaBadge} <span class="ct">${escHtml(o.status_real_painel)}</span></td>
+      <td>${ativaBadge} <span class="ct">${escHtml(statusHumano(o.status_real_painel))}</span></td>
     </tr>`;
   }).join('');
   $('q1-top10').innerHTML = tb;
@@ -1954,7 +1957,7 @@ function openSyncModal(tipo) {
   let title, help, columns, rows;
 
   if (tipo === 'fossil') {
-    title = 'Cronograma fossilizado';
+    title = 'Planejamento desatualizado';
     help = '20 obras que o sistema de planejamento ainda lista como ativas, mas o painel já marcou como finalizadas/concluídas. Essas obras puxam o atraso médio do planejamento (mediana 83d) sem refletir trabalho real pendente.';
     columns = ['Cliente', 'Consultor', 'Atraso', 'Data prevista', 'Status real (painel)'];
     rows = Q1_PLAN_OBRAS.filter(o => o.painel_ativa === false).sort((a,b) => b.dias_atraso - a.dias_atraso).map(o => [
@@ -1962,7 +1965,7 @@ function openSyncModal(tipo) {
       q4EscHtml(o.consultor || 'sem consultor'),
       `<span class="num idade-esc">+${o.dias_atraso}d</span>`,
       q4EscHtml(o.dataTermino),
-      q4EscHtml(o.status_real)
+      q4EscHtml(statusHumano(o.status_real))
     ]);
   } else if (tipo === 'limbo') {
     title = 'Limbo status × fase';
@@ -1971,7 +1974,7 @@ function openSyncModal(tipo) {
     rows = SYNC_LIMBO.map(o => [
       q4EscHtml(o.cliente),
       q4EscHtml(o.cidade || ''),
-      `<span class="pill">${q4EscHtml(o.status || '')}</span>`,
+      `<span class="pill">${q4EscHtml(statusHumano(o.status || ''))}</span>`,
       q4EscHtml(o.faseAtual || ''),
       q4EscHtml(o.consultor || '—'),
       o.idade_dias != null ? `<span class="num">${o.idade_dias}d</span>` : '—'
@@ -1983,18 +1986,18 @@ function openSyncModal(tipo) {
     rows = SYNC_ESCALACAO_INV.map(o => [
       q4EscHtml(o.cliente),
       q4EscHtml(o.cidade || ''),
-      `<span class="pill">${q4EscHtml(o.status || '')}</span>`,
+      `<span class="pill">${q4EscHtml(statusHumano(o.status || ''))}</span>`,
       q4EscHtml(o.faseAtual || ''),
       `<span class="num">${o.n_membros || '—'}</span>`
     ]);
   } else if (tipo === 'bugarray') {
-    title = 'Bug array literal';
+    title = 'Erro de importação';
     help = '3 obras onde o campo consultorNome foi serializado como string literal "[]" em vez de array. Bug de importação no mesmo lote (provavelmente afeta lote SP). Corrigir na origem da importação.';
     columns = ['Cliente', 'Cidade', 'Status', 'Fase atual', 'Idade'];
     rows = SYNC_BUGARRAY.map(o => [
       q4EscHtml(o.cliente),
       q4EscHtml(o.cidade || ''),
-      `<span class="pill">${q4EscHtml(o.status || '')}</span>`,
+      `<span class="pill">${q4EscHtml(statusHumano(o.status || ''))}</span>`,
       q4EscHtml(o.faseAtual || ''),
       o.idade_dias != null ? `<span class="num">${o.idade_dias}d</span>` : '—'
     ]);
@@ -2081,7 +2084,7 @@ function openQ1Modal(cat) {
         <td>${q4EscHtml(o.consultor||'sem consultor')}</td>
         <td class="num ${atrasoCls}">${o.dias_atraso > 0 ? '+' : ''}${o.dias_atraso}d</td>
         <td>${q4EscHtml(o.dataTermino||'—')}</td>
-        <td>${q4EscHtml(o.status_real||'—')}${fantasma}</td>
+        <td>${q4EscHtml(statusHumano(o.status_real||'—'))}${fantasma}</td>
         <td>${q4EscHtml(o.fase_real||'—')}</td>
       </tr>`;
     }).join('');
@@ -2436,7 +2439,7 @@ function q4Init(){
 
   // Atualizar sub da seção com total real
   const subEl = document.getElementById('q4-sub');
-  if (subEl) subEl.textContent = `${obras.length} obras ativas, ${nFmt(totalM2)} m² em carteira. Veja por estado operacional: o que está rodando, o que travou, o que ainda não começou.`;
+  if (subEl) subEl.textContent = `O que está efetivamente em obra (rodando), o que travou (estagnado) e o que ainda não começou (pendente). ${obras.length} obras, ${nFmt(totalM2)} m². Clique nos cards para ver as obras.`;
 
   // Preencher os 3 cards
   Object.entries(grupos).forEach(([nome, statuses])=>{
@@ -2458,7 +2461,7 @@ function q4Init(){
       return { s, n: sub.length, m2: subM2 };
     }).filter(r=>r.n>0).sort((a,b)=>b.m2-a.m2);
     detail.innerHTML = rows.map(r=>
-      `<div class="q4-est-row"><span>${r.s}</span><span>${r.n} · ${nFmt(r.m2)} m²</span></div>`
+      `<div class="q4-est-row"><span>${statusHumano(r.s)}</span><span>${r.n} · ${nFmt(r.m2)} m²</span></div>`
     ).join('');
   });
 
@@ -2649,7 +2652,7 @@ function q4ModalRender(grupoId, obras){
     return '<tr>'+
       '<td>'+q4EscHtml(o.cliente||'')+'</td>'+
       '<td>'+q4EscHtml(o.cidade||'')+'</td>'+
-      '<td><span class="pill">'+q4EscHtml(o.status||'')+'</span></td>'+
+      '<td><span class="pill">'+q4EscHtml(statusHumano(o.status||''))+'</span></td>'+
       '<td class="num">'+(o.m2 ? o.m2.toLocaleString('pt-BR',{maximumFractionDigits:0}) : '—')+'</td>'+
       '<td class="q4-resp">'+respHtml+'</td>'+
     '</tr>';
@@ -3299,7 +3302,7 @@ function renderBaldes() {
 
   // Atualizar subtítulo com contagem real
   const subEl = document.getElementById('baldes-sub');
-  if (subEl) subEl.textContent = obras.length + ' obras ativas classificadas por tipo de flag. Clique num balde para ver as obras daquela categoria. Uma obra pode aparecer em mais de um balde.';
+  if (subEl) subEl.textContent = obras.length + ' obras ativas classificadas por tipo de problema. Uma obra pode aparecer em mais de um balde. Clique para abrir.';
 
   grid.innerHTML = baldes.filter(b => b.filter).map(b => {
     const list = obras.filter(b.filter).sort((a,c) => (c.idade||0) - (a.idade||0));
