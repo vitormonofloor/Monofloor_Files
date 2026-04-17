@@ -720,6 +720,26 @@
   .baldes-cta{display:inline-block;padding:12px 24px;border:1px solid #c4a77d;border-radius:6px;color:#c4a77d;text-decoration:none;font-size:13px;font-weight:500;transition:all .15s}
   .baldes-cta:hover{background:rgba(196,167,125,0.1);transform:translateY(-1px);box-shadow:0 4px 12px rgba(196,167,125,0.1)}
 
+  /* ============== AUTO-AGENTS ============== */
+  .auto-agents{padding:14px 24px;background:linear-gradient(135deg,#0a0a0a 0%,#0d0b08 100%);border-bottom:1px solid #1a1a1a;max-width:1600px;margin:0 auto}
+  .auto-agents-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+  .auto-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.18em;color:#c4a77d;text-transform:uppercase}
+  .auto-sub{font-size:11px;color:#555;font-style:italic}
+  .auto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:800px){.auto-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.auto-grid{grid-template-columns:1fr}}
+  .auto-agent{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:6px;transition:border-color .15s}
+  .auto-agent:hover{border-color:#2a2015}
+  .auto-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#555}
+  .auto-dot.ativo{background:#7be8a8;box-shadow:0 0 6px rgba(123,232,168,0.4);animation:dotPulse 2.5s ease-in-out infinite}
+  @keyframes dotPulse{0%,100%{box-shadow:0 0 4px rgba(123,232,168,0.3)}50%{box-shadow:0 0 10px rgba(123,232,168,0.6)}}
+  .auto-info{flex:1;min-width:0}
+  .auto-nome{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#fff;letter-spacing:0.05em}
+  .auto-nome a{color:#fff;text-decoration:none}
+  .auto-nome a:hover{color:#c4a77d;text-decoration:underline}
+  .auto-papel{font-size:10px;color:#888;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .auto-freq{font-family:'JetBrains Mono',monospace;font-size:10px;color:#c4a77d;white-space:nowrap;flex-shrink:0;font-weight:500}
+
   </style>
 </head>
 <body>
@@ -762,6 +782,47 @@
     </div>
   </div>
 </header>
+
+<div class="auto-agents">
+  <div class="auto-agents-head">
+    <span class="auto-tag">ALIMENTADO POR AGENTES AUT&Ocirc;NOMOS</span>
+    <span class="auto-sub">Dados coletados, analisados e publicados sem interven&ccedil;&atilde;o manual</span>
+  </div>
+  <div class="auto-grid">
+    <div class="auto-agent">
+      <div class="auto-dot ativo"></div>
+      <div class="auto-info">
+        <div class="auto-nome"><a href="../indicadores.html">ARGOS</a></div>
+        <div class="auto-papel">Extra&ccedil;&atilde;o de indicadores</div>
+      </div>
+      <div class="auto-freq">a cada 6h</div>
+    </div>
+    <div class="auto-agent">
+      <div class="auto-dot ativo"></div>
+      <div class="auto-info">
+        <div class="auto-nome">HERMES</div>
+        <div class="auto-papel">An&aacute;lise narrativa di&aacute;ria</div>
+      </div>
+      <div class="auto-freq">1&times;/dia &middot; 8h</div>
+    </div>
+    <div class="auto-agent">
+      <div class="auto-dot ativo"></div>
+      <div class="auto-info">
+        <div class="auto-nome"><a href="atena.html">ATENA</a></div>
+        <div class="auto-papel">Auditoria estrat&eacute;gica (5 olhos)</div>
+      </div>
+      <div class="auto-freq">1&times;/dia &middot; 7h</div>
+    </div>
+    <div class="auto-agent refresh">
+      <div class="auto-dot ativo"></div>
+      <div class="auto-info">
+        <div class="auto-nome">REFRESH</div>
+        <div class="auto-papel">Atualiza&ccedil;&atilde;o de dados do painel</div>
+      </div>
+      <div class="auto-freq">a cada 30 min</div>
+    </div>
+  </div>
+</div>
 
 <div class="container">
 
