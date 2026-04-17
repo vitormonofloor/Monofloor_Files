@@ -95,8 +95,22 @@ nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:#060
 .explain-source code{background:#141414;padding:1px 5px;border-radius:3px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:9px}
 
 /* Sparkline */
-.spark-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px}
+.spark-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;position:relative}
 .spark-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.spark-chart{position:relative;height:120px;cursor:crosshair}
+.spark-chart svg{width:100%;height:100%;overflow:visible}
+.spark-y-axis{position:absolute;left:0;top:0;bottom:20px;width:36px;display:flex;flex-direction:column;justify-content:space-between}
+.spark-y-label{font-size:8px;color:var(--dim);font-family:'JetBrains Mono',monospace;text-align:right;padding-right:6px}
+.spark-x-axis{display:flex;justify-content:space-between;padding:6px 0 0 40px;font-size:8px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+/* Tooltip */
+.spark-tooltip{position:absolute;top:-8px;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:10}
+.spark-tooltip.visible{opacity:1}
+.spark-tt-line{position:absolute;top:0;width:1px;background:var(--gold);opacity:0.4;height:100%}
+.spark-tt-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 8px var(--gold);transform:translate(-4px,-4px)}
+.spark-tt-box{position:absolute;bottom:calc(100% + 8px);transform:translateX(-50%);background:#1a1510;border:1px solid #c4a77d40;border-radius:8px;padding:8px 12px;white-space:nowrap;box-shadow:0 4px 16px #00000060}
+.spark-tt-date{font-size:10px;color:var(--gold);font-weight:600;margin-bottom:2px;font-family:'JetBrains Mono',monospace}
+.spark-tt-val{font-size:14px;color:var(--text);font-weight:700;font-family:'JetBrains Mono',monospace}
+.spark-tt-label{font-size:8px;color:var(--dim);margin-top:1px}
 .spark-stats{display:flex;gap:24px;font-size:11px;color:var(--muted);margin-top:10px}
 .spark-stats strong{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;display:block;margin-bottom:2px}
 
@@ -239,11 +253,7 @@ footer{text-align:center;padding:28px 0;font-size:9px;color:#333;border-top:1px 
 
   <div class="spark-wrap" style="margin-top:16px">
     <div class="spark-title">Volume diário de mensagens · últimos 30 dias</div>
-    <svg viewBox="0 0 800 80" style="width:100%;height:80px" preserveAspectRatio="none">
-      <defs><linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c4a77d" stop-opacity="0.2"/><stop offset="100%" stop-color="#c4a77d" stop-opacity="0.01"/></linearGradient></defs>
-      <polygon points="0,75 20,60 50,55 80,58 110,45 140,50 170,42 200,38 230,35 260,40 290,30 320,25 350,28 380,32 410,20 440,25 470,30 500,22 530,35 560,28 590,32 620,40 650,35 680,38 710,30 740,25 770,28 800,32 800,80 0,80" fill="url(#sg)"/>
-      <polyline points="0,75 20,60 50,55 80,58 110,45 140,50 170,42 200,38 230,35 260,40 290,30 320,25 350,28 380,32 410,20 440,25 470,30 500,22 530,35 560,28 590,32 620,40 650,35 680,38 710,30 740,25 770,28 800,32" fill="none" stroke="#c4a77d" stroke-width="1.5"/>
-    </svg>
+    <div class="spark-chart" id="sparkChart"></div>
     <div class="spark-stats"><div><strong>253</strong>média/dia</div><div><strong>412</strong>pico</div><div><strong>7.585</strong>total 30d</div></div>
   </div>
 </div>
@@ -470,10 +480,134 @@ function closeSev(ci, ti) {
   el.closest('.type-detail-inner').querySelectorAll('.sev-col.active').forEach(function(c) { c.classList.remove('active'); });
 }
 
+// ═══ INTERACTIVE SPARKLINE ═══
+function renderSparkline() {
+  var container = document.getElementById('sparkChart');
+  // Mock 30 days of data (would come from Argos in production)
+  var today = new Date(2026, 3, 16);
+  var data = [
+    148, 195, 210, 188, 265, 230, 280, 295, 310, 252,
+    340, 370, 345, 320, 412, 360, 335, 390, 300, 345,
+    310, 295, 325, 350, 330, 320, 355, 380, 345, 325
+  ];
+  var maxVal = Math.max.apply(null, data);
+  var minVal = Math.min.apply(null, data);
+
+  var W = 800, H = 100, PAD_L = 40, PAD_R = 10, PAD_T = 10, PAD_B = 24;
+  var chartW = W - PAD_L - PAD_R;
+  var chartH = H - PAD_T - PAD_B;
+
+  function xPos(i) { return PAD_L + (i / (data.length - 1)) * chartW; }
+  function yPos(v) { return PAD_T + chartH - ((v - minVal) / (maxVal - minVal)) * chartH; }
+
+  // Build points
+  var pts = data.map(function(v, i) { return xPos(i) + ',' + yPos(v); });
+  var polyPts = pts.join(' ');
+  var areaPts = polyPts + ' ' + (PAD_L + chartW) + ',' + (PAD_T + chartH) + ' ' + PAD_L + ',' + (PAD_T + chartH);
+
+  // Y-axis labels
+  var ySteps = [minVal, Math.round((minVal + maxVal) / 2), maxVal];
+
+  // X-axis labels (show every 5 days)
+  var xLabels = '';
+  for (var i = 0; i < data.length; i += 5) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - (data.length - 1 - i));
+    var label = (d.getDate() < 10 ? '0' : '') + d.getDate() + '/' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    xLabels += '<text x="' + xPos(i) + '" y="' + (H - 2) + '" fill="#555" font-size="9" font-family="JetBrains Mono,monospace" text-anchor="middle">' + label + '</text>';
+  }
+
+  // Grid lines
+  var gridLines = ySteps.map(function(v) {
+    var y = yPos(v);
+    return '<line x1="' + PAD_L + '" y1="' + y + '" x2="' + (W - PAD_R) + '" y2="' + y + '" stroke="#1a1a1a" stroke-width="1"/>' +
+      '<text x="' + (PAD_L - 4) + '" y="' + (y + 3) + '" fill="#555" font-size="8" font-family="JetBrains Mono,monospace" text-anchor="end">' + v + '</text>';
+  }).join('');
+
+  // Invisible hover areas for each point
+  var hoverAreas = data.map(function(v, i) {
+    var x = xPos(i);
+    return '<rect x="' + (x - chartW / data.length / 2) + '" y="' + PAD_T + '" width="' + (chartW / data.length) + '" height="' + chartH + '" fill="transparent" data-idx="' + i + '" class="spark-hover-zone"/>';
+  }).join('');
+
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:120px;overflow:visible" preserveAspectRatio="xMidYMid meet">' +
+    '<defs><linearGradient id="sg2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c4a77d" stop-opacity="0.25"/><stop offset="100%" stop-color="#c4a77d" stop-opacity="0.02"/></linearGradient></defs>' +
+    gridLines +
+    '<polygon points="' + areaPts + '" fill="url(#sg2)"/>' +
+    '<polyline points="' + polyPts + '" fill="none" stroke="#c4a77d" stroke-width="2" stroke-linejoin="round"/>' +
+    xLabels +
+    '<line id="sparkVLine" x1="0" y1="' + PAD_T + '" x2="0" y2="' + (PAD_T + chartH) + '" stroke="#c4a77d" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>' +
+    '<circle id="sparkDot" cx="0" cy="0" r="5" fill="#c4a77d" stroke="#060606" stroke-width="2" opacity="0"/>' +
+    hoverAreas +
+  '</svg>';
+
+  // Tooltip element
+  var tooltip = '<div class="spark-tooltip" id="sparkTooltip">' +
+    '<div class="spark-tt-box">' +
+      '<div class="spark-tt-date" id="sparkTTDate"></div>' +
+      '<div class="spark-tt-val" id="sparkTTVal"></div>' +
+      '<div class="spark-tt-label">mensagens</div>' +
+    '</div>' +
+  '</div>';
+
+  container.innerHTML = svg + tooltip;
+
+  // Hover events
+  var vline = document.getElementById('sparkVLine');
+  var dot = document.getElementById('sparkDot');
+  var tt = document.getElementById('sparkTooltip');
+  var ttDate = document.getElementById('sparkTTDate');
+  var ttVal = document.getElementById('sparkTTVal');
+
+  container.addEventListener('mousemove', function(e) {
+    var rect = container.querySelector('svg').getBoundingClientRect();
+    var relX = e.clientX - rect.left;
+    var svgX = (relX / rect.width) * W;
+
+    // Find closest point
+    var closest = 0, closestDist = Infinity;
+    for (var j = 0; j < data.length; j++) {
+      var dist = Math.abs(svgX - xPos(j));
+      if (dist < closestDist) { closestDist = dist; closest = j; }
+    }
+
+    var px = xPos(closest), py = yPos(data[closest]);
+    vline.setAttribute('x1', px);
+    vline.setAttribute('x2', px);
+    vline.setAttribute('opacity', '0.4');
+    dot.setAttribute('cx', px);
+    dot.setAttribute('cy', py);
+    dot.setAttribute('opacity', '1');
+
+    // Date for this point
+    var dd = new Date(today);
+    dd.setDate(dd.getDate() - (data.length - 1 - closest));
+    var dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    var dateStr = dias[dd.getDay()] + ' ' + (dd.getDate() < 10 ? '0' : '') + dd.getDate() + '/' + (dd.getMonth() < 9 ? '0' : '') + (dd.getMonth() + 1);
+
+    ttDate.textContent = dateStr;
+    ttVal.textContent = data[closest];
+
+    // Position tooltip
+    var pctX = (relX / rect.width) * 100;
+    var pctY = (py / H) * 100;
+    tt.style.left = pctX + '%';
+    tt.style.top = pctY + '%';
+    tt.classList.add('visible');
+  });
+
+  container.addEventListener('mouseleave', function() {
+    vline.setAttribute('opacity', '0');
+    dot.setAttribute('opacity', '0');
+    tt.classList.remove('visible');
+  });
+}
+
 // Init
 renderKPIs();
 renderConsBtns();
 showCons(0);
+renderSparkline();
 </script>
 </body>
 </html>
