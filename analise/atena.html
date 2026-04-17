@@ -75,11 +75,12 @@ a:hover { text-decoration: underline; }
 .atena-score{display:flex;align-items:baseline;gap:8px}
 .atena-score-num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:#2a2520}
 .atena-score-lbl{font-size:10px;color:#a89e92;text-transform:uppercase;letter-spacing:0.08em}
-.atena-footer-actions{display:flex;align-items:center;gap:14px}
-.evo-btn{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#ffffff;border:1px solid #e0d8cc;border-radius:6px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:#3a3530;transition:all .2s}
+.atena-evo-bar{max-width:720px;margin:0 auto;padding:12px 20px 0}
+.evo-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;background:#ffffff;border:1px solid #e0d8cc;border-radius:6px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:#3a3530;transition:all .2s;text-align:left}
 .evo-btn:hover{border-color:#b8a080;box-shadow:0 2px 8px rgba(184,160,128,0.1);transform:translateY(-1px)}
-.evo-icon{font-size:16px;color:#b8a080}
+.evo-icon{font-size:16px;color:#b8a080;flex-shrink:0}
 .evo-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;color:#b8a080}
+.evo-sub{font-size:11px;color:#a89e92;margin-left:auto}
 .atena-dash-link{font-size:11px;color:#b8a080;text-decoration:none;font-weight:500;transition:color .2s}
 .atena-dash-link:hover{color:#8a7050}
 
@@ -171,6 +172,14 @@ a:hover { text-decoration: underline; }
   </div>
 </nav>
 
+<div class="atena-evo-bar">
+  <button class="evo-btn" onclick="openEvolucao()">
+    <span class="evo-icon">&#9719;</span>
+    <span class="evo-label">EVOLU&Ccedil;&Atilde;O</span>
+    <span class="evo-sub">rastreio de indicadores ao longo do tempo</span>
+  </button>
+</div>
+
 <div class="atena-wrap">
 
   <!-- HEADER -->
@@ -217,13 +226,7 @@ a:hover { text-decoration: underline; }
       <span class="atena-score-num">&mdash;</span>
       <span class="atena-score-lbl">score de sa&uacute;de</span>
     </div>
-    <div class="atena-footer-actions">
-      <button class="evo-btn" onclick="openEvolucao()">
-        <span class="evo-icon">&#9719;</span>
-        <span class="evo-label">EVOLU&Ccedil;&Atilde;O</span>
-      </button>
-      <a href="dashboard.html" class="atena-dash-link">Ver dashboard completo &rarr;</a>
-    </div>
+    <a href="dashboard.html" class="atena-dash-link">Ver dashboard completo &rarr;</a>
   </div>
 
 </div>
