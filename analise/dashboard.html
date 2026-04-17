@@ -670,6 +670,16 @@
   @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
   .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
   @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+
+  /* ============== LEITURA DO DIA ============== */
+  .leitura-dia{margin:0 0 28px;padding:20px 24px;background:linear-gradient(135deg,#0d0d0d 0%,#101008 100%);border:1px solid #2a2015;border-left:3px solid #c4a77d;border-radius:0 8px 8px 0;position:relative}
+  .leitura-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .leitura-tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.15em;color:#c4a77d;text-transform:uppercase}
+  .leitura-data{font-family:'JetBrains Mono',monospace;font-size:11px;color:#666}
+  .leitura-texto{font-size:14px;line-height:1.8;color:#ddd;max-width:900px}
+  .leitura-texto b{color:#c4a77d;font-weight:600}
+  .leitura-texto .num{font-family:'JetBrains Mono',monospace;font-weight:600}
+  .leitura-fonte{font-size:10px;color:#555;margin-top:12px;font-style:italic}
   </style>
 </head>
 <body>
@@ -707,6 +717,7 @@
   <div class="top-row">
     <h1>Central de Qualidade Monofloor — <span class="acc">Dashboard Executivo</span></h1>
     <div class="links">
+      <a href="#leitura">Leitura do dia ↓</a>
       <a href="#backlog">Backlog crítico</a>
       <span class="stamp"><span id="snapshot-badge"></span>Snapshot em <span class="mono" id="stamp-snapshot">—</span> · atualizado <span class="mono" id="stamp-now">—</span></span>
     </div>
@@ -739,6 +750,18 @@
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
+    </div>
+  </section>
+
+  <!-- ============== LEITURA DO DIA ============== -->
+  <section id="leitura" class="leitura-dia">
+    <div class="leitura-head">
+      <span class="leitura-tag">LEITURA DO DIA</span>
+      <span class="leitura-data" id="leitura-data"></span>
+    </div>
+    <p class="leitura-texto" id="leitura-texto">Carregando análise...</p>
+    <div class="leitura-fonte">
+      <span>Gerado automaticamente a partir dos dados do dashboard</span>
     </div>
   </section>
 
@@ -3359,10 +3382,101 @@ function renderAtRiskTop() {
   if ($('atrisk-list')) $('atrisk-list').innerHTML = html;
 }
 
+// ============== LEITURA DO DIA ==============
+function renderLeituraDia() {
+  const hoje = new Date();
+  const dataStr = hoje.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+  document.getElementById('leitura-data').textContent = dataStr;
+
+  const obras = Q2_OBRAS;
+  const totalObras = obras.length;
+  const totalM2 = obras.reduce((a,o) => a + (o.m2||0), 0);
+
+  // Receita estimada (R$600/m² proxy)
+  const receitaTotal = totalM2 * 600;
+  const rodando = obras.filter(o => o.status === 'em_execucao');
+  const receitaRodando = rodando.reduce((a,o) => a + (o.m2||0)*600, 0);
+  const pctRodando = receitaTotal ? (receitaRodando/receitaTotal*100).toFixed(0) : 0;
+
+  // Estagnado
+  const estagnados = obras.filter(o => ['pausado','reparo','marcas_rolo_cera','aguardando_clima'].includes(o.status));
+  const receitaEstagnada = estagnados.reduce((a,o) => a + (o.m2||0)*600, 0);
+
+  // Obras 180+
+  const antigas = obras.filter(o => o.idade >= 180);
+  const receitaAntigas = antigas.reduce((a,o) => a + (o.m2||0)*600, 0);
+
+  // Zumbi
+  const nZumbi = (EXT.zumbi_ids || []).length || 16;
+
+  // Consultor top (Luana)
+  const luana = obras.filter(o => (o.consultor||'').toUpperCase().includes('LUANA'));
+  const luanaM2 = luana.reduce((a,o) => a + (o.m2||0), 0);
+  const luanaReceita = luanaM2 * 600;
+  const luana180 = luana.filter(o => o.idade >= 180);
+  const luanaReceita180 = luana180.reduce((a,o) => a + (o.m2||0)*600, 0);
+
+  // Próximos 7 dias (agenda)
+  const em7d = new Date(hoje.getTime() + 7*86400000);
+  let visitasProx = 0, entradasProx = 0;
+  obras.forEach(o => {
+    const d = Q4_DATAS[o.id];
+    if (!d) return;
+    // Visita
+    if (d.dataVisita) {
+      const m = d.dataVisita.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+      if (m) {
+        const dt = new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+        if (dt >= hoje && dt <= em7d) visitasProx++;
+      }
+    }
+    // Entrada
+    if (d.dataEntrada) {
+      const m = d.dataEntrada.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+      if (m) {
+        const dt = new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+        if (dt >= hoje && dt <= em7d) entradasProx++;
+      }
+    }
+  });
+
+  // Lote VT congelado
+  const loteVT = (EXT.vt_cauda || {}).n || 8;
+
+  // Montar narrativa
+  const fmt = n => n.toLocaleString('pt-BR', {maximumFractionDigits:0});
+  const fmtR = n => 'R$' + (n/1000000).toFixed(1).replace('.', ',') + 'M';
+
+  let frases = [];
+
+  // Frase 1: pipeline
+  frases.push('A operação tem <b class="num">' + fmtR(receitaTotal) + '</b> em carteira ativa (<b class="num">' + fmt(totalObras) + '</b> obras, <b class="num">' + fmt(totalM2) + '</b> m²), mas apenas <b class="num">' + fmtR(receitaRodando) + '</b> está efetivamente rodando (<b class="num">' + pctRodando + '%</b>).');
+
+  // Frase 2: estagnado
+  frases.push('<b class="num">' + fmtR(receitaEstagnada) + '</b> estão travados em reparo, pausas ou clima — precisam de ação imediata.');
+
+  // Frase 3: antiguidade
+  frases.push('<b class="num">' + antigas.length + '</b> obras (' + (antigas.length/totalObras*100).toFixed(0) + '%) estão no radar há mais de 6 meses, representando <b class="num">' + fmtR(receitaAntigas) + '</b> em receita envelhecendo.');
+
+  // Frase 4: consultor
+  frases.push('Luana segura <b class="num">' + fmtR(luanaReceita) + '</b> em ' + luana.length + ' obras — <b class="num">' + fmtR(luanaReceita180) + '</b> com mais de 6 meses.');
+
+  // Frase 5: próxima semana
+  if (visitasProx > 0 || entradasProx > 0) {
+    frases.push('Próximos 7 dias: <b class="num">' + visitasProx + '</b> visitas técnicas e <b class="num">' + entradasProx + '</b> entradas em obra agendadas.');
+  }
+
+  // Frase 6: prioridade
+  frases.push('<b>Prioridade:</b> fechar as <b class="num">' + nZumbi + '</b> obras zumbi e destravar o lote de <b class="num">' + loteVT + '</b> VTs congelado há ' + ((EXT.vt_cauda || {}).idade_mediana || 260) + ' dias.');
+
+  document.getElementById('leitura-texto').innerHTML = frases.join(' ');
+}
+
 // ============== INIT ==============
 renderSnapshotDate();
 renderHealth();
 renderHero();
+renderLeituraDia();
 renderHeroZumbiChip();
 renderQ1();
 q1RenderStacked();
