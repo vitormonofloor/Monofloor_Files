@@ -759,6 +759,55 @@
   .auto-papel{font-size:10px;color:#8a7e72;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .auto-freq{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;white-space:nowrap;flex-shrink:0;font-weight:500}
 
+  /* ============== EVOLUÇÃO ============== */
+  .auto-evolucao{margin-top:12px;padding-top:12px;border-top:1px solid #e8e0d4}
+  .evo-btn{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;background:#ffffff;border:1px solid #e0d8cc;border-radius:8px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:#3a3530;transition:all .2s;text-align:left}
+  .evo-btn:hover{border-color:#b8a080;box-shadow:0 2px 12px rgba(184,160,128,0.12);transform:translateY(-1px)}
+  .evo-icon{font-size:20px;color:#b8a080;flex-shrink:0}
+  .evo-label{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.1em;color:#b8a080}
+  .evo-sub{font-size:11px;color:#a89e92;margin-left:auto}
+
+  .evo-modal{display:none;position:fixed;inset:0;z-index:1000;align-items:flex-start;justify-content:center;padding:30px 20px;overflow-y:auto}
+  .evo-modal.open{display:flex}
+  .evo-modal-bg{position:fixed;inset:0;background:rgba(42,37,32,0.5);backdrop-filter:blur(4px)}
+  .evo-modal-box{position:relative;background:#ffffff;border:1px solid #e0d8cc;border-radius:12px;max-width:900px;width:100%;padding:32px;box-shadow:0 20px 60px rgba(42,37,32,0.15);z-index:1}
+  .evo-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:#a89e92;font-size:22px;cursor:pointer;line-height:1;padding:4px 10px;border-radius:4px}
+  .evo-close:hover{background:#f5f0e8;color:#3a3530}
+
+  .evo-header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e8e0d4}
+  .evo-header h2{font-size:20px;color:#2a2520;font-weight:600;margin-bottom:4px}
+  .evo-header-sub{font-size:12px;color:#a89e92}
+
+  .evo-section{margin-bottom:28px}
+  .evo-section h3{font-size:11px;color:#b8a080;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:12px}
+
+  .evo-chart{background:#faf7f2;border:1px solid #e8e0d4;border-radius:8px;padding:16px;height:120px;position:relative;overflow:hidden}
+  .evo-chart-tall{height:180px}
+  .evo-chart svg{width:100%;height:100%;display:block}
+
+  .evo-legend{display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+  .evo-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#8a7e72}
+  .evo-legend-dot{width:10px;height:10px;border-radius:2px}
+
+  .evo-timeline{max-height:300px;overflow-y:auto}
+  .evo-tl-item{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid #ede6dc;font-size:12px}
+  .evo-tl-item:last-child{border:none}
+  .evo-tl-date{font-family:'JetBrains Mono',monospace;color:#b8a080;font-size:11px;font-weight:500}
+  .evo-tl-text{color:#6b6156;line-height:1.5}
+  .evo-tl-text b{color:#3a3530}
+  .evo-tl-empty{color:#b8b0a4;font-size:12px;font-style:italic;padding:20px;text-align:center}
+
+  .evo-snapshots{display:flex;flex-direction:column;gap:8px;max-height:250px;overflow-y:auto}
+  .evo-snap{display:grid;grid-template-columns:90px repeat(5,1fr);gap:8px;padding:10px 12px;background:#faf7f2;border:1px solid #ede6dc;border-radius:6px;font-size:11px;align-items:center}
+  .evo-snap-date{font-family:'JetBrains Mono',monospace;color:#b8a080;font-weight:600}
+  .evo-snap-val{font-family:'JetBrains Mono',monospace;text-align:center;color:#3a3530;font-weight:500}
+  .evo-snap-delta{font-size:9px;display:block;margin-top:2px}
+  .evo-snap-delta.down{color:#3d8a5a}
+  .evo-snap-delta.up{color:#c45a5a}
+  .evo-snap-delta.same{color:#b8b0a4}
+  .evo-snap-header{background:transparent;border:none;font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:0.06em;font-weight:500}
+
+  @media(max-width:720px){.evo-modal-box{padding:20px}.evo-snap{grid-template-columns:70px repeat(3,1fr);font-size:10px}}
   </style>
 </head>
 <body>
@@ -851,6 +900,13 @@
       </div>
       <div class="auto-freq">a cada 30 min</div>
     </div>
+  </div>
+  <div class="auto-evolucao">
+    <button class="evo-btn" onclick="openEvolucao()">
+      <span class="evo-icon">◷</span>
+      <span class="evo-label">EVOLUÇÃO</span>
+      <span class="evo-sub">rastreio de indicadores ao longo do tempo</span>
+    </button>
   </div>
   <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para indicadores em tempo real via KIRA, use <a href="../indicadores-v2.html">Indicadores</a> na nav acima. Bases distintas, métricas complementares.</div>
 </div>
@@ -3923,7 +3979,284 @@ document.querySelectorAll('.mono-nav-btn[data-page="atena"]').forEach(function(b
     setTimeout(function(){ window.location.href = btn.href; }, 2200);
   });
 });
+
+// ============== EVOLUÇÃO ==============
+function openEvolucao() {
+  document.getElementById('evoModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadEvolucaoData();
+}
+
+function closeEvolucao() {
+  document.getElementById('evoModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeEvolucao(); });
+
+async function loadEvolucaoData() {
+  try {
+    var histResp = await fetch('dados/backlog-historico.json?t=' + Date.now());
+    var hist = histResp.ok ? await histResp.json() : [];
+
+    var snapshots = [];
+    var hoje = new Date();
+    for (var i = 0; i < 30; i++) {
+      var d = new Date(hoje.getTime() - i * 86400000);
+      var dateStr = d.toISOString().slice(0, 10);
+      try {
+        var r = await fetch('dados/snapshots/' + dateStr + '.json?t=' + Date.now());
+        if (r.ok) {
+          var snap = await r.json();
+          snapshots.unshift(snap);
+        }
+      } catch(e) {}
+    }
+
+    renderEvoScore(snapshots);
+    renderEvoBacklog(hist);
+    renderEvoTimeline(hist);
+    renderEvoSnapshots(hist);
+  } catch(e) {
+    console.error('Evolução:', e);
+  }
+}
+
+function renderEvoScore(snapshots) {
+  var el = document.getElementById('evo-score-chart');
+  if (!el || !snapshots.length) {
+    if (el) el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#b8b0a4;font-size:12px;font-style:italic">Acumulando dados... Primeiro gráfico aparece com 2+ snapshots.</div>';
+    return;
+  }
+
+  var points = snapshots.map(function(s) {
+    var ativas = s.ativas || [];
+    var total = ativas.length || 1;
+    var n180 = ativas.filter(function(o) { return (o.idade_dias||0) >= 180; }).length;
+    var nReparo = ativas.filter(function(o) { return o.status === 'reparo'; }).length;
+    var comIdade = ativas.filter(function(o) { return o.idade_dias != null; });
+    var idadeMedia = comIdade.reduce(function(a,o) { return a + o.idade_dias; }, 0) / (comIdade.length || 1);
+    var score = Math.round(
+      (1 - n180/total) * 30 +
+      (1 - nReparo/total) * 20 +
+      (1 - Math.min(idadeMedia/300, 1)) * 30 +
+      (1 - Math.min(n180/total, 0.5)*2) * 20
+    );
+    return { date: s.date, score: Math.max(0, Math.min(100, score)), n: total };
+  });
+
+  el.innerHTML = renderLineChart(
+    points.map(function(p) { return p.score; }),
+    points.map(function(p) { return p.date; }),
+    '#b8a080', 100
+  );
+}
+
+function renderEvoBacklog(hist) {
+  var el = document.getElementById('evo-backlog-chart');
+  var legendEl = document.getElementById('evo-legend');
+  if (!el || !hist.length) {
+    if (el) el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#b8b0a4;font-size:12px;font-style:italic">Acumulando dados... Primeiro gráfico aparece com 2+ entries no histórico.</div>';
+    return;
+  }
+
+  var series = [
+    {key: 'zumbi', label: 'Enc. sem fechar', color: '#c45a5a'},
+    {key: 'orfas', label: 'Sem responsável', color: '#b89a4a'},
+    {key: 'lote_vt', label: 'VT travada', color: '#4a7ab8'},
+    {key: 'lideres_ocultos', label: 'Líderes ocultos', color: '#8a5ab8'},
+    {key: 'conflitos', label: 'Conflitos', color: '#b85a8a'}
+  ];
+
+  legendEl.innerHTML = series.map(function(s) {
+    return '<div class="evo-legend-item"><div class="evo-legend-dot" style="background:' + s.color + '"></div>' + s.label + '</div>';
+  }).join('');
+
+  if (hist.length < 2) {
+    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#b8b0a4;font-size:12px;font-style:italic">Primeiro gráfico de tendência aparece amanhã com o 2º snapshot.</div>';
+    return;
+  }
+
+  var dates = hist.map(function(h) { return h.date; });
+  var allVals = [];
+  series.forEach(function(s) { hist.forEach(function(h) { allVals.push((h.indices && h.indices[s.key] && h.indices[s.key].total) || 0); }); });
+  var maxVal = Math.max.apply(null, allVals.concat([1]));
+  var W = 800, H = 160, padL = 40, padR = 10, padT = 10, padB = 25;
+  var chartW = W - padL - padR, chartH = H - padT - padB;
+
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+
+  for (var i = 0; i <= 4; i++) {
+    var y = padT + (chartH / 4) * i;
+    var val = Math.round(maxVal - (maxVal/4)*i);
+    svg += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W-padR) + '" y2="' + y + '" stroke="#e8e0d4" stroke-width="0.5"/>';
+    svg += '<text x="' + (padL-6) + '" y="' + (y+3) + '" fill="#b8b0a4" font-size="9" text-anchor="end" font-family="JetBrains Mono">' + val + '</text>';
+  }
+
+  hist.forEach(function(h, idx) {
+    var x = padL + (chartW / Math.max(hist.length-1, 1)) * idx;
+    if (idx % Math.max(1, Math.floor(hist.length/7)) === 0 || idx === hist.length-1) {
+      svg += '<text x="' + x + '" y="' + (H-4) + '" fill="#b8b0a4" font-size="8" text-anchor="middle" font-family="JetBrains Mono">' + h.date.slice(5) + '</text>';
+    }
+  });
+
+  series.forEach(function(s) {
+    var vals = hist.map(function(h) { return (h.indices && h.indices[s.key] && h.indices[s.key].total) || 0; });
+    var pts = vals.map(function(v, idx) {
+      var x = padL + (chartW / Math.max(hist.length-1, 1)) * idx;
+      var yy = padT + chartH - (v / maxVal) * chartH;
+      return x + ',' + yy;
+    });
+    svg += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + s.color + '" stroke-width="2" stroke-linejoin="round"/>';
+    var lastPt = pts[pts.length-1].split(',');
+    svg += '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="4" fill="' + s.color + '"/>';
+  });
+
+  svg += '</svg>';
+  el.innerHTML = svg;
+}
+
+function renderEvoTimeline(hist) {
+  var el = document.getElementById('evo-timeline');
+  if (!el) return;
+
+  var movs = [];
+  var slice = hist.slice(-14);
+  slice.forEach(function(h) {
+    if (!h.mudancas_vs_anterior) return;
+    var m = h.mudancas_vs_anterior;
+    Object.keys(m).forEach(function(key) {
+      var items = m[key];
+      if (!Array.isArray(items)) return;
+      items.forEach(function(item) {
+        var acao = '';
+        if (key.indexOf('saiu') >= 0) acao = '<b>' + (item.cliente || item.id) + '</b> saiu do limbo' + (item.idade_quando_saiu ? ' (estava há ' + item.idade_quando_saiu + 'd)' : '');
+        else if (key.indexOf('atribuida') >= 0) acao = '<b>' + (item.cliente || item.id) + '</b> recebeu consultor ' + (item.novo_consultor || '');
+        else if (key.indexOf('formalizado') >= 0) acao = '<b>' + (item.nome || item.id) + '</b> cadastrado em /api/equipes';
+        else if (key.indexOf('resolvido') >= 0) acao = '<b>' + (item.nome || item.id) + '</b> conflito resolvido';
+        else if (key.indexOf('destravada') >= 0) acao = '<b>' + (item.cliente || item.id) + '</b> destravada (mudou de fase)';
+        else acao = JSON.stringify(item);
+        movs.push({ date: h.date, acao: acao });
+      });
+    });
+  });
+
+  if (movs.length === 0) {
+    el.innerHTML = '<div class="evo-tl-empty">Sem movimentações registradas ainda. Aparecem conforme obras mudam de categoria entre snapshots diários.</div>';
+    return;
+  }
+
+  el.innerHTML = movs.reverse().map(function(m) {
+    return '<div class="evo-tl-item"><div class="evo-tl-date">' + m.date + '</div><div class="evo-tl-text">' + m.acao + '</div></div>';
+  }).join('');
+}
+
+function renderEvoSnapshots(hist) {
+  var el = document.getElementById('evo-snapshots');
+  if (!el || !hist.length) return;
+
+  var cats = ['zumbi','orfas','lote_vt','lideres_ocultos','conflitos'];
+  var labels = ['Enc.s/fechar','Sem resp.','VT trav.','Líd.ocultos','Conflitos'];
+
+  var html = '<div class="evo-snap evo-snap-header"><div>Data</div>' + labels.map(function(l) { return '<div>' + l + '</div>'; }).join('') + '</div>';
+
+  var rows = hist.slice(-14).reverse();
+  rows.forEach(function(h, i) {
+    var prev = i < rows.length - 1 ? rows[i+1] : null;
+    html += '<div class="evo-snap"><div class="evo-snap-date">' + h.date.slice(5) + '</div>';
+    cats.forEach(function(c) {
+      var val = (h.indices && h.indices[c] && h.indices[c].total != null) ? h.indices[c].total : '—';
+      var prevVal = prev && prev.indices && prev.indices[c] ? prev.indices[c].total : undefined;
+      var deltaHtml = '';
+      if (prevVal !== undefined && val !== '—') {
+        var d = val - prevVal;
+        if (d < 0) deltaHtml = '<span class="evo-snap-delta down">▼' + Math.abs(d) + '</span>';
+        else if (d > 0) deltaHtml = '<span class="evo-snap-delta up">▲' + d + '</span>';
+        else deltaHtml = '<span class="evo-snap-delta same">=</span>';
+      }
+      html += '<div class="evo-snap-val">' + val + deltaHtml + '</div>';
+    });
+    html += '</div>';
+  });
+
+  el.innerHTML = html;
+}
+
+function renderLineChart(values, labels, color, maxY) {
+  if (values.length < 2) {
+    var val = values[0] || 0;
+    return '<svg viewBox="0 0 800 100">' +
+      '<circle cx="400" cy="' + (50 - (val/maxY)*40 + 20) + '" r="5" fill="' + color + '"/>' +
+      '<text x="400" y="' + (50 - (val/maxY)*40 + 8) + '" fill="' + color + '" font-size="14" text-anchor="middle" font-family="JetBrains Mono" font-weight="600">' + val + '</text>' +
+      '<text x="400" y="90" fill="#b8b0a4" font-size="10" text-anchor="middle" font-family="Plus Jakarta Sans" font-style="italic">1 ponto — tendência aparece amanhã</text>' +
+      '</svg>';
+  }
+
+  var W = 800, H = 100, pad = 30;
+  var chartW = W - pad*2, chartH = H - pad*2;
+  var max = Math.max.apply(null, values.concat([maxY * 0.8]));
+
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
+
+  var pts = values.map(function(v, i) {
+    var x = pad + (chartW / (values.length-1)) * i;
+    var y = pad + chartH - (v/max)*chartH;
+    return x + ',' + y;
+  });
+  svg += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linejoin="round"/>';
+  svg += '<polygon points="' + pad + ',' + (H-pad) + ' ' + pts.join(' ') + ' ' + (W-pad) + ',' + (H-pad) + '" fill="' + color + '" opacity="0.08"/>';
+
+  values.forEach(function(v, i) {
+    var x = pad + (chartW / (values.length-1)) * i;
+    var y = pad + chartH - (v/max)*chartH;
+    svg += '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="' + color + '"/>';
+    if (i === 0 || i === values.length-1 || i % Math.max(1, Math.floor(values.length/5)) === 0) {
+      svg += '<text x="' + x + '" y="' + (y-10) + '" fill="' + color + '" font-size="10" text-anchor="middle" font-family="JetBrains Mono" font-weight="600">' + v + '</text>';
+      svg += '<text x="' + x + '" y="' + (H-5) + '" fill="#b8b0a4" font-size="8" text-anchor="middle" font-family="JetBrains Mono">' + (labels[i] ? labels[i].slice(5) : '') + '</text>';
+    }
+  });
+
+  svg += '</svg>';
+  return svg;
+}
 </script>
+
+<div class="evo-modal" id="evoModal">
+  <div class="evo-modal-bg" onclick="closeEvolucao()"></div>
+  <div class="evo-modal-box">
+    <button class="evo-close" onclick="closeEvolucao()">&times;</button>
+
+    <div class="evo-header">
+      <h2>Evolução dos Indicadores</h2>
+      <p class="evo-header-sub">Rastreio diário dos índices operacionais. Cada ponto = 1 snapshot do dia.</p>
+    </div>
+
+    <!-- Score de saúde ao longo do tempo -->
+    <div class="evo-section">
+      <h3>Score de Saúde</h3>
+      <div class="evo-chart" id="evo-score-chart"></div>
+    </div>
+
+    <!-- 5 índices do backlog -->
+    <div class="evo-section">
+      <h3>Índices do Backlog</h3>
+      <div class="evo-legend" id="evo-legend"></div>
+      <div class="evo-chart evo-chart-tall" id="evo-backlog-chart"></div>
+    </div>
+
+    <!-- Movimentações recentes -->
+    <div class="evo-section">
+      <h3>Movimentações Recentes</h3>
+      <div class="evo-timeline" id="evo-timeline"></div>
+    </div>
+
+    <!-- Resumo diário (snapshot comparison) -->
+    <div class="evo-section">
+      <h3>Resumo por Snapshot</h3>
+      <div class="evo-snapshots" id="evo-snapshots"></div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
