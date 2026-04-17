@@ -47,8 +47,8 @@ header{padding:32px 0;display:flex;justify-content:space-between;align-items:cen
 .kpi-hint span{color:var(--gold);font-weight:500}
 
 /* ═══ FIRE ACTION ═══ */
-.fire-action{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;color:var(--gold-dark);font-weight:500;cursor:pointer;transition:color 0.2s;letter-spacing:0.5px}
-.fire-action:hover{color:var(--gold)}
+.fire-action{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;color:var(--gold-dark);font-weight:500;cursor:pointer;transition:color 0.2s;letter-spacing:0.5px;text-decoration:none}
+.fire-action:hover{color:var(--gold);text-decoration:none}
 .fire-action svg{width:14px;height:14px;stroke:currentColor}
 
 /* ═══ FIRE CARDS ═══ */
@@ -199,7 +199,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
       <div class="fire-unit">ocorrências abertas</div>
       <div class="fire-insight">26 são críticas — nenhuma foi resolvida</div>
       <div class="fire-detail">Desvios de qualidade, reclamações e abandonos acumulando sem tratamento.</div>
-      <div class="fire-action">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <a class="fire-action" onclick="document.querySelectorAll('.kpi-card')[1].click();document.querySelectorAll('.kpi-card')[1].scrollIntoView({behavior:'smooth',block:'center'})">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
     <div class="fire-card">
       <span class="fire-pill warn">meta ≤15%</span>
@@ -208,7 +208,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
       <div class="fire-unit">taxa de atraso</div>
       <div class="fire-insight">Uma em cada três obras está atrasada</div>
       <div class="fire-detail">O dobro da meta de 15%. Piorou 2.3pp nas últimas 6 horas.</div>
-      <div class="fire-action">Ver obras atrasadas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <a class="fire-action" onclick="document.querySelectorAll('.kpi-card')[2].click();document.querySelectorAll('.kpi-card')[2].scrollIntoView({behavior:'smooth',block:'center'})">Ver obras atrasadas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </div>
 </div>
