@@ -30,168 +30,53 @@ html, body { background: var(--bg); color: var(--text); font-family: 'Plus Jakar
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ============== HEADER ============== */
-header.top {
-  position: sticky; top: 0; z-index: 30;
-  background: var(--card); border-bottom: 1px solid var(--border);
-  padding: 14px 28px;
-}
-.top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; }
-.top h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-.top h1 span.acc { color: var(--accent); }
-.top .tagline { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.top .links { display: flex; gap: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
-.top .status-bar {
-  display: flex; gap: 20px; font-size: 11px; color: var(--muted); margin-top: 6px;
-  padding-top: 6px; border-top: 1px solid var(--border);
-}
-.top .status-bar .val { color: var(--text); font-family: 'JetBrains Mono', monospace; }
-.top .status-bar .val.crit { color: var(--red); }
-.top .status-bar .val.warn { color: var(--amber); }
+/* ============== ATENA BRIEFING ============== */
+.atena-wrap{max-width:720px;margin:0 auto;padding:24px 20px 40px}
 
-/* ============== CONTAINER ============== */
-.container { max-width: 1480px; margin: 0 auto; padding: 28px; }
-section { margin-bottom: 56px; }
-.section-head { margin-bottom: 18px; }
-.section-kicker {
-  font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.18em;
-  margin-bottom: 6px;
-}
-.section-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-.section-sub { font-size: 12px; color: var(--muted); margin-top: 4px; max-width: 760px; }
+.atena-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid #e8e0d4}
+.atena-brand{display:flex;align-items:center;gap:14px}
+.atena-symbol{font-size:32px;color:#b8a080}
+.atena-header h1{font-size:24px;font-weight:600;color:#2a2520;letter-spacing:0.05em}
+.atena-tagline{font-size:11px;color:#a89e92;margin-top:2px;letter-spacing:0.02em}
+.atena-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:#b8a080;text-align:right;line-height:1.4}
 
-/* ============== HERO ============== */
-.hero {
-  display: grid; grid-template-columns: 300px 1fr; gap: 24px;
-  background: linear-gradient(180deg, #f8f4ee, var(--card)); border: 1px solid var(--border);
-  padding: 32px; border-radius: 6px; margin-bottom: 56px;
-}
-.health-box {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 8px; border-right: 1px solid var(--border);
-}
-.health-svg { width: 200px; height: 200px; }
-.health-num {
-  font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 600;
-  fill: var(--text); text-anchor: middle; dominant-baseline: central;
-}
-.health-pct { font-size: 11px; fill: var(--muted); text-anchor: middle; }
-.health-lbl {
-  margin-top: 12px; text-align: center;
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
-}
+.atena-section{margin-bottom:28px}
+.atena-section h2{font-size:13px;font-weight:600;color:#2a2520;margin-bottom:4px}
+.atena-section-sub{font-size:11px;color:#a89e92;margin-bottom:14px}
 
-.hero-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-.hero-kpi { padding: 8px 24px; border-right: 1px solid var(--border); }
-.hero-kpi:last-child { border-right: none; }
-.hero-kpi .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-.hero-kpi .val {
-  font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 600; margin: 6px 0 4px;
-}
-.hero-kpi .val.warn { color: var(--amber); }
-.hero-kpi .val.crit { color: var(--red); }
-.hero-kpi .val.green { color: var(--green); }
-.hero-kpi .val.blue { color: var(--blue); }
-.hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
+.atena-loading{font-size:12px;color:#b8b0a4;font-style:italic;padding:20px;text-align:center}
 
-/* ============== OLHOS TABS ============== */
-.olhos-tabs {
-  display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px;
-}
-.olhos-tab {
-  padding: 10px 20px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s; background: none; border-top: none; border-left: none; border-right: none;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-.olhos-tab:hover { color: var(--text); }
-.olhos-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.olhos-tab .badge {
-  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  padding: 1px 5px; border-radius: 3px; margin-left: 6px;
-  background: var(--border); color: var(--muted);
-}
-.olhos-tab .badge.alta { background: rgba(232,123,123,0.15); color: var(--red); }
-.olhos-tab .badge.media { background: rgba(232,200,123,0.15); color: var(--amber); }
+/* Bloco 1: mudancas */
+.atena-mudou-list{display:flex;flex-direction:column;gap:6px}
+.atena-mudou-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#ffffff;border:1px solid #ede6dc;border-radius:6px;font-size:12px;color:#6b6156;line-height:1.5}
+.atena-mudou-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.atena-mudou-item b{color:#3a3530;font-weight:500}
+.atena-mudou-item .num{font-family:'JetBrains Mono',monospace;color:#b8a080;font-weight:500}
+.atena-mudou-empty{padding:16px;text-align:center;color:#b8b0a4;font-size:12px;font-style:italic;background:#faf7f2;border-radius:6px}
 
-/* ============== OLHO PANEL ============== */
-.olho-panel { display: none; }
-.olho-panel.active { display: block; }
+/* Bloco 2: acoes */
+.atena-acoes-list{display:flex;flex-direction:column;gap:8px}
+.atena-acao{background:#ffffff;border:1px solid #ede6dc;border-left:3px solid #c45a5a;border-radius:0 6px 6px 0;padding:14px 16px}
+.atena-acao.warn{border-left-color:#b89a4a}
+.atena-acao.info{border-left-color:#4a7ab8}
+.atena-acao-title{font-size:13px;font-weight:500;color:#2a2520;margin-bottom:4px}
+.atena-acao-text{font-size:11px;color:#8a7e72;line-height:1.6}
+.atena-acao-text b{color:#6b6156;font-weight:500}
+.atena-acao-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;margin-top:6px}
 
-.olho-meta {
-  display: flex; gap: 24px; font-size: 11px; color: var(--muted); margin-bottom: 18px;
-  padding-bottom: 12px; border-bottom: 1px solid var(--border);
-}
-.olho-meta .val { color: var(--text); font-family: 'JetBrains Mono', monospace; }
+/* Bloco 3: insight */
+.atena-insight-card{background:#ffffff;border:1px solid #e0d8cc;border-radius:8px;padding:20px;position:relative}
+.atena-insight-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#b8a080,#d8c8b0);border-radius:8px 8px 0 0}
+.atena-insight-quote{font-size:14px;color:#3a3530;line-height:1.7;font-weight:300;font-style:italic}
+.atena-insight-source{font-size:10px;color:#a89e92;margin-top:10px;font-family:'JetBrains Mono',monospace}
 
-/* ============== ACHADO CARD ============== */
-.achado {
-  background: var(--card-2); border: 1px solid var(--border); border-radius: 4px;
-  padding: 16px 20px; margin-bottom: 10px;
-}
-.achado-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
-.achado .sev {
-  display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 2px;
-  text-transform: uppercase; letter-spacing: 0.07em; font-weight: 500;
-  border: 1px solid; white-space: nowrap;
-}
-.achado .sev.alta { color: var(--red); border-color: rgba(232,123,123,0.35); background: rgba(232,123,123,0.04); }
-.achado .sev.media { color: var(--amber); border-color: rgba(232,200,123,0.35); background: rgba(232,200,123,0.04); }
-.achado .sev.baixa { color: var(--muted); border-color: var(--border-2); }
-.achado .titulo { font-size: 13px; font-weight: 600; }
-.achado .descricao { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-.achado .evidencia {
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted-2);
-  background: rgba(42,37,32,0.06); padding: 6px 10px; border-radius: 3px; margin-top: 6px;
-  overflow-x: auto; white-space: pre-wrap; word-break: break-all;
-}
-
-/* ============== METRICAS ============== */
-.metricas-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
-}
-.metrica {
-  background: var(--card); border: 1px solid var(--border); padding: 12px 14px; border-radius: 4px;
-}
-.metrica .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.metrica .val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600; margin-top: 4px; }
-
-/* ============== HISTORICO ============== */
-.timeline { display: flex; flex-direction: column; gap: 8px; }
-.timeline-row {
-  display: grid; grid-template-columns: 100px 1fr 80px; gap: 14px;
-  align-items: center; font-size: 12px; padding: 8px 14px;
-  background: var(--card-2); border: 1px solid var(--border); border-radius: 4px;
-}
-.timeline-date { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
-.timeline-olhos { display: flex; gap: 4px; }
-.timeline-olho {
-  font-size: 9px; padding: 2px 6px; border-radius: 2px;
-  background: rgba(184,160,128,0.08); color: var(--accent); border: 1px solid rgba(184,160,128,0.2);
-  text-transform: uppercase; letter-spacing: 0.04em;
-}
-.timeline-status { font-size: 11px; color: var(--green); text-align: right; }
-
-/* ============== EMPTY STATE ============== */
-.empty-state {
-  text-align: center; padding: 80px 40px; color: var(--muted);
-}
-.empty-state .icon { font-size: 48px; color: var(--accent); margin-bottom: 16px; opacity: 0.4; }
-.empty-state .title { font-size: 18px; color: var(--text); margin-bottom: 8px; }
-.empty-state .desc { font-size: 13px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
-
-/* ============== RESPONSIVE ============== */
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; }
-  .health-box { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
-  .hero-kpis { grid-template-columns: 1fr 1fr; }
-  .olhos-tabs { flex-wrap: wrap; }
-}
-@media (max-width: 600px) {
-  .hero-kpis { grid-template-columns: 1fr; }
-  .timeline-row { grid-template-columns: 1fr; gap: 6px; }
-}
+/* Footer */
+.atena-footer{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:20px;border-top:1px solid #e8e0d4}
+.atena-score{display:flex;align-items:baseline;gap:8px}
+.atena-score-num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:#2a2520}
+.atena-score-lbl{font-size:10px;color:#a89e92;text-transform:uppercase;letter-spacing:0.08em}
+.atena-dash-link{font-size:11px;color:#b8a080;text-decoration:none;font-weight:500;transition:color .2s}
+.atena-dash-link:hover{color:#8a7050}
 
 /* ============== MONO-NAV ============== */
 .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#f0ebe3,rgba(240,235,227,0.97));border-bottom:1px solid #e0d8cc;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -258,311 +143,248 @@ section { margin-bottom: 56px; }
   </div>
 </nav>
 
-<header class="top">
-  <div class="top-row">
-    <div>
-      <h1>ATENA — <span class="acc">Auditor Estrategico</span></h1>
-      <div class="tagline">deusa da sabedoria -- varredura diaria da Central de Qualidade</div>
-    </div>
-  </div>
-  <div class="status-bar" id="status-bar">
-    <span>Ultima varredura: <span class="val" id="st-ultima">--</span></span>
-    <span>Proxima: <span class="val" id="st-proxima">--</span></span>
-    <span>Achados: <span class="val" id="st-achados">--</span></span>
-    <span>Alta severidade: <span class="val crit" id="st-alta">--</span></span>
-  </div>
-</header>
+<div class="atena-wrap">
 
-<div class="container">
-
-  <!-- ============== HERO ============== -->
-  <section class="hero" id="hero-section">
-    <div class="health-box">
-      <svg class="health-svg" viewBox="0 0 200 200" id="health-svg">
-        <circle cx="100" cy="100" r="86" fill="none" stroke="#e0d8cc" stroke-width="14"/>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="#b8a080" stroke-width="14"
-                stroke-dasharray="540" stroke-dashoffset="540" stroke-linecap="round"
-                transform="rotate(-90 100 100)" id="health-arc"/>
-        <text x="100" y="100" class="health-num" id="health-num">--</text>
-        <text x="100" y="135" class="health-pct">/ 100</text>
-      </svg>
-      <div class="health-lbl">Indice de Saude (via Bugs)</div>
-    </div>
-    <div>
-      <div class="hero-kpis">
-        <div class="hero-kpi">
-          <div class="lbl">Total achados</div>
-          <div class="val" id="kpi-total">--</div>
-          <div class="sub">todos os olhos</div>
-        </div>
-        <div class="hero-kpi">
-          <div class="lbl">Alta severidade</div>
-          <div class="val crit" id="kpi-alta">--</div>
-          <div class="sub">requerem atencao</div>
-        </div>
-        <div class="hero-kpi">
-          <div class="lbl">Novos hoje</div>
-          <div class="val blue" id="kpi-novos">--</div>
-          <div class="sub">vs varredura anterior</div>
-        </div>
-        <div class="hero-kpi">
-          <div class="lbl">Varreduras</div>
-          <div class="val green" id="kpi-varreduras">--</div>
-          <div class="sub">no historico</div>
-        </div>
+  <!-- HEADER -->
+  <div class="atena-header">
+    <div class="atena-brand">
+      <span class="atena-symbol">&#9672;</span>
+      <div>
+        <h1>ATENA</h1>
+        <p class="atena-tagline">briefing executivo &middot; o que mudou e o que precisa de aten&ccedil;&atilde;o</p>
       </div>
     </div>
-  </section>
+    <div class="atena-date" id="atena-date">carregando...</div>
+  </div>
 
-  <!-- ============== 5 OLHOS ============== -->
-  <section id="olhos">
-    <div class="section-head">
-      <div class="section-kicker">5 Olhos</div>
-      <div class="section-title">Analises heuristicas</div>
-      <div class="section-sub">Cada olho varre um aspecto da Central de Qualidade: UX do dashboard, insights operacionais, lacunas de dados, bugs de coerencia e oportunidades de melhoria.</div>
+  <!-- BLOCO 1: O QUE MUDOU (delta 24h) -->
+  <section class="atena-section" id="atena-mudou">
+    <h2>O que mudou</h2>
+    <p class="atena-section-sub">Compara&ccedil;&atilde;o autom&aacute;tica com o snapshot anterior</p>
+    <div class="atena-mudou-list" id="atena-mudou-list">
+      <div class="atena-loading">Carregando dados...</div>
     </div>
-
-    <div class="olhos-tabs" id="olhos-tabs"></div>
-    <div id="olhos-panels"></div>
   </section>
 
-  <!-- ============== HISTORICO ============== -->
-  <section id="historico">
-    <div class="section-head">
-      <div class="section-kicker">Historico</div>
-      <div class="section-title">Linha do tempo das varreduras</div>
+  <!-- BLOCO 2: O QUE PRECISA DE ACAO HOJE (top 3 urgencias) -->
+  <section class="atena-section" id="atena-acoes">
+    <h2>A&ccedil;&atilde;o necess&aacute;ria hoje</h2>
+    <p class="atena-section-sub">As 3 situa&ccedil;&otilde;es mais urgentes que precisam de decis&atilde;o</p>
+    <div class="atena-acoes-list" id="atena-acoes-list">
+      <div class="atena-loading">Carregando dados...</div>
     </div>
-    <div class="timeline" id="timeline"></div>
   </section>
+
+  <!-- BLOCO 3: INSIGHT DA SEMANA (1 rotativo) -->
+  <section class="atena-section" id="atena-insight">
+    <h2>Insight da semana</h2>
+    <div class="atena-insight-card" id="atena-insight-card">
+      <div class="atena-loading">Carregando dados...</div>
+    </div>
+  </section>
+
+  <!-- RODAPE: score + mini link pro dashboard -->
+  <div class="atena-footer">
+    <div class="atena-score" id="atena-score">
+      <span class="atena-score-num">&mdash;</span>
+      <span class="atena-score-lbl">score de sa&uacute;de</span>
+    </div>
+    <a href="dashboard.html" class="atena-dash-link">Ver dashboard completo &rarr;</a>
+  </div>
 
 </div>
 
 <script>
-const OLHO_NAMES = ['ux', 'insights', 'lacunas', 'bugs', 'oportunidades'];
-const OLHO_LABELS = {
-  ux: 'UX',
-  insights: 'Insights',
-  lacunas: 'Lacunas',
-  bugs: 'Bugs',
-  oportunidades: 'Oportunidades'
-};
+async function atenaInit() {
+  const hoje = new Date();
+  const hojeStr = hoje.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('atena-date').textContent = hojeStr;
 
-let indexData = null;
-let olhoCache = {};
-
-async function loadIndex() {
+  // Carregar backlog-historico
+  let hist = [];
   try {
-    const r = await fetch('dados/atena/index.json');
-    if (!r.ok) throw new Error('index.json nao encontrado');
-    indexData = await r.json();
-    renderHeader();
-    renderHero();
-    renderTabs();
-    renderTimeline();
-    // Auto-load first tab
-    switchTab(OLHO_NAMES[0]);
-  } catch(e) {
-    renderEmpty();
-  }
+    const r = await fetch('dados/backlog-historico.json?t=' + Date.now());
+    if (r.ok) hist = await r.json();
+  } catch(e) {}
+
+  // Carregar snapshot de hoje e ontem
+  let snapHoje = null, snapOntem = null;
+  const hojeISO = hoje.toISOString().slice(0,10);
+  const ontemISO = new Date(hoje.getTime()-86400000).toISOString().slice(0,10);
+  try {
+    const r1 = await fetch('dados/snapshots/' + hojeISO + '.json?t=' + Date.now());
+    if (r1.ok) snapHoje = await r1.json();
+  } catch(e) {}
+  try {
+    const r2 = await fetch('dados/snapshots/' + ontemISO + '.json?t=' + Date.now());
+    if (r2.ok) snapOntem = await r2.json();
+  } catch(e) {}
+
+  // Carregar ultimo ATENA scan
+  let atenaScan = null;
+  try {
+    const r = await fetch('dados/atena/index.json?t=' + Date.now());
+    if (r.ok) atenaScan = await r.json();
+  } catch(e) {}
+
+  renderMudou(hist, snapHoje, snapOntem);
+  renderAcoes(hist, snapHoje, atenaScan);
+  renderInsight(atenaScan);
+  renderAtenaScore(snapHoje);
 }
 
-function renderHeader() {
-  if (!indexData) return;
-  const d = indexData;
-  document.getElementById('st-ultima').textContent = formatDate(d.ultima_varredura);
-  document.getElementById('st-proxima').textContent = formatDate(d.proxima_varredura);
-  document.getElementById('st-achados').textContent = d.total_achados || 0;
-  document.getElementById('st-alta').textContent = d.achados_alta || 0;
-}
+function renderMudou(hist, snapHoje, snapOntem) {
+  var el = document.getElementById('atena-mudou-list');
+  var items = [];
 
-function renderHero() {
-  if (!indexData) return;
-  const d = indexData;
-  const saude = d.indice_saude;
+  // Delta dos 5 indices
+  if (hist.length >= 2) {
+    var last = hist[hist.length-1];
+    var prev = hist[hist.length-2];
+    var cats = {zumbi:'Enc. sem fechar', orfas:'Sem responsavel', lote_vt:'VT travadas', lideres_ocultos:'Lideres ocultos', conflitos:'Conflitos'};
+    Object.entries(cats).forEach(function(pair) {
+      var key = pair[0], label = pair[1];
+      var cur = (last.indices && last.indices[key] && last.indices[key].total != null) ? last.indices[key].total : 0;
+      var pre = (prev.indices && prev.indices[key] && prev.indices[key].total != null) ? prev.indices[key].total : 0;
+      var diff = cur - pre;
+      if (diff < 0) items.push({icon:'\u2713', text:'<b>' + label + '</b> caiu de <span class="num">' + pre + '</span> para <span class="num">' + cur + '</span> (' + diff + ')'});
+      else if (diff > 0) items.push({icon:'\u26A0', text:'<b>' + label + '</b> subiu de <span class="num">' + pre + '</span> para <span class="num">' + cur + '</span> (+' + diff + ')'});
+    });
 
-  // Arc
-  if (saude != null) {
-    const arc = document.getElementById('health-arc');
-    const offset = 540 - (540 * saude / 100);
-    arc.style.transition = 'stroke-dashoffset 1.2s ease-out';
-    arc.setAttribute('stroke-dashoffset', offset);
-    const color = saude >= 70 ? '#3d8a5a' : saude >= 40 ? '#b89a4a' : '#c45a5a';
-    arc.setAttribute('stroke', color);
-    document.getElementById('health-num').textContent = saude;
-  }
-
-  document.getElementById('kpi-total').textContent = d.total_achados || 0;
-  document.getElementById('kpi-alta').textContent = d.achados_alta || 0;
-  document.getElementById('kpi-varreduras').textContent = (d.varreduras || []).length;
-
-  // "Novos hoje" = total achados (para primeira varredura)
-  document.getElementById('kpi-novos').textContent = d.total_achados || 0;
-}
-
-function renderTabs() {
-  const tabs = document.getElementById('olhos-tabs');
-  const panels = document.getElementById('olhos-panels');
-  tabs.innerHTML = '';
-  panels.innerHTML = '';
-
-  OLHO_NAMES.forEach(nome => {
-    const sumario = (indexData.sumario_hoje || {})[nome] || {};
-    const btn = document.createElement('button');
-    btn.className = 'olhos-tab';
-    btn.dataset.olho = nome;
-
-    let badgeClass = '';
-    let badgeText = String(sumario.achados || 0);
-    if (sumario.alta > 0) badgeClass = 'alta';
-    else if (sumario.media > 0) badgeClass = 'media';
-
-    btn.innerHTML = OLHO_LABELS[nome] + ' <span class="badge ' + badgeClass + '">' + badgeText + '</span>';
-    btn.onclick = () => switchTab(nome);
-    tabs.appendChild(btn);
-
-    const panel = document.createElement('div');
-    panel.className = 'olho-panel';
-    panel.id = 'panel-' + nome;
-    panel.innerHTML = '<div style="color:var(--muted);padding:20px;">Carregando...</div>';
-    panels.appendChild(panel);
-  });
-}
-
-async function switchTab(nome) {
-  // Update tab active state
-  document.querySelectorAll('.olhos-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.olho === nome);
-  });
-  document.querySelectorAll('.olho-panel').forEach(p => {
-    p.classList.toggle('active', p.id === 'panel-' + nome);
-  });
-
-  // Load data if not cached
-  if (!olhoCache[nome]) {
-    const lastVar = (indexData.varreduras || []).slice(-1)[0];
-    if (lastVar) {
-      try {
-        const r = await fetch('dados/atena/' + lastVar.date + '-' + nome + '.json');
-        if (r.ok) olhoCache[nome] = await r.json();
-      } catch(e) {}
+    // Movimentacoes nominais
+    if (last.mudancas_vs_anterior) {
+      var m = last.mudancas_vs_anterior;
+      Object.entries(m).forEach(function(pair) {
+        var key = pair[0], arr = pair[1];
+        if (!Array.isArray(arr)) return;
+        arr.forEach(function(item) {
+          if (key.indexOf('saiu') !== -1) items.push({icon:'\u2713', text:'<b>' + (item.cliente||item.id) + '</b> saiu do limbo' + (item.idade_quando_saiu ? ' (estava ha ' + item.idade_quando_saiu + 'd)' : '')});
+          else if (key.indexOf('atribuida') !== -1) items.push({icon:'\u2713', text:'<b>' + (item.cliente||item.id) + '</b> recebeu consultor'});
+          else if (key.indexOf('destravada') !== -1) items.push({icon:'\u2713', text:'<b>' + (item.cliente||item.id) + '</b> destravada (mudou de fase)'});
+        });
+      });
     }
   }
 
-  renderOlhoPanel(nome);
+  // Delta de ativas
+  if (snapHoje && snapOntem && snapHoje.ativas && snapOntem.ativas) {
+    var diff = snapHoje.ativas.length - snapOntem.ativas.length;
+    if (diff !== 0) items.push({icon: diff > 0 ? '\u25B2' : '\u25BC', text:'Carteira ativa: <span class="num">' + snapOntem.ativas.length + '</span> \u2192 <span class="num">' + snapHoje.ativas.length + '</span> (' + (diff>0?'+':'') + diff + ')'});
+  }
+
+  if (items.length === 0) {
+    el.innerHTML = '<div class="atena-mudou-empty">Sem mudan\u00E7as detectadas ainda. O primeiro delta aparece quando o 2\u00BA snapshot di\u00E1rio for gerado.</div>';
+  } else {
+    el.innerHTML = items.map(function(i) { return '<div class="atena-mudou-item"><span class="atena-mudou-icon">' + i.icon + '</span><div>' + i.text + '</div></div>'; }).join('');
+  }
 }
 
-function renderOlhoPanel(nome) {
-  const panel = document.getElementById('panel-' + nome);
-  const data = olhoCache[nome];
+function renderAcoes(hist, snapHoje, atenaScan) {
+  var el = document.getElementById('atena-acoes-list');
+  var acoes = [];
 
-  if (!data) {
-    panel.innerHTML = '<div class="empty-state"><div class="icon">--</div><div class="title">Sem dados para ' + OLHO_LABELS[nome] + '</div><div class="desc">A varredura ainda nao foi executada para este olho.</div></div>';
-    return;
-  }
+  // Pegar obras ativas com maior idade
+  if (snapHoje && snapHoje.ativas) {
+    var sorted = snapHoje.ativas.filter(function(o){return o.idade_dias;}).sort(function(a,b){return b.idade_dias-a.idade_dias;});
 
-  let html = '';
-
-  // Meta
-  html += '<div class="olho-meta">';
-  html += '<span>Executado: <span class="val">' + formatDate(data.executado_em) + '</span></span>';
-  html += '<span>Achados: <span class="val">' + (data.achados || []).length + '</span></span>';
-  if (data.comparativo_vs_anterior) {
-    html += '<span>Delta: <span class="val">' + esc(data.comparativo_vs_anterior) + '</span></span>';
-  }
-  html += '</div>';
-
-  // Achados
-  const achados = data.achados || [];
-  // Sort: alta first, then media, then baixa
-  const sevOrder = {alta: 0, media: 1, baixa: 2};
-  achados.sort((a, b) => (sevOrder[a.severidade] || 9) - (sevOrder[b.severidade] || 9));
-
-  achados.forEach(a => {
-    html += '<div class="achado">';
-    html += '<div class="achado-head">';
-    html += '<span class="sev ' + (a.severidade || '') + '">' + (a.severidade || '?') + '</span>';
-    html += '<span class="titulo">' + esc(a.titulo) + '</span>';
-    html += '</div>';
-    html += '<div class="descricao">' + esc(a.descricao) + '</div>';
-    if (a.evidencia) {
-      html += '<div class="evidencia">' + esc(a.evidencia) + '</div>';
+    // Obra mais antiga ativa
+    if (sorted[0]) {
+      acoes.push({
+        sev: 'crit',
+        title: sorted[0].clienteNome,
+        text: 'Obra mais antiga da carteira \u2014 <b>' + sorted[0].idade_dias + ' dias</b> no radar. Status: ' + sorted[0].status + '. Fase: ' + sorted[0].faseAtual + '. Consultor: ' + (sorted[0].consultorNome||'sem respons\u00E1vel') + '.',
+        meta: sorted[0].idade_dias + 'd \u00B7 ' + sorted[0].faseAtual
+      });
     }
-    html += '</div>';
-  });
 
-  if (achados.length === 0) {
-    html += '<div style="color:var(--green);padding:20px;text-align:center;">Nenhum achado neste olho. Tudo limpo.</div>';
+    // Obras sem responsavel com maior idade
+    var orfas = sorted.filter(function(o){return !o.consultorNome || o.consultorNome==='' || o.consultorNome==='[]';});
+    if (orfas.length > 0) {
+      acoes.push({
+        sev: 'warn',
+        title: orfas.length + ' obras sem respons\u00E1vel',
+        text: 'A mais antiga: <b>' + orfas[0].clienteNome + '</b> (' + (orfas[0].idade_dias||'?') + 'd). Ningu\u00E9m est\u00E1 oficialmente cuidando destas obras.',
+        meta: orfas.length + ' obras \u00B7 mais antiga ' + (orfas[0].idade_dias||'?') + 'd'
+      });
+    }
   }
 
-  // Metricas
-  const metricas = data.metricas || {};
-  const metricKeys = Object.keys(metricas);
-  if (metricKeys.length > 0) {
-    html += '<div class="metricas-grid">';
-    metricKeys.forEach(k => {
-      const v = metricas[k];
-      html += '<div class="metrica">';
-      html += '<div class="lbl">' + esc(k.replace(/_/g, ' ')) + '</div>';
-      html += '<div class="val">' + (v != null ? v : '--') + '</div>';
-      html += '</div>';
+  // Achados de alta severidade do ATENA scan
+  if (atenaScan && Array.isArray(atenaScan.varreduras) && atenaScan.varreduras.length > 0) {
+    var lastScan = atenaScan.varreduras[atenaScan.varreduras.length-1];
+    if (lastScan.resumo && lastScan.resumo.alta > 0) {
+      acoes.push({
+        sev: 'info',
+        title: 'ATENA detectou ' + lastScan.resumo.alta + ' achado(s) de alta severidade',
+        text: '\u00DAltima varredura: ' + lastScan.data + '. Total de ' + lastScan.resumo.total + ' achados (' + lastScan.resumo.alta + ' alta, ' + lastScan.resumo.media + ' m\u00E9dia).',
+        meta: 'Varredura ' + lastScan.data
+      });
+    }
+  }
+
+  // Fallback se nenhuma acao
+  if (acoes.length === 0) {
+    acoes.push({
+      sev: 'info',
+      title: 'Aguardando dados',
+      text: 'As a\u00E7\u00F5es priorit\u00E1rias ser\u00E3o geradas automaticamente quando os snapshots di\u00E1rios acumularem. O primeiro briefing completo aparece com 2+ dias de dados.',
+      meta: 'Sistema em aquecimento'
     });
-    html += '</div>';
   }
 
-  panel.innerHTML = html;
-}
-
-function renderTimeline() {
-  const el = document.getElementById('timeline');
-  const varreduras = (indexData.varreduras || []).slice().reverse();
-
-  if (varreduras.length === 0) {
-    el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;">Nenhuma varredura no historico.</div>';
-    return;
-  }
-
-  let html = '';
-  varreduras.forEach(v => {
-    html += '<div class="timeline-row">';
-    html += '<div class="timeline-date">' + v.date + '</div>';
-    html += '<div class="timeline-olhos">';
-    (v.olhos || []).forEach(o => {
-      html += '<span class="timeline-olho">' + o + '</span>';
-    });
-    html += '</div>';
-    html += '<div class="timeline-status">' + (v.completa ? 'completa' : 'parcial') + '</div>';
-    html += '</div>';
-  });
-
-  el.innerHTML = html;
-}
-
-function renderEmpty() {
-  document.querySelector('.container').innerHTML = '<div class="empty-state">' +
-    '<div class="icon">&#9670;</div>' +
-    '<div class="title">ATENA aguarda primeira varredura</div>' +
-    '<div class="desc">A varredura diaria roda as 07h (Brasilia) via GitHub Actions. ' +
-    'Quando a primeira execucao completar, os 5 olhos serao exibidos aqui com achados, metricas e historico comparativo.' +
-    '<br><br>Voce tambem pode disparar manualmente via <code style="color:var(--accent)">workflow_dispatch</code> no GitHub Actions.</div>' +
+  el.innerHTML = acoes.slice(0,3).map(function(a) {
+    return '<div class="atena-acao ' + a.sev + '">' +
+      '<div class="atena-acao-title">' + a.title + '</div>' +
+      '<div class="atena-acao-text">' + a.text + '</div>' +
+      '<div class="atena-acao-meta">' + a.meta + '</div>' +
     '</div>';
+  }).join('');
 }
 
-function formatDate(s) {
-  if (!s) return '--';
-  try {
-    const d = new Date(s);
-    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-  } catch(e) {
-    return s;
+function renderInsight(atenaScan) {
+  var el = document.getElementById('atena-insight-card');
+
+  // Pool de insights estaticos (baseados nos 26 cruzamentos)
+  var insights = [
+    {quote:'Obras de piso+parede demoram 2\u00D7 mais que parede pura (mediana 238d vs 46d). Considere separar escopos combinados em fases.', source:'cruz-idade-tipo.json'},
+    {quote:'Dois consultores (Luana e Wesley) concentram 85% das obras ativas e 91% das que passaram de 6 meses. Qualquer aus\u00EAncia colapsa a opera\u00E7\u00E3o.', source:'cruz-idade-consultor.json'},
+    {quote:'39 obras foram marcadas como finalizadas no sistema sem terem terminado de verdade no Pipefy. 6 ainda est\u00E3o em execu\u00E7\u00E3o.', source:'cruz-pipefy-fantasmas.json'},
+    {quote:'O ciclo mediano de uma obra entregue com sucesso \u00E9 117 dias. Obras que passam de 150 dias t\u00EAm 3\u00D7 mais chance de entrar em risco.', source:'cruz-success-dna.json'},
+    {quote:'43% das obras ativas nunca tiveram um resumo de WhatsApp gerado. S\u00E3o invis\u00EDveis pro sistema de comunica\u00E7\u00E3o.', source:'cruz-silenciosas.json'},
+    {quote:'100% das obras no sistema de planejamento est\u00E3o atrasadas. 58,8% j\u00E1 foram conclu\u00EDdas no painel mas continuam no plano.', source:'cruz-cronograma-fossil.json'},
+    {quote:'5 pessoas lideram 52% das obras escaladas hoje sem estarem cadastradas no sistema de equipes. A opera\u00E7\u00E3o real \u00E9 invis\u00EDvel pro CRM.', source:'cruz-organograma-real.json'}
+  ];
+
+  // Rotacionar por dia da semana
+  var idx = new Date().getDay() % insights.length;
+  var ins = insights[idx];
+
+  el.innerHTML = '<div class="atena-insight-quote">\u201C' + ins.quote + '\u201D</div>' +
+    '<div class="atena-insight-source">fonte: ' + ins.source + '</div>';
+}
+
+function renderAtenaScore(snapHoje) {
+  var el = document.getElementById('atena-score');
+  if (!snapHoje || !snapHoje.ativas) {
+    el.querySelector('.atena-score-num').textContent = '\u2014';
+    return;
   }
+  var ativas = snapHoje.ativas;
+  var total = ativas.length || 1;
+  var n180 = ativas.filter(function(o){return (o.idade_dias||0)>=180;}).length;
+  var nReparo = ativas.filter(function(o){return o.status==='reparo';}).length;
+  var idadeArr = ativas.filter(function(o){return o.idade_dias!=null;});
+  var idadeMedia = idadeArr.reduce(function(a,o){return a+o.idade_dias;},0) / (idadeArr.length||1);
+  var score = Math.round(
+    Math.max(0,1-n180/total)*30 +
+    Math.max(0,1-nReparo/total)*20 +
+    Math.max(0,1-Math.min(idadeMedia/300,1))*30 +
+    Math.max(0,1-Math.min(n180/total,0.5)*2)*20
+  );
+  el.querySelector('.atena-score-num').textContent = score;
 }
 
-function esc(s) {
-  if (s == null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-document.addEventListener('DOMContentLoaded', loadIndex);
+document.addEventListener('DOMContentLoaded', atenaInit);
 </script>
 
 <div class="atena-portal" id="atenaPortal">
