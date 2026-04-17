@@ -112,6 +112,22 @@
   .mono-nav-btn.active .mono-nav-icon{opacity:1}
   .mono-nav-label{white-space:nowrap}
   @media(max-width:600px){.mono-nav-label{display:none}.mono-nav-icon{font-size:18px}.mono-nav-btn{padding:10px 12px}}
+
+  /* ATENA PORTAL */
+  .atena-portal{position:fixed;inset:0;background:#0a0a0a;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
+  .atena-portal.active{opacity:1;pointer-events:auto}
+  .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(196,167,125,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
+  @keyframes atenaGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0.6}}
+  .atena-shield-wrap{position:relative;width:140px;height:160px;display:flex;align-items:center;justify-content:center}
+  .atena-shield-svg{width:120px;height:140px;opacity:0;animation:shieldAppear 0.6s ease-out 0.2s forwards, shieldSpin 1.8s ease-in-out 0.3s forwards}
+  @keyframes shieldAppear{0%{opacity:0;transform:scale(0.5)}100%{opacity:1;transform:scale(1)}}
+  @keyframes shieldSpin{0%{transform:perspective(600px) rotateY(0deg)}50%{transform:perspective(600px) rotateY(180deg)}100%{transform:perspective(600px) rotateY(360deg)}}
+  .atena-shield-glow{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle, rgba(196,167,125,0.3) 0%, transparent 70%);opacity:0;animation:shieldGlowPulse 1.8s ease-in-out 0.3s forwards}
+  @keyframes shieldGlowPulse{0%{opacity:0;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(1)}}
+  .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#f5d890;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(196,167,125,0.5)}
+  @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
+  .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
+  @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -1045,5 +1061,37 @@
 </footer>
 
 </div>
+
+<div class="atena-portal" id="atenaPortal">
+  <div class="atena-shield-wrap">
+    <div class="atena-shield-glow"></div>
+    <svg class="atena-shield-svg" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 5 L110 30 L110 75 Q110 120 60 135 Q10 120 10 75 L10 30 Z" stroke="#c4a77d" stroke-width="2" fill="rgba(196,167,125,0.05)"/>
+      <path d="M60 20 L95 38 L95 72 Q95 108 60 120 Q25 108 25 72 L25 38 Z" stroke="#c4a77d" stroke-width="1" fill="none" opacity="0.4"/>
+      <path d="M60 45 L75 70 L60 95 L45 70 Z" stroke="#c4a77d" stroke-width="1.5" fill="rgba(196,167,125,0.1)"/>
+      <circle cx="53" cy="65" r="3" stroke="#c4a77d" stroke-width="1" fill="none"/>
+      <circle cx="67" cy="65" r="3" stroke="#c4a77d" stroke-width="1" fill="none"/>
+      <circle cx="53" cy="65" r="1" fill="#c4a77d"/>
+      <circle cx="67" cy="65" r="1" fill="#c4a77d"/>
+      <path d="M57 72 L60 76 L63 72" stroke="#c4a77d" stroke-width="1" fill="none"/>
+    </svg>
+  </div>
+  <div class="atena-portal-title">Atena</div>
+  <div class="atena-portal-tagline">auditor estratégico · monofloor</div>
+</div>
+
+<script>
+// ATENA PORTAL
+document.querySelectorAll('.mono-nav-btn[data-page="atena"]').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    if(btn.classList.contains('active')) return;
+    e.preventDefault();
+    var portal = document.getElementById('atenaPortal');
+    if(!portal){ window.location.href = btn.href; return; }
+    portal.classList.add('active');
+    setTimeout(function(){ window.location.href = btn.href; }, 2200);
+  });
+});
+</script>
 </body>
 </html>
