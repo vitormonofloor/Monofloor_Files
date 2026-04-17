@@ -38,6 +38,19 @@ header{padding:32px 0;display:flex;justify-content:space-between;align-items:cen
 .section-tag.hermes{color:var(--gold-dark);background:var(--gold-bg);border:1px solid var(--gold-light)}
 .section-line{flex:1;height:1px;background:var(--border-light)}
 
+/* ═══ CONTEXT BLOCK ═══ */
+.context{margin-top:32px;padding:20px 24px;background:var(--surface);border:1px solid var(--border-light);border-radius:12px;font-size:12px;color:var(--text-sub);line-height:1.7;font-weight:300}
+.context strong{color:var(--text);font-weight:500}
+
+/* ═══ KPI HINT ═══ */
+.kpi-hint{text-align:center;font-size:10px;color:var(--text-lightest);margin-bottom:16px;font-weight:400;letter-spacing:0.5px}
+.kpi-hint span{color:var(--gold);font-weight:500}
+
+/* ═══ FIRE ACTION ═══ */
+.fire-action{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;color:var(--gold-dark);font-weight:500;cursor:pointer;transition:color 0.2s;letter-spacing:0.5px}
+.fire-action:hover{color:var(--gold)}
+.fire-action svg{width:14px;height:14px;stroke:currentColor}
+
 /* ═══ FIRE CARDS ═══ */
 .fire-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .fire-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative;transition:box-shadow 0.3s}
@@ -167,6 +180,11 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
   <div class="header-meta"><strong>16 abr 2026</strong> · 18:06<br>159 projetos ativos · atualizado a cada 6h</div>
 </header>
 
+<!-- ═══ CONTEXT BLOCK ═══ -->
+<div class="context">
+  Este painel monitora <strong>159 obras ativas</strong> da Monofloor em tempo real, analisando automaticamente as mensagens de <strong>Telegram</strong> e <strong>WhatsApp</strong> dos grupos de cada obra. A inteligência artificial identifica ocorrências, mede comunicação e detecta atrasos. As metas vêm da <strong>Régua de Saúde Operacional</strong> — o padrão de como a empresa deve operar.
+</div>
+
 <!-- ═══ SECTION 1 — ATENÇÃO ═══ -->
 <div class="section">
   <div class="section-head">
@@ -181,6 +199,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
       <div class="fire-unit">ocorrências abertas</div>
       <div class="fire-insight">26 são críticas — nenhuma foi resolvida</div>
       <div class="fire-detail">Desvios de qualidade, reclamações e abandonos acumulando sem tratamento.</div>
+      <div class="fire-action">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </div>
     <div class="fire-card">
       <span class="fire-pill warn">meta ≤15%</span>
@@ -189,6 +208,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
       <div class="fire-unit">taxa de atraso</div>
       <div class="fire-insight">Uma em cada três obras está atrasada</div>
       <div class="fire-detail">O dobro da meta de 15%. Piorou 2.3pp nas últimas 6 horas.</div>
+      <div class="fire-action">Ver obras atrasadas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </div>
   </div>
 </div>
@@ -200,6 +220,8 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
     <div class="section-line"></div>
   </div>
 
+  <div class="kpi-hint">Toque em qualquer grupo para entender <span>o que significa</span> cada indicador</div>
+
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-group-name">Comunicação</div>
@@ -208,7 +230,7 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
           <div class="kpi-dot green"></div>
           <div class="kpi-row"><span class="kpi-val gold">7.585</span><span class="kpi-delta good">↑312</span></div>
           <div class="kpi-label">Mensagens 30d</div>
-          <div class="kpi-sub">TG 4.716 · WA 2.869</div>
+          <div class="kpi-sub">Telegram 4.716 · WhatsApp 2.869</div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
