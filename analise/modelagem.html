@@ -5,128 +5,128 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Modelagem de Dados — Aba Obras (Monofloor Cloud)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e8e8e8;line-height:1.5;font-size:13px}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0ebe3;color:#3a3530;line-height:1.5;font-size:13px}
   .wrap{max-width:1600px;margin:0 auto;padding:32px 24px}
-  header{border-bottom:1px solid #222;padding-bottom:24px;margin-bottom:32px}
-  h1{font-size:24px;font-weight:600;color:#fff;letter-spacing:-0.02em}
-  h1 span{color:#c4a77d}
-  .sub{color:#888;font-size:12px;margin-top:6px}
-  .meta{display:flex;gap:24px;margin-top:16px;font-size:11px;color:#666}
-  .meta span b{color:#c4a77d;font-weight:500}
+  header{border-bottom:1px solid #d8d0c4;padding-bottom:24px;margin-bottom:32px}
+  h1{font-size:24px;font-weight:600;color:#2a2520;letter-spacing:-0.02em}
+  h1 span{color:#b8a080}
+  .sub{color:#8a7e72;font-size:12px;margin-top:6px}
+  .meta{display:flex;gap:24px;margin-top:16px;font-size:11px;color:#a89e92}
+  .meta span b{color:#b8a080;font-weight:500}
 
-  nav{position:sticky;top:0;background:#0a0a0a;border-bottom:1px solid #222;padding:12px 0;margin:0 -24px 24px;z-index:10}
+  nav{position:sticky;top:0;background:#f0ebe3;border-bottom:1px solid #d8d0c4;padding:12px 0;margin:0 -24px 24px;z-index:10}
   nav ul{display:flex;gap:4px;list-style:none;padding:0 24px;flex-wrap:wrap}
-  nav a{color:#888;text-decoration:none;font-size:11px;padding:6px 10px;border-radius:4px;transition:all .15s;text-transform:uppercase;letter-spacing:0.05em}
-  nav a:hover{background:#1a1a1a;color:#c4a77d}
+  nav a{color:#8a7e72;text-decoration:none;font-size:11px;padding:6px 10px;border-radius:4px;transition:all .15s;text-transform:uppercase;letter-spacing:0.05em}
+  nav a:hover{background:#e8e0d4;color:#b8a080}
 
   section{margin-bottom:48px;scroll-margin-top:80px}
-  h2{font-size:11px;font-weight:600;color:#c4a77d;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #1a1a1a}
-  h2 .count{color:#555;margin-left:8px;font-weight:400}
-  h3{font-size:13px;font-weight:600;color:#fff;margin:20px 0 10px}
+  h2{font-size:11px;font-weight:600;color:#b8a080;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #e8e0d4}
+  h2 .count{color:#b8b0a4;margin-left:8px;font-weight:400}
+  h3{font-size:13px;font-weight:600;color:#2a2520;margin:20px 0 10px}
 
   .grid{display:grid;gap:12px}
   .g2{grid-template-columns:1fr 1fr}
   .g3{grid-template-columns:1fr 1fr 1fr}
   .g4{grid-template-columns:repeat(4,1fr)}
 
-  .card{background:#101010;border:1px solid #1f1f1f;border-radius:6px;padding:16px}
-  .card h4{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
-  .card .num{font-size:24px;font-weight:600;color:#fff;font-family:'JetBrains Mono',monospace}
-  .card .num.gold{color:#c4a77d}
-  .card .num.red{color:#e87b7b}
-  .card .num.amber{color:#e8c87b}
-  .card .num.green{color:#7be8a8}
-  .card .lbl{font-size:11px;color:#666;margin-top:4px}
+  .card{background:#faf7f2;border:1px solid #e0d8cc;border-radius:6px;padding:16px}
+  .card h4{font-size:11px;color:#8a7e72;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-weight:500}
+  .card .num{font-size:24px;font-weight:600;color:#2a2520;font-family:'JetBrains Mono',monospace}
+  .card .num.gold{color:#b8a080}
+  .card .num.red{color:#c45a5a}
+  .card .num.amber{color:#b89a4a}
+  .card .num.green{color:#3d8a5a}
+  .card .lbl{font-size:11px;color:#a89e92;margin-top:4px}
 
   table{width:100%;border-collapse:collapse;font-size:12px}
-  th{text-align:left;padding:8px 10px;color:#888;font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #222;background:#0d0d0d;position:sticky;top:60px}
-  td{padding:7px 10px;border-bottom:1px solid #161616;vertical-align:top}
-  tr:hover td{background:#0d0d0d}
+  th{text-align:left;padding:8px 10px;color:#8a7e72;font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid #d8d0c4;background:#faf7f2;position:sticky;top:60px}
+  td{padding:7px 10px;border-bottom:1px solid #ede6dc;vertical-align:top}
+  tr:hover td{background:#f5f0e8}
   td.mono,th.mono{font-family:'JetBrains Mono',monospace;font-size:11px}
   td.num{text-align:right;font-family:'JetBrains Mono',monospace}
-  td .tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-family:'JetBrains Mono',monospace;background:#1a1a1a;color:#aaa}
-  td .tag.str{background:#1a2330;color:#7ba8e8}
-  td .tag.num{background:#1d2a1d;color:#7be8a8}
-  td .tag.date{background:#2a221d;color:#e8c87b}
+  td .tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-family:'JetBrains Mono',monospace;background:#e8e0d4;color:#7a7068}
+  td .tag.str{background:#eaf0f6;color:#4a7ab8}
+  td .tag.num{background:#e8f2ec;color:#3d8a5a}
+  td .tag.date{background:#f4f0e6;color:#b89a4a}
   td .tag.bool{background:#2a1d2a;color:#d87be8}
   td .tag.arr{background:#2a2a1d;color:#e8e87b}
   td .tag.obj{background:#1d2a2a;color:#7be8e8}
-  td .tag.null{background:#2a1d1d;color:#e87b7b}
+  td .tag.null{background:#f6eaea;color:#c45a5a}
 
   .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
-  .pill.ok{background:#1d2a1d;color:#7be8a8}
-  .pill.warn{background:#2a221d;color:#e8c87b}
-  .pill.crit{background:#2a1d1d;color:#e87b7b}
-  .pill.info{background:#1a2330;color:#7ba8e8}
-  .pill.dead{background:#1f1f1f;color:#666;text-decoration:line-through}
+  .pill.ok{background:#e8f2ec;color:#3d8a5a}
+  .pill.warn{background:#f4f0e6;color:#b89a4a}
+  .pill.crit{background:#f6eaea;color:#c45a5a}
+  .pill.info{background:#eaf0f6;color:#4a7ab8}
+  .pill.dead{background:#e0d8cc;color:#a89e92;text-decoration:line-through}
 
-  .bar{height:4px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin-top:4px}
-  .bar div{height:100%;background:#c4a77d;border-radius:2px}
-  .bar.red div{background:#e87b7b}
-  .bar.amber div{background:#e8c87b}
-  .bar.green div{background:#7be8a8}
+  .bar{height:4px;background:#e8e0d4;border-radius:2px;overflow:hidden;margin-top:4px}
+  .bar div{height:100%;background:#b8a080;border-radius:2px}
+  .bar.red div{background:#c45a5a}
+  .bar.amber div{background:#b89a4a}
+  .bar.green div{background:#3d8a5a}
 
-  .anom{background:#1a0f0f;border-left:3px solid #e87b7b;padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:12px}
-  .anom b{color:#e87b7b}
+  .anom{background:#faf2f2;border-left:3px solid #c45a5a;padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:12px}
+  .anom b{color:#c45a5a}
 
-  .deadfield{background:#150e0e;border-left:3px solid #444;padding:8px 12px;border-radius:0 4px 4px 0;margin-bottom:6px;font-size:11px;color:#888;font-family:'JetBrains Mono',monospace}
+  .deadfield{background:#faf5f5;border-left:3px solid #c0b8ac;padding:8px 12px;border-radius:0 4px 4px 0;margin-bottom:6px;font-size:11px;color:#8a7e72;font-family:'JetBrains Mono',monospace}
 
-  .question{background:#0f1518;border-left:3px solid #7ba8e8;padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:12px;color:#bbd}
+  .question{background:#f0f5f8;border-left:3px solid #4a7ab8;padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:8px;font-size:12px;color:#bbd}
 
-  details{background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;margin-bottom:8px}
-  details summary{padding:12px 16px;cursor:pointer;font-size:12px;color:#ccc;font-weight:500}
-  details summary:hover{background:#141414}
-  details[open]{background:#0a0a0a}
-  details > div{padding:12px 16px;border-top:1px solid #1a1a1a}
+  details{background:#ffffff;border:1px solid #e0d8cc;border-radius:6px;margin-bottom:8px}
+  details summary{padding:12px 16px;cursor:pointer;font-size:12px;color:#5a5248;font-weight:500}
+  details summary:hover{background:#f5f0e8}
+  details[open]{background:#f0ebe3}
+  details > div{padding:12px 16px;border-top:1px solid #e8e0d4}
 
-  .endpoint{font-family:'JetBrains Mono',monospace;font-size:11px;color:#c4a77d;background:#1a1a1a;padding:2px 6px;border-radius:3px;display:inline-block}
+  .endpoint{font-family:'JetBrains Mono',monospace;font-size:11px;color:#b8a080;background:#e8e0d4;padding:2px 6px;border-radius:3px;display:inline-block}
 
-  .legend{display:flex;gap:14px;margin-bottom:14px;font-size:10px;color:#666;flex-wrap:wrap}
+  .legend{display:flex;gap:14px;margin-bottom:14px;font-size:10px;color:#a89e92;flex-wrap:wrap}
   .legend span{display:flex;align-items:center;gap:4px}
 
   .funnel{display:flex;flex-direction:column;gap:3px;margin-top:8px}
   .funnel-row{display:grid;grid-template-columns:160px 1fr 50px;gap:8px;align-items:center;font-size:11px}
-  .funnel-row .name{color:#bbb;font-family:'JetBrains Mono',monospace;font-size:10px}
-  .funnel-row .bar-out{height:18px;background:#141414;border-radius:3px;overflow:hidden;position:relative}
-  .funnel-row .bar-in{height:100%;background:linear-gradient(90deg,#c4a77d,#8a7355)}
-  .funnel-row .v{text-align:right;color:#c4a77d;font-family:'JetBrains Mono',monospace}
+  .funnel-row .name{color:#6b6156;font-family:'JetBrains Mono',monospace;font-size:10px}
+  .funnel-row .bar-out{height:18px;background:#f5f0e8;border-radius:3px;overflow:hidden;position:relative}
+  .funnel-row .bar-in{height:100%;background:linear-gradient(90deg,#b8a080,#8a7355)}
+  .funnel-row .v{text-align:right;color:#b8a080;font-family:'JetBrains Mono',monospace}
 
-  footer{margin-top:48px;padding-top:24px;border-top:1px solid #1a1a1a;color:#555;font-size:11px;text-align:center}
+  footer{margin-top:48px;padding-top:24px;border-top:1px solid #e8e0d4;color:#b8b0a4;font-size:11px;text-align:center}
 
   /* ============== MONO-NAV ============== */
-  .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#0a0a0a 0%,rgba(10,10,10,0.95) 100%);border-bottom:1px solid #1f1f1f;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#f0ebe3,rgba(240,235,227,0.97));border-bottom:1px solid #e0d8cc;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
   .mono-nav-inner{display:flex;gap:6px;max-width:1600px;margin:0 auto;padding:0 24px;flex-wrap:wrap;justify-content:center}
-  .mono-nav-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;text-decoration:none;color:#888;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;border:1px solid transparent;transition:all .2s;position:relative;overflow:hidden}
-  .mono-nav-btn::before{content:'';position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .3s;box-shadow:0 0 12px 2px rgba(196,167,125,0.15) inset,0 0 20px 4px rgba(196,167,125,0.08)}
-  .mono-nav-btn:hover{color:#e8e8e8;border-color:#2a2015;background:rgba(196,167,125,0.05);text-decoration:none}
+  .mono-nav-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;text-decoration:none;color:#8a7e72;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;border:1px solid transparent;transition:all .2s;position:relative;overflow:hidden}
+  .mono-nav-btn::before{content:'';position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .3s;box-shadow:0 0 12px 2px rgba(184,160,128,0.15) inset,0 0 20px 4px rgba(184,160,128,0.08)}
+  .mono-nav-btn:hover{color:#3a3530;border-color:#2a2015;background:rgba(184,160,128,0.05);text-decoration:none}
   .mono-nav-btn:hover::before{opacity:1}
-  .mono-nav-btn.active{color:#c4a77d;border-color:#c4a77d;background:rgba(196,167,125,0.08);font-weight:600}
-  .mono-nav-btn.active::before{opacity:1;box-shadow:0 0 16px 3px rgba(196,167,125,0.2) inset,0 0 24px 6px rgba(196,167,125,0.1)}
+  .mono-nav-btn.active{color:#b8a080;border-color:#b8a080;background:rgba(184,160,128,0.08);font-weight:600}
+  .mono-nav-btn.active::before{opacity:1;box-shadow:0 0 16px 3px rgba(184,160,128,0.2) inset,0 0 24px 6px rgba(184,160,128,0.1)}
   .mono-nav-btn.active .mono-nav-icon{animation:navGlow 2s ease-in-out infinite}
-  @keyframes navGlow{0%,100%{text-shadow:0 0 6px rgba(196,167,125,0.4)}50%{text-shadow:0 0 14px rgba(196,167,125,0.7),0 0 28px rgba(196,167,125,0.3)}}
-  .mono-nav-icon{font-size:14px;line-height:1;color:#c4a77d;opacity:0.6;transition:opacity .2s}
+  @keyframes navGlow{0%,100%{text-shadow:0 0 6px rgba(184,160,128,0.4)}50%{text-shadow:0 0 14px rgba(184,160,128,0.7),0 0 28px rgba(184,160,128,0.3)}}
+  .mono-nav-icon{font-size:14px;line-height:1;color:#b8a080;opacity:0.6;transition:opacity .2s}
   .mono-nav-btn:hover .mono-nav-icon{opacity:1}
   .mono-nav-btn.active .mono-nav-icon{opacity:1}
   .mono-nav-label{white-space:nowrap}
   @media(max-width:600px){.mono-nav-label{display:none}.mono-nav-icon{font-size:18px}.mono-nav-btn{padding:10px 12px}}
 
   /* ATENA PORTAL */
-  .atena-portal{position:fixed;inset:0;background:#0a0a0a;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
+  .atena-portal{position:fixed;inset:0;background:#f0ebe3;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
   .atena-portal.active{opacity:1;pointer-events:auto}
-  .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(196,167,125,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
+  .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(184,160,128,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
   @keyframes atenaGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0.6}}
   .atena-shield-wrap{position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center}
   .atena-shield-svg{width:130px;height:130px;opacity:0;animation:shieldAppear 0.5s ease-out 0.2s forwards, shieldRotate 2.5s linear 0.3s infinite}
   @keyframes shieldAppear{0%{opacity:0;transform:scale(0.3)}100%{opacity:1;transform:scale(1)}}
   @keyframes shieldRotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-  .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(196,167,125,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
+  .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(184,160,128,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
   @keyframes shieldGlowPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:0.7;transform:scale(1.1)}}
-  .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#f5d890;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(196,167,125,0.5)}
+  .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#a89060;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(184,160,128,0.5)}
   @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
-  .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
+  .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#6b6156;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
   @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -230,12 +230,12 @@
       <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/whatsapp/summary?projectId=</td><td>resumo IA por obra</td><td class="num">1</td><td><span class="pill info">público</span></td><td>retorna null se não populado</td></tr>
       <tr><td><span class="pill ok">POST</span></td><td class="mono">/api/whatsapp/suggest</td><td>sugestão IA de resposta (Kira Suggest)</td><td>—</td><td><span class="pill info">público</span></td><td>copiloto do inbox</td></tr>
       <tr><td><span class="pill ok">POST</span></td><td class="mono">/api/whatsapp/send</td><td>envio de mensagem</td><td>—</td><td><span class="pill info">público</span></td><td>—</td></tr>
-      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/escalacao-diaria</td><td><b style="color:#7be8a8">NOVO</b> — escalações do dia (líder + membros por obra)</td><td class="num">N</td><td><span class="pill info">público</span></td><td>fonte dos chips coloridos da aba HOJE</td></tr>
+      <tr><td><span class="pill ok">GET</span></td><td class="mono">/api/escalacao-diaria</td><td><b style="color:#3d8a5a">NOVO</b> — escalações do dia (líder + membros por obra)</td><td class="num">N</td><td><span class="pill info">público</span></td><td>fonte dos chips coloridos da aba HOJE</td></tr>
       <tr><td><span class="pill crit">404</span></td><td class="mono">/api/whatsapp</td><td>—</td><td>—</td><td>—</td><td>endpoint agregado não existe</td></tr>
       <tr><td><span class="pill crit">404</span></td><td class="mono">/api/hoje, /api/today, /api/agenda, /api/eventos, /api/timeline, /api/atividades, /api/calendar, /api/visitas, /api/execucoes, /api/agendamentos</td><td>—</td><td>—</td><td>—</td><td>aba HOJE não tem backend dedicado</td></tr>
       <tr><td><span class="pill crit">404</span></td><td class="mono">/api/telegram, /api/fotos, /api/photos, /api/feed, /api/kira, /api/kira/feed</td><td>—</td><td>—</td><td>—</td><td>schema fantasma</td></tr>
       <tr><td><span class="pill crit">500</span></td><td class="mono">/api/projects/today</td><td>{error:"Failed to fetch project"}</td><td>—</td><td>—</td><td>handler engole "today" como UUID — sem validação</td></tr>
-      <tr><td colspan="6" style="background:#1a1a1a;color:#c4a77d;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;font-size:11px">Subdomínio · planejamento.monofloor.cloud (SPA Vite/React separada)</td></tr>
+      <tr><td colspan="6" style="background:#e8e0d4;color:#b8a080;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;font-size:11px">Subdomínio · planejamento.monofloor.cloud (SPA Vite/React separada)</td></tr>
       <tr><td><span class="pill ok">GET</span></td><td class="mono">planejamento/api/obras</td><td>obras com cronograma (etapas dia a dia em <code>dados_json</code> string)</td><td class="num">40</td><td><span class="pill info">público</span></td><td>só status=ativo</td></tr>
       <tr><td><span class="pill ok">GET</span></td><td class="mono">planejamento/api/projects</td><td>projetos comerciais (proposta + estimativaPrazo + progress + pipefyFase)</td><td class="num">1.037</td><td><span class="pill info">público</span></td><td>IDs orphan-os-xlsx + pf-mklv (duas fontes)</td></tr>
       <tr><td><span class="pill ok">GET</span></td><td class="mono">planejamento/api/equipes</td><td>equipes com schema snake_case + IDs textuais</td><td class="num">N</td><td><span class="pill info">público</span></td><td>schema diferente do /api/equipes do cliente</td></tr>
@@ -307,7 +307,7 @@
       <tr><td class="mono">nomeReceber / telefoneReceber</td><td><span class="tag str">str</span></td><td>—</td><td>quem recebe equipe</td></tr>
       <tr><td class="mono">corConfirmada</td><td><span class="tag bool">bool</span></td><td>true</td><td>—</td></tr>
       <tr><td class="mono">numPrestadores</td><td><span class="tag num">num</span></td><td>5</td><td>—</td></tr>
-      <tr><td class="mono">pipefyCreatedAt</td><td><span class="tag date">ISO</span></td><td>2025-09-26T15:54Z</td><td><b style="color:#7be8a8">FONTE REAL DE IDADE</b></td></tr>
+      <tr><td class="mono">pipefyCreatedAt</td><td><span class="tag date">ISO</span></td><td>2025-09-26T15:54Z</td><td><b style="color:#3d8a5a">FONTE REAL DE IDADE</b></td></tr>
       <tr><td class="mono">pipefyUpdatedAt</td><td><span class="tag date">ISO</span></td><td>2026-03-05T13:45Z</td><td>edição real Pipefy</td></tr>
       <tr><td class="mono">consultorProjetos</td><td><span class="tag str">str</span></td><td>Thaísa de Lara Barbosa</td><td>—</td></tr>
       <tr><td class="mono">consultorAtendimento</td><td><span class="tag str">str</span></td><td>Pedro Marçal</td><td>—</td></tr>
@@ -380,7 +380,7 @@
     <div class="funnel-row"><div class="name">14. OBRA CONCLUÍDA</div><div class="bar-out"><div class="bar-in" style="width:0%"></div></div><div class="v">0</div></div>
     <div class="funnel-row"><div class="name">15. CLIENTE FINALIZADO</div><div class="bar-out"><div class="bar-in" style="width:64%"></div></div><div class="v">64</div></div>
   </div>
-  <p style="font-size:11px;color:#666;margin-top:10px">Desvios: OBRA PAUSADA · REPARO · CANCELADO. Volume = ativos no dashboard quando disponível, senão amostra.</p>
+  <p style="font-size:11px;color:#a89e92;margin-top:10px">Desvios: OBRA PAUSADA · REPARO · CANCELADO. Volume = ativos no dashboard quando disponível, senão amostra.</p>
 
   <h3>Lista completa de fases (27)</h3>
   <table>
@@ -428,7 +428,7 @@
       <tr><td class="mono">updatedAt</td><td>raiz</td><td>ISO UTC ms</td><td>UTC</td><td class="num">100%</td><td>sync, não atividade humana</td></tr>
       <tr><td class="mono">dataExecucaoPrevista</td><td>raiz</td><td>YYYY-MM-DD</td><td>—</td><td class="num">58%</td><td>chave para SLA</td></tr>
       <tr><td class="mono">dataExecucaoConfirmada</td><td>raiz</td><td>YYYY-MM-DD</td><td>—</td><td class="num">baixo</td><td>diferença = adiamento</td></tr>
-      <tr><td class="mono">acessoDetalhes.pipefyCreatedAt</td><td>detail</td><td>ISO UTC s</td><td>UTC</td><td class="num">~100%</td><td><b style="color:#7be8a8">FONTE REAL de idade</b></td></tr>
+      <tr><td class="mono">acessoDetalhes.pipefyCreatedAt</td><td>detail</td><td>ISO UTC s</td><td>UTC</td><td class="num">~100%</td><td><b style="color:#3d8a5a">FONTE REAL de idade</b></td></tr>
       <tr><td class="mono">acessoDetalhes.pipefyUpdatedAt</td><td>detail</td><td>ISO UTC s</td><td>UTC</td><td class="num">~100%</td><td>edição real Pipefy</td></tr>
       <tr><td class="mono">allFields.data_de_entrada</td><td>detail</td><td>DD/MM/YYYY HH:mm</td><td>BRT</td><td class="num">parcial</td><td>com hora</td></tr>
       <tr><td class="mono">allFields.data_e_hora_da_visita</td><td>detail</td><td>DD/MM/YYYY HH:mm</td><td>BRT</td><td class="num">parcial</td><td>marco VT</td></tr>
@@ -575,7 +575,7 @@
           <tr><td>CAMPINAS</td><td class="num">2</td></tr>
         </tbody>
       </table>
-      <p style="font-size:11px;color:#888;margin-top:8px">SP aparece em 4 grafias distintas — sem normalização ~70% da carteira é SP.</p>
+      <p style="font-size:11px;color:#8a7e72;margin-top:8px">SP aparece em 4 grafias distintas — sem normalização ~70% da carteira é SP.</p>
     </div>
     <div>
       <h3>UF (extraído via regex do endereço)</h3>
@@ -638,8 +638,8 @@
 <section id="hoje">
   <h2>Aba HOJE — espelho client-side de /api/projects</h2>
 
-  <div class="anom" style="border-color:#7be8a8;background:#0f1a14;color:#cfe">
-    <b style="color:#7be8a8">VEREDITO PROVADO BYTE-A-BYTE:</b> abrir uma obra em /app/hoje retorna o MESMO payload de /app/projetos/{id}. Auditor testou obra ca4b3047... em <code>/api/projects/{id}</code> e <code>/api/projects/{id}?context=hoje</code> — 8.433 bytes, 113 chaves, idênticos. Query <code>?context=hoje</code> é ignorada. Backend único.
+  <div class="anom" style="border-color:#3d8a5a;background:#e8f2ec;color:#2a5a3a">
+    <b style="color:#3d8a5a">VEREDITO PROVADO BYTE-A-BYTE:</b> abrir uma obra em /app/hoje retorna o MESMO payload de /app/projetos/{id}. Auditor testou obra ca4b3047... em <code>/api/projects/{id}</code> e <code>/api/projects/{id}?context=hoje</code> — 8.433 bytes, 113 chaves, idênticos. Query <code>?context=hoje</code> é ignorada. Backend único.
   </div>
 
   <h3>Como a aba HOJE é montada</h3>
@@ -658,9 +658,9 @@
 
   <h3>Widgets identificados na página</h3>
   <div class="grid g3">
-    <div class="card"><h4>5 KPIs no topo</h4><div style="font-size:12px;color:#ccc;margin-top:6px">Atrasados · Em Execução · Escalados Hoje · Sem Alocação · Próximos 30d</div></div>
-    <div class="card"><h4>Filtro por gestora</h4><div style="font-size:12px;color:#ccc;margin-top:6px">Todos · Juliana · Luana · Mayara · Pedro · Wesley</div></div>
-    <div class="card"><h4>Lista de 75+ obras</h4><div style="font-size:12px;color:#ccc;margin-top:6px">cards clicáveis com chips de aplicadores por equipe</div></div>
+    <div class="card"><h4>5 KPIs no topo</h4><div style="font-size:12px;color:#5a5248;margin-top:6px">Atrasados · Em Execução · Escalados Hoje · Sem Alocação · Próximos 30d</div></div>
+    <div class="card"><h4>Filtro por gestora</h4><div style="font-size:12px;color:#5a5248;margin-top:6px">Todos · Juliana · Luana · Mayara · Pedro · Wesley</div></div>
+    <div class="card"><h4>Lista de 75+ obras</h4><div style="font-size:12px;color:#5a5248;margin-top:6px">cards clicáveis com chips de aplicadores por equipe</div></div>
   </div>
 
   <h3>Cores de equipe (chips)</h3>
@@ -729,8 +729,8 @@
 <section id="planejamento">
   <h2>Aba PLANEJAMENTO — backend separado em planejamento.monofloor.cloud</h2>
 
-  <div class="anom" style="border-color:#7be8a8;background:#0f1a14;color:#cfe">
-    <b style="color:#7be8a8">VEREDITO:</b> a rota <code>/app/planejamento</code> em cliente.monofloor.cloud retorna 404 (página não implementada). O planejamento real vive em <code>planejamento.monofloor.cloud</code> — SPA Vite/React standalone com banco e schema próprios. <b>Dois backends, dois bancos de equipes incompatíveis convivem.</b>
+  <div class="anom" style="border-color:#3d8a5a;background:#e8f2ec;color:#2a5a3a">
+    <b style="color:#3d8a5a">VEREDITO:</b> a rota <code>/app/planejamento</code> em cliente.monofloor.cloud retorna 404 (página não implementada). O planejamento real vive em <code>planejamento.monofloor.cloud</code> — SPA Vite/React standalone com banco e schema próprios. <b>Dois backends, dois bancos de equipes incompatíveis convivem.</b>
   </div>
 
   <h3>Arquitetura — dois backends, dois schemas</h3>
@@ -769,7 +769,7 @@
   </div>
 
   <h3>Pipeline COMBINADO (21+ etapas típicas)</h3>
-  <p style="font-size:12px;color:#aaa;line-height:1.7">
+  <p style="font-size:12px;color:#7a7068;line-height:1.7">
     Proteção/Fitamento → Limpeza → Primer → LILIT 1ª demão → LILIT 2ª demão → Lixamento girafa → Leona demão final → Stelion → Cura Stelion → Primer Texturizado → Lixamento fino → Verificação Calafetes
   </p>
 
@@ -786,7 +786,7 @@
   <h3>Lógica de cálculo</h3>
   <div class="card" style="margin-bottom:8px">
     <h4>Fórmula observada</h4>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#c4a77d;margin-top:6px">dataFim_obra = dataInicio + diasTotal(úteis), considerando trabalhaSabado/Domingo</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b8a080;margin-top:6px">dataFim_obra = dataInicio + diasTotal(úteis), considerando trabalhaSabado/Domingo</div>
     <div class="lbl" style="margin-top:8px">diasTotal ≠ diasInstalacao + diasCura (campos legados, &lt;17% preenchidos). Verdade vive em etapas[] — cada etapa duração=1d, sequencial sem folga (dataInicio[N] = dataFim[N-1] + 1).</div>
   </div>
 
@@ -806,8 +806,8 @@
   <div class="anom"><b>2 endpoints /api/equipes incompatíveis</b> convivem entre os dois backends</div>
 
   <h3>Gap para a diretoria — capacidade produtiva</h3>
-  <div class="anom" style="border-color:#e8c87b;background:#1a160e;color:#fed">
-    <b style="color:#e8c87b">A plataforma NÃO tem nenhuma superfície que responda "qual o volume real da operação?":</b>
+  <div class="anom" style="border-color:#b89a4a;background:#1a160e;color:#fed">
+    <b style="color:#b89a4a">A plataforma NÃO tem nenhuma superfície que responda "qual o volume real da operação?":</b>
     <ul style="margin:8px 0 0 20px;font-size:12px">
       <li>Sem throughput histórico (obras/m² por mês concluídos)</li>
       <li>Sem backlog dimensionado (m² em carteira vs capacidade)</li>
@@ -877,7 +877,7 @@
 
 <section id="allfields">
   <h2>acessoDetalhes.allFields — Checklist Pipefy bruto <span class="count">~60 chaves</span></h2>
-  <p style="font-size:12px;color:#888;margin-bottom:12px">Mina de ouro nunca explorada. Valores são YES/NO/enum em português. Várias chaves com typos preservados do Pipefy.</p>
+  <p style="font-size:12px;color:#8a7e72;margin-bottom:12px">Mina de ouro nunca explorada. Valores são YES/NO/enum em português. Várias chaves com typos preservados do Pipefy.</p>
 
   <details open>
     <summary><b>Cores & Material</b> (8)</summary>
@@ -1066,16 +1066,16 @@
   <div class="atena-shield-wrap">
     <div class="atena-shield-glow"></div>
     <svg class="atena-shield-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="60" cy="60" r="56" fill="#0d0d0d" stroke="#c4a77d" stroke-width="3"/>
-      <circle cx="60" cy="60" r="48" fill="none" stroke="#c4a77d" stroke-width="1.5" stroke-dasharray="8 4 2 4" opacity="0.5"/>
-      <circle cx="60" cy="60" r="40" fill="none" stroke="#c4a77d" stroke-width="0.8" opacity="0.25"/>
-      <g stroke="#c4a77d" stroke-width="1" fill="none" opacity="0.4">
+      <circle cx="60" cy="60" r="56" fill="#ffffff" stroke="#b8a080" stroke-width="3"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#b8a080" stroke-width="1.5" stroke-dasharray="8 4 2 4" opacity="0.5"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="#b8a080" stroke-width="0.8" opacity="0.25"/>
+      <g stroke="#b8a080" stroke-width="1" fill="none" opacity="0.4">
         <path d="M60 12 L60 18 M60 102 L60 108"/>
         <path d="M12 60 L18 60 M102 60 L108 60"/>
         <path d="M25 25 L30 30 M90 90 L95 95"/>
         <path d="M95 25 L90 30 M30 90 L25 95"/>
       </g>
-      <g stroke="#c4a77d" stroke-width="1.2" fill="none" opacity="0.6">
+      <g stroke="#b8a080" stroke-width="1.2" fill="none" opacity="0.6">
         <path d="M42 15 L42 20 L48 20"/>
         <path d="M78 15 L78 20 L72 20"/>
         <path d="M105 42 L100 42 L100 48"/>
@@ -1085,8 +1085,8 @@
         <path d="M15 78 L20 78 L20 72"/>
         <path d="M15 42 L20 42 L20 48"/>
       </g>
-      <text x="60" y="68" text-anchor="middle" font-family="serif" font-size="32" fill="#c4a77d" opacity="0.8">&#937;</text>
-      <circle cx="60" cy="78" r="2" fill="#c4a77d" opacity="0.5"/>
+      <text x="60" y="68" text-anchor="middle" font-family="serif" font-size="32" fill="#b8a080" opacity="0.8">&#937;</text>
+      <circle cx="60" cy="78" r="2" fill="#b8a080" opacity="0.5"/>
     </svg>
   </div>
   <div class="atena-portal-title">Atena</div>

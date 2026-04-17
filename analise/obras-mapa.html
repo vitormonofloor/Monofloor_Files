@@ -6,26 +6,26 @@
 <title>Mapa de Obras Ativas — Monofloor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a;
-    --card: #0d0d0d;
-    --card-2: #111;
-    --border: #1f1f1f;
-    --border-2: #2a2a2a;
-    --text: #e8e8e8;
-    --muted: #888;
-    --muted-2: #555;
-    --accent: #c4a77d;
-    --green: #7be8a8;
-    --amber: #e8c87b;
-    --red: #e87b7b;
+    --bg: #f0ebe3;
+    --card: #ffffff;
+    --card-2: #faf7f2;
+    --border: #e0d8cc;
+    --border-2: #c4b5a0;
+    --text: #3a3530;
+    --muted: #8a7e72;
+    --muted-2: #b8b0a4;
+    --accent: #b8a080;
+    --green: #3d8a5a;
+    --amber: #b89a4a;
+    --red: #c45a5a;
     --scarlet: #ff5252;
-    --blue: #7ba8e8;
+    --blue: #4a7ab8;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
@@ -40,7 +40,7 @@
   .top h1 span.acc { color: var(--accent); }
   .top .stamp { font-size: 11px; color: var(--muted); }
   .top .back { font-size: 11px; color: var(--accent); text-decoration: none; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; display: inline-block; margin-bottom: 10px; transition: all .15s; }
-  .top .back:hover { background: #1a1a1a; border-color: var(--accent); }
+  .top .back:hover { background: #e8e0d4; border-color: var(--accent); }
   .stamp .mono { color: var(--text); }
 
   .metrics { display: flex; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
@@ -58,7 +58,7 @@
   .filters-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .filters input, .filters select {
     background: var(--bg); border: 1px solid var(--border-2); color: var(--text);
-    padding: 6px 10px; font-family: 'Inter', sans-serif; font-size: 12px; border-radius: 3px;
+    padding: 6px 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; border-radius: 3px;
     outline: none; transition: border-color .15s;
   }
   .filters input:focus, .filters select:focus { border-color: var(--accent); }
@@ -68,12 +68,12 @@
   .toggles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
   .toggle {
     background: transparent; border: 1px solid var(--border-2); color: var(--muted);
-    padding: 4px 10px; font-size: 11px; font-family: 'Inter'; cursor: pointer;
+    padding: 4px 10px; font-size: 11px; font-family: 'Plus Jakarta Sans'; cursor: pointer;
     border-radius: 3px; letter-spacing: 0.04em; text-transform: uppercase;
     transition: all .15s;
   }
   .toggle:hover { color: var(--text); border-color: var(--border-2); }
-  .toggle.active { background: var(--accent); color: #0a0a0a; border-color: var(--accent); }
+  .toggle.active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
   .clear-btn {
     background: transparent; border: 1px solid var(--border-2); color: var(--muted);
     padding: 4px 10px; font-size: 11px; cursor: pointer; border-radius: 3px;
@@ -102,8 +102,8 @@
     border-bottom: 1px solid var(--border); cursor: pointer;
     transition: background .12s;
   }
-  table.obras tbody tr.row:hover { background: #131313; }
-  table.obras tbody tr.row.expanded { background: #131313; }
+  table.obras tbody tr.row:hover { background: #f5f0e8; }
+  table.obras tbody tr.row.expanded { background: #f5f0e8; }
   table.obras tbody td { padding: 10px 12px; vertical-align: top; font-size: 12px; }
   td.cli { min-width: 220px; }
   td.cli .nome { color: var(--text); font-weight: 500; }
@@ -113,7 +113,7 @@
   .badge {
     display: inline-block; padding: 2px 7px; font-size: 10px;
     border-radius: 2px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
-    font-family: 'Inter', sans-serif; white-space: nowrap;
+    font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap;
   }
   .badge-status-em_execucao { background: rgba(123,232,168,0.12); color: var(--green); border: 1px solid rgba(123,232,168,0.3); }
   .badge-status-aguardando_clima, .badge-status-aguardando_execucao { background: rgba(232,200,123,0.12); color: var(--amber); border: 1px solid rgba(232,200,123,0.3); }
@@ -129,7 +129,7 @@
   .chip {
     display: inline-block; padding: 1px 6px; font-size: 9px;
     border-radius: 2px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;
-    font-family: 'Inter', sans-serif; margin: 1px 3px 1px 0;
+    font-family: 'Plus Jakarta Sans', sans-serif; margin: 1px 3px 1px 0;
   }
   .chip-red    { background: rgba(232,123,123,0.14); color: var(--red); border: 1px solid rgba(232,123,123,0.35); }
   .chip-amber  { background: rgba(232,200,123,0.12); color: var(--amber); border: 1px solid rgba(232,200,123,0.3); }
@@ -142,7 +142,7 @@
   td.fase { color: var(--muted); font-size: 11px; max-width: 200px; }
 
   tr.detail-row td {
-    background: #0a0a0a; padding: 16px 24px 20px 24px;
+    background: #f0ebe3; padding: 16px 24px 20px 24px;
     border-bottom: 1px solid var(--border-2);
   }
   .detail-grid {
@@ -189,36 +189,36 @@
   }
 
   /* ============== MONO-NAV ============== */
-  .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#0a0a0a 0%,rgba(10,10,10,0.95) 100%);border-bottom:1px solid #1f1f1f;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#f0ebe3,rgba(240,235,227,0.97));border-bottom:1px solid #e0d8cc;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
   .mono-nav-inner{display:flex;gap:6px;max-width:1600px;margin:0 auto;padding:0 24px;flex-wrap:wrap;justify-content:center}
-  .mono-nav-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;text-decoration:none;color:#888;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;border:1px solid transparent;transition:all .2s;position:relative;overflow:hidden}
-  .mono-nav-btn::before{content:'';position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .3s;box-shadow:0 0 12px 2px rgba(196,167,125,0.15) inset,0 0 20px 4px rgba(196,167,125,0.08)}
-  .mono-nav-btn:hover{color:#e8e8e8;border-color:#2a2015;background:rgba(196,167,125,0.05);text-decoration:none}
+  .mono-nav-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;text-decoration:none;color:#8a7e72;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;border:1px solid transparent;transition:all .2s;position:relative;overflow:hidden}
+  .mono-nav-btn::before{content:'';position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .3s;box-shadow:0 0 12px 2px rgba(184,160,128,0.15) inset,0 0 20px 4px rgba(184,160,128,0.08)}
+  .mono-nav-btn:hover{color:#3a3530;border-color:#2a2015;background:rgba(184,160,128,0.05);text-decoration:none}
   .mono-nav-btn:hover::before{opacity:1}
-  .mono-nav-btn.active{color:#c4a77d;border-color:#c4a77d;background:rgba(196,167,125,0.08);font-weight:600}
-  .mono-nav-btn.active::before{opacity:1;box-shadow:0 0 16px 3px rgba(196,167,125,0.2) inset,0 0 24px 6px rgba(196,167,125,0.1)}
+  .mono-nav-btn.active{color:#b8a080;border-color:#b8a080;background:rgba(184,160,128,0.08);font-weight:600}
+  .mono-nav-btn.active::before{opacity:1;box-shadow:0 0 16px 3px rgba(184,160,128,0.2) inset,0 0 24px 6px rgba(184,160,128,0.1)}
   .mono-nav-btn.active .mono-nav-icon{animation:navGlow 2s ease-in-out infinite}
-  @keyframes navGlow{0%,100%{text-shadow:0 0 6px rgba(196,167,125,0.4)}50%{text-shadow:0 0 14px rgba(196,167,125,0.7),0 0 28px rgba(196,167,125,0.3)}}
-  .mono-nav-icon{font-size:14px;line-height:1;color:#c4a77d;opacity:0.6;transition:opacity .2s}
+  @keyframes navGlow{0%,100%{text-shadow:0 0 6px rgba(184,160,128,0.4)}50%{text-shadow:0 0 14px rgba(184,160,128,0.7),0 0 28px rgba(184,160,128,0.3)}}
+  .mono-nav-icon{font-size:14px;line-height:1;color:#b8a080;opacity:0.6;transition:opacity .2s}
   .mono-nav-btn:hover .mono-nav-icon{opacity:1}
   .mono-nav-btn.active .mono-nav-icon{opacity:1}
   .mono-nav-label{white-space:nowrap}
   @media(max-width:600px){.mono-nav-label{display:none}.mono-nav-icon{font-size:18px}.mono-nav-btn{padding:10px 12px}}
 
   /* ATENA PORTAL */
-  .atena-portal{position:fixed;inset:0;background:#0a0a0a;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
+  .atena-portal{position:fixed;inset:0;background:#f0ebe3;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
   .atena-portal.active{opacity:1;pointer-events:auto}
-  .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(196,167,125,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
+  .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(184,160,128,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
   @keyframes atenaGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0.6}}
   .atena-shield-wrap{position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center}
   .atena-shield-svg{width:130px;height:130px;opacity:0;animation:shieldAppear 0.5s ease-out 0.2s forwards, shieldRotate 2.5s linear 0.3s infinite}
   @keyframes shieldAppear{0%{opacity:0;transform:scale(0.3)}100%{opacity:1;transform:scale(1)}}
   @keyframes shieldRotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-  .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(196,167,125,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
+  .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(184,160,128,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
   @keyframes shieldGlowPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:0.7;transform:scale(1.1)}}
-  .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#f5d890;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(196,167,125,0.5)}
+  .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#a89060;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(184,160,128,0.5)}
   @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
-  .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
+  .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#6b6156;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
   @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -593,16 +593,16 @@ render();
   <div class="atena-shield-wrap">
     <div class="atena-shield-glow"></div>
     <svg class="atena-shield-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="60" cy="60" r="56" fill="#0d0d0d" stroke="#c4a77d" stroke-width="3"/>
-      <circle cx="60" cy="60" r="48" fill="none" stroke="#c4a77d" stroke-width="1.5" stroke-dasharray="8 4 2 4" opacity="0.5"/>
-      <circle cx="60" cy="60" r="40" fill="none" stroke="#c4a77d" stroke-width="0.8" opacity="0.25"/>
-      <g stroke="#c4a77d" stroke-width="1" fill="none" opacity="0.4">
+      <circle cx="60" cy="60" r="56" fill="#ffffff" stroke="#b8a080" stroke-width="3"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#b8a080" stroke-width="1.5" stroke-dasharray="8 4 2 4" opacity="0.5"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="#b8a080" stroke-width="0.8" opacity="0.25"/>
+      <g stroke="#b8a080" stroke-width="1" fill="none" opacity="0.4">
         <path d="M60 12 L60 18 M60 102 L60 108"/>
         <path d="M12 60 L18 60 M102 60 L108 60"/>
         <path d="M25 25 L30 30 M90 90 L95 95"/>
         <path d="M95 25 L90 30 M30 90 L25 95"/>
       </g>
-      <g stroke="#c4a77d" stroke-width="1.2" fill="none" opacity="0.6">
+      <g stroke="#b8a080" stroke-width="1.2" fill="none" opacity="0.6">
         <path d="M42 15 L42 20 L48 20"/>
         <path d="M78 15 L78 20 L72 20"/>
         <path d="M105 42 L100 42 L100 48"/>
@@ -612,8 +612,8 @@ render();
         <path d="M15 78 L20 78 L20 72"/>
         <path d="M15 42 L20 42 L20 48"/>
       </g>
-      <text x="60" y="68" text-anchor="middle" font-family="serif" font-size="32" fill="#c4a77d" opacity="0.8">&#937;</text>
-      <circle cx="60" cy="78" r="2" fill="#c4a77d" opacity="0.5"/>
+      <text x="60" y="68" text-anchor="middle" font-family="serif" font-size="32" fill="#b8a080" opacity="0.8">&#937;</text>
+      <circle cx="60" cy="78" r="2" fill="#b8a080" opacity="0.5"/>
     </svg>
   </div>
   <div class="atena-portal-title">Atena</div>
