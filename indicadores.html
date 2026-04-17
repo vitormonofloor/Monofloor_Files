@@ -167,71 +167,9 @@ tr:hover{background:#1a1a1a}
 .tab-content{display:none}
 .tab-content.active{display:block}
 .section-h{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 10px;font-weight:600}
-
-/* ============== MONO-NAV ============== */
-.mono-nav{position:sticky;top:0;z-index:500;background:linear-gradient(180deg,#0a0a0a 0%,rgba(10,10,10,0.95) 100%);border-bottom:1px solid #1f1f1f;padding:8px 0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.mono-nav-inner{display:flex;gap:6px;max-width:1600px;margin:0 auto;padding:0 24px;flex-wrap:wrap;justify-content:center}
-.mono-nav-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:6px;text-decoration:none;color:#888;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;border:1px solid transparent;transition:all .2s;position:relative;overflow:hidden}
-.mono-nav-btn::before{content:'';position:absolute;inset:0;border-radius:6px;opacity:0;transition:opacity .3s;box-shadow:0 0 12px 2px rgba(196,167,125,0.15) inset,0 0 20px 4px rgba(196,167,125,0.08)}
-.mono-nav-btn:hover{color:#e8e8e8;border-color:#2a2015;background:rgba(196,167,125,0.05);text-decoration:none}
-.mono-nav-btn:hover::before{opacity:1}
-.mono-nav-btn.active{color:#c4a77d;border-color:#c4a77d;background:rgba(196,167,125,0.08);font-weight:600}
-.mono-nav-btn.active::before{opacity:1;box-shadow:0 0 16px 3px rgba(196,167,125,0.2) inset,0 0 24px 6px rgba(196,167,125,0.1)}
-.mono-nav-btn.active .mono-nav-icon{animation:navGlow 2s ease-in-out infinite}
-@keyframes navGlow{0%,100%{text-shadow:0 0 6px rgba(196,167,125,0.4)}50%{text-shadow:0 0 14px rgba(196,167,125,0.7),0 0 28px rgba(196,167,125,0.3)}}
-.mono-nav-icon{font-size:14px;line-height:1;color:#c4a77d;opacity:0.6;transition:opacity .2s}
-.mono-nav-btn:hover .mono-nav-icon{opacity:1}
-.mono-nav-btn.active .mono-nav-icon{opacity:1}
-.mono-nav-label{white-space:nowrap}
-@media(max-width:600px){.mono-nav-label{display:none}.mono-nav-icon{font-size:18px}.mono-nav-btn{padding:10px 12px}}
-
-/* ATENA PORTAL */
-.atena-portal{position:fixed;inset:0;background:#0a0a0a;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
-.atena-portal.active{opacity:1;pointer-events:auto}
-.atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(196,167,125,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
-@keyframes atenaGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0.6}}
-.atena-shield-wrap{position:relative;width:140px;height:160px;display:flex;align-items:center;justify-content:center}
-.atena-shield-svg{width:120px;height:140px;opacity:0;animation:shieldAppear 0.6s ease-out 0.2s forwards, shieldSpin 1.8s ease-in-out 0.3s forwards}
-@keyframes shieldAppear{0%{opacity:0;transform:scale(0.5)}100%{opacity:1;transform:scale(1)}}
-@keyframes shieldSpin{0%{transform:perspective(600px) rotateY(0deg)}50%{transform:perspective(600px) rotateY(180deg)}100%{transform:perspective(600px) rotateY(360deg)}}
-.atena-shield-glow{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle, rgba(196,167,125,0.3) 0%, transparent 70%);opacity:0;animation:shieldGlowPulse 1.8s ease-in-out 0.3s forwards}
-@keyframes shieldGlowPulse{0%{opacity:0;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(1)}}
-.atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#f5d890;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(196,167,125,0.5)}
-@keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
-.atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
-@keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-
-<nav class="mono-nav" id="mono-nav">
-  <div class="mono-nav-inner">
-    <a href="analise/dashboard.html" class="mono-nav-btn" data-page="dashboard">
-      <span class="mono-nav-icon">&#9671;</span>
-      <span class="mono-nav-label">Dashboard</span>
-    </a>
-    <a href="analise/atena.html" class="mono-nav-btn" data-page="atena">
-      <span class="mono-nav-icon">&#9672;</span>
-      <span class="mono-nav-label">ATENA</span>
-    </a>
-    <a href="analise/obras-mapa.html" class="mono-nav-btn" data-page="mapa">
-      <span class="mono-nav-icon">&#9638;</span>
-      <span class="mono-nav-label">Mapa de Obras</span>
-    </a>
-    <a href="indicadores.html" class="mono-nav-btn active" data-page="indicadores">
-      <span class="mono-nav-icon">&#9670;</span>
-      <span class="mono-nav-label">Indicadores</span>
-    </a>
-    <a href="analise/modelagem.html" class="mono-nav-btn" data-page="modelagem">
-      <span class="mono-nav-icon">&equiv;</span>
-      <span class="mono-nav-label">Modelagem</span>
-    </a>
-    <a href="analise/plano.html" class="mono-nav-btn" data-page="plano">
-      <span class="mono-nav-icon">&#9776;</span>
-      <span class="mono-nav-label">Plano</span>
-    </a>
-  </div>
-</nav>
 
 <!-- HERMES PORTAL — animação de asa dourada -->
 <div class="hermes-portal" id="hermesPortal">
@@ -262,37 +200,37 @@ tr:hover{background:#1a1a1a}
 </div>
 
 <h1>Painel de Indicadores Operacionais</h1>
-<div class="sub">Atualizado: 16/04/2026, 18:06:09 · Extração: 85.5s · 159 projetos ativos de 500 · <span style="color:#c4a77d">clique nos cards para detalhes</span></div>
+<div class="sub">Atualizado: 17/04/2026, 00:06:14 · Extração: 89.3s · 164 projetos ativos de 500 · <span style="color:#c4a77d">clique nos cards para detalhes</span></div>
 
-<div class="alert-box" data-modal="criticas"><h4>⚠ 26 ocorrências CRÍTICAS sem resolução</h4><p>286 de 286 ocorrências abertas (100%). Taxa de resolução: 0%. Clique para ver detalhes.</p></div>
+<div class="alert-box" data-modal="criticas"><h4>⚠ 26 ocorrências CRÍTICAS sem resolução</h4><p>300 de 300 ocorrências abertas (100%). Taxa de resolução: 0%. Clique para ver detalhes.</p></div>
 
 <div class="section">
 <div class="grid g4">
-  <div class="card kpi gold clickable" data-modal="msgs"><div class="val">7.585</div><div class="label">Mensagens 30d</div></div>
-  <div class="card kpi blue clickable" data-modal="ativos"><div class="val">133</div><div class="label">Projetos com msgs</div></div>
-  <div class="card kpi amber clickable" data-modal="silencio"><div class="val">16.4%</div><div class="label">Taxa silêncio</div></div>
-  <div class="card kpi red clickable" data-modal="ocorrencias"><div class="val">286</div><div class="label">Ocorrências abertas</div></div>
-  <div class="card kpi red clickable" data-modal="atraso"><div class="val">32.1%</div><div class="label">Taxa atraso</div></div>
-  <div class="card kpi blue"><div class="val">4716</div><div class="label">Telegram</div></div>
-  <div class="card kpi green"><div class="val">2869</div><div class="label">WhatsApp</div></div>
+  <div class="card kpi gold clickable" data-modal="msgs"><div class="val">7.839</div><div class="label">Mensagens 30d</div></div>
+  <div class="card kpi blue clickable" data-modal="ativos"><div class="val">135</div><div class="label">Projetos com msgs</div></div>
+  <div class="card kpi amber clickable" data-modal="silencio"><div class="val">17.7%</div><div class="label">Taxa silêncio</div></div>
+  <div class="card kpi red clickable" data-modal="ocorrencias"><div class="val">300</div><div class="label">Ocorrências abertas</div></div>
+  <div class="card kpi red clickable" data-modal="atraso"><div class="val">31.7%</div><div class="label">Taxa atraso</div></div>
+  <div class="card kpi blue"><div class="val">4959</div><div class="label">Telegram</div></div>
+  <div class="card kpi green"><div class="val">2880</div><div class="label">WhatsApp</div></div>
   <div class="card kpi red clickable" data-modal="criticas"><div class="val">26</div><div class="label">Críticas</div></div>
 </div>
 </div>
 
 <div class="section">
 <div class="section-title">Atividade Diária (30d)</div>
-<div class="card"><div class="act-wrap"><div class="act-col"><div class="act-bar" style="height:0%"><span class="act-val">1</span></div><div class="act-label">03-17</div></div><div class="act-col"><div class="act-bar" style="height:8%"><span class="act-val">86</span></div><div class="act-label">03-18</div></div><div class="act-col"><div class="act-bar" style="height:4%"><span class="act-val">45</span></div><div class="act-label">03-19</div></div><div class="act-col"><div class="act-bar" style="height:6%"><span class="act-val">62</span></div><div class="act-label">03-20</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">11</span></div><div class="act-label">03-21</div></div><div class="act-col"><div class="act-bar" style="height:8%"><span class="act-val">86</span></div><div class="act-label">03-23</div></div><div class="act-col"><div class="act-bar" style="height:6%"><span class="act-val">67</span></div><div class="act-label">03-24</div></div><div class="act-col"><div class="act-bar" style="height:14%"><span class="act-val">146</span></div><div class="act-label">03-25</div></div><div class="act-col"><div class="act-bar" style="height:19%"><span class="act-val">203</span></div><div class="act-label">03-26</div></div><div class="act-col"><div class="act-bar" style="height:7%"><span class="act-val">71</span></div><div class="act-label">03-27</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">11</span></div><div class="act-label">03-28</div></div><div class="act-col weekend"><div class="act-bar" style="height:0%"><span class="act-val">1</span></div><div class="act-label">03-29</div></div><div class="act-col"><div class="act-bar" style="height:16%"><span class="act-val">174</span></div><div class="act-label">03-30</div></div><div class="act-col"><div class="act-bar" style="height:20%"><span class="act-val">216</span></div><div class="act-label">03-31</div></div><div class="act-col"><div class="act-bar" style="height:25%"><span class="act-val">268</span></div><div class="act-label">04-01</div></div><div class="act-col"><div class="act-bar" style="height:24%"><span class="act-val">254</span></div><div class="act-label">04-02</div></div><div class="act-col"><div class="act-bar" style="height:2%"><span class="act-val">17</span></div><div class="act-label">04-03</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">9</span></div><div class="act-label">04-04</div></div><div class="act-col"><div class="act-bar" style="height:23%"><span class="act-val">252</span></div><div class="act-label">04-06</div></div><div class="act-col"><div class="act-bar" style="height:31%"><span class="act-val">332</span></div><div class="act-label">04-07</div></div><div class="act-col"><div class="act-bar" style="height:42%"><span class="act-val">455</span></div><div class="act-label">04-08</div></div><div class="act-col"><div class="act-bar" style="height:44%"><span class="act-val">475</span></div><div class="act-label">04-09</div></div><div class="act-col"><div class="act-bar" style="height:48%"><span class="act-val">519</span></div><div class="act-label">04-10</div></div><div class="act-col weekend"><div class="act-bar" style="height:8%"><span class="act-val">87</span></div><div class="act-label">04-11</div></div><div class="act-col weekend"><div class="act-bar" style="height:2%"><span class="act-val">23</span></div><div class="act-label">04-12</div></div><div class="act-col"><div class="act-bar" style="height:89%"><span class="act-val">956</span></div><div class="act-label">04-13</div></div><div class="act-col"><div class="act-bar" style="height:79%"><span class="act-val">846</span></div><div class="act-label">04-14</div></div><div class="act-col"><div class="act-bar" style="height:100%"><span class="act-val">1076</span></div><div class="act-label">04-15</div></div><div class="act-col"><div class="act-bar" style="height:78%"><span class="act-val">836</span></div><div class="act-label">04-16</div></div></div></div>
+<div class="card"><div class="act-wrap"><div class="act-col"><div class="act-bar" style="height:8%"><span class="act-val">85</span></div><div class="act-label">03-18</div></div><div class="act-col"><div class="act-bar" style="height:4%"><span class="act-val">45</span></div><div class="act-label">03-19</div></div><div class="act-col"><div class="act-bar" style="height:6%"><span class="act-val">62</span></div><div class="act-label">03-20</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">11</span></div><div class="act-label">03-21</div></div><div class="act-col"><div class="act-bar" style="height:7%"><span class="act-val">78</span></div><div class="act-label">03-23</div></div><div class="act-col"><div class="act-bar" style="height:6%"><span class="act-val">67</span></div><div class="act-label">03-24</div></div><div class="act-col"><div class="act-bar" style="height:14%"><span class="act-val">146</span></div><div class="act-label">03-25</div></div><div class="act-col"><div class="act-bar" style="height:19%"><span class="act-val">201</span></div><div class="act-label">03-26</div></div><div class="act-col"><div class="act-bar" style="height:7%"><span class="act-val">71</span></div><div class="act-label">03-27</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">11</span></div><div class="act-label">03-28</div></div><div class="act-col weekend"><div class="act-bar" style="height:0%"><span class="act-val">1</span></div><div class="act-label">03-29</div></div><div class="act-col"><div class="act-bar" style="height:19%"><span class="act-val">203</span></div><div class="act-label">03-30</div></div><div class="act-col"><div class="act-bar" style="height:21%"><span class="act-val">230</span></div><div class="act-label">03-31</div></div><div class="act-col"><div class="act-bar" style="height:28%"><span class="act-val">299</span></div><div class="act-label">04-01</div></div><div class="act-col"><div class="act-bar" style="height:25%"><span class="act-val">274</span></div><div class="act-label">04-02</div></div><div class="act-col"><div class="act-bar" style="height:2%"><span class="act-val">17</span></div><div class="act-label">04-03</div></div><div class="act-col weekend"><div class="act-bar" style="height:1%"><span class="act-val">10</span></div><div class="act-label">04-04</div></div><div class="act-col"><div class="act-bar" style="height:24%"><span class="act-val">255</span></div><div class="act-label">04-06</div></div><div class="act-col"><div class="act-bar" style="height:32%"><span class="act-val">347</span></div><div class="act-label">04-07</div></div><div class="act-col"><div class="act-bar" style="height:44%"><span class="act-val">470</span></div><div class="act-label">04-08</div></div><div class="act-col"><div class="act-bar" style="height:46%"><span class="act-val">498</span></div><div class="act-label">04-09</div></div><div class="act-col"><div class="act-bar" style="height:50%"><span class="act-val">541</span></div><div class="act-label">04-10</div></div><div class="act-col weekend"><div class="act-bar" style="height:8%"><span class="act-val">87</span></div><div class="act-label">04-11</div></div><div class="act-col weekend"><div class="act-bar" style="height:2%"><span class="act-val">23</span></div><div class="act-label">04-12</div></div><div class="act-col"><div class="act-bar" style="height:88%"><span class="act-val">951</span></div><div class="act-label">04-13</div></div><div class="act-col"><div class="act-bar" style="height:79%"><span class="act-val">846</span></div><div class="act-label">04-14</div></div><div class="act-col"><div class="act-bar" style="height:100%"><span class="act-val">1076</span></div><div class="act-label">04-15</div></div><div class="act-col"><div class="act-bar" style="height:86%"><span class="act-val">929</span></div><div class="act-label">04-16</div></div><div class="act-col"><div class="act-bar" style="height:0%"><span class="act-val">5</span></div><div class="act-label">04-17</div></div></div></div>
 </div>
 
 <div class="section">
 <div class="grid g2">
   <div class="card">
     <h3>Por Consultor</h3>
-    <table><tr><th>Consultor</th><th>Obras</th><th>Msgs</th><th>Ocs</th><th>Ocs/obra</th><th>Atraso</th></tr><tr><td>Wesley Matheus</td><td>71</td><td>3602</td><td>169</td><td>2.4</td><td>38%</td></tr><tr><td>LUANA PATRICIA</td><td>61</td><td>3108</td><td>93</td><td>1.5</td><td>21%</td></tr><tr><td>Pedro Alexandre</td><td>5</td><td>236</td><td>13</td><td>2.6</td><td>20%</td></tr><tr><td>Pedro Marçal</td><td>2</td><td>56</td><td>0</td><td>0.0</td><td>0%</td></tr><tr><td>Juliana Santos</td><td>2</td><td>344</td><td>9</td><td>4.5</td><td>100%</td></tr><tr><td>Renata Garcia</td><td>1</td><td>0</td><td>0</td><td>0.0</td><td>0%</td></tr><tr><td>Thaísa de</td><td>1</td><td>146</td><td>0</td><td>0.0</td><td>100%</td></tr></table>
+    <table><tr><th>Consultor</th><th>Obras</th><th>Msgs</th><th>Ocs</th><th>Ocs/obra</th><th>Atraso</th></tr><tr><td>Wesley Matheus</td><td>71</td><td>3609</td><td>173</td><td>2.4</td><td>38%</td></tr><tr><td>LUANA PATRICIA</td><td>64</td><td>3342</td><td>100</td><td>1.6</td><td>20%</td></tr><tr><td>Pedro Alexandre</td><td>5</td><td>249</td><td>14</td><td>2.8</td><td>40%</td></tr><tr><td>Pedro Marçal</td><td>2</td><td>56</td><td>0</td><td>0.0</td><td>0%</td></tr><tr><td>Juliana Santos</td><td>2</td><td>344</td><td>9</td><td>4.5</td><td>100%</td></tr><tr><td>Renata Garcia</td><td>1</td><td>0</td><td>0</td><td>0.0</td><td>0%</td></tr><tr><td>Thaísa de</td><td>1</td><td>146</td><td>2</td><td>2.0</td><td>100%</td></tr></table>
   </div>
   <div class="card">
     <h3>Por Região</h3>
-    <table><tr><th>Região</th><th>Obras</th><th>Msgs</th><th>Msgs/obra</th><th>Ocs</th></tr><tr><td>SP</td><td>94</td><td>5028</td><td>53</td><td>189</td></tr><tr><td>OUT</td><td>41</td><td>1466</td><td>36</td><td>67</td></tr><tr><td>RJ</td><td>16</td><td>692</td><td>43</td><td>16</td></tr><tr><td>CWB</td><td>8</td><td>399</td><td>50</td><td>14</td></tr></table>
+    <table><tr><th>Região</th><th>Obras</th><th>Msgs</th><th>Msgs/obra</th><th>Ocs</th></tr><tr><td>SP</td><td>96</td><td>5045</td><td>53</td><td>198</td></tr><tr><td>OUT</td><td>42</td><td>1665</td><td>40</td><td>69</td></tr><tr><td>RJ</td><td>18</td><td>717</td><td>40</td><td>18</td></tr><tr><td>CWB</td><td>8</td><td>412</td><td>52</td><td>15</td></tr></table>
   </div>
 </div>
 </div>
@@ -300,7 +238,7 @@ tr:hover{background:#1a1a1a}
 <div class="section">
 <div class="section-title">Projetos Problemáticos (alta msg + alta ocorrência)</div>
 <div class="card">
-  <table><tr><th>Projeto</th><th>Msgs</th><th>Ocs</th><th>Autores</th><th>Consultor</th><th>Fase</th></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td>200</td><td class="oc-cell">33</td><td>9</td><td>Wesley</td><td><span class="badge em_execucao">OBRA EM EXECUÇÃO</span></td></tr><tr><td>MANOELA LATINI GAVASSI FRANCIS</td><td>200</td><td class="oc-cell">17</td><td>11</td><td>Wesley</td><td><span class="badge em_execucao">OBRA EM EXECUÇÃO</span></td></tr><tr><td>FLÁVIO FAVA DITT</td><td>200</td><td class="oc-cell">13</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">LOGÍSTICA - MATERIAL</span></td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td>200</td><td class="oc-cell">10</td><td>8</td><td>LUANA</td><td><span class="badge em_execucao">CLIENTE FINALIZADO</span></td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td>160</td><td class="oc-cell">10</td><td>12</td><td>Wesley</td><td><span class="badge em_execucao">AGEND. VT - ENTRADA</span></td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td>200</td><td class="oc-cell">10</td><td>11</td><td>LUANA</td><td><span class="badge marcas_rolo_cera">OBRA PAUSADA</span></td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td>200</td><td class="oc-cell">9</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">LOGÍSTICA - MATERIAL</span></td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td>200</td><td class="oc-cell">7</td><td>10</td><td>Wesley</td><td><span class="badge em_execucao">AGUARDANDO LIBERAÇÃO</span></td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td>134</td><td class="oc-cell">7</td><td>13</td><td>LUANA</td><td><span class="badge reparo">LOGÍSTICA - EM ENTRE</span></td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E </td><td>200</td><td class="oc-cell">6</td><td>8</td><td>LUANA</td><td><span class="badge em_execucao">RESULTADO VT - ENTRA</span></td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td>200</td><td class="oc-cell">6</td><td>11</td><td>Wesley</td><td><span class="badge em_execucao">LOGÍSTICA - EM ENTRE</span></td></tr><tr><td>BENY MAJTLIS</td><td>200</td><td class="oc-cell">5</td><td>9</td><td>Wesley</td><td><span class="badge em_execucao">OBRA CONCLUÍDA</span></td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E R</td><td>200</td><td class="oc-cell">5</td><td>8</td><td>Wesley</td><td><span class="badge em_execucao">AGEND. VT - ENTRADA</span></td></tr><tr><td>ADRIANA FERNANDES PERES</td><td>200</td><td class="oc-cell">5</td><td>10</td><td>LUANA</td><td><span class="badge em_execucao">INDÚSTRIA - EM PRODU</span></td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td>123</td><td class="oc-cell">5</td><td>9</td><td>Pedro</td><td><span class="badge em_execucao">CLIENTE FINALIZADO</span></td></tr></table>
+  <table><tr><th>Projeto</th><th>Msgs</th><th>Ocs</th><th>Autores</th><th>Consultor</th><th>Fase</th></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td>200</td><td class="oc-cell">33</td><td>9</td><td>Wesley</td><td><span class="badge em_execucao">OBRA EM EXECUÇÃO</span></td></tr><tr><td>MANOELA LATINI GAVASSI FRANCIS</td><td>200</td><td class="oc-cell">17</td><td>11</td><td>Wesley</td><td><span class="badge em_execucao">OBRA EM EXECUÇÃO</span></td></tr><tr><td>FLÁVIO FAVA DITT</td><td>200</td><td class="oc-cell">14</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">LOGÍSTICA - MATERIAL</span></td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td>200</td><td class="oc-cell">10</td><td>9</td><td>LUANA</td><td><span class="badge em_execucao">LOGÍSTICA - MATERIAL</span></td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td>200</td><td class="oc-cell">10</td><td>8</td><td>LUANA</td><td><span class="badge em_execucao">CLIENTE FINALIZADO</span></td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td>160</td><td class="oc-cell">10</td><td>12</td><td>Wesley</td><td><span class="badge em_execucao">AGEND. VT - ENTRADA</span></td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td>200</td><td class="oc-cell">10</td><td>11</td><td>LUANA</td><td><span class="badge marcas_rolo_cera">OBRA PAUSADA</span></td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td>200</td><td class="oc-cell">7</td><td>10</td><td>Wesley</td><td><span class="badge em_execucao">AGUARDANDO LIBERAÇÃO</span></td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td>134</td><td class="oc-cell">7</td><td>13</td><td>LUANA</td><td><span class="badge reparo">LOGÍSTICA - EM ENTRE</span></td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E </td><td>200</td><td class="oc-cell">6</td><td>8</td><td>LUANA</td><td><span class="badge em_execucao">RESULTADO VT - ENTRA</span></td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td>200</td><td class="oc-cell">6</td><td>10</td><td>Wesley</td><td><span class="badge em_execucao">LOGÍSTICA - EM ENTRE</span></td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td>136</td><td class="oc-cell">6</td><td>9</td><td>Pedro</td><td><span class="badge em_execucao">CLIENTE FINALIZADO</span></td></tr><tr><td>BENY MAJTLIS</td><td>200</td><td class="oc-cell">5</td><td>9</td><td>Wesley</td><td><span class="badge em_execucao">OBRA CONCLUÍDA</span></td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E R</td><td>200</td><td class="oc-cell">5</td><td>8</td><td>Wesley</td><td><span class="badge em_execucao">AGEND. VT - ENTRADA</span></td></tr><tr><td>ADRIANA FERNANDES PERES</td><td>200</td><td class="oc-cell">5</td><td>10</td><td>LUANA</td><td><span class="badge em_execucao">INDÚSTRIA - EM PRODU</span></td></tr></table>
 </div>
 </div>
 
@@ -308,11 +246,11 @@ tr:hover{background:#1a1a1a}
 <div class="grid g2">
   <div class="card">
     <h3>Tipos de Ocorrência</h3>
-    <table><tr><th>Tipo</th><th>Qtd</th><th></th></tr><tr><td>outro</td><td>60</td><td><div class="bar" style="width:21%"></div></td></tr><tr><td>falha comunicacao</td><td>51</td><td><div class="bar" style="width:18%"></div></td></tr><tr><td>desvio qualidade</td><td>32</td><td><div class="bar" style="width:11%"></div></td></tr><tr><td>relatorio diario</td><td>25</td><td><div class="bar" style="width:9%"></div></td></tr><tr><td>marco operacional</td><td>21</td><td><div class="bar" style="width:7%"></div></td></tr><tr><td>atraso entrega</td><td>17</td><td><div class="bar" style="width:6%"></div></td></tr><tr><td>incidente obra</td><td>17</td><td><div class="bar" style="width:6%"></div></td></tr><tr><td>reclamacao cliente</td><td>15</td><td><div class="bar" style="width:5%"></div></td></tr><tr><td>problema logistico</td><td>11</td><td><div class="bar" style="width:4%"></div></td></tr><tr><td>atraso</td><td>9</td><td><div class="bar" style="width:3%"></div></td></tr></table>
+    <table><tr><th>Tipo</th><th>Qtd</th><th></th></tr><tr><td>outro</td><td>65</td><td><div class="bar" style="width:22%"></div></td></tr><tr><td>falha comunicacao</td><td>53</td><td><div class="bar" style="width:18%"></div></td></tr><tr><td>desvio qualidade</td><td>32</td><td><div class="bar" style="width:11%"></div></td></tr><tr><td>relatorio diario</td><td>25</td><td><div class="bar" style="width:8%"></div></td></tr><tr><td>marco operacional</td><td>21</td><td><div class="bar" style="width:7%"></div></td></tr><tr><td>atraso entrega</td><td>20</td><td><div class="bar" style="width:7%"></div></td></tr><tr><td>incidente obra</td><td>17</td><td><div class="bar" style="width:6%"></div></td></tr><tr><td>reclamacao cliente</td><td>15</td><td><div class="bar" style="width:5%"></div></td></tr><tr><td>problema logistico</td><td>13</td><td><div class="bar" style="width:4%"></div></td></tr><tr><td>atraso</td><td>9</td><td><div class="bar" style="width:3%"></div></td></tr></table>
   </div>
   <div class="card">
-    <h3>Projetos Silenciosos (26)</h3>
-    <table><tr><th>Projeto</th><th>Status</th><th>Fase</th></tr><tr><td>LG MONTES INVESTIMENTOS E PART</td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>RODOLFO FRANK MUNHOZ DA ROCHA</td><td>contrato</td><td>CONTRATO</td></tr><tr><td>RAFAEL INGRÁCIO BELTRÃO</td><td>planejamento</td><td>1º CONTATO OP.</td></tr><tr><td>GAMA EMPREENDIMENTOS E PARTICI</td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td>em_execucao</td><td>CLIENTE FINALIZADO</td></tr><tr><td>Tamara Newman Lobato Souza</td><td>reparo</td><td>OECT</td></tr><tr><td>BRENO SILVEIRO DE ANDRADE LIMA</td><td>aguardando_execucao</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td>reparo</td><td>OECT</td></tr><tr><td>LC ADMINISTRAÇÃO E PARTICIPAÇÕ</td><td>aguardando_execucao</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>PAULA DAYAN</td><td>planejamento</td><td>ENTRADA</td></tr><tr><td>LA PASTINA IMPORTAÇÃO EXPORTAÇ</td><td>em_execucao</td><td>?</td></tr><tr><td>RICARDO DIAS DA CRUZ AFFONSO F</td><td>planejamento</td><td>EM CONTRATO</td></tr><tr><td>CARLA ANTONIO </td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>BERNARDO MAGALHÃES</td><td>reparo</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MONALISA PARTICIPAÇÕES </td><td>aguardando_clima</td><td>AGUARDANDO LIBERAÇÃO</td></tr></table>
+    <h3>Projetos Silenciosos (29)</h3>
+    <table><tr><th>Projeto</th><th>Status</th><th>Fase</th></tr><tr><td>Marina Cugler Ferrari</td><td>aguardando_execucao</td><td>OECT</td></tr><tr><td>MAURICIO BATEMAN PELA</td><td>reparo</td><td>ENTRADA</td></tr><tr><td>AMANDA PAGLIARINI MACEDO </td><td>planejamento</td><td>1º CONTATO OP.</td></tr><tr><td>APARTAMENTO 92 FELIPE SIMAS E </td><td>planejamento</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>PHILIP ANDREAS KIENTZ</td><td>reparo</td><td>CLIENTE FINALIZADO</td></tr><tr><td>LG MONTES INVESTIMENTOS E PART</td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>RODOLFO FRANK MUNHOZ DA ROCHA</td><td>contrato</td><td>CONTRATO</td></tr><tr><td>RAFAEL INGRÁCIO BELTRÃO</td><td>planejamento</td><td>1º CONTATO OP.</td></tr><tr><td>GAMA EMPREENDIMENTOS E PARTICI</td><td>planejamento</td><td>AGEND. VT - AFERIÇÃO/ORIE</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td>em_execucao</td><td>CLIENTE FINALIZADO</td></tr><tr><td>Tamara Newman Lobato Souza</td><td>reparo</td><td>OECT</td></tr><tr><td>BRENO SILVEIRO DE ANDRADE LIMA</td><td>aguardando_execucao</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td>reparo</td><td>OECT</td></tr><tr><td>LC ADMINISTRAÇÃO E PARTICIPAÇÕ</td><td>aguardando_execucao</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>PAULA DAYAN</td><td>planejamento</td><td>ENTRADA</td></tr></table>
   </div>
 </div>
 </div>
@@ -326,49 +264,49 @@ tr:hover{background:#1a1a1a}
 <div class="modal-overlay" id="modal-msgs">
   <div class="modal">
     <div class="modal-header">
-      <div><div class="modal-title">Mensagens — últimos 30 dias</div><div class="modal-subtitle">7.585 mensagens detectadas</div></div>
+      <div><div class="modal-title">Mensagens — últimos 30 dias</div><div class="modal-subtitle">7.839 mensagens detectadas</div></div>
       <button class="modal-close" data-close>×</button>
     </div>
     <div class="def-box">
       <h4>Definição</h4>
       <p>Total de mensagens trocadas nos grupos de Telegram e WhatsApp de obra detectadas pela <code>KIRA</code>.</p>
       <h4 style="margin-top:12px">Critério</h4>
-      <p>Janela: <code>últimos 30 dias</code> corridos a partir de agora. Fonte: campo <code>timestamp</code> de cada mensagem. Inclui Telegram (4716) e WhatsApp (2869).</p>
+      <p>Janela: <code>últimos 30 dias</code> corridos a partir de agora. Fonte: campo <code>timestamp</code> de cada mensagem. Inclui Telegram (4959) e WhatsApp (2880).</p>
     </div>
     <div class="drill-title">Top 50 projetos com mais mensagens</div>
-    <table><tr><th>Projeto</th><th class="num">Msgs</th><th class="num">TG</th><th class="num">WA</th><th class="num">Dias</th><th class="num">Autores</th><th>Fase</th></tr><tr><td>ANA PAULA JACINTHO JUNQUEIRA APARTA</td><td class="num">200</td><td class="num">178</td><td class="num">22</td><td class="num">12/30</td><td class="num">9</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E INTER</td><td class="num">200</td><td class="num">151</td><td class="num">49</td><td class="num">4/30</td><td class="num">8</td><td>RESULTADO VT - ENTRADA</td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td class="num">200</td><td class="num">127</td><td class="num">73</td><td class="num">11/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>BENY MAJTLIS</td><td class="num">200</td><td class="num">133</td><td class="num">67</td><td class="num">6/30</td><td class="num">9</td><td>OBRA CONCLUÍDA</td></tr><tr><td>PEDRO RUBENS SILVEIRA MELLO BERLINC</td><td class="num">200</td><td class="num">129</td><td class="num">71</td><td class="num">7/30</td><td class="num">12</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>CINTIA TIEMI KITA </td><td class="num">200</td><td class="num">135</td><td class="num">65</td><td class="num">9/30</td><td class="num">9</td><td>REVISÃO FINAL OP</td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E REFORM</td><td class="num">200</td><td class="num">140</td><td class="num">60</td><td class="num">7/30</td><td class="num">8</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>JULIANA GOMES (RICARDO RANAURO)</td><td class="num">200</td><td class="num">200</td><td class="num">0</td><td class="num">9/30</td><td class="num">7</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td class="num">200</td><td class="num">40</td><td class="num">160</td><td class="num">14/30</td><td class="num">11</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>ADRIANA FERNANDES PERES</td><td class="num">200</td><td class="num">138</td><td class="num">62</td><td class="num">7/30</td><td class="num">10</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>FLÁVIO FAVA DITT</td><td class="num">200</td><td class="num">140</td><td class="num">60</td><td class="num">4/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td class="num">200</td><td class="num">123</td><td class="num">77</td><td class="num">5/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td class="num">200</td><td class="num">166</td><td class="num">34</td><td class="num">8/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MANOELA LATINI GAVASSI FRANCISCO 2ª</td><td class="num">200</td><td class="num">148</td><td class="num">52</td><td class="num">10/30</td><td class="num">11</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>MARINA PIRES DE AGUIAR</td><td class="num">200</td><td class="num">160</td><td class="num">40</td><td class="num">6/30</td><td class="num">10</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td class="num">200</td><td class="num">103</td><td class="num">97</td><td class="num">12/30</td><td class="num">9</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td class="num">200</td><td class="num">93</td><td class="num">107</td><td class="num">19/30</td><td class="num">11</td><td>OBRA PAUSADA</td></tr><tr><td>GN DERMATO LTDA</td><td class="num">198</td><td class="num">139</td><td class="num">59</td><td class="num">14/30</td><td class="num">17</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td class="num">160</td><td class="num">92</td><td class="num">68</td><td class="num">17/30</td><td class="num">12</td><td>AGEND. VT - ENTRADA</td></tr><tr><td> LOVELY RITA DIAS MENEZES    SEGUND</td><td class="num">146</td><td class="num">146</td><td class="num">0</td><td class="num">9/30</td><td class="num">11</td><td>INFORMAÇÕES LOGÍSTICAS</td></tr><tr><td>GETULIO TURATTI OST</td><td class="num">144</td><td class="num">144</td><td class="num">0</td><td class="num">15/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BM VAREJO – M. FASHION</td><td class="num">135</td><td class="num">134</td><td class="num">1</td><td class="num">8/30</td><td class="num">13</td><td>OBRA CONCLUÍDA</td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td class="num">134</td><td class="num">81</td><td class="num">53</td><td class="num">14/30</td><td class="num">13</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>JOYCE BAHIENSE GOMES </td><td class="num">132</td><td class="num">132</td><td class="num">0</td><td class="num">10/30</td><td class="num">12</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>RAFIK WLADIMIR FREUA</td><td class="num">125</td><td class="num">125</td><td class="num">0</td><td class="num">10/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td class="num">123</td><td class="num">93</td><td class="num">30</td><td class="num">10/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>DIOGO CANTERAS SANTOS</td><td class="num">114</td><td class="num">0</td><td class="num">114</td><td class="num">11/30</td><td class="num">1</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>NINA RODRIGUES FIALDINI</td><td class="num">94</td><td class="num">94</td><td class="num">0</td><td class="num">6/30</td><td class="num">6</td><td>PROJETOS  - 1ª REVISÃO</td></tr><tr><td>FABIO FEDERICI DE CARVALHO</td><td class="num">91</td><td class="num">27</td><td class="num">64</td><td class="num">13/30</td><td class="num">8</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>GUILHERME HAIDAR BERJEAUT</td><td class="num">91</td><td class="num">91</td><td class="num">0</td><td class="num">11/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>JULIO CEZAR ENGEL DOS SANTOS</td><td class="num">81</td><td class="num">81</td><td class="num">0</td><td class="num">9/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MAJORELLE HOLDINGS LTDA</td><td class="num">71</td><td class="num">71</td><td class="num">0</td><td class="num">11/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TRESPONTOZERO COMPRA E VENDA DE IMÓ</td><td class="num">69</td><td class="num">7</td><td class="num">62</td><td class="num">17/30</td><td class="num">3</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL PEREIRA FERNANDES</td><td class="num">68</td><td class="num">3</td><td class="num">65</td><td class="num">3/30</td><td class="num">2</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>AVVA HOUSE LTDA - MOZART RODRIGUES</td><td class="num">67</td><td class="num">28</td><td class="num">39</td><td class="num">15/30</td><td class="num">8</td><td>OBRA CONCLUÍDA</td></tr><tr><td>KRYSTAL LURI NUMA</td><td class="num">65</td><td class="num">5</td><td class="num">60</td><td class="num">10/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL WEIL </td><td class="num">65</td><td class="num">0</td><td class="num">65</td><td class="num">13/30</td><td class="num">1</td><td>RESULTADO VT - QUALIDA</td></tr><tr><td>LEMBECK ADMINISTRADORA DE BENS LTDA</td><td class="num">57</td><td class="num">17</td><td class="num">40</td><td class="num">10/30</td><td class="num">7</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>RICARDO GUIMARAES VIEIRA</td><td class="num">53</td><td class="num">15</td><td class="num">38</td><td class="num">11/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>SILVANA PANDOLFI JANETE</td><td class="num">52</td><td class="num">0</td><td class="num">52</td><td class="num">4/30</td><td class="num">1</td><td>REVISÃO FINAL OP</td></tr><tr><td>TÂMARA NEWMAN LOBATO SOUZA</td><td class="num">51</td><td class="num">6</td><td class="num">45</td><td class="num">8/30</td><td class="num">4</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL DE OLIVEIRA BOTELHO CORREA</td><td class="num">50</td><td class="num">18</td><td class="num">32</td><td class="num">9/30</td><td class="num">7</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td class="num">50</td><td class="num">50</td><td class="num">0</td><td class="num">7/30</td><td class="num">5</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>UNKÊ ARQUITETURA E ENGENHARIA LTDA</td><td class="num">49</td><td class="num">0</td><td class="num">49</td><td class="num">10/30</td><td class="num">1</td><td>CLIENTE FINALIZADO</td></tr><tr><td>GUSTAVO PARRILO DA NOBREGA</td><td class="num">49</td><td class="num">37</td><td class="num">12</td><td class="num">4/30</td><td class="num">6</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>LUIS GUSTAVO ROVARON</td><td class="num">47</td><td class="num">34</td><td class="num">13</td><td class="num">7/30</td><td class="num">5</td><td>OBRA CONCLUÍDA</td></tr><tr><td>GUILHERME LANGER</td><td class="num">47</td><td class="num">20</td><td class="num">27</td><td class="num">10/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MARISA NATALIA PINTO</td><td class="num">44</td><td class="num">44</td><td class="num">0</td><td class="num">8/30</td><td class="num">11</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BRUNO FRIGO ZEZZE</td><td class="num">43</td><td class="num">11</td><td class="num">32</td><td class="num">8/30</td><td class="num">4</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>ANDRESSA SOUZA CAMPOS MONTEIRO DE C</td><td class="num">41</td><td class="num">18</td><td class="num">23</td><td class="num">9/30</td><td class="num">6</td><td>INFORMAÇÕES PROJETOS</td></tr></table>
+    <table><tr><th>Projeto</th><th class="num">Msgs</th><th class="num">TG</th><th class="num">WA</th><th class="num">Dias</th><th class="num">Autores</th><th>Fase</th></tr><tr><td>ANA PAULA JACINTHO JUNQUEIRA GOIAS/</td><td class="num">200</td><td class="num">200</td><td class="num">0</td><td class="num">10/30</td><td class="num">9</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>ANA PAULA JACINTHO JUNQUEIRA APARTA</td><td class="num">200</td><td class="num">178</td><td class="num">22</td><td class="num">12/30</td><td class="num">9</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E INTER</td><td class="num">200</td><td class="num">151</td><td class="num">49</td><td class="num">4/30</td><td class="num">8</td><td>RESULTADO VT - ENTRADA</td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td class="num">200</td><td class="num">128</td><td class="num">72</td><td class="num">12/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>BENY MAJTLIS</td><td class="num">200</td><td class="num">133</td><td class="num">67</td><td class="num">6/30</td><td class="num">9</td><td>OBRA CONCLUÍDA</td></tr><tr><td>PEDRO RUBENS SILVEIRA MELLO BERLINC</td><td class="num">200</td><td class="num">129</td><td class="num">71</td><td class="num">7/30</td><td class="num">12</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>CINTIA TIEMI KITA </td><td class="num">200</td><td class="num">137</td><td class="num">63</td><td class="num">8/30</td><td class="num">8</td><td>REVISÃO FINAL OP</td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E REFORM</td><td class="num">200</td><td class="num">140</td><td class="num">60</td><td class="num">7/30</td><td class="num">8</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>JULIANA GOMES (RICARDO RANAURO)</td><td class="num">200</td><td class="num">200</td><td class="num">0</td><td class="num">8/30</td><td class="num">7</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td class="num">200</td><td class="num">49</td><td class="num">151</td><td class="num">13/30</td><td class="num">10</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>ADRIANA FERNANDES PERES</td><td class="num">200</td><td class="num">138</td><td class="num">62</td><td class="num">7/30</td><td class="num">10</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>FLÁVIO FAVA DITT</td><td class="num">200</td><td class="num">145</td><td class="num">55</td><td class="num">4/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td class="num">200</td><td class="num">123</td><td class="num">77</td><td class="num">5/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td class="num">200</td><td class="num">166</td><td class="num">34</td><td class="num">8/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MANOELA LATINI GAVASSI FRANCISCO 2ª</td><td class="num">200</td><td class="num">148</td><td class="num">52</td><td class="num">10/30</td><td class="num">11</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>MARINA PIRES DE AGUIAR</td><td class="num">200</td><td class="num">153</td><td class="num">47</td><td class="num">5/30</td><td class="num">10</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td class="num">200</td><td class="num">103</td><td class="num">97</td><td class="num">12/30</td><td class="num">9</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td class="num">200</td><td class="num">93</td><td class="num">107</td><td class="num">19/30</td><td class="num">11</td><td>OBRA PAUSADA</td></tr><tr><td>GN DERMATO LTDA</td><td class="num">199</td><td class="num">140</td><td class="num">59</td><td class="num">15/30</td><td class="num">17</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td class="num">160</td><td class="num">92</td><td class="num">68</td><td class="num">17/30</td><td class="num">12</td><td>AGEND. VT - ENTRADA</td></tr><tr><td> LOVELY RITA DIAS MENEZES    SEGUND</td><td class="num">146</td><td class="num">146</td><td class="num">0</td><td class="num">9/30</td><td class="num">11</td><td>INFORMAÇÕES LOGÍSTICAS</td></tr><tr><td>JOYCE BAHIENSE GOMES </td><td class="num">145</td><td class="num">145</td><td class="num">0</td><td class="num">10/30</td><td class="num">12</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>GETULIO TURATTI OST</td><td class="num">144</td><td class="num">144</td><td class="num">0</td><td class="num">15/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BM VAREJO – M. FASHION</td><td class="num">138</td><td class="num">137</td><td class="num">1</td><td class="num">8/30</td><td class="num">13</td><td>OBRA CONCLUÍDA</td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td class="num">136</td><td class="num">106</td><td class="num">30</td><td class="num">10/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td class="num">134</td><td class="num">81</td><td class="num">53</td><td class="num">14/30</td><td class="num">13</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>RAFIK WLADIMIR FREUA</td><td class="num">125</td><td class="num">125</td><td class="num">0</td><td class="num">10/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>DIOGO CANTERAS SANTOS</td><td class="num">114</td><td class="num">0</td><td class="num">114</td><td class="num">11/30</td><td class="num">1</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>NINA RODRIGUES FIALDINI</td><td class="num">94</td><td class="num">94</td><td class="num">0</td><td class="num">6/30</td><td class="num">6</td><td>PROJETOS  - 1ª REVISÃO</td></tr><tr><td>FABIO FEDERICI DE CARVALHO</td><td class="num">91</td><td class="num">27</td><td class="num">64</td><td class="num">13/30</td><td class="num">8</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>GUILHERME HAIDAR BERJEAUT</td><td class="num">91</td><td class="num">91</td><td class="num">0</td><td class="num">11/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>JULIO CEZAR ENGEL DOS SANTOS</td><td class="num">81</td><td class="num">81</td><td class="num">0</td><td class="num">9/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL PEREIRA FERNANDES</td><td class="num">74</td><td class="num">3</td><td class="num">71</td><td class="num">3/30</td><td class="num">2</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>MAJORELLE HOLDINGS LTDA</td><td class="num">71</td><td class="num">71</td><td class="num">0</td><td class="num">11/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TRESPONTOZERO COMPRA E VENDA DE IMÓ</td><td class="num">69</td><td class="num">7</td><td class="num">62</td><td class="num">17/30</td><td class="num">3</td><td>CLIENTE FINALIZADO</td></tr><tr><td>AVVA HOUSE LTDA - MOZART RODRIGUES</td><td class="num">66</td><td class="num">28</td><td class="num">38</td><td class="num">15/30</td><td class="num">8</td><td>OBRA CONCLUÍDA</td></tr><tr><td>KRYSTAL LURI NUMA</td><td class="num">65</td><td class="num">5</td><td class="num">60</td><td class="num">10/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL WEIL </td><td class="num">64</td><td class="num">0</td><td class="num">64</td><td class="num">12/30</td><td class="num">1</td><td>RESULTADO VT - QUALIDA</td></tr><tr><td>LEMBECK ADMINISTRADORA DE BENS LTDA</td><td class="num">57</td><td class="num">17</td><td class="num">40</td><td class="num">10/30</td><td class="num">7</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>RICARDO GUIMARAES VIEIRA</td><td class="num">54</td><td class="num">15</td><td class="num">39</td><td class="num">12/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>SILVANA PANDOLFI JANETE</td><td class="num">52</td><td class="num">0</td><td class="num">52</td><td class="num">4/30</td><td class="num">1</td><td>REVISÃO FINAL OP</td></tr><tr><td>GUSTAVO PARRILO DA NOBREGA</td><td class="num">51</td><td class="num">39</td><td class="num">12</td><td class="num">5/30</td><td class="num">6</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>TÂMARA NEWMAN LOBATO SOUZA</td><td class="num">51</td><td class="num">6</td><td class="num">45</td><td class="num">8/30</td><td class="num">4</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL DE OLIVEIRA BOTELHO CORREA</td><td class="num">50</td><td class="num">18</td><td class="num">32</td><td class="num">9/30</td><td class="num">7</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td class="num">50</td><td class="num">50</td><td class="num">0</td><td class="num">7/30</td><td class="num">5</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>UNKÊ ARQUITETURA E ENGENHARIA LTDA</td><td class="num">49</td><td class="num">0</td><td class="num">49</td><td class="num">10/30</td><td class="num">1</td><td>CLIENTE FINALIZADO</td></tr><tr><td>LUIS GUSTAVO ROVARON</td><td class="num">47</td><td class="num">34</td><td class="num">13</td><td class="num">7/30</td><td class="num">5</td><td>OBRA CONCLUÍDA</td></tr><tr><td>GUILHERME LANGER</td><td class="num">47</td><td class="num">20</td><td class="num">27</td><td class="num">10/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MARISA NATALIA PINTO</td><td class="num">44</td><td class="num">44</td><td class="num">0</td><td class="num">8/30</td><td class="num">11</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BRUNO FRIGO ZEZZE</td><td class="num">43</td><td class="num">11</td><td class="num">32</td><td class="num">8/30</td><td class="num">4</td><td>AGEND. VT - AFERIÇÃO/O</td></tr></table>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-ativos">
   <div class="modal">
     <div class="modal-header">
-      <div><div class="modal-title">Projetos com mensagens (30d)</div><div class="modal-subtitle">133 projetos de 159 ativos</div></div>
+      <div><div class="modal-title">Projetos com mensagens (30d)</div><div class="modal-subtitle">135 projetos de 164 ativos</div></div>
       <button class="modal-close" data-close>×</button>
     </div>
     <div class="def-box">
       <h4>Definição</h4>
       <p>Projetos que receberam pelo menos uma mensagem no Telegram ou WhatsApp nos últimos 30 dias.</p>
       <h4 style="margin-top:12px">Critério</h4>
-      <p>Quantidade de projetos com <code>msgs30d &gt; 0</code>. Total analisado: 159 projetos ativos (excluindo finalizados, concluídos e cancelados).</p>
+      <p>Quantidade de projetos com <code>msgs30d &gt; 0</code>. Total analisado: 164 projetos ativos (excluindo finalizados, concluídos e cancelados).</p>
     </div>
     <div class="drill-title">Top 50 mais ativos</div>
-    <table><tr><th>Projeto</th><th class="num">Msgs</th><th class="num">TG</th><th class="num">WA</th><th class="num">Dias</th><th class="num">Autores</th><th>Fase</th></tr><tr><td>ANA PAULA JACINTHO JUNQUEIRA APARTA</td><td class="num">200</td><td class="num">178</td><td class="num">22</td><td class="num">12/30</td><td class="num">9</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E INTER</td><td class="num">200</td><td class="num">151</td><td class="num">49</td><td class="num">4/30</td><td class="num">8</td><td>RESULTADO VT - ENTRADA</td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td class="num">200</td><td class="num">127</td><td class="num">73</td><td class="num">11/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>BENY MAJTLIS</td><td class="num">200</td><td class="num">133</td><td class="num">67</td><td class="num">6/30</td><td class="num">9</td><td>OBRA CONCLUÍDA</td></tr><tr><td>PEDRO RUBENS SILVEIRA MELLO BERLINC</td><td class="num">200</td><td class="num">129</td><td class="num">71</td><td class="num">7/30</td><td class="num">12</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>CINTIA TIEMI KITA </td><td class="num">200</td><td class="num">135</td><td class="num">65</td><td class="num">9/30</td><td class="num">9</td><td>REVISÃO FINAL OP</td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E REFORM</td><td class="num">200</td><td class="num">140</td><td class="num">60</td><td class="num">7/30</td><td class="num">8</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>JULIANA GOMES (RICARDO RANAURO)</td><td class="num">200</td><td class="num">200</td><td class="num">0</td><td class="num">9/30</td><td class="num">7</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td class="num">200</td><td class="num">40</td><td class="num">160</td><td class="num">14/30</td><td class="num">11</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>ADRIANA FERNANDES PERES</td><td class="num">200</td><td class="num">138</td><td class="num">62</td><td class="num">7/30</td><td class="num">10</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>FLÁVIO FAVA DITT</td><td class="num">200</td><td class="num">140</td><td class="num">60</td><td class="num">4/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td class="num">200</td><td class="num">123</td><td class="num">77</td><td class="num">5/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td class="num">200</td><td class="num">166</td><td class="num">34</td><td class="num">8/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MANOELA LATINI GAVASSI FRANCISCO 2ª</td><td class="num">200</td><td class="num">148</td><td class="num">52</td><td class="num">10/30</td><td class="num">11</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>MARINA PIRES DE AGUIAR</td><td class="num">200</td><td class="num">160</td><td class="num">40</td><td class="num">6/30</td><td class="num">10</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td class="num">200</td><td class="num">103</td><td class="num">97</td><td class="num">12/30</td><td class="num">9</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td class="num">200</td><td class="num">93</td><td class="num">107</td><td class="num">19/30</td><td class="num">11</td><td>OBRA PAUSADA</td></tr><tr><td>GN DERMATO LTDA</td><td class="num">198</td><td class="num">139</td><td class="num">59</td><td class="num">14/30</td><td class="num">17</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td class="num">160</td><td class="num">92</td><td class="num">68</td><td class="num">17/30</td><td class="num">12</td><td>AGEND. VT - ENTRADA</td></tr><tr><td> LOVELY RITA DIAS MENEZES    SEGUND</td><td class="num">146</td><td class="num">146</td><td class="num">0</td><td class="num">9/30</td><td class="num">11</td><td>INFORMAÇÕES LOGÍSTICAS</td></tr><tr><td>GETULIO TURATTI OST</td><td class="num">144</td><td class="num">144</td><td class="num">0</td><td class="num">15/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BM VAREJO – M. FASHION</td><td class="num">135</td><td class="num">134</td><td class="num">1</td><td class="num">8/30</td><td class="num">13</td><td>OBRA CONCLUÍDA</td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td class="num">134</td><td class="num">81</td><td class="num">53</td><td class="num">14/30</td><td class="num">13</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>JOYCE BAHIENSE GOMES </td><td class="num">132</td><td class="num">132</td><td class="num">0</td><td class="num">10/30</td><td class="num">12</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>RAFIK WLADIMIR FREUA</td><td class="num">125</td><td class="num">125</td><td class="num">0</td><td class="num">10/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td class="num">123</td><td class="num">93</td><td class="num">30</td><td class="num">10/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>DIOGO CANTERAS SANTOS</td><td class="num">114</td><td class="num">0</td><td class="num">114</td><td class="num">11/30</td><td class="num">1</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>NINA RODRIGUES FIALDINI</td><td class="num">94</td><td class="num">94</td><td class="num">0</td><td class="num">6/30</td><td class="num">6</td><td>PROJETOS  - 1ª REVISÃO</td></tr><tr><td>FABIO FEDERICI DE CARVALHO</td><td class="num">91</td><td class="num">27</td><td class="num">64</td><td class="num">13/30</td><td class="num">8</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>GUILHERME HAIDAR BERJEAUT</td><td class="num">91</td><td class="num">91</td><td class="num">0</td><td class="num">11/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>JULIO CEZAR ENGEL DOS SANTOS</td><td class="num">81</td><td class="num">81</td><td class="num">0</td><td class="num">9/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MAJORELLE HOLDINGS LTDA</td><td class="num">71</td><td class="num">71</td><td class="num">0</td><td class="num">11/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TRESPONTOZERO COMPRA E VENDA DE IMÓ</td><td class="num">69</td><td class="num">7</td><td class="num">62</td><td class="num">17/30</td><td class="num">3</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL PEREIRA FERNANDES</td><td class="num">68</td><td class="num">3</td><td class="num">65</td><td class="num">3/30</td><td class="num">2</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>AVVA HOUSE LTDA - MOZART RODRIGUES</td><td class="num">67</td><td class="num">28</td><td class="num">39</td><td class="num">15/30</td><td class="num">8</td><td>OBRA CONCLUÍDA</td></tr><tr><td>KRYSTAL LURI NUMA</td><td class="num">65</td><td class="num">5</td><td class="num">60</td><td class="num">10/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL WEIL </td><td class="num">65</td><td class="num">0</td><td class="num">65</td><td class="num">13/30</td><td class="num">1</td><td>RESULTADO VT - QUALIDA</td></tr><tr><td>LEMBECK ADMINISTRADORA DE BENS LTDA</td><td class="num">57</td><td class="num">17</td><td class="num">40</td><td class="num">10/30</td><td class="num">7</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>RICARDO GUIMARAES VIEIRA</td><td class="num">53</td><td class="num">15</td><td class="num">38</td><td class="num">11/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>SILVANA PANDOLFI JANETE</td><td class="num">52</td><td class="num">0</td><td class="num">52</td><td class="num">4/30</td><td class="num">1</td><td>REVISÃO FINAL OP</td></tr><tr><td>TÂMARA NEWMAN LOBATO SOUZA</td><td class="num">51</td><td class="num">6</td><td class="num">45</td><td class="num">8/30</td><td class="num">4</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL DE OLIVEIRA BOTELHO CORREA</td><td class="num">50</td><td class="num">18</td><td class="num">32</td><td class="num">9/30</td><td class="num">7</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td class="num">50</td><td class="num">50</td><td class="num">0</td><td class="num">7/30</td><td class="num">5</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>UNKÊ ARQUITETURA E ENGENHARIA LTDA</td><td class="num">49</td><td class="num">0</td><td class="num">49</td><td class="num">10/30</td><td class="num">1</td><td>CLIENTE FINALIZADO</td></tr><tr><td>GUSTAVO PARRILO DA NOBREGA</td><td class="num">49</td><td class="num">37</td><td class="num">12</td><td class="num">4/30</td><td class="num">6</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>LUIS GUSTAVO ROVARON</td><td class="num">47</td><td class="num">34</td><td class="num">13</td><td class="num">7/30</td><td class="num">5</td><td>OBRA CONCLUÍDA</td></tr><tr><td>GUILHERME LANGER</td><td class="num">47</td><td class="num">20</td><td class="num">27</td><td class="num">10/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MARISA NATALIA PINTO</td><td class="num">44</td><td class="num">44</td><td class="num">0</td><td class="num">8/30</td><td class="num">11</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BRUNO FRIGO ZEZZE</td><td class="num">43</td><td class="num">11</td><td class="num">32</td><td class="num">8/30</td><td class="num">4</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>ANDRESSA SOUZA CAMPOS MONTEIRO DE C</td><td class="num">41</td><td class="num">18</td><td class="num">23</td><td class="num">9/30</td><td class="num">6</td><td>INFORMAÇÕES PROJETOS</td></tr></table>
+    <table><tr><th>Projeto</th><th class="num">Msgs</th><th class="num">TG</th><th class="num">WA</th><th class="num">Dias</th><th class="num">Autores</th><th>Fase</th></tr><tr><td>ANA PAULA JACINTHO JUNQUEIRA GOIAS/</td><td class="num">200</td><td class="num">200</td><td class="num">0</td><td class="num">10/30</td><td class="num">9</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>ANA PAULA JACINTHO JUNQUEIRA APARTA</td><td class="num">200</td><td class="num">178</td><td class="num">22</td><td class="num">12/30</td><td class="num">9</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E INTER</td><td class="num">200</td><td class="num">151</td><td class="num">49</td><td class="num">4/30</td><td class="num">8</td><td>RESULTADO VT - ENTRADA</td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td class="num">200</td><td class="num">128</td><td class="num">72</td><td class="num">12/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>BENY MAJTLIS</td><td class="num">200</td><td class="num">133</td><td class="num">67</td><td class="num">6/30</td><td class="num">9</td><td>OBRA CONCLUÍDA</td></tr><tr><td>PEDRO RUBENS SILVEIRA MELLO BERLINC</td><td class="num">200</td><td class="num">129</td><td class="num">71</td><td class="num">7/30</td><td class="num">12</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>CINTIA TIEMI KITA </td><td class="num">200</td><td class="num">137</td><td class="num">63</td><td class="num">8/30</td><td class="num">8</td><td>REVISÃO FINAL OP</td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E REFORM</td><td class="num">200</td><td class="num">140</td><td class="num">60</td><td class="num">7/30</td><td class="num">8</td><td>AGEND. VT - ENTRADA</td></tr><tr><td>JULIANA GOMES (RICARDO RANAURO)</td><td class="num">200</td><td class="num">200</td><td class="num">0</td><td class="num">8/30</td><td class="num">7</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td class="num">200</td><td class="num">49</td><td class="num">151</td><td class="num">13/30</td><td class="num">10</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>ADRIANA FERNANDES PERES</td><td class="num">200</td><td class="num">138</td><td class="num">62</td><td class="num">7/30</td><td class="num">10</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>FLÁVIO FAVA DITT</td><td class="num">200</td><td class="num">145</td><td class="num">55</td><td class="num">4/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td class="num">200</td><td class="num">123</td><td class="num">77</td><td class="num">5/30</td><td class="num">9</td><td>LOGÍSTICA - MATERIAL E</td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td class="num">200</td><td class="num">166</td><td class="num">34</td><td class="num">8/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MANOELA LATINI GAVASSI FRANCISCO 2ª</td><td class="num">200</td><td class="num">148</td><td class="num">52</td><td class="num">10/30</td><td class="num">11</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>MARINA PIRES DE AGUIAR</td><td class="num">200</td><td class="num">153</td><td class="num">47</td><td class="num">5/30</td><td class="num">10</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td class="num">200</td><td class="num">103</td><td class="num">97</td><td class="num">12/30</td><td class="num">9</td><td>OBRA EM EXECUÇÃO</td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td class="num">200</td><td class="num">93</td><td class="num">107</td><td class="num">19/30</td><td class="num">11</td><td>OBRA PAUSADA</td></tr><tr><td>GN DERMATO LTDA</td><td class="num">199</td><td class="num">140</td><td class="num">59</td><td class="num">15/30</td><td class="num">17</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td class="num">160</td><td class="num">92</td><td class="num">68</td><td class="num">17/30</td><td class="num">12</td><td>AGEND. VT - ENTRADA</td></tr><tr><td> LOVELY RITA DIAS MENEZES    SEGUND</td><td class="num">146</td><td class="num">146</td><td class="num">0</td><td class="num">9/30</td><td class="num">11</td><td>INFORMAÇÕES LOGÍSTICAS</td></tr><tr><td>JOYCE BAHIENSE GOMES </td><td class="num">145</td><td class="num">145</td><td class="num">0</td><td class="num">10/30</td><td class="num">12</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>GETULIO TURATTI OST</td><td class="num">144</td><td class="num">144</td><td class="num">0</td><td class="num">15/30</td><td class="num">8</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BM VAREJO – M. FASHION</td><td class="num">138</td><td class="num">137</td><td class="num">1</td><td class="num">8/30</td><td class="num">13</td><td>OBRA CONCLUÍDA</td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td class="num">136</td><td class="num">106</td><td class="num">30</td><td class="num">10/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td class="num">134</td><td class="num">81</td><td class="num">53</td><td class="num">14/30</td><td class="num">13</td><td>LOGÍSTICA - EM ENTREGA</td></tr><tr><td>RAFIK WLADIMIR FREUA</td><td class="num">125</td><td class="num">125</td><td class="num">0</td><td class="num">10/30</td><td class="num">10</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>DIOGO CANTERAS SANTOS</td><td class="num">114</td><td class="num">0</td><td class="num">114</td><td class="num">11/30</td><td class="num">1</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>NINA RODRIGUES FIALDINI</td><td class="num">94</td><td class="num">94</td><td class="num">0</td><td class="num">6/30</td><td class="num">6</td><td>PROJETOS  - 1ª REVISÃO</td></tr><tr><td>FABIO FEDERICI DE CARVALHO</td><td class="num">91</td><td class="num">27</td><td class="num">64</td><td class="num">13/30</td><td class="num">8</td><td>CONFIRMAÇÕES OP 1</td></tr><tr><td>GUILHERME HAIDAR BERJEAUT</td><td class="num">91</td><td class="num">91</td><td class="num">0</td><td class="num">11/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>JULIO CEZAR ENGEL DOS SANTOS</td><td class="num">81</td><td class="num">81</td><td class="num">0</td><td class="num">9/30</td><td class="num">9</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL PEREIRA FERNANDES</td><td class="num">74</td><td class="num">3</td><td class="num">71</td><td class="num">3/30</td><td class="num">2</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>MAJORELLE HOLDINGS LTDA</td><td class="num">71</td><td class="num">71</td><td class="num">0</td><td class="num">11/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>TRESPONTOZERO COMPRA E VENDA DE IMÓ</td><td class="num">69</td><td class="num">7</td><td class="num">62</td><td class="num">17/30</td><td class="num">3</td><td>CLIENTE FINALIZADO</td></tr><tr><td>AVVA HOUSE LTDA - MOZART RODRIGUES</td><td class="num">66</td><td class="num">28</td><td class="num">38</td><td class="num">15/30</td><td class="num">8</td><td>OBRA CONCLUÍDA</td></tr><tr><td>KRYSTAL LURI NUMA</td><td class="num">65</td><td class="num">5</td><td class="num">60</td><td class="num">10/30</td><td class="num">5</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL WEIL </td><td class="num">64</td><td class="num">0</td><td class="num">64</td><td class="num">12/30</td><td class="num">1</td><td>RESULTADO VT - QUALIDA</td></tr><tr><td>LEMBECK ADMINISTRADORA DE BENS LTDA</td><td class="num">57</td><td class="num">17</td><td class="num">40</td><td class="num">10/30</td><td class="num">7</td><td>RESULTADO VT - AFERIÇÃ</td></tr><tr><td>RICARDO GUIMARAES VIEIRA</td><td class="num">54</td><td class="num">15</td><td class="num">39</td><td class="num">12/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>SILVANA PANDOLFI JANETE</td><td class="num">52</td><td class="num">0</td><td class="num">52</td><td class="num">4/30</td><td class="num">1</td><td>REVISÃO FINAL OP</td></tr><tr><td>GUSTAVO PARRILO DA NOBREGA</td><td class="num">51</td><td class="num">39</td><td class="num">12</td><td class="num">5/30</td><td class="num">6</td><td>AGUARDANDO LIBERAÇÃO</td></tr><tr><td>TÂMARA NEWMAN LOBATO SOUZA</td><td class="num">51</td><td class="num">6</td><td class="num">45</td><td class="num">8/30</td><td class="num">4</td><td>CLIENTE FINALIZADO</td></tr><tr><td>RAFAEL DE OLIVEIRA BOTELHO CORREA</td><td class="num">50</td><td class="num">18</td><td class="num">32</td><td class="num">9/30</td><td class="num">7</td><td>AGEND. VT - AFERIÇÃO/O</td></tr><tr><td>MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td class="num">50</td><td class="num">50</td><td class="num">0</td><td class="num">7/30</td><td class="num">5</td><td>INDÚSTRIA - EM PRODUÇÃ</td></tr><tr><td>UNKÊ ARQUITETURA E ENGENHARIA LTDA</td><td class="num">49</td><td class="num">0</td><td class="num">49</td><td class="num">10/30</td><td class="num">1</td><td>CLIENTE FINALIZADO</td></tr><tr><td>LUIS GUSTAVO ROVARON</td><td class="num">47</td><td class="num">34</td><td class="num">13</td><td class="num">7/30</td><td class="num">5</td><td>OBRA CONCLUÍDA</td></tr><tr><td>GUILHERME LANGER</td><td class="num">47</td><td class="num">20</td><td class="num">27</td><td class="num">10/30</td><td class="num">7</td><td>CLIENTE FINALIZADO</td></tr><tr><td>MARISA NATALIA PINTO</td><td class="num">44</td><td class="num">44</td><td class="num">0</td><td class="num">8/30</td><td class="num">11</td><td>CLIENTE FINALIZADO</td></tr><tr><td>BRUNO FRIGO ZEZZE</td><td class="num">43</td><td class="num">11</td><td class="num">32</td><td class="num">8/30</td><td class="num">4</td><td>AGEND. VT - AFERIÇÃO/O</td></tr></table>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-silencio">
   <div class="modal">
     <div class="modal-header">
-      <div><div class="modal-title">Taxa de Silêncio</div><div class="modal-subtitle">16.4% — 26 de 159 projetos ativos sem comunicação</div></div>
+      <div><div class="modal-title">Taxa de Silêncio</div><div class="modal-subtitle">17.7% — 29 de 164 projetos ativos sem comunicação</div></div>
       <button class="modal-close" data-close>×</button>
     </div>
 
     <div class="dist-grid">
-      <div class="dist-card"><div class="v" style="color:#f59e0b">16.4%</div><div class="l">Taxa de silêncio</div></div>
-      <div class="dist-card"><div class="v" style="color:#ef4444">26</div><div class="l">Silenciosos</div></div>
-      <div class="dist-card"><div class="v" style="color:#22c55e">133</div><div class="l">Com atividade</div></div>
-      <div class="dist-card"><div class="v" style="color:#c4a77d">159</div><div class="l">Total ativos</div></div>
+      <div class="dist-card"><div class="v" style="color:#f59e0b">17.7%</div><div class="l">Taxa de silêncio</div></div>
+      <div class="dist-card"><div class="v" style="color:#ef4444">29</div><div class="l">Silenciosos</div></div>
+      <div class="dist-card"><div class="v" style="color:#22c55e">135</div><div class="l">Com atividade</div></div>
+      <div class="dist-card"><div class="v" style="color:#c4a77d">164</div><div class="l">Total ativos</div></div>
     </div>
 
     <div class="modal-tabs">
@@ -384,31 +322,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">ENTRADA</div>
-          <div class="cat-num"><strong>5</strong> <span style="color:#666">· 19.2%</span></div>
+          <div class="cat-num"><strong>5</strong> <span style="color:#666">· 17.2%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:19.2%;background:#f59e0b"></div></div>
-        
-        
-        
-      </div>
-    
-      <div class="cat-block">
-        <div class="cat-head">
-          <div class="cat-label">AGEND. VT - AFERIÇÃO/ORIENTAÇÃO</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 15.4%</span></div>
-        </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:15.4%;background:#f59e0b"></div></div>
-        
-        
-        
-      </div>
-    
-      <div class="cat-block">
-        <div class="cat-head">
-          <div class="cat-label">CLIENTE FINALIZADO</div>
-          <div class="cat-num"><strong>3</strong> <span style="color:#666">· 11.5%</span></div>
-        </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:11.5%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:17.2%;background:#f59e0b"></div></div>
         
         
         
@@ -417,9 +333,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">OECT</div>
-          <div class="cat-num"><strong>3</strong> <span style="color:#666">· 11.5%</span></div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 13.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:11.5%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:13.8%;background:#f59e0b"></div></div>
         
         
         
@@ -427,10 +343,21 @@ tr:hover{background:#1a1a1a}
     
       <div class="cat-block">
         <div class="cat-head">
-          <div class="cat-label">CONTRATO</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 7.7%</span></div>
+          <div class="cat-label">CLIENTE FINALIZADO</div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 13.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.7%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:13.8%;background:#f59e0b"></div></div>
+        
+        
+        
+      </div>
+    
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-label">AGEND. VT - AFERIÇÃO/ORIENTAÇÃO</div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 13.8%</span></div>
+        </div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:13.8%;background:#f59e0b"></div></div>
         
         
         
@@ -439,9 +366,20 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">1º CONTATO OP.</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 7.7%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 6.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.7%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:6.9%;background:#f59e0b"></div></div>
+        
+        
+        
+      </div>
+    
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-label">CONTRATO</div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 6.9%</span></div>
+        </div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:6.9%;background:#f59e0b"></div></div>
         
         
         
@@ -450,9 +388,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">AGUARDANDO LIBERAÇÃO</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 7.7%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 6.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.7%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:6.9%;background:#f59e0b"></div></div>
         
         
         
@@ -461,9 +399,20 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">?</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 7.7%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 6.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.7%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:6.9%;background:#f59e0b"></div></div>
+        
+        
+        
+      </div>
+    
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-label">CONFIRMAÇÕES OP 1</div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.4%</span></div>
+        </div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.4%;background:#f59e0b"></div></div>
         
         
         
@@ -472,9 +421,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">AGEND. VT - ENTRADA</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.8%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.4%;background:#f59e0b"></div></div>
         
         
         
@@ -483,9 +432,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">EM CONTRATO</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.8%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.4%;background:#f59e0b"></div></div>
         
         
         
@@ -494,9 +443,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">REVISÃO FINAL OP</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.8%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.4%;background:#f59e0b"></div></div>
         
         
         
@@ -510,9 +459,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">sem consultor</div>
-          <div class="cat-num"><strong>12</strong> <span style="color:#666">· 46.2%</span></div>
+          <div class="cat-num"><strong>13</strong> <span style="color:#666">· 44.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:46.2%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:44.8%;background:#f59e0b"></div></div>
         
         
         
@@ -521,9 +470,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">LUANA PATRICIA</div>
-          <div class="cat-num"><strong>9</strong> <span style="color:#666">· 34.6%</span></div>
+          <div class="cat-num"><strong>10</strong> <span style="color:#666">· 34.5%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:34.6%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:34.5%;background:#f59e0b"></div></div>
         
         
         
@@ -532,9 +481,20 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">Wesley Matheus</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 15.4%</span></div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 13.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:15.4%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:13.8%;background:#f59e0b"></div></div>
+        
+        
+        
+      </div>
+    
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-label">[]</div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.4%</span></div>
+        </div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.4%;background:#f59e0b"></div></div>
         
         
         
@@ -543,9 +503,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">Renata Garcia</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.8%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 3.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#f59e0b"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.4%;background:#f59e0b"></div></div>
         
         
         
@@ -554,8 +514,8 @@ tr:hover{background:#1a1a1a}
     </div>
 
     <div class="tab-content" id="tab-sil-lista">
-      <div class="section-h">Lista completa (26)</div>
-      <table><tr><th>Projeto</th><th>Status</th><th>Fase</th><th>Consultor</th></tr><tr><td>LG MONTES INVESTIMENTOS E PARTICIPA</td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>LUANA PATRICIA</td></tr><tr><td>RODOLFO FRANK MUNHOZ DA ROCHA</td><td><span class="tag">contrato</span></td><td>CONTRATO</td><td>Renata Garcia</td></tr><tr><td>RAFAEL INGRÁCIO BELTRÃO</td><td><span class="tag">planejamento</span></td><td>1º CONTATO OP.</td><td>LUANA PATRICIA</td></tr><tr><td>GAMA EMPREENDIMENTOS E PARTICIPAÇÕE</td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>LUANA PATRICIA</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td><span class="tag">em_execucao</span></td><td>CLIENTE FINALIZADO</td><td>Wesley Matheus</td></tr><tr><td>Tamara Newman Lobato Souza</td><td><span class="tag">reparo</span></td><td>OECT</td><td></td></tr><tr><td>BRENO SILVEIRO DE ANDRADE LIMA CALA</td><td><span class="tag">aguardando_execucao</span></td><td>AGUARDANDO LIBERAÇÃO</td><td>LUANA PATRICIA</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td><span class="tag">reparo</span></td><td>OECT</td><td></td></tr><tr><td>LC ADMINISTRAÇÃO E PARTICIPAÇÕES LT</td><td><span class="tag">aguardando_execucao</span></td><td>AGEND. VT - ENTRADA</td><td>LUANA PATRICIA</td></tr><tr><td>PAULA DAYAN</td><td><span class="tag">planejamento</span></td><td>ENTRADA</td><td></td></tr><tr><td>LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LT</td><td><span class="tag">em_execucao</span></td><td>?</td><td></td></tr><tr><td>RICARDO DIAS DA CRUZ AFFONSO FERREI</td><td><span class="tag">planejamento</span></td><td>EM CONTRATO</td><td>LUANA PATRICIA</td></tr><tr><td>CARLA ANTONIO </td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>LUANA PATRICIA</td></tr><tr><td>BERNARDO MAGALHÃES</td><td><span class="tag">reparo</span></td><td>CLIENTE FINALIZADO</td><td></td></tr><tr><td>MONALISA PARTICIPAÇÕES </td><td><span class="tag">aguardando_clima</span></td><td>AGUARDANDO LIBERAÇÃO</td><td>Wesley Matheus</td></tr><tr><td>ELIZETE DE FÁTIMA MARCONCIN</td><td><span class="tag">reparo</span></td><td>?</td><td></td></tr><tr><td>Andrea Almeida</td><td><span class="tag">reserva</span></td><td>ENTRADA</td><td></td></tr><tr><td>Marcelo Edwin (Campinas)</td><td><span class="tag">reserva</span></td><td>ENTRADA</td><td></td></tr><tr><td>Anelise (katharina)</td><td><span class="tag">reserva</span></td><td>ENTRADA</td><td></td></tr><tr><td>PEDRO PRADO CLARO QUARESMA </td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>Wesley Matheus</td></tr><tr><td>ESCOLA DO BAIRRO EDUCAÇÃO BASICA LT</td><td><span class="tag">aguardando_execucao</span></td><td>REVISÃO FINAL OP</td><td>Wesley Matheus</td></tr><tr><td>MAURICIO BATEMAN PELA</td><td><span class="tag">reparo</span></td><td>ENTRADA</td><td></td></tr><tr><td>AMANDA PAGLIARINI MACEDO </td><td><span class="tag">planejamento</span></td><td>1º CONTATO OP.</td><td>LUANA PATRICIA</td></tr><tr><td>RICARDO FRUGOLI</td><td><span class="tag">contrato</span></td><td>CONTRATO</td><td></td></tr><tr><td>MARCELO ANDRE STEUER</td><td><span class="tag">reparo</span></td><td>CLIENTE FINALIZADO</td><td>LUANA PATRICIA</td></tr><tr><td>Roberto Tamio Murakami</td><td><span class="tag">reparo</span></td><td>OECT</td><td></td></tr></table>
+      <div class="section-h">Lista completa (29)</div>
+      <table><tr><th>Projeto</th><th>Status</th><th>Fase</th><th>Consultor</th></tr><tr><td>Marina Cugler Ferrari</td><td><span class="tag">aguardando_execucao</span></td><td>OECT</td><td></td></tr><tr><td>MAURICIO BATEMAN PELA</td><td><span class="tag">reparo</span></td><td>ENTRADA</td><td></td></tr><tr><td>AMANDA PAGLIARINI MACEDO </td><td><span class="tag">planejamento</span></td><td>1º CONTATO OP.</td><td>LUANA PATRICIA</td></tr><tr><td>APARTAMENTO 92 FELIPE SIMAS E SILVA</td><td><span class="tag">planejamento</span></td><td>CONFIRMAÇÕES OP 1</td><td>LUANA PATRICIA</td></tr><tr><td>PHILIP ANDREAS KIENTZ</td><td><span class="tag">reparo</span></td><td>CLIENTE FINALIZADO</td><td>[]</td></tr><tr><td>LG MONTES INVESTIMENTOS E PARTICIPA</td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>LUANA PATRICIA</td></tr><tr><td>RODOLFO FRANK MUNHOZ DA ROCHA</td><td><span class="tag">contrato</span></td><td>CONTRATO</td><td>Renata Garcia</td></tr><tr><td>RAFAEL INGRÁCIO BELTRÃO</td><td><span class="tag">planejamento</span></td><td>1º CONTATO OP.</td><td>LUANA PATRICIA</td></tr><tr><td>GAMA EMPREENDIMENTOS E PARTICIPAÇÕE</td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>LUANA PATRICIA</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td><span class="tag">em_execucao</span></td><td>CLIENTE FINALIZADO</td><td>Wesley Matheus</td></tr><tr><td>Tamara Newman Lobato Souza</td><td><span class="tag">reparo</span></td><td>OECT</td><td></td></tr><tr><td>BRENO SILVEIRO DE ANDRADE LIMA CALA</td><td><span class="tag">aguardando_execucao</span></td><td>AGUARDANDO LIBERAÇÃO</td><td>LUANA PATRICIA</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td><span class="tag">reparo</span></td><td>OECT</td><td></td></tr><tr><td>LC ADMINISTRAÇÃO E PARTICIPAÇÕES LT</td><td><span class="tag">aguardando_execucao</span></td><td>AGEND. VT - ENTRADA</td><td>LUANA PATRICIA</td></tr><tr><td>PAULA DAYAN</td><td><span class="tag">planejamento</span></td><td>ENTRADA</td><td></td></tr><tr><td>LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LT</td><td><span class="tag">em_execucao</span></td><td>?</td><td></td></tr><tr><td>RICARDO DIAS DA CRUZ AFFONSO FERREI</td><td><span class="tag">planejamento</span></td><td>EM CONTRATO</td><td>LUANA PATRICIA</td></tr><tr><td>CARLA ANTONIO </td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>LUANA PATRICIA</td></tr><tr><td>BERNARDO MAGALHÃES</td><td><span class="tag">reparo</span></td><td>CLIENTE FINALIZADO</td><td></td></tr><tr><td>MONALISA PARTICIPAÇÕES </td><td><span class="tag">aguardando_clima</span></td><td>AGUARDANDO LIBERAÇÃO</td><td>Wesley Matheus</td></tr><tr><td>ELIZETE DE FÁTIMA MARCONCIN</td><td><span class="tag">reparo</span></td><td>?</td><td></td></tr><tr><td>Andrea Almeida</td><td><span class="tag">reserva</span></td><td>ENTRADA</td><td></td></tr><tr><td>Marcelo Edwin (Campinas)</td><td><span class="tag">reserva</span></td><td>ENTRADA</td><td></td></tr><tr><td>Anelise (katharina)</td><td><span class="tag">reserva</span></td><td>ENTRADA</td><td></td></tr><tr><td>PEDRO PRADO CLARO QUARESMA </td><td><span class="tag">planejamento</span></td><td>AGEND. VT - AFERIÇÃO/ORIE</td><td>Wesley Matheus</td></tr><tr><td>ESCOLA DO BAIRRO EDUCAÇÃO BASICA LT</td><td><span class="tag">aguardando_execucao</span></td><td>REVISÃO FINAL OP</td><td>Wesley Matheus</td></tr><tr><td>RICARDO FRUGOLI</td><td><span class="tag">contrato</span></td><td>CONTRATO</td><td></td></tr><tr><td>MARCELO ANDRE STEUER</td><td><span class="tag">reparo</span></td><td>CLIENTE FINALIZADO</td><td>LUANA PATRICIA</td></tr><tr><td>Roberto Tamio Murakami</td><td><span class="tag">reparo</span></td><td>OECT</td><td></td></tr></table>
     </div>
 
     <div class="tab-content" id="tab-sil-def">
@@ -576,29 +536,29 @@ tr:hover{background:#1a1a1a}
 <div class="modal-overlay" id="modal-ocorrencias">
   <div class="modal">
     <div class="modal-header">
-      <div><div class="modal-title">Ocorrências Abertas</div><div class="modal-subtitle">286 ocorrências registradas · 26 críticas · 0 resolvidas</div></div>
+      <div><div class="modal-title">Ocorrências Abertas</div><div class="modal-subtitle">300 ocorrências registradas · 26 críticas · 0 resolvidas</div></div>
       <button class="modal-close" data-close>×</button>
     </div>
 
     <div class="dist-grid">
       <div class="dist-card critica"><div class="v">25</div><div class="l">Críticas</div></div>
-      <div class="dist-card alta"><div class="v">84</div><div class="l">Altas</div></div>
-      <div class="dist-card media"><div class="v">87</div><div class="l">Médias</div></div>
+      <div class="dist-card alta"><div class="v">88</div><div class="l">Altas</div></div>
+      <div class="dist-card media"><div class="v">97</div><div class="l">Médias</div></div>
       <div class="dist-card baixa"><div class="v">87</div><div class="l">Baixas</div></div>
       <div class="dist-card"><div class="v" style="color:#c4a77d">16</div><div class="l">Tipos distintos</div></div>
-      <div class="dist-card"><div class="v" style="color:#c4a77d">61</div><div class="l">Projetos afetados</div></div>
+      <div class="dist-card"><div class="v" style="color:#c4a77d">64</div><div class="l">Projetos afetados</div></div>
     </div>
 
     <div class="section-h">Tendência — últimos 30 dias</div>
     
       <div class="sparkline-wrap">
-        <div class="sparkline-stats"><span>Hoje: <strong>5</strong></span> <span>Média 30d: <strong>4.2</strong></span> <span>Máx: <strong>19</strong></span></div>
+        <div class="sparkline-stats"><span>Hoje: <strong>0</strong></span> <span>Média 30d: <strong>4.6</strong></span> <span>Máx: <strong>19</strong></span></div>
         <svg viewBox="0 0 600 60" preserveAspectRatio="none" style="width:100%;height:60px">
-          <rect x="-6.9" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-18: 0</title></rect><rect x="13.8" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-19: 0</title></rect><rect x="34.5" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-20: 0</title></rect><rect x="55.2" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-21: 0</title></rect><rect x="75.9" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-22: 0</title></rect><rect x="96.6" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-23: 0</title></rect><rect x="117.2" y="56.8" width="12.4" height="3.2" fill="#c4a77d" opacity="0.2"><title>2026-03-24: 1</title></rect><rect x="137.9" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-25: 0</title></rect><rect x="158.6" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-03-26: 6</title></rect><rect x="179.3" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-03-27: 6</title></rect><rect x="200.0" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-28: 0</title></rect><rect x="220.7" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-29: 0</title></rect><rect x="241.4" y="56.8" width="12.4" height="3.2" fill="#c4a77d" opacity="0.2"><title>2026-03-30: 1</title></rect><rect x="262.1" y="53.7" width="12.4" height="6.3" fill="#c4a77d" opacity="0.2"><title>2026-03-31: 2</title></rect><rect x="282.8" y="47.4" width="12.4" height="12.6" fill="#c4a77d" opacity="0.2"><title>2026-04-01: 4</title></rect><rect x="303.4" y="50.5" width="12.4" height="9.5" fill="#c4a77d" opacity="0.2"><title>2026-04-02: 3</title></rect><rect x="324.1" y="50.5" width="12.4" height="9.5" fill="#c4a77d" opacity="0.2"><title>2026-04-03: 3</title></rect><rect x="344.8" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-04-04: 6</title></rect><rect x="365.5" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-04-05: 0</title></rect><rect x="386.2" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-04-06: 6</title></rect><rect x="406.9" y="44.2" width="12.4" height="15.8" fill="#c4a77d" opacity="0.2"><title>2026-04-07: 5</title></rect><rect x="427.6" y="37.9" width="12.4" height="22.1" fill="#c4a77d" opacity="0.2"><title>2026-04-08: 7</title></rect><rect x="448.3" y="15.8" width="12.4" height="44.2" fill="#c4a77d" opacity="0.2"><title>2026-04-09: 14</title></rect><rect x="469.0" y="56.8" width="12.4" height="3.2" fill="#c4a77d" opacity="0.2"><title>2026-04-10: 1</title></rect><rect x="489.7" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-04-11: 6</title></rect><rect x="510.3" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-04-12: 0</title></rect><rect x="531.0" y="12.6" width="12.4" height="47.4" fill="#c4a77d" opacity="0.2"><title>2026-04-13: 15</title></rect><rect x="551.7" y="9.5" width="12.4" height="50.5" fill="#c4a77d" opacity="0.2"><title>2026-04-14: 16</title></rect><rect x="572.4" y="0.0" width="12.4" height="60.0" fill="#c4a77d" opacity="0.2"><title>2026-04-15: 19</title></rect><rect x="593.1" y="44.2" width="12.4" height="15.8" fill="#c4a77d" opacity="0.2"><title>2026-04-16: 5</title></rect>
-          <polygon points="0,60 0.0,60.0 20.7,60.0 41.4,60.0 62.1,60.0 82.8,60.0 103.4,60.0 124.1,56.8 144.8,60.0 165.5,41.1 186.2,41.1 206.9,60.0 227.6,60.0 248.3,56.8 269.0,53.7 289.7,47.4 310.3,50.5 331.0,50.5 351.7,41.1 372.4,60.0 393.1,41.1 413.8,44.2 434.5,37.9 455.2,15.8 475.9,56.8 496.6,41.1 517.2,60.0 537.9,12.6 558.6,9.5 579.3,0.0 600.0,44.2 600,60" fill="#c4a77d" opacity="0.08"/>
-          <polyline points="0.0,60.0 20.7,60.0 41.4,60.0 62.1,60.0 82.8,60.0 103.4,60.0 124.1,56.8 144.8,60.0 165.5,41.1 186.2,41.1 206.9,60.0 227.6,60.0 248.3,56.8 269.0,53.7 289.7,47.4 310.3,50.5 331.0,50.5 351.7,41.1 372.4,60.0 393.1,41.1 413.8,44.2 434.5,37.9 455.2,15.8 475.9,56.8 496.6,41.1 517.2,60.0 537.9,12.6 558.6,9.5 579.3,0.0 600.0,44.2" fill="none" stroke="#c4a77d" stroke-width="1.5"/>
+          <rect x="-6.9" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-19: 0</title></rect><rect x="13.8" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-20: 0</title></rect><rect x="34.5" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-21: 0</title></rect><rect x="55.2" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-22: 0</title></rect><rect x="75.9" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-23: 0</title></rect><rect x="96.6" y="56.8" width="12.4" height="3.2" fill="#c4a77d" opacity="0.2"><title>2026-03-24: 1</title></rect><rect x="117.2" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-25: 0</title></rect><rect x="137.9" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-03-26: 6</title></rect><rect x="158.6" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-03-27: 6</title></rect><rect x="179.3" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-28: 0</title></rect><rect x="200.0" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-03-29: 0</title></rect><rect x="220.7" y="56.8" width="12.4" height="3.2" fill="#c4a77d" opacity="0.2"><title>2026-03-30: 1</title></rect><rect x="241.4" y="53.7" width="12.4" height="6.3" fill="#c4a77d" opacity="0.2"><title>2026-03-31: 2</title></rect><rect x="262.1" y="47.4" width="12.4" height="12.6" fill="#c4a77d" opacity="0.2"><title>2026-04-01: 4</title></rect><rect x="282.8" y="50.5" width="12.4" height="9.5" fill="#c4a77d" opacity="0.2"><title>2026-04-02: 3</title></rect><rect x="303.4" y="50.5" width="12.4" height="9.5" fill="#c4a77d" opacity="0.2"><title>2026-04-03: 3</title></rect><rect x="324.1" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-04-04: 6</title></rect><rect x="344.8" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-04-05: 0</title></rect><rect x="365.5" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-04-06: 6</title></rect><rect x="386.2" y="44.2" width="12.4" height="15.8" fill="#c4a77d" opacity="0.2"><title>2026-04-07: 5</title></rect><rect x="406.9" y="37.9" width="12.4" height="22.1" fill="#c4a77d" opacity="0.2"><title>2026-04-08: 7</title></rect><rect x="427.6" y="15.8" width="12.4" height="44.2" fill="#c4a77d" opacity="0.2"><title>2026-04-09: 14</title></rect><rect x="448.3" y="56.8" width="12.4" height="3.2" fill="#c4a77d" opacity="0.2"><title>2026-04-10: 1</title></rect><rect x="469.0" y="41.1" width="12.4" height="18.9" fill="#c4a77d" opacity="0.2"><title>2026-04-11: 6</title></rect><rect x="489.7" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-04-12: 0</title></rect><rect x="510.3" y="12.6" width="12.4" height="47.4" fill="#c4a77d" opacity="0.2"><title>2026-04-13: 15</title></rect><rect x="531.0" y="9.5" width="12.4" height="50.5" fill="#c4a77d" opacity="0.2"><title>2026-04-14: 16</title></rect><rect x="551.7" y="0.0" width="12.4" height="60.0" fill="#c4a77d" opacity="0.2"><title>2026-04-15: 19</title></rect><rect x="572.4" y="3.2" width="12.4" height="56.8" fill="#c4a77d" opacity="0.2"><title>2026-04-16: 18</title></rect><rect x="593.1" y="60.0" width="12.4" height="0.0" fill="#c4a77d" opacity="0.2"><title>2026-04-17: 0</title></rect>
+          <polygon points="0,60 0.0,60.0 20.7,60.0 41.4,60.0 62.1,60.0 82.8,60.0 103.4,56.8 124.1,60.0 144.8,41.1 165.5,41.1 186.2,60.0 206.9,60.0 227.6,56.8 248.3,53.7 269.0,47.4 289.7,50.5 310.3,50.5 331.0,41.1 351.7,60.0 372.4,41.1 393.1,44.2 413.8,37.9 434.5,15.8 455.2,56.8 475.9,41.1 496.6,60.0 517.2,12.6 537.9,9.5 558.6,0.0 579.3,3.2 600.0,60.0 600,60" fill="#c4a77d" opacity="0.08"/>
+          <polyline points="0.0,60.0 20.7,60.0 41.4,60.0 62.1,60.0 82.8,60.0 103.4,56.8 124.1,60.0 144.8,41.1 165.5,41.1 186.2,60.0 206.9,60.0 227.6,56.8 248.3,53.7 269.0,47.4 289.7,50.5 310.3,50.5 331.0,41.1 351.7,60.0 372.4,41.1 393.1,44.2 413.8,37.9 434.5,15.8 455.2,56.8 475.9,41.1 496.6,60.0 517.2,12.6 537.9,9.5 558.6,0.0 579.3,3.2 600.0,60.0" fill="none" stroke="#c4a77d" stroke-width="1.5"/>
         </svg>
-        <div class="sparkline-labels"><span>03-18</span><span>04-02</span><span>04-16</span></div>
+        <div class="sparkline-labels"><span>03-19</span><span>04-03</span><span>04-17</span></div>
       </div>
     
 
@@ -614,32 +574,32 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">outro</div>
-          <div class="cat-num"><strong>60</strong> <span style="color:#666">· 21.2%</span></div>
+          <div class="cat-num"><strong>65</strong> <span style="color:#666">· 21.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:21.2%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:21.9%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:3" title="3 críticas">3</div>
-        <div class="stack-bar sev-alta-bg" style="flex:12" title="12 altas">12</div>
-        <div class="stack-bar sev-media-bg" style="flex:11" title="11 médias">11</div>
+        <div class="stack-bar sev-alta-bg" style="flex:13" title="13 altas">13</div>
+        <div class="stack-bar sev-media-bg" style="flex:15" title="15 médias">15</div>
         <div class="stack-bar sev-baixa-bg" style="flex:34" title="34 baixas">34</div>
       </div>
     
-        <div class="cat-meta">36 projetos · 4 consultores</div>
+        <div class="cat-meta">40 projetos · 5 consultores</div>
         
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">falha comunicacao</div>
-          <div class="cat-num"><strong>51</strong> <span style="color:#666">· 18.0%</span></div>
+          <div class="cat-num"><strong>53</strong> <span style="color:#666">· 17.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:18.0%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:17.8%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:5" title="5 críticas">5</div>
         <div class="stack-bar sev-alta-bg" style="flex:22" title="22 altas">22</div>
-        <div class="stack-bar sev-media-bg" style="flex:24" title="24 médias">24</div>
+        <div class="stack-bar sev-media-bg" style="flex:26" title="26 médias">26</div>
         
       </div>
     
@@ -650,9 +610,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">desvio qualidade</div>
-          <div class="cat-num"><strong>32</strong> <span style="color:#666">· 11.3%</span></div>
+          <div class="cat-num"><strong>32</strong> <span style="color:#666">· 10.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:11.3%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:10.8%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:4" title="4 críticas">4</div>
@@ -668,9 +628,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">relatorio diario</div>
-          <div class="cat-num"><strong>24</strong> <span style="color:#666">· 8.5%</span></div>
+          <div class="cat-num"><strong>24</strong> <span style="color:#666">· 8.1%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:8.5%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:8.1%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
@@ -686,9 +646,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">marco operacional</div>
-          <div class="cat-num"><strong>21</strong> <span style="color:#666">· 7.4%</span></div>
+          <div class="cat-num"><strong>21</strong> <span style="color:#666">· 7.1%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.4%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.1%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
@@ -703,10 +663,28 @@ tr:hover{background:#1a1a1a}
     
       <div class="cat-block">
         <div class="cat-head">
-          <div class="cat-label">incidente obra</div>
-          <div class="cat-num"><strong>17</strong> <span style="color:#666">· 6.0%</span></div>
+          <div class="cat-label">atraso entrega</div>
+          <div class="cat-num"><strong>19</strong> <span style="color:#666">· 6.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:6.0%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:6.4%;background:#c4a77d"></div></div>
+        
+      <div class="stack-sev">
+        <div class="stack-bar sev-critica-bg" style="flex:1" title="1 críticas"></div>
+        <div class="stack-bar sev-alta-bg" style="flex:5" title="5 altas">5</div>
+        <div class="stack-bar sev-media-bg" style="flex:13" title="13 médias">13</div>
+        
+      </div>
+    
+        <div class="cat-meta">15 projetos · 3 consultores</div>
+        
+      </div>
+    
+      <div class="cat-block">
+        <div class="cat-head">
+          <div class="cat-label">incidente obra</div>
+          <div class="cat-num"><strong>17</strong> <span style="color:#666">· 5.7%</span></div>
+        </div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.7%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:5" title="5 críticas">5</div>
@@ -721,28 +699,10 @@ tr:hover{background:#1a1a1a}
     
       <div class="cat-block">
         <div class="cat-head">
-          <div class="cat-label">atraso entrega</div>
-          <div class="cat-num"><strong>16</strong> <span style="color:#666">· 5.7%</span></div>
-        </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.7%;background:#c4a77d"></div></div>
-        
-      <div class="stack-sev">
-        <div class="stack-bar sev-critica-bg" style="flex:1" title="1 críticas"></div>
-        <div class="stack-bar sev-alta-bg" style="flex:4" title="4 altas">4</div>
-        <div class="stack-bar sev-media-bg" style="flex:11" title="11 médias">11</div>
-        
-      </div>
-    
-        <div class="cat-meta">14 projetos · 3 consultores</div>
-        
-      </div>
-    
-      <div class="cat-block">
-        <div class="cat-head">
           <div class="cat-label">reclamacao cliente</div>
-          <div class="cat-num"><strong>15</strong> <span style="color:#666">· 5.3%</span></div>
+          <div class="cat-num"><strong>15</strong> <span style="color:#666">· 5.1%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.3%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.1%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:2" title="2 críticas"></div>
@@ -758,27 +718,27 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">problema logistico</div>
-          <div class="cat-num"><strong>11</strong> <span style="color:#666">· 3.9%</span></div>
+          <div class="cat-num"><strong>13</strong> <span style="color:#666">· 4.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.9%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:4.4%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:3" title="3 críticas">3</div>
         <div class="stack-bar sev-alta-bg" style="flex:1" title="1 altas"></div>
-        <div class="stack-bar sev-media-bg" style="flex:6" title="6 médias">6</div>
+        <div class="stack-bar sev-media-bg" style="flex:8" title="8 médias">8</div>
         <div class="stack-bar sev-baixa-bg" style="flex:1" title="1 baixas"></div>
       </div>
     
-        <div class="cat-meta">7 projetos · 4 consultores</div>
+        <div class="cat-meta">9 projetos · 4 consultores</div>
         
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">atraso</div>
-          <div class="cat-num"><strong>9</strong> <span style="color:#666">· 3.2%</span></div>
+          <div class="cat-num"><strong>9</strong> <span style="color:#666">· 3.0%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.2%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.0%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
@@ -794,9 +754,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">problema tecnico</div>
-          <div class="cat-num"><strong>7</strong> <span style="color:#666">· 2.5%</span></div>
+          <div class="cat-num"><strong>7</strong> <span style="color:#666">· 2.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.5%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.4%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:1" title="1 críticas"></div>
@@ -812,9 +772,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">qualidade</div>
-          <div class="cat-num"><strong>7</strong> <span style="color:#666">· 2.5%</span></div>
+          <div class="cat-num"><strong>7</strong> <span style="color:#666">· 2.4%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.5%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.4%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
@@ -830,27 +790,27 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">defeito material</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 1.4%</span></div>
+          <div class="cat-num"><strong>6</strong> <span style="color:#666">· 2.0%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.4%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
-        <div class="stack-bar sev-alta-bg" style="flex:2" title="2 altas"></div>
+        <div class="stack-bar sev-alta-bg" style="flex:4" title="4 altas">4</div>
         <div class="stack-bar sev-media-bg" style="flex:2" title="2 médias"></div>
         
       </div>
     
-        <div class="cat-meta">4 projetos · 3 consultores</div>
+        <div class="cat-meta">6 projetos · 4 consultores</div>
         
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">erro producao</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 1.4%</span></div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 1.3%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.4%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.3%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         <div class="stack-bar sev-critica-bg" style="flex:1" title="1 críticas"></div>
@@ -866,9 +826,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">inicio execucao</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 1.4%</span></div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 1.3%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.4%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.3%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
@@ -884,9 +844,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">atraso pagamento</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 0.4%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 0.3%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:0.4%;background:#c4a77d"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:0.3%;background:#c4a77d"></div></div>
         
       <div class="stack-sev">
         
@@ -904,7 +864,7 @@ tr:hover{background:#1a1a1a}
 
     <div class="tab-content" id="tab-ocs-lista">
       <div class="section-h">Top 100 por severidade</div>
-      <table><tr><th>Sev</th><th>Título</th><th>Projeto</th><th>Tipo</th></tr><tr><td><span class="sev-alta">alta</span></td><td>[PLANEJAMENTO] Análise pré-execução — RISCO ALTO</td><td>ANDRESSA SOUZA CAMPOS MON</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Cliente insatisfeito com reagendamento para 23/04 </td><td>APARTAMENTO 803 - JOAO GA</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Cliente sem resposta para aprovação</td><td>GURGEL DALFONSO ARQUITETU</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Trinca/fissura detectada</td><td>GURGEL DALFONSO ARQUITETU</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>[PLANEJAMENTO] Análise pré-execução — RISCO ALTO</td><td>GURGEL DALFONSO ARQUITETU</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Equipe não compareceu à obra</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Mensagens contraditórias sobre presença em obra</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Verniz aplicado sem análise de manchas</td><td>BENY MAJTLIS</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Esquadrias do box serão arrancadas danificando tra</td><td>BENY MAJTLIS</td><td>incidente obra</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Responsável de obra pressiona sobre serviços pende</td><td>BENY MAJTLIS</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Obra 11 dias além do prazo - retorno adiado pelo c</td><td>BENY MAJTLIS</td><td>atraso entrega</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Retorno adiado — cliente Marcela pressionando</td><td>PEDRO RUBENS SILVEIRA MEL</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Falta de interação e registro com cliente desde se</td><td>LUIS GUSTAVO ROVARON</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>[PLANEJAMENTO] Análise pré-execução — RISCO ALTO</td><td>OFICIO 1934 (JULIA MARANG</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Risco de aderência em porcelanato polido - necessá</td><td>JOAO PEDRO SCANAGATTA DAM</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Umidade </td><td>JULIANA GOMES (RICARDO RA</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Infiltração/vazamento reportado pelo cliente</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Infiltração/vazamento reportado pelo cliente</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Selante Hard saindo após aplicação no contrapiso</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>defeito material</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Sem resposta após 4 cobranças</td><td>ADRIANA FERNANDES PERES</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Sem resposta sobre ralos</td><td>ADRIANA FERNANDES PERES</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Trincas identificadas no piso</td><td>ADRIANA FERNANDES PERES</td><td>incidente obra</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Defeito no revestimento reportado pelo cliente</td><td>FLÁVIO FAVA DITT</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Retrabalho por erros de aplicação</td><td>FLÁVIO FAVA DITT</td><td>erro producao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Sem resposta após 4 cobranças</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Prazo produção não respondido</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Amostras não enviadas — prazo clínica em risco</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>atraso entrega</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Obra 31+ dias atrasada - verniz externo pendente p</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>atraso entrega</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Bolhas no banheiro e problemas de acabamento ident</td><td>MONICA ESMERALDA BRUCKMAN</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Ralos sem calha vedada e pontos quebradiços na sup</td><td>JOSUE MONTEDONIO NASCIMEN</td><td>incidente obra</td></tr><tr><td><span class="sev-media">media</span></td><td>Sem grupo Telegram criado</td><td>ANA PAULA JACINTHO JUNQUE</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Início 06/05 provavelmente postergado</td><td>RAFAEL PEREIRA FERNANDES</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Reaplicação adiada por previsão do tempo</td><td>ANDRESSA SOUZA CAMPOS MON</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Data entrada 20/04 versus feriado 21/04</td><td>GUSTAVO PARRILO DA NOBREG</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Autonivelante exige 21 dias de cura mínima antes d</td><td>APARTAMENTO 803 - JOAO GA</td><td>problema logistico</td></tr><tr><td><span class="sev-media">media</span></td><td>Desorganização da equipe em obra</td><td>MARISA NATALIA PINTO</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Uso de autonivelante desaconselhado - risco de pat</td><td>GURGEL DALFONSO ARQUITETU</td><td>problema tecnico</td></tr><tr><td><span class="sev-media">media</span></td><td>Cliente sem previsão de liberação do piso</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe não foi à obra sem justificativa registrada</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Confusão na nomenclatura Leona x Stelion Leona</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Leona sem acabamento ideal, necessária nova camada</td><td>EDUARDO JOSE SCOTTI</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Corredor do meio sem aplicação por frisos aparente</td><td>GN DERMATO LTDA</td><td>incidente obra</td></tr><tr><td><span class="sev-media">media</span></td><td>[PLANEJAMENTO] Análise pré-execução — ATENÇÃO</td><td>GN DERMATO LTDA</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Sem confirmação de prestador em obra</td><td>VITOR FLAMIA DE BARROS CO</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Horário da equipe amanhã sem confirmação</td><td>PEDRO RUBENS SILVEIRA MEL</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe impedida por pintores na obra</td><td>PEDRO RUBENS SILVEIRA MEL</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Aplicador Wellington sem contato - dificuldade de </td><td>LUIS GUSTAVO ROVARON</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Varandas externas pendentes de finalização - depen</td><td>LUIS GUSTAVO ROVARON</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Data de entrega alterada pendência em aberto</td><td>JOAO PEDRO SCANAGATTA DAM</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Obra postergada múltiplas vezes - de 26/02 para 20</td><td>JOAO PEDRO SCANAGATTA DAM</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Problema visual reportado pelo cliente</td><td>BRUNO FRIGO ZEZZE</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Obra postergada múltiplas vezes - reagendada para </td><td>APARTAMENTO 805 - JOAO GA</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Problema visual reportado pelo cliente</td><td>CINTIA TIEMI KITA </td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Regularizações do cliente impedem entrada em obra</td><td>CINTIA TIEMI KITA </td><td>atraso</td></tr><tr><td><span class="sev-media">media</span></td><td>Perda de vídeos da visita por problema no telefone</td><td>CINTIA TIEMI KITA </td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Pergunta sobre proteção do piso sem resposta</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Infiltração água da chuva</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>incidente obra</td></tr><tr><td><span class="sev-media">media</span></td><td>Fissuras nas paredes por retração de material</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>problema tecnico</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe aguardando chave do apartamento</td><td>JULIANA GOMES (RICARDO RA</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>[PLANEJAMENTO] Análise pré-execução — ATENÇÃO</td><td>JULIANA GOMES (RICARDO RA</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Líder Ronaldo sem Telegram instalado</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Pendência antes da última camada</td><td>ADRIANA FERNANDES PERES</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Anita sem resposta sobre prazo de finalização</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe repete erro de materiais sobre bancadas</td><td>FLÁVIO FAVA DITT</td><td>erro producao</td></tr><tr><td><span class="sev-media">media</span></td><td>Desorganização reincidente da equipe</td><td>FLÁVIO FAVA DITT</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Elevador inoperante na chegada</td><td>FLÁVIO FAVA DITT</td><td>problema logistico</td></tr><tr><td><span class="sev-media">media</span></td><td>Problema de acesso - fechadura eletrônica bloqueou</td><td>FLÁVIO FAVA DITT</td><td>problema tecnico</td></tr><tr><td><span class="sev-media">media</span></td><td>Escopo redefinido — confirmação início pendente</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Cliente solicita visita tecnica para check-list de</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-media">media</span></td><td>Balde de Stelion endureceu - material perdido</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>defeito material</td></tr><tr><td><span class="sev-media">media</span></td><td>Obra bloqueada por inadimplência entre 13/01 e 22/</td><td>MONICA ESMERALDA BRUCKMAN</td><td>atraso pagamento</td></tr><tr><td><span class="sev-media">media</span></td><td>Área externa exige 10 dias de secagem sem contato </td><td>JOSUE MONTEDONIO NASCIMEN</td><td>atraso entrega</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>GURGEL DALFONSO ARQUITETU</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>VT entrada agendada 19/03 - início previsto 30/03</td><td>GURGEL DALFONSO ARQUITETU</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>BENY MAJTLIS</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>LUIS GUSTAVO ROVARON</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional</td><td>CINTIA TIEMI KITA </td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>VT agendada 16/03 - processo em andamento normal</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>FLÁVIO FAVA DITT</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>Obra em execução ativa - lixamento de ralos penden</td><td>FLÁVIO FAVA DITT</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>MONICA ESMERALDA BRUCKMAN</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>JOSUE MONTEDONIO NASCIMEN</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>Relatório diário 13/03 - Área externa: 10 dias sec</td><td>JOSUE MONTEDONIO NASCIMEN</td><td>relatorio diario</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>Área externa: 10 dias secagem necessários, ralos s</td><td>JOSUE MONTEDONIO NASCIMEN</td><td>marco operacional</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>Relatório diário 12/03 - Lilit bancos/bancada, rod</td><td>JOSUE MONTEDONIO NASCIMEN</td><td>relatorio diario</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>Início da execução 2a fase - Josué Montedonio</td><td>JOSUE MONTEDONIO NASCIMEN</td><td>inicio execucao</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Infiltração/vazamento detectado</td><td>GUSTAVO PARRILO DA NOBREG</td><td>incidente obra</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Infiltração/vazamento detectado</td><td>GUSTAVO PARRILO DA NOBREG</td><td>incidente obra</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Finalização inaceitável com dano à marcenaria</td><td>MARISA NATALIA PINTO</td><td>desvio qualidade</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Manchas rejeitadas marcenaria na sequência</td><td>EDUARDO JOSE SCOTTI</td><td>desvio qualidade</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Cliente ameaça ação judicial - frustração extrema </td><td>PALLOMA BIANCA RAMIREZ UR</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-critica">critica</span></td><td>[PLANEJAMENTO] Análise pré-execução — BLOQUEIO CRÍ</td><td>ADRIANA FERNANDES PERES</td><td>outro</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Prazo de 5 semanas estourado falta material</td><td>FLÁVIO FAVA DITT</td><td>atraso entrega</td></tr><tr><td><span class="sev-critica">critica</span></td><td>12 paredes com retrabalho por erro de aplicação</td><td>FLÁVIO FAVA DITT</td><td>erro producao</td></tr><tr><td><span class="sev-critica">critica</span></td><td>6 cobranças sem resposta</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Amostras não enviadas — agenda do cliente travada</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>problema logistico</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Cliente aguarda desde janeiro por reparos e novo s</td><td>MONICA ESMERALDA BRUCKMAN</td><td>reclamacao cliente</td></tr></table>
+      <table><tr><th>Sev</th><th>Título</th><th>Projeto</th><th>Tipo</th></tr><tr><td><span class="sev-alta">alta</span></td><td>Aditivo em Negociação: APARTAMENTO 92 FELIPE SIMAS</td><td>APARTAMENTO 92 FELIPE SIM</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Mariana alega falha de aplicação</td><td>LUIZ GUSTAVO MIGUEL REBEI</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Infiltração/vazamento reportado pelo cliente</td><td>LUIZ GUSTAVO MIGUEL REBEI</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Recorte grosseiro em superfície metálica</td><td>LUIZ GUSTAVO MIGUEL REBEI</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>[PLANEJAMENTO] Análise pré-execução — RISCO ALTO</td><td>ANDRESSA SOUZA CAMPOS MON</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Cliente insatisfeito com reagendamento para 23/04 </td><td>APARTAMENTO 803 - JOAO GA</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Cliente sem resposta para aprovação</td><td>GURGEL DALFONSO ARQUITETU</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Trinca/fissura detectada</td><td>GURGEL DALFONSO ARQUITETU</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>[PLANEJAMENTO] Análise pré-execução — RISCO ALTO</td><td>GURGEL DALFONSO ARQUITETU</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Equipe não compareceu à obra</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Mensagens contraditórias sobre presença em obra</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Estoque insuficiente para 3ª camada</td><td>VITOR FLAMIA DE BARROS CO</td><td>defeito material</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Verniz aplicado sem análise de manchas</td><td>BENY MAJTLIS</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Esquadrias do box serão arrancadas danificando tra</td><td>BENY MAJTLIS</td><td>incidente obra</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Responsável de obra pressiona sobre serviços pende</td><td>BENY MAJTLIS</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Obra 11 dias além do prazo - retorno adiado pelo c</td><td>BENY MAJTLIS</td><td>atraso entrega</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Retorno adiado — cliente Marcela pressionando</td><td>PEDRO RUBENS SILVEIRA MEL</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Falta de interação e registro com cliente desde se</td><td>LUIS GUSTAVO ROVARON</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>[PLANEJAMENTO] Análise pré-execução — RISCO ALTO</td><td>OFICIO 1934 (JULIA MARANG</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Risco de aderência em porcelanato polido - necessá</td><td>JOAO PEDRO SCANAGATTA DAM</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Umidade </td><td>JULIANA GOMES (RICARDO RA</td><td>outro</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Infiltração/vazamento reportado pelo cliente</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Infiltração/vazamento reportado pelo cliente</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Selante Hard saindo após aplicação no contrapiso</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>defeito material</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Sem resposta após 4 cobranças</td><td>ADRIANA FERNANDES PERES</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Sem resposta sobre ralos</td><td>ADRIANA FERNANDES PERES</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Trincas identificadas no piso</td><td>ADRIANA FERNANDES PERES</td><td>incidente obra</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Defeito no revestimento reportado pelo cliente</td><td>FLÁVIO FAVA DITT</td><td>desvio qualidade</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Retrabalho por erros de aplicação</td><td>FLÁVIO FAVA DITT</td><td>erro producao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Sem resposta após 4 cobranças</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Prazo produção não respondido</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>falha comunicacao</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Amostras não enviadas — prazo clínica em risco</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>atraso entrega</td></tr><tr><td><span class="sev-alta">alta</span></td><td>Obra 31+ dias atrasada - verniz externo pendente p</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Responsabilidade pelo pagamento do reparo indefini</td><td>LUIZ GUSTAVO MIGUEL REBEI</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Valor manutenção pendente timing em risco</td><td>LUIZ GUSTAVO MIGUEL REBEI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Pedido de orçamento de reparos sem resposta</td><td>LUIZ GUSTAVO MIGUEL REBEI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Sem grupo Telegram criado</td><td>ANA PAULA JACINTHO JUNQUE</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Entrada adiada para 09/06 por marcenaria</td><td>RAFAEL PEREIRA FERNANDES</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Início 06/05 provavelmente postergado</td><td>RAFAEL PEREIRA FERNANDES</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Reaplicação adiada por previsão do tempo</td><td>ANDRESSA SOUZA CAMPOS MON</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Data entrada 20/04 versus feriado 21/04</td><td>GUSTAVO PARRILO DA NOBREG</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Dados da equipe não enviados</td><td>RODRIGO DE ALMEIDA SCHMID</td><td>problema logistico</td></tr><tr><td><span class="sev-media">media</span></td><td>Autonivelante exige 21 dias de cura mínima antes d</td><td>APARTAMENTO 803 - JOAO GA</td><td>problema logistico</td></tr><tr><td><span class="sev-media">media</span></td><td>Desorganização da equipe em obra</td><td>MARISA NATALIA PINTO</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Uso de autonivelante desaconselhado - risco de pat</td><td>GURGEL DALFONSO ARQUITETU</td><td>problema tecnico</td></tr><tr><td><span class="sev-media">media</span></td><td>Cliente sem previsão de liberação do piso</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe não foi à obra sem justificativa registrada</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Confusão na nomenclatura Leona x Stelion Leona</td><td>EDUARDO JOSE SCOTTI</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Leona sem acabamento ideal, necessária nova camada</td><td>EDUARDO JOSE SCOTTI</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Corredor do meio sem aplicação por frisos aparente</td><td>GN DERMATO LTDA</td><td>incidente obra</td></tr><tr><td><span class="sev-media">media</span></td><td>[PLANEJAMENTO] Análise pré-execução — ATENÇÃO</td><td>GN DERMATO LTDA</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Sem confirmação de prestador em obra</td><td>VITOR FLAMIA DE BARROS CO</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Horário da equipe amanhã sem confirmação</td><td>PEDRO RUBENS SILVEIRA MEL</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe impedida por pintores na obra</td><td>PEDRO RUBENS SILVEIRA MEL</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Aplicador Wellington sem contato - dificuldade de </td><td>LUIS GUSTAVO ROVARON</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Varandas externas pendentes de finalização - depen</td><td>LUIS GUSTAVO ROVARON</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Data de entrega alterada pendência em aberto</td><td>JOAO PEDRO SCANAGATTA DAM</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Obra postergada múltiplas vezes - de 26/02 para 20</td><td>JOAO PEDRO SCANAGATTA DAM</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Problema visual reportado pelo cliente</td><td>BRUNO FRIGO ZEZZE</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Obra postergada múltiplas vezes - reagendada para </td><td>APARTAMENTO 805 - JOAO GA</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>Problema visual reportado pelo cliente</td><td>CINTIA TIEMI KITA </td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Regularizações do cliente impedem entrada em obra</td><td>CINTIA TIEMI KITA </td><td>atraso</td></tr><tr><td><span class="sev-media">media</span></td><td>Perda de vídeos da visita por problema no telefone</td><td>CINTIA TIEMI KITA </td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Pergunta sobre proteção do piso sem resposta</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Infiltração água da chuva</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>incidente obra</td></tr><tr><td><span class="sev-media">media</span></td><td>Fissuras nas paredes por retração de material</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>problema tecnico</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe aguardando chave do apartamento</td><td>JULIANA GOMES (RICARDO RA</td><td>atraso entrega</td></tr><tr><td><span class="sev-media">media</span></td><td>[PLANEJAMENTO] Análise pré-execução — ATENÇÃO</td><td>JULIANA GOMES (RICARDO RA</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Líder Ronaldo sem Telegram instalado</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Pendência antes da última camada</td><td>ADRIANA FERNANDES PERES</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Data de término não informada ao cliente</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Anita sem resposta sobre prazo de finalização</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-media">media</span></td><td>Equipe repete erro de materiais sobre bancadas</td><td>FLÁVIO FAVA DITT</td><td>erro producao</td></tr><tr><td><span class="sev-media">media</span></td><td>Desorganização reincidente da equipe</td><td>FLÁVIO FAVA DITT</td><td>desvio qualidade</td></tr><tr><td><span class="sev-media">media</span></td><td>Elevador inoperante na chegada</td><td>FLÁVIO FAVA DITT</td><td>problema logistico</td></tr><tr><td><span class="sev-media">media</span></td><td>Problema de acesso - fechadura eletrônica bloqueou</td><td>FLÁVIO FAVA DITT</td><td>problema tecnico</td></tr><tr><td><span class="sev-media">media</span></td><td>Escopo redefinido — confirmação início pendente</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>outro</td></tr><tr><td><span class="sev-media">media</span></td><td>Cliente solicita visita tecnica para check-list de</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-media">media</span></td><td>Balde de Stelion endureceu - material perdido</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>defeito material</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>GURGEL DALFONSO ARQUITETU</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>VT entrada agendada 19/03 - início previsto 30/03</td><td>GURGEL DALFONSO ARQUITETU</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>BENY MAJTLIS</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>LUIS GUSTAVO ROVARON</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional</td><td>CINTIA TIEMI KITA </td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>VT agendada 16/03 - processo em andamento normal</td><td>P2B ENGENHARIA CONSTRUÇÕE</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>PALLOMA BIANCA RAMIREZ UR</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>FLÁVIO FAVA DITT</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>Obra em execução ativa - lixamento de ralos penden</td><td>FLÁVIO FAVA DITT</td><td>outro</td></tr><tr><td><span class="sev-baixa">baixa</span></td><td>[ANÁLISE] Diagnóstico operacional completo</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>outro</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Infiltração/vazamento detectado</td><td>GUSTAVO PARRILO DA NOBREG</td><td>incidente obra</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Infiltração/vazamento detectado</td><td>GUSTAVO PARRILO DA NOBREG</td><td>incidente obra</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Finalização inaceitável com dano à marcenaria</td><td>MARISA NATALIA PINTO</td><td>desvio qualidade</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Manchas rejeitadas marcenaria na sequência</td><td>EDUARDO JOSE SCOTTI</td><td>desvio qualidade</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Cliente ameaça ação judicial - frustração extrema </td><td>PALLOMA BIANCA RAMIREZ UR</td><td>reclamacao cliente</td></tr><tr><td><span class="sev-critica">critica</span></td><td>[PLANEJAMENTO] Análise pré-execução — BLOQUEIO CRÍ</td><td>ADRIANA FERNANDES PERES</td><td>outro</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Prazo de 5 semanas estourado falta material</td><td>FLÁVIO FAVA DITT</td><td>atraso entrega</td></tr><tr><td><span class="sev-critica">critica</span></td><td>12 paredes com retrabalho por erro de aplicação</td><td>FLÁVIO FAVA DITT</td><td>erro producao</td></tr><tr><td><span class="sev-critica">critica</span></td><td>6 cobranças sem resposta</td><td>FLÁVIO FAVA DITT</td><td>falha comunicacao</td></tr><tr><td><span class="sev-critica">critica</span></td><td>Amostras não enviadas — agenda do cliente travada</td><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td>problema logistico</td></tr></table>
     </div>
 
     <div class="tab-content" id="tab-ocs-def">
@@ -1117,14 +1077,14 @@ tr:hover{background:#1a1a1a}
 <div class="modal-overlay" id="modal-atraso">
   <div class="modal">
     <div class="modal-header">
-      <div><div class="modal-title">Taxa de Atraso</div><div class="modal-subtitle">32.1% — 51 projetos ultrapassaram a data prevista</div></div>
+      <div><div class="modal-title">Taxa de Atraso</div><div class="modal-subtitle">31.7% — 52 projetos ultrapassaram a data prevista</div></div>
       <button class="modal-close" data-close>×</button>
     </div>
 
     <div class="dist-grid">
-      <div class="dist-card"><div class="v" style="color:#ef4444">32.1%</div><div class="l">Taxa</div></div>
-      <div class="dist-card"><div class="v" style="color:#ef4444">51</div><div class="l">Atrasados</div></div>
-      <div class="dist-card"><div class="v" style="color:#c4a77d">25d</div><div class="l">Atraso médio</div></div>
+      <div class="dist-card"><div class="v" style="color:#ef4444">31.7%</div><div class="l">Taxa</div></div>
+      <div class="dist-card"><div class="v" style="color:#ef4444">52</div><div class="l">Atrasados</div></div>
+      <div class="dist-card"><div class="v" style="color:#c4a77d">26d</div><div class="l">Atraso médio</div></div>
       <div class="dist-card"><div class="v" style="color:#ef4444">14</div><div class="l">+30d atrasados</div></div>
     </div>
 
@@ -1140,9 +1100,9 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">CLIENTE FINALIZADO</div>
-          <div class="cat-num"><strong>15</strong> <span style="color:#666">· 29.4%</span></div>
+          <div class="cat-num"><strong>16</strong> <span style="color:#666">· 30.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:29.4%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:30.8%;background:#ef4444"></div></div>
         
         
         <div class="cat-meta">Média de 24d de atraso</div>
@@ -1151,195 +1111,195 @@ tr:hover{background:#1a1a1a}
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">OBRA CONCLUÍDA</div>
-          <div class="cat-num"><strong>5</strong> <span style="color:#666">· 9.8%</span></div>
+          <div class="cat-num"><strong>5</strong> <span style="color:#666">· 9.6%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:9.8%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:9.6%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 27d de atraso</div>
+        <div class="cat-meta">Média de 28d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">OBRA PAUSADA</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 7.8%</span></div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 7.7%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.8%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.7%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 92d de atraso</div>
+        <div class="cat-meta">Média de 93d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">AGUARDANDO LIBERAÇÃO</div>
-          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 7.8%</span></div>
+          <div class="cat-num"><strong>4</strong> <span style="color:#666">· 7.7%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.8%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:7.7%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 6d de atraso</div>
+        <div class="cat-meta">Média de 7d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">ENTRADA</div>
-          <div class="cat-num"><strong>3</strong> <span style="color:#666">· 5.9%</span></div>
+          <div class="cat-num"><strong>3</strong> <span style="color:#666">· 5.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 36d de atraso</div>
+        <div class="cat-meta">Média de 37d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">AGEND. VT - ENTRADA</div>
-          <div class="cat-num"><strong>3</strong> <span style="color:#666">· 5.9%</span></div>
+          <div class="cat-num"><strong>3</strong> <span style="color:#666">· 5.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:5.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 12d de atraso</div>
+        <div class="cat-meta">Média de 13d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">OBRA EM EXECUÇÃO</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.9%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 34d de atraso</div>
+        <div class="cat-meta">Média de 35d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">LOGÍSTICA - MATERIAL ENTREGUE</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.9%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 31d de atraso</div>
+        <div class="cat-meta">Média de 32d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">LOGÍSTICA - EM ENTREGA</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.9%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 24d de atraso</div>
+        <div class="cat-meta">Média de 25d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">INDÚSTRIA - EM PRODUÇÃO</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.9%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 12d de atraso</div>
+        <div class="cat-meta">Média de 13d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">?</div>
-          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.9%</span></div>
+          <div class="cat-num"><strong>2</strong> <span style="color:#666">· 3.8%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.9%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:3.8%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 2d de atraso</div>
+        <div class="cat-meta">Média de 3d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">INFORMAÇÕES PROJETOS</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 17d de atraso</div>
+        <div class="cat-meta">Média de 18d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">REVISÃO FINAL OP</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 10d de atraso</div>
+        <div class="cat-meta">Média de 11d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">CONFIRMAÇÕES OP 1</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 8d de atraso</div>
+        <div class="cat-meta">Média de 9d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">RESULTADO VT - ENTRADA</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 3d de atraso</div>
+        <div class="cat-meta">Média de 4d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 3d de atraso</div>
+        <div class="cat-meta">Média de 4d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">INFORMAÇÕES LOGÍSTICAS</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 3d de atraso</div>
+        <div class="cat-meta">Média de 4d de atraso</div>
       </div>
     
       <div class="cat-block">
         <div class="cat-head">
           <div class="cat-label">OECT</div>
-          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 2.0%</span></div>
+          <div class="cat-num"><strong>1</strong> <span style="color:#666">· 1.9%</span></div>
         </div>
-        <div class="cat-bar-wrap"><div class="cat-bar" style="width:2.0%;background:#ef4444"></div></div>
+        <div class="cat-bar-wrap"><div class="cat-bar" style="width:1.9%;background:#ef4444"></div></div>
         
         
-        <div class="cat-meta">Média de 1d de atraso</div>
+        <div class="cat-meta">Média de 2d de atraso</div>
       </div>
     </div>
     </div>
 
     <div class="tab-content" id="tab-atr-lista">
       <div class="section-h">Lista ordenada por dias de atraso</div>
-      <table><tr><th>Projeto</th><th class="num">Atraso</th><th>Fase</th><th>Status</th><th>Consultor</th></tr><tr><td>GUILHERME WENTZ</td><td class="num sev-critica">155d</td><td>OBRA PAUSADA</td><td><span class="tag">reparo</span></td><td>LUANA PATRICIA</td></tr><tr><td>ANTONIO CARLOS CANTO PORTO NETO</td><td class="num sev-critica">127d</td><td>OBRA PAUSADA</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>GUILHERME HAIDAR BERJEAUT</td><td class="num sev-critica">101d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">marcas_rolo_cera</span></td><td>Wesley Matheus</td></tr><tr><td>AMANDA NEGRELLI HANNUD</td><td class="num sev-critica">101d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>LUIZ GUSTAVO MIGUEL REBEIS</td><td class="num sev-critica">87d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>AVVA HOUSE LTDA - MOZART RODRIGU</td><td class="num sev-critica">78d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>MANOELA LATINI GAVASSI FRANCISCO</td><td class="num sev-critica">65d</td><td>OBRA EM EXECUÇÃO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>CD 01 DESENVOLVIMENTO IMOBILIÁRI</td><td class="num sev-critica">52d</td><td>OBRA PAUSADA</td><td><span class="tag">pausado</span></td><td>Wesley Matheus</td></tr><tr><td>Anelise (katharina)</td><td class="num sev-critica">45d</td><td>ENTRADA</td><td><span class="tag">reserva</span></td><td></td></tr><tr><td>REYNALDO SOUZA QUEIROZ FIGUEIRED</td><td class="num sev-critica">45d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">marcas_rolo_cera</span></td><td>Wesley Matheus</td></tr><tr><td>Marcelo Edwin (Campinas)</td><td class="num sev-critica">41d</td><td>ENTRADA</td><td><span class="tag">reserva</span></td><td></td></tr><tr><td>FLÁVIO FAVA DITT</td><td class="num sev-critica">38d</td><td>LOGÍSTICA - MATERIAL E</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td class="num sev-critica">35d</td><td>OBRA PAUSADA</td><td><span class="tag">marcas_rolo_cera</span></td><td>LUANA PATRICIA</td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td class="num sev-critica">31d</td><td>LOGÍSTICA - EM ENTREGA</td><td><span class="tag">reparo</span></td><td>LUANA PATRICIA</td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td class="num sev-critica">25d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td class="num sev-critica">23d</td><td>LOGÍSTICA - MATERIAL E</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>ADRIANA FERNANDES PERES</td><td class="num sev-critica">22d</td><td>INDÚSTRIA - EM PRODUÇÃ</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>MISCI BRASIL COMERCIO DE MODA LT</td><td class="num sev-critica">22d</td><td>AGEND. VT - ENTRADA</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>Andrea Almeida</td><td class="num sev-critica">22d</td><td>ENTRADA</td><td><span class="tag">reserva</span></td><td></td></tr><tr><td>ANDRESSA SOUZA CAMPOS MONTEIRO D</td><td class="num sev-critica">17d</td><td>INFORMAÇÕES PROJETOS</td><td><span class="tag">aguardando_clima</span></td><td>LUANA PATRICIA</td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td class="num sev-critica">16d</td><td>LOGÍSTICA - EM ENTREGA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>CINTIA TIEMI KITA </td><td class="num sev-critica">10d</td><td>REVISÃO FINAL OP</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E REF</td><td class="num sev-critica">10d</td><td>AGEND. VT - ENTRADA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>JULIANA GOMES (RICARDO RANAURO)</td><td class="num sev-critica">10d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>JULIO CEZAR ENGEL DOS SANTOS</td><td class="num sev-critica">10d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>MAJORELLE HOLDINGS LTDA</td><td class="num sev-critica">8d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td class="num sev-critica">8d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>GN DERMATO LTDA</td><td class="num sev-critica">8d</td><td>CONFIRMAÇÕES OP 1</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td class="num sev-critica">8d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>BENY MAJTLIS</td><td class="num sev-critica">8d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>GETULIO TURATTI OST</td><td class="num sev-critica">8d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">marcas_rolo_cera</span></td><td>Juliana Santos</td></tr><tr><td>FILIPE AUGUSTO MARINI LOPES</td><td class="num sev-critica">7d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E IN</td><td class="num sev-critica">3d</td><td>RESULTADO VT - ENTRADA</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>PEDRO RUBENS SILVEIRA MELLO BERL</td><td class="num sev-critica">3d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">aguardando_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td class="num sev-critica">3d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>Pedro Alexandre</td></tr><tr><td>BM VAREJO – M. FASHION</td><td class="num sev-critica">3d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>JOYCE BAHIENSE GOMES </td><td class="num sev-critica">3d</td><td>RESULTADO VT - AFERIÇÃ</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td> LOVELY RITA DIAS MENEZES    SEG</td><td class="num sev-critica">3d</td><td>INFORMAÇÕES LOGÍSTICAS</td><td><span class="tag">em_execucao</span></td><td>Thaísa de</td></tr><tr><td>BERNARDO MAGALHÃES</td><td class="num sev-critica">3d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td></td></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td class="num sev-critica">3d</td><td>OBRA EM EXECUÇÃO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>RAFIK WLADIMIR FREUA</td><td class="num sev-critica">3d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td class="num sev-critica">3d</td><td>AGEND. VT - ENTRADA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>ELIZETE DE FÁTIMA MARCONCIN</td><td class="num sev-critica">2d</td><td>?</td><td><span class="tag">reparo</span></td><td></td></tr><tr><td>LUIS GUSTAVO ROVARON</td><td class="num sev-critica">1d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td class="num sev-critica">1d</td><td>OECT</td><td><span class="tag">reparo</span></td><td></td></tr><tr><td>CASA VIK ADMINISTRADORA DE SALOE</td><td class="num sev-critica">1d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">aguardando_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td class="num sev-critica">1d</td><td>INDÚSTRIA - EM PRODUÇÃ</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>LA PASTINA IMPORTAÇÃO EXPORTAÇÃO</td><td class="num sev-critica">1d</td><td>?</td><td><span class="tag">em_execucao</span></td><td></td></tr><tr><td>MARINA PIRES DE AGUIAR</td><td class="num sev-critica">1d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Juliana Santos</td></tr><tr><td>RONALDO PORTUGAL BACELLAR FILHO</td><td class="num sev-critica">1d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">aguardando_clima</span></td><td>Wesley Matheus</td></tr><tr><td>KATIA MOTA NOGUEIRA  </td><td class="num sev-critica">1d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr></table>
+      <table><tr><th>Projeto</th><th class="num">Atraso</th><th>Fase</th><th>Status</th><th>Consultor</th></tr><tr><td>GUILHERME WENTZ</td><td class="num sev-critica">156d</td><td>OBRA PAUSADA</td><td><span class="tag">reparo</span></td><td>LUANA PATRICIA</td></tr><tr><td>ANTONIO CARLOS CANTO PORTO NETO</td><td class="num sev-critica">128d</td><td>OBRA PAUSADA</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>GUILHERME HAIDAR BERJEAUT</td><td class="num sev-critica">102d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">marcas_rolo_cera</span></td><td>Wesley Matheus</td></tr><tr><td>AMANDA NEGRELLI HANNUD</td><td class="num sev-critica">102d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>LUIZ GUSTAVO MIGUEL REBEIS</td><td class="num sev-critica">88d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>AVVA HOUSE LTDA - MOZART RODRIGU</td><td class="num sev-critica">79d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>MANOELA LATINI GAVASSI FRANCISCO</td><td class="num sev-critica">66d</td><td>OBRA EM EXECUÇÃO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>CD 01 DESENVOLVIMENTO IMOBILIÁRI</td><td class="num sev-critica">53d</td><td>OBRA PAUSADA</td><td><span class="tag">pausado</span></td><td>Wesley Matheus</td></tr><tr><td>Anelise (katharina)</td><td class="num sev-critica">46d</td><td>ENTRADA</td><td><span class="tag">reserva</span></td><td></td></tr><tr><td>REYNALDO SOUZA QUEIROZ FIGUEIRED</td><td class="num sev-critica">46d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">marcas_rolo_cera</span></td><td>Wesley Matheus</td></tr><tr><td>Marcelo Edwin (Campinas)</td><td class="num sev-critica">42d</td><td>ENTRADA</td><td><span class="tag">reserva</span></td><td></td></tr><tr><td>FLÁVIO FAVA DITT</td><td class="num sev-critica">39d</td><td>LOGÍSTICA - MATERIAL E</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>PETITE FLEUR PATISSERIE LTDA</td><td class="num sev-critica">36d</td><td>OBRA PAUSADA</td><td><span class="tag">marcas_rolo_cera</span></td><td>LUANA PATRICIA</td></tr><tr><td>JOSE ANTUNES SOBRINHO </td><td class="num sev-critica">32d</td><td>LOGÍSTICA - EM ENTREGA</td><td><span class="tag">reparo</span></td><td>LUANA PATRICIA</td></tr><tr><td>ANDRE KEUNECKE SALERNO</td><td class="num sev-critica">26d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>RODRIGO DE FARIA JARDIM</td><td class="num sev-critica">24d</td><td>LOGÍSTICA - MATERIAL E</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>ADRIANA FERNANDES PERES</td><td class="num sev-critica">23d</td><td>INDÚSTRIA - EM PRODUÇÃ</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>MISCI BRASIL COMERCIO DE MODA LT</td><td class="num sev-critica">23d</td><td>AGEND. VT - ENTRADA</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>Andrea Almeida</td><td class="num sev-critica">23d</td><td>ENTRADA</td><td><span class="tag">reserva</span></td><td></td></tr><tr><td>ANDRESSA SOUZA CAMPOS MONTEIRO D</td><td class="num sev-critica">18d</td><td>INFORMAÇÕES PROJETOS</td><td><span class="tag">aguardando_clima</span></td><td>LUANA PATRICIA</td></tr><tr><td>PALLOMA BIANCA RAMIREZ URIZZI</td><td class="num sev-critica">17d</td><td>LOGÍSTICA - EM ENTREGA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>CINTIA TIEMI KITA </td><td class="num sev-critica">11d</td><td>REVISÃO FINAL OP</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>P2B ENGENHARIA CONSTRUÇÕES E REF</td><td class="num sev-critica">11d</td><td>AGEND. VT - ENTRADA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>JULIANA GOMES (RICARDO RANAURO)</td><td class="num sev-critica">11d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>JULIO CEZAR ENGEL DOS SANTOS</td><td class="num sev-critica">11d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>MAJORELLE HOLDINGS LTDA</td><td class="num sev-critica">9d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>EDUARDO JOSE SCOTTI</td><td class="num sev-critica">9d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>GN DERMATO LTDA</td><td class="num sev-critica">9d</td><td>CONFIRMAÇÕES OP 1</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>VITOR FLAMIA DE BARROS COSTA </td><td class="num sev-critica">9d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>BENY MAJTLIS</td><td class="num sev-critica">9d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>GETULIO TURATTI OST</td><td class="num sev-critica">9d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">marcas_rolo_cera</span></td><td>Juliana Santos</td></tr><tr><td>FILIPE AUGUSTO MARINI LOPES</td><td class="num sev-critica">8d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>GURGEL DALFONSO ARQUITETURA E IN</td><td class="num sev-critica">4d</td><td>RESULTADO VT - ENTRADA</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>PEDRO RUBENS SILVEIRA MELLO BERL</td><td class="num sev-critica">4d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">aguardando_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>JOÃO EDUARDO MARTINS KUHLMANN</td><td class="num sev-critica">4d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">em_execucao</span></td><td>Pedro Alexandre</td></tr><tr><td>BM VAREJO – M. FASHION</td><td class="num sev-critica">4d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>JOYCE BAHIENSE GOMES </td><td class="num sev-critica">4d</td><td>RESULTADO VT - AFERIÇÃ</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td> LOVELY RITA DIAS MENEZES    SEG</td><td class="num sev-critica">4d</td><td>INFORMAÇÕES LOGÍSTICAS</td><td><span class="tag">em_execucao</span></td><td>Thaísa de</td></tr><tr><td>BERNARDO MAGALHÃES</td><td class="num sev-critica">4d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td></td></tr><tr><td>TALLY FELDMAN SINGAL GROSS</td><td class="num sev-critica">4d</td><td>OBRA EM EXECUÇÃO</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>RAFIK WLADIMIR FREUA</td><td class="num sev-critica">4d</td><td>AGUARDANDO LIBERAÇÃO</td><td><span class="tag">em_execucao</span></td><td>LUANA PATRICIA</td></tr><tr><td>LUIS FERNANDO DE LIMA CARVALHO</td><td class="num sev-critica">4d</td><td>AGEND. VT - ENTRADA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>ELIZETE DE FÁTIMA MARCONCIN</td><td class="num sev-critica">3d</td><td>?</td><td><span class="tag">reparo</span></td><td></td></tr><tr><td>LUIS GUSTAVO ROVARON</td><td class="num sev-critica">2d</td><td>OBRA CONCLUÍDA</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>Vitor Flammia de Barros Costa</td><td class="num sev-critica">2d</td><td>OECT</td><td><span class="tag">reparo</span></td><td></td></tr><tr><td>CASA VIK ADMINISTRADORA DE SALOE</td><td class="num sev-critica">2d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">aguardando_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td class="num sev-critica">2d</td><td>INDÚSTRIA - EM PRODUÇÃ</td><td><span class="tag">em_execucao</span></td><td>Wesley Matheus</td></tr><tr><td>LA PASTINA IMPORTAÇÃO EXPORTAÇÃO</td><td class="num sev-critica">2d</td><td>?</td><td><span class="tag">em_execucao</span></td><td></td></tr><tr><td>MARINA PIRES DE AGUIAR</td><td class="num sev-critica">2d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Juliana Santos</td></tr><tr><td>RONALDO PORTUGAL BACELLAR FILHO</td><td class="num sev-critica">2d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">aguardando_clima</span></td><td>Wesley Matheus</td></tr><tr><td>KATIA MOTA NOGUEIRA  </td><td class="num sev-critica">2d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Wesley Matheus</td></tr><tr><td>ÁUREO EUSTÁQUIO BRANDÃO</td><td class="num sev-critica">0d</td><td>CLIENTE FINALIZADO</td><td><span class="tag">reparo</span></td><td>Pedro Alexandre</td></tr></table>
     </div>
 
     <div class="tab-content" id="tab-atr-def">
@@ -1407,36 +1367,5 @@ document.querySelectorAll('.hermes-btn').forEach(btn => {
     setTimeout(() => { window.location.href = target; }, 2500);
   });
 });
-
-// ATENA PORTAL
-document.querySelectorAll('.mono-nav-btn[data-page="atena"]').forEach(function(btn){
-  btn.addEventListener('click', function(e){
-    if(btn.classList.contains('active')) return;
-    e.preventDefault();
-    var portal = document.getElementById('atenaPortal');
-    if(!portal){ window.location.href = btn.href; return; }
-    portal.classList.add('active');
-    setTimeout(function(){ window.location.href = btn.href; }, 2200);
-  });
-});
 </script>
-
-<div class="atena-portal" id="atenaPortal">
-  <div class="atena-shield-wrap">
-    <div class="atena-shield-glow"></div>
-    <svg class="atena-shield-svg" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M60 5 L110 30 L110 75 Q110 120 60 135 Q10 120 10 75 L10 30 Z" stroke="#c4a77d" stroke-width="2" fill="rgba(196,167,125,0.05)"/>
-      <path d="M60 20 L95 38 L95 72 Q95 108 60 120 Q25 108 25 72 L25 38 Z" stroke="#c4a77d" stroke-width="1" fill="none" opacity="0.4"/>
-      <path d="M60 45 L75 70 L60 95 L45 70 Z" stroke="#c4a77d" stroke-width="1.5" fill="rgba(196,167,125,0.1)"/>
-      <circle cx="53" cy="65" r="3" stroke="#c4a77d" stroke-width="1" fill="none"/>
-      <circle cx="67" cy="65" r="3" stroke="#c4a77d" stroke-width="1" fill="none"/>
-      <circle cx="53" cy="65" r="1" fill="#c4a77d"/>
-      <circle cx="67" cy="65" r="1" fill="#c4a77d"/>
-      <path d="M57 72 L60 76 L63 72" stroke="#c4a77d" stroke-width="1" fill="none"/>
-    </svg>
-  </div>
-  <div class="atena-portal-title">Atena</div>
-  <div class="atena-portal-tagline">auditor estratégico · monofloor</div>
-</div>
-
 </body></html>
