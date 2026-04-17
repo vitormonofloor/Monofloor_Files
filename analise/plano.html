@@ -82,12 +82,12 @@
   .atena-portal.active{opacity:1;pointer-events:auto}
   .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(196,167,125,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
   @keyframes atenaGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0.6}}
-  .atena-shield-wrap{position:relative;width:140px;height:160px;display:flex;align-items:center;justify-content:center}
-  .atena-shield-svg{width:120px;height:140px;opacity:0;animation:shieldAppear 0.6s ease-out 0.2s forwards, shieldSpin 1.8s ease-in-out 0.3s forwards}
-  @keyframes shieldAppear{0%{opacity:0;transform:scale(0.5)}100%{opacity:1;transform:scale(1)}}
-  @keyframes shieldSpin{0%{transform:perspective(600px) rotateY(0deg)}50%{transform:perspective(600px) rotateY(180deg)}100%{transform:perspective(600px) rotateY(360deg)}}
-  .atena-shield-glow{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle, rgba(196,167,125,0.3) 0%, transparent 70%);opacity:0;animation:shieldGlowPulse 1.8s ease-in-out 0.3s forwards}
-  @keyframes shieldGlowPulse{0%{opacity:0;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(1)}}
+  .atena-shield-wrap{position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center}
+  .atena-shield-svg{width:130px;height:130px;opacity:0;animation:shieldAppear 0.5s ease-out 0.2s forwards, shieldRotate 2.5s linear 0.3s infinite}
+  @keyframes shieldAppear{0%{opacity:0;transform:scale(0.3)}100%{opacity:1;transform:scale(1)}}
+  @keyframes shieldRotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(196,167,125,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
+  @keyframes shieldGlowPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:0.7;transform:scale(1.1)}}
   .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#f5d890;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(196,167,125,0.5)}
   @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
   .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#8a6f42;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
@@ -501,15 +501,28 @@
 <div class="atena-portal" id="atenaPortal">
   <div class="atena-shield-wrap">
     <div class="atena-shield-glow"></div>
-    <svg class="atena-shield-svg" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M60 5 L110 30 L110 75 Q110 120 60 135 Q10 120 10 75 L10 30 Z" stroke="#c4a77d" stroke-width="2" fill="rgba(196,167,125,0.05)"/>
-      <path d="M60 20 L95 38 L95 72 Q95 108 60 120 Q25 108 25 72 L25 38 Z" stroke="#c4a77d" stroke-width="1" fill="none" opacity="0.4"/>
-      <path d="M60 45 L75 70 L60 95 L45 70 Z" stroke="#c4a77d" stroke-width="1.5" fill="rgba(196,167,125,0.1)"/>
-      <circle cx="53" cy="65" r="3" stroke="#c4a77d" stroke-width="1" fill="none"/>
-      <circle cx="67" cy="65" r="3" stroke="#c4a77d" stroke-width="1" fill="none"/>
-      <circle cx="53" cy="65" r="1" fill="#c4a77d"/>
-      <circle cx="67" cy="65" r="1" fill="#c4a77d"/>
-      <path d="M57 72 L60 76 L63 72" stroke="#c4a77d" stroke-width="1" fill="none"/>
+    <svg class="atena-shield-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="56" fill="#0d0d0d" stroke="#c4a77d" stroke-width="3"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#c4a77d" stroke-width="1.5" stroke-dasharray="8 4 2 4" opacity="0.5"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="#c4a77d" stroke-width="0.8" opacity="0.25"/>
+      <g stroke="#c4a77d" stroke-width="1" fill="none" opacity="0.4">
+        <path d="M60 12 L60 18 M60 102 L60 108"/>
+        <path d="M12 60 L18 60 M102 60 L108 60"/>
+        <path d="M25 25 L30 30 M90 90 L95 95"/>
+        <path d="M95 25 L90 30 M30 90 L25 95"/>
+      </g>
+      <g stroke="#c4a77d" stroke-width="1.2" fill="none" opacity="0.6">
+        <path d="M42 15 L42 20 L48 20"/>
+        <path d="M78 15 L78 20 L72 20"/>
+        <path d="M105 42 L100 42 L100 48"/>
+        <path d="M105 78 L100 78 L100 72"/>
+        <path d="M78 105 L78 100 L72 100"/>
+        <path d="M42 105 L42 100 L48 100"/>
+        <path d="M15 78 L20 78 L20 72"/>
+        <path d="M15 42 L20 42 L20 48"/>
+      </g>
+      <text x="60" y="68" text-anchor="middle" font-family="serif" font-size="32" fill="#c4a77d" opacity="0.8">&#937;</text>
+      <circle cx="60" cy="78" r="2" fill="#c4a77d" opacity="0.5"/>
     </svg>
   </div>
   <div class="atena-portal-title">Atena</div>
