@@ -131,14 +131,14 @@
   .score-detail-metric{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8b0a4;margin-top:8px;font-weight:400;letter-spacing:0.02em}
 
   /* ============== SIDE NAV ============== */
-  .side-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:14px}
+  .side-nav{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:0;background:#ffffff;border:1px solid #e8e0d4;border-radius:20px;padding:10px 6px;box-shadow:0 2px 12px rgba(42,37,32,0.06)}
   @media(max-width:900px){.side-nav{display:none}}
-  .side-dot{display:flex;align-items:center;justify-content:flex-end;gap:8px;text-decoration:none;position:relative}
-  .side-dot span{width:10px;height:10px;border-radius:50%;background:#d8d0c4;border:2px solid #e0d8cc;transition:all .2s;flex-shrink:0}
-  .side-dot:hover span{background:#b8a080;border-color:#b8a080;transform:scale(1.3)}
-  .side-dot.active span{background:#b8a080;border-color:#b8a080;box-shadow:0 0 8px rgba(184,160,128,0.4)}
-  .side-dot::before{content:attr(data-label);font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;color:transparent;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:all .2s;white-space:nowrap;pointer-events:none}
-  .side-dot:hover::before{color:#8a7e72}
+  .side-dot{display:flex;align-items:center;justify-content:flex-end;gap:8px;text-decoration:none;position:relative;padding:6px 4px}
+  .side-dot span{width:7px;height:7px;border-radius:50%;background:#d8d0c4;transition:all .25s;flex-shrink:0}
+  .side-dot:hover span{background:#b8a080;transform:scale(1.4)}
+  .side-dot.active span{background:#b8a080;box-shadow:0 0 6px rgba(184,160,128,0.5)}
+  .side-dot::before{content:attr(data-label);position:absolute;right:24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;color:transparent;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;transition:all .2s;white-space:nowrap;pointer-events:none;background:#ffffff;border:1px solid #e8e0d4;border-radius:4px;padding:3px 8px;box-shadow:0 1px 4px rgba(42,37,32,0.06)}
+  .side-dot:hover::before{color:#6b6156}
   .side-dot.active::before{color:#b8a080}
 
   /* ============== CARDS ============== */
