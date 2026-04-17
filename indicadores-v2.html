@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monofloor — Indicadores Operacionais v2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060606;--card:#0e0e0e;--border:#1a1a1a;--gold:#c4a77d;--gold-dim:#8a6f45;--red:#ef4444;--amber:#f59e0b;--blue:#3b82f6;--green:#22c55e;--purple:#a855f7;--text:#e8e8e8;--muted:#888;--dim:#555}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;scroll-behavior:smooth}
+body{max-width:1200px;margin:0 auto;padding:0 24px 80px}
+::selection{background:var(--gold);color:#000}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:#060606dd;border-bottom:1px solid var(--border);padding:14px 0;display:flex;justify-content:space-between;align-items:center}
+.nav-brand{font-size:18px;font-weight:300;letter-spacing:6px;text-transform:uppercase}
+.nav-tag{font-size:8px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-left:10px}
+.nav-meta{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace;text-align:right;line-height:1.6}
+
+/* LEVEL TAGS */
+.lvl{font-size:9px;text-transform:uppercase;letter-spacing:3px;font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.lvl.red{color:var(--red)}.lvl.red::before{content:"";width:6px;height:6px;background:var(--red);border-radius:50%;animation:pulse 2s infinite}
+.lvl.gold{color:var(--gold)}.lvl.gold::before{content:"";width:20px;height:1px;background:var(--gold)}
+.lvl.blue{color:var(--blue)}.lvl.blue::before{content:"";width:20px;height:1px;background:var(--blue)}
+.lvl.purple{color:var(--purple)}.lvl.purple::before{content:"";width:20px;height:1px;background:var(--purple)}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 #ef444480}50%{opacity:.7;box-shadow:0 0 0 8px #ef444400}}
+
+.section{margin:36px 0}
+
+/* ═══ FIRE CARDS ═══ */
+.fire-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fire-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.3s}
+.fire-card:hover{border-color:var(--red);transform:translateY(-2px)}
+.fire-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--red),transparent)}
+.fire-hero{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.fire-num{font-size:48px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
+.fire-unit{font-size:13px;color:var(--muted)}
+.fire-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.fire-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.fire-badge{position:absolute;top:16px;right:16px;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:600;text-transform:uppercase}
+.fire-badge.crit{background:#ef444418;color:var(--red);border:1px solid #ef444430}
+.fire-badge.warn{background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b30}
+
+/* ═══ KPI CARDS (semáforo + pulso + explicação) ═══ */
+.kpi-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.kpi-group{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.3s}
+.kpi-group.open{border-color:var(--gold)}
+.kpi-group-top{padding:20px 22px;cursor:pointer;transition:background 0.2s;position:relative}
+.kpi-group-top:hover{background:#111}
+.kpi-group-title{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-weight:500}
+.kpi-pair{display:flex;gap:24px}
+.kpi-item{flex:1;position:relative}
+.kpi-status{position:absolute;top:0;right:0;width:8px;height:8px;border-radius:50%}
+.kpi-status.green{background:var(--green);box-shadow:0 0 6px var(--green)}
+.kpi-status.amber{background:var(--amber);box-shadow:0 0 6px var(--amber)}
+.kpi-status.red{background:var(--red);box-shadow:0 0 6px var(--red)}
+.kpi-info{position:absolute;top:0;right:16px;width:14px;height:14px;border-radius:50%;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:8px;color:#444;font-style:italic;transition:all 0.2s}
+.kpi-group.open .kpi-info{border-color:var(--gold);color:var(--gold)}
+.kpi-header{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.kpi-val{font-size:26px;font-weight:600;font-family:'JetBrains Mono',monospace;line-height:1}
+.kpi-delta{font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:600;padding:2px 6px;border-radius:4px}
+.kpi-delta.up-bad{color:var(--red);background:#ef444412}
+.kpi-delta.up-good{color:var(--green);background:#22c55e12}
+.kpi-delta.neutral{color:var(--dim)}
+.kpi-name{font-size:10px;color:var(--muted);margin-bottom:6px}
+.kpi-sub{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+.kpi-meter{height:4px;background:#1a1a1a;border-radius:2px;position:relative;margin-top:8px}
+.kpi-meter-fill{height:100%;border-radius:2px}
+.kpi-meter-fill.green{background:var(--green)}.kpi-meter-fill.amber{background:var(--amber)}.kpi-meter-fill.red{background:var(--red)}
+.kpi-meter-target{position:absolute;top:-4px;height:12px;width:2px;border-radius:1px;background:var(--text);opacity:0.4}
+.kpi-meta{display:flex;justify-content:space-between;margin-top:5px;font-size:8px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+
+/* Explainer */
+.kpi-explain{max-height:0;overflow:hidden;transition:max-height 0.5s ease-out}
+.kpi-group.open .kpi-explain{max-height:800px}
+.explain-inner{padding:0 22px 22px;border-top:1px solid var(--border)}
+.explain-section{margin-top:14px}
+.explain-label{font-size:8px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.explain-label::before{content:"";width:3px;height:10px;background:var(--gold);border-radius:2px}
+.explain-text{font-size:11px;color:#bbb;line-height:1.7}
+.explain-text strong{color:var(--text);font-weight:600}
+.explain-text code{background:#141414;padding:1px 5px;border-radius:3px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:10px}
+.explain-scale{display:flex;gap:0;margin-top:10px;border-radius:8px;overflow:hidden}
+.scale-zone{flex:1;padding:8px 10px;text-align:center;font-size:10px}
+.scale-zone .zone-range{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;margin-bottom:2px}
+.scale-zone .zone-label{font-size:7px;text-transform:uppercase;letter-spacing:0.5px}
+.scale-zone.green{background:#22c55e12;color:var(--green);border:1px solid #22c55e20}
+.scale-zone.amber{background:#f59e0b12;color:var(--amber);border:1px solid #f59e0b20;border-left:none;border-right:none}
+.scale-zone.red{background:#ef444412;color:var(--red);border:1px solid #ef444420}
+.scale-zone.active{outline:2px solid currentColor;outline-offset:-2px;font-weight:700}
+.explain-analogy{background:#0a0a0a;border:1px solid #151515;border-radius:8px;padding:12px;margin-top:10px;font-size:11px;color:#999;line-height:1.6;font-style:italic;position:relative}
+.explain-analogy::before{content:"💡";position:absolute;top:-8px;left:12px;font-size:11px;font-style:normal;background:var(--card);padding:0 4px}
+.explain-source{margin-top:10px;font-size:9px;color:var(--dim)}
+.explain-source code{background:#141414;padding:1px 5px;border-radius:3px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:9px}
+
+/* Sparkline */
+.spark-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px}
+.spark-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.spark-stats{display:flex;gap:24px;font-size:11px;color:var(--muted);margin-top:10px}
+.spark-stats strong{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;display:block;margin-bottom:2px}
+
+/* ═══ CONSULTORES ═══ */
+.cons-layout{display:grid;grid-template-columns:280px 1fr;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;min-height:400px}
+.cons-list{display:flex;flex-direction:column;gap:6px}
+.cons-list-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-weight:500}
+.cons-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;background:transparent;border:1px solid transparent;border-radius:10px;cursor:pointer;transition:all 0.25s;position:relative}
+.cons-btn:hover{background:#141414;border-color:var(--border)}
+.cons-btn.active{background:#151210;border-color:var(--gold)}
+.cons-btn.active::before{content:"";position:absolute;left:0;top:20%;height:60%;width:3px;background:var(--gold);border-radius:0 3px 3px 0}
+.cons-avatar{width:34px;height:34px;border-radius:50%;background:#1a1a1a;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--gold);flex-shrink:0;transition:border-color 0.3s}
+.cons-btn.active .cons-avatar{border-color:var(--gold)}
+.cons-info{flex:1;text-align:left}
+.cons-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.cons-quick{font-size:9px;color:var(--dim);font-family:'JetBrains Mono',monospace}
+.cons-obras-badge{font-size:15px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.cons-chart{border-left:1px solid var(--border);padding-left:24px;overflow-y:auto}
+.chart-header{margin-bottom:16px}
+.chart-cons-name{font-size:18px;font-weight:600}
+.chart-cons-role{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.chart-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.chart-stat{text-align:center;padding:12px 6px;background:#0a0a0a;border-radius:8px;border:1px solid #111}
+.chart-stat-val{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:3px}
+.chart-stat-val.red{color:var(--red)}.chart-stat-val.amber{color:var(--amber)}.chart-stat-val.blue{color:var(--blue)}.chart-stat-val.gold{color:var(--gold)}.chart-stat-val.green{color:var(--green)}
+.chart-stat-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+
+/* Type bars (expandable with severity) */
+.types-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.type-item{border:1px solid transparent;border-radius:8px;margin-bottom:3px;transition:all 0.2s;cursor:pointer}
+.type-item:hover{background:#0c0c0c;border-color:var(--border)}
+.type-item.active{background:#0a0a0a;border-color:var(--gold);border-radius:10px}
+.type-row{display:grid;grid-template-columns:130px 1fr 36px 14px;gap:8px;align-items:center;font-size:11px;padding:8px 10px}
+.type-label{color:var(--muted);text-transform:capitalize;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.type-bar-bg{background:#1a1a1a;border-radius:4px;height:6px;overflow:hidden}
+.type-bar{height:100%;border-radius:4px}
+.type-bar.gold{background:linear-gradient(90deg,var(--gold),#8a6f45)}
+.type-bar.red{background:linear-gradient(90deg,var(--red),#b91c1c)}
+.type-bar.amber{background:linear-gradient(90deg,var(--amber),#b45309)}
+.type-count{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--gold);font-size:11px}
+.type-chev{color:var(--dim);font-size:10px;transition:transform 0.3s;text-align:center}
+.type-item.active .type-chev{transform:rotate(90deg);color:var(--gold)}
+.type-detail{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out}
+.type-item.active .type-detail{max-height:500px}
+.type-detail-inner{padding:8px 10px 14px}
+.def-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.def-block{background:#080808;border:1px solid #151515;border-radius:8px;padding:12px}
+.def-title{font-size:7px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px}
+.def-text{font-size:10px;color:#bbb;line-height:1.6}
+.def-text code{background:#141414;padding:1px 4px;border-radius:3px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:9px}
+
+/* Severity chart with animation */
+.sev-chart{display:flex;align-items:flex-end;height:90px;position:relative;padding:0 8px;margin-bottom:8px}
+.sev-chart::before{content:"";position:absolute;bottom:28px;left:20px;right:20px;height:1px;background:linear-gradient(90deg,var(--red),var(--amber),var(--blue),var(--green));opacity:0.15}
+.sev-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform 0.2s;z-index:1}
+.sev-col:hover{transform:translateY(-2px)}
+.sev-col.active .sev-bubble{box-shadow:0 0 16px var(--glow)}
+.sev-bar-wrap{width:30px;display:flex;justify-content:center}
+.sev-bar{width:22px;border-radius:4px 4px 0 0;transition:height 0.6s cubic-bezier(0.4,0,0.2,1)}
+.sev-bar.critica{background:var(--red)}.sev-bar.alta{background:var(--amber)}.sev-bar.media{background:var(--blue)}.sev-bar.baixa{background:var(--green)}
+.sev-bubble{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border);background:var(--card);transition:all 0.3s;position:relative}
+.sev-bubble-num{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;z-index:2}
+.sev-bubble.critica{--glow:#ef444450}.sev-bubble.critica .sev-bubble-num{color:var(--red)}
+.sev-bubble.alta{--glow:#f59e0b50}.sev-bubble.alta .sev-bubble-num{color:var(--amber)}
+.sev-bubble.media{--glow:#3b82f650}.sev-bubble.media .sev-bubble-num{color:var(--blue)}
+.sev-bubble.baixa{--glow:#22c55e50}.sev-bubble.baixa .sev-bubble-num{color:var(--green)}
+.sev-pulse{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;animation:sevPulse 2.5s ease-out infinite}
+.sev-bubble.critica .sev-pulse{border-color:var(--red);animation-duration:1.5s}
+.sev-bubble.alta .sev-pulse{border-color:var(--amber);animation-duration:2s}
+.sev-bubble.media .sev-pulse{border-color:var(--blue);animation-duration:3s}
+.sev-bubble.baixa .sev-pulse{border-color:var(--green);animation-duration:4s}
+@keyframes sevPulse{0%{transform:scale(1);opacity:0.5}100%{transform:scale(1.8);opacity:0}}
+.sev-label{font-size:8px;color:var(--dim);text-transform:uppercase}
+.sev-list{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out}
+.sev-list.open{max-height:300px;overflow-y:auto}
+.sev-list-inner{background:#080808;border:1px solid #151515;border-radius:8px;padding:4px 0;margin-top:6px}
+.sev-list-head{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #111}
+.sev-list-title{font-size:10px;font-weight:600;text-transform:capitalize}
+.sev-list-title.critica{color:var(--red)}.sev-list-title.alta{color:var(--amber)}.sev-list-title.media{color:var(--blue)}.sev-list-title.baixa{color:var(--green)}
+.sev-list-close{font-size:9px;color:var(--dim);cursor:pointer;padding:3px 6px;border-radius:4px}
+.sev-list-close:hover{color:var(--gold);background:#141414}
+.oc-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 12px;border-bottom:1px solid #0e0e0e;font-size:10px}
+.oc-row:last-child{border-bottom:none}
+.oc-row:hover{background:#0c0c0c}
+.oc-titulo{color:#ccc;line-height:1.4}
+.oc-projeto{color:var(--dim);text-align:right;white-space:nowrap;font-size:9px}
+
+/* Top obras */
+.obras-title{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:14px 0 6px}
+.obra-row{display:grid;grid-template-columns:1fr 50px 50px;gap:6px;padding:6px 0;border-bottom:1px solid #111;font-size:10px}
+.obra-row:last-child{border-bottom:none}
+.obra-name{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.obra-val{text-align:right;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.obra-val.red{color:var(--red);font-weight:600}
+
+/* ═══ HERMES CTA ═══ */
+.hermes-block{background:linear-gradient(135deg, #151210 0%, #0e0e0e 60%);border:1px solid #c4a77d30;border-radius:20px;padding:36px 44px;display:flex;align-items:center;gap:36px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden}
+.hermes-block:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px #c4a77d15}
+.hermes-block::before{content:"";position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,#c4a77d08,transparent 70%)}
+.hermes-left{flex:1}
+.hermes-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hermes-diamond{color:var(--gold);font-size:16px}
+.hermes-tag{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-weight:600}
+.hermes-h{font-size:26px;font-weight:300;color:#fff;line-height:1.35;margin-bottom:10px}
+.hermes-p{font-size:12px;color:var(--muted);line-height:1.6}
+.hermes-right{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.hermes-arrow{width:52px;height:52px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);transition:all 0.3s}
+.hermes-block:hover .hermes-arrow{background:var(--gold);color:#000;transform:scale(1.1)}
+.hermes-right-label{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+
+footer{text-align:center;padding:28px 0;font-size:9px;color:#333;border-top:1px solid #111;margin-top:40px;line-height:1.8}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.section{animation:fadeIn 0.5s ease-out both}
+.section:nth-child(3){animation-delay:.1s}.section:nth-child(4){animation-delay:.15s}.section:nth-child(5){animation-delay:.2s}.section:nth-child(6){animation-delay:.25s}
+
+@media(max-width:768px){.fire-grid{grid-template-columns:1fr}.kpi-groups{grid-template-columns:1fr}.cons-layout{grid-template-columns:1fr}.hermes-block{flex-direction:column;text-align:center;padding:28px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div><span class="nav-brand">Monofloor</span><span class="nav-tag">Premium Unique Surfaces™</span></div>
+  <div class="nav-meta">16/04/2026 · 18:06<br>159 projetos ativos · ciclo anterior: 12:06</div>
+</nav>
+
+<!-- ═══ NÍVEL 1 — FOGO ═══ -->
+<div class="section">
+  <div class="lvl red">Atenção imediata</div>
+  <div class="fire-grid">
+    <div class="fire-card"><span class="fire-badge crit">0% resolvidas</span><div class="fire-hero"><div class="fire-num" style="color:var(--red)">286</div><div class="fire-unit">ocorrências abertas</div></div><div class="fire-title">26 são críticas — nenhuma resolvida</div><div class="fire-desc">Taxa de resolução: 0%. Desvios, reclamações e abandonos acumulando sem tratamento.</div></div>
+    <div class="fire-card"><span class="fire-badge warn">meta: ≤15%</span><div class="fire-hero"><div class="fire-num" style="color:var(--amber)">32.1%</div><div class="fire-unit">taxa de atraso</div></div><div class="fire-title">1 em cada 3 obras está atrasada</div><div class="fire-desc">O dobro da meta de 15%. Piorou 2.3pp nas últimas 6h.</div></div>
+  </div>
+</div>
+
+<!-- ═══ NÍVEL 2 — KPIs COM SEMÁFORO + PULSO + EXPLICAÇÃO ═══ -->
+<div class="section">
+  <div class="lvl gold">Panorama operacional — clique para entender cada indicador</div>
+  <div id="kpiContainer"></div>
+
+  <div class="spark-wrap" style="margin-top:16px">
+    <div class="spark-title">Volume diário de mensagens · últimos 30 dias</div>
+    <svg viewBox="0 0 800 80" style="width:100%;height:80px" preserveAspectRatio="none">
+      <defs><linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c4a77d" stop-opacity="0.2"/><stop offset="100%" stop-color="#c4a77d" stop-opacity="0.01"/></linearGradient></defs>
+      <polygon points="0,75 20,60 50,55 80,58 110,45 140,50 170,42 200,38 230,35 260,40 290,30 320,25 350,28 380,32 410,20 440,25 470,30 500,22 530,35 560,28 590,32 620,40 650,35 680,38 710,30 740,25 770,28 800,32 800,80 0,80" fill="url(#sg)"/>
+      <polyline points="0,75 20,60 50,55 80,58 110,45 140,50 170,42 200,38 230,35 260,40 290,30 320,25 350,28 380,32 410,20 440,25 470,30 500,22 530,35 560,28 590,32 620,40 650,35 680,38 710,30 740,25 770,28 800,32" fill="none" stroke="#c4a77d" stroke-width="1.5"/>
+    </svg>
+    <div class="spark-stats"><div><strong>253</strong>média/dia</div><div><strong>412</strong>pico</div><div><strong>7.585</strong>total 30d</div></div>
+  </div>
+</div>
+
+<!-- ═══ NÍVEL 3 — CONSULTORES INTERATIVOS ═══ -->
+<div class="section">
+  <div class="lvl blue">Onde estão os problemas · Por Consultor</div>
+  <div class="cons-layout">
+    <div class="cons-list">
+      <div class="cons-list-title">Selecione um consultor</div>
+      <div id="consBtns"></div>
+    </div>
+    <div class="cons-chart" id="chartArea"></div>
+  </div>
+</div>
+
+<!-- ═══ NÍVEL 4 — HERMES CTA ═══ -->
+<div class="section">
+  <div class="lvl purple">Próximo passo</div>
+  <div class="hermes-block" onclick="window.location.href='analise.html'">
+    <div class="hermes-left">
+      <div class="hermes-eyebrow"><span class="hermes-diamond">◆</span><span class="hermes-tag">Hermes · Análise diária</span></div>
+      <div class="hermes-h">O que esses números significam e o que fazer agora</div>
+      <div class="hermes-p">Narrativa gerada por IA com os dados acima. Insights não-óbvios, plano de ação priorizado, projeção da semana.</div>
+    </div>
+    <div class="hermes-right"><div class="hermes-arrow">→</div><div class="hermes-right-label">Ler análise</div></div>
+  </div>
+</div>
+
+<footer>Monofloor · Indicadores Operacionais v2 · Preview integrado<br>Dados: KIRA (TG+WA) · Metas: Régua de Saúde (57 indicadores · 8 setores) · Atualização: 6h via Argos</footer>
+
+<script>
+// ═══ KPI DATA ═══
+var KPI_ROWS = [
+  [
+    { grupo: 'Comunicação', items: [
+      { val: '7.585', nome: 'Mensagens 30d', cor: 'gold', delta: '↑312', dc: 'up-good', sub: 'TG 4.716 · WA 2.869', meter: { fill: 75, color: 'green', target: 50 }, ctx: 'ref ≥5.000', meta: 'ref ≥5.000', oque: 'Total de <strong>mensagens trocadas em todos os grupos de obra</strong> (TG + WA) nos últimos 30 dias.', pq: 'Mensagens são o <strong>sinal vital</strong> da operação. Quando caem, algo parou.', como: '<code>KIRA</code> conta todas as mensagens dos grupos TG/WA conectados a cada projeto.', escala: { green: '≥ 5.000', amber: '2–5k', red: '< 2.000', atual: 'green' }, analogia: 'É como o volume de ligações de uma central. 7.585 msgs/30d = ~253/dia = operação ativa.', fonte: 'KIRA → Telegram + WhatsApp' },
+      { val: '133', nome: 'Projetos com msgs', cor: 'blue', delta: '↑2', dc: 'up-good', sub: 'de 159 (83.6%)', meter: { fill: 83, color: 'green', target: 60 }, ctx: '26 silenciosos', meta: 'meta ≥80%', oque: '<strong>Quantos projetos ativos tiveram pelo menos 1 mensagem</strong> no TG ou WA nos últimos 30 dias.', pq: 'Se 133 de 159 têm msgs, <strong>26 ficaram totalmente mudos</strong> — o complemento é a taxa de silêncio.', como: '<code>KIRA</code> verifica se cada projeto ativo tem <code>msgs30d > 0</code>.', escala: { green: '≥ 80%', amber: '60–80%', red: '< 60%', atual: 'green' }, analogia: '133 de 159 lojas deram sinal de vida. As outras 26 estão no escuro.', fonte: 'KIRA → contagem por projeto' },
+    ]},
+    { grupo: 'Qualidade', items: [
+      { val: '286', nome: 'Ocorrências', cor: 'red', delta: '↑14', dc: 'up-bad', sub: '0 resolvidas', meter: { fill: 100, color: 'red', target: 17 }, ctx: '0 resolvidas', meta: 'meta ≤50', oque: '<strong>Problemas operacionais detectados automaticamente</strong> pela KIRA ao ler mensagens dos grupos de obra.', pq: 'Ocorrências não tratadas <strong>escalam</strong>. O mais crítico é a taxa de resolução: <strong>0%</strong>.', como: '<code>KIRA</code> analisa cada mensagem com IA. Detecta padrões como "mancha", "atrasou", "cadê a equipe".', escala: { green: '≤ 50', amber: '50–150', red: '> 150', atual: 'red' }, analogia: '286 reclamações abertas no SAC e nenhuma respondida. O acúmulo é o problema.', fonte: 'KIRA → IA de classificação' },
+      { val: '26', nome: 'Críticas', cor: 'red', delta: '↑3', dc: 'up-bad', sub: 'risco imediato', meter: { fill: 86, color: 'red', target: 17 }, ctx: 'resolução 0%', meta: 'meta ≤5', oque: 'Severidade máxima. <strong>Risco real e imediato</strong>: ação judicial, abandono de obra, defeito grave.', pq: 'Crítica não tratada em 48h <strong>piora irreversivelmente</strong>. Cliente que ameaça processo e não recebe retorno, executa.', como: 'KIRA classifica como crítica quando detecta: ameaças legais, abandono, defeitos que comprometem a superfície inteira.', escala: { green: '≤ 5', amber: '5–15', red: '> 15', atual: 'red' }, analogia: 'Das 286 reclamações, 26 já estão no Procon ou com advogado. Precisam de resposta HOJE.', fonte: 'KIRA → classificação por severidade' },
+    ]},
+    { grupo: 'Performance', items: [
+      { val: '16.4%', nome: 'Taxa silêncio', cor: 'amber', delta: '↑1.2pp', dc: 'up-bad', sub: '26 obras mudas', meter: { fill: 65, color: 'amber', target: 40 }, ctx: '26 obras mudas', meta: 'meta ≤10%', oque: '<strong>Percentual de obras ativas sem qualquer comunicação</strong> em 30 dias. Zero mensagens no TG e WA.', pq: 'Obra silenciosa pode ser: parada sem saber, grupo não criado, KIRA não conectada, ou tudo resolvido por telefone (sem registro).', como: '<code>(obras com 0 msgs) ÷ (total ativas) × 100</code>. Extraído da KIRA.', escala: { green: '≤ 10%', amber: '10–20%', red: '> 20%', atual: 'amber' }, analogia: 'Você gerencia 159 lojas. 26 não deram sinal de vida no último mês. Não sabe se estão abertas.', fonte: 'KIRA → msgs por projeto nos últimos 30d' },
+      { val: '32.1%', nome: 'Taxa atraso', cor: 'red', delta: '↑2.3pp', dc: 'up-bad', sub: '51 obras atrasadas', meter: { fill: 85, color: 'red', target: 40 }, ctx: '51 atrasadas', meta: 'meta ≤15%', oque: '<strong>Percentual de obras cuja data prevista já passou</strong> e não foram finalizadas.', pq: 'Atraso gera <strong>efeito cascata</strong>: cliente insatisfeito, equipe presa, novos projetos não começam, custo sobe.', como: '<code>(obras com dataExecPrevista < hoje) ÷ (total ativas) × 100</code>. Cruza Pipefy + Argos.', escala: { green: '≤ 15%', amber: '15–25%', red: '> 25%', atual: 'red' }, analogia: 'Prometeu 100 encomendas, 32 atrasaram. Quase 1/3 dos clientes esperando além do prazo.', fonte: 'Pipefy (data prevista) + Argos (comparação)' },
+    ]},
+  ],
+  [
+    { grupo: 'Operações', items: [
+      { val: '47.6%', nome: 'Taxa de pausa', cor: 'red', delta: '—', dc: 'neutral', sub: 'quase metade', meter: { fill: 95, color: 'red', target: 20 }, ctx: 'quase metade pausada', meta: 'meta ≤10%', oque: '<strong>Percentual de obras com status "pausado"</strong>. Obra começou mas foi interrompida.', pq: 'Obra pausada é <strong>dinheiro parado</strong>. Equipe mobilizada, material comprado, e tudo congelado. 47.6% = quase 5x a meta.', como: 'Extraído do <code>Pipefy</code> (fase OBRA PAUSADA). Não há campo de "motivo" obrigatório — muitas pausadas sem explicação.', escala: { green: '≤ 10%', amber: '10–25%', red: '> 25%', atual: 'red' }, analogia: 'Fábrica com 100 máquinas. 48 paradas. Paga por 100, produz com 52.', fonte: 'Pipefy → fase OBRA PAUSADA' },
+      { val: '238d', nome: 'Ciclo médio', cor: 'red', delta: '—', dc: 'neutral', sub: '88d acima da meta', meter: { fill: 90, color: 'red', target: 56 }, ctx: '88 dias acima da meta', meta: 'meta ≤150d', oque: '<strong>Tempo médio do projeto do início ao fim</strong> (end-to-end). Da entrada no sistema até finalização.', pq: 'Meta é 150 dias. Com 238d, cada obra leva <strong>59% mais tempo</strong> do que deveria. Comprime capacidade e rentabilidade.', como: 'Extraído do <code>Dashboard Executivo</code> que analisa 1.028 obras no painel-temporal.', escala: { green: '≤ 150d', amber: '150–200d', red: '> 200d', atual: 'red' }, analogia: 'Se a receita de bolo diz 1h, suas obras levam 1h35. Todo dia, todos os dias.', fonte: 'Dashboard Executivo → painel-temporal.json' },
+    ]},
+    { grupo: 'Logística', items: [
+      { val: '267', nome: 'Amostras CORES', cor: 'red', delta: '—', dc: 'neutral', sub: '260d avg · travadas', meter: { fill: 100, color: 'red', target: 7 }, ctx: '260d avg · travadas', meta: 'meta ≤20', oque: '<strong>Amostras de cor presas no pipeline CORES</strong> do Pipefy. Cada uma representa um projeto esperando aprovação de cor.', pq: 'Sem aprovação de cor, a obra <strong>não pode começar</strong>. 267 amostras travadas há 260 dias em média = gargalo #1 de logística. Meta é no máximo 20.', como: 'Contagem direta do pipe CORES no <code>Pipefy</code>. Cruzado com idade média pelo Dashboard.', escala: { green: '≤ 20', amber: '20–50', red: '> 50', atual: 'red' }, analogia: 'Imagine 267 pedidos de aprovação empilhados na mesa há 9 meses. Ninguém assina. Nada anda.', fonte: 'Pipefy → pipe CORES + Dashboard Executivo' },
+      { val: '3%', nome: 'SLA Visita Técnica', cor: 'red', delta: '—', dc: 'neutral', sub: '41 na fila', meter: { fill: 3, color: 'red', target: 90 }, ctx: '41 na fila', meta: 'meta ≥90%', oque: '<strong>Percentual de visitas técnicas realizadas dentro do prazo</strong>. VT é o primeiro contato presencial com a obra.', pq: 'Só 3% no prazo. Fila de 41 VTs. Cada atraso de VT atrasa toda a cadeia: projeto, contrato, execução. Meta: 90%.', como: 'Calculado pela régua de saúde com dados do <code>Pipefy</code> (fase AGEND VT - AFERIÇÃO).', escala: { green: '≥ 90%', amber: '50–90%', red: '< 50%', atual: 'red' }, analogia: 'Médico que atende 3% dos pacientes no horário. Os outros 97% ficam esperando.', fonte: 'Pipefy → AGEND VT AFERIÇÃO + Régua de Saúde' },
+    ]},
+    { grupo: 'Comercial', items: [
+      { val: 'R$151k', nome: 'Ticket médio', cor: 'green', delta: '↑8k', dc: 'up-good', sub: '89% acima da meta', meter: { fill: 100, color: 'green', target: 53 }, ctx: '89% acima da meta', meta: 'meta ≥R$80k', oque: '<strong>Valor médio por contrato</strong>. Quanto cada obra gera de receita bruta.', pq: 'R$151k contra meta de R$80k = <strong>excelente</strong>. Indica que a empresa está atraindo projetos de alto valor (STELION™ e grandes metragens).', como: 'Calculado pela régua de saúde com dados do <code>Pipefy</code> e estimativas comerciais.', escala: { green: '≥ R$80k', amber: 'R$50–80k', red: '< R$50k', atual: 'green' }, analogia: 'Sua meta era vender hambúrgueres de R$80. Está vendendo de R$151. Clientela premium.', fonte: 'Régua de Saúde → dados comerciais' },
+      { val: '25', nome: 'Throughput/mês', cor: 'green', delta: '↑3', dc: 'up-good', sub: 'obras concluídas', meter: { fill: 83, color: 'green', target: 67 }, ctx: 'obras concluídas', meta: 'meta ≥20/mês', oque: '<strong>Obras concluídas por mês</strong>. Capacidade real de entrega da operação.', pq: '25 contra meta de 20 = <strong>saudável</strong>. A operação consegue entregar, o problema está nos que ficam travados no meio.', como: 'Contagem de obras que mudaram pra status finalizado/concluído no mês corrente.', escala: { green: '≥ 20', amber: '15–20', red: '< 15', atual: 'green' }, analogia: 'A fábrica entrega 25 produtos/mês contra meta de 20. Produção ok, o gargalo é o estoque parado.', fonte: 'Pipefy → transições de fase + Régua de Saúde' },
+    ]},
+  ],
+];
+
+// Render KPIs
+function renderKPIs() {
+  var html = '';
+  KPI_ROWS.forEach(function(row, ri) {
+    html += '<div class="kpi-groups"' + (ri > 0 ? ' style="margin-top:16px"' : '') + '>';
+    row.forEach(function(group, gi) {
+      var gIdx = ri * 3 + gi;
+      html += '<div class="kpi-group" id="kpi-' + gIdx + '">';
+      html += '<div class="kpi-group-top" onclick="toggleKPI(' + gIdx + ')">';
+      html += '<div class="kpi-group-title">' + group.grupo + '</div>';
+      html += '<div class="kpi-pair">';
+      group.items.forEach(function(k) {
+        html += '<div class="kpi-item"><div class="kpi-status ' + k.cor + '"></div><div class="kpi-info">i</div>';
+        html += '<div class="kpi-header"><div class="kpi-val" style="color:var(--' + k.cor + ')">' + k.val + '</div><div class="kpi-delta ' + k.dc + '">' + k.delta + '</div></div>';
+        html += '<div class="kpi-name">' + k.nome + '</div>';
+        html += '<div class="kpi-sub">' + k.sub + '</div>';
+        html += '<div class="kpi-meter"><div class="kpi-meter-fill ' + k.meter.color + '" style="width:' + k.meter.fill + '%"></div><div class="kpi-meter-target" style="left:' + k.meter.target + '%"></div></div>';
+        html += '<div class="kpi-meta"><span>' + k.ctx + '</span><span>' + k.meta + '</span></div>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+
+      // Explainer (uses first item for simplicity, both share group)
+      var k = group.items[0];
+      var escala = '<div class="explain-scale"><div class="scale-zone green ' + (k.escala.atual === 'green' ? 'active' : '') + '"><div class="zone-range">' + k.escala.green + '</div><div class="zone-label">Saudável</div></div><div class="scale-zone amber ' + (k.escala.atual === 'amber' ? 'active' : '') + '"><div class="zone-range">' + k.escala.amber + '</div><div class="zone-label">Atenção</div></div><div class="scale-zone red ' + (k.escala.atual === 'red' ? 'active' : '') + '"><div class="zone-range">' + k.escala.red + '</div><div class="zone-label">Crítico</div></div></div>';
+
+      // Build explainer for BOTH items
+      var explainItems = group.items.map(function(item) {
+        var esc = '<div class="explain-scale"><div class="scale-zone green ' + (item.escala.atual === 'green' ? 'active' : '') + '"><div class="zone-range">' + item.escala.green + '</div><div class="zone-label">Saudável</div></div><div class="scale-zone amber ' + (item.escala.atual === 'amber' ? 'active' : '') + '"><div class="zone-range">' + item.escala.amber + '</div><div class="zone-label">Atenção</div></div><div class="scale-zone red ' + (item.escala.atual === 'red' ? 'active' : '') + '"><div class="zone-range">' + item.escala.red + '</div><div class="zone-label">Crítico</div></div></div>';
+        return '<div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #111">' +
+          '<div style="font-size:13px;font-weight:600;color:var(--' + item.cor + ');margin-bottom:12px">' + item.val + ' — ' + item.nome + '</div>' +
+          '<div class="explain-section"><div class="explain-label">O que é</div><div class="explain-text">' + item.oque + '</div></div>' +
+          '<div class="explain-section"><div class="explain-label">Por que importa</div><div class="explain-text">' + item.pq + '</div></div>' +
+          '<div class="explain-section"><div class="explain-label">Escala</div>' + esc + '</div>' +
+          '<div class="explain-analogy">' + item.analogia + '</div>' +
+          '<div class="explain-section"><div class="explain-label">Como é calculado</div><div class="explain-text">' + item.como + '</div></div>' +
+          '<div class="explain-source">Fonte: <code>' + item.fonte + '</code></div>' +
+        '</div>';
+      }).join('');
+
+      html += '<div class="kpi-explain"><div class="explain-inner">' + explainItems + '</div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('kpiContainer').innerHTML = html;
+}
+
+function toggleKPI(idx) {
+  var el = document.getElementById('kpi-' + idx);
+  var wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.kpi-group.open').forEach(function(c) { c.classList.remove('open'); });
+  if (!wasOpen) el.classList.add('open');
+}
+
+// ═══ CONSULTORES ═══
+var TIPO_DEFS = {
+  'desvio qualidade': { def: 'Divergência entre resultado e padrão técnico. Manchas, bolhas, cor errada, nivelamento fora.', como: '<code>KIRA</code> detecta: "mancha", "bolha", "irregular", "cor errada", fotos de defeitos.' },
+  'falha comunicação': { def: 'Quebra no fluxo de informação. Silêncio, cronograma não informado, decisões sem consulta.', como: '<code>KIRA</code> detecta: períodos sem resposta, cliente ignorado, desalinhamentos.' },
+  'atraso': { def: 'Prazo previsto ultrapassado. Medido pela diferença entre data prevista e hoje.', como: '<code>KIRA</code> + <code>Argos</code>: menções a "atrasou", "reagendar" + data do Pipefy.' },
+  'reclamação cliente': { def: 'Insatisfação explícita do cliente. Pode escalar pra ação judicial.', como: '<code>KIRA</code> detecta: "insatisfeito", "inaceitável", "advogado", tom negativo.' },
+  'material': { def: 'Material errado, atraso, consumo acima do estimado, estoque insuficiente.', como: '<code>KIRA</code>: "material errado", "falta de", cruza com pipe PRODUÇÃO.' },
+  'abandono obra': { def: 'Equipe deixa obra sem aviso. Classificação mais grave.', como: '<code>KIRA</code>: silêncio súbito, "cadê a equipe", "sumiu", "não apareceu".' },
+};
+
+var CONS = [
+  { id: 'wesley', nome: 'Wesley Matheus', ini: 'WM', obras: 42, msgs: 2814, ocs: 98, crit: 12, atraso: 38,
+    tipos: [ { t: 'desvio qualidade', n: 28, sev: { critica: { n:5, items: [{tit:'Manchas extensas após cura',proj:'TALLY FELDMAN'},{tit:'Cor diferente do aprovado',proj:'TALLY FELDMAN'},{tit:'Retrabalho completo — piso rejeitado',proj:'ANDRE KEUNECKE'},{tit:'Desplacamento em alto tráfego',proj:'GETULIO TURATTI'},{tit:'Ondulações visíveis',proj:'LUIZ GUSTAVO'}] }, alta: { n:10, items: [{tit:'Irregularidade no corredor',proj:'LUIZ GUSTAVO'},{tit:'Bolhas após PU',proj:'FLAVIO FAVA'},{tit:'Tonalidade desigual',proj:'TALLY FELDMAN'},{tit:'Micro fissuras na entrada',proj:'TRESPONTOZERO'}] }, media: { n:8, items: [{tit:'Consumo resina 20% acima',proj:'ANDRE KEUNECKE'}] }, baixa: { n:5, items: [{tit:'Arranhão superficial removível',proj:'CONDOMÍNIO CORIN'}] } } },
+      { t: 'falha comunicação', n: 22, sev: { critica: { n:2, items: [{tit:'Cliente sem retorno há 12 dias',proj:'TALLY FELDMAN'}] }, alta: { n:8, items: [{tit:'Não comunicou mudança de cronograma',proj:'TALLY FELDMAN'}] }, media: { n:8, items: [] }, baixa: { n:4, items: [] } } },
+      { t: 'atraso', n: 18, sev: { critica: { n:3, items: [{tit:'131 dias na fase (prazo: 15d)',proj:'TALLY FELDMAN'},{tit:'Reprogramada 5 vezes',proj:'ANDRE KEUNECKE'}] }, alta: { n:6, items: [{tit:'45 dias sobre cronograma',proj:'GETULIO TURATTI'}] }, media: { n:6, items: [] }, baixa: { n:3, items: [] } } },
+      { t: 'reclamação cliente', n: 16, sev: { critica: { n:4, items: [{tit:'Ameaça ação judicial',proj:'TALLY FELDMAN'},{tit:'Recusa receber obra',proj:'FLAVIO FAVA'}] }, alta: { n:6, items: [] }, media: { n:4, items: [] }, baixa: { n:2, items: [] } } },
+      { t: 'abandono obra', n: 6, sev: { critica: { n:4, items: [{tit:'Abandonou obra 5 dias sem aviso',proj:'TALLY FELDMAN'},{tit:'Não apareceu 3 dias — cliente desesperado',proj:'FLAVIO FAVA'}] }, alta: { n:2, items: [] }, media: { n:0, items: [] }, baixa: { n:0, items: [] } } },
+    ],
+    topObras: [{n:'TALLY FELDMAN SINGAL GROSS',m:200,o:32},{n:'ANDRE KEUNECKE SALERNO',m:200,o:10},{n:'FLAVIO FAVA DITT',m:89,o:13},{n:'GUILHERME HAIDAR BERJEAUT',m:91,o:1}],
+  },
+  { id: 'luana', nome: 'Luana Patricia', ini: 'LP', obras: 35, msgs: 1950, ocs: 62, crit: 8, atraso: 22,
+    tipos: [ { t: 'desvio qualidade', n: 20, sev: { critica:{n:3,items:[]}, alta:{n:8,items:[]}, media:{n:6,items:[]}, baixa:{n:3,items:[]} } }, { t: 'atraso', n: 15, sev: { critica:{n:2,items:[]}, alta:{n:5,items:[]}, media:{n:5,items:[]}, baixa:{n:3,items:[]} } }, { t: 'falha comunicação', n: 12, sev: { critica:{n:1,items:[]}, alta:{n:4,items:[]}, media:{n:5,items:[]}, baixa:{n:2,items:[]} } } ],
+    topObras: [{n:'PETITE FLEUR',m:210,o:8},{n:'ANDRE KEUNECKE SALERNO',m:200,o:10},{n:'MARINA PIRES DE AGUIAR',m:200,o:4}],
+  },
+  { id: 'juliana', nome: 'Juliana', ini: 'JL', obras: 28, msgs: 1200, ocs: 45, crit: 4, atraso: 18,
+    tipos: [ { t: 'desvio qualidade', n: 14, sev: { critica:{n:1,items:[]}, alta:{n:5,items:[]}, media:{n:5,items:[]}, baixa:{n:3,items:[]} } }, { t: 'reclamação cliente', n: 12, sev: { critica:{n:2,items:[]}, alta:{n:4,items:[]}, media:{n:4,items:[]}, baixa:{n:2,items:[]} } } ],
+    topObras: [{n:'GETULIO TURATTI OST',m:144,o:5},{n:'MARINA PIRES DE AGUIAR',m:200,o:4}],
+  },
+  { id: 'pedro', nome: 'Pedro Marçal', ini: 'PM', obras: 18, msgs: 680, ocs: 32, crit: 3, atraso: 28,
+    tipos: [ { t: 'atraso', n: 12, sev: { critica:{n:1,items:[]}, alta:{n:4,items:[]}, media:{n:5,items:[]}, baixa:{n:2,items:[]} } }, { t: 'desvio qualidade', n: 8, sev: { critica:{n:1,items:[]}, alta:{n:3,items:[]}, media:{n:3,items:[]}, baixa:{n:1,items:[]} } } ],
+    topObras: [{n:'TÂMARA NEWMAN LOBATO',m:51,o:3}],
+  },
+  { id: 'orfas', nome: 'Sem consultor', ini: '?', obras: 18, msgs: 0, ocs: 12, crit: 2, atraso: 0, isOrfa: true,
+    tipos: [ { t: 'falha comunicação', n: 5, sev: { critica:{n:1,items:[]}, alta:{n:2,items:[]}, media:{n:2,items:[]}, baixa:{n:0,items:[]} } }, { t: 'desvio qualidade', n: 4, sev: { critica:{n:1,items:[]}, alta:{n:1,items:[]}, media:{n:1,items:[]}, baixa:{n:1,items:[]} } } ],
+    topObras: [{n:'OBRA ÓRFÃ 1',m:0,o:4},{n:'OBRA ÓRFÃ 2',m:0,o:3}],
+  },
+];
+
+// Render consultant buttons
+function renderConsBtns() {
+  document.getElementById('consBtns').innerHTML = CONS.map(function(c, i) {
+    var style = c.isOrfa ? ' style="border-color:var(--red);color:var(--red)"' : '';
+    var nameStyle = c.isOrfa ? ' style="color:var(--red)"' : '';
+    var badgeStyle = c.isOrfa ? ' style="color:var(--red)"' : '';
+    return '<div class="cons-btn' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '" onclick="showCons(' + i + ')"><div class="cons-avatar"' + style + '>' + c.ini + '</div><div class="cons-info"><div class="cons-name"' + nameStyle + '>' + c.nome + '</div><div class="cons-quick">' + c.ocs + ' ocs · ' + (c.atraso > 0 ? c.atraso + '% atraso' : 'sem responsável') + '</div></div><div class="cons-obras-badge"' + badgeStyle + '>' + c.obras + '</div></div>';
+  }).join('');
+}
+
+function showCons(idx) {
+  var c = CONS[idx];
+  document.querySelectorAll('.cons-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelector('[data-idx="' + idx + '"]').classList.add('active');
+  var maxT = Math.max.apply(null, c.tipos.map(function(t) { return t.n; }));
+  var ac = c.atraso > 30 ? 'red' : c.atraso > 15 ? 'amber' : 'green';
+  var oc = c.ocs > 80 ? 'red' : c.ocs > 40 ? 'amber' : 'gold';
+
+  var types = c.tipos.map(function(t, ti) {
+    var pct = (t.n / maxT * 100).toFixed(0);
+    var bc = t.t.includes('abandono') || t.t.includes('reclamação') ? 'red' : t.t.includes('atraso') ? 'amber' : 'gold';
+    var def = TIPO_DEFS[t.t] || {};
+    var maxS = Math.max(t.sev.critica.n, t.sev.alta.n, t.sev.media.n, t.sev.baixa.n, 1);
+    var sevs = ['critica','alta','media','baixa'].map(function(s) {
+      var h = Math.max((t.sev[s].n / maxS) * 45, 3);
+      return '<div class="sev-col" data-ci="' + idx + '" data-ti="' + ti + '" data-sev="' + s + '" onclick="toggleSev(this)"><div class="sev-bar-wrap" style="height:' + (h+38) + 'px"><div class="sev-bar ' + s + '" style="height:' + h + 'px"></div></div><div class="sev-bubble ' + s + '"><div class="sev-pulse"></div><span class="sev-bubble-num">' + t.sev[s].n + '</span></div><div class="sev-label">' + s.substring(0,4) + '</div></div>';
+    }).join('');
+
+    return '<div class="type-item" id="type-' + idx + '-' + ti + '"><div class="type-row" onclick="toggleType(\'' + idx + '-' + ti + '\')"><span class="type-label">' + t.t + '</span><div class="type-bar-bg"><div class="type-bar ' + bc + '" style="width:' + pct + '%"></div></div><span class="type-count">' + t.n + '</span><span class="type-chev">›</span></div><div class="type-detail"><div class="type-detail-inner"><div class="def-row"><div class="def-block"><div class="def-title">O que é</div><div class="def-text">' + (def.def||'') + '</div></div><div class="def-block"><div class="def-title">Como detecta</div><div class="def-text">' + (def.como||'') + '</div></div></div><div class="sev-chart">' + sevs + '</div><div class="sev-list" id="sev-' + idx + '-' + ti + '"></div></div></div></div>';
+  }).join('');
+
+  var obras = c.topObras.map(function(o) {
+    return '<div class="obra-row"><span class="obra-name">' + o.n + '</span><span class="obra-val">' + o.m + ' msgs</span><span class="obra-val ' + (o.o > 5 ? 'red' : '') + '">' + (o.o > 0 ? o.o + ' ocs' : '\u2014') + '</span></div>';
+  }).join('');
+
+  document.getElementById('chartArea').innerHTML = '<div style="animation:fadeIn 0.3s ease-out"><div class="chart-header"><div class="chart-cons-name">' + c.nome + '</div><div class="chart-cons-role">' + (c.isOrfa ? '18 obras sem responsável' : 'Consultor · ' + c.obras + ' obras') + '</div></div><div class="chart-stats"><div class="chart-stat"><div class="chart-stat-val gold">' + c.obras + '</div><div class="chart-stat-label">Obras</div></div><div class="chart-stat"><div class="chart-stat-val blue">' + c.msgs.toLocaleString('pt-BR') + '</div><div class="chart-stat-label">Msgs</div></div><div class="chart-stat"><div class="chart-stat-val ' + oc + '">' + c.ocs + '</div><div class="chart-stat-label">Ocs</div></div><div class="chart-stat"><div class="chart-stat-val ' + ac + '">' + (c.atraso > 0 ? c.atraso + '%' : '\u2014') + '</div><div class="chart-stat-label">Atraso</div></div></div><div class="types-title">Tipos de ocorrência — clique para entender e ver severidades</div>' + types + '<div class="obras-title">Obras mais problemáticas</div>' + obras + '</div>';
+}
+
+function toggleType(id) {
+  var el = document.getElementById('type-' + id);
+  var was = el.classList.contains('active');
+  el.closest('.cons-chart').querySelectorAll('.type-item.active').forEach(function(i) { i.classList.remove('active'); });
+  if (!was) el.classList.add('active');
+}
+
+function toggleSev(col) {
+  var ci = parseInt(col.dataset.ci), ti = parseInt(col.dataset.ti), sev = col.dataset.sev;
+  var c = CONS[ci], t = c.tipos[ti], items = t.sev[sev].items;
+  var listEl = document.getElementById('sev-' + ci + '-' + ti);
+  var was = col.classList.contains('active');
+  col.closest('.sev-chart').querySelectorAll('.sev-col').forEach(function(c) { c.classList.remove('active'); });
+  if (was) { listEl.classList.remove('open'); listEl.innerHTML = ''; return; }
+  col.classList.add('active');
+  var labels = { critica:'Crítica', alta:'Alta', media:'Média', baixa:'Baixa' };
+  if (!items.length) {
+    listEl.innerHTML = '<div class="sev-list-inner"><div class="sev-list-head"><span class="sev-list-title ' + sev + '">' + labels[sev] + ' — ' + t.sev[sev].n + '</span></div><div style="padding:12px;color:var(--dim);font-size:10px;text-align:center">Dados detalhados indisponíveis neste preview.</div></div>';
+  } else {
+    var rows = items.map(function(o) { return '<div class="oc-row"><span class="oc-titulo">' + o.tit + '</span><span class="oc-projeto">' + o.proj + '</span></div>'; }).join('');
+    listEl.innerHTML = '<div class="sev-list-inner"><div class="sev-list-head"><span class="sev-list-title ' + sev + '">' + labels[sev] + ' — ' + items.length + ' ocorrência' + (items.length > 1 ? 's' : '') + '</span><span class="sev-list-close" onclick="event.stopPropagation();closeSev(' + ci + ',' + ti + ')">✕</span></div>' + rows + '</div>';
+  }
+  listEl.classList.add('open');
+}
+
+function closeSev(ci, ti) {
+  var el = document.getElementById('sev-' + ci + '-' + ti);
+  el.classList.remove('open');
+  el.closest('.type-detail-inner').querySelectorAll('.sev-col.active').forEach(function(c) { c.classList.remove('active'); });
+}
+
+// Init
+renderKPIs();
+renderConsBtns();
+showCons(0);
+</script>
+</body>
+</html>
