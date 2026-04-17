@@ -142,14 +142,14 @@ nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:#060
 .type-detail{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out}
 .type-item.active .type-detail{max-height:500px}
 .type-detail-inner{padding:8px 10px 14px}
-.def-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.def-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
 .def-block{background:#080808;border:1px solid #151515;border-radius:8px;padding:12px}
 .def-title{font-size:7px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px}
 .def-text{font-size:10px;color:#bbb;line-height:1.6}
 .def-text code{background:#141414;padding:1px 4px;border-radius:3px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:9px}
 
 /* Severity chart with animation */
-.sev-chart{display:flex;align-items:flex-end;height:90px;position:relative;padding:0 8px;margin-bottom:8px}
+.sev-chart{display:flex;align-items:flex-end;height:110px;position:relative;padding:0 8px;margin:16px 0 8px;border-top:1px solid #111;padding-top:8px}
 .sev-chart::before{content:"";position:absolute;bottom:28px;left:20px;right:20px;height:1px;background:linear-gradient(90deg,var(--red),var(--amber),var(--blue),var(--green));opacity:0.15}
 .sev-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform 0.2s;z-index:1}
 .sev-col:hover{transform:translateY(-2px)}
@@ -157,8 +157,8 @@ nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);background:#060
 .sev-bar-wrap{width:30px;display:flex;justify-content:center}
 .sev-bar{width:22px;border-radius:4px 4px 0 0;transition:height 0.6s cubic-bezier(0.4,0,0.2,1)}
 .sev-bar.critica{background:var(--red)}.sev-bar.alta{background:var(--amber)}.sev-bar.media{background:var(--blue)}.sev-bar.baixa{background:var(--green)}
-.sev-bubble{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border);background:var(--card);transition:all 0.3s;position:relative}
-.sev-bubble-num{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;z-index:2}
+.sev-bubble{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--border);background:var(--card);transition:all 0.3s;position:relative}
+.sev-bubble-num{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;z-index:2}
 .sev-bubble.critica{--glow:#ef444450}.sev-bubble.critica .sev-bubble-num{color:var(--red)}
 .sev-bubble.alta{--glow:#f59e0b50}.sev-bubble.alta .sev-bubble-num{color:var(--amber)}
 .sev-bubble.media{--glow:#3b82f650}.sev-bubble.media .sev-bubble-num{color:var(--blue)}
@@ -425,8 +425,8 @@ function showCons(idx) {
     var def = TIPO_DEFS[t.t] || {};
     var maxS = Math.max(t.sev.critica.n, t.sev.alta.n, t.sev.media.n, t.sev.baixa.n, 1);
     var sevs = ['critica','alta','media','baixa'].map(function(s) {
-      var h = Math.max((t.sev[s].n / maxS) * 45, 3);
-      return '<div class="sev-col" data-ci="' + idx + '" data-ti="' + ti + '" data-sev="' + s + '" onclick="toggleSev(this)"><div class="sev-bar-wrap" style="height:' + (h+38) + 'px"><div class="sev-bar ' + s + '" style="height:' + h + 'px"></div></div><div class="sev-bubble ' + s + '"><div class="sev-pulse"></div><span class="sev-bubble-num">' + t.sev[s].n + '</span></div><div class="sev-label">' + s.substring(0,4) + '</div></div>';
+      var h = Math.max((t.sev[s].n / maxS) * 30, 3);
+      return '<div class="sev-col" data-ci="' + idx + '" data-ti="' + ti + '" data-sev="' + s + '" onclick="toggleSev(this)"><div class="sev-bar-wrap" style="height:' + (h+30) + 'px"><div class="sev-bar ' + s + '" style="height:' + h + 'px"></div></div><div class="sev-bubble ' + s + '"><div class="sev-pulse"></div><span class="sev-bubble-num">' + t.sev[s].n + '</span></div><div class="sev-label">' + s.substring(0,4) + '</div></div>';
     }).join('');
 
     return '<div class="type-item" id="type-' + idx + '-' + ti + '"><div class="type-row" onclick="toggleType(\'' + idx + '-' + ti + '\')"><span class="type-label">' + t.t + '</span><div class="type-bar-bg"><div class="type-bar ' + bc + '" style="width:' + pct + '%"></div></div><span class="type-count">' + t.n + '</span><span class="type-chev">›</span></div><div class="type-detail"><div class="type-detail-inner"><div class="def-row"><div class="def-block"><div class="def-title">O que é</div><div class="def-text">' + (def.def||'') + '</div></div><div class="def-block"><div class="def-title">Como detecta</div><div class="def-text">' + (def.como||'') + '</div></div></div><div class="sev-chart">' + sevs + '</div><div class="sev-list" id="sev-' + idx + '-' + ti + '"></div></div></div></div>';
