@@ -25,6 +25,7 @@ header{padding:32px 0;display:flex;justify-content:space-between;align-items:cen
 .logo{display:flex;align-items:center;gap:12px}
 .logo svg{height:22px}
 .logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-faint);margin-top:2px}
 .header-meta{text-align:right;font-size:11px;color:var(--text-faint);line-height:1.6}
 .header-meta strong{color:var(--text-sub);font-weight:500}
 
@@ -41,6 +42,10 @@ header{padding:32px 0;display:flex;justify-content:space-between;align-items:cen
 /* ═══ CONTEXT BLOCK ═══ */
 .context{margin-top:32px;padding:20px 24px;background:var(--surface);border:1px solid var(--border-light);border-radius:12px;font-size:12px;color:var(--text-sub);line-height:1.7;font-weight:300}
 .context strong{color:var(--text);font-weight:500}
+.context-items{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.context-item{display:flex;align-items:baseline;gap:10px}
+.context-icon{flex-shrink:0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.context-item-text{flex:1}
 
 /* ═══ KPI HINT ═══ */
 .kpi-hint{text-align:center;font-size:10px;color:var(--text-lightest);margin-bottom:16px;font-weight:400;letter-spacing:0.5px}
@@ -289,13 +294,18 @@ body{animation:pageIn 0.6s ease-out}
 <header>
   <div class="logo">
     <span class="logo-text">monofloor</span>
+    <div class="logo-sub">Indicadores Operacionais</div>
   </div>
   <div class="header-meta"><strong>16 abr 2026</strong> · 18:06<br>159 projetos ativos · atualizado a cada 6h</div>
 </header>
 
 <!-- ═══ CONTEXT BLOCK ═══ -->
 <div class="context">
-  Este painel monitora <strong>159 obras ativas</strong> da Monofloor em tempo real, analisando automaticamente as mensagens de <strong>Telegram</strong> e <strong>WhatsApp</strong> dos grupos de cada obra. A inteligência artificial identifica ocorrências, mede comunicação e detecta atrasos. As metas vêm da <strong>Régua de Saúde Operacional</strong> — o padrão de como a empresa deve operar.
+  <div class="context-items">
+    <div class="context-item"><span class="context-icon">📡</span><span class="context-item-text">Monitora <strong>159 obras ativas</strong> em tempo real, analisando mensagens de <strong>Telegram</strong> e <strong>WhatsApp</strong> dos grupos de cada obra.</span></div>
+    <div class="context-item"><span class="context-icon">🤖</span><span class="context-item-text">A inteligência artificial detecta <strong>problemas</strong> automaticamente — desvios de qualidade, atrasos, reclamações, abandonos.</span></div>
+    <div class="context-item"><span class="context-icon">🎯</span><span class="context-item-text">As metas vêm da <strong>Régua de Saúde Operacional</strong> — o padrão de como a empresa deve operar em cada setor.</span></div>
+  </div>
 </div>
 
 <!-- ═══ SECTION 1 — ATENÇÃO ═══ -->
@@ -307,11 +317,11 @@ body{animation:pageIn 0.6s ease-out}
   <div class="fire-grid">
     <div class="fire-card">
       <span class="fire-pill crit">0% resolvidas</span>
-      <div class="fire-status"><span class="fire-dot red"></span><span class="fire-status-text red">Resolução zero</span></div>
+      <div class="fire-status"><span class="fire-dot red"></span><span class="fire-status-text red">Nenhum resolvido</span></div>
       <div class="fire-number red">286</div>
-      <div class="fire-unit">ocorrências abertas</div>
-      <div class="fire-insight">26 são críticas — nenhuma foi resolvida</div>
-      <div class="fire-detail">Desvios de qualidade, reclamações e abandonos acumulando sem tratamento.</div>
+      <div class="fire-unit">problemas detectados nas obras</div>
+      <div class="fire-insight">26 são críticos — nenhum foi resolvido</div>
+      <div class="fire-detail">Desvios de qualidade, reclamações de clientes e abandonos de obra — detectados pela IA nas mensagens dos grupos.</div>
       <a class="fire-action" href="javascript:void(0)" onclick="event.stopPropagation();openKPI(1)">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
     <div class="fire-card">
