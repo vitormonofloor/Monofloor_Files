@@ -741,6 +741,11 @@
   .auto-fonte a:hover{text-decoration:underline}
   .scope-note{font-size:10px;color:#b8b0a4;margin-top:6px;font-style:italic;line-height:1.4}
   .scope-note a{color:#b8a080}
+  .section-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.12em}
+  .pill-prazo{background:#f6eaea;color:#c45a5a;border:1px solid #e8c8c8}
+  .pill-paradas{background:#f4f0e6;color:#b89a4a;border:1px solid #e0d8c0}
+  .pill-equipe{background:#eaf0f6;color:#4a7ab8;border:1px solid #c8d8e8}
+  .pill-volume{background:#e8f2ec;color:#3d8a5a;border:1px solid #c8e0d0}
   .auto-agents-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
   .auto-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.18em;color:#b8a080;text-transform:uppercase}
   .auto-sub{font-size:11px;color:#b8b0a4;font-style:italic}
@@ -947,7 +952,7 @@
   <!-- ============== Q1 — PRAZO ============== -->
   <section id="q1">
     <div class="q-head">
-      <h2>PRAZO</h2>
+      <h2><span class="section-pill pill-prazo">PRAZO</span></h2>
       <p class="sub">Das 34 obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
       <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja <a href="../indicadores-v2.html">Indicadores</a>.</p>
     </div>
@@ -1004,7 +1009,7 @@
   <!-- ============== Q2 — POR QUE PARADO ============== -->
   <section id="q2">
     <div class="q-head">
-      <h2>OBRAS PARADAS</h2>
+      <h2><span class="section-pill pill-paradas">OBRAS PARADAS</span></h2>
       <p class="sub">Todas as 208 obras ativas agrupadas por situação. Clique numa categoria para ver quais obras estão ali e o diagnóstico.</p>
       <p class="scope-note">Base: carteira completa (208 ativas de 1.028 no sistema). Métricas complementares nos <a href="../indicadores-v2.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
     </div>
@@ -1037,7 +1042,7 @@
   <!-- ============== Q3 — EQUIPE ============== -->
   <section id="q3">
     <div class="q-head">
-      <h2>EQUIPE</h2>
+      <h2><span class="section-pill pill-equipe">EQUIPE</span></h2>
       <p class="sub">Dois consultores (Luana e Wesley) concentram 85% de todas as obras ativas. Veja a distribuição de carga e as equipes operacionais.</p>
     </div>
 
@@ -1085,7 +1090,7 @@
   <!-- ============== Q4 — VOLUME ============== -->
   <section id="q4">
     <div class="q-head">
-      <h2>VOLUME</h2>
+      <h2><span class="section-pill pill-volume">VOLUME</span></h2>
       <p class="sub" id="q4-sub">O que está efetivamente em obra (rodando), o que travou (estagnado) e o que ainda não começou (pendente). Clique nos cards para ver as obras.</p>
     </div>
 
