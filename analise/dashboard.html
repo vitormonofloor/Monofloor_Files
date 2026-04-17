@@ -672,14 +672,6 @@
   @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 
   /* ============== LEITURA DO DIA ============== */
-  .leitura-dia{margin:0 0 28px;padding:20px 24px;background:linear-gradient(135deg,#0d0d0d 0%,#101008 100%);border:1px solid #2a2015;border-left:3px solid #c4a77d;border-radius:0 8px 8px 0;position:relative}
-  .leitura-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
-  .leitura-tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.15em;color:#c4a77d;text-transform:uppercase}
-  .leitura-data{font-family:'JetBrains Mono',monospace;font-size:11px;color:#666}
-  .leitura-texto{font-size:14px;line-height:1.8;color:#ddd;max-width:900px}
-  .leitura-texto b{color:#c4a77d;font-weight:600}
-  .leitura-texto .num{font-family:'JetBrains Mono',monospace;font-weight:600}
-  .leitura-fonte{font-size:10px;color:#555;margin-top:12px;font-style:italic}
   </style>
 </head>
 <body>
@@ -750,18 +742,6 @@
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
-    </div>
-  </section>
-
-  <!-- ============== LEITURA DO DIA ============== -->
-  <section id="leitura" class="leitura-dia">
-    <div class="leitura-head">
-      <span class="leitura-tag">LEITURA DO DIA</span>
-      <span class="leitura-data" id="leitura-data"></span>
-    </div>
-    <p class="leitura-texto" id="leitura-texto">Carregando análise...</p>
-    <div class="leitura-fonte">
-      <span>Gerado automaticamente a partir dos dados do dashboard</span>
     </div>
   </section>
 
@@ -3476,7 +3456,7 @@ function renderLeituraDia() {
 renderSnapshotDate();
 renderHealth();
 renderHero();
-renderLeituraDia();
+// renderLeituraDia() removido a pedido do Vitor
 renderHeroZumbiChip();
 renderQ1();
 q1RenderStacked();
