@@ -94,6 +94,34 @@ header{padding:32px 0;display:flex;justify-content:space-between;align-items:cen
 .kpi-meter-mark{position:absolute;top:-3px;height:9px;width:1px;background:var(--text-sub);opacity:0.3;border-radius:1px}
 .kpi-range{display:flex;justify-content:space-between;margin-top:4px;font-size:8px;color:var(--text-lightest);font-family:'JetBrains Mono',monospace}
 
+/* KPI Explainer */
+.kpi-card{overflow:hidden;position:relative}
+.kpi-card.open{border-color:var(--gold-light);box-shadow:0 4px 20px rgba(184,151,106,0.08)}
+.kpi-info-btn{position:absolute;top:16px;right:16px;width:18px;height:18px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-lightest);font-style:italic;cursor:pointer;transition:all 0.2s;background:transparent}
+.kpi-card:hover .kpi-info-btn{border-color:var(--gold-light);color:var(--gold)}
+.kpi-card.open .kpi-info-btn{background:var(--gold);border-color:var(--gold);color:#fff;font-style:normal}
+.kpi-explain{max-height:0;overflow:hidden;transition:max-height 0.5s ease-out}
+.kpi-card.open .kpi-explain{max-height:1200px}
+.explain-inner{padding:20px 0 0;border-top:1px solid var(--border-light);margin-top:20px}
+.explain-block{margin-bottom:16px}
+.explain-label{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.explain-label::before{content:"";width:3px;height:10px;background:var(--gold-light);border-radius:2px}
+.explain-text{font-size:11px;color:var(--text-sub);line-height:1.7;font-weight:300}
+.explain-text strong{color:var(--text);font-weight:500}
+.explain-text code{background:var(--surface-warm);padding:1px 5px;border-radius:3px;color:var(--gold-dark);font-family:'JetBrains Mono',monospace;font-size:10px}
+.explain-scale{display:flex;gap:0;border-radius:8px;overflow:hidden;margin-top:8px}
+.scale-zone{flex:1;padding:8px 10px;text-align:center}
+.scale-zone .zone-range{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;margin-bottom:2px}
+.scale-zone .zone-label{font-size:7px;text-transform:uppercase;letter-spacing:0.5px}
+.scale-zone.sz-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.scale-zone.sz-amber{background:var(--amber-bg);color:var(--amber);border-top:1px solid var(--amber-border);border-bottom:1px solid var(--amber-border)}
+.scale-zone.sz-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.scale-zone.active{outline:2px solid currentColor;outline-offset:-2px;font-weight:700}
+.explain-analogy{background:var(--surface-warm);border:1px solid var(--border-light);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:11px;color:var(--text-sub);line-height:1.6;font-style:italic;position:relative}
+.explain-analogy::before{content:"💡";position:absolute;top:-8px;left:12px;font-size:11px;font-style:normal;background:var(--surface);padding:0 4px}
+.explain-source{margin-top:10px;font-size:9px;color:var(--text-lightest)}
+.explain-source code{background:var(--surface-warm);padding:1px 5px;border-radius:3px;color:var(--gold-dark);font-family:'JetBrains Mono',monospace;font-size:9px}
+
 /* ═══ SPARKLINE ═══ */
 .spark-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px}
 .spark-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
@@ -345,6 +373,87 @@ footer{margin-top:56px;padding:20px 0;border-top:1px solid var(--border-light);d
   var vl=document.getElementById('vl'),dt=document.getElementById('dt'),stt=document.getElementById('stt'),std=document.getElementById('std'),stv=document.getElementById('stv');
   c.addEventListener('mousemove',function(e){var r=c.querySelector('svg').getBoundingClientRect(),rx=e.clientX-r.left,sx=(rx/r.width)*W,cl=0,cd=1e9;for(var j=0;j<data.length;j++){var d2=Math.abs(sx-xP(j));if(d2<cd){cd=d2;cl=j}}var px=xP(cl),py=yP(data[cl]);vl.setAttribute('x1',px);vl.setAttribute('x2',px);vl.setAttribute('opacity','0.4');dt.setAttribute('cx',px);dt.setAttribute('cy',py);dt.setAttribute('opacity','1');var dd=new Date(today);dd.setDate(dd.getDate()-(data.length-1-cl));var dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];std.textContent=dias[dd.getDay()]+' '+(dd.getDate()<10?'0':'')+dd.getDate()+'/'+(dd.getMonth()<9?'0':'')+(dd.getMonth()+1);stv.textContent=data[cl];stt.style.left=(rx/r.width*100)+'%';stt.style.top=(py/H*100)+'%';stt.classList.add('visible')});
   c.addEventListener('mouseleave',function(){vl.setAttribute('opacity','0');dt.setAttribute('opacity','0');stt.classList.remove('visible')});
+})();
+
+// ═══ KPI EXPLAINERS ═══
+(function(){
+  var EXPLAIN = {
+    'Comunicação': [
+      { oque:'Total de <strong>mensagens trocadas em todos os grupos de obra</strong> (TG + WA) nos últimos 30 dias. É o termômetro de comunicação da operação.', pq:'Mensagens são o <strong>sinal vital</strong>. Quando caem, algo parou. Quando sobem muito num projeto, geralmente indica problema.', como:'<code>KIRA</code> conta todas as mensagens dos grupos TG/WA. Cálculo: <code>SUM(msgs últimos 30d)</code>.', escala:{green:'≥ 5.000',amber:'2–5k',red:'< 2.000',atual:'green'}, analogia:'Volume de ligações de uma central. 253/dia = operação ativa. Se cair pra 50/dia, algo desligou.', fonte:'KIRA → Telegram + WhatsApp' },
+      { oque:'<strong>Quantos projetos ativos tiveram pelo menos 1 mensagem</strong> no TG ou WA nos últimos 30 dias.', pq:'Se 133 de 159 têm msgs, <strong>26 ficaram mudos</strong>. O complemento é a taxa de silêncio.', como:'<code>KIRA</code> verifica se cada projeto ativo tem <code>msgs30d > 0</code>.', escala:{green:'≥ 80%',amber:'60–80%',red:'< 60%',atual:'green'}, analogia:'133 de 159 lojas deram sinal de vida. As outras 26 estão no escuro.', fonte:'KIRA → contagem por projeto' },
+    ],
+    'Qualidade': [
+      { oque:'<strong>Problemas operacionais detectados automaticamente</strong> pela KIRA ao ler mensagens dos grupos de obra. Cada ocorrência tem tipo e severidade.', pq:'Ocorrências não tratadas <strong>escalam</strong>. O mais crítico: <strong>taxa de resolução 0%</strong>.', como:'<code>KIRA</code> analisa cada mensagem com IA. Detecta padrões como "mancha", "atrasou", "cadê a equipe".', escala:{green:'≤ 50',amber:'50–150',red:'> 150',atual:'red'}, analogia:'286 reclamações no SAC sem nenhuma respondida. O acúmulo sem tratamento é o verdadeiro problema.', fonte:'KIRA → classificação por IA' },
+      { oque:'Severidade máxima. <strong>Risco real e imediato</strong>: ação judicial, abandono de obra, defeito que exige refazer tudo.', pq:'Crítica não tratada em 48h <strong>piora irreversivelmente</strong>. Cliente que ameaça processo e não recebe retorno, executa.', como:'KIRA classifica como crítica: ameaças legais, abandono, defeitos que comprometem a superfície inteira.', escala:{green:'≤ 5',amber:'5–15',red:'> 15',atual:'red'}, analogia:'Das 286 reclamações, 26 já estão no Procon ou com advogado. Precisam de resposta HOJE.', fonte:'KIRA → classificação por severidade' },
+    ],
+    'Performance': [
+      { oque:'<strong>Percentual de obras ativas sem qualquer comunicação</strong> em 30 dias. Zero mensagens no TG e WA. Como se a obra não existisse.', pq:'Obra silenciosa pode ser: parada sem ninguém saber, grupo não criado, KIRA não conectada, ou tudo por telefone (sem registro).', como:'<code>(obras com 0 msgs) ÷ (total ativas) × 100</code>. Extraído da KIRA.', escala:{green:'≤ 10%',amber:'10–20%',red:'> 20%',atual:'amber'}, analogia:'Você gerencia 159 lojas. 26 não deram sinal de vida no último mês. Não sabe se estão abertas.', fonte:'KIRA → msgs por projeto nos últimos 30d' },
+      { oque:'<strong>Percentual de obras cuja data prevista já passou</strong> e não foram finalizadas. 1 em cada 3 está atrasada.', pq:'Atraso gera <strong>efeito cascata</strong>: cliente insatisfeito, equipe presa, novos projetos não começam, custo sobe.', como:'<code>(obras com dataExecPrevista < hoje) ÷ (total ativas) × 100</code>. Cruza Pipefy + Argos.', escala:{green:'≤ 15%',amber:'15–25%',red:'> 25%',atual:'red'}, analogia:'Prometeu 100 encomendas, 32 atrasaram. Quase 1/3 dos clientes esperando além do prazo.', fonte:'Pipefy (data prevista) + Argos' },
+    ],
+    'Operações': [
+      { oque:'Percentual de obras ativas <strong>com status "pausado"</strong>. Obra começou mas foi interrompida.', pq:'Obra pausada é <strong>dinheiro parado</strong>. Equipe mobilizada, material comprado, tudo congelado. 47.6% = quase 5x a meta.', como:'Extraído do <code>Pipefy</code> (fase OBRA PAUSADA). Não há campo obrigatório de "motivo da pausa".', escala:{green:'≤ 10%',amber:'10–25%',red:'> 25%',atual:'red'}, analogia:'Fábrica com 100 máquinas. 48 paradas. Paga por 100, produz com 52.', fonte:'Pipefy → fase OBRA PAUSADA' },
+      { oque:'<strong>Tempo médio do projeto do início ao fim</strong> (end-to-end). Da entrada no sistema até finalização.', pq:'Meta é 150 dias. Com 238d, cada obra leva <strong>59% mais tempo</strong>. Comprime capacidade e rentabilidade.', como:'Extraído do <code>Dashboard Executivo</code> que analisa 1.028 obras.', escala:{green:'≤ 150d',amber:'150–200d',red:'> 200d',atual:'red'}, analogia:'Se a receita diz 1h, suas obras levam 1h35. Todo dia, todos os dias.', fonte:'Dashboard Executivo → painel-temporal.json' },
+    ],
+    'Logística': [
+      { oque:'<strong>Amostras de cor presas no pipeline CORES</strong> do Pipefy. Cada uma é um projeto esperando aprovação.', pq:'Sem aprovação de cor, a obra <strong>não pode começar</strong>. 267 amostras há 260d = gargalo #1 de logística.', como:'Contagem direta do pipe CORES no <code>Pipefy</code>. Cruzado com idade média pelo Dashboard.', escala:{green:'≤ 20',amber:'20–50',red:'> 50',atual:'red'}, analogia:'267 pedidos de aprovação empilhados na mesa há 9 meses. Ninguém assina. Nada anda.', fonte:'Pipefy → pipe CORES' },
+      { oque:'<strong>Percentual de visitas técnicas realizadas dentro do prazo</strong>. VT é o primeiro contato presencial com a obra.', pq:'Só 3% no prazo. Fila de 41 VTs. Cada atraso de VT atrasa toda a cadeia: projeto, contrato, execução.', como:'Calculado pela régua de saúde com dados do <code>Pipefy</code> (fase AGEND VT).', escala:{green:'≥ 90%',amber:'50–90%',red:'< 50%',atual:'red'}, analogia:'Médico que atende 3% dos pacientes no horário. Os outros 97% ficam esperando.', fonte:'Pipefy → AGEND VT AFERIÇÃO' },
+    ],
+    'Comercial': [
+      { oque:'<strong>Valor médio por contrato</strong>. Quanto cada obra gera de receita bruta.', pq:'R$151k contra meta de R$80k = <strong>excelente</strong>. Projetos de alto valor (STELION™).', como:'Calculado pela régua de saúde com dados do Pipefy e estimativas comerciais.', escala:{green:'≥ R$80k',amber:'R$50–80k',red:'< R$50k',atual:'green'}, analogia:'Sua meta era vender hambúrgueres de R$80. Está vendendo de R$151. Clientela premium.', fonte:'Régua de Saúde → dados comerciais' },
+      { oque:'<strong>Obras concluídas por mês</strong>. Capacidade real de entrega da operação.', pq:'25 contra meta de 20 = <strong>saudável</strong>. A operação entrega, o problema está nos que travam no meio.', como:'Contagem de obras que mudaram pra status finalizado no mês corrente.', escala:{green:'≥ 20',amber:'15–20',red:'< 15',atual:'green'}, analogia:'A fábrica entrega 25 produtos/mês contra meta de 20. Produção ok, gargalo é o estoque parado.', fonte:'Pipefy → transições de fase' },
+    ],
+  };
+
+  document.querySelectorAll('.kpi-card').forEach(function(card) {
+    var groupName = card.querySelector('.kpi-group-name');
+    if (!groupName) return;
+    var name = groupName.textContent.trim();
+    var defs = EXPLAIN[name];
+    if (!defs) return;
+
+    // Add info button
+    var btn = document.createElement('div');
+    btn.className = 'kpi-info-btn';
+    btn.textContent = 'i';
+    card.appendChild(btn);
+
+    // Build explain HTML for both items
+    var html = '<div class="kpi-explain"><div class="explain-inner">';
+    var items = card.querySelectorAll('.kpi-item');
+    items.forEach(function(item, idx) {
+      var d = defs[idx];
+      if (!d) return;
+      var label = item.querySelector('.kpi-label');
+      var val = item.querySelector('.kpi-val');
+      var itemLabel = label ? label.textContent : '';
+      var itemVal = val ? val.textContent : '';
+      var escala = '<div class="explain-scale">' +
+        '<div class="scale-zone sz-green ' + (d.escala.atual==='green'?'active':'') + '"><div class="zone-range">' + d.escala.green + '</div><div class="zone-label">Saudável</div></div>' +
+        '<div class="scale-zone sz-amber ' + (d.escala.atual==='amber'?'active':'') + '"><div class="zone-range">' + d.escala.amber + '</div><div class="zone-label">Atenção</div></div>' +
+        '<div class="scale-zone sz-red ' + (d.escala.atual==='red'?'active':'') + '"><div class="zone-range">' + d.escala.red + '</div><div class="zone-label">Crítico</div></div>' +
+      '</div>';
+
+      html += '<div style="' + (idx > 0 ? 'margin-top:20px;padding-top:20px;border-top:1px solid var(--border-light)' : '') + '">';
+      html += '<div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:12px">' + itemVal + ' — ' + itemLabel + '</div>';
+      html += '<div class="explain-block"><div class="explain-label">O que é</div><div class="explain-text">' + d.oque + '</div></div>';
+      html += '<div class="explain-block"><div class="explain-label">Por que importa</div><div class="explain-text">' + d.pq + '</div></div>';
+      html += '<div class="explain-block"><div class="explain-label">Escala de saúde</div>' + escala + '</div>';
+      html += '<div class="explain-analogy">' + d.analogia + '</div>';
+      html += '<div class="explain-block"><div class="explain-label">Como é calculado</div><div class="explain-text">' + d.como + '</div></div>';
+      html += '<div class="explain-source">Fonte: <code>' + d.fonte + '</code></div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+    card.insertAdjacentHTML('beforeend', html);
+
+    // Click handler
+    card.addEventListener('click', function(e) {
+      if (e.target.closest('.hermes-card')) return;
+      var wasOpen = card.classList.contains('open');
+      document.querySelectorAll('.kpi-card.open').forEach(function(c) { c.classList.remove('open'); });
+      if (!wasOpen) card.classList.add('open');
+    });
+  });
 })();
 </script>
 </body>
