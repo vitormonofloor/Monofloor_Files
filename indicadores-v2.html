@@ -303,6 +303,16 @@ body{animation:pageIn 0.6s ease-out}
   .spark-top{flex-direction:column;gap:10px}
   .type-row{grid-template-columns:100px 1fr 28px 12px;font-size:10px}
 }
+/* ============== SIDE NAV ============== */
+.side-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:10px}
+@media(max-width:900px){.side-nav{display:none}}
+.side-dot{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.side-dot:hover{color:#b8a080;background:rgba(184,160,128,0.08)}
+.side-dot.active{color:#b8a080}
+.side-dot svg{width:16px;height:16px;flex-shrink:0}
+.side-dot::before{content:attr(data-label);position:absolute;right:40px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.side-dot:hover::before{color:#8a7e72}
+.side-dot.active::before{color:#b8a080}
 </style>
 <script src="auth.js"></script>
 </head>
@@ -323,6 +333,12 @@ body{animation:pageIn 0.6s ease-out}
   </a>
 </nav>
 
+<nav class="side-nav" id="side-nav-ind">
+  <a href="#sec-atencao" class="side-dot active" data-label="ATENÇÃO"><svg viewBox="0 0 16 16"><path d="M8 2l6 12H2z" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="7" x2="8" y2="10" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="12" r="0.8" fill="currentColor"/></svg></a>
+  <a href="#sec-panorama" class="side-dot" data-label="PANORAMA"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 10l4-3 3 2 5-5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="#sec-problemas" class="side-dot" data-label="PROBLEMAS"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="#sec-hermes" class="side-dot" data-label="HERMES"><svg viewBox="0 0 16 16"><path d="M4 13V5l4-3 4 3v8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 6l6-4 6 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+</nav>
 
 <header>
   <div class="logo">
@@ -343,7 +359,7 @@ body{animation:pageIn 0.6s ease-out}
 </div>
 
 <!-- ═══ SECTION 1 — ATENÇÃO ═══ -->
-<div class="section">
+<div class="section" id="sec-atencao">
   <div class="section-head">
     <span class="section-tag urgent">Atenção imediata</span>
     <div class="section-line"></div>
@@ -371,7 +387,7 @@ body{animation:pageIn 0.6s ease-out}
 </div>
 
 <!-- ═══ SECTION 2 — PANORAMA ═══ -->
-<div class="section">
+<div class="section" id="sec-panorama">
   <div class="section-head">
     <span class="section-tag panorama">Panorama operacional</span>
     <div class="section-line"></div>
@@ -512,7 +528,7 @@ body{animation:pageIn 0.6s ease-out}
 </div>
 
 <!-- ═══ SECTION 3 — CONSULTORES ═══ -->
-<div class="section">
+<div class="section" id="sec-problemas">
   <div class="section-head">
     <span class="section-tag analysis">Onde estão os problemas</span>
     <div class="section-line"></div>
@@ -527,7 +543,7 @@ body{animation:pageIn 0.6s ease-out}
 </div>
 
 <!-- ═══ SECTION 4 — HERMES ═══ -->
-<div class="section">
+<div class="section" id="sec-hermes">
   <div class="section-head">
     <span class="section-tag hermes">◆ &nbsp;Hermes</span>
     <div class="section-line"></div>
@@ -742,6 +758,35 @@ function closeSev(ci,ti){var le=document.getElementById('sl-'+ci+'-'+ti);le.clas
       var wasOpen = card.classList.contains('open');
       document.querySelectorAll('.kpi-card.open').forEach(function(c) { c.classList.remove('open'); });
       if (!wasOpen) card.classList.add('open');
+    });
+  });
+})();
+
+// Side-nav scroll spy
+(function(){
+  var dots = document.querySelectorAll('#side-nav-ind .side-dot');
+  var secs = [];
+  dots.forEach(function(d){
+    var id = d.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) secs.push({el:el, dot:d});
+  });
+  if (!secs.length) return;
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){
+        dots.forEach(function(d){d.classList.remove('active')});
+        var m = secs.find(function(s){return s.el===e.target});
+        if (m) m.dot.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-30% 0px -60% 0px'});
+  secs.forEach(function(s){obs.observe(s.el)});
+  dots.forEach(function(d){
+    d.addEventListener('click', function(e){
+      e.preventDefault();
+      var el = document.getElementById(d.getAttribute('href').slice(1));
+      if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
     });
   });
 })();
