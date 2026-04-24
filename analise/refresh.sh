@@ -1,238 +1,128 @@
 #!/usr/bin/env bash
-# Refresh automático Monofloor — fetch + snapshot + regen obras-mapa
+# Refresh automático Monofloor — fetch + snapshot + regen dashboard-data
 # Roda 1x a cada 30 min via GitHub Actions
-# Hoje (refresh leve): atualiza data.json + escalacao
-# Primeiro run do dia (Brasília): atualiza details + painel-temporal + snapshot + obras-mapa
+# Modo LEVE: atualiza data.json
+# Modo PESADO (1ª vez do dia): details + painel-temporal + snapshot + backlog + dashboard-data.json
+#
+# ROBUSTO: respostas API vão pra ARQUIVOS TEMP, Python lê de arquivo (nunca heredoc com JSON)
 
-set -euo pipefail
-
-API_CLI="https://cliente.monofloor.cloud/api"
-API_PLAN="https://planejamento.monofloor.cloud/api"
+API="https://cliente.monofloor.cloud/api"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 DADOS="$DIR/dados"
-DETAILS="$DADOS/details"
 SNAPSHOTS="$DADOS/snapshots"
-mkdir -p "$DETAILS" "$SNAPSHOTS"
+DETAILS="$DADOS/details"
+TMP="$DADOS/.tmp"
+mkdir -p "$DETAILS" "$SNAPSHOTS" "$TMP"
 
 TODAY=$(TZ=America/Sao_Paulo date +%Y-%m-%d)
-NOW_UTC=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-SNAP_FILE="$SNAPSHOTS/$TODAY.json"
+NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+SNAP="$SNAPSHOTS/$TODAY.json"
 
-# ─────────────────────────────────────────
-# 1) REFRESH LEVE (sempre) — 5 listas
-# ─────────────────────────────────────────
-echo "[1/5] Fetch listas leves..."
-P=$(curl -s --max-time 30 "$API_CLI/projects?limit=2000")
-D=$(curl -s --max-time 30 "$API_CLI/dashboard")
-A=$(curl -s --max-time 30 "$API_CLI/analise")
-E=$(curl -s --max-time 30 "$API_CLI/escalacao-diaria")
-EQ=$(curl -s --max-time 30 "$API_CLI/equipes")
+echo "=== Refresh Monofloor === $NOW"
 
-# valida JSONs (não sobrescreve se vier corrompido)
-for V in "$P" "$D" "$A" "$E" "$EQ"; do
-  echo "$V" | python3 -c "import sys,json; json.load(sys.stdin)" > /dev/null 2>&1 || {
-    echo "ERRO: resposta inválida de uma das APIs. Abortando."
-    exit 1
-  }
-done
+# ─── 1) LEVE: fetch 5 listas ───
+echo "[1] Fetch listas..."
+curl -sf --max-time 30 "$API/projects?limit=2000" -o "$TMP/projects.json" || { echo "ERRO: /projects falhou"; exit 1; }
+curl -sf --max-time 30 "$API/dashboard"         -o "$TMP/dashboard.json"  || echo "AVISO: /dashboard falhou"
+curl -sf --max-time 30 "$API/analise"            -o "$TMP/analise.json"   || echo "AVISO: /analise falhou"
+curl -sf --max-time 30 "$API/escalacao-diaria"   -o "$TMP/escalacao.json" || echo "AVISO: /escalacao falhou"
+curl -sf --max-time 30 "$API/equipes"            -o "$TMP/equipes.json"   || echo "AVISO: /equipes falhou"
 
-# data.json consolidado
-cat > "$DIR/data.json" <<EOF
-{"projects":$P,"dashboard":$D,"analise":$A,"escalacao":$E,"equipes":$EQ,"fetchedAt":"$NOW_UTC"}
-EOF
-echo "  data.json: $(wc -c < "$DIR/data.json") bytes"
+# Validar projects (obrigatório)
+python3 -c "import json; json.load(open('$TMP/projects.json'))" 2>/dev/null || { echo "ERRO: projects.json inválido"; exit 1; }
 
-# ─────────────────────────────────────────
-# 2) DECIDIR SE FAZ REFRESH PESADO
-# ─────────────────────────────────────────
-DO_HEAVY=0
-if [ ! -f "$SNAP_FILE" ]; then
-  DO_HEAVY=1
-  echo "[2/5] Snapshot do dia ($TODAY) ainda não existe → refresh PESADO"
-else
-  echo "[2/5] Snapshot do dia já existe → refresh LEVE apenas"
-fi
+# Montar data.json
+python3 -c "
+import json, os
+TMP = '$TMP'
+DIR = '$DIR'
+NOW = '$NOW'
+p = json.load(open(os.path.join(TMP, 'projects.json')))
+d = json.load(open(os.path.join(TMP, 'dashboard.json'))) if os.path.exists(os.path.join(TMP, 'dashboard.json')) else {}
+a = json.load(open(os.path.join(TMP, 'analise.json'))) if os.path.exists(os.path.join(TMP, 'analise.json')) else {}
+e = json.load(open(os.path.join(TMP, 'escalacao.json'))) if os.path.exists(os.path.join(TMP, 'escalacao.json')) else {}
+eq = json.load(open(os.path.join(TMP, 'equipes.json'))) if os.path.exists(os.path.join(TMP, 'equipes.json')) else []
+with open(os.path.join(DIR, 'data.json'), 'w') as f:
+    json.dump({'projects':p,'dashboard':d,'analise':a,'escalacao':e,'equipes':eq,'fetchedAt':NOW}, f, ensure_ascii=False)
+print(f'  data.json OK ({len(p)} projects)')
+"
 
-if [ "$DO_HEAVY" -eq 0 ]; then
-  echo "[done] Refresh leve concluído em $NOW_UTC"
+# ─── 2) PESADO? ───
+if [ -f "$SNAP" ]; then
+  echo "[done] Snapshot do dia já existe. Refresh LEVE concluído."
+  rm -rf "$TMP"
   exit 0
 fi
+echo "[2] Modo PESADO — snapshot do dia não existe"
 
-# ─────────────────────────────────────────
-# 3) FETCH DETAILS (apenas ativas + recentes)
-# ─────────────────────────────────────────
-echo "[3/5] Fetch dos details..."
-
-# Extrai IDs ativos (status NOT IN finalizado/concluido/cancelado)
-IDS=$(echo "$P" | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-inativos = {'finalizado','concluido','cancelado'}
-for p in d:
-    if p.get('status') not in inativos:
-        print(p['id'])
-")
-
-N_ATIVAS=$(echo "$IDS" | wc -l)
-echo "  $N_ATIVAS obras ativas a buscar"
-
-# baixa em paralelo (lotes de 20)
-echo "$IDS" | xargs -I {} -P 20 bash -c '
-  ID="$1"
-  OUT="'"$DETAILS"'/$ID.json"
-  curl -s --max-time 20 "'"$API_CLI"'/projects/$ID" -o "$OUT" 2>/dev/null
-  [ -s "$OUT" ] || rm -f "$OUT"
-' _ {}
-
-N_OK=$(ls "$DETAILS" | wc -l)
-echo "  $N_OK details salvos"
-
-# ─────────────────────────────────────────
-# 4) REGENERAR painel-temporal.json
-# ─────────────────────────────────────────
-echo "[4/5] Regenerando painel-temporal.json..."
-
-# Snapshot Pipefy (fonte auxiliar de created_at)
-PIPEFY=$(curl -s --max-time 30 "https://raw.githubusercontent.com/vitormonofloor/cargo-assistente/main/pipefy_cards.json")
-
-python3 - <<PYEOF
-import json, os, sys
-from datetime import datetime, timezone
-
-DETAILS_DIR = "$DETAILS"
-PIPEFY_RAW = '''$PIPEFY'''
-OUT = "$DADOS/painel-temporal.json"
-TODAY = datetime.strptime("$TODAY", "%Y-%m-%d").date()
-
-# Indexar Pipefy snapshot por id (string)
-try:
-    pipefy_list = json.loads(PIPEFY_RAW)
-    pipefy_by_id = {str(c.get("id")): c for c in pipefy_list if c.get("id")}
-except Exception as e:
-    print(f"  AVISO: pipefy snapshot inválido ({e}), seguindo sem ele")
-    pipefy_by_id = {}
-
-INATIVAS = {"finalizado", "concluido", "cancelado"}
-out = []
-
-for fname in os.listdir(DETAILS_DIR):
-    if not fname.endswith(".json"):
-        continue
-    try:
-        with open(os.path.join(DETAILS_DIR, fname), encoding="utf-8") as f:
-            o = json.load(f)
-    except Exception:
-        continue
-
-    pid = o.get("id")
-    if not pid:
-        continue
-
-    pipefyCardId = (o.get("acessoDetalhes") or {}).get("pipefyCardId") or o.get("pipefyCardId")
-    pipefy_api_dt = (o.get("acessoDetalhes") or {}).get("pipefyCreatedAt")
-
-    pipefy_snap_dt = None
-    if pipefyCardId and str(pipefyCardId) in pipefy_by_id:
-        pipefy_snap_dt = pipefy_by_id[str(pipefyCardId)].get("created_at")
-
-    # data_radar: prioridade snapshot Pipefy > API
-    data_radar, fonte = None, "sem_data"
-    if pipefy_snap_dt:
-        data_radar, fonte = pipefy_snap_dt[:10], "pipefy_snapshot"
-    elif pipefy_api_dt:
-        data_radar, fonte = pipefy_api_dt[:10], "pipefy_api"
-
-    idade_dias = None
-    if data_radar:
-        try:
-            idade_dias = (TODAY - datetime.strptime(data_radar, "%Y-%m-%d").date()).days
-        except Exception:
-            pass
-
-    status = o.get("status")
-    out.append({
-        "id": pid,
-        "clienteNome": o.get("clienteNome"),
-        "projetoCidade": o.get("projetoCidade"),
-        "status": status,
-        "faseAtual": o.get("faseAtual"),
-        "consultorNome": o.get("consultorNome"),
-        "projetoMetragem": o.get("projetoMetragem"),
-        "pipefyCardId": pipefyCardId,
-        "pipefy_snapshot_created_at": pipefy_snap_dt,
-        "pipefyCreatedAt_api": pipefy_api_dt,
-        "data_radar": data_radar,
-        "data_radar_fonte": fonte,
-        "idade_dias": idade_dias,
-        "ativa": status not in INATIVAS,
-    })
-
-with open(OUT, "w", encoding="utf-8") as f:
-    json.dump(out, f, ensure_ascii=False, indent=2)
-
-ativas = sum(1 for o in out if o["ativa"])
-com_data = sum(1 for o in out if o["data_radar"])
-print(f"  painel-temporal.json: {len(out)} obras ({ativas} ativas, {com_data} com data)")
-PYEOF
-
-# ─────────────────────────────────────────
-# 5) SNAPSHOT DIÁRIO + regen obras-mapa.html
-# ─────────────────────────────────────────
-echo "[5/5] Snapshot do dia + regen obras-mapa..."
-
-# Snapshot diário compacto: apenas {id, clienteNome, status, faseAtual, consultorNome, idade_dias}
-python3 - <<PYEOF
+# ─── 3) Fetch details das ativas ───
+echo "[3] Fetch details..."
+python3 -c "
 import json
-src = json.load(open("$DADOS/painel-temporal.json", encoding="utf-8"))
-snap = [{
-    "id": o["id"],
-    "clienteNome": o["clienteNome"],
-    "status": o["status"],
-    "faseAtual": o["faseAtual"],
-    "consultorNome": o["consultorNome"],
-    "idade_dias": o["idade_dias"],
-} for o in src if o.get("ativa")]
-with open("$SNAP_FILE", "w", encoding="utf-8") as f:
-    json.dump({"date": "$TODAY", "fetchedAt": "$NOW_UTC", "ativas": snap}, f, ensure_ascii=False)
-print(f"  snapshot $TODAY.json: {len(snap)} obras ativas")
-PYEOF
+p = json.load(open('$TMP/projects.json'))
+skip = {'finalizado','concluido','cancelado'}
+ids = [x['id'] for x in p if x.get('status') not in skip]
+print(f'  {len(ids)} ativas')
+with open('$TMP/ids.txt','w') as f:
+    f.write('\n'.join(ids))
+"
 
-# Regen obras-mapa.html via PowerShell (já existe no repo)
-if command -v pwsh > /dev/null 2>&1; then
-  echo "  rodando build-mapa.ps1..."
-  pwsh -ExecutionPolicy Bypass -File "$DIR/build-mapa.ps1" 2>&1 | tail -20 || echo "  AVISO: build-mapa.ps1 falhou (não bloqueia o refresh)"
-else
-  echo "  AVISO: pwsh não disponível, pulando regen obras-mapa.html"
-fi
+# Download em paralelo (max 10, timeout 15s cada)
+cat "$TMP/ids.txt" | xargs -I {} -P 10 bash -c '
+  curl -sf --max-time 15 "'"$API"'/projects/$1" -o "'"$DETAILS"'/$1.json" 2>/dev/null || true
+' _ {} 2>/dev/null || true
 
-# ─────────────────────────────────────────
-# 6) HISTÓRICO BACKLOG — calcula 5 índices, compara, anexa
-# ─────────────────────────────────────────
-echo "[6/6] Atualizando backlog-historico.json..."
+N_DET=$(ls "$DETAILS"/*.json 2>/dev/null | wc -l)
+echo "  $N_DET details salvos"
 
-HIST_FILE="$DADOS/backlog-historico.json"
-EQUIPES_RAW="$EQ"
+# ─── 4) Snapshot + painel-temporal + backlog + dashboard-data ───
+echo "[4] Snapshot + painel-temporal + backlog + dashboard-data..."
+curl -sf --max-time 30 "https://raw.githubusercontent.com/vitormonofloor/cargo-assistente/main/pipefy_cards.json" -o "$TMP/pipefy.json" || echo "AVISO: pipefy falhou"
 
-python3 - <<PYEOF
+# Exportar paths via ENV para o Python (heredoc com aspas = sem expansão shell)
+export DADOS_DIR="$DADOS"
+export DETAILS_DIR="$DETAILS"
+export TMP_DIR="$TMP"
+export TODAY_STR="$TODAY"
+export NOW_STR="$NOW"
+export SNAP_FILE="$SNAP"
+export DIR_STR="$DIR"
+
+python3 << 'PYEOF'
 import json, os, sys
-from datetime import datetime, date, timedelta
+from datetime import datetime
 
-DADOS  = "$DADOS"
-TODAY  = "$TODAY"
-HIST_F = "$HIST_FILE"
+DADOS = os.environ["DADOS_DIR"]
+DETAILS = os.environ["DETAILS_DIR"]
+TMP = os.environ["TMP_DIR"]
+TODAY = os.environ["TODAY_STR"]
+NOW = os.environ["NOW_STR"]
+SNAP = os.environ["SNAP_FILE"]
+DIR = os.environ["DIR_STR"]
 
-# ---------- Carrega painel-temporal (fonte das obras) ----------
-panel_path = os.path.join(DADOS, "painel-temporal.json")
-with open(panel_path, encoding="utf-8") as f:
-    panel = json.load(f)
+today = datetime.strptime(TODAY, "%Y-%m-%d").date()
 
-# ---------- Carrega /api/equipes (fonte de líderes cadastrados) ----------
-try:
-    equipes = json.loads('''$EQUIPES_RAW''')
-except Exception:
-    equipes = []
+# ──── Pipefy snapshot (lê de arquivo, não de variável) ────
+pipefy = {}
+pf = os.path.join(TMP, "pipefy.json")
+if os.path.exists(pf):
+    try:
+        for c in json.load(open(pf)):
+            if c.get("id"):
+                pipefy[str(c["id"])] = c
+    except Exception as e:
+        print(f"  AVISO: pipefy snapshot inválido ({e}), seguindo sem ele")
 
-# Set de IDs cadastrados em /api/equipes (todos os membros, qualquer função)
+# ──── Equipes (lê de arquivo) ────
+equipes = []
+eq_path = os.path.join(TMP, "equipes.json")
+if os.path.exists(eq_path):
+    try:
+        equipes = json.load(open(eq_path))
+    except:
+        equipes = []
+
+# Set de IDs cadastrados em /api/equipes
 ids_cadastrados = set()
 for eq in (equipes or []):
     for m in (eq.get("membros") or []):
@@ -241,47 +131,101 @@ for eq in (equipes or []):
     if eq.get("liderId"):
         ids_cadastrados.add(eq["liderId"])
 
-INATIVAS = {"finalizado", "concluido", "cancelado"}
+SKIP = {"finalizado", "concluido", "cancelado"}
 FINALIZADO_FASE = "CLIENTE FINALIZADO"
+obras = []
 
-# ============================================================
-# 1) ZUMBI: ativa + faseAtual=CLIENTE FINALIZADO
-# ============================================================
-zumbi_ids   = []
-zumbi_cli   = {}
-zumbi_idade = {}
-for o in panel:
-    if o.get("status") in INATIVAS:
+for fn in os.listdir(DETAILS):
+    if not fn.endswith(".json"):
         continue
+    try:
+        o = json.load(open(os.path.join(DETAILS, fn)))
+    except:
+        continue
+    pid = o.get("id")
+    if not pid:
+        continue
+
+    pcid = (o.get("acessoDetalhes") or {}).get("pipefyCardId") or o.get("pipefyCardId")
+    pdt = (o.get("acessoDetalhes") or {}).get("pipefyCreatedAt")
+    sdt = pipefy.get(str(pcid), {}).get("created_at") if pcid else None
+
+    dr, src = None, "sem_data"
+    if sdt:
+        dr, src = sdt[:10], "pipefy_snapshot"
+    elif pdt:
+        dr, src = pdt[:10], "pipefy_api"
+
+    idade = None
+    if dr:
+        try:
+            idade = (today - datetime.strptime(dr, "%Y-%m-%d").date()).days
+        except:
+            pass
+
+    st = o.get("status")
+    obras.append({
+        "id": pid, "clienteNome": o.get("clienteNome"), "projetoCidade": o.get("projetoCidade"),
+        "status": st, "faseAtual": o.get("faseAtual"), "consultorNome": o.get("consultorNome"),
+        "projetoMetragem": o.get("projetoMetragem"), "pipefyCardId": pcid,
+        "pipefy_snapshot_created_at": sdt,
+        "pipefyCreatedAt_api": pdt,
+        "data_radar": dr, "data_radar_fonte": src, "idade_dias": idade,
+        "ativa": st not in SKIP
+    })
+
+# ──── Salvar painel-temporal ────
+with open(os.path.join(DADOS, "painel-temporal.json"), "w") as f:
+    json.dump(obras, f, ensure_ascii=False, indent=2)
+
+ativas = [o for o in obras if o["ativa"]]
+print(f"  painel-temporal: {len(obras)} obras ({len(ativas)} ativas)")
+
+# ──── Snapshot do dia ────
+snap = [{"id": o["id"], "clienteNome": o["clienteNome"], "status": o["status"],
+         "faseAtual": o["faseAtual"], "consultorNome": o["consultorNome"], "idade_dias": o["idade_dias"]}
+        for o in ativas]
+with open(SNAP, "w") as f:
+    json.dump({"date": TODAY, "fetchedAt": NOW, "ativas": snap}, f, ensure_ascii=False)
+print(f"  snapshot {TODAY}: {len(snap)} ativas")
+
+# ════════════════════════════════════════════
+# BACKLOG HISTORICO
+# ════════════════════════════════════════════
+hist_path = os.path.join(DADOS, "backlog-historico.json")
+try:
+    hist = json.load(open(hist_path))
+except:
+    hist = []
+
+# 1) ZUMBI
+zumbi_ids, zumbi_cli, zumbi_idade = [], {}, {}
+for o in ativas:
     if (o.get("faseAtual") or "").strip().upper() == FINALIZADO_FASE:
+        if o.get("status") == "reparo":
+            continue
         sid = o["id"][:8]
         zumbi_ids.append(sid)
-        zumbi_cli[sid]   = (o.get("clienteNome") or "").strip()
+        zumbi_cli[sid] = (o.get("clienteNome") or "").strip()
         zumbi_idade[sid] = o.get("idade_dias")
 
-# ============================================================
-# 2) ÓRFÃS: ativa + consultorNome vazio/null/literal "[]"
-# ============================================================
-orfas_ids = []
-orfas_cli = {}
+# 2) ORFAS
 def is_orfa(c):
-    if c is None: return True
+    if c is None:
+        return True
     s = str(c).strip()
     return s == "" or s == "[]"
-for o in panel:
-    if o.get("status") in INATIVAS: continue
+
+orfas_ids, orfas_cli = [], {}
+for o in ativas:
     if is_orfa(o.get("consultorNome")):
         sid = o["id"][:8]
         orfas_ids.append(sid)
         orfas_cli[sid] = (o.get("clienteNome") or "").strip()
 
-# ============================================================
-# 3) LOTE VT: idade_dias entre 258-262 (lote dos 260d ±2)
-# ============================================================
-lote_ids = []
-lote_cli = {}
-for o in panel:
-    if o.get("status") in INATIVAS: continue
+# 3) LOTE VT
+lote_ids, lote_cli = [], {}
+for o in ativas:
     fase = (o.get("faseAtual") or "").upper()
     if "AGEND" in fase and "VT" in fase:
         idade = o.get("idade_dias")
@@ -290,20 +234,16 @@ for o in panel:
             lote_ids.append(sid)
             lote_cli[sid] = (o.get("clienteNome") or "").strip()
 
-# ============================================================
-# 4) LÍDERES OCULTOS + CONFLITOS — precisa de escalacao-diaria
-# ============================================================
-# Tenta carregar escalação do data.json (já fetched no passo 1)
+# 4) LIDERES OCULTOS + CONFLITOS
 try:
-    with open(os.path.join("$DIR", "data.json"), encoding="utf-8") as f:
+    with open(os.path.join(DIR, "data.json"), encoding="utf-8") as f:
         dataj = json.load(f)
     escalacao = dataj.get("escalacao") or []
-except Exception:
+except:
     escalacao = []
 
-# liderId aparece nas obras escaladas hoje. Se não está em ids_cadastrados → oculto
-lideres_hoje = {}      # liderId -> set(obraId)
-membros_hoje = {}      # membroId -> list(obraId)
+lideres_hoje = {}
+membros_hoje = {}
 for esc in (escalacao or []):
     obra_id = esc.get("projetoId") or esc.get("id") or ""
     obra_short = obra_id[:8] if obra_id else ""
@@ -315,27 +255,24 @@ for esc in (escalacao or []):
         if mid:
             membros_hoje.setdefault(mid, []).append(obra_short)
 
-ocultos = {lid: len(obras) for lid, obras in lideres_hoje.items()
+ocultos = {lid: len(obras_set) for lid, obras_set in lideres_hoje.items()
            if lid and lid not in ids_cadastrados}
 
-# Conflito: aplicador (não-líder) escalado em ≥2 obras distintas hoje
 conflitos = {}
-for mid, obras in membros_hoje.items():
-    obras_unicas = list(set(o for o in obras if o))
+for mid, obras_list in membros_hoje.items():
+    obras_unicas = list(set(o for o in obras_list if o))
     if len(obras_unicas) >= 2 and mid not in lideres_hoje:
-        # busca nome em /api/equipes
         nome = None
         for eq in (equipes or []):
             for m in (eq.get("membros") or []):
                 if m.get("id") == mid:
                     nome = m.get("nome")
                     break
-            if nome: break
+            if nome:
+                break
         conflitos[mid] = {"nome": nome or mid[:8], "obras": obras_unicas}
 
-# ============================================================
 # Monta entrada de hoje
-# ============================================================
 entrada_hoje = {
     "date": TODAY,
     "indices": {
@@ -369,33 +306,21 @@ entrada_hoje = {
     "mudancas_vs_anterior": None
 }
 
-# ============================================================
-# Carrega histórico anterior
-# ============================================================
-hist = []
-if os.path.exists(HIST_F):
-    try:
-        with open(HIST_F, encoding="utf-8") as f:
-            hist = json.load(f)
-    except Exception:
-        hist = []
+# Detectar mudancas vs anterior
+panel_by_short = {o["id"][:8]: o for o in ativas}
 
-# Se a última entrada é de hoje, sobrescreve (re-run no mesmo dia)
 if hist and hist[-1].get("date") == TODAY:
     hist = hist[:-1]
 
 prev = hist[-1] if hist else None
 
-# ============================================================
-# Detecta mudanças
-# ============================================================
 def detectar_mudancas(prev, atual):
-    if not prev: return None
+    if not prev:
+        return None
     p = prev["indices"]
     a = atual["indices"]
     out = {}
 
-    # zumbi: IDs ontem mas não hoje
     p_zumbi = set(p.get("zumbi", {}).get("ids", []))
     a_zumbi = set(a.get("zumbi", {}).get("ids", []))
     saiu_zumbi = p_zumbi - a_zumbi
@@ -410,16 +335,13 @@ def detectar_mudancas(prev, atual):
                 "motivo": "saiu de CLIENTE FINALIZADO ou foi finalizado"
             })
 
-    # órfãs: IDs ontem que ganharam consultor (não estão hoje)
     p_orf = set(p.get("orfas", {}).get("ids", []))
     a_orf = set(a.get("orfas", {}).get("ids", []))
     atrib = p_orf - a_orf
     if atrib:
-        # tenta achar consultor atual no painel
-        panel_by_short = {o["id"][:8]: o for o in panel}
         out["orfas_atribuida"] = []
         for sid in sorted(atrib):
-            cli  = p.get("orfas", {}).get("clientes", {}).get(sid, sid)
+            cli = p.get("orfas", {}).get("clientes", {}).get(sid, sid)
             cons = (panel_by_short.get(sid, {}).get("consultorNome") or "").strip()
             cons_short = cons.split()[0] if cons else "(?)"
             out["orfas_atribuida"].append({
@@ -427,7 +349,6 @@ def detectar_mudancas(prev, atual):
                 "novo_consultor": cons_short
             })
 
-    # líderes ocultos: IDs ontem mas não hoje (= cadastrados em /api/equipes)
     p_lid = set(p.get("lideres_ocultos", {}).get("ids", []))
     a_lid = set(a.get("lideres_ocultos", {}).get("ids", []))
     formaliz = p_lid - a_lid
@@ -437,7 +358,6 @@ def detectar_mudancas(prev, atual):
             for sid in sorted(formaliz)
         ]
 
-    # conflitos: nomes ontem mas não hoje
     p_conf = set(p.get("conflitos", {}).get("nomes", []))
     a_conf = set(a.get("conflitos", {}).get("nomes", []))
     resolv = p_conf - a_conf
@@ -447,7 +367,6 @@ def detectar_mudancas(prev, atual):
             for n in sorted(resolv)
         ]
 
-    # lote VT: IDs ontem mas não hoje (=mudaram de fase)
     p_vt = set(p.get("lote_vt", {}).get("ids", []))
     a_vt = set(a.get("lote_vt", {}).get("ids", []))
     destrav = p_vt - a_vt
@@ -464,20 +383,81 @@ def detectar_mudancas(prev, atual):
 
 entrada_hoje["mudancas_vs_anterior"] = detectar_mudancas(prev, entrada_hoje)
 
-# ============================================================
-# Anexa, aplica janela 90d e salva
-# ============================================================
 hist.append(entrada_hoje)
-
-# rolling window 90d
 if len(hist) > 90:
     hist = hist[-90:]
 
-with open(HIST_F, "w", encoding="utf-8") as f:
+with open(hist_path, "w") as f:
     json.dump(hist, f, ensure_ascii=False, indent=2)
 
 n_mud = sum(len(v) for v in (entrada_hoje["mudancas_vs_anterior"] or {}).values())
-print(f"  backlog-historico.json: {len(hist)} entradas | hoje: zumbi={len(zumbi_ids)} ocultos={len(ocultos)} orfas={len(orfas_ids)} conf={len(conflitos)} vt={len(lote_ids)} | mudancas={n_mud}")
+print(f"  backlog-historico: {len(hist)} entries | zumbi={len(zumbi_ids)} ocultos={len(ocultos)} orfas={len(orfas_ids)} conf={len(conflitos)} vt={len(lote_ids)} | mudancas={n_mud}")
+
+# ════════════════════════════════════════════
+# DASHBOARD-DATA.JSON
+# ════════════════════════════════════════════
+dd = {
+    "snapshot_date": TODAY,
+    "AGG": {
+        "total_ativas": len(ativas),
+        "total_obras": len(obras),
+        "status_dist": {},
+        "n_180_plus": sum(1 for o in ativas if (o.get("idade_dias") or 0) >= 180),
+        "n_270_plus": sum(1 for o in ativas if (o.get("idade_dias") or 0) >= 270),
+        "n_lt90": sum(1 for o in ativas if (o.get("idade_dias") or 0) < 90 and o.get("idade_dias") is not None),
+        "n_90_180": sum(1 for o in ativas if 90 <= (o.get("idade_dias") or 0) < 180),
+        "metragem_total": sum(float(o.get("projetoMetragem") or 0) for o in ativas),
+        "idade_media": round(sum(o["idade_dias"] for o in ativas if o.get("idade_dias")) / max(1, sum(1 for o in ativas if o.get("idade_dias"))), 1),
+        "idade_mediana": 0,
+        "sem_consultor_ativas": len(orfas_ids),
+    },
+    "Q2_OBRAS": [{"id": o["id"], "cliente": o.get("clienteNome"), "cidade": o.get("projetoCidade"),
+                   "fase": o.get("faseAtual"), "consultor": o.get("consultorNome"),
+                   "status": o.get("status"), "m2": float(o.get("projetoMetragem") or 0),
+                   "idade": o.get("idade_dias")} for o in ativas],
+}
+
+# Status distribution
+for o in ativas:
+    s = o.get("status", "?")
+    dd["AGG"]["status_dist"][s] = dd["AGG"]["status_dist"].get(s, 0) + 1
+
+# Top consultores
+cons = {}
+for o in ativas:
+    c = o.get("consultorNome") or "(sem)"
+    if str(c).strip() in ("", "[]"):
+        c = "(sem)"
+    cons[c] = cons.get(c, 0) + 1
+dd["AGG"]["top_consultores"] = sorted([{"nome": k, "n": v} for k, v in cons.items()], key=lambda x: -x["n"])
+
+# Top fases
+fases = {}
+for o in ativas:
+    f = o.get("faseAtual") or "(sem)"
+    fases[f] = fases.get(f, 0) + 1
+dd["AGG"]["top_fases"] = sorted([{"fase": k, "n": v} for k, v in fases.items()], key=lambda x: -x["n"])[:10]
+
+# Mediana
+idades = sorted([o["idade_dias"] for o in ativas if o.get("idade_dias")])
+dd["AGG"]["idade_mediana"] = idades[len(idades) // 2] if idades else 0
+
+# Preservar campos extras do JSON existente
+dd_path = os.path.join(DADOS, "dashboard-data.json")
+if os.path.exists(dd_path):
+    try:
+        old = json.load(open(dd_path))
+        for k in ("EXT", "Q2_DIAG", "Q4_RESP_OPS", "Q4_ESCALACAO", "Q4_DATAS", "Q1_PLAN_OBRAS", "Q1_TOTAIS",
+                   "SYNC_LIMBO", "SYNC_ESCALACAO_INV", "SYNC_BUGARRAY", "Q3_EQUIPES", "Q3_OBRAS_HOJE"):
+            if k in old and k not in dd:
+                dd[k] = old[k]
+    except:
+        pass
+
+with open(dd_path, "w") as f:
+    json.dump(dd, f, ensure_ascii=False)
+print(f"  dashboard-data.json: {len(ativas)} ativas, snapshot {TODAY}")
 PYEOF
 
-echo "[done] Refresh PESADO concluído em $NOW_UTC"
+echo "[done] Refresh PESADO concluído em $NOW"
+rm -rf "$TMP"

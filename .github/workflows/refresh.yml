@@ -35,6 +35,7 @@ jobs:
                   analise/dados/painel-temporal.json \
                   analise/dados/snapshots/ \
                   analise/dados/dashboard-data.json \
+                  analise/dados/backlog-historico.json \
                   analise/obras-mapa.html 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Sem mudanças — nada a commitar"
