@@ -1793,8 +1793,10 @@ let _dataLoaded = false;
 async function loadDashboardData() {
   try {
     var r = await fetch('dados/dashboard-data.json?t=' + Date.now());
-    if (!r.ok) throw new Error('fetch failed: ' + r.status);
-    var d = await r.json();
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var txt = await r.text();
+    var d;
+    try { d = JSON.parse(txt); } catch(pe) { throw new Error('JSON parse: ' + pe.message + ' | primeiros 200 chars: ' + txt.slice(0,200)); }
     AGG = d.AGG || {};
     EXT = d.EXT || {};
     Q2_OBRAS = d.Q2_OBRAS || [];
@@ -1814,7 +1816,11 @@ async function loadDashboardData() {
     try { initDashboard(); } catch(initErr) { console.error('Erro no initDashboard:', initErr); alert('Dashboard carregou dados mas falhou ao renderizar: ' + initErr.message); }
   } catch(e) {
     console.error('Erro carregando dados:', e);
-    document.body.innerHTML = '<div style="padding:60px;text-align:center;color:#c45a5a;font-family:Plus Jakarta Sans,sans-serif"><h2>Erro ao carregar dados</h2><p style="color:#8a7e72;margin-top:12px">'+e.message+'</p><p style="margin-top:8px"><a href="dados/dashboard-data.json" style="color:#b8a080">Testar link direto</a></p></div>';
+    var container = document.querySelector('.container') || document.body;
+    var errDiv = document.createElement('div');
+    errDiv.style.cssText = 'padding:40px;text-align:center;color:#c45a5a;font-family:Plus Jakarta Sans,sans-serif;background:#faf2f2;border:1px solid #e8c8c8;border-radius:8px;margin:20px auto;max-width:600px';
+    errDiv.innerHTML = '<h2 style="font-size:16px">Erro ao carregar dados</h2><p style="color:#8a7e72;margin-top:8px;font-size:12px">'+e.message+'</p><p style="margin-top:8px"><a href="dados/dashboard-data.json" style="color:#b8a080;font-size:11px">Testar link direto</a></p>';
+    container.prepend(errDiv);
   }
 }
 
