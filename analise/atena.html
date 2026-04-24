@@ -50,35 +50,37 @@ a:hover { text-decoration: underline; }
 
 .atena-loading{font-size:12px;color:#b8b0a4;font-style:italic;padding:32px;text-align:center;background:#faf7f2;border-radius:8px;border:1px dashed #e0d8cc}
 
-/* Bloco 1: mudancas */
-.atena-mudou-list{display:flex;flex-direction:column;gap:6px}
-.atena-mudou-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:#ffffff;border:1px solid #ede6dc;border-radius:8px;font-size:12px;color:#6b6156;line-height:1.6;transition:all .2s;border-left:3px solid transparent}
-.atena-mudou-item:hover{border-left-color:#b8a080;transform:translateX(2px);box-shadow:0 2px 8px rgba(42,37,32,0.04)}
-.atena-mudou-icon{font-size:14px;flex-shrink:0;margin-top:2px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:#faf7f2;border-radius:6px}
-.atena-mudou-item b{color:#3a3530;font-weight:500}
-.atena-mudou-item .num{font-family:'JetBrains Mono',monospace;color:#b8a080;font-weight:500}
-.atena-mudou-empty{padding:24px;text-align:center;color:#b8b0a4;font-size:12px;font-style:italic;background:#faf7f2;border-radius:8px;border:1px dashed #e0d8cc}
+/* Bloco 1: KPI Strip */
+.brief-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.brief-kpi{background:#fff;border:1px solid #ede6dc;border-radius:8px;padding:14px 16px;position:relative}
+.brief-kpi.alert{border-left:3px solid #c45a5a}
+.brief-kpi.warn{border-left:3px solid #b89a4a}
+.brief-kpi-val{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:#2a2520;line-height:1}
+.brief-kpi-label{font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:0.08em;margin-top:6px;font-weight:500}
+.brief-kpi-delta{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:6px;font-weight:500}
+.brief-kpi-delta.up{color:#c45a5a}
+.brief-kpi-delta.down{color:#3d8a5a}
+.brief-kpi-delta.same{color:#b8b0a4}
+@media(max-width:600px){.brief-kpis{grid-template-columns:repeat(2,1fr)}}
 
-/* Bloco 2: acoes */
-.atena-acoes-list{display:flex;flex-direction:column;gap:8px}
-.atena-acao{background:#ffffff;border:1px solid #ede6dc;border-left:3px solid #c45a5a;border-radius:0 8px 8px 0;padding:16px 18px;transition:all .2s}
-.atena-acao:hover{box-shadow:0 4px 16px rgba(42,37,32,0.06);transform:translateY(-1px)}
-.atena-acao.warn{border-left-color:#b89a4a}
-.atena-acao.info{border-left-color:#4a7ab8}
-.atena-acao-title{font-size:14px;font-weight:500;color:#2a2520;margin-bottom:6px}
-.atena-acao-text{font-size:12px;color:#8a7e72;line-height:1.7}
-.atena-acao-text b{color:#6b6156;font-weight:500}
-.atena-acao-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;margin-top:8px;padding-top:8px;border-top:1px solid #f5f0e8}
+/* Bloco 2: Acoes prioritarias */
+.brief-section{margin-bottom:24px}
+.brief-title{font-size:10px;color:#b8a080;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #ede6dc}
+.brief-acao{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f5f0e8;font-size:12px;color:#6b6156;line-height:1.5}
+.brief-acao:last-child{border-bottom:none}
+.brief-acao-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.brief-acao-dot.crit{background:#c45a5a}
+.brief-acao-dot.warn{background:#b89a4a}
+.brief-acao-dot.info{background:#4a7ab8}
+.brief-acao b{color:#3a3530;font-weight:500}
+.brief-acao .meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;display:block;margin-top:3px}
 
-/* Bloco 3: insight */
-.atena-insight-card{background:linear-gradient(135deg,#ffffff 0%,#faf7f2 100%);border:1px solid #e0d8cc;border-radius:10px;padding:24px;position:relative;overflow:hidden}
-.atena-insight-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#b8a080,#d8c8b0,#b8a080)}
-.atena-insight-card::after{content:'\201D';position:absolute;top:12px;right:20px;font-size:64px;font-family:serif;color:#e8e0d4;line-height:1}
-.atena-insight-quote{font-size:15px;color:#3a3530;line-height:1.8;font-weight:300;font-style:italic;max-width:90%;position:relative;z-index:1}
-.atena-insight-source{font-size:10px;color:#b8b0a4;margin-top:14px;font-family:'JetBrains Mono',monospace;position:relative;z-index:1}
+/* Bloco 3: Insight */
+.brief-insight{font-size:13px;color:#6b6156;line-height:1.7;font-weight:300;font-style:italic;padding-left:14px;border-left:2px solid #e0d8cc;position:relative}
+.brief-insight-source{font-size:9px;color:#b8b0a4;margin-top:8px;font-family:'JetBrains Mono',monospace;font-style:normal}
 
 /* Footer */
-.atena-footer{display:flex;justify-content:space-between;align-items:center;margin-top:36px;padding:20px 0;border-top:1px solid #e8e0d4}
+.atena-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding:14px 0;border-top:1px solid #ede6dc}
 .atena-score{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .atena-score-num{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;color:#2a2520;letter-spacing:-0.02em}
 .atena-score-lbl{font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-top:2px}
@@ -225,33 +227,47 @@ a:hover { text-decoration: underline; }
   <!-- PANEL: ATENA -->
   <div class="atena-panel active" id="panel-atena">
 
-  <!-- BLOCO 1: O QUE MUDOU (delta 24h) -->
-  <section class="atena-section" id="atena-mudou">
-    <h2><svg class="section-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 1v14M1 8h14M3 3l10 10M13 3L3 13" stroke-linecap="round" opacity="0.6"/><circle cx="8" cy="8" r="6"/></svg><span class="section-pill section-pill--blue">DELTA</span> O que mudou</h2>
-    <p class="atena-section-sub">Compara&ccedil;&atilde;o autom&aacute;tica com o snapshot anterior</p>
-    <div class="atena-mudou-list" id="atena-mudou-list">
+  <!-- KPI STRIP -->
+  <div class="brief-kpis">
+    <div class="brief-kpi">
+      <div class="brief-kpi-val" id="bk-ativas">&mdash;</div>
+      <div class="brief-kpi-label">ATIVAS</div>
+      <div class="brief-kpi-delta" id="bk-ativas-delta"></div>
+    </div>
+    <div class="brief-kpi alert">
+      <div class="brief-kpi-val" id="bk-zumbi">&mdash;</div>
+      <div class="brief-kpi-label">ENC. S/ FECHAR</div>
+      <div class="brief-kpi-delta" id="bk-zumbi-delta"></div>
+    </div>
+    <div class="brief-kpi warn">
+      <div class="brief-kpi-val" id="bk-orfas">&mdash;</div>
+      <div class="brief-kpi-label">SEM RESPONS&Aacute;VEL</div>
+      <div class="brief-kpi-delta" id="bk-orfas-delta"></div>
+    </div>
+    <div class="brief-kpi">
+      <div class="brief-kpi-val" id="bk-vt">&mdash;</div>
+      <div class="brief-kpi-label">VT TRAVADAS</div>
+      <div class="brief-kpi-delta" id="bk-vt-delta"></div>
+    </div>
+  </div>
+
+  <!-- ACOES PRIORITARIAS -->
+  <div class="brief-section">
+    <div class="brief-title">A&ccedil;&otilde;es priorit&aacute;rias</div>
+    <div class="brief-acoes" id="brief-acoes">
       <div class="atena-loading">Carregando dados...</div>
     </div>
-  </section>
+  </div>
 
-  <!-- BLOCO 2: O QUE PRECISA DE ACAO HOJE (top 3 urgencias) -->
-  <section class="atena-section" id="atena-acoes">
-    <h2><svg class="section-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 1L1 15h14L8 1z" stroke-linejoin="round"/><line x1="8" y1="6" x2="8" y2="10" stroke-linecap="round"/><circle cx="8" cy="12.5" r="0.8" fill="currentColor" stroke="none"/></svg><span class="section-pill section-pill--red">URGENTE</span> A&ccedil;&atilde;o necess&aacute;ria hoje</h2>
-    <p class="atena-section-sub">As 3 situa&ccedil;&otilde;es mais urgentes que precisam de decis&atilde;o</p>
-    <div class="atena-acoes-list" id="atena-acoes-list">
+  <!-- INSIGHT DA SEMANA -->
+  <div class="brief-section">
+    <div class="brief-title">Insight da semana</div>
+    <div class="brief-insight" id="brief-insight">
       <div class="atena-loading">Carregando dados...</div>
     </div>
-  </section>
+  </div>
 
-  <!-- BLOCO 3: INSIGHT DA SEMANA (1 rotativo) -->
-  <section class="atena-section" id="atena-insight">
-    <h2><svg class="section-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="6" r="4"/><path d="M6 10v2a2 2 0 004 0v-2" stroke-linecap="round"/><line x1="8" y1="14" x2="8" y2="15" stroke-linecap="round"/><path d="M5 2L4 0.5M11 2l1-1.5M2 6H0.5M15.5 6H14" stroke-linecap="round" opacity="0.5"/></svg><span class="section-pill section-pill--gold">INSIGHT</span> Insight da semana</h2>
-    <div class="atena-insight-card" id="atena-insight-card">
-      <div class="atena-loading">Carregando dados...</div>
-    </div>
-  </section>
-
-  <!-- RODAPE: score + evolução + dashboard -->
+  <!-- RODAPE: score + link -->
   <div class="atena-footer">
     <div class="atena-score" id="atena-score">
       <span class="atena-score-num">&mdash;</span>
@@ -321,136 +337,108 @@ async function atenaInit() {
     if (r.ok) atenaScan = await r.json();
   } catch(e) {}
 
-  renderMudou(hist, snapHoje, snapOntem);
-  renderAcoes(hist, snapHoje, atenaScan);
-  renderInsight(atenaScan);
+  renderBriefKPIs(hist, snapHoje, snapOntem);
+  renderBriefAcoes(hist, snapHoje);
+  renderBriefInsight(atenaScan);
   renderAtenaScore(snapHoje);
 }
 
-function renderMudou(hist, snapHoje, snapOntem) {
-  var el = document.getElementById('atena-mudou-list');
-  var items = [];
+function renderBriefKPIs(hist, snapHoje, snapOntem) {
+  var ativas = snapHoje ? snapHoje.ativas.length : 0;
+  document.getElementById('bk-ativas').textContent = ativas;
 
-  // Delta dos 5 indices
+  // Delta ativas
+  if (snapHoje && snapOntem && snapHoje.ativas && snapOntem.ativas) {
+    setDelta('bk-ativas-delta', snapHoje.ativas.length - snapOntem.ativas.length);
+  }
+
   if (hist.length >= 2) {
     var last = hist[hist.length-1];
     var prev = hist[hist.length-2];
-    var cats = {zumbi:'Enc. sem fechar', orfas:'Sem responsavel', lote_vt:'VT travadas', lideres_ocultos:'Lideres ocultos', conflitos:'Conflitos'};
-    Object.entries(cats).forEach(function(pair) {
-      var key = pair[0], label = pair[1];
-      var cur = (last.indices && last.indices[key] && last.indices[key].total != null) ? last.indices[key].total : 0;
-      var pre = (prev.indices && prev.indices[key] && prev.indices[key].total != null) ? prev.indices[key].total : 0;
-      var diff = cur - pre;
-      if (diff < 0) items.push({icon:'\u2713', text:'<b>' + label + '</b> caiu de <span class="num">' + pre + '</span> para <span class="num">' + cur + '</span> (' + diff + ')'});
-      else if (diff > 0) items.push({icon:'\u26A0', text:'<b>' + label + '</b> subiu de <span class="num">' + pre + '</span> para <span class="num">' + cur + '</span> (+' + diff + ')'});
-    });
 
-    // Movimentacoes nominais
-    if (last.mudancas_vs_anterior) {
-      var m = last.mudancas_vs_anterior;
-      Object.entries(m).forEach(function(pair) {
-        var key = pair[0], arr = pair[1];
-        if (!Array.isArray(arr)) return;
-        arr.forEach(function(item) {
-          if (key.indexOf('saiu') !== -1) items.push({icon:'\u2713', text:'<b>' + (item.cliente||item.id) + '</b> saiu do limbo' + (item.idade_quando_saiu ? ' (estava ha ' + item.idade_quando_saiu + 'd)' : '')});
-          else if (key.indexOf('atribuida') !== -1) items.push({icon:'\u2713', text:'<b>' + (item.cliente||item.id) + '</b> recebeu consultor'});
-          else if (key.indexOf('destravada') !== -1) items.push({icon:'\u2713', text:'<b>' + (item.cliente||item.id) + '</b> destravada (mudou de fase)'});
-        });
-      });
-    }
-  }
+    // Zumbi
+    var zN = (last.indices && last.indices.zumbi) ? last.indices.zumbi.total : 0;
+    var zP = (prev.indices && prev.indices.zumbi) ? prev.indices.zumbi.total : 0;
+    document.getElementById('bk-zumbi').textContent = zN;
+    setDelta('bk-zumbi-delta', zN - zP);
 
-  // Delta de ativas
-  if (snapHoje && snapOntem && snapHoje.ativas && snapOntem.ativas) {
-    var diff = snapHoje.ativas.length - snapOntem.ativas.length;
-    if (diff !== 0) items.push({icon: diff > 0 ? '\u25B2' : '\u25BC', text:'Carteira ativa: <span class="num">' + snapOntem.ativas.length + '</span> \u2192 <span class="num">' + snapHoje.ativas.length + '</span> (' + (diff>0?'+':'') + diff + ')'});
-  }
+    // Orfas
+    var oN = (last.indices && last.indices.orfas) ? last.indices.orfas.total : 0;
+    var oP = (prev.indices && prev.indices.orfas) ? prev.indices.orfas.total : 0;
+    document.getElementById('bk-orfas').textContent = oN;
+    setDelta('bk-orfas-delta', oN - oP);
 
-  if (items.length === 0) {
-    el.innerHTML = '<div class="atena-mudou-empty">Sem mudan\u00E7as detectadas ainda. O primeiro delta aparece quando o 2\u00BA snapshot di\u00E1rio for gerado.</div>';
-  } else {
-    el.innerHTML = items.map(function(i) { return '<div class="atena-mudou-item"><span class="atena-mudou-icon">' + i.icon + '</span><div>' + i.text + '</div></div>'; }).join('');
+    // VT
+    var vN = (last.indices && last.indices.lote_vt) ? last.indices.lote_vt.total : 0;
+    var vP = (prev.indices && prev.indices.lote_vt) ? prev.indices.lote_vt.total : 0;
+    document.getElementById('bk-vt').textContent = vN;
+    setDelta('bk-vt-delta', vN - vP);
+  } else if (snapHoje && snapHoje.ativas) {
+    // Sem historico — calcular do snapshot
+    var todas = snapHoje.ativas;
+    var zumbis = todas.filter(function(o){return (o.faseAtual||'').indexOf('CLIENTE FINALIZADO')>=0 && o.status!=='reparo' && o.status!=='finalizado' && o.status!=='concluido' && o.status!=='cancelado';});
+    var orfas = todas.filter(function(o){return !o.consultorNome || o.consultorNome==='' || o.consultorNome==='[]';});
+    var vt = todas.filter(function(o){return (o.faseAtual||'').indexOf('AGEND. VT')>=0;});
+    document.getElementById('bk-zumbi').textContent = zumbis.length;
+    document.getElementById('bk-orfas').textContent = orfas.length;
+    document.getElementById('bk-vt').textContent = vt.length;
   }
 }
 
-function renderAcoes(hist, snapHoje, atenaScan) {
-  var el = document.getElementById('atena-acoes-list');
+function setDelta(id, diff) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (diff > 0) { el.textContent = '\u25B2 +' + diff; el.className = 'brief-kpi-delta up'; }
+  else if (diff < 0) { el.textContent = '\u25BC ' + diff; el.className = 'brief-kpi-delta down'; }
+  else { el.textContent = '= 0'; el.className = 'brief-kpi-delta same'; }
+}
+
+function renderBriefAcoes(hist, snapHoje) {
+  var el = document.getElementById('brief-acoes');
+  if (!el) return;
   var acoes = [];
 
-  // Pegar obras ativas
   if (snapHoje && snapHoje.ativas) {
     var todas = snapHoje.ativas;
-    var comIdade = todas.filter(function(o){return o.idade_dias;});
-    var sorted = comIdade.length > 0 ? comIdade.sort(function(a,b){return b.idade_dias-a.idade_dias;}) : todas;
 
-    // Obra mais antiga (ou primeira se sem idade)
-    if (sorted[0]) {
-      var idTxt = sorted[0].idade_dias ? sorted[0].idade_dias + ' dias no radar. ' : '';
-      acoes.push({
-        sev: 'crit',
-        title: sorted[0].clienteNome,
-        text: 'Obra com maior tempo na carteira. ' + idTxt + 'Status: ' + sorted[0].status + '. Fase: ' + sorted[0].faseAtual + '. Consultor: ' + (sorted[0].consultorNome||'sem respons\u00E1vel') + '.',
-        meta: (sorted[0].idade_dias ? sorted[0].idade_dias + 'd' : 'sem idade') + ' \u00B7 ' + sorted[0].faseAtual
-      });
-    }
-
-    // Obras sem responsavel
-    var orfas = todas.filter(function(o){return !o.consultorNome || o.consultorNome==='' || o.consultorNome==='[]';});
-    if (orfas.length > 0) {
-      acoes.push({
-        sev: 'warn',
-        title: orfas.length + ' obras sem respons\u00E1vel',
-        text: 'Ningu\u00E9m est\u00E1 oficialmente cuidando destas obras. Risco de abandono e atraso silencioso.',
-        meta: orfas.length + ' obras \u00B7 a\u00E7\u00E3o: atribuir consultor'
-      });
-    }
-
-    // Obras zumbi (CLIENTE FINALIZADO com status ativo)
+    // Zumbis
     var zumbis = todas.filter(function(o){return (o.faseAtual||'').indexOf('CLIENTE FINALIZADO')>=0 && o.status!=='reparo' && o.status!=='finalizado' && o.status!=='concluido' && o.status!=='cancelado';});
     if (zumbis.length > 0) {
-      acoes.push({
-        sev: 'crit',
-        title: zumbis.length + ' obras encerradas sem fechar',
-        text: 'Terminaram na pr\u00E1tica mas continuam aparecendo como ativas, distorcendo os n\u00FAmeros do painel.',
-        meta: zumbis.length + ' obras \u00B7 a\u00E7\u00E3o: encerrar status'
-      });
+      acoes.push({sev:'crit', text:'<b>' + zumbis.length + ' obras encerradas sem fechar</b> \u2014 distorcem os n\u00FAmeros do painel', meta:'a\u00E7\u00E3o: encerrar status no sistema'});
+    }
+
+    // Orfas
+    var orfas = todas.filter(function(o){return !o.consultorNome || o.consultorNome==='' || o.consultorNome==='[]';});
+    if (orfas.length > 0) {
+      acoes.push({sev:'warn', text:'<b>' + orfas.length + ' obras sem respons\u00E1vel</b> \u2014 ningu\u00E9m cuida oficialmente', meta:'a\u00E7\u00E3o: atribuir consultor'});
+    }
+
+    // VT travadas
+    var vt = todas.filter(function(o){return (o.faseAtual||'').indexOf('AGEND. VT')>=0;});
+    if (vt.length > 10) {
+      acoes.push({sev:'info', text:'<b>' + vt.length + ' obras em agendamento de VT</b> \u2014 maior gargalo do funil', meta:'a\u00E7\u00E3o: priorizar agendamentos'});
+    }
+
+    // Obra mais antiga
+    var comIdade = todas.filter(function(o){return o.idade_dias;});
+    var sorted = comIdade.length > 0 ? comIdade.sort(function(a,b){return b.idade_dias-a.idade_dias;}) : [];
+    if (sorted.length > 0 && sorted[0].idade_dias > 180) {
+      acoes.push({sev:'crit', text:'<b>' + sorted[0].clienteNome + '</b> \u2014 ' + sorted[0].idade_dias + 'd na carteira, ' + sorted[0].faseAtual, meta:sorted[0].status + ' \u00B7 ' + (sorted[0].consultorNome||'sem consultor')});
     }
   }
 
-  // Achados de alta severidade do ATENA scan
-  if (atenaScan && Array.isArray(atenaScan.varreduras) && atenaScan.varreduras.length > 0) {
-    var lastScan = atenaScan.varreduras[atenaScan.varreduras.length-1];
-    if (lastScan.resumo && lastScan.resumo.alta > 0) {
-      acoes.push({
-        sev: 'info',
-        title: 'ATENA detectou ' + lastScan.resumo.alta + ' achado(s) de alta severidade',
-        text: '\u00DAltima varredura: ' + lastScan.data + '. Total de ' + lastScan.resumo.total + ' achados (' + lastScan.resumo.alta + ' alta, ' + lastScan.resumo.media + ' m\u00E9dia).',
-        meta: 'Varredura ' + lastScan.data
-      });
-    }
-  }
-
-  // Fallback se nenhuma acao
   if (acoes.length === 0) {
-    acoes.push({
-      sev: 'info',
-      title: 'Aguardando dados',
-      text: 'As a\u00E7\u00F5es priorit\u00E1rias ser\u00E3o geradas automaticamente quando os snapshots di\u00E1rios acumularem. O primeiro briefing completo aparece com 2+ dias de dados.',
-      meta: 'Sistema em aquecimento'
-    });
+    el.innerHTML = '<div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px 0">Sem a\u00E7\u00F5es cr\u00EDticas identificadas.</div>';
+  } else {
+    el.innerHTML = acoes.map(function(a) {
+      return '<div class="brief-acao"><div class="brief-acao-dot ' + a.sev + '"></div><div>' + a.text + '<span class="meta">' + a.meta + '</span></div></div>';
+    }).join('');
   }
-
-  el.innerHTML = acoes.slice(0,3).map(function(a) {
-    return '<div class="atena-acao ' + a.sev + '">' +
-      '<div class="atena-acao-title">' + a.title + '</div>' +
-      '<div class="atena-acao-text">' + a.text + '</div>' +
-      '<div class="atena-acao-meta">' + a.meta + '</div>' +
-    '</div>';
-  }).join('');
 }
 
-function renderInsight(atenaScan) {
-  var el = document.getElementById('atena-insight-card');
+function renderBriefInsight(atenaScan) {
+  var el = document.getElementById('brief-insight');
+  if (!el) return;
 
   // Pool de insights estaticos (baseados nos 26 cruzamentos)
   var insights = [
@@ -467,8 +455,8 @@ function renderInsight(atenaScan) {
   var idx = new Date().getDay() % insights.length;
   var ins = insights[idx];
 
-  el.innerHTML = '<div class="atena-insight-quote">\u201C' + ins.quote + '\u201D</div>' +
-    '<div class="atena-insight-source">fonte: ' + ins.source + '</div>';
+  el.innerHTML = '\u201C' + ins.quote + '\u201D' +
+    '<div class="brief-insight-source">fonte: ' + ins.source + '</div>';
 }
 
 function renderAtenaScore(snapHoje) {
