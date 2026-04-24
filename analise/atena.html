@@ -57,10 +57,13 @@ a:hover { text-decoration: underline; }
 .brief-kpi.warn{border-left:3px solid #b89a4a}
 .brief-kpi-val{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:#2a2520;line-height:1}
 .brief-kpi-label{font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:0.08em;margin-top:6px;font-weight:500}
-.brief-kpi-delta{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:6px;font-weight:500}
+.brief-kpi-delta{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:4px;font-weight:500}
 .brief-kpi-delta.up{color:#c45a5a}
 .brief-kpi-delta.down{color:#3d8a5a}
 .brief-kpi-delta.same{color:#b8b0a4}
+.brief-kpi-spark{margin-top:8px;height:36px;position:relative}
+.brief-kpi-spark svg{width:100%;height:28px;display:block}
+.brief-kpi-spark .spark-dates{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:7px;color:#c8bfb4;margin-top:2px}
 @media(max-width:600px){.brief-kpis{grid-template-columns:repeat(2,1fr)}}
 
 /* Bloco 2: Acoes prioritarias */
@@ -233,21 +236,25 @@ a:hover { text-decoration: underline; }
       <div class="brief-kpi-val" id="bk-ativas">&mdash;</div>
       <div class="brief-kpi-label">ATIVAS</div>
       <div class="brief-kpi-delta" id="bk-ativas-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-ativas"></div>
     </div>
     <div class="brief-kpi alert">
       <div class="brief-kpi-val" id="bk-zumbi">&mdash;</div>
       <div class="brief-kpi-label">ENC. S/ FECHAR</div>
       <div class="brief-kpi-delta" id="bk-zumbi-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-zumbi"></div>
     </div>
     <div class="brief-kpi warn">
       <div class="brief-kpi-val" id="bk-orfas">&mdash;</div>
       <div class="brief-kpi-label">SEM RESPONS&Aacute;VEL</div>
       <div class="brief-kpi-delta" id="bk-orfas-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-orfas"></div>
     </div>
     <div class="brief-kpi">
       <div class="brief-kpi-val" id="bk-vt">&mdash;</div>
       <div class="brief-kpi-label">VT TRAVADAS</div>
       <div class="brief-kpi-delta" id="bk-vt-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-vt"></div>
     </div>
   </div>
 
@@ -383,6 +390,9 @@ function renderBriefKPIs(hist, snapHoje, snapOntem) {
     document.getElementById('bk-orfas').textContent = orfas.length;
     document.getElementById('bk-vt').textContent = vt.length;
   }
+
+  // Sparklines de tendência
+  renderBriefSparklines(hist, snapHoje);
 }
 
 function setDelta(id, diff) {
@@ -391,6 +401,102 @@ function setDelta(id, diff) {
   if (diff > 0) { el.textContent = '\u25B2 +' + diff; el.className = 'brief-kpi-delta up'; }
   else if (diff < 0) { el.textContent = '\u25BC ' + diff; el.className = 'brief-kpi-delta down'; }
   else { el.textContent = '= 0'; el.className = 'brief-kpi-delta same'; }
+}
+
+function renderBriefSparklines(hist, snapHoje) {
+  var cats = [
+    {id: 'bk-spark-ativas', key: '_ativas', color: '#b8a080'},
+    {id: 'bk-spark-zumbi', key: 'zumbi', color: '#c45a5a'},
+    {id: 'bk-spark-orfas', key: 'orfas', color: '#b89a4a'},
+    {id: 'bk-spark-vt', key: 'lote_vt', color: '#4a7ab8'}
+  ];
+
+  cats.forEach(function(cat) {
+    var el = document.getElementById(cat.id);
+    if (!el) return;
+
+    // Extrair série de valores do histórico
+    var series = [];
+    hist.forEach(function(h) {
+      var val = 0;
+      if (cat.key === '_ativas') {
+        // Ativas não está no indices — usar total de ativas do snapshot se disponível
+        // Fallback: contar zumbi+orfas como proxy (não ideal mas mostra algo)
+        val = null;
+      } else if (h.indices && h.indices[cat.key]) {
+        val = h.indices[cat.key].total || 0;
+      }
+      series.push({date: h.date, val: val});
+    });
+
+    // Para ativas, pegar do snapshot
+    if (cat.key === '_ativas' && snapHoje) {
+      series[series.length - 1] = {date: series[series.length-1] ? series[series.length-1].date : '', val: snapHoje.ativas.length};
+      // Se só temos 1 ponto, adicionar o anterior como estimativa
+      if (series.length === 1) {
+        series = [{date: '', val: snapHoje.ativas.length}];
+      }
+    }
+
+    // Filtrar nulls
+    series = series.filter(function(s) { return s.val !== null; });
+
+    if (series.length === 0) { el.innerHTML = ''; return; }
+
+    // Gerar SVG sparkline
+    var W = 120, H = 28;
+    var vals = series.map(function(s) { return s.val; });
+    var max = Math.max.apply(null, vals.concat([1]));
+    var min = Math.min.apply(null, vals.concat([0]));
+    var range = max - min || 1;
+    var pad = 3;
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">';
+
+    if (vals.length === 1) {
+      // 1 ponto — círculo + label
+      svg += '<circle cx="' + (W/2) + '" cy="' + (H/2) + '" r="3" fill="' + cat.color + '"/>';
+      svg += '<text x="' + (W/2) + '" y="' + (H/2 - 6) + '" fill="' + cat.color + '" font-size="8" text-anchor="middle" font-family="JetBrains Mono">' + vals[0] + '</text>';
+    } else {
+      // Linha + área
+      var pts = vals.map(function(v, i) {
+        var x = pad + (W - pad*2) / (vals.length - 1) * i;
+        var y = pad + (H - pad*2) - ((v - min) / range) * (H - pad*2);
+        return x.toFixed(1) + ',' + y.toFixed(1);
+      });
+
+      // Área preenchida
+      svg += '<polygon points="' + pad + ',' + (H - pad) + ' ' + pts.join(' ') + ' ' + (W - pad) + ',' + (H - pad) + '" fill="' + cat.color + '" opacity="0.08"/>';
+
+      // Linha
+      svg += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + cat.color + '" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>';
+
+      // Último ponto destacado
+      var lastPt = pts[pts.length - 1].split(',');
+      svg += '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="2.5" fill="' + cat.color + '"/>';
+
+      // Seta de tendência
+      var lastVal = vals[vals.length - 1];
+      var prevVal = vals[vals.length - 2];
+      if (lastVal > prevVal) {
+        svg += '<path d="M' + (W - 8) + ',' + (pad + 4) + ' L' + (W - 4) + ',' + pad + ' L' + W + ',' + (pad + 4) + '" fill="none" stroke="' + cat.color + '" stroke-width="1.2" opacity="0.6"/>';
+      } else if (lastVal < prevVal) {
+        svg += '<path d="M' + (W - 8) + ',' + (H - pad - 4) + ' L' + (W - 4) + ',' + (H - pad) + ' L' + W + ',' + (H - pad - 4) + '" fill="none" stroke="' + cat.color + '" stroke-width="1.2" opacity="0.6"/>';
+      }
+    }
+
+    svg += '</svg>';
+
+    // Datas no eixo inferior
+    var dates = '';
+    if (series.length >= 2) {
+      var first = series[0].date ? series[0].date.slice(5).replace('-', '/') : '';
+      var last = series[series.length - 1].date ? series[series.length - 1].date.slice(5).replace('-', '/') : '';
+      dates = '<div class="spark-dates"><span>' + first + '</span><span>' + last + '</span></div>';
+    }
+
+    el.innerHTML = svg + dates;
+  });
 }
 
 function renderBriefAcoes(hist, snapHoje) {
