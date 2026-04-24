@@ -1235,20 +1235,20 @@
       <b>Leitura:</b> calculando estado operacional…
     </div>
 
-    <!-- BLOCO 2: Distribuição secundária (geografia + pipeline) -->
-    <div class="q4-grid-sec">
+    <!-- BLOCO 2: Distribuição secundária -->
+    <div class="q4-grid-sec" style="grid-template-columns:1fr 1fr 1fr">
       <div class="q4-sec-card">
-        <h4>Top fases que concentram volume</h4>
+        <h4>Top fases por volume</h4>
         <div id="q4-fases-bars"></div>
       </div>
       <div class="q4-sec-card">
-        <h4>Distribuição geográfica (top UF)</h4>
+        <h4>Geografia (top UF)</h4>
         <div id="q4-uf-bars"></div>
       </div>
-    </div>
-
-    <div class="key-finding" style="margin-top:18px;">
-      <strong>Snapshot diário começou hoje.</strong> Em 7–30 dias o sistema terá throughput mensal, velocity por equipe e taxa real de conclusão. Por enquanto métricas de fluxo (entrada/saída) são estáticas.
+      <div class="q4-sec-card">
+        <h4>Funil pré-execução</h4>
+        <div id="q4-funil-bars"></div>
+      </div>
     </div>
 
     <!-- ====== MODAIS Q4 (RODANDO / ESTAGNADO / PENDENTE) ====== -->
@@ -2656,6 +2656,7 @@ function q4Init(){
 
   q4RenderFases();
   q4RenderUFs();
+  q4RenderFunil();
 }
 
 function q4RenderFases(){
@@ -2710,6 +2711,21 @@ function q4RenderUFs(){
       <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
       <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
     </div>`).join('');
+}
+
+function q4RenderFunil(){
+  var obras = Q2_OBRAS;
+  var faseOrdem = ['ENTRADA','1º CONTATO OP.','EM CONTRATO','CONTRATO','INFORMAÇÕES PROJETOS','INFORMAÇÕES FINANCEIRAS','INFORMAÇÕES LOGÍSTICAS','AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','PROJETOS  - 1ª REVISÃO','CONFIRMAÇÕES OP 1','REVISÃO FINAL OP','INDÚSTRIA - EM PRODUÇÃO','LOGÍSTICA - EM COLETA','LOGÍSTICA - EM ENTREGA','LOGÍSTICA - MATERIAL ENTREGUE','AGEND. VT - ENTRADA','RESULTADO VT - ENTRADA','EQUIPE DE EXECUÇÃO','AGUARDANDO LIBERAÇÃO','OBRA EM EXECUÇÃO'];
+  var por = {};
+  obras.forEach(function(o){var f=o.fase||'(sem)'; por[f]=(por[f]||0)+1;});
+  var funil = faseOrdem.filter(function(f){return por[f]>0;}).map(function(f){return{fase:f,n:por[f]};});
+  if (funil.length===0) funil = Object.entries(por).sort(function(a,b){return b[1]-a[1];}).slice(0,8).map(function(e){return{fase:e[0],n:e[1]};});
+  var max = funil.reduce(function(a,f){return Math.max(a,f.n);},1);
+  var el = document.getElementById('q4-funil-bars');
+  if(el) el.innerHTML = funil.slice(0,8).map(function(f){
+    var short = f.fase.replace('AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','VT Aferição').replace('RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','Resultado VT').replace('INDÚSTRIA - EM PRODUÇÃO','Indústria').replace('LOGÍSTICA - EM ENTREGA','Log. Entrega').replace('LOGÍSTICA - EM COLETA','Log. Coleta').replace('LOGÍSTICA - MATERIAL ENTREGUE','Log. Entregue').replace('AGUARDANDO LIBERAÇÃO','Ag. Liberação').replace('CONFIRMAÇÕES OP 1','Confirmações').replace('OBRA EM EXECUÇÃO','Em Execução').replace('1º CONTATO OP.','1º Contato').replace('EQUIPE DE EXECUÇÃO','Equipe Exec.');
+    return '<div class="q3-cap-row"><div class="nome" title="'+f.fase+'">'+short+'</div><div class="bar-out"><div class="bar-use" style="width:'+(f.n/max*100).toFixed(0)+'%;background:linear-gradient(90deg,#4a7ab8,#3d8a5a)"></div></div><div class="pct">'+f.n+'</div></div>';
+  }).join('');
 }
 
 // ============== Q4 — modal por estado operacional ==============
