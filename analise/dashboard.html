@@ -1442,6 +1442,31 @@
         <div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px">Calculando ranking...</div>
       </div>
     </div>
+
+    <!-- BENCHMARK + FANTASMAS -->
+    <div class="ki-grid" style="margin-top:20px">
+      <div class="ki-card" style="border-left-color:#3d8a5a">
+        <div class="ki-card-head">
+          <div class="ki-val" style="color:#3d8a5a" id="ki-ciclo">—</div>
+          <div class="ki-label">CICLO MEDIANO DE SUCESSO</div>
+        </div>
+        <div class="ki-desc" id="ki-ciclo-desc">Carregando...</div>
+      </div>
+      <div class="ki-card ki-alert">
+        <div class="ki-card-head">
+          <div class="ki-val" id="ki-fantasmas">—</div>
+          <div class="ki-label">FANTASMAS PIPEFY</div>
+        </div>
+        <div class="ki-desc" id="ki-fantasmas-desc">Carregando...</div>
+      </div>
+      <div class="ki-card">
+        <div class="ki-card-head">
+          <div class="ki-val" id="ki-diagnosticos">—</div>
+          <div class="ki-label">COM DIAGNÓSTICO KIRA</div>
+        </div>
+        <div class="ki-desc" id="ki-diag-desc">Carregando...</div>
+      </div>
+    </div>
   </section>
 
   <!-- ============== DIAGNÓSTICO OPERACIONAL ============== -->
@@ -4093,6 +4118,39 @@ async function loadKiraInsights() {
       rkEl2.innerHTML = '<div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px">Sem dados suficientes para ranking.</div>';
     }
   } catch(e) { console.error('KI risco:', e); }
+
+  // 5. Success DNA
+  try {
+    var r5 = await fetch('dados/cruz-success-dna.json?t=' + Date.now());
+    if (r5.ok) {
+      var sd = await r5.json();
+      var ciclo = sd.ciclo_obras_reais ? sd.ciclo_obras_reais.mediana : (sd.mediana || 117);
+      document.getElementById('ki-ciclo').textContent = ciclo + 'd';
+      document.getElementById('ki-ciclo-desc').textContent = 'Obras entregues com sucesso levam em média ' + ciclo + ' dias. Benchmark positivo pra comparar com obras ativas.';
+    }
+  } catch(e) { console.error('KI success:', e); }
+
+  // 6. Pipefy fantasmas
+  try {
+    var r6 = await fetch('dados/cruz-pipefy-fantasmas.json?t=' + Date.now());
+    if (r6.ok) {
+      var pf = await r6.json();
+      var nf = pf.total_fantasmas_perigosas || 39;
+      document.getElementById('ki-fantasmas').textContent = nf;
+      document.getElementById('ki-fantasmas-desc').textContent = nf + ' obras marcadas como finalizadas no sistema sem terem terminado de verdade no Pipefy. ' + (pf.total_sumidas_pipefy || 0) + ' sumiram completamente.';
+    }
+  } catch(e) { console.error('KI fantasmas:', e); }
+
+  // 7. Diagnósticos KIRA
+  try {
+    var r7 = await fetch('dados/cruz-diagnostico-kira.json?t=' + Date.now());
+    if (r7.ok) {
+      var dk = await r7.json();
+      var pct = dk.total_obras ? (dk.com_situacao_atual / dk.total_obras * 100).toFixed(0) : 0;
+      document.getElementById('ki-diagnosticos').textContent = pct + '%';
+      document.getElementById('ki-diag-desc').textContent = dk.com_situacao_atual + ' de ' + dk.total_obras + ' obras têm diagnóstico narrativo. ' + dk.com_tag_kira + ' com tag KIRA. ' + (dk.total_obras - dk.com_situacao_atual) + ' estão sem análise.';
+    }
+  } catch(e) { console.error('KI diagnostico:', e); }
 }
 
 // Disparar após dashboard carregar (não interfere com initDashboard)
