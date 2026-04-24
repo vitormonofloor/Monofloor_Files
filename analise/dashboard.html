@@ -912,6 +912,20 @@
   .ki-risco-metric.ok{color:#3d8a5a}
   .ki-risco-score{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#c45a5a;text-align:center;background:#f6eaea;border-radius:4px;padding:4px 8px}
   @media(max-width:720px){.ki-risco-item{grid-template-columns:28px 1fr 50px 50px;font-size:10px}.ki-risco-metric:nth-child(4),.ki-risco-metric:nth-child(5){display:none}}
+
+  /* Drill-down: nomes clicáveis nas tabelas/modais */
+  .q4-modal-tbl td:first-child,
+  .balde-content td:first-child,
+  .ki-risco-name {
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .q4-modal-tbl td:first-child:hover,
+  .balde-content td:first-child:hover,
+  .ki-risco-name:hover {
+    color: #b8a080;
+    text-decoration: underline;
+  }
   </style>
 <script src="../auth.js"></script>
 </head>
@@ -4518,6 +4532,51 @@ function renderLineChart(values, labels, color, maxY) {
   svg += '</svg>';
   return svg;
 }
+
+// Drill-down: clicar no nome de obra em qualquer tabela/modal abre Jornada
+document.addEventListener('click', function(e) {
+  // Alternativa: clique em .ki-risco-name (ranking de risco — usa div, não td)
+  var riscoName = e.target.closest('.ki-risco-name');
+  if (riscoName) {
+    var clienteText2 = riscoName.textContent.trim();
+    var obra2 = (typeof Q2_OBRAS !== 'undefined' ? Q2_OBRAS : []).find(function(o) {
+      return o.cliente && o.cliente.trim() === clienteText2;
+    });
+    if (obra2 && obra2.id) {
+      e.preventDefault();
+      window.open('timeline-lab.html#' + obra2.id, '_blank');
+    }
+    return;
+  }
+
+  // Detectar clique em célula de tabela que tem nome de cliente
+  var td = e.target.closest('td');
+  if (!td) return;
+
+  // Só primeira coluna (nome do cliente)
+  var tr = td.closest('tr');
+  if (!tr) return;
+  var cells = tr.querySelectorAll('td');
+  if (cells[0] !== td) return;
+
+  // Verificar se está dentro de modal ou tabela conhecida
+  var modal = td.closest('.q4-modal, .bk-modal, .q4-modal-tbl, .ki-risco-item');
+  var balde = td.closest('.balde-content');
+  if (!modal && !balde) return;
+
+  // Buscar ID da obra por nome
+  var clienteText = td.textContent.trim();
+  if (!clienteText || clienteText.length < 3) return;
+
+  var obra = (typeof Q2_OBRAS !== 'undefined' ? Q2_OBRAS : []).find(function(o) {
+    return o.cliente && o.cliente.trim() === clienteText;
+  });
+
+  if (obra && obra.id) {
+    e.preventDefault();
+    window.open('timeline-lab.html#' + obra.id, '_blank');
+  }
+});
 </script>
 
 <div class="evo-modal" id="evoModal">
