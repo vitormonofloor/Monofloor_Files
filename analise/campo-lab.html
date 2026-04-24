@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Campo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--text:#3a3530;
+  --text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#5a9a6a;--red:#c0534f;--yellow:#c4a030;--orange:#d4843e;--gray:#c8c0b8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;padding:0;line-height:1.55}
+
+/* DOCK LATERAL */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative;cursor:pointer}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08);text-decoration:none}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+.dock-item.active::after{color:var(--accent)}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text)}
+.header-brand .logo{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase}
+.header-stats{margin-left:auto;display:flex;gap:16px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)}
+.header-stats span{background:rgba(184,160,128,0.1);padding:4px 10px;border-radius:6px}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 60px;margin-left:60px}
+@media(max-width:900px){.main{margin-left:auto}}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.section-title{font-size:14px;font-weight:700;letter-spacing:0.04em;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.section-title .icon{width:20px;height:20px;color:var(--accent)}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.kpi-card{background:rgba(184,160,128,0.06);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.kpi-value{font-size:28px;font-weight:700;font-family:var(--font-mono);line-height:1.1}
+.kpi-label{font-size:10px;font-family:var(--font-mono);font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-top:4px}
+.kpi-value.green{color:var(--green)}
+.kpi-value.red{color:var(--red)}
+.kpi-value.yellow{color:var(--yellow)}
+.kpi-value.orange{color:var(--orange)}
+.kpi-value.accent{color:var(--accent)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:8px 10px;border-bottom:2px solid var(--border)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover{background:rgba(184,160,128,0.04)}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--font-mono);font-weight:600;margin:1px 2px}
+.badge.red{background:rgba(192,83,79,0.12);color:var(--red)}
+.badge.green{background:rgba(90,154,106,0.12);color:var(--green)}
+.badge.yellow{background:rgba(196,160,48,0.12);color:var(--yellow)}
+.badge.orange{background:rgba(212,132,62,0.12);color:var(--orange)}
+.badge.gray{background:rgba(200,192,184,0.15);color:var(--text-muted)}
+
+/* BARRAS HORIZONTAIS */
+.bar-group{margin-bottom:14px}
+.bar-group:last-child{margin-bottom:0}
+.bar-label{font-size:11px;font-family:var(--font-mono);font-weight:600;color:var(--text);margin-bottom:4px;display:flex;justify-content:space-between}
+.bar-label .val{font-weight:400;color:var(--text-muted)}
+.bar-track{height:22px;border-radius:6px;overflow:hidden;display:flex;background:rgba(184,160,128,0.08)}
+.bar-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--font-mono);font-weight:600;color:#fff;min-width:1px;transition:width .6s ease}
+
+/* TOOLTIP */
+.tooltip{position:fixed;background:#3a3530;color:#fff;font-size:11px;font-family:var(--font-mono);padding:6px 10px;border-radius:6px;pointer-events:none;z-index:1000;display:none;max-width:280px;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+
+/* LOADING */
+.loading-msg{text-align:center;padding:60px;color:var(--text-muted);font-size:14px}
+
+/* DIST CHART */
+.dist-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dist-row:last-child{margin-bottom:0}
+.dist-label{font-size:11px;font-family:var(--font-mono);font-weight:600;width:120px;text-align:right;color:var(--text);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dist-bar-wrap{flex:1;height:20px;background:rgba(184,160,128,0.08);border-radius:5px;overflow:hidden;position:relative}
+.dist-bar{height:100%;border-radius:5px;transition:width .6s ease;display:flex;align-items:center;padding:0 6px;font-size:9px;font-family:var(--font-mono);font-weight:600;color:#fff;min-width:0}
+.dist-count{font-size:11px;font-family:var(--font-mono);font-weight:500;color:var(--text-muted);width:36px;text-align:right;flex-shrink:0}
+
+/* PERFIL GAUGE */
+.gauge-row{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.gauge-item{flex:1;min-width:120px;text-align:center}
+.gauge-ring{width:80px;height:80px;border-radius:50%;margin:0 auto 8px;position:relative;display:flex;align-items:center;justify-content:center}
+.gauge-ring svg{width:80px;height:80px;transform:rotate(-90deg)}
+.gauge-ring .gauge-val{position:absolute;font-size:18px;font-weight:700;font-family:var(--font-mono)}
+.gauge-caption{font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em}
+
+/* ERROR */
+.error-msg{background:rgba(192,83,79,0.08);border:1px solid rgba(192,83,79,0.2);border-radius:8px;padding:12px 16px;color:var(--red);font-size:12px;font-family:var(--font-mono)}
+</style>
+</head>
+<body>
+
+<!-- DOCK -->
+<nav class="dock">
+  <a class="dock-item active" data-label="silencio" href="#sec-silencio">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 0 1 21 12c0 2.49-1.01 4.74-2.64 6.36"/><path d="M15.54 8.46A5 5 0 0 1 17 12a5 5 0 0 1-1.46 3.54"/><line x1="1" y1="1" x2="23" y2="23"/><path d="M9.41 9.41A4 4 0 0 0 8 12a4 4 0 0 0 4 4c1.1 0 2.1-.45 2.83-1.17"/><path d="M12 4a8 8 0 0 0-8 8c0 1.56.44 3.02 1.22 4.26"/></svg>
+  </a>
+  <a class="dock-item" data-label="reporters" href="#sec-reporters">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </a>
+  <a class="dock-item" data-label="prestadores" href="#sec-prestadores">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </a>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">M</div>
+    MONOFLOOR
+  </div>
+  <div class="header-title">Cap. 3 — O que acontece no campo?</div>
+  <div class="header-stats">
+    <span id="stat-fonte">Fonte: cruz-relatorios + API</span>
+    <span id="stat-date">2026-04-24</span>
+  </div>
+</header>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- CONTENT -->
+<div class="main">
+  <div class="loading-msg" id="loading">Carregando dados do campo...</div>
+
+  <!-- BLOCO 1: SILENCIO DE CAMPO -->
+  <div class="section" id="sec-silencio" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64A9 9 0 0 1 21 12c0 2.49-1.01 4.74-2.64 6.36"/><path d="M15.54 8.46A5 5 0 0 1 17 12a5 5 0 0 1-1.46 3.54"/><line x1="1" y1="1" x2="23" y2="23"/><path d="M9.41 9.41A4 4 0 0 0 8 12a4 4 0 0 0 4 4c1.1 0 2.1-.45 2.83-1.17"/><path d="M12 4a8 8 0 0 0-8 8c0 1.56.44 3.02 1.22 4.26"/></svg>
+      Dias sem Relatorio — Alerta de Silencio
+    </div>
+    <div class="kpi-row" id="kpi-silencio"></div>
+    <div style="overflow-x:auto">
+      <table class="tbl" id="tbl-cegas">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Obra (cliente)</th>
+            <th>Relatorios</th>
+            <th>Ultimo</th>
+            <th>Dias sem</th>
+            <th>Alerta</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-cegas-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BLOCO 2: TOP REPORTERS -->
+  <div class="section" id="sec-reporters" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Quem reporta mais — Top Reporters
+    </div>
+    <div id="reporters-bars"></div>
+  </div>
+
+  <!-- BLOCO 3: PRESTADORES -->
+  <div class="section" id="sec-prestadores" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Auditoria de Prestadores (API ao vivo)
+    </div>
+    <div id="prest-loading" class="loading-msg" style="padding:20px">Buscando prestadores da API...</div>
+    <div id="prest-error" style="display:none"></div>
+    <div id="prest-content" style="display:none">
+      <div class="kpi-row" id="kpi-prest"></div>
+      <div style="margin-bottom:20px">
+        <h4 style="font-size:12px;font-family:var(--font-mono);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:12px">Distribuicao por Funcao</h4>
+        <div id="prest-dist"></div>
+      </div>
+      <div>
+        <h4 style="font-size:12px;font-family:var(--font-mono);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:12px">Ranking — Perfil Incompleto (0%)</h4>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="tbl-perfil">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Funcao</th>
+                <th>Ativo</th>
+                <th>Perfil %</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-perfil-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TODAY = new Date('2026-04-24');
+const tooltip = document.getElementById('tooltip');
+
+document.addEventListener('mousemove', e => {
+  tooltip.style.left = (e.clientX + 12) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+});
+function showTip(text){ tooltip.textContent = text; tooltip.style.display = 'block'; }
+function hideTip(){ tooltip.style.display = 'none'; }
+
+// Dock navigation
+document.querySelectorAll('.dock-item').forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(item.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.dock-item').forEach(d => d.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+// Scroll spy
+const sections = ['sec-silencio','sec-reporters','sec-prestadores'];
+const dockItems = document.querySelectorAll('.dock-item');
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  }
+  dockItems.forEach((d, i) => {
+    d.classList.toggle('active', sections[i] === current);
+  });
+});
+
+/* ===== BLOCO 1 + 2: Dados de cruz-relatorios.json ===== */
+async function loadRelatorios() {
+  try {
+    const resp = await fetch('dados/cruz-relatorios.json');
+    const data = await resp.json();
+    renderSilencio(data);
+    renderReporters(data);
+  } catch(err) {
+    console.error('Erro ao carregar cruz-relatorios:', err);
+    document.getElementById('loading').textContent = 'Erro ao carregar dados: ' + err.message;
+  }
+}
+
+function renderSilencio(data) {
+  const obras = data.obras || [];
+  const total = obras.length;
+  const com48h = obras.filter(o => o.dias_sem_relatorio !== null && o.dias_sem_relatorio <= 2).length;
+  const sem7d = obras.filter(o => o.dias_sem_relatorio !== null && o.dias_sem_relatorio >= 7).length;
+  const semNunca = obras.filter(o => o.dias_sem_relatorio === null && o.n_relatorios === 0).length;
+
+  // KPIs
+  const kpiEl = document.getElementById('kpi-silencio');
+  kpiEl.innerHTML = `
+    <div class="kpi-card"><div class="kpi-value accent">${total}</div><div class="kpi-label">Obras consultadas</div></div>
+    <div class="kpi-card"><div class="kpi-value green">${com48h}</div><div class="kpi-label">Relatorio 48h</div></div>
+    <div class="kpi-card"><div class="kpi-value orange">${sem7d}</div><div class="kpi-label">Sem relatorio 7+ dias</div></div>
+    <div class="kpi-card"><div class="kpi-value red">${semNunca}</div><div class="kpi-label">Sem relatorio NUNCA</div></div>
+  `;
+
+  // Tabela: obras cegas (sem relatorio recente), ordenadas por dias sem reportar
+  const cegas = obras
+    .map(o => ({
+      ...o,
+      sortKey: o.dias_sem_relatorio === null ? 9999 : o.dias_sem_relatorio
+    }))
+    .sort((a, b) => b.sortKey - a.sortKey);
+
+  const tbody = document.getElementById('tbl-cegas-body');
+  tbody.innerHTML = cegas.map((o, i) => {
+    const dias = o.dias_sem_relatorio;
+    const diasTxt = dias === null ? 'NUNCA' : dias + 'd';
+    const ultimoTxt = o.ultimo_relatorio || '—';
+    let alerta = '';
+    if (dias === null) {
+      alerta = '<span class="badge red">CEGO</span>';
+    } else if (dias >= 7) {
+      alerta = '<span class="badge orange">ALERTA</span>';
+    } else if (dias >= 3) {
+      alerta = '<span class="badge yellow">ATENCAO</span>';
+    } else {
+      alerta = '<span class="badge green">OK</span>';
+    }
+    return `<tr>
+      <td style="font-family:var(--font-mono);color:var(--text-muted)">${i + 1}</td>
+      <td style="font-weight:600;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${o.cliente}">${o.cliente}</td>
+      <td style="font-family:var(--font-mono);text-align:center">${o.n_relatorios}</td>
+      <td style="font-family:var(--font-mono);font-size:11px">${ultimoTxt}</td>
+      <td style="font-family:var(--font-mono);font-weight:700;text-align:center;color:${dias === null ? 'var(--red)' : dias >= 7 ? 'var(--orange)' : dias >= 3 ? 'var(--yellow)' : 'var(--green)'}">${diasTxt}</td>
+      <td>${alerta}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('sec-silencio').style.display = '';
+  document.getElementById('loading').style.display = 'none';
+}
+
+function renderReporters(data) {
+  const reporters = (data.top_reporters || []).slice().sort((a, b) => b.total - a.total);
+  const maxVal = reporters.length ? reporters[0].total : 1;
+  const container = document.getElementById('reporters-bars');
+
+  container.innerHTML = reporters.map(r => {
+    const pct = Math.max((r.total / maxVal) * 100, 4);
+    const color = r.total >= 5 ? 'var(--green)' : r.total >= 3 ? 'var(--accent)' : 'var(--gray)';
+    return `<div class="dist-row">
+      <div class="dist-label" title="${r.nome}">${r.nome}</div>
+      <div class="dist-bar-wrap">
+        <div class="dist-bar" style="width:${pct}%;background:${color}">${r.total}</div>
+      </div>
+      <div class="dist-count">${r.total}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sec-reporters').style.display = '';
+}
+
+/* ===== BLOCO 3: Prestadores (API ao vivo) ===== */
+async function loadPrestadores() {
+  const loadEl = document.getElementById('prest-loading');
+  const errEl = document.getElementById('prest-error');
+  const contentEl = document.getElementById('prest-content');
+
+  try {
+    const resp = await fetch('https://cliente.monofloor.cloud/api/prestadores');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const prestadores = await resp.json();
+    loadEl.style.display = 'none';
+    contentEl.style.display = '';
+    renderPrestadores(prestadores);
+  } catch(err) {
+    loadEl.style.display = 'none';
+    errEl.style.display = '';
+    errEl.innerHTML = `<div class="error-msg">Erro ao buscar prestadores da API: ${err.message}<br>Verifique a conexao ou CORS.</div>`;
+    document.getElementById('sec-prestadores').style.display = '';
+  }
+}
+
+function renderPrestadores(list) {
+  const total = list.length;
+  const ativos = list.filter(p => p.ativo === true || p.ativo === 'true').length;
+  const inativos = total - ativos;
+
+  // Perfil completo: percentual > 80 vs < 20
+  const comPerfil = list.filter(p => (p.perfilCompleto || 0) > 80).length;
+  const semPerfil = list.filter(p => (p.perfilCompleto || 0) < 20).length;
+  const pctCompleto = total > 0 ? Math.round((comPerfil / total) * 100) : 0;
+  const pctIncompleto = total > 0 ? Math.round((semPerfil / total) * 100) : 0;
+
+  // KPIs
+  document.getElementById('kpi-prest').innerHTML = `
+    <div class="kpi-card"><div class="kpi-value accent">${total}</div><div class="kpi-label">Total cadastrados</div></div>
+    <div class="kpi-card"><div class="kpi-value green">${ativos}</div><div class="kpi-label">Ativos</div></div>
+    <div class="kpi-card"><div class="kpi-value red">${inativos}</div><div class="kpi-label">Inativos</div></div>
+    <div class="kpi-card"><div class="kpi-value green">${comPerfil} <span style="font-size:14px;color:var(--text-muted)">(${pctCompleto}%)</span></div><div class="kpi-label">Perfil &gt;80%</div></div>
+    <div class="kpi-card"><div class="kpi-value red">${semPerfil} <span style="font-size:14px;color:var(--text-muted)">(${pctIncompleto}%)</span></div><div class="kpi-label">Perfil &lt;20%</div></div>
+  `;
+
+  // Distribuicao por funcao
+  const funcoes = {};
+  const FUNC_LABELS = {
+    'LIDER': 'Lider',
+    'APLICADOR_1': 'Aplicador 1',
+    'APLICADOR_2': 'Aplicador 2',
+    'APLICADOR_3': 'Aplicador 3',
+    'PREPARADOR': 'Preparador',
+    'AJUDANTE': 'Ajudante'
+  };
+  list.forEach(p => {
+    const fn = p.funcao || p.cargo || p.role || 'SEM_FUNCAO';
+    funcoes[fn] = (funcoes[fn] || 0) + 1;
+  });
+
+  const funcSorted = Object.entries(funcoes).sort((a, b) => b[1] - a[1]);
+  const maxFunc = funcSorted.length ? funcSorted[0][1] : 1;
+
+  const FUNC_COLORS = {
+    'LIDER': 'var(--accent)',
+    'APLICADOR_1': 'var(--green)',
+    'APLICADOR_2': '#6ba3be',
+    'APLICADOR_3': '#8b7ec8',
+    'PREPARADOR': 'var(--yellow)',
+    'AJUDANTE': 'var(--orange)',
+  };
+
+  document.getElementById('prest-dist').innerHTML = funcSorted.map(([fn, count]) => {
+    const pct = Math.max((count / maxFunc) * 100, 4);
+    const label = FUNC_LABELS[fn] || fn;
+    const color = FUNC_COLORS[fn] || 'var(--gray)';
+    return `<div class="dist-row">
+      <div class="dist-label" title="${label}">${label}</div>
+      <div class="dist-bar-wrap">
+        <div class="dist-bar" style="width:${pct}%;background:${color}">${count}</div>
+      </div>
+      <div class="dist-count">${count}</div>
+    </div>`;
+  }).join('');
+
+  // Ranking: perfil = 0
+  const zeroPerfil = list
+    .filter(p => (p.perfilCompleto || 0) === 0)
+    .sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+
+  const tbody = document.getElementById('tbl-perfil-body');
+  const toShow = zeroPerfil.slice(0, 30);
+  tbody.innerHTML = toShow.map((p, i) => {
+    const nome = p.nome || p.name || '—';
+    const funcao = FUNC_LABELS[p.funcao] || p.funcao || p.cargo || p.role || '—';
+    const ativo = (p.ativo === true || p.ativo === 'true')
+      ? '<span class="badge green">SIM</span>'
+      : '<span class="badge red">NAO</span>';
+    return `<tr>
+      <td style="font-family:var(--font-mono);color:var(--text-muted)">${i + 1}</td>
+      <td style="font-weight:600">${nome}</td>
+      <td style="font-family:var(--font-mono);font-size:11px">${funcao}</td>
+      <td>${ativo}</td>
+      <td style="font-family:var(--font-mono);font-weight:700;color:var(--red)">0%</td>
+    </tr>`;
+  }).join('');
+
+  if (zeroPerfil.length > 30) {
+    tbody.innerHTML += `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);font-size:11px">... e mais ${zeroPerfil.length - 30} prestadores com perfil 0%</td></tr>`;
+  }
+
+  if (zeroPerfil.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--green);font-size:12px">Nenhum prestador com perfil 0% encontrado.</td></tr>`;
+  }
+
+  document.getElementById('sec-prestadores').style.display = '';
+}
+
+/* ===== INIT ===== */
+(async function init() {
+  await loadRelatorios();
+  loadPrestadores();
+})();
+</script>
+</body>
+</html>
