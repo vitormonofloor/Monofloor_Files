@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Jornada da Obra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--text:#3a3530;
+  --text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#5a9a6a;--red:#c0534f;--yellow:#c4a030;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;padding:0;line-height:1.55}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ─── DOCK LATERAL ─── */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08);text-decoration:none}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+.dock-item.active::after{color:var(--accent)}
+
+/* ─── HEADER ─── */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text)}
+.header-brand .logo{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase}
+
+/* ─── SEARCH / SELECTOR ─── */
+.search-wrap{position:relative;flex:1;max-width:480px;min-width:260px}
+.search-input{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--border);border-radius:8px;font-family:var(--font-sans);font-size:13px;background:var(--bg);color:var(--text);outline:none;transition:border .2s}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-muted)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted)}
+.search-results{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:0 0 8px 8px;max-height:360px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.search-results.open{display:block}
+.search-item{padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:13px;border-bottom:1px solid var(--border);transition:background .15s}
+.search-item:hover{background:rgba(184,160,128,0.06)}
+.search-item:last-child{border-bottom:none}
+.search-item .si-name{font-weight:600}
+.search-item .si-meta{font-size:11px;color:var(--text-muted);font-family:var(--font-mono)}
+
+/* ─── MAIN CONTENT ─── */
+.main{max-width:780px;margin:0 auto;padding:28px 24px 60px}
+.main.loading .content-area{opacity:0.3;pointer-events:none}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{text-align:center;padding:80px 20px;color:var(--text-muted)}
+.empty-state h2{font-size:18px;font-weight:600;margin-bottom:8px;color:var(--text)}
+.empty-state p{font-size:13px;max-width:360px;margin:0 auto}
+
+/* ─── CARD ─── */
+.card{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:20px 24px;margin-bottom:16px}
+.card-label{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.card-label .cl-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+/* ─── FICHA ─── */
+.ficha-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.ficha-sub{font-size:13px;color:var(--text-muted);margin-bottom:2px}
+.ficha-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.ficha-tag{font-size:11px;font-family:var(--font-mono);font-weight:500;padding:3px 8px;border-radius:4px;background:rgba(184,160,128,0.1);color:var(--accent)}
+.ficha-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+@media(max-width:600px){.ficha-metrics{grid-template-columns:1fr}}
+.metric{display:flex;flex-direction:column;gap:4px}
+.metric-label{font-size:11px;font-family:var(--font-mono);font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em}
+.metric-value{font-size:22px;font-weight:700;font-family:var(--font-mono)}
+.metric-bar{height:6px;border-radius:3px;background:rgba(184,160,128,0.15);overflow:hidden;margin-top:2px}
+.metric-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.metric-bar-fill.green{background:var(--green)}
+.metric-bar-fill.red{background:var(--red)}
+.metric-bar-fill.yellow{background:var(--yellow)}
+.metric-bar-fill.accent{background:var(--accent)}
+.metric-detail{font-size:11px;color:var(--text-muted)}
+
+/* ─── TIMELINE ─── */
+.timeline{position:relative;padding:8px 0 8px 0}
+.tl-item{display:flex;gap:0;margin-bottom:0;position:relative;min-height:48px}
+.tl-date{width:72px;flex-shrink:0;text-align:right;padding-right:16px;padding-top:2px;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text-muted)}
+.tl-dot-col{width:24px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;position:relative}
+.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);background:var(--card);z-index:2;flex-shrink:0}
+.tl-dot.filled{background:var(--accent)}
+.tl-dot.today{background:var(--accent);width:14px;height:14px;box-shadow:0 0 0 4px rgba(184,160,128,0.2)}
+.tl-dot.future{border-color:var(--text-muted);border-style:dashed}
+.tl-dot.late{border-color:var(--red);background:rgba(192,83,79,0.15)}
+.tl-dot.late.filled{background:var(--red)}
+.tl-line{width:2px;flex:1;background:var(--border);min-height:12px}
+.tl-line.late{background:rgba(192,83,79,0.3)}
+.tl-content{flex:1;padding:0 0 16px 12px}
+.tl-title{font-size:13px;font-weight:600;line-height:1.4}
+.tl-title.today-title{color:var(--accent);font-weight:700}
+.tl-title.late-title{color:var(--red)}
+.tl-detail{font-size:11px;color:var(--text-muted);margin-top:2px}
+.tl-item:last-child .tl-line{display:none}
+
+/* ─── DIAGNOSTICO KIRA ─── */
+.kira-text{font-size:13px;line-height:1.6;color:var(--text);font-style:italic}
+.kira-tag{margin-top:8px;font-size:11px;font-family:var(--font-mono);color:var(--accent);font-weight:500}
+
+/* ─── OCORRENCIAS ─── */
+.oc-summary{display:flex;gap:16px;flex-wrap:wrap;font-size:13px}
+.oc-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-family:var(--font-mono);font-size:12px;font-weight:600}
+.oc-badge.crit{background:rgba(192,83,79,0.1);color:var(--red)}
+.oc-badge.med{background:rgba(196,160,48,0.1);color:var(--yellow)}
+.oc-badge.low{background:rgba(184,160,128,0.1);color:var(--text-muted)}
+.oc-badge.ok{background:rgba(90,154,106,0.1);color:var(--green)}
+.oc-empty{font-size:13px;color:var(--text-muted)}
+
+/* ─── RELATORIOS ─── */
+.rel-list{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.rel-item:last-child{border-bottom:none}
+.rel-date{font-family:var(--font-mono);font-size:12px;font-weight:500;color:var(--text-muted);width:64px;flex-shrink:0}
+.rel-who{flex:1;font-weight:500}
+.rel-empty{font-size:13px;color:var(--text-muted)}
+
+/* ─── FOOTER ─── */
+.footer{text-align:center;padding:20px;font-size:12px;color:var(--text-muted)}
+.footer a{font-weight:600}
+
+/* ─── LOADING SPINNER ─── */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-msg{text-align:center;padding:24px;color:var(--text-muted);font-size:13px}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(184,160,128,0.3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- DOCK LATERAL -->
+<nav class="dock" id="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central">
+    <svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+  </a>
+  <a href="../indicadores-v2.html" class="dock-item" data-label="Indicadores">
+    <svg viewBox="0 0 20 20"><path d="M1 10h4l2-6 3 12 2-8 2 4h5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  </a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard">
+    <svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </a>
+  <a href="atena.html" class="dock-item" data-label="ATENA">
+    <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg>
+  </a>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">M</div>
+    MONOFLOOR
+  </div>
+  <span class="header-title">Jornada da Obra</span>
+  <div class="search-wrap" id="search-wrap">
+    <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l4 4" stroke-linecap="round"/></svg>
+    <input class="search-input" id="search-input" type="text" placeholder="Buscar obra por cliente, cidade ou ID..." autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main" id="main">
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty-state">
+    <h2>Selecione uma obra</h2>
+    <p>Use a busca acima para encontrar uma obra e visualizar sua jornada completa.</p>
+  </div>
+
+  <!-- CONTENT (hidden until obra selected) -->
+  <div class="content-area" id="content-area" style="display:none">
+
+    <!-- FICHA -->
+    <div class="card" id="card-ficha">
+      <div class="card-label"><span class="cl-dot"></span>FICHA</div>
+      <div id="ficha-body"></div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="card" id="card-timeline">
+      <div class="card-label"><span class="cl-dot"></span>TIMELINE</div>
+      <div class="timeline" id="timeline-body"></div>
+    </div>
+
+    <!-- DIAGNOSTICO KIRA -->
+    <div class="card" id="card-kira" style="display:none">
+      <div class="card-label"><span class="cl-dot"></span>DIAGN&Oacute;STICO KIRA</div>
+      <div id="kira-body"></div>
+    </div>
+
+    <!-- OCORRENCIAS -->
+    <div class="card" id="card-ocorrencias">
+      <div class="card-label"><span class="cl-dot"></span>OCORR&Ecirc;NCIAS <span id="oc-count"></span></div>
+      <div id="oc-body"><div class="loading-msg"><span class="spinner"></span>Carregando...</div></div>
+    </div>
+
+    <!-- RELATORIOS -->
+    <div class="card" id="card-relatorios">
+      <div class="card-label"><span class="cl-dot"></span>RELAT&Oacute;RIOS RECENTES <span id="rel-count"></span></div>
+      <div id="rel-body"><div class="loading-msg"><span class="spinner"></span>Carregando...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <a href="dashboard.html">&larr; Voltar ao Dashboard</a>
+  &nbsp;&middot;&nbsp; LAB &middot; Cap&iacute;tulo 1
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const API = 'https://cliente.monofloor.cloud/api';
+const HOJE = new Date();
+
+// ── Caches ──
+let allObras = [];      // Q2_OBRAS
+let kiraMap = {};        // id → {situacaoAtual, tagKira, metragemPendente, dataTerminoPrevista}
+let progressoMap = {};   // id → pct_concluido
+let ocorrenciasMap = {}; // id → {n_ocorrencias, n_criticas, n_abertas, n_resolvidas}
+let selectedId = null;
+
+// ── Utils ──
+function fmtDateBR(iso) {
+  if (!iso) return '??/??/??';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) {
+    // Try DD/MM/YYYY format
+    const m = String(iso).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if (m) return m[1] + '/' + m[2] + '/' + m[3].slice(2);
+    return '??/??/??';
+  }
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yy = String(d.getFullYear()).slice(2);
+  return dd+'/'+mm+'/'+yy;
+}
+
+function parseDateAny(v) {
+  if (!v) return null;
+  // ISO
+  let d = new Date(v);
+  if (!isNaN(d.getTime())) return d;
+  // DD/MM/YYYY HH:MM or DD/MM/YYYY
+  const m = String(v).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  return null;
+}
+
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+
+function clamp(min, max, v) { return Math.max(min, Math.min(max, v)); }
+
+function shortId(id) {
+  return id ? id.substring(0, 8) : '';
+}
+
+function escHtml(s) {
+  const el = document.createElement('span');
+  el.textContent = s || '';
+  return el.innerHTML;
+}
+
+// ── Score de saude ──
+function calcScore(obra, kira, progresso, ocLocal) {
+  let score = 100;
+  const nCrit = ocLocal ? (ocLocal.n_criticas || 0) : 0;
+  const nAbertas = ocLocal ? (ocLocal.n_abertas || 0) : 0;
+  const pct = progresso || 0;
+
+  score -= nCrit * 15;
+  score -= nAbertas * 3;
+
+  // Atraso
+  const dtPrev = parseDateAny(kira?.dataTerminoPrevista) || parseDateAny(obra?.dataExecucaoPrevista);
+  if (dtPrev) {
+    const atraso = Math.max(0, daysBetween(dtPrev, HOJE));
+    score -= atraso * 0.5;
+  }
+
+  // Bloqueadores faltantes (simplified)
+  if (obra?.acessoDetalhes) {
+    const af = obra.acessoDetalhes.allFields || {};
+    if (!af.cor_confirmada && !af.cor_definida) score -= 10;
+    if (!af.material_em_obra && !af.material_entregue) score -= 10;
+  }
+
+  score += pct * 0.3;
+  return clamp(0, 100, Math.round(score));
+}
+
+function calcAtraso(kira, obra) {
+  const dtPrev = parseDateAny(kira?.dataTerminoPrevista) || parseDateAny(obra?.dataExecucaoPrevista);
+  if (!dtPrev) return null;
+  return Math.max(0, daysBetween(dtPrev, HOJE));
+}
+
+function barColor(pct) {
+  if (pct >= 70) return 'green';
+  if (pct >= 40) return 'yellow';
+  return 'red';
+}
+
+// ── INIT: Load all data ──
+async function init() {
+  try {
+    const [dashRes, kiraRes, progRes, ocRes] = await Promise.all([
+      fetch('dados/dashboard-data.json?t='+Date.now()),
+      fetch('dados/cruz-diagnostico-kira.json?t='+Date.now()),
+      fetch('dados/cruz-progresso-obras.json?t='+Date.now()),
+      fetch('dados/cruz-ocorrencias-por-obra.json?t='+Date.now())
+    ]);
+
+    const dashData = await dashRes.json();
+    allObras = dashData.Q2_OBRAS || [];
+
+    const kiraData = await kiraRes.json();
+    (kiraData.obras || []).forEach(o => { kiraMap[o.id] = o; });
+
+    const progData = await progRes.json();
+    // Build map from both rankings
+    const allRankings = [
+      ...(progData.ranking_menos_concluidas || []),
+      ...(progData.ranking_mais_concluidas || [])
+    ];
+    allRankings.forEach(o => { progressoMap[o.id] = o.pct_concluido; });
+
+    const ocData = await ocRes.json();
+    (ocData.obras || []).forEach(o => { ocorrenciasMap[o.id] = o; });
+
+    console.log('[JORNADA] Loaded:', allObras.length, 'obras,', Object.keys(kiraMap).length, 'kira,', Object.keys(progressoMap).length, 'progresso');
+    setupSearch();
+
+    // Check URL hash
+    if (location.hash && location.hash.length > 1) {
+      const hashId = location.hash.slice(1);
+      const found = allObras.find(o => o.id === hashId || shortId(o.id) === hashId);
+      if (found) selectObra(found.id);
+    }
+  } catch(e) {
+    console.error('[JORNADA] Init error:', e);
+  }
+}
+
+// ── SEARCH ──
+function setupSearch() {
+  const input = document.getElementById('search-input');
+  const results = document.getElementById('search-results');
+
+  input.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { results.classList.remove('open'); return; }
+
+    const matches = allObras.filter(o => {
+      return (o.cliente||'').toLowerCase().includes(q) ||
+             (o.cidade||'').toLowerCase().includes(q) ||
+             (o.id||'').toLowerCase().includes(q) ||
+             shortId(o.id).includes(q);
+    }).slice(0, 10);
+
+    if (matches.length === 0) {
+      results.innerHTML = '<div class="search-item" style="color:var(--text-muted)">Nenhuma obra encontrada</div>';
+    } else {
+      results.innerHTML = matches.map(o =>
+        '<div class="search-item" data-id="'+escHtml(o.id)+'">' +
+          '<span class="si-name">'+escHtml(o.cliente)+'</span>' +
+          '<span class="si-meta">'+escHtml(o.cidade||'')+' &middot; '+escHtml(o.status)+'</span>' +
+        '</div>'
+      ).join('');
+    }
+    results.classList.add('open');
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') results.classList.remove('open');
+  });
+
+  results.addEventListener('click', function(e) {
+    const item = e.target.closest('.search-item');
+    if (!item || !item.dataset.id) return;
+    selectObra(item.dataset.id);
+    results.classList.remove('open');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!document.getElementById('search-wrap').contains(e.target)) {
+      results.classList.remove('open');
+    }
+  });
+}
+
+// ── SELECT OBRA ──
+async function selectObra(id) {
+  selectedId = id;
+  location.hash = id;
+  const obraBase = allObras.find(o => o.id === id);
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('content-area').style.display = 'block';
+  document.getElementById('main').classList.add('loading');
+
+  // Update search input
+  document.getElementById('search-input').value = obraBase ? obraBase.cliente : id;
+
+  // Show loading in ficha
+  document.getElementById('ficha-body').innerHTML = '<div class="loading-msg"><span class="spinner"></span>Carregando dados da obra...</div>';
+  document.getElementById('timeline-body').innerHTML = '<div class="loading-msg"><span class="spinner"></span>Montando timeline...</div>';
+  document.getElementById('oc-body').innerHTML = '<div class="loading-msg"><span class="spinner"></span>Carregando ocorr&ecirc;ncias...</div>';
+  document.getElementById('rel-body').innerHTML = '<div class="loading-msg"><span class="spinner"></span>Carregando relat&oacute;rios...</div>';
+
+  try {
+    // Fetch project detail + relatorios + ocorrencias in parallel
+    const [projRes, relRes, ocRes] = await Promise.allSettled([
+      fetch(API + '/projects/' + id),
+      fetch(API + '/projects/' + id + '/relatorios'),
+      fetch(API + '/projects/' + id + '/ocorrencias')
+    ]);
+
+    const proj = projRes.status === 'fulfilled' ? await projRes.value.json() : null;
+    let relatorios = [];
+    let ocorrencias = [];
+
+    if (relRes.status === 'fulfilled' && relRes.value.ok) {
+      try { relatorios = await relRes.value.json(); } catch(e) {}
+    }
+    if (ocRes.status === 'fulfilled' && ocRes.value.ok) {
+      try { ocorrencias = await ocRes.value.json(); } catch(e) {}
+    }
+
+    // Normalize arrays
+    if (relatorios && !Array.isArray(relatorios)) {
+      relatorios = relatorios.relatorios || relatorios.data || [];
+    }
+    if (ocorrencias && !Array.isArray(ocorrencias)) {
+      ocorrencias = ocorrencias.ocorrencias || ocorrencias.data || [];
+    }
+
+    const kira = kiraMap[id] || null;
+    const pct = progressoMap[id] ?? null;
+    const ocLocal = ocorrenciasMap[id] || null;
+
+    document.getElementById('main').classList.remove('loading');
+
+    renderFicha(obraBase, proj, kira, pct, ocLocal, ocorrencias);
+    renderTimeline(obraBase, proj, kira, relatorios);
+    renderKira(kira, proj);
+    renderOcorrencias(ocorrencias, ocLocal);
+    renderRelatorios(relatorios);
+
+  } catch(e) {
+    console.error('[JORNADA] Fetch error:', e);
+    document.getElementById('main').classList.remove('loading');
+    document.getElementById('ficha-body').innerHTML = '<div class="loading-msg" style="color:var(--red)">Erro ao carregar dados. Verifique a conex&atilde;o.</div>';
+  }
+}
+
+// ── RENDER: FICHA ──
+function renderFicha(base, proj, kira, pct, ocLocal, ocorrenciasApi) {
+  const nome = proj?.clienteNome || base?.cliente || '?';
+  const cidade = proj?.projetoCidade || base?.cidade || '?';
+  const m2 = proj?.projetoMetragem || base?.m2 || '?';
+  const consultor = proj?.consultorNome || base?.consultor || '?';
+  const respAtend = proj?.responsavelAtendimento || proj?.acessoDetalhes?.consultorProjetos || '';
+  const status = proj?.status || base?.status || '?';
+  const fase = proj?.faseAtual || proj?.pipefyFase || base?.fase || '?';
+  const tipoObra = proj?.tipoObra || '';
+  const idCurto = '#' + shortId(proj?.id || base?.id || '');
+
+  // Score
+  const score = calcScore(proj || base, kira, pct ?? 50, ocLocal);
+  const atraso = calcAtraso(kira, proj);
+
+  // Progresso
+  const progresso = pct != null ? Math.max(0, Math.min(100, pct)) : null;
+
+  let html = '';
+  html += '<div class="ficha-title">' + escHtml(idCurto) + ' &middot; ' + escHtml(nome) + '</div>';
+  html += '<div class="ficha-sub">' + escHtml(cidade) + ' &middot; ' + (m2 ? m2 + 'm&sup2;' : '?m&sup2;') + (tipoObra ? ' &middot; ' + escHtml(tipoObra) : '') + '</div>';
+  html += '<div class="ficha-sub">Consultor: ' + escHtml(consultor) + (respAtend ? ' &middot; Op: ' + escHtml(respAtend) : '') + '</div>';
+  html += '<div class="ficha-row">';
+  html += '<span class="ficha-tag">' + escHtml(formatStatus(status)) + '</span>';
+  html += '<span class="ficha-tag">' + escHtml(fase) + '</span>';
+  html += '</div>';
+
+  // Metrics
+  html += '<div class="ficha-metrics">';
+  // Score
+  html += '<div class="metric">';
+  html += '<div class="metric-label">Score sa&uacute;de</div>';
+  html += '<div class="metric-value">' + score + '<span style="font-size:14px;color:var(--text-muted)">/100</span></div>';
+  html += '<div class="metric-bar"><div class="metric-bar-fill ' + barColor(score) + '" style="width:' + score + '%"></div></div>';
+  html += '</div>';
+  // Progresso
+  html += '<div class="metric">';
+  html += '<div class="metric-label">Progresso</div>';
+  if (progresso != null) {
+    html += '<div class="metric-value">' + progresso + '<span style="font-size:14px;color:var(--text-muted)">%</span></div>';
+    html += '<div class="metric-bar"><div class="metric-bar-fill accent" style="width:' + progresso + '%"></div></div>';
+  } else {
+    html += '<div class="metric-value" style="font-size:14px;color:var(--text-muted)">sem dados</div>';
+  }
+  html += '</div>';
+  // Atraso
+  html += '<div class="metric">';
+  html += '<div class="metric-label">Atraso</div>';
+  if (atraso != null && atraso > 0) {
+    html += '<div class="metric-value" style="color:var(--red)">' + atraso + '<span style="font-size:12px;color:var(--text-muted)"> dias</span></div>';
+    html += '<div class="metric-detail">al&eacute;m do previsto</div>';
+  } else if (atraso === 0) {
+    html += '<div class="metric-value" style="color:var(--green)">No prazo</div>';
+  } else {
+    html += '<div class="metric-value" style="font-size:14px;color:var(--text-muted)">sem data prevista</div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  document.getElementById('ficha-body').innerHTML = html;
+}
+
+function formatStatus(s) {
+  if (!s) return '?';
+  return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// ── RENDER: TIMELINE ──
+function renderTimeline(base, proj, kira, relatorios) {
+  const marcos = [];
+  const ad = proj?.acessoDetalhes || {};
+  const af = ad.allFields || {};
+
+  // 1. Criada no Pipefy
+  const pipefyCreated = ad.pipefyCreatedAt;
+  if (pipefyCreated) {
+    marcos.push({ date: parseDateAny(pipefyCreated), label: 'Criada no Pipefy', detail: '', type: 'past' });
+  }
+
+  // 2. Data de entrada
+  const dataEntrada = af.data_de_entrada || af.data_entrada;
+  if (dataEntrada) {
+    marcos.push({ date: parseDateAny(dataEntrada), label: 'Entrada no pipe', detail: '', type: 'past' });
+  }
+
+  // 3. Visita tecnica
+  const vtDate = af.data_e_hora_da_visita || af.data_da_visita || af.data_vt_afericao;
+  if (vtDate) {
+    marcos.push({ date: parseDateAny(vtDate), label: 'Visita t&eacute;cnica agendada', detail: '', type: 'past' });
+  }
+
+  // 4. Data execucao prevista
+  const execPrev = proj?.dataExecucaoPrevista || af.data_execucao_prevista;
+  if (execPrev) {
+    const d = parseDateAny(execPrev);
+    marcos.push({ date: d, label: 'Data execu&ccedil;&atilde;o prevista', detail: '', type: d && d > HOJE ? 'future' : 'past' });
+  }
+
+  // 5. Data execucao confirmada
+  const execConf = proj?.dataExecucaoConfirmada || af.data_execucao_confirmada;
+  if (execConf) {
+    const d = parseDateAny(execConf);
+    marcos.push({ date: d, label: 'Execu&ccedil;&atilde;o confirmada', detail: '', type: d && d > HOJE ? 'future' : 'past' });
+  }
+
+  // 6. Tag KIRA updated
+  const tagKiraDate = proj?.tagKiraUpdatedAt;
+  if (tagKiraDate && proj?.tagKira) {
+    marcos.push({ date: parseDateAny(tagKiraDate), label: 'Tag KIRA: "' + escHtml(proj.tagKira) + '"', detail: '', type: 'past' });
+  }
+
+  // 7. Ultimo relatorio
+  if (relatorios && relatorios.length > 0) {
+    // Sort by date desc
+    const sorted = [...relatorios].sort((a,b) => {
+      const da = parseDateAny(a.createdAt || a.data || a.created_at);
+      const db = parseDateAny(b.createdAt || b.data || b.created_at);
+      return (db||0) - (da||0);
+    });
+    const ultimo = sorted[0];
+    const uDate = parseDateAny(ultimo.createdAt || ultimo.data || ultimo.created_at);
+    const uWho = ultimo.responsavel || ultimo.autor || ultimo.quem || ultimo.userName || '';
+    marcos.push({ date: uDate, label: '&Uacute;ltimo relat&oacute;rio' + (uWho ? ' (por ' + escHtml(uWho) + ')' : ''), detail: '', type: 'past' });
+  }
+
+  // 8. HOJE
+  marcos.push({ date: new Date(HOJE), label: 'HOJE', detail: (proj?.faseAtual || base?.fase || ''), type: 'today' });
+
+  // 9. Data termino prevista
+  const dtTermino = kira?.dataTerminoPrevista || proj?.acessoDetalhes?.allFields?.data_termino_prevista;
+  if (dtTermino) {
+    const d = parseDateAny(dtTermino);
+    const atraso = calcAtraso(kira, proj);
+    marcos.push({
+      date: d,
+      label: 'Data t&eacute;rmino prevista' + (atraso && atraso > 0 ? ' (' + atraso + 'd atrasado)' : ''),
+      detail: '',
+      type: d && d > HOJE ? 'future' : 'late'
+    });
+  }
+
+  // 10. Data finalizacao
+  const dtFinal = af.data_de_finaliza_o_da_obra || af.data_finalizacao;
+  if (dtFinal) {
+    const d = parseDateAny(dtFinal);
+    marcos.push({ date: d, label: 'Finalizada', detail: '', type: d && d > HOJE ? 'future' : 'past' });
+  }
+
+  // Sort by date (nulls at end)
+  marcos.sort((a,b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return a.date - b.date;
+  });
+
+  // Render
+  let html = '';
+  marcos.forEach((m, i) => {
+    const isToday = m.type === 'today';
+    const isFuture = m.type === 'future';
+    const isLate = m.type === 'late';
+    const isLast = i === marcos.length - 1;
+
+    let dotClass = 'tl-dot';
+    if (isToday) dotClass += ' today filled';
+    else if (isFuture) dotClass += ' future';
+    else if (isLate) dotClass += ' late filled';
+    else dotClass += ' filled';
+
+    let lineClass = 'tl-line';
+    if (isLate || (marcos[i+1] && marcos[i+1].type === 'late')) lineClass += ' late';
+
+    let titleClass = 'tl-title';
+    if (isToday) titleClass += ' today-title';
+    if (isLate) titleClass += ' late-title';
+
+    html += '<div class="tl-item">';
+    html += '<div class="tl-date">' + (isToday ? '<strong>HOJE</strong>' : fmtDateBR(m.date)) + '</div>';
+    html += '<div class="tl-dot-col">';
+    html += '<div class="' + dotClass + '"></div>';
+    if (!isLast) html += '<div class="' + lineClass + '"></div>';
+    html += '</div>';
+    html += '<div class="tl-content">';
+    html += '<div class="' + titleClass + '">' + (isToday ? 'Fase: ' + escHtml(m.detail) : m.label) + '</div>';
+    if (m.detail && !isToday) html += '<div class="tl-detail">' + escHtml(m.detail) + '</div>';
+    html += '</div>';
+    html += '</div>';
+  });
+
+  if (marcos.length === 0) {
+    html = '<div class="oc-empty">Nenhum marco encontrado para esta obra.</div>';
+  }
+
+  document.getElementById('timeline-body').innerHTML = html;
+}
+
+// ── RENDER: KIRA ──
+function renderKira(kira, proj) {
+  const card = document.getElementById('card-kira');
+  const situacao = kira?.situacaoAtual || proj?.situacaoAtual;
+  const tag = kira?.tagKira || proj?.tagKira;
+
+  if (!situacao && !tag) {
+    card.style.display = 'none';
+    return;
+  }
+
+  card.style.display = 'block';
+  let html = '';
+  if (situacao) {
+    html += '<div class="kira-text">&ldquo;' + escHtml(situacao) + '&rdquo;</div>';
+  }
+  if (tag) {
+    html += '<div class="kira-tag">Tag: ' + escHtml(tag) + '</div>';
+  }
+  document.getElementById('kira-body').innerHTML = html;
+}
+
+// ── RENDER: OCORRENCIAS ──
+function renderOcorrencias(ocApi, ocLocal) {
+  const countEl = document.getElementById('oc-count');
+  const bodyEl = document.getElementById('oc-body');
+
+  // Use API data if available, else local
+  let total = 0, criticas = 0, abertas = 0, resolvidas = 0;
+
+  if (ocApi && Array.isArray(ocApi) && ocApi.length > 0) {
+    total = ocApi.length;
+    ocApi.forEach(o => {
+      const sev = (o.severidade || o.severity || o.tipo || '').toLowerCase();
+      const st = (o.status || '').toLowerCase();
+      if (sev.includes('crit') || sev.includes('alta') || sev === 'high') criticas++;
+      if (st !== 'resolvido' && st !== 'resolvida' && st !== 'closed' && st !== 'finalizado') abertas++;
+      else resolvidas++;
+    });
+  } else if (ocLocal) {
+    total = ocLocal.n_ocorrencias || 0;
+    criticas = ocLocal.n_criticas || 0;
+    abertas = ocLocal.n_abertas || 0;
+    resolvidas = ocLocal.n_resolvidas || 0;
+  }
+
+  countEl.textContent = total > 0 ? '(' + total + ')' : '';
+
+  if (total === 0) {
+    bodyEl.innerHTML = '<div class="oc-empty">Nenhuma ocorr&ecirc;ncia registrada.</div>';
+    return;
+  }
+
+  const medias = Math.max(0, total - criticas - Math.max(0, total - abertas - criticas));
+  const baixas = Math.max(0, total - criticas - medias);
+  const pctRes = total > 0 ? Math.round(resolvidas / total * 100) : 0;
+
+  let html = '<div class="oc-summary">';
+  if (criticas > 0) html += '<span class="oc-badge crit">' + criticas + ' cr&iacute;tica' + (criticas>1?'s':'') + '</span>';
+  if (abertas > 0) html += '<span class="oc-badge med">' + abertas + ' aberta' + (abertas>1?'s':'') + '</span>';
+  html += '<span class="oc-badge ok">' + pctRes + '% resolvidas</span>';
+  html += '</div>';
+
+  bodyEl.innerHTML = html;
+}
+
+// ── RENDER: RELATORIOS ──
+function renderRelatorios(relatorios) {
+  const countEl = document.getElementById('rel-count');
+  const bodyEl = document.getElementById('rel-body');
+
+  if (!relatorios || !Array.isArray(relatorios) || relatorios.length === 0) {
+    countEl.textContent = '';
+    bodyEl.innerHTML = '<div class="rel-empty">Nenhum relat&oacute;rio encontrado.</div>';
+    return;
+  }
+
+  countEl.textContent = '(' + relatorios.length + ')';
+
+  // Sort by date desc, show last 5
+  const sorted = [...relatorios].sort((a,b) => {
+    const da = parseDateAny(a.createdAt || a.data || a.created_at);
+    const db = parseDateAny(b.createdAt || b.data || b.created_at);
+    return (db||0) - (da||0);
+  }).slice(0, 5);
+
+  let html = '<div class="rel-list">';
+  sorted.forEach(r => {
+    const dt = fmtDateBR(r.createdAt || r.data || r.created_at);
+    const who = r.responsavel || r.autor || r.quem || r.userName || '?';
+    html += '<div class="rel-item">';
+    html += '<span class="rel-date">' + dt + '</span>';
+    html += '<span class="rel-who">' + escHtml(who) + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  bodyEl.innerHTML = html;
+}
+
+// ── BOOT ──
+init();
+
+})();
+</script>
+</body>
+</html>
