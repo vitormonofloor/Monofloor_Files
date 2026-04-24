@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Bloqueadores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--text:#3a3530;
+  --text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#5a9a6a;--red:#c0534f;--yellow:#c4a030;--gray:#c8c0b8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;padding:0;line-height:1.55}
+
+/* DOCK LATERAL */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative;cursor:pointer}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08);text-decoration:none}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+.dock-item.active::after{color:var(--accent)}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text)}
+.header-brand .logo{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase}
+.header-stats{margin-left:auto;display:flex;gap:16px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)}
+.header-stats span{background:rgba(184,160,128,0.1);padding:4px 10px;border-radius:6px}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 60px;margin-left:60px}
+@media(max-width:900px){.main{margin-left:auto}}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.section-title{font-size:14px;font-weight:700;letter-spacing:0.04em;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.section-title .icon{width:20px;height:20px;color:var(--accent)}
+
+/* HEATMAP */
+.heatmap-wrap{overflow-x:auto;max-height:600px;overflow-y:auto}
+.heatmap-header{display:grid;grid-template-columns:20px 20px 20px 20px 20px 20px 1fr;gap:2px;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px;position:sticky;top:0;background:var(--card);z-index:10}
+.heatmap-header .col-label{font-size:8px;font-family:var(--font-mono);font-weight:600;text-transform:uppercase;color:var(--text-muted);writing-mode:vertical-lr;text-orientation:mixed;transform:rotate(180deg);height:70px;display:flex;align-items:flex-start;justify-content:center;letter-spacing:0.05em}
+.heatmap-row{display:grid;grid-template-columns:20px 20px 20px 20px 20px 20px 1fr;gap:2px;align-items:center}
+.heatmap-cell{width:20px;height:20px;border-radius:3px;cursor:pointer;position:relative;transition:transform .15s}
+.heatmap-cell:hover{transform:scale(1.3);z-index:5}
+.heatmap-cell.ok{background:var(--green)}
+.heatmap-cell.block{background:var(--red)}
+.heatmap-cell.na{background:var(--gray);opacity:0.4}
+.heatmap-name{font-size:10px;font-family:var(--font-mono);color:var(--text-muted);padding-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+
+/* TOOLTIP */
+.tooltip{position:fixed;background:#3a3530;color:#fff;font-size:11px;font-family:var(--font-mono);padding:6px 10px;border-radius:6px;pointer-events:none;z-index:1000;display:none;max-width:260px;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+
+/* BARRAS */
+.bar-group{margin-bottom:12px}
+.bar-group:last-child{margin-bottom:0}
+.bar-label{font-size:11px;font-family:var(--font-mono);font-weight:600;color:var(--text);margin-bottom:4px;display:flex;justify-content:space-between}
+.bar-label .counts{font-weight:400;color:var(--text-muted)}
+.bar-track{height:22px;border-radius:6px;overflow:hidden;display:flex;background:rgba(184,160,128,0.08)}
+.bar-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--font-mono);font-weight:600;color:#fff;min-width:1px;transition:width .4s ease}
+.bar-seg.ok{background:var(--green)}
+.bar-seg.block{background:var(--red)}
+.bar-seg.na{background:var(--gray)}
+
+/* TABLE TOP 20 */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:8px 10px;border-bottom:2px solid var(--border)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover{background:rgba(184,160,128,0.04)}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--font-mono);font-weight:600;margin:1px 2px}
+.badge.ok{background:rgba(90,154,106,0.12);color:var(--green)}
+.badge.block{background:rgba(192,83,79,0.12);color:var(--red)}
+.badge.na{background:rgba(200,192,184,0.15);color:var(--text-muted)}
+.bloq-count{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;font-size:11px;font-family:var(--font-mono);font-weight:700;width:24px;height:24px;border-radius:50%}
+.bloq-count.zero{background:var(--green)}
+
+/* LOADING */
+.loading-msg{text-align:center;padding:60px;color:var(--text-muted);font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- DOCK -->
+<nav class="dock">
+  <a class="dock-item active" data-label="heatmap" href="#sec-heatmap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  </a>
+  <a class="dock-item" data-label="resumo" href="#sec-resumo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+  </a>
+  <a class="dock-item" data-label="marcos" href="#sec-marcos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+  </a>
+  <a class="dock-item" data-label="ranking" href="#sec-ranking">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+  </a>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">M</div>
+    MONOFLOOR
+  </div>
+  <div class="header-title">Bloqueadores</div>
+  <div class="header-stats">
+    <span id="stat-total">--</span>
+    <span id="stat-date">--</span>
+  </div>
+</header>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- CONTENT -->
+<div class="main">
+  <div class="loading-msg" id="loading">Carregando dados...</div>
+
+  <!-- HEATMAP -->
+  <div class="section" id="sec-heatmap" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Heatmap de Bloqueadores
+    </div>
+    <div class="heatmap-wrap" id="heatmap"></div>
+  </div>
+
+  <!-- RESUMO POR BLOQUEADOR -->
+  <div class="section" id="sec-resumo" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      Resumo por Bloqueador
+    </div>
+    <div id="resumo-bars"></div>
+  </div>
+
+  <!-- MARCOS -->
+  <div class="section" id="sec-marcos" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Checklist de Marcos
+    </div>
+    <div id="marcos-bars"></div>
+  </div>
+
+  <!-- TOP 20 -->
+  <div class="section" id="sec-ranking" style="display:none">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Top 20 Mais Bloqueadas
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl" id="ranking-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Obra</th>
+            <th>Status</th>
+            <th>Fase</th>
+            <th>COR</th>
+            <th>MAT</th>
+            <th>EQP</th>
+            <th>PROD</th>
+            <th>EST</th>
+            <th>OS</th>
+            <th>Bloq.</th>
+          </tr>
+        </thead>
+        <tbody id="ranking-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLS = ['cor','material','equipe','produzido','estoque','os'];
+const COL_LABELS = ['COR','MATERIAL','EQUIPE','PRODUZIDO','ESTOQUE','OS'];
+const RESUMO_KEYS = ['cor_confirmada','material_em_obra','equipe_confirmada','material_produzido','tem_estoque','os_pronta'];
+const RESUMO_LABELS = ['Cor Confirmada','Material em Obra','Equipe Confirmada','Material Produzido','Tem Estoque','OS Pronta'];
+const MARCOS_KEYS = ['visita1_feita','visita2_feita','onboarding_feito','industria_liberada'];
+const MARCOS_LABELS = ['VT1 Feita','VT2 Feita','Onboarding Feito','Industria Liberada'];
+
+const tooltip = document.getElementById('tooltip');
+
+document.addEventListener('mousemove', e => {
+  tooltip.style.left = (e.clientX + 12) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+});
+
+function showTip(text) {
+  tooltip.textContent = text;
+  tooltip.style.display = 'block';
+}
+function hideTip() {
+  tooltip.style.display = 'none';
+}
+
+function cellClass(val) {
+  if (val === true) return 'ok';
+  if (val === false) return 'block';
+  return 'na';
+}
+
+function badgeHTML(val, label) {
+  const cls = cellClass(val);
+  const txt = val === true ? 'OK' : val === false ? 'X' : '-';
+  return `<span class="badge ${cls}" title="${label}: ${txt}">${txt}</span>`;
+}
+
+function buildBar(container, label, data, total) {
+  const pctSim = ((data.sim / total) * 100).toFixed(1);
+  const pctNao = ((data.nao / total) * 100).toFixed(1);
+  const pctNa = ((data.sem_dado / total) * 100).toFixed(1);
+  const g = document.createElement('div');
+  g.className = 'bar-group';
+  g.innerHTML = `
+    <div class="bar-label">
+      <span>${label}</span>
+      <span class="counts">${data.sim} sim / ${data.nao} nao / ${data.sem_dado} sem dado</span>
+    </div>
+    <div class="bar-track">
+      ${data.sim > 0 ? `<div class="bar-seg ok" style="width:${pctSim}%">${pctSim}%</div>` : ''}
+      ${data.nao > 0 ? `<div class="bar-seg block" style="width:${pctNao}%">${pctNao}%</div>` : ''}
+      ${data.sem_dado > 0 ? `<div class="bar-seg na" style="width:${pctNa}%">${pctNa}%</div>` : ''}
+    </div>`;
+  container.appendChild(g);
+}
+
+function truncate(s, n) {
+  if (!s) return '-';
+  return s.length > n ? s.substring(0, n) + '...' : s;
+}
+
+async function init() {
+  try {
+    const resp = await fetch('dados/cruz-bloqueadores.json');
+    const data = await resp.json();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('stat-total').textContent = data.total_obras + ' obras ativas';
+    document.getElementById('stat-date').textContent = data.gerado_em;
+
+    // Show all sections
+    document.querySelectorAll('.section').forEach(s => s.style.display = '');
+
+    // HEATMAP
+    const hm = document.getElementById('heatmap');
+    // Header
+    const headerRow = document.createElement('div');
+    headerRow.className = 'heatmap-header';
+    COL_LABELS.forEach(l => {
+      const d = document.createElement('div');
+      d.className = 'col-label';
+      d.textContent = l;
+      headerRow.appendChild(d);
+    });
+    const spacer = document.createElement('div');
+    spacer.style.cssText = 'font-size:10px;font-family:var(--font-mono);color:var(--text-muted);font-weight:600;display:flex;align-items:flex-end;padding-bottom:2px';
+    spacer.textContent = 'OBRA';
+    headerRow.appendChild(spacer);
+    hm.appendChild(headerRow);
+
+    // Rows sorted by n_bloqueios desc
+    const obras = data.obras;
+    obras.forEach(ob => {
+      const row = document.createElement('div');
+      row.className = 'heatmap-row';
+      COLS.forEach((col, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell ' + cellClass(ob[col]);
+        const val = ob[col] === true ? 'SIM' : ob[col] === false ? 'NAO' : 'Sem dado';
+        cell.addEventListener('mouseenter', () => showTip(`${truncate(ob.cliente, 40)} | ${COL_LABELS[i]}: ${val}`));
+        cell.addEventListener('mouseleave', hideTip);
+        row.appendChild(cell);
+      });
+      const name = document.createElement('div');
+      name.className = 'heatmap-name';
+      name.textContent = truncate(ob.cliente, 45);
+      row.appendChild(name);
+      hm.appendChild(row);
+    });
+
+    // RESUMO BARS
+    const rb = document.getElementById('resumo-bars');
+    RESUMO_KEYS.forEach((k, i) => {
+      buildBar(rb, RESUMO_LABELS[i], data.resumo[k], data.total_obras);
+    });
+
+    // MARCOS BARS
+    const mb = document.getElementById('marcos-bars');
+    MARCOS_KEYS.forEach((k, i) => {
+      buildBar(mb, MARCOS_LABELS[i], data.marcos[k], data.total_obras);
+    });
+
+    // TOP 20 TABLE
+    const tbody = document.getElementById('ranking-body');
+    data.ranking_mais_bloqueadas.forEach((ob, idx) => {
+      const tr = document.createElement('tr');
+      const bloqCls = ob.n_bloqueios === 0 ? 'zero' : '';
+      tr.innerHTML = `
+        <td style="font-family:var(--font-mono);color:var(--text-muted)">${idx + 1}</td>
+        <td style="font-weight:600;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${truncate(ob.cliente, 35)}</td>
+        <td><span class="badge na">${ob.status || '-'}</span></td>
+        <td style="font-size:11px">${truncate(ob.fase, 25)}</td>
+        <td>${badgeHTML(ob.cor, 'COR')}</td>
+        <td>${badgeHTML(ob.material, 'MAT')}</td>
+        <td>${badgeHTML(ob.equipe, 'EQP')}</td>
+        <td>${badgeHTML(ob.produzido, 'PROD')}</td>
+        <td>${badgeHTML(ob.estoque, 'EST')}</td>
+        <td>${badgeHTML(ob.os, 'OS')}</td>
+        <td><span class="bloq-count ${bloqCls}">${ob.n_bloqueios}</span></td>`;
+      tbody.appendChild(tr);
+    });
+
+  } catch (err) {
+    document.getElementById('loading').textContent = 'Erro ao carregar dados: ' + err.message;
+  }
+}
+
+// Dock navigation
+document.querySelectorAll('.dock-item').forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.dock-item').forEach(d => d.classList.remove('active'));
+    item.classList.add('active');
+    const target = document.querySelector(item.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Highlight active section on scroll
+const sections = ['sec-heatmap','sec-resumo','sec-marcos','sec-ranking'];
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  }
+  document.querySelectorAll('.dock-item').forEach(d => {
+    d.classList.toggle('active', d.getAttribute('href') === '#' + current);
+  });
+});
+
+init();
+</script>
+</body>
+</html>
