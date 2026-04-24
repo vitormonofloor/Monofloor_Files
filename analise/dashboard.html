@@ -1037,7 +1037,7 @@
 
     <div>
       <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de 1.028 no painel</div><div class="kpi-edai">do total de 1.028 obras no sistema</div></div>
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span id="dyn-total-obras">—</span> no painel</div><div class="kpi-edai">do total de <span id="dyn-total-obras-edai">—</span> obras no sistema</div></div>
         <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai">apenas 12% da carteira ativa</div></div>
         <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai">quase metade da carteira — acima de 6 meses</div></div>
         <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: 4 com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
@@ -1114,7 +1114,7 @@
     <div class="q-head">
       <h2><span class="section-pill pill-paradas">OBRAS PARADAS</span></h2>
       <p class="sub">Todas as 208 obras ativas agrupadas por situação. Clique numa categoria para ver quais obras estão ali e o diagnóstico.</p>
-      <p class="scope-note">Base: carteira completa (208 ativas de 1.028 no sistema). Métricas complementares nos <a href="../indicadores-v2.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
+      <p class="scope-note">Base: carteira completa (<span id="dyn-ativas-scope">—</span> ativas de <span id="dyn-total-scope">—</span> no sistema). Métricas complementares nos <a href="../indicadores-v2.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
     </div>
 
     <!-- Mini-dashboard de filtros -->
@@ -1438,11 +1438,7 @@
       </div>
     </div>
 
-    <!-- Ranking de obras problema -->
-    <div class="ki-ranking">
-      <div class="ki-ranking-title">Obras com mais ocorrências</div>
-      <div class="ki-ranking-list" id="ki-ranking"></div>
-    </div>
+    <!-- Ranking de ocorrências removido: consolidado no ki-risco (score cruzado) abaixo -->
 
     <!-- Tarefas por responsável -->
     <div class="ki-responsaveis">
@@ -2236,8 +2232,18 @@ function renderHero() {
     `mediana <span class="mono">${AGG.idade_mediana}d</span>, média <span class="mono">${AGG.idade_media}d</span> · ` +
     `${EXT.zumbi_n} encerradas sem fechar · ${EXT.orfas_n} sem responsável · ${EXT.ocorrencias.n_atRisk} em risco`;
 
-  const stamp = new Date();
-  $('stamp-now').textContent = stamp.getHours().toString().padStart(2,'0') + ':' + stamp.getMinutes().toString().padStart(2,'0');
+  // Hidratar totais dinâmicos
+  const totalObras = AGG.total_obras || '—';
+  const totalObrasFmt = typeof totalObras === 'number' ? totalObras.toLocaleString('pt-BR') : totalObras;
+  if ($('dyn-total-obras')) $('dyn-total-obras').textContent = totalObrasFmt;
+  if ($('dyn-total-obras-edai')) $('dyn-total-obras-edai').textContent = totalObrasFmt;
+  if ($('dyn-ativas-scope')) $('dyn-ativas-scope').textContent = ativas;
+  if ($('dyn-total-scope')) $('dyn-total-scope').textContent = totalObrasFmt;
+
+  // stamp-now: usar data do snapshot, não hora local do browser
+  const snapISO = AGG.snapshot_date || new Date().toISOString().slice(0, 10);
+  const snapTs = new Date(snapISO + 'T12:00:00');
+  $('stamp-now').textContent = snapTs.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 // ============== Q1 ==============
@@ -4032,15 +4038,7 @@ async function loadKiraInsights() {
       document.getElementById('ki-resolucao').textContent = taxaRes.toFixed(0) + '%';
       document.getElementById('ki-resolucao-desc').textContent = oc.total_ocorrencias + ' ocorrências registradas na amostra. ' + (taxaRes === 0 ? 'Nenhuma foi resolvida — sistema registra problemas mas ninguém fecha.' : taxaRes + '% resolvidas.');
 
-      // Ranking
-      var ranking = oc.ranking_por_ocorrencias || [];
-      var rkEl = document.getElementById('ki-ranking');
-      if (rkEl && ranking.length) {
-        rkEl.innerHTML = '<div class="ki-rank-item" style="background:transparent;font-weight:600;color:#a89e92;font-size:9px;text-transform:uppercase;letter-spacing:0.06em"><div>Obra</div><div style="text-align:center">Total</div><div style="text-align:center">Críticas</div><div style="text-align:center">Abertas</div></div>' +
-          ranking.slice(0, 10).map(function(r) {
-            return '<div class="ki-rank-item"><div class="ki-rank-name">' + (r.cliente||r.id||'') + '</div><div class="ki-rank-val">' + r.n_ocorrencias + '</div><div class="ki-rank-val ' + (r.n_criticas > 0 ? 'crit' : '') + '">' + (r.n_criticas||0) + '</div><div class="ki-rank-val ' + (r.n_abertas > 0 ? 'warn' : 'ok') + '">' + (r.n_abertas||0) + '</div></div>';
-          }).join('');
-      }
+      // Ranking de ocorrências removido (consolidado no ki-risco abaixo)
     }
   } catch(e) { console.error('KI ocorrencias:', e); }
 
