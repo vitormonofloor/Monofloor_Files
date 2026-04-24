@@ -1811,10 +1811,10 @@ async function loadDashboardData() {
     SYNC_BUGARRAY = d.SYNC_BUGARRAY || [];
     if (d.snapshot_date) AGG.snapshot_date = d.snapshot_date;
     _dataLoaded = true;
-    initDashboard();
+    try { initDashboard(); } catch(initErr) { console.error('Erro no initDashboard:', initErr); alert('Dashboard carregou dados mas falhou ao renderizar: ' + initErr.message); }
   } catch(e) {
     console.error('Erro carregando dados:', e);
-    document.body.innerHTML = '<div style="padding:60px;text-align:center;color:#c45a5a;font-family:Plus Jakarta Sans,sans-serif"><h2>Erro ao carregar dados</h2><p style="color:#8a7e72;margin-top:12px">O arquivo dashboard-data.json nao foi encontrado ou esta corrompido.</p><p style="margin-top:8px"><a href="dados/dashboard-data.json" style="color:#b8a080">Testar link direto</a></p></div>';
+    document.body.innerHTML = '<div style="padding:60px;text-align:center;color:#c45a5a;font-family:Plus Jakarta Sans,sans-serif"><h2>Erro ao carregar dados</h2><p style="color:#8a7e72;margin-top:12px">'+e.message+'</p><p style="margin-top:8px"><a href="dados/dashboard-data.json" style="color:#b8a080">Testar link direto</a></p></div>';
   }
 }
 
