@@ -896,6 +896,20 @@
   .ki-resp-bar-out{height:12px;background:#ede6dc;border-radius:3px;overflow:hidden}
   .ki-resp-bar-in{height:100%;background:linear-gradient(90deg,#b8a080,#d8c8b0);border-radius:3px;transition:width .8s}
   .ki-resp-count{font-family:'JetBrains Mono',monospace;color:#b8a080;text-align:right;font-weight:500}
+  .ki-risco{margin-top:20px}
+  .ki-risco-list{display:flex;flex-direction:column;gap:6px}
+  .ki-risco-item{display:grid;grid-template-columns:32px 1fr 70px 70px 70px 60px;gap:8px;padding:10px 12px;background:#fff;border:1px solid #ede6dc;border-radius:6px;font-size:11px;align-items:center;transition:all .15s;cursor:default}
+  .ki-risco-item:hover{border-color:#c45a5a;box-shadow:0 2px 8px rgba(196,90,90,0.06)}
+  .ki-risco-pos{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#c45a5a;text-align:center}
+  .ki-risco-name{color:#3a3530;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ki-risco-name small{display:block;color:#a89e92;font-weight:400;font-size:10px;margin-top:1px}
+  .ki-risco-metric{text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:#6b6156}
+  .ki-risco-metric small{display:block;color:#b8b0a4;font-size:8px;text-transform:uppercase;letter-spacing:0.05em;margin-top:1px}
+  .ki-risco-metric.crit{color:#c45a5a}
+  .ki-risco-metric.warn{color:#b89a4a}
+  .ki-risco-metric.ok{color:#3d8a5a}
+  .ki-risco-score{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#c45a5a;text-align:center;background:#f6eaea;border-radius:4px;padding:4px 8px}
+  @media(max-width:720px){.ki-risco-item{grid-template-columns:28px 1fr 50px 50px;font-size:10px}.ki-risco-metric:nth-child(4),.ki-risco-metric:nth-child(5){display:none}}
   </style>
 <script src="../auth.js"></script>
 </head>
@@ -1418,6 +1432,15 @@
     <div class="ki-responsaveis">
       <div class="ki-ranking-title">Carga de tarefas por responsável</div>
       <div class="ki-resp-bars" id="ki-resp-bars"></div>
+    </div>
+
+    <!-- RANKING DE RISCO UNIFICADO -->
+    <div class="ki-risco">
+      <div class="ki-ranking-title">Top 10 obras que precisam de atenção agora</div>
+      <p style="font-size:11px;color:#a89e92;margin-bottom:12px">Score calculado cruzando ocorrências + progresso + tarefas. Quanto maior, mais urgente.</p>
+      <div class="ki-risco-list" id="ki-risco-list">
+        <div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px">Calculando ranking...</div>
+      </div>
     </div>
   </section>
 
@@ -4007,6 +4030,69 @@ async function loadKiraInsights() {
       });
     }
   } catch(e) { console.error('KI progresso:', e); }
+
+  // 4. Ranking de risco unificado (cruzamento dos 3)
+  try {
+    var risco = {};
+
+    // De ocorrências
+    try {
+      var r1b = await fetch('dados/cruz-ocorrencias-por-obra.json?t=' + Date.now());
+      if (r1b.ok) {
+        var ocData = await r1b.json();
+        (ocData.obras || []).forEach(function(o) {
+          var key = o.id || o.cliente;
+          if (!risco[key]) risco[key] = {id: o.id, cliente: o.cliente, ocs: 0, crit: 0, abertas: 0, pct: null, tarefas: 0};
+          risco[key].ocs = o.n_ocorrencias || 0;
+          risco[key].crit = o.n_criticas || 0;
+          risco[key].abertas = o.n_abertas || 0;
+        });
+      }
+    } catch(e) {}
+
+    // De progresso
+    try {
+      var r3b = await fetch('dados/cruz-progresso-obras.json?t=' + Date.now());
+      if (r3b.ok) {
+        var pgData = await r3b.json();
+        (pgData.obras || []).forEach(function(o) {
+          var key = o.id || o.cliente;
+          if (!risco[key]) risco[key] = {id: o.id, cliente: o.cliente, ocs: 0, crit: 0, abertas: 0, pct: null, tarefas: 0};
+          risco[key].pct = o.pct_concluido;
+          if (!risco[key].cliente && o.cliente) risco[key].cliente = o.cliente;
+        });
+      }
+    } catch(e) {}
+
+    // Calcular score
+    var riscoList = Object.values(risco).map(function(r) {
+      var pctPenalty = r.pct !== null && r.pct !== undefined ? (100 - Math.max(0, Math.min(100, r.pct))) * 0.5 : 25;
+      r.score = (r.ocs * 10) + (r.crit * 30) + pctPenalty + (r.tarefas * 5);
+      return r;
+    });
+
+    // Ordenar e top 10
+    riscoList.sort(function(a, b) { return b.score - a.score; });
+    var top10 = riscoList.slice(0, 10);
+
+    var rkEl2 = document.getElementById('ki-risco-list');
+    if (rkEl2 && top10.length) {
+      rkEl2.innerHTML = top10.map(function(r, i) {
+        var pctText = r.pct !== null && r.pct !== undefined ? r.pct.toFixed(0) + '%' : '\u2014';
+        var pctCls = r.pct !== null ? (r.pct < 25 ? 'crit' : r.pct < 50 ? 'warn' : 'ok') : '';
+        return '<div class="ki-risco-item">' +
+          '<div class="ki-risco-pos">' + (i+1) + '</div>' +
+          '<div class="ki-risco-name">' + (r.cliente||r.id||'') + '</div>' +
+          '<div class="ki-risco-metric ' + (r.ocs > 5 ? 'crit' : r.ocs > 0 ? 'warn' : '') + '">' + r.ocs + '<small>ocorrências</small></div>' +
+          '<div class="ki-risco-metric ' + (r.crit > 0 ? 'crit' : '') + '">' + r.crit + '<small>críticas</small></div>' +
+          '<div class="ki-risco-metric ' + pctCls + '">' + pctText + '<small>progresso</small></div>' +
+          '<div class="ki-risco-score">' + r.score.toFixed(0) + '</div>' +
+          '</div>';
+      }).join('');
+    } else if (rkEl2) {
+      rkEl2.innerHTML = '<div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px">Sem dados suficientes para ranking.</div>';
+    }
+  } catch(e) { console.error('KI risco:', e); }
 }
 
 // Disparar após dashboard carregar (não interfere com initDashboard)
