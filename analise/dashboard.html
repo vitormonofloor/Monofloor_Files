@@ -861,6 +861,41 @@
   .back-link{position:fixed;top:16px;left:20px;z-index:999;display:inline-flex;align-items:center;gap:5px;font-size:10px;color:#a89e92;text-decoration:none;letter-spacing:1px;text-transform:uppercase;transition:color 0.2s;font-weight:500;background:rgba(240,235,227,0.85);padding:6px 14px 6px 10px;border-radius:20px;border:1px solid #e0d8cc;backdrop-filter:blur(8px)}
   .back-link:hover{color:#8b6d44;border-color:#d4c4a8}
   .back-link svg{width:14px;height:14px;stroke:currentColor}
+
+  /* ============== KIRA INSIGHTS ============== */
+  #kira-insights{margin-bottom:36px}
+  .ki-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  @media(max-width:720px){.ki-grid{grid-template-columns:1fr}}
+  .ki-card{background:#fff;border:1px solid #ede6dc;border-radius:8px;padding:18px;border-left:3px solid #e0d8cc}
+  .ki-card.ki-alert{border-left-color:#c45a5a}
+  .ki-card.ki-warn{border-left-color:#b89a4a}
+  .ki-card-head{margin-bottom:10px}
+  .ki-val{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;color:#2a2520;line-height:1}
+  .ki-card.ki-alert .ki-val{color:#c45a5a}
+  .ki-card.ki-warn .ki-val{color:#b89a4a}
+  .ki-label{font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;font-weight:500}
+  .ki-desc{font-size:11px;color:#8a7e72;line-height:1.5}
+  .ki-bar-wrap{margin:8px 0}
+  .ki-bar{height:6px;background:#ede6dc;border-radius:3px;overflow:hidden}
+  .ki-bar-fill{height:100%;background:#b8a080;border-radius:3px;transition:width 1s ease-out;width:0}
+
+  .ki-ranking{margin-bottom:20px}
+  .ki-ranking-title{font-size:10px;color:#b8a080;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #ede6dc}
+  .ki-ranking-list{display:flex;flex-direction:column;gap:4px}
+  .ki-rank-item{display:grid;grid-template-columns:1fr 60px 60px 60px;gap:8px;padding:8px 10px;background:#faf7f2;border-radius:4px;font-size:11px;align-items:center}
+  .ki-rank-item:hover{background:#f5f0e8}
+  .ki-rank-name{color:#3a3530;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ki-rank-val{font-family:'JetBrains Mono',monospace;text-align:center;font-size:11px}
+  .ki-rank-val.crit{color:#c45a5a;font-weight:600}
+  .ki-rank-val.warn{color:#b89a4a}
+  .ki-rank-val.ok{color:#3d8a5a}
+
+  .ki-resp-bars{display:flex;flex-direction:column;gap:6px}
+  .ki-resp-row{display:grid;grid-template-columns:80px 1fr 40px;gap:8px;align-items:center;font-size:11px}
+  .ki-resp-name{color:#6b6156;font-family:'JetBrains Mono',monospace;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ki-resp-bar-out{height:12px;background:#ede6dc;border-radius:3px;overflow:hidden}
+  .ki-resp-bar-in{height:100%;background:linear-gradient(90deg,#b8a080,#d8c8b0);border-radius:3px;transition:width .8s}
+  .ki-resp-count{font-family:'JetBrains Mono',monospace;color:#b8a080;text-align:right;font-weight:500}
   </style>
 <script src="../auth.js"></script>
 </head>
@@ -1331,6 +1366,58 @@
     <div class="ag-lista">
       <h4>Próximos 10 marcos</h4>
       <ul id="ag-lista-ul"></ul>
+    </div>
+  </section>
+
+  <!-- ============== KIRA INSIGHTS ============== -->
+  <section id="kira-insights">
+    <div class="q-head">
+      <h2><span class="section-pill" style="background:rgba(184,160,128,0.12);color:#b8a080">KIRA INSIGHTS</span></h2>
+      <p class="sub">Dados extraídos diretamente dos endpoints internos do KIRA — ocorrências, tarefas e progresso real das obras.</p>
+    </div>
+
+    <div class="ki-grid">
+      <!-- Card 1: Taxa de Resolução -->
+      <div class="ki-card ki-alert">
+        <div class="ki-card-head">
+          <div class="ki-val" id="ki-resolucao">—</div>
+          <div class="ki-label">TAXA DE RESOLUÇÃO</div>
+        </div>
+        <div class="ki-desc" id="ki-resolucao-desc">Carregando...</div>
+      </div>
+
+      <!-- Card 2: Tarefas abertas -->
+      <div class="ki-card ki-warn">
+        <div class="ki-card-head">
+          <div class="ki-val" id="ki-tarefas">—</div>
+          <div class="ki-label">TAREFAS ABERTAS</div>
+        </div>
+        <div class="ki-desc" id="ki-tarefas-desc">Carregando...</div>
+      </div>
+
+      <!-- Card 3: Progresso médio -->
+      <div class="ki-card">
+        <div class="ki-card-head">
+          <div class="ki-val" id="ki-progresso">—</div>
+          <div class="ki-label">PROGRESSO MÉDIO</div>
+        </div>
+        <div class="ki-bar-wrap">
+          <div class="ki-bar"><div class="ki-bar-fill" id="ki-bar-fill"></div></div>
+        </div>
+        <div class="ki-desc" id="ki-progresso-desc">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- Ranking de obras problema -->
+    <div class="ki-ranking">
+      <div class="ki-ranking-title">Obras com mais ocorrências</div>
+      <div class="ki-ranking-list" id="ki-ranking"></div>
+    </div>
+
+    <!-- Tarefas por responsável -->
+    <div class="ki-responsaveis">
+      <div class="ki-ranking-title">Carga de tarefas por responsável</div>
+      <div class="ki-resp-bars" id="ki-resp-bars"></div>
     </div>
   </section>
 
@@ -3856,6 +3943,73 @@ function escHtmlSafe(s) {
     if(n===0)badge.classList.add('zero');
   }).catch(function(){});
 })();
+
+// ============== KIRA INSIGHTS (isolado) ==============
+async function loadKiraInsights() {
+  try {
+    // 1. Ocorrências
+    var r1 = await fetch('dados/cruz-ocorrencias-por-obra.json?t=' + Date.now());
+    if (r1.ok) {
+      var oc = await r1.json();
+      var taxaRes = oc.taxa_resolucao_global || 0;
+      document.getElementById('ki-resolucao').textContent = taxaRes.toFixed(0) + '%';
+      document.getElementById('ki-resolucao-desc').textContent = oc.total_ocorrencias + ' ocorrências registradas na amostra. ' + (taxaRes === 0 ? 'Nenhuma foi resolvida — sistema registra problemas mas ninguém fecha.' : taxaRes + '% resolvidas.');
+
+      // Ranking
+      var ranking = oc.ranking_por_ocorrencias || [];
+      var rkEl = document.getElementById('ki-ranking');
+      if (rkEl && ranking.length) {
+        rkEl.innerHTML = '<div class="ki-rank-item" style="background:transparent;font-weight:600;color:#a89e92;font-size:9px;text-transform:uppercase;letter-spacing:0.06em"><div>Obra</div><div style="text-align:center">Total</div><div style="text-align:center">Críticas</div><div style="text-align:center">Abertas</div></div>' +
+          ranking.slice(0, 10).map(function(r) {
+            return '<div class="ki-rank-item"><div class="ki-rank-name">' + (r.cliente||r.id||'') + '</div><div class="ki-rank-val">' + r.n_ocorrencias + '</div><div class="ki-rank-val ' + (r.n_criticas > 0 ? 'crit' : '') + '">' + (r.n_criticas||0) + '</div><div class="ki-rank-val ' + (r.n_abertas > 0 ? 'warn' : 'ok') + '">' + (r.n_abertas||0) + '</div></div>';
+          }).join('');
+      }
+    }
+  } catch(e) { console.error('KI ocorrencias:', e); }
+
+  try {
+    // 2. Tarefas
+    var r2 = await fetch('dados/cruz-tarefas.json?t=' + Date.now());
+    if (r2.ok) {
+      var tf = await r2.json();
+      var abertas = (tf.por_status && tf.por_status.aberta) || 0;
+      document.getElementById('ki-tarefas').textContent = abertas;
+      document.getElementById('ki-tarefas-desc').textContent = tf.total_tarefas + ' tarefas no sistema. ' + abertas + ' abertas (' + (tf.total_tarefas ? (abertas/tf.total_tarefas*100).toFixed(0) : 0) + '%). Prioridade alta/crítica: ' + ((tf.por_prioridade && (tf.por_prioridade.alta||0) + (tf.por_prioridade.critica||0)) || 0) + '.';
+
+      // Barras por responsável
+      var resp = tf.por_responsavel || [];
+      var maxResp = resp.length ? resp[0].total : 1;
+      var barsEl = document.getElementById('ki-resp-bars');
+      if (barsEl && resp.length) {
+        barsEl.innerHTML = resp.slice(0, 6).map(function(r) {
+          var pct = (r.total / maxResp * 100).toFixed(0);
+          return '<div class="ki-resp-row"><div class="ki-resp-name">' + (r.nome||'') + '</div><div class="ki-resp-bar-out"><div class="ki-resp-bar-in" style="width:' + pct + '%"></div></div><div class="ki-resp-count">' + r.total + '</div></div>';
+        }).join('');
+      }
+    }
+  } catch(e) { console.error('KI tarefas:', e); }
+
+  try {
+    // 3. Progresso
+    var r3 = await fetch('dados/cruz-progresso-obras.json?t=' + Date.now());
+    if (r3.ok) {
+      var pg = await r3.json();
+      var media = pg.media_pct_concluido || 0;
+      document.getElementById('ki-progresso').textContent = media.toFixed(0) + '%';
+      document.getElementById('ki-progresso-desc').textContent = pg.obras.length + ' obras analisadas. Média de conclusão ' + media.toFixed(1) + '%. ' + (pg.obras_sem_metragem_pendente||0) + ' sem metragem pendente definida.';
+
+      // Barra animada
+      requestAnimationFrame(function() {
+        var bar = document.getElementById('ki-bar-fill');
+        if (bar) bar.style.width = Math.min(media, 100).toFixed(0) + '%';
+      });
+    }
+  } catch(e) { console.error('KI progresso:', e); }
+}
+
+// Disparar após dashboard carregar (não interfere com initDashboard)
+if (document.readyState === 'complete') { loadKiraInsights(); }
+else { window.addEventListener('load', loadKiraInsights); }
 </script>
 
 <div class="atena-portal" id="atenaPortal">
