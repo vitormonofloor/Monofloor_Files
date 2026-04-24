@@ -1369,11 +1369,11 @@
     </div>
   </section>
 
-  <!-- ============== KIRA INSIGHTS ============== -->
+  <!-- ============== OPERAÇÃO ============== -->
   <section id="kira-insights">
     <div class="q-head">
-      <h2><span class="section-pill" style="background:rgba(184,160,128,0.12);color:#b8a080">KIRA INSIGHTS</span></h2>
-      <p class="sub">Dados extraídos diretamente dos endpoints internos do KIRA — ocorrências, tarefas e progresso real das obras.</p>
+      <h2><span class="section-pill" style="background:rgba(196,90,90,0.1);color:#c45a5a">OPERAÇÃO</span></h2>
+      <p class="sub">Ocorrências registradas, tarefas pendentes e progresso real de execução das obras ativas.</p>
     </div>
 
     <div class="ki-grid">
@@ -3951,7 +3951,9 @@ async function loadKiraInsights() {
     var r1 = await fetch('dados/cruz-ocorrencias-por-obra.json?t=' + Date.now());
     if (r1.ok) {
       var oc = await r1.json();
-      var taxaRes = oc.taxa_resolucao_global || 0;
+      var taxaRaw = oc.taxa_resolucao_global;
+      var taxaRes = typeof taxaRaw === 'string' ? parseFloat(taxaRaw) : (taxaRaw || 0);
+      if (isNaN(taxaRes)) taxaRes = 0;
       document.getElementById('ki-resolucao').textContent = taxaRes.toFixed(0) + '%';
       document.getElementById('ki-resolucao-desc').textContent = oc.total_ocorrencias + ' ocorrências registradas na amostra. ' + (taxaRes === 0 ? 'Nenhuma foi resolvida — sistema registra problemas mas ninguém fecha.' : taxaRes + '% resolvidas.');
 
