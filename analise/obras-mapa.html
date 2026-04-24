@@ -256,10 +256,30 @@
 <header class="top">
   <div class="top-row">
     <h1>Mapa de Obras Ativas <span class="acc">— 208 obras, 23 cruzamentos consolidados</span></h1>
-    <div class="stamp">última atualização <span class="mono">2026-04-15</span></div>
+    <div class="stamp">última atualização <span class="mono" id="mapa-stamp">2026-04-15</span> <span id="mapa-stale"></span></div>
   </div>
   <div class="metrics" id="metrics"></div>
+  <div style="font-size:10px;color:#a89e92;margin-top:6px;font-style:italic" id="mapa-recorte">Recorte: dados estáticos do snapshot. Atualização depende de re-geração manual ou pipeline.</div>
 </header>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof META === 'undefined') return;
+  var d = META.ultAtual || '2026-04-15';
+  var stampEl = document.getElementById('mapa-stamp');
+  if (stampEl) stampEl.textContent = d;
+  var parts = d.split('-');
+  var snapDate = new Date(+parts[0], +parts[1]-1, +parts[2]);
+  var hoje = new Date();
+  var diff = Math.floor((hoje - snapDate) / 86400000);
+  var staleEl = document.getElementById('mapa-stale');
+  if (staleEl && diff > 2) {
+    var cor = diff > 7 ? '#c45a5a' : '#b89a4a';
+    staleEl.innerHTML = '<span style="background:'+cor+';color:#fff;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600;margin-left:6px;">Dados de '+diff+' dias atr\u00e1s</span>';
+  }
+  var recEl = document.getElementById('mapa-recorte');
+  if (recEl) recEl.textContent = 'Recorte: ' + META.total + ' obras do snapshot de ' + parts[2]+'/'+parts[1]+'/'+parts[0] + '. Atualiza\u00e7\u00e3o depende de re-gera\u00e7\u00e3o do pipeline.';
+});
+</script>
 
 <div class="filters">
   <div class="filters-row">
