@@ -2386,11 +2386,12 @@ function q3RenderCap(){
   const el = document.getElementById('q3-cap-bars');
   if (!el) return;
   el.innerHTML = Q3_EQUIPES.map(e => {
-    const cls = e.util_pct < 40 ? 'crit' : '';
+    const up2 = e.util_pct || 0;
+    const cls = up2 < 40 ? 'crit' : '';
     return `<div class="q3-cap-row ${cls}">
-      <div class="nome" title="${escHtml(e.nome)}">${escHtml(e.nome.replace('Equipe ',''))}</div>
-      <div class="bar-out"><div class="bar-cap"></div><div class="bar-use" style="width:${Math.min(e.util_pct,100)}%"></div></div>
-      <div class="pct">${e.util_pct.toFixed(0)}%</div>
+      <div class="nome" title="${escHtml(e.nome||'')}">${escHtml((e.nome||'').replace('Equipe ',''))}</div>
+      <div class="bar-out"><div class="bar-cap"></div><div class="bar-use" style="width:${Math.min(up2,100)}%"></div></div>
+      <div class="pct">${up2.toFixed(0)}%</div>
     </div>`;
   }).join('') + `<div style="font-size:10px;color:#a89e92;margin-top:8px;font-style:italic">Capacidade nominal = aplicadores ativos cadastrados. Uso = % escalados hoje. Linha tracejada = teto da equipe. Sombras não têm capacidade cadastrada.</div>`;
 }
