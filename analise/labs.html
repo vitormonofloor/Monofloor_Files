@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de Qualidade — Laboratório</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { background: #f0ebe3; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+  /* ====== DOCK ====== */
+  .dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+  @media(max-width:900px){.dock{display:none}}
+  .dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+  .dock-item svg{width:18px;height:18px}
+  .dock-item:hover{color:#b8a080;background:rgba(184,160,128,0.08);text-decoration:none}
+  .dock-item.active{color:#b8a080}
+  .dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+  .dock-item:hover::after{color:#8a7e72}
+  .dock-item.active::after{color:#b8a080}
+
+  /* ====== LABS ====== */
+  .labs-wrap { max-width: 1200px; margin: 0 auto; padding: 20px 24px; }
+
+  .labs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e8e0d4; }
+  .labs-logo-text { font-size: 15px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; color: #3a3530; }
+  .labs-logo-sub { font-size: 9px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: #a89e92; margin-top: 2px; }
+
+  .labs-tabs { display: flex; gap: 0; border-bottom: 1px solid #e8e0d4; margin-bottom: 0; }
+  .labs-tab { padding: 12px 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #a89e92; background: none; border: none; cursor: pointer; position: relative; transition: color 0.2s; }
+  .labs-tab:hover { color: #6b6156; }
+  .labs-tab.active { color: #b8a080; }
+  .labs-tab::after { content: ''; position: absolute; bottom: -1px; left: 20%; right: 20%; height: 2px; background: #b8a080; border-radius: 1px; transform: scaleX(0); transition: transform 0.3s; }
+  .labs-tab.active::after { transform: scaleX(1); }
+  @media(max-width:720px) { .labs-tab { padding: 10px 12px; font-size: 9px; } }
+
+  .labs-content { position: relative; }
+  .labs-frame { width: 100%; border: none; height: calc(100vh - 140px); min-height: 600px; display: none; background: transparent; border-radius: 0 0 8px 8px; }
+  .labs-frame.active { display: block; }
+
+  /* ====== ATENA PORTAL ====== */
+  .atena-portal{position:fixed;inset:0;background:#f0ebe3;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.4s ease}
+  .atena-portal.active{opacity:1;pointer-events:auto}
+  .atena-portal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 45%, rgba(184,160,128,0.12) 0%, transparent 70%);opacity:0;animation:atenaGlow 2.5s ease-in-out forwards}
+  @keyframes atenaGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0.6}}
+  .atena-shield-wrap{position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center}
+  .atena-shield-svg{width:130px;height:130px;opacity:0;animation:shieldAppear 0.5s ease-out 0.2s forwards, shieldRotate 2.5s linear 0.3s infinite}
+  @keyframes shieldAppear{0%{opacity:0;transform:scale(0.3)}100%{opacity:1;transform:scale(1)}}
+  @keyframes shieldRotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(184,160,128,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
+  @keyframes shieldGlowPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:0.7;transform:scale(1.1)}}
+  .atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#6b6156;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(184,160,128,0.5)}
+  @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
+  .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#a89e92;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
+  @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+
+<!-- DOCK LATERAL -->
+<nav class="dock" id="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central">
+    <svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+  </a>
+  <a href="../indicadores-v2.html" class="dock-item" data-label="Indicadores">
+    <svg viewBox="0 0 20 20"><path d="M1 10h4l2-6 3 12 2-8 2 4h5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  </a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard">
+    <svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </a>
+  <a href="atena.html" class="dock-item" data-label="ATENA">
+    <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg>
+  </a>
+</nav>
+
+<!-- CONTEUDO -->
+<div class="labs-wrap">
+  <div class="labs-header">
+    <div>
+      <div class="labs-logo-text">monofloor</div>
+      <div class="labs-logo-sub">Laboratório de Análises</div>
+    </div>
+  </div>
+
+  <!-- 5 ABAS -->
+  <div class="labs-tabs">
+    <button class="labs-tab active" data-tab="jornada">Jornada da Obra</button>
+    <button class="labs-tab" data-tab="bloqueadores">Bloqueadores</button>
+    <button class="labs-tab" data-tab="campo">Campo</button>
+    <button class="labs-tab" data-tab="escopo">Escopo</button>
+    <button class="labs-tab" data-tab="funil">Funil</button>
+  </div>
+
+  <!-- IFRAMES -->
+  <div class="labs-content">
+    <iframe class="labs-frame active" id="frame-jornada" src="timeline-lab.html?embed=1" loading="eager"></iframe>
+    <iframe class="labs-frame" id="frame-bloqueadores" data-src="bloqueadores-lab.html?embed=1" loading="lazy"></iframe>
+    <iframe class="labs-frame" id="frame-campo" data-src="campo-lab.html?embed=1" loading="lazy"></iframe>
+    <iframe class="labs-frame" id="frame-escopo" data-src="escopo-lab.html?embed=1" loading="lazy"></iframe>
+    <iframe class="labs-frame" id="frame-funil" data-src="funil-lab.html?embed=1" loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- ATENA PORTAL -->
+<div class="atena-portal" id="atenaPortal">
+  <div class="atena-shield-wrap">
+    <div class="atena-shield-glow"></div>
+    <svg class="atena-shield-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="56" fill="#ffffff" stroke="#b8a080" stroke-width="3"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#b8a080" stroke-width="1.5" stroke-dasharray="8 4 2 4" opacity="0.5"/>
+      <circle cx="60" cy="60" r="40" fill="none" stroke="#b8a080" stroke-width="0.8" opacity="0.25"/>
+      <g stroke="#b8a080" stroke-width="1" fill="none" opacity="0.4">
+        <path d="M60 12 L60 18 M60 102 L60 108"/>
+        <path d="M12 60 L18 60 M102 60 L108 60"/>
+        <path d="M25 25 L30 30 M90 90 L95 95"/>
+        <path d="M95 25 L90 30 M30 90 L25 95"/>
+      </g>
+      <g stroke="#b8a080" stroke-width="1.2" fill="none" opacity="0.6">
+        <path d="M42 15 L42 20 L48 20"/>
+        <path d="M78 15 L78 20 L72 20"/>
+        <path d="M105 42 L100 42 L100 48"/>
+        <path d="M105 78 L100 78 L100 72"/>
+        <path d="M78 105 L78 100 L72 100"/>
+        <path d="M42 105 L42 100 L48 100"/>
+        <path d="M15 78 L20 78 L20 72"/>
+        <path d="M15 42 L20 42 L20 48"/>
+      </g>
+      <text x="60" y="68" text-anchor="middle" font-family="serif" font-size="32" fill="#b8a080" opacity="0.8">&#937;</text>
+      <circle cx="60" cy="78" r="2" fill="#b8a080" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="atena-portal-title">Atena</div>
+  <div class="atena-portal-tagline">auditor estratégico · monofloor</div>
+</div>
+
+<script>
+// Tab switching com lazy loading de iframes
+document.querySelectorAll('.labs-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    // Remove active de todas as tabs e frames
+    document.querySelectorAll('.labs-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.labs-frame').forEach(function(f) { f.classList.remove('active'); });
+
+    // Ativa a tab clicada
+    tab.classList.add('active');
+    var frameId = 'frame-' + tab.dataset.tab;
+    var frame = document.getElementById(frameId);
+    if (frame) {
+      frame.classList.add('active');
+      // Lazy load: se tem data-src mas não src real, carregar agora
+      if (frame.dataset.src && !frame.getAttribute('src')) {
+        frame.src = frame.dataset.src;
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
