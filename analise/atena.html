@@ -377,28 +377,42 @@ function renderAcoes(hist, snapHoje, atenaScan) {
   var el = document.getElementById('atena-acoes-list');
   var acoes = [];
 
-  // Pegar obras ativas com maior idade
+  // Pegar obras ativas
   if (snapHoje && snapHoje.ativas) {
-    var sorted = snapHoje.ativas.filter(function(o){return o.idade_dias;}).sort(function(a,b){return b.idade_dias-a.idade_dias;});
+    var todas = snapHoje.ativas;
+    var comIdade = todas.filter(function(o){return o.idade_dias;});
+    var sorted = comIdade.length > 0 ? comIdade.sort(function(a,b){return b.idade_dias-a.idade_dias;}) : todas;
 
-    // Obra mais antiga ativa
+    // Obra mais antiga (ou primeira se sem idade)
     if (sorted[0]) {
+      var idTxt = sorted[0].idade_dias ? sorted[0].idade_dias + ' dias no radar. ' : '';
       acoes.push({
         sev: 'crit',
         title: sorted[0].clienteNome,
-        text: 'Obra mais antiga da carteira \u2014 <b>' + sorted[0].idade_dias + ' dias</b> no radar. Status: ' + sorted[0].status + '. Fase: ' + sorted[0].faseAtual + '. Consultor: ' + (sorted[0].consultorNome||'sem respons\u00E1vel') + '.',
-        meta: sorted[0].idade_dias + 'd \u00B7 ' + sorted[0].faseAtual
+        text: 'Obra com maior tempo na carteira. ' + idTxt + 'Status: ' + sorted[0].status + '. Fase: ' + sorted[0].faseAtual + '. Consultor: ' + (sorted[0].consultorNome||'sem respons\u00E1vel') + '.',
+        meta: (sorted[0].idade_dias ? sorted[0].idade_dias + 'd' : 'sem idade') + ' \u00B7 ' + sorted[0].faseAtual
       });
     }
 
-    // Obras sem responsavel com maior idade
-    var orfas = sorted.filter(function(o){return !o.consultorNome || o.consultorNome==='' || o.consultorNome==='[]';});
+    // Obras sem responsavel
+    var orfas = todas.filter(function(o){return !o.consultorNome || o.consultorNome==='' || o.consultorNome==='[]';});
     if (orfas.length > 0) {
       acoes.push({
         sev: 'warn',
         title: orfas.length + ' obras sem respons\u00E1vel',
-        text: 'A mais antiga: <b>' + orfas[0].clienteNome + '</b> (' + (orfas[0].idade_dias||'?') + 'd). Ningu\u00E9m est\u00E1 oficialmente cuidando destas obras.',
-        meta: orfas.length + ' obras \u00B7 mais antiga ' + (orfas[0].idade_dias||'?') + 'd'
+        text: 'Ningu\u00E9m est\u00E1 oficialmente cuidando destas obras. Risco de abandono e atraso silencioso.',
+        meta: orfas.length + ' obras \u00B7 a\u00E7\u00E3o: atribuir consultor'
+      });
+    }
+
+    // Obras zumbi (CLIENTE FINALIZADO com status ativo)
+    var zumbis = todas.filter(function(o){return (o.faseAtual||'').indexOf('CLIENTE FINALIZADO')>=0 && o.status!=='reparo' && o.status!=='finalizado' && o.status!=='concluido' && o.status!=='cancelado';});
+    if (zumbis.length > 0) {
+      acoes.push({
+        sev: 'crit',
+        title: zumbis.length + ' obras encerradas sem fechar',
+        text: 'Terminaram na pr\u00E1tica mas continuam aparecendo como ativas, distorcendo os n\u00FAmeros do painel.',
+        meta: zumbis.length + ' obras \u00B7 a\u00E7\u00E3o: encerrar status'
       });
     }
   }
