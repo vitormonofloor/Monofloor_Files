@@ -4153,7 +4153,96 @@ async function loadKiraInsights() {
       document.getElementById('ki-diag-desc').textContent = dk.com_situacao_atual + ' de ' + dk.total_obras + ' obras têm diagnóstico narrativo. ' + dk.com_tag_kira + ' com tag KIRA. ' + (dk.total_obras - dk.com_situacao_atual) + ' estão sem análise.';
     }
   } catch(e) { console.error('KI diagnostico:', e); }
+
+  // 8. Carregar lookups pra enriquecer modais
+  try {
+    var rProg = await fetch('dados/cruz-progresso-obras.json?t=' + Date.now());
+    if (rProg.ok) {
+      var pgData = await rProg.json();
+      window._progresso = {};
+      (pgData.obras || []).forEach(function(o) { window._progresso[o.id] = o; });
+    }
+  } catch(e) {}
+
+  try {
+    var rDiag = await fetch('dados/cruz-diagnostico-kira.json?t=' + Date.now());
+    if (rDiag.ok) {
+      var dkData = await rDiag.json();
+      window._diagnosticoKira = {};
+      (dkData.obras || []).forEach(function(o) { window._diagnosticoKira[o.id] = o; });
+    }
+  } catch(e) {}
 }
+
+// Enriquece tabelas de modais com progresso + diagnóstico KIRA
+function enrichModalRow(obraId) {
+  if (!obraId) return '';
+  var html = '';
+
+  // Progresso
+  var prog = (window._progresso || {})[obraId];
+  if (prog && prog.pct_concluido !== null && prog.pct_concluido !== undefined) {
+    var pct = Math.max(0, Math.min(100, prog.pct_concluido));
+    var cor = pct < 25 ? '#c45a5a' : pct < 50 ? '#b89a4a' : pct < 75 ? '#b8a080' : '#3d8a5a';
+    html += '<div class="enrich-prog" style="margin-top:4px"><div style="display:flex;align-items:center;gap:6px;font-size:10px"><span style="color:#a89e92">Progresso:</span><div style="flex:1;height:4px;background:#ede6dc;border-radius:2px;overflow:hidden"><div style="height:100%;width:' + pct.toFixed(0) + '%;background:' + cor + ';border-radius:2px"></div></div><span style="font-family:JetBrains Mono,monospace;color:' + cor + ';font-weight:500">' + pct.toFixed(0) + '%</span></div></div>';
+  }
+
+  // Diagnóstico KIRA
+  var diag = (window._diagnosticoKira || {})[obraId];
+  if (diag && diag.situacaoAtual) {
+    var txt = diag.situacaoAtual.length > 150 ? diag.situacaoAtual.slice(0, 150) + '...' : diag.situacaoAtual;
+    html += '<div class="enrich-diag" style="margin-top:4px;font-size:10px;color:#8a7e72;font-style:italic;line-height:1.4;border-left:2px solid #e0d8cc;padding-left:8px">' + txt.replace(/</g,'&lt;') + '</div>';
+  }
+  if (diag && diag.tagKira) {
+    html += '<div style="margin-top:3px"><span style="font-size:9px;background:#f4f0e6;color:#b89a4a;padding:1px 6px;border-radius:3px;font-family:JetBrains Mono,monospace">' + diag.tagKira.replace(/</g,'&lt;') + '</span></div>';
+  }
+
+  return html;
+}
+
+// Observer: quando modal Q4 abre, enriquece linhas com progresso + diagnóstico
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.q4-est, .q4-fase-btn, .q2-fcard');
+  if (!btn) return;
+
+  // Esperar o modal renderizar
+  setTimeout(function() {
+    var modals = document.querySelectorAll('.q4-modal.open, .evo-modal.open');
+    modals.forEach(function(modal) {
+      var rows = modal.querySelectorAll('tbody tr');
+      rows.forEach(function(tr) {
+        // Já enriquecido?
+        if (tr.querySelector('.enrich-prog, .enrich-diag')) return;
+
+        // Pegar ID da obra (primeira célula geralmente tem o cliente)
+        var firstCell = tr.querySelector('td');
+        if (!firstCell) return;
+        var clienteText = firstCell.textContent.trim();
+
+        // Buscar por nome no lookup
+        var obraId = null;
+        var progMap = window._progresso || {};
+        var diagMap = window._diagnosticoKira || {};
+
+        for (var id in progMap) {
+          if (progMap[id].cliente && progMap[id].cliente.trim() === clienteText) { obraId = id; break; }
+        }
+        if (!obraId) {
+          for (var id in diagMap) {
+            if (diagMap[id].cliente && diagMap[id].cliente.trim() === clienteText) { obraId = id; break; }
+          }
+        }
+
+        if (obraId) {
+          var extra = enrichModalRow(obraId);
+          if (extra) {
+            firstCell.insertAdjacentHTML('beforeend', extra);
+          }
+        }
+      });
+    });
+  }, 300);
+});
 
 // Disparar após dashboard carregar (não interfere com initDashboard)
 if (document.readyState === 'complete') { loadKiraInsights(); }
