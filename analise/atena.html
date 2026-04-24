@@ -539,6 +539,20 @@ function renderBriefAcoes(hist, snapHoje) {
     }
   }
 
+  // Relatórios de campo (fetch assíncrono — adiciona depois)
+  try {
+    fetch('dados/cruz-relatorios.json?t=' + Date.now()).then(function(r){return r.ok?r.json():null}).then(function(rel){
+      if (!rel) return;
+      var cegas = (rel.obras||[]).filter(function(o){return o.n_relatorios===0 || o.dias_sem_relatorio > 7;});
+      if (cegas.length > 0 && el) {
+        var item = document.createElement('div');
+        item.className = 'brief-acao';
+        item.innerHTML = '<div class="brief-acao-dot warn"></div><div><b>' + cegas.length + ' obras sem relat\u00F3rio de campo</b> \u2014 equipe n\u00E3o reportou nos \u00FAltimos 7 dias<span class="meta">a\u00E7\u00E3o: cobrar relat\u00F3rio di\u00E1rio</span></div>';
+        el.appendChild(item);
+      }
+    });
+  } catch(e) {}
+
   if (acoes.length === 0) {
     el.innerHTML = '<div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px 0">Sem a\u00E7\u00F5es cr\u00EDticas identificadas.</div>';
   } else {
