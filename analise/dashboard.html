@@ -2325,21 +2325,46 @@ function renderQ3() {
   q3Init();
 }
 
+function q3NormalizeEquipes() {
+  // Se Q3_EQUIPES veio da API crua (tem 'membros' mas não tem 'util_pct'), computar campos
+  if (Q3_EQUIPES.length && Q3_EQUIPES[0].membros && Q3_EQUIPES[0].util_pct === undefined) {
+    Q3_EQUIPES = Q3_EQUIPES.map(eq => {
+      const membros = eq.membros || [];
+      const ativos = membros.filter(m => m.ativo).length;
+      const liderAtivo = eq.lider ? eq.lider.ativo : false;
+      const liderNome = eq.lider ? eq.lider.nome : eq.nome;
+      return {
+        id: (eq.nome || '').toLowerCase().replace(/\s+/g,'-').replace('equipe-',''),
+        nome: eq.nome || '',
+        lider: liderNome || '',
+        lider_oculto: false,
+        estado: ativos === 0 ? 'fantasma' : ativos < 5 ? 'parcial' : 'saudavel',
+        ativos: ativos,
+        escalados_hoje: 0,
+        util_pct: 0,
+        obras_ids: []
+      };
+    });
+  }
+}
+
 function q3Init(){
+  q3NormalizeEquipes();
   const list = document.getElementById('q3-eq-list');
   if (!list) return;
   list.innerHTML = Q3_EQUIPES.map(e => {
-    const utilColor = e.util_pct >= 70 ? '#3d8a5a' : e.util_pct >= 40 ? '#b89a4a' : '#c45a5a';
+    const up = e.util_pct || 0;
+    const utilColor = up >= 70 ? '#3d8a5a' : up >= 40 ? '#b89a4a' : '#c45a5a';
     const liderCls = e.lider_oculto ? 'oculto' : '';
     return `<button type="button" class="q3-eq-card ${e.estado}" data-id="${e.id}">
       <div class="q3-eq-name">${escHtml(e.nome)}</div>
       <div class="q3-eq-leader ${liderCls}">líder: ${escHtml(e.lider)}</div>
       <div class="q3-eq-stats">
         <div><span class="lbl">Ativos</span><b>${e.ativos}</b></div>
-        <div><span class="lbl">Escalados</span><b>${e.escalados_hoje}</b></div>
-        <div><span class="lbl">Util</span><b>${e.util_pct.toFixed(0)}%</b></div>
+        <div><span class="lbl">Escalados</span><b>${e.escalados_hoje||0}</b></div>
+        <div><span class="lbl">Util</span><b>${up.toFixed(0)}%</b></div>
       </div>
-      <div class="q3-eq-util-bar"><div style="width:${Math.min(e.util_pct,100)}%;background:${utilColor}"></div></div>
+      <div class="q3-eq-util-bar"><div style="width:${Math.min(up,100)}%;background:${utilColor}"></div></div>
     </button>`;
   }).join('');
 
