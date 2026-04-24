@@ -865,7 +865,7 @@
   .back-link svg{width:14px;height:14px;stroke:currentColor}
 
   /* ============== KIRA INSIGHTS ============== */
-  #kira-insights{margin-bottom:36px}
+  #problemas{margin-bottom:36px}
   .ki-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
   @media(max-width:720px){.ki-grid{grid-template-columns:1fr}}
   .ki-card{background:#fff;border:1px solid #ede6dc;border-radius:8px;padding:18px;border-left:3px solid #e0d8cc}
@@ -940,7 +940,7 @@
   <a href="#q3" class="side-dot" data-label="EQUIPE"><svg viewBox="0 0 16 16"><circle cx="6" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3 2-4 4-4s4 1 4 4M8 14c0-3 2-4 3-4s3 1 3 4" fill="none" stroke="currentColor" stroke-width="1"/></svg></a>
   <a href="#q4" class="side-dot" data-label="VOLUME"><svg viewBox="0 0 16 16"><rect x="2" y="9" width="3" height="5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="6.5" y="5" width="3" height="9" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="11" y="2" width="3" height="12" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
   <a href="#agenda" class="side-dot" data-label="AGENDA"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
-  <a href="#diagnostico" class="side-dot" data-label="DIAGN&Oacute;STICO"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="#problemas" class="side-dot" data-label="PROBLEMAS"><svg viewBox="0 0 16 16"><path d="M8 2L1 14h14L8 2z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 12v0.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
   <a href="#carteira" class="side-dot" data-label="CARTEIRA"><svg viewBox="0 0 16 16"><path d="M3 3h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 7h10M8 7v6" stroke="currentColor" stroke-width="1" opacity="0.5"/></svg></a>
 </nav>
 
@@ -1385,11 +1385,11 @@
     </div>
   </section>
 
-  <!-- ============== OPERAÇÃO ============== -->
-  <section id="kira-insights">
+  <!-- ============== PROBLEMAS ============== -->
+  <section id="problemas">
     <div class="q-head">
-      <h2><span class="section-pill" style="background:rgba(196,90,90,0.1);color:#c45a5a">OPERAÇÃO</span></h2>
-      <p class="sub">Ocorrências registradas, tarefas pendentes e progresso real de execução das obras ativas.</p>
+      <h2><span class="section-pill" style="background:rgba(196,90,90,0.1);color:#c45a5a">PROBLEMAS</span></h2>
+      <p class="sub">Ocorrências, tarefas, progresso, diagnóstico estrutural e ações pendentes — tudo consolidado.</p>
     </div>
 
     <div class="ki-grid">
@@ -1469,14 +1469,9 @@
         <div class="ki-desc" id="ki-diag-desc">Carregando...</div>
       </div>
     </div>
-  </section>
 
-  <!-- ============== DIAGNÓSTICO OPERACIONAL ============== -->
-  <section id="diagnostico">
-    <div class="q-head">
-      <h2>DIAGNÓSTICO OPERACIONAL</h2>
-      <p class="sub">Consolidação de tudo que encontramos: padrões invisíveis, inconsistências entre sistemas, e ações que precisam de decisão imediata.</p>
-    </div>
+    <!-- Separador visual: diagnóstico estrutural -->
+    <div style="height:1px;background:linear-gradient(90deg,transparent,#e0d8cc,transparent);margin:28px 0"></div>
 
     <!-- Sub-bloco B: Inconsistências (antigo Falhas de Sincronização) -->
     <div class="diag-bloco" id="sync">
@@ -1697,7 +1692,7 @@
       </button>
     </div>
     </div><!-- /diag-bloco backlog -->
-  </section><!-- /diagnostico -->
+  </section><!-- /problemas -->
 
   <!-- ============== MODAL: ENCERRADAS SEM FECHAR ============== -->
   <div class="bk-modal" id="modal-zumbi">
