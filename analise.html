@@ -4,90 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hermes — Análise Operacional Monofloor</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:#0a0a0a;color:#e0e0e0;font-family:Inter,-apple-system,sans-serif;scroll-behavior:smooth;overflow-x:hidden}
+html,body{background:#f0ebe3;color:#3a3530;font-family:'Plus Jakarta Sans',-apple-system,sans-serif;scroll-behavior:smooth;overflow-x:hidden}
 .container{max-width:1100px;margin:0 auto;padding:0 32px}
-.slide{padding:80px 0;position:relative;border-bottom:1px solid #151515;opacity:0;transform:translateY(20px);transition:opacity 0.8s ease-out, transform 0.8s ease-out}
+.slide{padding:80px 0;position:relative;border-bottom:1px solid #ddd5c8;opacity:0;transform:translateY(20px);transition:opacity 0.8s ease-out, transform 0.8s ease-out}
 .slide.visible{opacity:1;transform:translateY(0)}
 .slide:first-of-type{padding-top:0;opacity:1;transform:none}
 .slide-content{width:100%}
-.slide-eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#c4a77d;margin-bottom:20px;display:inline-block;padding:6px 12px;background:#c4a77d15;border-radius:4px}
-.slide h1{font-size:52px;font-weight:300;line-height:1.12;margin-bottom:24px;letter-spacing:-0.02em;color:#fff}
-.slide h1 strong{color:#c4a77d;font-weight:500}
-.slide h2{font-size:36px;font-weight:400;margin-bottom:28px;color:#fff;letter-spacing:-0.015em;line-height:1.2}
-.slide h2 .accent{color:#c4a77d}
-.slide p{font-size:17px;line-height:1.75;color:#c8c8c8}
+.slide-eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#b8a080;margin-bottom:20px;display:inline-block;padding:6px 12px;background:#b8a08015;border-radius:4px}
+.slide h1{font-size:52px;font-weight:300;line-height:1.12;margin-bottom:24px;letter-spacing:-0.02em;color:#2a2520}
+.slide h1 strong{color:#b8a080;font-weight:500}
+.slide h2{font-size:36px;font-weight:400;margin-bottom:28px;color:#2a2520;letter-spacing:-0.015em;line-height:1.2}
+.slide h2 .accent{color:#b8a080}
+.slide p{font-size:17px;line-height:1.75;color:#5a5550}
 .slide p + p{margin-top:16px}
 /* HERO */
-.hero{min-height:85vh;display:flex;align-items:center;padding:60px 0 100px;background:radial-gradient(ellipse 80% 60% at 50% 30%, #1e1810 0%, #0a0a0a 60%)}
+.hero{min-height:85vh;display:flex;align-items:center;padding:60px 0 100px;background:radial-gradient(ellipse 80% 60% at 50% 30%, #ede6db 0%, #f0ebe3 60%)}
 .hero-content{width:100%}
 .hero .brand{display:flex;align-items:baseline;gap:14px;margin-bottom:40px;justify-content:center;flex-wrap:wrap}
-.hero .logo{font-size:24px;letter-spacing:10px;color:#c4a77d;text-transform:uppercase;font-weight:300}
-.hero .subtitle{font-size:10px;letter-spacing:4px;color:#555;text-transform:uppercase}
-.hero .subtitle::before{content:"·";margin-right:10px;color:#333}
+.hero .logo{font-size:24px;letter-spacing:10px;color:#b8a080;text-transform:uppercase;font-weight:300}
+.hero .subtitle{font-size:10px;letter-spacing:4px;color:#a89e92;text-transform:uppercase}
+.hero .subtitle::before{content:"·";margin-right:10px;color:#c4b5a0}
 .hero h1{font-size:68px;text-align:center;max-width:900px;margin:0 auto 32px;line-height:1.08}
-.hero-meta{font-size:13px;color:#666;text-align:center;margin-top:40px;padding-top:32px;border-top:1px solid #1a1a1a;max-width:600px;margin-left:auto;margin-right:auto}
-.hero-meta a{color:#c4a77d;text-decoration:none;border-bottom:1px solid #c4a77d30;padding-bottom:1px}
-.hero-meta a:hover{border-bottom-color:#c4a77d}
+.hero-meta{font-size:13px;color:#8a7e72;text-align:center;margin-top:40px;padding-top:32px;border-top:1px solid #ddd5c8;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-meta a{color:#b8a080;text-decoration:none;border-bottom:1px solid #b8a08030;padding-bottom:1px}
+.hero-meta a:hover{border-bottom-color:#b8a080}
 /* KPI GRID */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:32px}
-.kpi-card{background:linear-gradient(180deg, #141414 0%, #0e0e0e 100%);border:1px solid #1f1f1f;border-radius:12px;padding:24px 18px;text-align:center;transition:all 0.2s}
-.kpi-card:hover{border-color:#c4a77d40;transform:translateY(-2px)}
-.kpi-val{font-size:38px;font-weight:700;line-height:1;color:#c4a77d;font-variant-numeric:tabular-nums}
+.kpi-card{background:#fff;border:1px solid #e0d8cc;border-radius:12px;padding:24px 18px;text-align:center;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.kpi-card:hover{border-color:#b8a08040;transform:translateY(-2px)}
+.kpi-val{font-size:38px;font-weight:700;line-height:1;color:#b8a080;font-variant-numeric:tabular-nums}
 .kpi-val.red{color:#ef4444}
 .kpi-val.amber{color:#f59e0b}
-.kpi-label{font-size:10px;color:#777;text-transform:uppercase;letter-spacing:1.2px;margin-top:10px;font-weight:500}
+.kpi-label{font-size:10px;color:#8a7e72;text-transform:uppercase;letter-spacing:1.2px;margin-top:10px;font-weight:500}
 /* CONTEXT */
-.contexto{font-size:19px;line-height:1.75;color:#d8d8d8;max-width:780px}
-.contexto strong{color:#c4a77d;font-weight:500}
+.contexto{font-size:19px;line-height:1.75;color:#4a4540;max-width:780px}
+.contexto strong{color:#b8a080;font-weight:500}
 .contexto p{font-size:19px;line-height:1.75}
 /* CHART */
-.chart-wrap{background:linear-gradient(180deg, #141414 0%, #0e0e0e 100%);border:1px solid #1f1f1f;border-radius:12px;padding:28px;margin-top:32px}
-.chart-title{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;font-weight:500}
+.chart-wrap{background:#fff;border:1px solid #e0d8cc;border-radius:12px;padding:28px;margin-top:32px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.chart-title{font-size:11px;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;font-weight:500}
 svg.sparkline{width:100%;height:120px;display:block}
-.chart-stats{display:flex;gap:40px;margin-top:20px;padding-top:18px;border-top:1px solid #222;flex-wrap:wrap}
-.chart-stat{font-size:10px;color:#777;text-transform:uppercase;letter-spacing:1px}
-.chart-stat strong{color:#c4a77d;font-size:22px;display:block;margin-top:4px;font-weight:600;letter-spacing:0;text-transform:none}
+.chart-stats{display:flex;gap:40px;margin-top:20px;padding-top:18px;border-top:1px solid #e0d8cc;flex-wrap:wrap}
+.chart-stat{font-size:10px;color:#8a7e72;text-transform:uppercase;letter-spacing:1px}
+.chart-stat strong{color:#b8a080;font-size:22px;display:block;margin-top:4px;font-weight:600;letter-spacing:0;text-transform:none}
 /* INSIGHTS */
 .insights-grid{display:grid;gap:16px;margin-top:24px}
-.insight-card{background:linear-gradient(135deg, #161108 0%, #0f0c07 100%);border:1px solid #2a2015;border-left:3px solid #c4a77d;border-radius:10px;padding:24px 28px;transition:transform 0.2s}
+.insight-card{background:#fff;border:1px solid #e0d8cc;border-left:3px solid #b8a080;border-radius:10px;padding:24px 28px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .insight-card:hover{transform:translateX(4px)}
-.insight-title{font-size:19px;color:#c4a77d;font-weight:500;margin-bottom:10px;letter-spacing:-0.01em}
-.insight-text{font-size:15px;line-height:1.65;color:#c8c8c8}
+.insight-title{font-size:19px;color:#b8a080;font-weight:500;margin-bottom:10px;letter-spacing:-0.01em}
+.insight-text{font-size:15px;line-height:1.65;color:#5a5550}
 /* ACTIONS */
 .acoes-grid{display:grid;gap:14px;margin-top:24px}
-.acao-card{background:#121212;border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:90px 1fr;gap:22px;align-items:flex-start;border:1px solid #1a1a1a;transition:all 0.2s}
-.acao-card:hover{border-color:#333}
+.acao-card{background:#fff;border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:90px 1fr;gap:22px;align-items:flex-start;border:1px solid #e0d8cc;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.acao-card:hover{border-color:#c4b5a0}
 .acao-card.prio-alta{border-left:3px solid #ef4444}
 .acao-card.prio-media{border-left:3px solid #f59e0b}
 .acao-card.prio-baixa{border-left:3px solid #555}
-.acao-prio{font-size:10px;letter-spacing:1.5px;color:#888;padding:8px 10px;background:#0a0a0a;border-radius:6px;text-align:center;font-weight:600;align-self:start}
-.acao-card.prio-alta .acao-prio{color:#ef4444;background:#ef444415}
-.acao-card.prio-media .acao-prio{color:#f59e0b;background:#f59e0b15}
-.acao-texto{font-size:17px;line-height:1.5;color:#f0f0f0;font-weight:500;margin-bottom:8px}
-.acao-ctx{font-size:13px;line-height:1.6;color:#888}
+.acao-prio{font-size:10px;letter-spacing:1.5px;color:#8a7e72;padding:8px 10px;background:#f5f0e8;border-radius:6px;text-align:center;font-weight:600;align-self:start}
+.acao-card.prio-alta .acao-prio{color:#ef4444;background:#fef2f2}
+.acao-card.prio-media .acao-prio{color:#f59e0b;background:#fefbf0}
+.acao-texto{font-size:17px;line-height:1.5;color:#2a2520;font-weight:500;margin-bottom:8px}
+.acao-ctx{font-size:13px;line-height:1.6;color:#8a7e72}
 /* TYPES CHART */
 .tipos-chart{margin-top:24px}
 .tipo-row{display:grid;grid-template-columns:200px 1fr 70px;gap:18px;align-items:center;margin-bottom:14px;font-size:13px}
-.tipo-label{color:#d0d0d0;text-transform:capitalize;font-weight:500}
-.tipo-bar-wrap{background:#151515;border-radius:6px;height:10px;overflow:hidden}
-.tipo-bar{background:linear-gradient(90deg, #c4a77d 0%, #8a6f45 100%);height:100%;border-radius:6px}
-.tipo-num{color:#c4a77d;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.tipo-label{color:#4a4540;text-transform:capitalize;font-weight:500}
+.tipo-bar-wrap{background:#e8e2d8;border-radius:6px;height:10px;overflow:hidden}
+.tipo-bar{background:linear-gradient(90deg, #b8a080 0%, #8a6f45 100%);height:100%;border-radius:6px}
+.tipo-num{color:#b8a080;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
 /* DIFF */
 .diff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:24px}
-.diff-card{background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:22px 18px;text-align:center}
-.diff-label{font-size:10px;color:#777;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;font-weight:500}
-.diff-valor{font-size:30px;font-weight:600;color:#c4a77d;line-height:1;font-variant-numeric:tabular-nums}
+.diff-card{background:#fff;border:1px solid #e0d8cc;border-radius:10px;padding:22px 18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.diff-label{font-size:10px;color:#8a7e72;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;font-weight:500}
+.diff-valor{font-size:30px;font-weight:600;color:#b8a080;line-height:1;font-variant-numeric:tabular-nums}
 .diff-delta{font-size:14px;margin-top:10px;font-weight:500}
 /* SEMANA */
-.semana-box{background:linear-gradient(135deg, #0f1410 0%, #0a0c0a 100%);border-left:3px solid #22c55e;padding:28px 32px;border-radius:10px;margin-top:20px}
-.semana-box p{font-size:19px;line-height:1.7;color:#e0e0e0}
+.semana-box{background:#f0f8f2;border-left:3px solid #22c55e;padding:28px 32px;border-radius:10px;margin-top:20px}
+.semana-box p{font-size:19px;line-height:1.7;color:#3a3530}
 /* BACK LINK */
-.back-link{position:fixed;top:20px;left:20px;z-index:20;background:#141414cc;backdrop-filter:blur(8px);border:1px solid #222;color:#888;padding:10px 16px;border-radius:8px;text-decoration:none;font-size:12px;transition:all 0.2s;font-weight:500;display:inline-flex;align-items:center;gap:6px}
-.back-link:hover{color:#c4a77d;border-color:#c4a77d;background:#141414}
-.footer{text-align:center;padding:40px 20px;color:#444;font-size:11px;border-top:1px solid #151515;margin-top:40px}
-.footer a{color:#c4a77d;text-decoration:none}
+.back-link{position:fixed;top:20px;left:20px;z-index:20;background:#f0ebe3cc;backdrop-filter:blur(8px);border:1px solid #ddd5c8;color:#8a7e72;padding:10px 16px;border-radius:8px;text-decoration:none;font-size:12px;transition:all 0.2s;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.back-link:hover{color:#b8a080;border-color:#b8a080;background:#f0ebe3}
+.footer{text-align:center;padding:40px 20px;color:#a89e92;font-size:11px;border-top:1px solid #ddd5c8;margin-top:40px}
+.footer a{color:#b8a080;text-decoration:none}
 /* MOBILE */
 @media (max-width: 768px){
   .container{padding:0 20px}
@@ -106,27 +107,27 @@ svg.sparkline{width:100%;height:120px;display:block}
   .ibar-stats{flex-wrap:wrap;gap:4px}
 }
 /* Pipeline chart */
-.region-card{background:linear-gradient(180deg, #141414 0%, #0e0e0e 100%);border:1px solid #1f1f1f;border-radius:14px;padding:28px;margin-bottom:24px}
+.region-card{background:#fff;border:1px solid #e0d8cc;border-radius:14px;padding:28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .region-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.region-name{font-size:22px;font-weight:600;color:#e8e8e8;letter-spacing:1px}
-.region-stats{display:flex;gap:16px;font-size:12px;color:#888}
-.region-stats .val{color:#c4a77d;font-weight:600;font-size:14px;margin-right:3px}
+.region-name{font-size:22px;font-weight:600;color:#2a2520;letter-spacing:1px}
+.region-stats{display:flex;gap:16px;font-size:12px;color:#8a7e72}
+.region-stats .val{color:#b8a080;font-weight:600;font-size:14px;margin-right:3px}
 .chart-container{position:relative;width:100%;height:220px}
 .chart-container svg{width:100%;height:100%;overflow:visible}
 .chart-area{opacity:0.15}
-.grid-line{stroke:#1a1a1a;stroke-width:1}
-.grid-label{fill:#555;font-size:10px;font-family:Inter,sans-serif}
-.x-label{fill:#888;font-size:10px;font-family:Inter,sans-serif;text-anchor:middle;cursor:pointer;transition:fill 0.2s}
-.x-label:hover{fill:#c4a77d}
-.x-label.active{fill:#c4a77d;font-weight:600}
+.grid-line{stroke:#e0d8cc;stroke-width:1}
+.grid-label{fill:#8a7e72;font-size:10px;font-family:'Plus Jakarta Sans',sans-serif}
+.x-label{fill:#8a7e72;font-size:10px;font-family:'Plus Jakarta Sans',sans-serif;text-anchor:middle;cursor:pointer;transition:fill 0.2s}
+.x-label:hover{fill:#b8a080}
+.x-label.active{fill:#b8a080;font-weight:600}
 .data-point{cursor:pointer;transition:transform 0.2s;transform-box:fill-box;transform-origin:center}
 .data-point:hover{transform:scale(1.12)}
 .data-point.active .bubble-ring{stroke-width:2;opacity:1}
 .data-point.active .bubble-glow{opacity:0.4}
-.bubble-bg{fill:#141414;stroke:#333;stroke-width:1.5}
-.bubble-ring{fill:none;stroke:#c4a77d;stroke-width:0;opacity:0;transition:all 0.3s}
-.bubble-glow{fill:#c4a77d;opacity:0;transition:opacity 0.3s;filter:blur(8px)}
-.bubble-value{fill:#c4a77d;font-size:13px;font-weight:700;font-family:Inter,sans-serif;text-anchor:middle;dominant-baseline:central}
+.bubble-bg{fill:#fff;stroke:#ddd5c8;stroke-width:1.5}
+.bubble-ring{fill:none;stroke:#b8a080;stroke-width:0;opacity:0;transition:all 0.3s}
+.bubble-glow{fill:#b8a080;opacity:0;transition:opacity 0.3s;filter:blur(8px)}
+.bubble-value{fill:#b8a080;font-size:13px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;text-anchor:middle;dominant-baseline:central}
 .point-exec .bubble-bg{stroke:#3b82f6}.point-exec .bubble-value{fill:#3b82f6}.point-exec .bubble-ring{stroke:#3b82f6}.point-exec .bubble-glow{fill:#3b82f6}
 .point-agend .bubble-bg{stroke:#f59e0b}.point-agend .bubble-value{fill:#f59e0b}.point-agend .bubble-ring{stroke:#f59e0b}.point-agend .bubble-glow{fill:#f59e0b}
 .point-reparo .bubble-bg{stroke:#ef4444}.point-reparo .bubble-value{fill:#ef4444}.point-reparo .bubble-ring{stroke:#ef4444}.point-reparo .bubble-glow{fill:#ef4444}
@@ -135,80 +136,80 @@ svg.sparkline{width:100%;height:120px;display:block}
 /* Hermes tooltip */
 .hermes-tooltip{position:fixed;z-index:1000;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity 0.25s,transform 0.25s;max-width:320px}
 .hermes-tooltip.visible{opacity:1;transform:translateY(0)}
-.tooltip-inner{background:#1a1510;border:1px solid #c4a77d40;border-radius:12px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,0.6),0 0 20px #c4a77d15;position:relative}
-.tooltip-wing{position:absolute;top:-8px;width:28px;height:28px;background-image:url('hermes-wing.png');background-size:contain;background-repeat:no-repeat;opacity:0.7;filter:drop-shadow(0 0 4px #c4a77d40)}
+.tooltip-inner{background:#fff;border:1px solid #e0d8cc;border-radius:12px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,0.1),0 0 20px #b8a08015;position:relative}
+.tooltip-wing{position:absolute;top:-8px;width:28px;height:28px;background-image:url('hermes-wing.png');background-size:contain;background-repeat:no-repeat;opacity:0.7;filter:drop-shadow(0 0 4px #b8a08040)}
 .tooltip-wing-left{left:-14px;transform:scaleX(-1) rotate(-15deg);animation:tt-flutter 1.2s ease-in-out infinite}
 .tooltip-wing-right{right:-14px;transform:rotate(-15deg);animation:tt-flutter-r 1.2s ease-in-out infinite 0.1s}
 @keyframes tt-flutter{0%,100%{transform:scaleX(-1) rotate(-15deg)}50%{transform:scaleX(-1) rotate(-22deg)}}
 @keyframes tt-flutter-r{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(-22deg)}}
-.tooltip-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #c4a77d20}
-.tooltip-fase{font-size:13px;font-weight:600;color:#c4a77d;text-transform:capitalize;flex:1}
-.tooltip-count{font-size:18px;font-weight:700;color:#fff}
-.tooltip-count-label{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-left:4px}
+.tooltip-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0d8cc}
+.tooltip-fase{font-size:13px;font-weight:600;color:#b8a080;text-transform:capitalize;flex:1}
+.tooltip-count{font-size:18px;font-weight:700;color:#2a2520}
+.tooltip-count-label{font-size:9px;color:#8a7e72;text-transform:uppercase;letter-spacing:0.5px;margin-left:4px}
 .tooltip-sev-grid{display:flex;gap:6px;margin-bottom:10px}
-.tooltip-sev-item{flex:1;text-align:center;background:#0a0a0a;border-radius:6px;padding:6px 4px}
+.tooltip-sev-item{flex:1;text-align:center;background:#f5f0e8;border-radius:6px;padding:6px 4px}
 .tooltip-sev-num{font-size:14px;font-weight:700;line-height:1}
 .tooltip-sev-num.critica{color:#ef4444}.tooltip-sev-num.alta{color:#f59e0b}.tooltip-sev-num.media{color:#3b82f6}.tooltip-sev-num.baixa{color:#22c55e}
-.tooltip-sev-label{font-size:8px;color:#888;text-transform:uppercase;letter-spacing:0.3px;margin-top:2px}
+.tooltip-sev-label{font-size:8px;color:#8a7e72;text-transform:uppercase;letter-spacing:0.3px;margin-top:2px}
 .tooltip-tipos{margin-top:8px}
-.tooltip-tipo-row{display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px solid #0a0a0a}
-.tooltip-tipo-name{color:#ccc;text-transform:capitalize}
-.tooltip-tipo-count{color:#c4a77d;font-weight:600}
-.tooltip-hint{font-size:9px;color:#666;text-align:center;margin-top:8px;font-style:italic}
+.tooltip-tipo-row{display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px solid #f0ebe3}
+.tooltip-tipo-name{color:#4a4540;text-transform:capitalize}
+.tooltip-tipo-count{color:#b8a080;font-weight:600}
+.tooltip-hint{font-size:9px;color:#a89e92;text-align:center;margin-top:8px;font-style:italic}
 /* Drill list */
 .drill-list{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out,opacity 0.3s;opacity:0;margin-top:0}
 .drill-list.open{max-height:800px;opacity:1;margin-top:16px;overflow-y:auto}
-.drill-list-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#0a0a0a;border-radius:8px 8px 0 0;border:1px solid #222;border-bottom:none}
-.drill-list-title{font-size:13px;font-weight:600;color:#c4a77d;text-transform:capitalize}
-.drill-list-close{font-size:10px;color:#888;cursor:pointer;text-transform:uppercase;letter-spacing:1px;padding:4px 8px;border-radius:4px;transition:all 0.2s}
-.drill-list-close:hover{color:#c4a77d;background:#1a1a1a}
-.drill-list-body{background:#0a0a0a;border:1px solid #222;border-top:none;border-radius:0 0 8px 8px;padding:4px 0}
-.drill-row{display:grid;grid-template-columns:1fr 80px 70px 60px;padding:8px 16px;font-size:12px;border-bottom:1px solid #151515;transition:background 0.15s;align-items:center}
-.drill-row:hover{background:#141414}
-.drill-row-name{color:#e0e0e0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.drill-row-cons{color:#888;font-size:11px}
-.drill-row-msgs{color:#888;text-align:right;font-variant-numeric:tabular-nums}
-.drill-row-ocs.zero{color:#333}
+.drill-list-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#f5f0e8;border-radius:8px 8px 0 0;border:1px solid #e0d8cc;border-bottom:none}
+.drill-list-title{font-size:13px;font-weight:600;color:#b8a080;text-transform:capitalize}
+.drill-list-close{font-size:10px;color:#8a7e72;cursor:pointer;text-transform:uppercase;letter-spacing:1px;padding:4px 8px;border-radius:4px;transition:all 0.2s}
+.drill-list-close:hover{color:#b8a080;background:#f0ebe3}
+.drill-list-body{background:#fff;border:1px solid #e0d8cc;border-top:none;border-radius:0 0 8px 8px;padding:4px 0}
+.drill-row{display:grid;grid-template-columns:1fr 80px 70px 60px;padding:8px 16px;font-size:12px;border-bottom:1px solid #f0ebe3;transition:background 0.15s;align-items:center}
+.drill-row:hover{background:#f5f0e8}
+.drill-row-name{color:#3a3530;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drill-row-cons{color:#8a7e72;font-size:11px}
+.drill-row-msgs{color:#8a7e72;text-align:right;font-variant-numeric:tabular-nums}
+.drill-row-ocs.zero{color:#d0c8bc}
 .drill-row-ocs.has-ocs{color:#ef4444;font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
 .drill-row-ocs.has-ocs:hover{color:#ff6b6b}
-.ocs-expand{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out,padding 0.3s;grid-column:1/-1;padding:0 16px;background:#080808;border-bottom:1px solid #1a1a1a}
+.ocs-expand{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out,padding 0.3s;grid-column:1/-1;padding:0 16px;background:#f5f0e8;border-bottom:1px solid #e0d8cc}
 .ocs-expand.open{max-height:500px;padding:10px 16px 12px;overflow-y:auto}
-.ocs-list-head{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;justify-content:space-between}
-.ocs-item{display:grid;grid-template-columns:65px 100px 1fr;gap:8px;align-items:start;padding:5px 0;font-size:11px;border-bottom:1px solid #111}
+.ocs-list-head{font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;justify-content:space-between}
+.ocs-item{display:grid;grid-template-columns:65px 100px 1fr;gap:8px;align-items:start;padding:5px 0;font-size:11px;border-bottom:1px solid #e8e2d8}
 .ocs-item:last-child{border-bottom:none}
 .ocs-sev{padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600;text-transform:uppercase;text-align:center}
-.ocs-sev.critica{background:#ef444420;color:#ef4444}.ocs-sev.alta{background:#f59e0b20;color:#f59e0b}.ocs-sev.media{background:#3b82f620;color:#3b82f6}.ocs-sev.baixa{background:#22c55e20;color:#22c55e}
-.ocs-tipo{color:#888;font-size:10px;text-transform:capitalize}
+.ocs-sev.critica{background:#fef2f2;color:#ef4444}.ocs-sev.alta{background:#fefbf0;color:#f59e0b}.ocs-sev.media{background:#eff6ff;color:#3b82f6}.ocs-sev.baixa{background:#f0fdf4;color:#22c55e}
+.ocs-tipo{color:#8a7e72;font-size:10px;text-transform:capitalize}
 .drill-obra-meta .oc{color:#ef4444;font-weight:600}
-.ocs-titulo{color:#ccc;line-height:1.4}
-.minor-toggle{font-size:11px;color:#888;cursor:pointer;padding:10px 0 4px;border-top:1px solid #1a1a1a;margin-top:8px;transition:color 0.2s}
-.minor-toggle:hover{color:#c4a77d}
+.ocs-titulo{color:#4a4540;line-height:1.4}
+.minor-toggle{font-size:11px;color:#8a7e72;cursor:pointer;padding:10px 0 4px;border-top:1px solid #e0d8cc;margin-top:8px;transition:color 0.2s}
+.minor-toggle:hover{color:#b8a080}
 .minor-list{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out}
 .minor-list.open{max-height:400px;padding:8px 0}
 .minor-item{display:flex;align-items:center;gap:12px;padding:4px 8px;font-size:11px;cursor:pointer;border-radius:4px;transition:background 0.15s}
-.minor-item:hover{background:#1a1a1a}
-.minor-name{flex:1;color:#ccc;text-transform:capitalize}
-.minor-count{color:#c4a77d;font-weight:600;font-size:13px;min-width:24px;text-align:right}
+.minor-item:hover{background:#f5f0e8}
+.minor-name{flex:1;color:#4a4540;text-transform:capitalize}
+.minor-count{color:#b8a080;font-weight:600;font-size:13px;min-width:24px;text-align:right}
 .minor-ocs{color:#ef4444;font-size:10px;min-width:50px;text-align:right}
 /* KPI clickable */
 .kpi-click{cursor:pointer;position:relative}
-.kpi-click::after{content:"i";position:absolute;top:8px;right:10px;width:14px;height:14px;font-size:9px;color:#444;font-style:italic;text-align:center;line-height:14px;border:1px solid #333;border-radius:50%;transition:all 0.2s}
-.kpi-click:hover::after{color:#c4a77d;border-color:#c4a77d}
-.kpi-click.active{border-color:#c4a77d;background:#1a1510}
+.kpi-click::after{content:"i";position:absolute;top:8px;right:10px;width:14px;height:14px;font-size:9px;color:#c4b5a0;font-style:italic;text-align:center;line-height:14px;border:1px solid #ddd5c8;border-radius:50%;transition:all 0.2s}
+.kpi-click:hover::after{color:#b8a080;border-color:#b8a080}
+.kpi-click.active{border-color:#b8a080;background:#faf6f0}
 /* KPI detail panel */
 .kpi-detail{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out,opacity 0.3s,margin 0.3s;opacity:0;margin-top:0}
 .kpi-detail.open{max-height:700px;opacity:1;margin-top:16px;overflow-y:auto}
-.kpi-detail-inner{background:#0a0a0a;border:1px solid #222;border-radius:12px;padding:20px 24px}
-.kpi-detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #1a1a1a}
-.kpi-detail-title{font-size:16px;font-weight:600;color:#c4a77d}
-.kpi-detail-close{font-size:10px;color:#888;cursor:pointer;text-transform:uppercase;letter-spacing:1px;padding:4px 8px;border-radius:4px;transition:all 0.2s}
-.kpi-detail-close:hover{color:#c4a77d;background:#1a1a1a}
-.kpi-def{font-size:12px;color:#bbb;line-height:1.6;margin-bottom:16px}
-.kpi-def code{background:#141414;padding:2px 6px;border-radius:3px;color:#c4a77d;font-size:11px}
+.kpi-detail-inner{background:#fff;border:1px solid #e0d8cc;border-radius:12px;padding:20px 24px}
+.kpi-detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e0d8cc}
+.kpi-detail-title{font-size:16px;font-weight:600;color:#b8a080}
+.kpi-detail-close{font-size:10px;color:#8a7e72;cursor:pointer;text-transform:uppercase;letter-spacing:1px;padding:4px 8px;border-radius:4px;transition:all 0.2s}
+.kpi-detail-close:hover{color:#b8a080;background:#f5f0e8}
+.kpi-def{font-size:12px;color:#5a5550;line-height:1.6;margin-bottom:16px}
+.kpi-def code{background:#f5f0e8;padding:2px 6px;border-radius:3px;color:#b8a080;font-size:11px}
 .kpi-detail-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:12px}
-.kpi-detail-table th{text-align:left;color:#666;font-weight:500;padding:6px 10px;border-bottom:1px solid #222;text-transform:uppercase;letter-spacing:0.5px;font-size:9px}
-.kpi-detail-table td{padding:6px 10px;border-bottom:1px solid #151515;color:#ccc}
-.kpi-detail-table tr:hover{background:#141414}
+.kpi-detail-table th{text-align:left;color:#8a7e72;font-weight:500;padding:6px 10px;border-bottom:1px solid #e0d8cc;text-transform:uppercase;letter-spacing:0.5px;font-size:9px}
+.kpi-detail-table td{padding:6px 10px;border-bottom:1px solid #f0ebe3;color:#4a4540}
+.kpi-detail-table tr:hover{background:#f5f0e8}
 .kpi-detail-table .red{color:#ef4444;font-weight:600}
 .kpi-detail-table .amber{color:#f59e0b}
 </style>
@@ -254,13 +255,13 @@ svg.sparkline{width:100%;height:120px;display:block}
     <div class="kpi-detail" id="kpi-detail"></div>
 
     <!-- Pipeline charts por região -->
-    <div class="region-card" data-region="SP"><div class="region-header"><div class="region-name">SP</div><div class="region-stats"><span><span class="val">103</span>obras</span><span><span class="val">4.832</span>msgs</span><span><span class="val">191</span>ocs</span></div></div><div class="chart-container"><svg viewBox="0 0 900 180"><defs><linearGradient id="areaGrad-0" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c4a77d" stop-opacity="0.3"/><stop offset="100%" stop-color="#c4a77d" stop-opacity="0.02"/></linearGradient></defs><line class="grid-line" x1="35" y1="25" x2="875" y2="25"/><text class="grid-label" x="27" y="29" text-anchor="end">20</text><line class="grid-line" x1="35" y1="50" x2="875" y2="50"/><text class="grid-label" x="27" y="54" text-anchor="end">15</text><line class="grid-line" x1="35" y1="75" x2="875" y2="75"/><text class="grid-label" x="27" y="79" text-anchor="end">10</text><line class="grid-line" x1="35" y1="100" x2="875" y2="100"/><text class="grid-label" x="27" y="104" text-anchor="end">5</text><line class="grid-line" x1="35" y1="125" x2="875" y2="125"/><text class="grid-label" x="27" y="129" text-anchor="end">0</text><path class="chart-area" d="M 35 25 C 64.4 33.75, 60.2 34.25, 119 50 C 177.8 65.75, 144.2 56, 203 70 C 261.8 84, 228.2 81.25, 287 90 C 345.8 98.75, 312.2 89.75, 371 95 C 429.8 100.25, 396.2 101.5, 455 105 C 513.8 108.5, 480.2 105, 539 105 C 597.8 105, 564.2 105, 623 105 C 681.8 105, 648.2 105, 707 105 C 765.8 105, 732.2 103.25, 791 105 C 849.8 106.75, 845.6 108.25, 875 110 L 875 125 L 35 125 Z" style="fill:url(#areaGrad-0)"/><path class="chart-line" d="M 35 25 C 64.4 33.75, 60.2 34.25, 119 50 C 177.8 65.75, 144.2 56, 203 70 C 261.8 84, 228.2 81.25, 287 90 C 345.8 98.75, 312.2 89.75, 371 95 C 429.8 100.25, 396.2 101.5, 455 105 C 513.8 108.5, 480.2 105, 539 105 C 597.8 105, 564.2 105, 623 105 C 681.8 105, 648.2 105, 707 105 C 765.8 105, 732.2 103.25, 791 105 C 849.8 106.75, 845.6 108.25, 875 110"/><g class="data-point point-final" data-fase="cliente finalizado"><circle class="bubble-glow" cx="35" cy="25" r="26"/><circle class="bubble-ring" cx="35" cy="25" r="24"/><circle class="bubble-bg" cx="35" cy="25" r="20"/><text class="bubble-value" x="35" y="25">20</text></g><text class="x-label" x="35" y="172" data-fase="cliente finalizado">cliente fina…</text><g class="data-point point-agend" data-fase="agend. vt - aferição/orientação"><circle class="bubble-glow" cx="119" cy="50" r="26"/><circle class="bubble-ring" cx="119" cy="50" r="24"/><circle class="bubble-bg" cx="119" cy="50" r="20"/><text class="bubble-value" x="119" y="50">15</text></g><text class="x-label" x="119" y="172" data-fase="agend. vt - aferição/orientação">agend. vt - …</text><g class="data-point point-other" data-fase="aguardando liberação"><circle class="bubble-glow" cx="203" cy="70" r="26"/><circle class="bubble-ring" cx="203" cy="70" r="24"/><circle class="bubble-bg" cx="203" cy="70" r="20"/><text class="bubble-value" x="203" y="70">11</text></g><text class="x-label" x="203" y="172" data-fase="aguardando liberação">aguardando l…</text><g class="data-point point-other" data-fase="confirmações op 1"><circle class="bubble-glow" cx="287" cy="90" r="26"/><circle class="bubble-ring" cx="287" cy="90" r="24"/><circle class="bubble-bg" cx="287" cy="90" r="20"/><text class="bubble-value" x="287" y="90">7</text></g><text class="x-label" x="287" y="172" data-fase="confirmações op 1">confirmações…</text><g class="data-point point-other" data-fase="1º contato op."><circle class="bubble-glow" cx="371" cy="95" r="26"/><circle class="bubble-ring" cx="371" cy="95" r="24"/><circle class="bubble-bg" cx="371" cy="95" r="20"/><text class="bubble-value" x="371" y="95">6</text></g><text class="x-label" x="371" y="172" data-fase="1º contato op.">1º contato op.</text><g class="data-point point-other" data-fase="em contrato"><circle class="bubble-glow" cx="455" cy="105" r="26"/><circle class="bubble-ring" cx="455" cy="105" r="24"/><circle class="bubble-bg" cx="455" cy="105" r="20"/><text class="bubble-value" x="455" y="105">4</text></g><text class="x-label" x="455" y="172" data-fase="em contrato">em contrato</text><g class="data-point point-other" data-fase="indústria - em produção"><circle class="bubble-glow" cx="539" cy="105" r="26"/><circle class="bubble-ring" cx="539" cy="105" r="24"/><circle class="bubble-bg" cx="539" cy="105" r="20"/><text class="bubble-value" x="539" y="105">4</text></g><text class="x-label" x="539" y="172" data-fase="indústria - em produção">indústria - …</text><g class="data-point point-other" data-fase="contrato"><circle class="bubble-glow" cx="623" cy="105" r="26"/><circle class="bubble-ring" cx="623" cy="105" r="24"/><circle class="bubble-bg" cx="623" cy="105" r="20"/><text class="bubble-value" x="623" y="105">4</text></g><text class="x-label" x="623" y="172" data-fase="contrato">contrato</text><g class="data-point point-other" data-fase="logística - em entrega"><circle class="bubble-glow" cx="707" cy="105" r="26"/><circle class="bubble-ring" cx="707" cy="105" r="24"/><circle class="bubble-bg" cx="707" cy="105" r="20"/><text class="bubble-value" x="707" y="105">4</text></g><text class="x-label" x="707" y="172" data-fase="logística - em entrega">logística - …</text><g class="data-point point-other" data-fase="oect"><circle class="bubble-glow" cx="791" cy="105" r="26"/><circle class="bubble-ring" cx="791" cy="105" r="24"/><circle class="bubble-bg" cx="791" cy="105" r="20"/><text class="bubble-value" x="791" y="105">4</text></g><text class="x-label" x="791" y="172" data-fase="oect">oect</text><g class="data-point point-other" data-fase="projetos  - 1ª revisão"><circle class="bubble-glow" cx="875" cy="110" r="26"/><circle class="bubble-ring" cx="875" cy="110" r="24"/><circle class="bubble-bg" cx="875" cy="110" r="20"/><text class="bubble-value" x="875" y="110">3</text></g><text class="x-label" x="875" y="172" data-fase="projetos  - 1ª revisão">projetos  - …</text></svg></div><div class="minor-toggle" data-region="SP">+ 14 fases menores (21 obras · 104 ocs)</div><div class="minor-list" id="minor-SP"><div class="minor-item" data-fase="equipe de execução"><span class="minor-name">equipe de execução</span><span class="minor-count">2</span><span class="minor-ocs">7 ocs</span></div><div class="minor-item" data-fase="agend. vt - entrada"><span class="minor-name">agend. vt - entrada</span><span class="minor-count">2</span><span class="minor-ocs">16 ocs</span></div><div class="minor-item" data-fase="logística - material entregue"><span class="minor-name">logística - material entregue</span><span class="minor-count">2</span><span class="minor-ocs">28 ocs</span></div><div class="minor-item" data-fase="obra concluída"><span class="minor-name">obra concluída</span><span class="minor-count">2</span><span class="minor-ocs"></span></div><div class="minor-item" data-fase="revisão final op"><span class="minor-name">revisão final op</span><span class="minor-count">2</span><span class="minor-ocs">6 ocs</span></div><div class="minor-item" data-fase="entrada"><span class="minor-name">entrada</span><span class="minor-count">2</span><span class="minor-ocs">1 ocs</span></div><div class="minor-item" data-fase="obra pausada"><span class="minor-name">obra pausada</span><span class="minor-count">2</span><span class="minor-ocs">4 ocs</span></div><div class="minor-item" data-fase="resultado vt - aferição/orientação"><span class="minor-name">resultado vt - aferição/orientação</span><span class="minor-count">1</span><span class="minor-ocs"></span></div><div class="minor-item" data-fase="obra em execução"><span class="minor-name">obra em execução</span><span class="minor-count">1</span><span class="minor-ocs">33 ocs</span></div><div class="minor-item" data-fase="informações projetos"><span class="minor-name">informações projetos</span><span class="minor-count">1</span><span class="minor-ocs">2 ocs</span></div><div class="minor-item" data-fase="?"><span class="minor-name">?</span><span class="minor-count">1</span><span class="minor-ocs"></span></div><div class="minor-item" data-fase="resultado vt - entrada"><span class="minor-name">resultado vt - entrada</span><span class="minor-count">1</span><span class="minor-ocs">4 ocs</span></div><div class="minor-item" data-fase="informações financeiras"><span class="minor-name">informações financeiras</span><span class="minor-count">1</span><span class="minor-ocs">3 ocs</span></div><div class="minor-item" data-fase="resultado vt - qualidade"><span class="minor-name">resultado vt - qualidade</span><span class="minor-count">1</span><span class="minor-ocs"></span></div></div><div class="drill-list" id="drill-SP"></div></div><div class="region-card" data-region="RJ"><div class="region-header"><div class="region-name">RJ</div><div class="region-stats"><span><span class="val">19</span>obras</span><span><span class="val">943</span>msgs</span><span><span class="val">23</span>ocs</span></div></div><div class="chart-container"><svg viewBox="0 0 900 180"><defs><linearGradient id="areaGrad-2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c4a77d" stop-opacity="0.3"/><stop offset="100%" stop-color="#c4a77d" stop-opacity="0.02"/></linearGradient></defs><line class="grid-line" x1="35" y1="25" x2="875" y2="25"/><text class="grid-label" x="27" y="29" text-anchor="end">5</text><line class="grid-line" x1="35" y1="50" x2="875" y2="50"/><text class="grid-label" x="27" y="54" text-anchor="end">4</text><line class="grid-line" x1="35" y1="75" x2="875" y2="75"/><text class="grid-label" x="27" y="79" text-anchor="end">3</text><line class="grid-line" x1="35" y1="100" x2="875" y2="100"/><text class="grid-label" x="27" y="104" text-anchor="end">1</text><line class="grid-line" x1="35" y1="125" x2="875" y2="125"/><text class="grid-label" x="27" y="129" text-anchor="end">0</text><path class="chart-area" d="M 35 25 C 77 32, 71 31, 155 45 C 239 59, 191 51, 275 65 C 359 79, 311 78, 395 85 C 479 92, 431 78, 515 85 C 599 92, 551 98, 635 105 C 719 112, 671 105, 755 105 C 839 105, 833 105, 875 105 L 875 125 L 35 125 Z" style="fill:url(#areaGrad-2)"/><path class="chart-line" d="M 35 25 C 77 32, 71 31, 155 45 C 239 59, 191 51, 275 65 C 359 79, 311 78, 395 85 C 479 92, 431 78, 515 85 C 599 92, 551 98, 635 105 C 719 112, 671 105, 755 105 C 839 105, 833 105, 875 105"/><g class="data-point point-agend" data-fase="agend. vt - aferição/orientação"><circle class="bubble-glow" cx="35" cy="25" r="26"/><circle class="bubble-ring" cx="35" cy="25" r="24"/><circle class="bubble-bg" cx="35" cy="25" r="20"/><text class="bubble-value" x="35" y="25">5</text></g><text class="x-label" x="35" y="172" data-fase="agend. vt - aferição/orientação">agend. vt - …</text><g class="data-point point-final" data-fase="cliente finalizado"><circle class="bubble-glow" cx="155" cy="45" r="26"/><circle class="bubble-ring" cx="155" cy="45" r="24"/><circle class="bubble-bg" cx="155" cy="45" r="20"/><text class="bubble-value" x="155" y="45">4</text></g><text class="x-label" x="155" y="172" data-fase="cliente finalizado">cliente fina…</text><g class="data-point point-other" data-fase="resultado vt - aferição/orientação"><circle class="bubble-glow" cx="275" cy="65" r="26"/><circle class="bubble-ring" cx="275" cy="65" r="24"/><circle class="bubble-bg" cx="275" cy="65" r="20"/><text class="bubble-value" x="275" y="65">3</text></g><text class="x-label" x="275" y="172" data-fase="resultado vt - aferição/orientação">resultado vt…</text><g class="data-point point-other" data-fase="aguardando liberação"><circle class="bubble-glow" cx="395" cy="85" r="26"/><circle class="bubble-ring" cx="395" cy="85" r="24"/><circle class="bubble-bg" cx="395" cy="85" r="20"/><text class="bubble-value" x="395" y="85">2</text></g><text class="x-label" x="395" y="172" data-fase="aguardando liberação">aguardando l…</text><g class="data-point point-other" data-fase="em contrato"><circle class="bubble-glow" cx="515" cy="85" r="26"/><circle class="bubble-ring" cx="515" cy="85" r="24"/><circle class="bubble-bg" cx="515" cy="85" r="20"/><text class="bubble-value" x="515" y="85">2</text></g><text class="x-label" x="515" y="172" data-fase="em contrato">em contrato</text><g class="data-point point-other" data-fase="logística - em coleta"><circle class="bubble-glow" cx="635" cy="105" r="26"/><circle class="bubble-ring" cx="635" cy="105" r="24"/><circle class="bubble-bg" cx="635" cy="105" r="20"/><text class="bubble-value" x="635" y="105">1</text></g><text class="x-label" x="635" y="172" data-fase="logística - em coleta">logística - …</text><g class="data-point point-other" data-fase="informações projetos"><circle class="bubble-glow" cx="755" cy="105" r="26"/><circle class="bubble-ring" cx="755" cy="105" r="24"/><circle class="bubble-bg" cx="755" cy="105" r="20"/><text class="bubble-value" x="755" y="105">1</text></g><text class="x-label" x="755" y="172" data-fase="informações projetos">informações …</text><g class="data-point point-agend" data-fase="agend. vt - entrada"><circle class="bubble-glow" cx="875" cy="105" r="26"/><circle class="bubble-ring" cx="875" cy="105" r="24"/><circle class="bubble-bg" cx="875" cy="105" r="20"/><text class="bubble-value" x="875" y="105">1</text></g><text class="x-label" x="875" y="172" data-fase="agend. vt - entrada">agend. vt - …</text></svg></div><div class="drill-list" id="drill-RJ"></div></div><div class="region-card" data-region="CWB"><div class="region-header"><div class="region-name">CWB</div><div class="region-stats"><span><span class="val">13</span>obras</span><span><span class="val">519</span>msgs</span><span><span class="val">17</span>ocs</span></div></div><div class="chart-container"><svg viewBox="0 0 900 180"><defs><linearGradient id="areaGrad-3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c4a77d" stop-opacity="0.3"/><stop offset="100%" stop-color="#c4a77d" stop-opacity="0.02"/></linearGradient></defs><line class="grid-line" x1="35" y1="25" x2="875" y2="25"/><text class="grid-label" x="27" y="29" text-anchor="end">5</text><line class="grid-line" x1="35" y1="50" x2="875" y2="50"/><text class="grid-label" x="27" y="54" text-anchor="end">4</text><line class="grid-line" x1="35" y1="75" x2="875" y2="75"/><text class="grid-label" x="27" y="79" text-anchor="end">3</text><line class="grid-line" x1="35" y1="100" x2="875" y2="100"/><text class="grid-label" x="27" y="104" text-anchor="end">1</text><line class="grid-line" x1="35" y1="125" x2="875" y2="125"/><text class="grid-label" x="27" y="129" text-anchor="end">0</text><path class="chart-area" d="M 35 25 C 84 46, 77 64, 175 85 C 273 106, 217 78, 315 85 C 413 92, 357 98, 455 105 C 553 112, 497 105, 595 105 C 693 105, 637 105, 735 105 C 833 105, 826 105, 875 105 L 875 125 L 35 125 Z" style="fill:url(#areaGrad-3)"/><path class="chart-line" d="M 35 25 C 84 46, 77 64, 175 85 C 273 106, 217 78, 315 85 C 413 92, 357 98, 455 105 C 553 112, 497 105, 595 105 C 693 105, 637 105, 735 105 C 833 105, 826 105, 875 105"/><g class="data-point point-agend" data-fase="agend. vt - aferição/orientação"><circle class="bubble-glow" cx="35" cy="25" r="26"/><circle class="bubble-ring" cx="35" cy="25" r="24"/><circle class="bubble-bg" cx="35" cy="25" r="20"/><text class="bubble-value" x="35" y="25">5</text></g><text class="x-label" x="35" y="172" data-fase="agend. vt - aferição/orientação">agend. vt - …</text><g class="data-point point-other" data-fase="contrato"><circle class="bubble-glow" cx="175" cy="85" r="26"/><circle class="bubble-ring" cx="175" cy="85" r="24"/><circle class="bubble-bg" cx="175" cy="85" r="20"/><text class="bubble-value" x="175" y="85">2</text></g><text class="x-label" x="175" y="172" data-fase="contrato">contrato</text><g class="data-point point-other" data-fase="aguardando liberação"><circle class="bubble-glow" cx="315" cy="85" r="26"/><circle class="bubble-ring" cx="315" cy="85" r="24"/><circle class="bubble-bg" cx="315" cy="85" r="20"/><text class="bubble-value" x="315" y="85">2</text></g><text class="x-label" x="315" y="172" data-fase="aguardando liberação">aguardando l…</text><g class="data-point point-final" data-fase="cliente finalizado"><circle class="bubble-glow" cx="455" cy="105" r="26"/><circle class="bubble-ring" cx="455" cy="105" r="24"/><circle class="bubble-bg" cx="455" cy="105" r="20"/><text class="bubble-value" x="455" y="105">1</text></g><text class="x-label" x="455" y="172" data-fase="cliente finalizado">cliente fina…</text><g class="data-point point-other" data-fase="indústria - em produção"><circle class="bubble-glow" cx="595" cy="105" r="26"/><circle class="bubble-ring" cx="595" cy="105" r="24"/><circle class="bubble-bg" cx="595" cy="105" r="20"/><text class="bubble-value" x="595" y="105">1</text></g><text class="x-label" x="595" y="172" data-fase="indústria - em produção">indústria - …</text><g class="data-point point-other" data-fase="1º contato op."><circle class="bubble-glow" cx="735" cy="105" r="26"/><circle class="bubble-ring" cx="735" cy="105" r="24"/><circle class="bubble-bg" cx="735" cy="105" r="20"/><text class="bubble-value" x="735" y="105">1</text></g><text class="x-label" x="735" y="172" data-fase="1º contato op.">1º contato op.</text><g class="data-point point-other" data-fase="confirmações op 1"><circle class="bubble-glow" cx="875" cy="105" r="26"/><circle class="bubble-ring" cx="875" cy="105" r="24"/><circle class="bubble-bg" cx="875" cy="105" r="20"/><text class="bubble-value" x="875" y="105">1</text></g><text class="x-label" x="875" y="172" data-fase="confirmações op 1">confirmações…</text></svg></div><div class="drill-list" id="drill-CWB"></div></div>
+    <div class="region-card" data-region="SP"><div class="region-header"><div class="region-name">SP</div><div class="region-stats"><span><span class="val">103</span>obras</span><span><span class="val">4.832</span>msgs</span><span><span class="val">191</span>ocs</span></div></div><div class="chart-container"><svg viewBox="0 0 900 180"><defs><linearGradient id="areaGrad-0" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#b8a080" stop-opacity="0.3"/><stop offset="100%" stop-color="#b8a080" stop-opacity="0.02"/></linearGradient></defs><line class="grid-line" x1="35" y1="25" x2="875" y2="25"/><text class="grid-label" x="27" y="29" text-anchor="end">20</text><line class="grid-line" x1="35" y1="50" x2="875" y2="50"/><text class="grid-label" x="27" y="54" text-anchor="end">15</text><line class="grid-line" x1="35" y1="75" x2="875" y2="75"/><text class="grid-label" x="27" y="79" text-anchor="end">10</text><line class="grid-line" x1="35" y1="100" x2="875" y2="100"/><text class="grid-label" x="27" y="104" text-anchor="end">5</text><line class="grid-line" x1="35" y1="125" x2="875" y2="125"/><text class="grid-label" x="27" y="129" text-anchor="end">0</text><path class="chart-area" d="M 35 25 C 64.4 33.75, 60.2 34.25, 119 50 C 177.8 65.75, 144.2 56, 203 70 C 261.8 84, 228.2 81.25, 287 90 C 345.8 98.75, 312.2 89.75, 371 95 C 429.8 100.25, 396.2 101.5, 455 105 C 513.8 108.5, 480.2 105, 539 105 C 597.8 105, 564.2 105, 623 105 C 681.8 105, 648.2 105, 707 105 C 765.8 105, 732.2 103.25, 791 105 C 849.8 106.75, 845.6 108.25, 875 110 L 875 125 L 35 125 Z" style="fill:url(#areaGrad-0)"/><path class="chart-line" d="M 35 25 C 64.4 33.75, 60.2 34.25, 119 50 C 177.8 65.75, 144.2 56, 203 70 C 261.8 84, 228.2 81.25, 287 90 C 345.8 98.75, 312.2 89.75, 371 95 C 429.8 100.25, 396.2 101.5, 455 105 C 513.8 108.5, 480.2 105, 539 105 C 597.8 105, 564.2 105, 623 105 C 681.8 105, 648.2 105, 707 105 C 765.8 105, 732.2 103.25, 791 105 C 849.8 106.75, 845.6 108.25, 875 110"/><g class="data-point point-final" data-fase="cliente finalizado"><circle class="bubble-glow" cx="35" cy="25" r="26"/><circle class="bubble-ring" cx="35" cy="25" r="24"/><circle class="bubble-bg" cx="35" cy="25" r="20"/><text class="bubble-value" x="35" y="25">20</text></g><text class="x-label" x="35" y="172" data-fase="cliente finalizado">cliente fina…</text><g class="data-point point-agend" data-fase="agend. vt - aferição/orientação"><circle class="bubble-glow" cx="119" cy="50" r="26"/><circle class="bubble-ring" cx="119" cy="50" r="24"/><circle class="bubble-bg" cx="119" cy="50" r="20"/><text class="bubble-value" x="119" y="50">15</text></g><text class="x-label" x="119" y="172" data-fase="agend. vt - aferição/orientação">agend. vt - …</text><g class="data-point point-other" data-fase="aguardando liberação"><circle class="bubble-glow" cx="203" cy="70" r="26"/><circle class="bubble-ring" cx="203" cy="70" r="24"/><circle class="bubble-bg" cx="203" cy="70" r="20"/><text class="bubble-value" x="203" y="70">11</text></g><text class="x-label" x="203" y="172" data-fase="aguardando liberação">aguardando l…</text><g class="data-point point-other" data-fase="confirmações op 1"><circle class="bubble-glow" cx="287" cy="90" r="26"/><circle class="bubble-ring" cx="287" cy="90" r="24"/><circle class="bubble-bg" cx="287" cy="90" r="20"/><text class="bubble-value" x="287" y="90">7</text></g><text class="x-label" x="287" y="172" data-fase="confirmações op 1">confirmações…</text><g class="data-point point-other" data-fase="1º contato op."><circle class="bubble-glow" cx="371" cy="95" r="26"/><circle class="bubble-ring" cx="371" cy="95" r="24"/><circle class="bubble-bg" cx="371" cy="95" r="20"/><text class="bubble-value" x="371" y="95">6</text></g><text class="x-label" x="371" y="172" data-fase="1º contato op.">1º contato op.</text><g class="data-point point-other" data-fase="em contrato"><circle class="bubble-glow" cx="455" cy="105" r="26"/><circle class="bubble-ring" cx="455" cy="105" r="24"/><circle class="bubble-bg" cx="455" cy="105" r="20"/><text class="bubble-value" x="455" y="105">4</text></g><text class="x-label" x="455" y="172" data-fase="em contrato">em contrato</text><g class="data-point point-other" data-fase="indústria - em produção"><circle class="bubble-glow" cx="539" cy="105" r="26"/><circle class="bubble-ring" cx="539" cy="105" r="24"/><circle class="bubble-bg" cx="539" cy="105" r="20"/><text class="bubble-value" x="539" y="105">4</text></g><text class="x-label" x="539" y="172" data-fase="indústria - em produção">indústria - …</text><g class="data-point point-other" data-fase="contrato"><circle class="bubble-glow" cx="623" cy="105" r="26"/><circle class="bubble-ring" cx="623" cy="105" r="24"/><circle class="bubble-bg" cx="623" cy="105" r="20"/><text class="bubble-value" x="623" y="105">4</text></g><text class="x-label" x="623" y="172" data-fase="contrato">contrato</text><g class="data-point point-other" data-fase="logística - em entrega"><circle class="bubble-glow" cx="707" cy="105" r="26"/><circle class="bubble-ring" cx="707" cy="105" r="24"/><circle class="bubble-bg" cx="707" cy="105" r="20"/><text class="bubble-value" x="707" y="105">4</text></g><text class="x-label" x="707" y="172" data-fase="logística - em entrega">logística - …</text><g class="data-point point-other" data-fase="oect"><circle class="bubble-glow" cx="791" cy="105" r="26"/><circle class="bubble-ring" cx="791" cy="105" r="24"/><circle class="bubble-bg" cx="791" cy="105" r="20"/><text class="bubble-value" x="791" y="105">4</text></g><text class="x-label" x="791" y="172" data-fase="oect">oect</text><g class="data-point point-other" data-fase="projetos  - 1ª revisão"><circle class="bubble-glow" cx="875" cy="110" r="26"/><circle class="bubble-ring" cx="875" cy="110" r="24"/><circle class="bubble-bg" cx="875" cy="110" r="20"/><text class="bubble-value" x="875" y="110">3</text></g><text class="x-label" x="875" y="172" data-fase="projetos  - 1ª revisão">projetos  - …</text></svg></div><div class="minor-toggle" data-region="SP">+ 14 fases menores (21 obras · 104 ocs)</div><div class="minor-list" id="minor-SP"><div class="minor-item" data-fase="equipe de execução"><span class="minor-name">equipe de execução</span><span class="minor-count">2</span><span class="minor-ocs">7 ocs</span></div><div class="minor-item" data-fase="agend. vt - entrada"><span class="minor-name">agend. vt - entrada</span><span class="minor-count">2</span><span class="minor-ocs">16 ocs</span></div><div class="minor-item" data-fase="logística - material entregue"><span class="minor-name">logística - material entregue</span><span class="minor-count">2</span><span class="minor-ocs">28 ocs</span></div><div class="minor-item" data-fase="obra concluída"><span class="minor-name">obra concluída</span><span class="minor-count">2</span><span class="minor-ocs"></span></div><div class="minor-item" data-fase="revisão final op"><span class="minor-name">revisão final op</span><span class="minor-count">2</span><span class="minor-ocs">6 ocs</span></div><div class="minor-item" data-fase="entrada"><span class="minor-name">entrada</span><span class="minor-count">2</span><span class="minor-ocs">1 ocs</span></div><div class="minor-item" data-fase="obra pausada"><span class="minor-name">obra pausada</span><span class="minor-count">2</span><span class="minor-ocs">4 ocs</span></div><div class="minor-item" data-fase="resultado vt - aferição/orientação"><span class="minor-name">resultado vt - aferição/orientação</span><span class="minor-count">1</span><span class="minor-ocs"></span></div><div class="minor-item" data-fase="obra em execução"><span class="minor-name">obra em execução</span><span class="minor-count">1</span><span class="minor-ocs">33 ocs</span></div><div class="minor-item" data-fase="informações projetos"><span class="minor-name">informações projetos</span><span class="minor-count">1</span><span class="minor-ocs">2 ocs</span></div><div class="minor-item" data-fase="?"><span class="minor-name">?</span><span class="minor-count">1</span><span class="minor-ocs"></span></div><div class="minor-item" data-fase="resultado vt - entrada"><span class="minor-name">resultado vt - entrada</span><span class="minor-count">1</span><span class="minor-ocs">4 ocs</span></div><div class="minor-item" data-fase="informações financeiras"><span class="minor-name">informações financeiras</span><span class="minor-count">1</span><span class="minor-ocs">3 ocs</span></div><div class="minor-item" data-fase="resultado vt - qualidade"><span class="minor-name">resultado vt - qualidade</span><span class="minor-count">1</span><span class="minor-ocs"></span></div></div><div class="drill-list" id="drill-SP"></div></div><div class="region-card" data-region="RJ"><div class="region-header"><div class="region-name">RJ</div><div class="region-stats"><span><span class="val">19</span>obras</span><span><span class="val">943</span>msgs</span><span><span class="val">23</span>ocs</span></div></div><div class="chart-container"><svg viewBox="0 0 900 180"><defs><linearGradient id="areaGrad-2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#b8a080" stop-opacity="0.3"/><stop offset="100%" stop-color="#b8a080" stop-opacity="0.02"/></linearGradient></defs><line class="grid-line" x1="35" y1="25" x2="875" y2="25"/><text class="grid-label" x="27" y="29" text-anchor="end">5</text><line class="grid-line" x1="35" y1="50" x2="875" y2="50"/><text class="grid-label" x="27" y="54" text-anchor="end">4</text><line class="grid-line" x1="35" y1="75" x2="875" y2="75"/><text class="grid-label" x="27" y="79" text-anchor="end">3</text><line class="grid-line" x1="35" y1="100" x2="875" y2="100"/><text class="grid-label" x="27" y="104" text-anchor="end">1</text><line class="grid-line" x1="35" y1="125" x2="875" y2="125"/><text class="grid-label" x="27" y="129" text-anchor="end">0</text><path class="chart-area" d="M 35 25 C 77 32, 71 31, 155 45 C 239 59, 191 51, 275 65 C 359 79, 311 78, 395 85 C 479 92, 431 78, 515 85 C 599 92, 551 98, 635 105 C 719 112, 671 105, 755 105 C 839 105, 833 105, 875 105 L 875 125 L 35 125 Z" style="fill:url(#areaGrad-2)"/><path class="chart-line" d="M 35 25 C 77 32, 71 31, 155 45 C 239 59, 191 51, 275 65 C 359 79, 311 78, 395 85 C 479 92, 431 78, 515 85 C 599 92, 551 98, 635 105 C 719 112, 671 105, 755 105 C 839 105, 833 105, 875 105"/><g class="data-point point-agend" data-fase="agend. vt - aferição/orientação"><circle class="bubble-glow" cx="35" cy="25" r="26"/><circle class="bubble-ring" cx="35" cy="25" r="24"/><circle class="bubble-bg" cx="35" cy="25" r="20"/><text class="bubble-value" x="35" y="25">5</text></g><text class="x-label" x="35" y="172" data-fase="agend. vt - aferição/orientação">agend. vt - …</text><g class="data-point point-final" data-fase="cliente finalizado"><circle class="bubble-glow" cx="155" cy="45" r="26"/><circle class="bubble-ring" cx="155" cy="45" r="24"/><circle class="bubble-bg" cx="155" cy="45" r="20"/><text class="bubble-value" x="155" y="45">4</text></g><text class="x-label" x="155" y="172" data-fase="cliente finalizado">cliente fina…</text><g class="data-point point-other" data-fase="resultado vt - aferição/orientação"><circle class="bubble-glow" cx="275" cy="65" r="26"/><circle class="bubble-ring" cx="275" cy="65" r="24"/><circle class="bubble-bg" cx="275" cy="65" r="20"/><text class="bubble-value" x="275" y="65">3</text></g><text class="x-label" x="275" y="172" data-fase="resultado vt - aferição/orientação">resultado vt…</text><g class="data-point point-other" data-fase="aguardando liberação"><circle class="bubble-glow" cx="395" cy="85" r="26"/><circle class="bubble-ring" cx="395" cy="85" r="24"/><circle class="bubble-bg" cx="395" cy="85" r="20"/><text class="bubble-value" x="395" y="85">2</text></g><text class="x-label" x="395" y="172" data-fase="aguardando liberação">aguardando l…</text><g class="data-point point-other" data-fase="em contrato"><circle class="bubble-glow" cx="515" cy="85" r="26"/><circle class="bubble-ring" cx="515" cy="85" r="24"/><circle class="bubble-bg" cx="515" cy="85" r="20"/><text class="bubble-value" x="515" y="85">2</text></g><text class="x-label" x="515" y="172" data-fase="em contrato">em contrato</text><g class="data-point point-other" data-fase="logística - em coleta"><circle class="bubble-glow" cx="635" cy="105" r="26"/><circle class="bubble-ring" cx="635" cy="105" r="24"/><circle class="bubble-bg" cx="635" cy="105" r="20"/><text class="bubble-value" x="635" y="105">1</text></g><text class="x-label" x="635" y="172" data-fase="logística - em coleta">logística - …</text><g class="data-point point-other" data-fase="informações projetos"><circle class="bubble-glow" cx="755" cy="105" r="26"/><circle class="bubble-ring" cx="755" cy="105" r="24"/><circle class="bubble-bg" cx="755" cy="105" r="20"/><text class="bubble-value" x="755" y="105">1</text></g><text class="x-label" x="755" y="172" data-fase="informações projetos">informações …</text><g class="data-point point-agend" data-fase="agend. vt - entrada"><circle class="bubble-glow" cx="875" cy="105" r="26"/><circle class="bubble-ring" cx="875" cy="105" r="24"/><circle class="bubble-bg" cx="875" cy="105" r="20"/><text class="bubble-value" x="875" y="105">1</text></g><text class="x-label" x="875" y="172" data-fase="agend. vt - entrada">agend. vt - …</text></svg></div><div class="drill-list" id="drill-RJ"></div></div><div class="region-card" data-region="CWB"><div class="region-header"><div class="region-name">CWB</div><div class="region-stats"><span><span class="val">13</span>obras</span><span><span class="val">519</span>msgs</span><span><span class="val">17</span>ocs</span></div></div><div class="chart-container"><svg viewBox="0 0 900 180"><defs><linearGradient id="areaGrad-3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#b8a080" stop-opacity="0.3"/><stop offset="100%" stop-color="#b8a080" stop-opacity="0.02"/></linearGradient></defs><line class="grid-line" x1="35" y1="25" x2="875" y2="25"/><text class="grid-label" x="27" y="29" text-anchor="end">5</text><line class="grid-line" x1="35" y1="50" x2="875" y2="50"/><text class="grid-label" x="27" y="54" text-anchor="end">4</text><line class="grid-line" x1="35" y1="75" x2="875" y2="75"/><text class="grid-label" x="27" y="79" text-anchor="end">3</text><line class="grid-line" x1="35" y1="100" x2="875" y2="100"/><text class="grid-label" x="27" y="104" text-anchor="end">1</text><line class="grid-line" x1="35" y1="125" x2="875" y2="125"/><text class="grid-label" x="27" y="129" text-anchor="end">0</text><path class="chart-area" d="M 35 25 C 84 46, 77 64, 175 85 C 273 106, 217 78, 315 85 C 413 92, 357 98, 455 105 C 553 112, 497 105, 595 105 C 693 105, 637 105, 735 105 C 833 105, 826 105, 875 105 L 875 125 L 35 125 Z" style="fill:url(#areaGrad-3)"/><path class="chart-line" d="M 35 25 C 84 46, 77 64, 175 85 C 273 106, 217 78, 315 85 C 413 92, 357 98, 455 105 C 553 112, 497 105, 595 105 C 693 105, 637 105, 735 105 C 833 105, 826 105, 875 105"/><g class="data-point point-agend" data-fase="agend. vt - aferição/orientação"><circle class="bubble-glow" cx="35" cy="25" r="26"/><circle class="bubble-ring" cx="35" cy="25" r="24"/><circle class="bubble-bg" cx="35" cy="25" r="20"/><text class="bubble-value" x="35" y="25">5</text></g><text class="x-label" x="35" y="172" data-fase="agend. vt - aferição/orientação">agend. vt - …</text><g class="data-point point-other" data-fase="contrato"><circle class="bubble-glow" cx="175" cy="85" r="26"/><circle class="bubble-ring" cx="175" cy="85" r="24"/><circle class="bubble-bg" cx="175" cy="85" r="20"/><text class="bubble-value" x="175" y="85">2</text></g><text class="x-label" x="175" y="172" data-fase="contrato">contrato</text><g class="data-point point-other" data-fase="aguardando liberação"><circle class="bubble-glow" cx="315" cy="85" r="26"/><circle class="bubble-ring" cx="315" cy="85" r="24"/><circle class="bubble-bg" cx="315" cy="85" r="20"/><text class="bubble-value" x="315" y="85">2</text></g><text class="x-label" x="315" y="172" data-fase="aguardando liberação">aguardando l…</text><g class="data-point point-final" data-fase="cliente finalizado"><circle class="bubble-glow" cx="455" cy="105" r="26"/><circle class="bubble-ring" cx="455" cy="105" r="24"/><circle class="bubble-bg" cx="455" cy="105" r="20"/><text class="bubble-value" x="455" y="105">1</text></g><text class="x-label" x="455" y="172" data-fase="cliente finalizado">cliente fina…</text><g class="data-point point-other" data-fase="indústria - em produção"><circle class="bubble-glow" cx="595" cy="105" r="26"/><circle class="bubble-ring" cx="595" cy="105" r="24"/><circle class="bubble-bg" cx="595" cy="105" r="20"/><text class="bubble-value" x="595" y="105">1</text></g><text class="x-label" x="595" y="172" data-fase="indústria - em produção">indústria - …</text><g class="data-point point-other" data-fase="1º contato op."><circle class="bubble-glow" cx="735" cy="105" r="26"/><circle class="bubble-ring" cx="735" cy="105" r="24"/><circle class="bubble-bg" cx="735" cy="105" r="20"/><text class="bubble-value" x="735" y="105">1</text></g><text class="x-label" x="735" y="172" data-fase="1º contato op.">1º contato op.</text><g class="data-point point-other" data-fase="confirmações op 1"><circle class="bubble-glow" cx="875" cy="105" r="26"/><circle class="bubble-ring" cx="875" cy="105" r="24"/><circle class="bubble-bg" cx="875" cy="105" r="20"/><text class="bubble-value" x="875" y="105">1</text></g><text class="x-label" x="875" y="172" data-fase="confirmações op 1">confirmações…</text></svg></div><div class="drill-list" id="drill-CWB"></div></div>
 
     <div class="chart-wrap" style="margin-top:24px">
       <div class="chart-title">Volume diário de mensagens · últimos 30 dias</div>
       <svg class="sparkline" viewBox="0 0 600 100" preserveAspectRatio="none">
-        <polygon points="0,100 0,74 21,67 41,67 62,75 83,79 103,80 124,66 145,64 166,59 186,59 207,79 228,79 248,65 269,60 290,56 310,49 331,44 352,74 372,79 393,39 414,27 434,7 455,12 476,14 497,67 517,76 538,48 559,80 579,0 600,76 600,100" fill="#c4a77d" opacity="0.12"/>
-        <polyline points="0,74 21,67 41,67 62,75 83,79 103,80 124,66 145,64 166,59 186,59 207,79 228,79 248,65 269,60 290,56 310,49 331,44 352,74 372,79 393,39 414,27 434,7 455,12 476,14 497,67 517,76 538,48 559,80 579,0 600,76" fill="none" stroke="#c4a77d" stroke-width="2"/>
+        <polygon points="0,100 0,74 21,67 41,67 62,75 83,79 103,80 124,66 145,64 166,59 186,59 207,79 228,79 248,65 269,60 290,56 310,49 331,44 352,74 372,79 393,39 414,27 434,7 455,12 476,14 497,67 517,76 538,48 559,80 579,0 600,76 600,100" fill="#b8a080" opacity="0.12"/>
+        <polyline points="0,74 21,67 41,67 62,75 83,79 103,80 124,66 145,64 166,59 186,59 207,79 228,79 248,65 269,60 290,56 310,49 331,44 352,74 372,79 393,39 414,27 434,7 455,12 476,14 497,67 517,76 538,48 559,80 579,0 600,76" fill="none" stroke="#b8a080" stroke-width="2"/>
       </svg>
       <div class="chart-stats">
         <div class="chart-stat">média por dia<strong>265</strong></div>

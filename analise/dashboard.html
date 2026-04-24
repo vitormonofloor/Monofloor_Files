@@ -791,6 +791,8 @@
   .pill-paradas{background:#f4f0e6;color:#b89a4a;border:1px solid #e0d8c0}
   .pill-equipe{background:#eaf0f6;color:#4a7ab8;border:1px solid #c8d8e8}
   .pill-volume{background:#e8f2ec;color:#3d8a5a;border:1px solid #c8e0d0}
+  .pill-agenda{background:rgba(184,160,128,0.12);color:#b8a080;border:1px solid rgba(184,160,128,0.2)}
+  .pill-carteira{background:rgba(138,126,114,0.08);color:#8a7e72;border:1px solid rgba(138,126,114,0.15)}
   .auto-agents-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
   .auto-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.18em;color:#b8a080;text-transform:uppercase}
   .auto-sub{font-size:11px;color:#b8b0a4;font-style:italic}
@@ -1349,7 +1351,7 @@
   <section id="agenda">
     <div class="ag-head">
       <div class="ag-tag">AGENDA OPERACIONAL</div>
-      <h2>Próximos marcos da operação</h2>
+      <h2><span class="section-pill pill-agenda">AGENDA</span> Próximos marcos da operação</h2>
       <p class="sub">Próximos marcos da operação nos próximos dias — visitas técnicas agendadas, entradas em obra e execuções previstas. Ajuste o período para ver mais.</p>
     </div>
 
@@ -1895,7 +1897,7 @@
   <section id="carteira">
     <div class="section-head">
       <div class="section-kicker">Carteira detalhada</div>
-      <div class="section-title">Baldes de Classificação</div>
+      <div class="section-title"><span class="section-pill pill-carteira">CARTEIRA</span> Baldes de Classificação</div>
       <div class="section-sub" id="baldes-sub">Todas as obras ativas classificadas por tipo de problema. Uma obra pode aparecer em mais de um balde. Clique para abrir.</div>
     </div>
     <div class="baldes-grid" id="baldes-grid">
