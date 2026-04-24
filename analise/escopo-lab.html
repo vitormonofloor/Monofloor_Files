@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Escopo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--text:#3a3530;
+  --text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#5a9a6a;--red:#c0534f;--yellow:#c4a030;--orange:#d4843e;--gray:#c8c0b8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;padding:0;line-height:1.55}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* DOCK LATERAL */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative;cursor:pointer}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08);text-decoration:none}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+.dock-item.active::after{color:var(--accent)}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text)}
+.header-brand .logo{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase}
+.header-stats{margin-left:auto;display:flex;gap:16px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)}
+.header-stats span{background:rgba(184,160,128,0.1);padding:4px 10px;border-radius:6px}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 60px;margin-left:60px}
+@media(max-width:900px){.main{margin-left:auto}}
+
+/* SEARCH */
+.search-wrap{position:relative;max-width:480px;min-width:260px;margin-bottom:20px}
+.search-input{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--border);border-radius:8px;background:var(--card);font-family:var(--font-sans);font-size:13px;color:var(--text);outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted)}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.section-title{font-size:14px;font-weight:700;letter-spacing:0.04em;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.section-title .icon{width:20px;height:20px;color:var(--accent)}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.kpi-card{background:rgba(184,160,128,0.06);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.kpi-value{font-size:28px;font-weight:700;font-family:var(--font-mono);line-height:1.1}
+.kpi-label{font-size:10px;font-family:var(--font-mono);font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-top:4px}
+.kpi-value.green{color:var(--green)}
+.kpi-value.red{color:var(--red)}
+.kpi-value.yellow{color:var(--yellow)}
+.kpi-value.orange{color:var(--orange)}
+.kpi-value.accent{color:var(--accent)}
+
+/* OBRA CARD */
+.obra-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;transition:box-shadow .2s}
+.obra-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.obra-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;gap:12px}
+.obra-header:hover{background:rgba(184,160,128,0.04)}
+.obra-cliente{font-weight:700;font-size:13px;flex:1}
+.obra-meta{display:flex;gap:10px;align-items:center;font-size:11px;font-family:var(--font-mono);color:var(--text-muted)}
+.obra-m2{font-weight:600;color:var(--text)}
+.obra-status{font-size:10px;font-family:var(--font-mono);font-weight:600;padding:2px 8px;border-radius:4px}
+.obra-status.exec{background:rgba(90,154,106,0.12);color:var(--green)}
+.obra-status.pausa{background:rgba(192,83,79,0.12);color:var(--red)}
+.obra-status.reparo{background:rgba(212,132,62,0.12);color:var(--orange)}
+.obra-status.plan{background:rgba(184,160,128,0.12);color:var(--text-muted)}
+.obra-chevron{width:16px;height:16px;color:var(--text-muted);transition:transform .3s}
+.obra-card.open .obra-chevron{transform:rotate(180deg)}
+
+.obra-body{display:none;padding:0 18px 16px;border-top:1px solid var(--border)}
+.obra-card.open .obra-body{display:block}
+
+/* AMBIENTES TABLE */
+.amb-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.amb-tbl th{text-align:left;font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:6px 8px;border-bottom:2px solid var(--border)}
+.amb-tbl td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.amb-tbl tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--font-mono);font-weight:600}
+.badge.green{background:rgba(90,154,106,0.12);color:var(--green)}
+.badge.red{background:rgba(192,83,79,0.12);color:var(--red)}
+.badge.yellow{background:rgba(196,160,48,0.12);color:var(--yellow)}
+.badge.orange{background:rgba(212,132,62,0.12);color:var(--orange)}
+.badge.gray{background:rgba(200,192,184,0.15);color:var(--text-muted)}
+
+/* PROGRESS BAR */
+.prog-wrap{margin-top:10px}
+.prog-label{font-size:10px;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
+.prog-track{height:18px;background:rgba(184,160,128,0.08);border-radius:5px;overflow:hidden;display:flex}
+.prog-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--font-mono);font-weight:600;color:#fff;transition:width .6s ease}
+
+/* DOC SECTION */
+.doc-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.doc-chip{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;font-size:11px;font-family:var(--font-mono);font-weight:500;background:rgba(184,160,128,0.06);border:1px solid var(--border)}
+.doc-chip .doc-icon{width:14px;height:14px;color:var(--accent)}
+.doc-chip.missing{border-color:rgba(192,83,79,0.3);background:rgba(192,83,79,0.06);color:var(--red)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:8px 10px;border-bottom:2px solid var(--border)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+
+<!-- DOCK -->
+<nav class="dock">
+  <a class="dock-item active" data-label="materiais" href="#sec-materiais">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/></svg>
+  </a>
+  <a class="dock-item" data-label="documentos" href="#sec-docs">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  </a>
+  <a class="dock-item" data-label="resumo" href="#sec-resumo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  </a>
+  <a class="dock-item" data-label="lab index" href="bloqueadores-lab.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </a>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">M</div>
+    MONOFLOOR
+  </div>
+  <div class="header-title">Cap. 4 — Escopo: do m2 geral ao comodo</div>
+  <div class="header-stats">
+    <span>Fonte: API cliente.monofloor.cloud</span>
+    <span>2026-04-24</span>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<div class="main">
+
+  <!-- BUSCA -->
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" type="text" id="searchInput" placeholder="Buscar obra por cliente..." oninput="filterObras()">
+  </div>
+
+  <!-- BLOCO 1: MATERIAIS POR OBRA -->
+  <div class="section" id="sec-materiais">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"/></svg>
+      Materiais por Obra — Drill-down Tecnico
+    </div>
+
+    <div id="obrasContainer">
+
+      <!-- OBRA 1: FLAVIO FAVA DITT -->
+      <div class="obra-card open" data-search="FLAVIO FAVA DITT SAO PAULO">
+        <div class="obra-header" onclick="toggleObra(this)">
+          <div class="obra-cliente">FLAVIO FAVA DITT</div>
+          <div class="obra-meta">
+            <span>Sao Paulo</span>
+            <span class="obra-m2">186.00 m2</span>
+            <span class="obra-status exec">EM EXECUCAO</span>
+          </div>
+          <svg class="obra-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="obra-body">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)">
+            <span>Fase: <strong style="color:var(--text)">LOGISTICA - MATERIAL ENTREGUE</strong></span>
+            <span>Cores: <strong style="color:var(--text)">ASH, MIRAGE</strong></span>
+            <span>Equipe: <strong style="color:var(--text)">MUTIRAO</strong></span>
+            <span>Tipo: <strong style="color:var(--text)">piso + parede</strong></span>
+          </div>
+          <table class="amb-tbl">
+            <thead><tr><th>Ambiente</th><th>Produto</th><th>Cor</th><th>m2</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Area Seca</td><td>LILIT, STELION</td><td>ASH, MIRAGE</td><td>~93.0</td><td><span class="badge green">Concluido</span></td></tr>
+              <tr><td>Area Molhada</td><td>LILIT, STELION</td><td>ASH, MIRAGE</td><td>~93.0</td><td><span class="badge green">Concluido</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-top:8px">
+            Conclusao: <strong style="color:var(--green)">2 / 2 ambientes (100%)</strong> — Metragem pendente: 81.49 m2 (acabamento)
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-label"><span>Superficie</span><span>piso + parede + rodape</span></div>
+            <div class="prog-track">
+              <div class="prog-seg" style="width:50%;background:var(--accent)" title="Piso">Piso</div>
+              <div class="prog-seg" style="width:40%;background:var(--green)" title="Parede">Parede</div>
+              <div class="prog-seg" style="width:10%;background:var(--yellow)" title="Rodape 34.94m lin">Rod</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBRA 2: ANDRE KEUNECKE SALERNO -->
+      <div class="obra-card" data-search="ANDRE KEUNECKE SALERNO SAO PAULO">
+        <div class="obra-header" onclick="toggleObra(this)">
+          <div class="obra-cliente">ANDRE KEUNECKE SALERNO</div>
+          <div class="obra-meta">
+            <span>Sao Paulo</span>
+            <span class="obra-m2">182.75 m2</span>
+            <span class="obra-status exec">EM EXECUCAO</span>
+          </div>
+          <svg class="obra-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="obra-body">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)">
+            <span>Fase: <strong style="color:var(--text)">CLIENTE FINALIZADO</strong></span>
+            <span>Cores: <strong style="color:var(--text)">SAARA</strong></span>
+            <span>Equipe: <strong style="color:var(--text)">LAERCIO</strong></span>
+            <span>Tipo: <strong style="color:var(--text)">piso</strong></span>
+          </div>
+          <table class="amb-tbl">
+            <thead><tr><th>Ambiente</th><th>Produto</th><th>Cor</th><th>m2</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Area Seca</td><td>STELION</td><td>SAARA</td><td>150.00</td><td><span class="badge yellow">Pendente</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-top:8px">
+            Conclusao: <strong style="color:var(--red)">0 / 1 ambiente (0%)</strong> — Metragem pendente: 182.75 m2
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-label"><span>Superficie</span><span>piso apenas</span></div>
+            <div class="prog-track">
+              <div class="prog-seg" style="width:100%;background:var(--accent)" title="Piso">Piso 150.00 m2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBRA 3: GUSTAVO DE SOUZA PEREIRA -->
+      <div class="obra-card" data-search="GUSTAVO DE SOUZA PEREIRA SAO PAULO">
+        <div class="obra-header" onclick="toggleObra(this)">
+          <div class="obra-cliente">GUSTAVO DE SOUZA PEREIRA</div>
+          <div class="obra-meta">
+            <span>Sao Paulo</span>
+            <span class="obra-m2">112.01 m2</span>
+            <span class="obra-status pausa">PAUSADA</span>
+          </div>
+          <svg class="obra-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="obra-body">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)">
+            <span>Fase: <strong style="color:var(--text)">OBRA PAUSADA</strong></span>
+            <span>Cores: <strong style="color:var(--text)">SAARA</strong></span>
+            <span>Equipe: <strong style="color:var(--text)">GILMAR</strong></span>
+            <span>Tipo: <strong style="color:var(--text)">piso</strong></span>
+            <span>Status: <strong style="color:var(--orange)">marcas_rolo_cera</strong></span>
+          </div>
+          <table class="amb-tbl">
+            <thead><tr><th>Ambiente</th><th>Produto</th><th>Cor</th><th>m2</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Area Molhada</td><td>STELION</td><td>SAARA</td><td>~40.0</td><td><span class="badge red">Pendente</span></td></tr>
+              <tr><td>Area Seca</td><td>STELION</td><td>SAARA</td><td>~40.1</td><td><span class="badge red">Pendente</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-top:8px">
+            Conclusao: <strong style="color:var(--red)">0 / 2 ambientes (0%)</strong> — Metragem pendente: 112.01 m2 — Rodape: 17.17m lin
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-label"><span>Superficie</span><span>piso + rodape</span></div>
+            <div class="prog-track">
+              <div class="prog-seg" style="width:82%;background:var(--accent)" title="Piso">Piso 80.12 m2</div>
+              <div class="prog-seg" style="width:18%;background:var(--yellow)" title="Rodape 17.17m lin">Rod</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBRA 4: JOAO EDUARDO MARTINS KUHLMANN -->
+      <div class="obra-card" data-search="JOAO EDUARDO MARTINS KUHLMANN CURITIBA">
+        <div class="obra-header" onclick="toggleObra(this)">
+          <div class="obra-cliente">JOAO EDUARDO MARTINS KUHLMANN</div>
+          <div class="obra-meta">
+            <span>Curitiba</span>
+            <span class="obra-m2">305.16 m2</span>
+            <span class="obra-status exec">EM EXECUCAO</span>
+          </div>
+          <svg class="obra-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="obra-body">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)">
+            <span>Fase: <strong style="color:var(--text)">CLIENTE FINALIZADO</strong></span>
+            <span>Cores: <strong style="color:var(--text)">GHOST</strong></span>
+            <span>Equipe: <strong style="color:var(--text)">MUTIRAO</strong></span>
+            <span>Tipo: <strong style="color:var(--text)">piso + parede</strong></span>
+          </div>
+          <table class="amb-tbl">
+            <thead><tr><th>Ambiente</th><th>Produto</th><th>Cor</th><th>m2</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Area Externa</td><td>LILIT, STELION</td><td>GHOST</td><td>~44.1</td><td><span class="badge green">Concluido</span></td></tr>
+              <tr><td>Area Molhada</td><td>LILIT, STELION</td><td>GHOST</td><td>~44.1</td><td><span class="badge green">Concluido</span></td></tr>
+              <tr><td>Piscina</td><td>LILIT, STELION</td><td>GHOST</td><td>~44.1</td><td><span class="badge green">Concluido</span></td></tr>
+              <tr><td>Area Seca</td><td>LILIT, STELION</td><td>GHOST</td><td>~44.2</td><td><span class="badge yellow">Pendente</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-top:8px">
+            Conclusao: <strong style="color:var(--yellow)">3 / 4 ambientes (75%)</strong> — Metragem pendente: 82.48 m2 — Rodape: 24.86m lin
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-label"><span>Superficie</span><span>piso + parede + rodape</span></div>
+            <div class="prog-track">
+              <div class="prog-seg" style="width:45%;background:var(--accent)" title="Piso">Piso</div>
+              <div class="prog-seg" style="width:45%;background:var(--green)" title="Parede">Parede</div>
+              <div class="prog-seg" style="width:10%;background:var(--yellow)" title="Rodape 24.86m lin">Rod</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBRA 5: ANTONIO CARLOS CANTO PORTO NETO -->
+      <div class="obra-card" data-search="ANTONIO CARLOS CANTO PORTO NETO SAO PAULO">
+        <div class="obra-header" onclick="toggleObra(this)">
+          <div class="obra-cliente">ANTONIO CARLOS CANTO PORTO NETO</div>
+          <div class="obra-meta">
+            <span>Sao Paulo</span>
+            <span class="obra-m2">362.65 m2</span>
+            <span class="obra-status reparo">REPARO</span>
+          </div>
+          <svg class="obra-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="obra-body">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)">
+            <span>Fase: <strong style="color:var(--text)">OBRA PAUSADA</strong></span>
+            <span>Cores: <strong style="color:var(--text)">ARABIA, BAMBOO, FLAMINGO, HASSAN</strong></span>
+            <span>Equipe: <strong style="color:var(--text)">MUTIRAO</strong></span>
+            <span>Tipo: <strong style="color:var(--text)">piso + parede</strong></span>
+          </div>
+          <table class="amb-tbl">
+            <thead><tr><th>Ambiente</th><th>Produto</th><th>Cor</th><th>m2</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Area Externa</td><td>LEONA, STELION BASE</td><td>ARABIA, BAMBOO</td><td>~88.5</td><td><span class="badge red">Pendente</span></td></tr>
+              <tr><td>Area Molhada</td><td>LILIT</td><td>FLAMINGO, HASSAN</td><td>~88.5</td><td><span class="badge red">Pendente</span></td></tr>
+              <tr><td>Piscina</td><td>PISCINA</td><td>ARABIA</td><td>~88.4</td><td><span class="badge red">Pendente</span></td></tr>
+              <tr><td>Area Seca</td><td>LILIT, STELION BASE</td><td>BAMBOO, HASSAN</td><td>~88.4</td><td><span class="badge red">Pendente</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-top:8px">
+            Conclusao: <strong style="color:var(--red)">0 / 4 ambientes (0%)</strong> — Metragem pendente: 362.65 m2 — Rodape: 85.87m lin
+          </div>
+          <div class="prog-wrap">
+            <div class="prog-label"><span>Superficie</span><span>piso + parede + piscina + rodape</span></div>
+            <div class="prog-track">
+              <div class="prog-seg" style="width:35%;background:var(--accent)" title="Piso">Piso</div>
+              <div class="prog-seg" style="width:30%;background:var(--green)" title="Parede">Parede</div>
+              <div class="prog-seg" style="width:15%;background:#4a90d0" title="Piscina">Pisc</div>
+              <div class="prog-seg" style="width:20%;background:var(--yellow)" title="Rodape 85.87m lin">Rod</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /obrasContainer -->
+  </div>
+
+  <!-- BLOCO 2: DOCUMENTOS POR OBRA -->
+  <div class="section" id="sec-docs">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Documentos por Obra
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Total Docs</th>
+          <th>Escopo Inicial</th>
+          <th>Escopo Aprovado</th>
+          <th>Relatorio VT</th>
+          <th>Contrato</th>
+          <th>Fotos/Anexos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600">FLAVIO FAVA DITT</td>
+          <td style="font-family:var(--font-mono);font-weight:600">4</td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge green">4 anexos</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">ANDRE KEUNECKE SALERNO</td>
+          <td style="font-family:var(--font-mono);font-weight:600">4</td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge green">4 anexos</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">GUSTAVO DE SOUZA PEREIRA</td>
+          <td style="font-family:var(--font-mono);font-weight:600">5</td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge green">5 anexos</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">JOAO EDUARDO M. KUHLMANN</td>
+          <td style="font-family:var(--font-mono);font-weight:600">4</td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge green">4 anexos</span></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">ANTONIO C. CANTO PORTO NETO</td>
+          <td style="font-family:var(--font-mono);font-weight:600">3</td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge green">OK</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge gray">N/D</span></td>
+          <td><span class="badge green">3 anexos</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(196,160,48,0.08);border:1px solid rgba(196,160,48,0.2);border-radius:8px;font-size:12px;font-family:var(--font-mono);color:var(--yellow)">
+      Nenhuma das 5 obras possui campo de contrato preenchido na API. O campo "contrato" nao existe no schema do Pipefy OE — contratos sao gerenciados no pipe OECT separado.
+    </div>
+  </div>
+
+  <!-- BLOCO 3: RESUMO AGREGADO -->
+  <div class="section" id="sec-resumo">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Resumo Agregado — 5 Obras Amostra
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value accent">2.6</div>
+        <div class="kpi-label">Media ambientes / obra</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value yellow">35%</div>
+        <div class="kpi-label">Conclusao media</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value accent">1,148</div>
+        <div class="kpi-label">m2 total (5 obras)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value red">821</div>
+        <div class="kpi-label">m2 pendente</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value orange">0 / 5</div>
+        <div class="kpi-label">Obras com contrato</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value green">5 / 5</div>
+        <div class="kpi-label">Obras com escopo</div>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono);line-height:1.7">
+      <strong>Notas:</strong><br>
+      - Ambientes derivados do campo <code>reas_de_projetos</code> (SECA, MOLHADA, EXTERNA, PISCINA)<br>
+      - Status de conclusao inferido pela proporcao <code>metragemPendente / projetoMetragem</code><br>
+      - 5/5 obras com <code>onboardingStatus = "pendente"</code> (campo sempre "pendente" na API — feature morta)<br>
+      - Endpoint <code>/api/projects/{id}/materiais</code> nao existe — dados montados a partir do detalhe individual
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function toggleObra(header) {
+  const card = header.closest('.obra-card');
+  card.classList.toggle('open');
+}
+
+function filterObras() {
+  const q = document.getElementById('searchInput').value.toUpperCase().trim();
+  document.querySelectorAll('.obra-card').forEach(card => {
+    const search = card.getAttribute('data-search') || '';
+    card.style.display = !q || search.toUpperCase().includes(q) ? '' : 'none';
+  });
+}
+
+// Smooth scroll for dock
+document.querySelectorAll('.dock-item[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Active dock tracking
+const sections = document.querySelectorAll('.section[id]');
+const dockItems = document.querySelectorAll('.dock-item[href^="#"]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  dockItems.forEach(item => {
+    item.classList.toggle('active', item.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>

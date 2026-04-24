@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Funil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--text:#3a3530;
+  --text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#5a9a6a;--red:#c0534f;--yellow:#c4a030;--orange:#d4843e;--gray:#c8c0b8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;padding:0;line-height:1.55}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* DOCK LATERAL */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative;cursor:pointer}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08);text-decoration:none}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+.dock-item.active::after{color:var(--accent)}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text)}
+.header-brand .logo{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase}
+.header-stats{margin-left:auto;display:flex;gap:16px;font-size:12px;font-family:var(--font-mono);color:var(--text-muted)}
+.header-stats span{background:rgba(184,160,128,0.1);padding:4px 10px;border-radius:6px}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 60px;margin-left:60px}
+@media(max-width:900px){.main{margin-left:auto}}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.section-title{font-size:14px;font-weight:700;letter-spacing:0.04em;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--text)}
+.section-title .icon{width:20px;height:20px;color:var(--accent)}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.kpi-card{background:rgba(184,160,128,0.06);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.kpi-value{font-size:28px;font-weight:700;font-family:var(--font-mono);line-height:1.1}
+.kpi-label{font-size:10px;font-family:var(--font-mono);font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-top:4px}
+.kpi-value.green{color:var(--green)}
+.kpi-value.red{color:var(--red)}
+.kpi-value.yellow{color:var(--yellow)}
+.kpi-value.orange{color:var(--orange)}
+.kpi-value.accent{color:var(--accent)}
+
+/* FUNNEL BARS */
+.funnel-row{display:flex;align-items:center;gap:12px;margin-bottom:6px;position:relative}
+.funnel-row:last-child{margin-bottom:0}
+.funnel-label{font-size:10px;font-family:var(--font-mono);font-weight:600;width:200px;text-align:right;color:var(--text);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:0.02em}
+.funnel-bar-wrap{flex:1;height:28px;position:relative}
+.funnel-bar{height:100%;border-radius:5px;transition:width .8s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;padding:0 10px;font-size:11px;font-family:var(--font-mono);font-weight:700;color:#fff;min-width:24px;position:relative}
+.funnel-bar:hover{filter:brightness(1.1);cursor:default}
+.funnel-count{font-size:12px;font-family:var(--font-mono);font-weight:600;color:var(--text);width:36px;text-align:right;flex-shrink:0}
+
+/* CONVERSION TABLE */
+.conv-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.conv-tbl th{text-align:left;font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:8px 10px;border-bottom:2px solid var(--border)}
+.conv-tbl td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.conv-tbl tr:last-child td{border-bottom:none}
+.conv-tbl tr:hover{background:rgba(184,160,128,0.04)}
+.conv-arrow{color:var(--text-muted);font-family:var(--font-mono);font-weight:600}
+.conv-pct{font-family:var(--font-mono);font-weight:700}
+.conv-pct.high{color:var(--green)}
+.conv-pct.mid{color:var(--yellow)}
+.conv-pct.low{color:var(--red)}
+
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--font-mono);font-weight:600}
+.badge.green{background:rgba(90,154,106,0.12);color:var(--green)}
+.badge.red{background:rgba(192,83,79,0.12);color:var(--red)}
+.badge.yellow{background:rgba(196,160,48,0.12);color:var(--yellow)}
+.badge.orange{background:rgba(212,132,62,0.12);color:var(--orange)}
+.badge.gray{background:rgba(200,192,184,0.15);color:var(--text-muted)}
+
+/* ONBOARDING ALERT */
+.alert-box{padding:14px 18px;border-radius:10px;font-size:12px;font-family:var(--font-mono);line-height:1.6}
+.alert-box.warn{background:rgba(196,160,48,0.08);border:1px solid rgba(196,160,48,0.2);color:var(--yellow)}
+.alert-box.info{background:rgba(184,160,128,0.06);border:1px solid var(--border);color:var(--text-muted)}
+</style>
+</head>
+<body>
+
+<!-- DOCK -->
+<nav class="dock">
+  <a class="dock-item active" data-label="funil" href="#sec-funil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+  </a>
+  <a class="dock-item" data-label="conversao" href="#sec-conv">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  </a>
+  <a class="dock-item" data-label="onboarding" href="#sec-onboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+  </a>
+  <a class="dock-item" data-label="lab index" href="bloqueadores-lab.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </a>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">M</div>
+    MONOFLOOR
+  </div>
+  <div class="header-title">Cap. 5 — Funil: pipeline pre-execucao</div>
+  <div class="header-stats">
+    <span>Fonte: dashboard-data.json Q2_OBRAS</span>
+    <span>2026-04-24</span>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<div class="main">
+
+  <!-- BLOCO 1: FUNIL VISUAL -->
+  <div class="section" id="sec-funil">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      Funil de Fases — 223 obras ativas
+    </div>
+
+    <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:16px">
+      Cada barra = quantidade de obras naquela fase. Gradiente azul (inicio) a verde (execucao/conclusao).
+    </div>
+
+    <div id="funnelContainer">
+      <!-- Ordem do funil: inicio -> fim -->
+      <!-- Fase, count, cor (gradiente azul->verde) -->
+    </div>
+  </div>
+
+  <!-- BLOCO 2: CONVERSAO ENTRE FASES -->
+  <div class="section" id="sec-conv">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Conversao entre Fases Adjacentes
+    </div>
+
+    <table class="conv-tbl" id="convTable">
+      <thead>
+        <tr>
+          <th>De</th>
+          <th></th>
+          <th>Para</th>
+          <th>Saida</th>
+          <th>Entrada</th>
+          <th>Taxa</th>
+        </tr>
+      </thead>
+      <tbody id="convBody">
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BLOCO 3: ONBOARDING PENDENTE -->
+  <div class="section" id="sec-onboard">
+    <div class="section-title">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+      Onboarding Pendente (B6)
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-value red" id="kpi-onboard-pend">--</div>
+        <div class="kpi-label">Obras sem onboarding</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value accent" id="kpi-onboard-total">--</div>
+        <div class="kpi-label">Total obras ativas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value orange" id="kpi-onboard-pct">--</div>
+        <div class="kpi-label">% sem onboarding</div>
+      </div>
+    </div>
+
+    <div class="alert-box warn">
+      <strong>Atencao:</strong> O campo <code>onboardingStatus</code> retorna <code>"pendente"</code> em 100% das obras na API (feature morta no backend). Este indicador reflete dados do schema — nao da realidade operacional. Para onboarding real, cruzar com o campo <code>etapaNotas.onboarding_feito</code> do detalhe individual.
+    </div>
+
+    <div class="alert-box info" style="margin-top:10px" id="onboard-real">
+      Carregando dados reais de onboarding...
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ============================================================
+// DADOS DO FUNIL — extraidos de dashboard-data.json Q2_OBRAS
+// Ordem: inicio do funil -> final
+// ============================================================
+const funnelData = [
+  { fase: 'ENTRADA',                              count: 4,  order: 1  },
+  { fase: '1o CONTATO OP.',                        count: 9,  order: 2  },
+  { fase: 'CONTRATO',                              count: 11, order: 3  },
+  { fase: 'EM CONTRATO',                           count: 10, order: 4  },
+  { fase: 'OECT',                                  count: 6,  order: 5  },
+  { fase: 'INFORMACOES PROJETOS',                  count: 3,  order: 6  },
+  { fase: 'INFORMACOES FINANCEIRAS',               count: 1,  order: 7  },
+  { fase: 'INFORMACOES LOGISTICAS',                count: 2,  order: 8  },
+  { fase: 'AGEND. VT - AFERICAO/ORIENTACAO',       count: 48, order: 9  },
+  { fase: 'RESULTADO VT - AFERICAO/ORIENTACAO',    count: 8,  order: 10 },
+  { fase: 'RESULTADO VT - ENTRADA',                count: 1,  order: 11 },
+  { fase: 'RESULTADO VT - QUALIDADE',              count: 1,  order: 12 },
+  { fase: 'AGEND. VT - ENTRADA',                   count: 5,  order: 13 },
+  { fase: 'AGEND. VT - ACOMPANHAMENTO',            count: 1,  order: 14 },
+  { fase: 'PROJETOS - 1a REVISAO',                 count: 4,  order: 15 },
+  { fase: 'CONFIRMACOES OP 1',                     count: 9,  order: 16 },
+  { fase: 'REVISAO FINAL OP',                      count: 6,  order: 17 },
+  { fase: 'EQUIPE DE EXECUCAO',                    count: 2,  order: 18 },
+  { fase: 'AGUARDANDO LIBERACAO',                  count: 17, order: 19 },
+  { fase: 'INDUSTRIA - EM PRODUCAO',               count: 6,  order: 20 },
+  { fase: 'LOGISTICA - EM COLETA',                 count: 1,  order: 21 },
+  { fase: 'LOGISTICA - EM ENTREGA',                count: 6,  order: 22 },
+  { fase: 'LOGISTICA - MATERIAL ENTREGUE',         count: 4,  order: 23 },
+  { fase: 'OBRA EM EXECUCAO',                      count: 2,  order: 24 },
+  { fase: 'CLIENTE FINALIZADO',                    count: 42, order: 25 },
+  { fase: 'POS VENDAS ACIONADO',                   count: 2,  order: 26 },
+  { fase: 'OBRA PAUSADA',                          count: 9,  order: 27 },
+  { fase: 'OBRA CONCLUIDA',                        count: 3,  order: 28 },
+];
+
+const maxCount = Math.max(...funnelData.map(d => d.count));
+const totalObras = funnelData.reduce((s, d) => s + d.count, 0);
+
+// Color gradient: blue (start) -> teal (mid) -> green (end)
+function getFunnelColor(order, total) {
+  const t = (order - 1) / (total - 1);
+  // HSL: 210 (blue) -> 160 (teal) -> 130 (green)
+  const h = Math.round(210 - t * 80);
+  const s = Math.round(50 + t * 15);
+  const l = Math.round(45 + t * 5);
+  return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+function renderFunnel() {
+  const container = document.getElementById('funnelContainer');
+  let html = '';
+  const totalPhases = funnelData.length;
+
+  funnelData.forEach(d => {
+    const pct = Math.max((d.count / maxCount) * 100, 4);
+    const color = getFunnelColor(d.order, totalPhases);
+    html += `
+      <div class="funnel-row">
+        <div class="funnel-label">${d.fase}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:${pct}%;background:${color}">${d.count}</div>
+        </div>
+        <div class="funnel-count">${d.count}</div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+
+  // Animate
+  setTimeout(() => {
+    document.querySelectorAll('.funnel-bar').forEach(bar => {
+      bar.style.opacity = '1';
+    });
+  }, 100);
+}
+
+// ============================================================
+// CONVERSAO ENTRE FASES
+// ============================================================
+function renderConversion() {
+  const body = document.getElementById('convBody');
+  let html = '';
+
+  // Fases adjacentes significativas no pipeline linear
+  const pipeline = [
+    { from: 'ENTRADA',                           to: '1o CONTATO OP.',                     fromN: 4,  toN: 9  },
+    { from: '1o CONTATO OP.',                     to: 'CONTRATO',                            fromN: 9,  toN: 11 },
+    { from: 'CONTRATO',                            to: 'EM CONTRATO',                         fromN: 11, toN: 10 },
+    { from: 'EM CONTRATO',                         to: 'OECT',                                fromN: 10, toN: 6  },
+    { from: 'INFORMACOES (3 fases)',               to: 'AGEND. VT AFERICAO',                  fromN: 6,  toN: 48 },
+    { from: 'AGEND. VT AFERICAO',                  to: 'RESULTADO VT AFERICAO',               fromN: 48, toN: 8  },
+    { from: 'RESULTADO VT (3 fases)',              to: 'CONFIRMACOES OP 1',                   fromN: 10, toN: 9  },
+    { from: 'CONFIRMACOES OP 1',                   to: 'REVISAO FINAL OP',                    fromN: 9,  toN: 6  },
+    { from: 'REVISAO FINAL OP',                    to: 'EQUIPE + AGUARD. LIBERACAO',          fromN: 6,  toN: 19 },
+    { from: 'AGUARDANDO LIBERACAO',                to: 'INDUSTRIA - EM PRODUCAO',             fromN: 17, toN: 6  },
+    { from: 'INDUSTRIA - EM PRODUCAO',             to: 'LOGISTICA (coleta+entrega)',           fromN: 6,  toN: 11 },
+    { from: 'LOGISTICA',                           to: 'OBRA EM EXECUCAO',                    fromN: 11, toN: 2  },
+    { from: 'OBRA EM EXECUCAO',                    to: 'CLIENTE FINALIZADO',                  fromN: 2,  toN: 42 },
+    { from: 'CLIENTE FINALIZADO',                  to: 'OBRA CONCLUIDA',                      fromN: 42, toN: 3  },
+  ];
+
+  pipeline.forEach(p => {
+    // "taxa" = next / current — note: this is snapshot, not flow rate
+    // but still useful as relative indicator
+    const ratio = p.fromN > 0 ? (p.toN / p.fromN * 100) : 0;
+    let cls = 'mid';
+    if (ratio >= 80) cls = 'high';
+    if (ratio <= 30) cls = 'low';
+
+    html += `<tr>
+      <td style="font-weight:600;font-size:11px">${p.from}</td>
+      <td class="conv-arrow" style="text-align:center">&#8594;</td>
+      <td style="font-weight:600;font-size:11px">${p.to}</td>
+      <td style="font-family:var(--font-mono);text-align:center">${p.fromN}</td>
+      <td style="font-family:var(--font-mono);text-align:center">${p.toN}</td>
+      <td><span class="conv-pct ${cls}">${ratio.toFixed(0)}%</span></td>
+    </tr>`;
+  });
+
+  body.innerHTML = html;
+}
+
+// ============================================================
+// ONBOARDING
+// ============================================================
+function renderOnboarding() {
+  // API data: onboardingStatus = "pendente" em 100% (feature morta)
+  const totalAtivas = 223;
+  const pendAPI = 223; // 100% pendente na API
+  const pctAPI = 100;
+
+  document.getElementById('kpi-onboard-pend').textContent = pendAPI;
+  document.getElementById('kpi-onboard-total').textContent = totalAtivas;
+  document.getElementById('kpi-onboard-pct').textContent = pctAPI + '%';
+
+  // Dados reais da amostra de 5 obras (campo etapaNotas.onboarding_feito)
+  // 28aa71f9 (Flavio) = true | b8fbadd8 (Andre) = true | 687fbc05 (Gustavo) = sem campo
+  // 2d00e03f (Joao) = sem campo | cecc85af (Antonio) = sem campo
+  document.getElementById('onboard-real').innerHTML =
+    '<strong>Amostra real (5 obras):</strong><br>' +
+    '- 2 de 5 com <code>etapaNotas.onboarding_feito = true</code> (Flavio Ditt, Andre Salerno)<br>' +
+    '- 3 de 5 sem o campo <code>etapaNotas</code> (campo ausente = provavel que nao foi feito)<br>' +
+    '- <strong>Taxa real estimada: ~40% com onboarding feito</strong> (contra 0% que a API reporta)';
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderFunnel();
+renderConversion();
+renderOnboarding();
+
+// Dock scroll
+document.querySelectorAll('.dock-item[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Active dock
+const sections = document.querySelectorAll('.section[id]');
+const dockItems = document.querySelectorAll('.dock-item[href^="#"]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  dockItems.forEach(item => {
+    item.classList.toggle('active', item.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
