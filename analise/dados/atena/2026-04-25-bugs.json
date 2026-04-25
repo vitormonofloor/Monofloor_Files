@@ -1,0 +1,41 @@
+{
+  "olho": "bugs",
+  "executado_em": "2026-04-25T10:37:39Z",
+  "achados": [
+    {
+      "severidade": "alta",
+      "titulo": "50 obras zumbi (ativas + CLIENTE FINALIZADO)",
+      "descricao": "Obras com status ativo mas fase terminal. Deviam estar finalizadas.",
+      "evidencia": "6213aa79 (TAÍSA MENDONÇA DE OLIVEIR); a680acb2 (ALEXANDRE EDDE DINIZ DE O); 995ef403 (ARIANE RIBEIRO DOS SANTOS); 920dcacc ( PRISCILA MIRANDA BETTONI); abb93b6f (GUILHERME HAIDAR BERJEAUT)"
+    },
+    {
+      "severidade": "media",
+      "titulo": "31 obras orfas (sem consultor atribuido)",
+      "descricao": "Obras ativas sem consultor responsavel.",
+      "evidencia": "d51326f8; 83767b24; 58129f10; 2b5e9e85; 2498f5be; a681cf05; 65dc9222; 7f45fa66"
+    },
+    {
+      "severidade": "media",
+      "titulo": "Strings hardcoded no HTML: datas fixas 2026-04-xx",
+      "descricao": "Encontrados 1 ocorrencias de datas fixas 2026-04-xx fixas no HTML. Deviam ser dinamicas.",
+      "evidencia": "2026-04-15"
+    },
+    {
+      "severidade": "media",
+      "titulo": "Strings hardcoded no HTML: contagens hardcoded",
+      "descricao": "Encontrados 1 ocorrencias de contagens hardcoded fixas no HTML. Deviam ser dinamicas.",
+      "evidencia": "de 208"
+    }
+  ],
+  "metricas": {
+    "indice_saude": 65,
+    "obras_ativas": 230,
+    "zumbis": 50,
+    "orfas": 31,
+    "idades_extremas_500": 0,
+    "datas_estranhas": 0,
+    "idades_negativas": 0,
+    "finalizados_sem_fase": 0
+  },
+  "comparativo_vs_anterior": null
+}
