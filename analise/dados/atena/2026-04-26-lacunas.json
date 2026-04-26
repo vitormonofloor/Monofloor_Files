@@ -1,0 +1,27 @@
+{
+  "olho": "lacunas",
+  "executado_em": "2026-04-26T10:39:45Z",
+  "achados": [
+    {
+      "severidade": "media",
+      "titulo": "9 campos do painel-temporal nao usados no dashboard",
+      "descricao": "Campos disponiveis nos dados mas que nao aparecem referenciados no HTML do dashboard.",
+      "evidencia": "clienteNome, consultorNome, data_radar, data_radar_fonte, pipefyCardId, pipefyCreatedAt_api, pipefy_snapshot_created_at, projetoCidade, projetoMetragem"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "1 cruzamentos sem referencia no dashboard",
+      "descricao": "Cruzamentos (cruz-*.json) que existem nos dados mas nao parecem ser carregados pelo dashboard.",
+      "evidencia": "relatorios"
+    }
+  ],
+  "metricas": {
+    "campos_painel": 14,
+    "campos_referenciados_html": 397,
+    "campos_nao_usados": 9,
+    "cruzamentos_total": 4,
+    "cruzamentos_no_dashboard": 3,
+    "cruzamentos_ausentes": 1
+  },
+  "comparativo_vs_anterior": "achados: 2->2 (+0), alta: 0->0 (+0)"
+}

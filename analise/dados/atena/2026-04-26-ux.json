@@ -1,0 +1,42 @@
+{
+  "olho": "ux",
+  "executado_em": "2026-04-26T10:39:45Z",
+  "achados": [
+    {
+      "severidade": "baixa",
+      "titulo": "31 botoes sem aria-label",
+      "descricao": "Botoes interativos devem ter aria-label para acessibilidade.",
+      "evidencia": "<button type=\"button\" class=\"q4-est rodando\" onclick=\"openQ4Modal('rodando')\" title=\"Ver lista de obras RODANDO\"> "
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "11 estilos inline longos (>80 chars)",
+      "descricao": "Estilos inline extensos dificultam manutencao. Considerar mover para CSS.",
+      "evidencia": "style=\"height:1px;background:linear-gradient(90deg,transparent,#e0d8cc,transparent);margin:28px 0\"..."
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "2 blocos <script> inline com >100 chars",
+      "descricao": "Scripts inline extensos dificultam cache e manutencao.",
+      "evidencia": "2 blocos encontrados"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "11 chamadas console.* no codigo",
+      "descricao": "Console.log residuais devem ser removidos em producao.",
+      "evidencia": "11 ocorrencias"
+    }
+  ],
+  "metricas": {
+    "tamanho_kb": 246.7,
+    "linhas": 4636,
+    "ids_unicos": 160,
+    "ids_duplicados": 0,
+    "scripts_inline": 2,
+    "todos_fixme": 0,
+    "imagens_total": 0,
+    "imagens_sem_alt": 0,
+    "console_logs": 11
+  },
+  "comparativo_vs_anterior": "achados: 4->4 (+0), alta: 0->0 (+0)"
+}
