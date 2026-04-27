@@ -2,7 +2,8 @@ name: ATENA — Varredura Diária
 
 on:
   schedule:
-    - cron: "0 10 * * *"  # 10h UTC = 07h BR
+    - cron: "0 10 * * *"   # 10h UTC = 07h BR (manhã)
+    - cron: "0 22 * * *"   # 22h UTC = 19h BR (fim do dia)
   workflow_dispatch:        # permite rodar manualmente
 
 permissions:
