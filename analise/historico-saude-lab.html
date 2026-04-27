@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Histórico de Saúde</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--accent-dark:#6b4f30;
+  --text:#3a3530;--text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#3d8a5a;--red:#c45a5a;--amber:#b89a4a;--blue:#4a7ab8;--purple:#8a6ab8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;line-height:1.55}
+
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08)}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+body.embed .dock{display:none}
+
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;flex-direction:column}
+.logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:lowercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-left:auto}
+body.embed .header{display:none}
+
+.main{max-width:1200px;margin:0 auto;padding:24px 24px 60px}
+.intro{margin-bottom:24px}
+.intro h1{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-0.01em}
+.intro .lead{font-size:13px;color:var(--text-muted);max-width:780px;line-height:1.55}
+.intro .scope-note{margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);padding:8px 12px;background:rgba(184,160,128,0.06);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
+
+/* HERO SCORE */
+.hero-score{display:grid;grid-template-columns:1fr 2fr;gap:18px;margin-bottom:20px;align-items:stretch}
+@media(max-width:760px){.hero-score{grid-template-columns:1fr}}
+.score-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px 28px;text-align:center;display:flex;flex-direction:column;justify-content:center;border-left:4px solid var(--amber)}
+.score-card.alert{border-left-color:var(--red)}
+.score-card.ok{border-left-color:var(--green)}
+.score-num{font-family:var(--font-mono);font-size:64px;font-weight:600;color:var(--text);line-height:1;letter-spacing:-0.02em}
+.score-band{font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:8px}
+.score-band b{font-size:11px;color:var(--text)}
+.score-meta{font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.5}
+
+.score-line-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;display:flex;flex-direction:column}
+.score-line-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+.score-svg{width:100%;height:120px}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:760px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;border-left:3px solid var(--accent)}
+.kpi-box.alert{border-left-color:var(--red)}
+.kpi-box.warn{border-left-color:var(--amber)}
+.kpi-box.ok{border-left-color:var(--green)}
+.kpi-val{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--text);line-height:1}
+.kpi-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;margin-top:6px}
+.kpi-detail{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px}
+.section-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.section-title .small{font-family:var(--font-sans);font-size:11px;text-transform:none;letter-spacing:0;color:var(--text-muted)}
+
+/* SPARK GRID */
+.spark-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:920px){.spark-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.spark-grid{grid-template-columns:1fr}}
+.spark-card{background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent)}
+.spark-card.zumbi{border-left-color:var(--red)}
+.spark-card.lideres_ocultos{border-left-color:var(--accent-dark)}
+.spark-card.orfas{border-left-color:var(--amber)}
+.spark-card.conflitos{border-left-color:var(--purple)}
+.spark-card.lote_vt{border-left-color:var(--blue)}
+.spark-name{font-family:var(--font-mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.spark-current{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px}
+.spark-num{font-family:var(--font-mono);font-size:22px;font-weight:600;color:var(--text);line-height:1}
+.spark-delta{font-family:var(--font-mono);font-size:10px;font-weight:600;padding:2px 6px;border-radius:99px}
+.spark-delta.up{background:rgba(196,90,90,0.12);color:var(--red)}
+.spark-delta.down{background:rgba(61,138,90,0.12);color:var(--green)}
+.spark-delta.same{background:rgba(138,126,114,0.12);color:var(--text-muted)}
+.spark-svg{width:100%;height:36px}
+
+/* STACK BAR DIA × OLHO */
+.dias-grid{display:flex;flex-direction:column;gap:8px}
+.dia-row{display:grid;grid-template-columns:80px 1fr 80px;gap:12px;padding:8px 0;align-items:center}
+@media(max-width:600px){.dia-row{grid-template-columns:60px 1fr 60px;gap:8px}}
+.dia-data{font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:500}
+.dia-stack{display:flex;height:22px;border-radius:4px;overflow:hidden;background:rgba(184,160,128,0.08)}
+.dia-seg{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;color:#fff;font-weight:600}
+.dia-seg.alta{background:var(--red)}
+.dia-seg.media{background:var(--amber)}
+.dia-seg.baixa{background:var(--text-muted)}
+.dia-total{font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:600;text-align:right}
+
+/* LEGENDA */
+.legenda{display:flex;gap:16px;font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:12px}
+.legenda-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.legenda .alta{background:var(--red)}
+.legenda .media{background:var(--amber)}
+.legenda .baixa{background:var(--text-muted)}
+
+/* OLHO BREAKDOWN */
+.olhos-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:760px){.olhos-grid{grid-template-columns:repeat(2,1fr)}}
+.olho-card{background:var(--bg);padding:12px;border-radius:6px;text-align:center;border-bottom:3px solid var(--accent)}
+.olho-card.alta-flag{border-bottom-color:var(--red)}
+.olho-name{font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px}
+.olho-num{font-family:var(--font-mono);font-size:20px;font-weight:600;color:var(--text)}
+.olho-sev{display:flex;justify-content:center;gap:4px;margin-top:6px;font-family:var(--font-mono);font-size:9px}
+.olho-sev span{padding:1px 5px;border-radius:99px;background:rgba(184,160,128,0.1)}
+.olho-sev .a{background:rgba(196,90,90,0.15);color:var(--red)}
+.olho-sev .m{background:rgba(184,154,74,0.15);color:var(--amber)}
+.olho-sev .b{background:rgba(138,126,114,0.15);color:var(--text-muted)}
+
+/* ACHADOS */
+.achados-list{display:flex;flex-direction:column;gap:8px}
+.achado{display:grid;grid-template-columns:80px 1fr 70px;gap:10px;padding:10px 14px;background:var(--bg);border-radius:6px;align-items:start;border-left:3px solid var(--accent)}
+.achado.alta{border-left-color:var(--red)}
+.achado.media{border-left-color:var(--amber)}
+.achado.baixa{border-left-color:var(--text-muted)}
+@media(max-width:700px){.achado{grid-template-columns:1fr;gap:4px}}
+.achado-olho{font-family:var(--font-mono);font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+.achado-titulo{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.achado-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+.achado-evi{font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:4px;font-style:italic}
+.achado-sev{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;text-align:center;padding:3px 8px;border-radius:99px;align-self:start;justify-self:end}
+.achado-sev.alta{background:rgba(196,90,90,0.12);color:var(--red)}
+.achado-sev.media{background:rgba(184,154,74,0.12);color:var(--amber)}
+.achado-sev.baixa{background:rgba(138,126,114,0.12);color:var(--text-muted)}
+
+.footer-meta{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:20px}
+.footer-meta span b{color:var(--text)}
+
+.loader{display:flex;align-items:center;justify-content:center;min-height:300px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+.error{padding:20px;background:rgba(196,90,90,0.08);border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central"><svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard"><svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="atena.html" class="dock-item" data-label="ATENA"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg></a>
+  <a href="labs.html" class="dock-item active" data-label="Labs"><svg viewBox="0 0 20 20"><path d="M7 2v6L3 16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2L13 8V2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+</nav>
+
+<header class="header">
+  <a href="../hub.html" style="text-decoration:none;color:inherit">
+    <div class="header-brand">
+      <div class="logo-text">monofloor</div>
+      <div class="logo-sub">Laboratório · Histórico de Saúde</div>
+    </div>
+  </a>
+  <div class="header-title">Evolução do índice ATENA + 5 alarmes</div>
+</header>
+
+<main class="main" id="root">
+  <div class="loader">Carregando histórico…</div>
+</main>
+
+<script>
+(async function(){
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.body.classList.add('embed');
+  }
+
+  const root = document.getElementById('root');
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmtData(iso) {
+    if (!iso) return '—';
+    const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return m ? m[3]+'/'+m[2] : iso;
+  }
+  function scoreBand(s) {
+    if (s == null) return { name: '—', cls: '' };
+    if (s < 50) return { name: 'crítico', cls: 'alert' };
+    if (s < 70) return { name: 'atenção', cls: '' };
+    if (s < 85) return { name: 'bom', cls: 'ok' };
+    return { name: 'excelente', cls: 'ok' };
+  }
+  async function fetchSafe(url) {
+    try {
+      const r = await fetch(url, {cache:'no-store'});
+      if (!r.ok) return null;
+      return await r.json();
+    } catch(e) { return null; }
+  }
+
+  // Fetch tudo em paralelo
+  const [atenaIdx, backlog, headline] = await Promise.all([
+    fetchSafe('dados/atena/index.json'),
+    fetchSafe('dados/backlog-historico.json'),
+    fetchSafe('dados/headline.json'),
+  ]);
+
+  if (!atenaIdx && !backlog) {
+    root.innerHTML = '<div class="error">Não carregou dados/atena/index.json nem dados/backlog-historico.json</div>';
+    return;
+  }
+
+  // === SCORE ===
+  const scoreAtual = headline?.score ?? atenaIdx?.indice_saude ?? null;
+  const band = scoreBand(scoreAtual);
+  const totalAchados = atenaIdx?.total_achados ?? 0;
+  const achadosAlta = atenaIdx?.achados_alta ?? 0;
+  const achadosMedia = atenaIdx?.achados_media ?? 0;
+  const achadosBaixa = atenaIdx?.achados_baixa ?? 0;
+  const varreduras = atenaIdx?.varreduras || [];
+
+  // === SPARKLINE SCORE ===
+  // Como só temos score atual, vamos usar varreduras × N achados como proxy
+  // Ou plot só pontos disponíveis com score se existir
+  // Por enquanto, plot total_achados ao longo do tempo (se tiver histórico)
+  const scorePoints = []; // (date, score) — backfill quando tivermos
+  // Pra demonstração, vou usar apenas o ponto atual + nota informando que histórico vem
+  function renderScoreSpark() {
+    // Se houver pelo menos 2 varreduras com idx, plota linha. Caso contrário, mostra só ponto atual.
+    if (varreduras.length < 2) return '<svg class="score-svg" viewBox="0 0 200 80"><text x="100" y="45" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#a89e92">Histórico do score chega na FASE 8 (1 ponto disponível)</text></svg>';
+    return '';
+  }
+
+  // === ACHADOS HOJE × OLHO ===
+  const sumario = atenaIdx?.sumario_hoje || {};
+  const olhos = ['ux','insights','lacunas','bugs','oportunidades'];
+
+  // === STACK BAR HISTÓRICO POR DIA (varreduras) ===
+  // Como cada varredura tem 5 olhos com achados/alta/media/baixa só para o DIA atual no index.json,
+  // não temos histórico granular dos achados por dia ainda.
+  // Vou ler arquivos {date}-bugs.json etc para cada varredura e somar.
+
+  async function carregarTotaisPorDia() {
+    const dias = varreduras.map(v => v.date);
+    const totais = {};
+    await Promise.all(dias.map(async (date) => {
+      const total = { alta: 0, media: 0, baixa: 0, n: 0 };
+      await Promise.all(olhos.map(async (olho) => {
+        const d = await fetchSafe(`dados/atena/${date}-${olho}.json`);
+        if (d?.achados) {
+          d.achados.forEach(a => {
+            const sev = (a.severidade || '').toLowerCase();
+            if (sev === 'alta') total.alta++;
+            else if (sev === 'media' || sev === 'média') total.media++;
+            else total.baixa++;
+            total.n++;
+          });
+        }
+      }));
+      totais[date] = total;
+    }));
+    return totais;
+  }
+  const totaisPorDia = await carregarTotaisPorDia();
+
+  // === SPARKLINE DOS 5 ÍNDICES (backlog histórico) ===
+  const indices = ['zumbi','lideres_ocultos','orfas','conflitos','lote_vt'];
+  const indiceColors = {
+    zumbi: 'var(--red)', lideres_ocultos: 'var(--accent-dark)',
+    orfas: 'var(--amber)', conflitos: 'var(--purple)', lote_vt: 'var(--blue)'
+  };
+  const indiceNames = {
+    zumbi: 'zumbi', lideres_ocultos: 'líderes ocultos',
+    orfas: 'órfãs', conflitos: 'conflitos', lote_vt: 'lote VT'
+  };
+
+  function renderSparkline(values, color) {
+    if (!values || values.length < 2) return '<text x="50%" y="50%" text-anchor="middle" font-size="9" fill="#a89e92" font-family="JetBrains Mono">—</text>';
+    const max = Math.max(...values, 1);
+    const min = Math.min(...values, 0);
+    const range = (max - min) || 1;
+    const w = 200, h = 36;
+    const stepX = w / (values.length - 1);
+    const points = values.map((v, i) => `${(i * stepX).toFixed(1)},${(h - ((v - min) / range) * (h - 6) - 3).toFixed(1)}`);
+    const lastX = ((values.length - 1) * stepX).toFixed(1);
+    const lastY = (h - ((values[values.length-1] - min) / range) * (h - 6) - 3).toFixed(1);
+    return `
+      <polyline points="${points.join(' ')}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lastX}" cy="${lastY}" r="3" fill="${color}"/>
+    `;
+  }
+
+  // Extrai série dos índices
+  const series = {};
+  indices.forEach(idx => { series[idx] = (backlog || []).map(e => e.indices?.[idx]?.total ?? 0); });
+
+  // Deltas (último - penúltimo)
+  function deltaInfo(arr) {
+    if (!arr || arr.length < 2) return { txt: 'novo', cls: 'same' };
+    const last = arr[arr.length - 1];
+    const prev = arr[arr.length - 2];
+    const d = last - prev;
+    if (d > 0) return { txt: '▲ +'+d, cls: 'up' };
+    if (d < 0) return { txt: '▼ '+d, cls: 'down' };
+    return { txt: '= 0', cls: 'same' };
+  }
+
+  // === ACHADOS DETALHADOS (HOJE) ===
+  const dataHoje = (varreduras[varreduras.length-1] || {}).date;
+  const achadosHoje = [];
+  if (dataHoje) {
+    await Promise.all(olhos.map(async (olho) => {
+      const d = await fetchSafe(`dados/atena/${dataHoje}-${olho}.json`);
+      if (d?.achados) {
+        d.achados.forEach(a => {
+          achadosHoje.push({ olho, ...a, sev: (a.severidade || '').toLowerCase() });
+        });
+      }
+    }));
+  }
+  // Ordena: alta primeiro
+  const sevOrder = { alta: 0, media: 1, 'média': 1, baixa: 2 };
+  achadosHoje.sort((a, b) => (sevOrder[a.sev] ?? 3) - (sevOrder[b.sev] ?? 3));
+
+  // === RENDER ===
+  // Stack bar render
+  const renderStackRow = (date, t) => {
+    const total = t.n;
+    if (total === 0) return `<div class="dia-row"><span class="dia-data">${fmtData(date)}</span><div class="dia-stack" style="opacity:0.4"></div><span class="dia-total">—</span></div>`;
+    const wA = (t.alta / total) * 100;
+    const wM = (t.media / total) * 100;
+    const wB = (t.baixa / total) * 100;
+    return `<div class="dia-row">
+      <span class="dia-data">${fmtData(date)}</span>
+      <div class="dia-stack">
+        ${t.alta > 0 ? `<div class="dia-seg alta" style="width:${wA}%" title="alta: ${t.alta}">${t.alta}</div>` : ''}
+        ${t.media > 0 ? `<div class="dia-seg media" style="width:${wM}%" title="média: ${t.media}">${t.media}</div>` : ''}
+        ${t.baixa > 0 ? `<div class="dia-seg baixa" style="width:${wB}%" title="baixa: ${t.baixa}">${t.baixa}</div>` : ''}
+      </div>
+      <span class="dia-total">${total}</span>
+    </div>`;
+  };
+
+  const olhosCards = olhos.map(olho => {
+    const o = sumario[olho] || { achados: 0, alta: 0, media: 0, baixa: 0 };
+    return `<div class="olho-card ${o.alta > 0 ? 'alta-flag' : ''}">
+      <div class="olho-name">${olho}</div>
+      <div class="olho-num">${o.achados || 0}</div>
+      <div class="olho-sev">
+        ${o.alta > 0 ? `<span class="a">${o.alta} alta</span>` : ''}
+        ${o.media > 0 ? `<span class="m">${o.media} méd</span>` : ''}
+        ${o.baixa > 0 ? `<span class="b">${o.baixa} bx</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  const sparkCards = indices.map(idx => {
+    const arr = series[idx] || [];
+    const last = arr.length ? arr[arr.length-1] : 0;
+    const d = deltaInfo(arr);
+    return `<div class="spark-card ${idx}">
+      <div class="spark-name">${indiceNames[idx]}</div>
+      <div class="spark-current">
+        <span class="spark-num">${last}</span>
+        <span class="spark-delta ${d.cls}">${d.txt}</span>
+      </div>
+      <svg class="spark-svg" viewBox="0 0 200 36" preserveAspectRatio="none">
+        ${renderSparkline(arr, indiceColors[idx])}
+      </svg>
+    </div>`;
+  }).join('');
+
+  const achadosHtml = achadosHoje.map(a => `
+    <div class="achado ${a.sev}">
+      <div>
+        <div class="achado-olho">${a.olho}</div>
+      </div>
+      <div>
+        <div class="achado-titulo">${escHtml(a.titulo)}</div>
+        <div class="achado-desc">${escHtml(a.descricao)}</div>
+        ${a.evidencia ? `<div class="achado-evi">${escHtml(a.evidencia)}</div>` : ''}
+      </div>
+      <div class="achado-sev ${a.sev}">${escHtml(a.severidade)}</div>
+    </div>
+  `).join('');
+
+  // Última varredura
+  const ultimaVarredura = atenaIdx?.ultima_varredura ? new Date(atenaIdx.ultima_varredura).toLocaleString('pt-BR') : '—';
+
+  root.innerHTML = `
+    <div class="intro">
+      <h1>Índice de saúde atual: ${scoreAtual ?? '—'} · ${totalAchados} achados em ${varreduras.length} varreduras</h1>
+      <p class="lead">Score do <a href="dados/SCORE-FORMULA.md">headline.json</a> + síntese das ${varreduras.length} varreduras ATENA disponíveis. <b>${achadosAlta}</b> achados alta · <b>${achadosMedia}</b> média · <b>${achadosBaixa}</b> baixa. 5 índices históricos (zumbi/líderes/órfãs/conflitos/lote VT) seguem evolução em ${(backlog || []).length} pontos.</p>
+      <div class="scope-note">Última varredura: ${ultimaVarredura} · Fonte: atena/index.json + atena/{date}-{olho}.json + backlog-historico.json + headline.json</div>
+    </div>
+
+    <!-- HERO SCORE -->
+    <div class="hero-score">
+      <div class="score-card ${band.cls}">
+        <div class="score-num">${scoreAtual ?? '—'}</div>
+        <div class="score-band">faixa <b>${band.name}</b></div>
+        <div class="score-meta">Penalidades visíveis em SCORE-FORMULA.md · headline.json</div>
+      </div>
+      <div class="score-line-card">
+        <div class="score-line-title">Volume de achados ATENA por varredura</div>
+        <div class="dias-grid">
+          ${varreduras.map(v => renderStackRow(v.date, totaisPorDia[v.date] || {alta:0,media:0,baixa:0,n:0})).join('')}
+        </div>
+        <div class="legenda">
+          <span><span class="legenda-dot alta"></span>alta</span>
+          <span><span class="legenda-dot media"></span>média</span>
+          <span><span class="legenda-dot baixa"></span>baixa</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-box ${achadosAlta > 0 ? 'alert' : 'ok'}">
+        <div class="kpi-val">${totalAchados}</div>
+        <div class="kpi-label">achados hoje</div>
+        <div class="kpi-detail">total nos 5 olhos</div>
+      </div>
+      <div class="kpi-box ${achadosAlta > 1 ? 'alert' : 'warn'}">
+        <div class="kpi-val">${achadosAlta}</div>
+        <div class="kpi-label">severidade alta</div>
+        <div class="kpi-detail">críticos hoje</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-val">${varreduras.length}</div>
+        <div class="kpi-label">varreduras ATENA</div>
+        <div class="kpi-detail">${varreduras[0]?.date || '—'} → ${varreduras[varreduras.length-1]?.date || '—'}</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-val">${(backlog || []).length}</div>
+        <div class="kpi-label">snapshots backlog</div>
+        <div class="kpi-detail">série temporal dos índices</div>
+      </div>
+    </div>
+
+    <!-- SPARKLINES INDICES -->
+    <div class="section">
+      <div class="section-title">
+        Evolução dos 5 índices · ${(backlog || []).length} snapshots
+        <span class="small">delta = último vs penúltimo</span>
+      </div>
+      <div class="spark-grid">
+        ${sparkCards}
+      </div>
+    </div>
+
+    <!-- OLHOS HOJE -->
+    <div class="section">
+      <div class="section-title">
+        ATENA · 5 olhos hoje (${dataHoje || '—'})
+        <span class="small">borda vermelha = tem achado de alta severidade</span>
+      </div>
+      <div class="olhos-grid">${olhosCards}</div>
+    </div>
+
+    <!-- ACHADOS DETALHADOS -->
+    <div class="section">
+      <div class="section-title">
+        Achados de hoje · ordenados por severidade
+        <span class="small">${achadosHoje.length} achados</span>
+      </div>
+      <div class="achados-list">
+        ${achadosHtml || '<div style="color:#a89e92;font-size:11px;font-style:italic;padding:12px">Sem achados hoje (ou arquivos {date}-*.json não disponíveis).</div>'}
+      </div>
+    </div>
+
+    <div class="footer-meta">
+      <span>Score atual: <b>${scoreAtual ?? '—'}</b></span>
+      <span>Achados hoje: <b>${totalAchados}</b></span>
+      <span>Varreduras: <b>${varreduras.length}</b></span>
+      <span>Snapshots backlog: <b>${(backlog || []).length}</b></span>
+      <span>Próxima ATENA: <b>${atenaIdx?.proxima_varredura ? new Date(atenaIdx.proxima_varredura).toLocaleString('pt-BR') : '—'}</b></span>
+    </div>
+  `;
+})();
+</script>
+
+</body>
+</html>
