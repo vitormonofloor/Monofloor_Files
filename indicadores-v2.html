@@ -372,19 +372,19 @@ body{animation:pageIn 0.6s ease-out}
     <div class="fire-card">
       <span class="fire-pill crit">0% resolvidas</span>
       <div class="fire-status"><span class="fire-dot red"></span><span class="fire-status-text red">Nenhum resolvido</span></div>
-      <div class="fire-number red" id="ind-fire-ocorrencias">286</div>
+      <div class="fire-number red" id="ind-fire-ocorrencias">—</div>
       <div class="fire-unit">problemas detectados nas obras</div>
-      <div class="fire-insight"><span id="ind-fire-criticas">26</span> são críticos — nenhum foi resolvido</div>
+      <div class="fire-insight"><span id="ind-fire-criticas">—</span> são críticos — nenhum foi resolvido</div>
       <div class="fire-detail">Desvios de qualidade, reclamações de clientes e abandonos de obra — detectados pela IA nas mensagens dos grupos.</div>
       <a class="fire-action" href="#sec-problemas" onclick="event.stopPropagation();openKPI(1)">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
     <div class="fire-card">
       <span class="fire-pill warn">meta ≤15%</span>
       <div class="fire-status"><span class="fire-dot amber"></span><span class="fire-status-text amber">Acima da meta</span></div>
-      <div class="fire-number amber"><span id="ind-fire-atraso">32.1</span><span style="font-size:32px;font-weight:300">%</span></div>
+      <div class="fire-number amber"><span id="ind-fire-atraso">—</span><span style="font-size:32px;font-weight:300">%</span></div>
       <div class="fire-unit">taxa de atraso</div>
-      <div class="fire-insight">Uma em cada três obras está atrasada</div>
-      <div class="fire-detail">O dobro da meta de 15%. Piorou 2.3pp nas últimas 6 horas.</div>
+      <div class="fire-insight">Acima da meta de ≤15%</div>
+      <div class="fire-detail">% de obras detectadas pela KIRA com atraso operacional vs cronograma.</div>
       <a class="fire-action" href="#sec-problemas" onclick="event.stopPropagation();openKPI(2)">Ver obras atrasadas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </div>
@@ -405,15 +405,15 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
-          <div class="kpi-row"><span class="kpi-val gold" id="ind-msg-total">7.585</span><span class="kpi-delta good">↑312</span></div>
+          <div class="kpi-row"><span class="kpi-val gold" id="ind-msg-total">—</span></div>
           <div class="kpi-label">Mensagens 30d</div>
-          <div class="kpi-sub">Telegram <span id="ind-msg-tg">4.716</span> · WhatsApp <span id="ind-msg-wa">2.869</span></div>
+          <div class="kpi-sub">Telegram <span id="ind-msg-tg">—</span> · WhatsApp <span id="ind-msg-wa">—</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
-          <div class="kpi-row"><span class="kpi-val blue" id="ind-proj-com-msg">133</span><span class="kpi-delta good">↑2</span></div>
+          <div class="kpi-row"><span class="kpi-val blue" id="ind-proj-com-msg">—</span></div>
           <div class="kpi-label">Projetos com msgs</div>
-          <div class="kpi-sub">de <span id="ind-proj-base">159</span> (<span id="ind-proj-pct">83.6</span>%)</div>
+          <div class="kpi-sub">de <span id="ind-proj-base">—</span> (<span id="ind-proj-pct">—</span>%)</div>
         </div>
       </div>
     </div>
@@ -422,14 +422,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red" id="ind-ocorrencias">286</span><span class="kpi-delta bad">↑14</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-ocorrencias">—</span></div>
           <div class="kpi-label">Ocorrências</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:100%"></div><div class="kpi-meter-mark" style="left:17%"></div></div>
           <div class="kpi-range"><span>0 resolvidas</span><span>meta ≤50</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red" id="ind-criticas">26</span><span class="kpi-delta bad">↑3</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-criticas">—</span></div>
           <div class="kpi-label">Críticas</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:86%"></div><div class="kpi-meter-mark" style="left:17%"></div></div>
           <div class="kpi-range"><span>resolução 0%</span><span>meta ≤5</span></div>
@@ -441,14 +441,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot amber"></div>
-          <div class="kpi-row"><span class="kpi-val amber" id="ind-silencio">16.4%</span><span class="kpi-delta bad">↑1.2pp</span></div>
+          <div class="kpi-row"><span class="kpi-val amber" id="ind-silencio">—</span></div>
           <div class="kpi-label">Taxa silêncio</div>
           <div class="kpi-meter"><div class="kpi-meter-fill amber" style="width:65%"></div><div class="kpi-meter-mark" style="left:40%"></div></div>
           <div class="kpi-range"><span>26 mudas</span><span>meta ≤10%</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red" id="ind-atraso-pct">32.1%</span><span class="kpi-delta bad">↑2.3pp</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-atraso-pct">—</span></div>
           <div class="kpi-label">Taxa atraso</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:85%"></div><div class="kpi-meter-mark" style="left:40%"></div></div>
           <div class="kpi-range"><span>51 obras</span><span>meta ≤15%</span></div>
@@ -463,7 +463,7 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red" id="ind-pausa-pct">47.6%</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-pausa-pct">—</span></div>
           <div class="kpi-label">Taxa de pausa</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:95%"></div><div class="kpi-meter-mark" style="left:20%"></div></div>
           <div class="kpi-range"><span>quase metade</span><span>meta ≤10%</span></div>
@@ -522,9 +522,9 @@ body{animation:pageIn 0.6s ease-out}
     <div class="spark-top">
       <span class="spark-title">Volume diário · 30 dias</span>
       <div class="spark-stats">
-        <div><div class="spark-stat-num" id="ind-spark-media">253</div><div class="spark-stat-label">média/dia</div></div>
-        <div><div class="spark-stat-num" id="ind-spark-pico">412</div><div class="spark-stat-label">pico</div></div>
-        <div><div class="spark-stat-num" id="ind-spark-total">7.585</div><div class="spark-stat-label">total</div></div>
+        <div><div class="spark-stat-num" id="ind-spark-media">—</div><div class="spark-stat-label">média/dia</div></div>
+        <div><div class="spark-stat-num" id="ind-spark-pico">—</div><div class="spark-stat-label">pico</div></div>
+        <div><div class="spark-stat-num" id="ind-spark-total">—</div><div class="spark-stat-label">total</div></div>
       </div>
     </div>
     <div class="spark-area" id="sparkChart"></div>
@@ -536,6 +536,9 @@ body{animation:pageIn 0.6s ease-out}
   <div class="section-head">
     <span class="section-tag analysis">Onde estão os problemas</span>
     <div class="section-line"></div>
+  </div>
+  <div style="font-size:10px;color:#a89e92;font-style:italic;margin:8px 0 14px;padding:6px 10px;background:#f4f0e6;border-left:2px solid #b89a4a;border-radius:3px;">
+    Visão estática · dados específicos por consultor serão dinamizados em fase posterior.
   </div>
   <div class="cons-layout">
     <div class="cons-list">

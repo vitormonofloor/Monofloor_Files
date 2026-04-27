@@ -2472,10 +2472,13 @@ function renderHero() {
   if ($('dyn-ativas-scope')) $('dyn-ativas-scope').textContent = ativas;
   if ($('dyn-total-scope')) $('dyn-total-scope').textContent = totalObrasFmt;
 
-  // stamp-now: usar data do snapshot, não hora local do browser
-  const snapISO = AGG.snapshot_date || new Date().toISOString().slice(0, 10);
-  const snapTs = new Date(snapISO + 'T12:00:00');
-  $('stamp-now').textContent = snapTs.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  // stamp-now: data do snapshot real. Se AGG não trouxer, mostra "—" e NÃO mente com data local.
+  if (AGG.snapshot_date) {
+    const snapTs = new Date(AGG.snapshot_date + 'T12:00:00');
+    $('stamp-now').textContent = snapTs.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  } else {
+    $('stamp-now').textContent = '—';
+  }
 }
 
 // ============== Q1 ==============
@@ -3774,14 +3777,21 @@ function renderBaldes() {
 
 // ============== SNAPSHOT DATE + BADGE ==============
 function renderSnapshotDate() {
-  // Tentar extrair snapshot_date do AGG; fallback: data de hoje (evita literal defasado)
-  const snapISO = AGG.snapshot_date || new Date().toISOString().slice(0, 10);
+  // Se AGG n\u00e3o trouxer snapshot_date, N\u00c3O usa data local (mentira). Mostra "\u2014" + badge vermelho.
+  if (!AGG.snapshot_date) {
+    if ($('stamp-snapshot')) $('stamp-snapshot').textContent = '\u2014';
+    if ($('stamp-snapshot-footer')) $('stamp-snapshot-footer').textContent = '\u2014';
+    if ($('snapshot-badge')) {
+      $('snapshot-badge').innerHTML = '<span style="background:var(--red);color:#fff;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:8px;">snapshot indispon\u00edvel</span>';
+    }
+    return;
+  }
+  const snapISO = AGG.snapshot_date;
   const parts = snapISO.split('-');
   const fmt = parts[2] + '/' + parts[1] + '/' + parts[0];
   if ($('stamp-snapshot')) $('stamp-snapshot').textContent = fmt;
   if ($('stamp-snapshot-footer')) $('stamp-snapshot-footer').textContent = fmt;
 
-  // Badge de defasagem
   const snapDate = new Date(snapISO + 'T00:00:00');
   const hoje = new Date();
   const diffDias = Math.floor((hoje - snapDate) / 86400000);
