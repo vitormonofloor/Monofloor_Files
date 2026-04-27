@@ -1602,6 +1602,30 @@
       </div>
     </div>
 
+    <!-- ============== V3 — CAIXA-PRETA KIRA ============== -->
+    <div class="ki-caixa-preta" style="margin-top:24px;background:rgba(184,160,128,0.04);border:1px solid #e0d8cc;border-radius:8px;padding:18px 20px">
+      <div class="ki-ranking-title" style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ede6dc;padding-bottom:8px;margin-bottom:10px">
+        <span>Caixa-preta KIRA — narrativas não categorizadas</span>
+        <span id="cp-count" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#a89e92;font-weight:400;letter-spacing:0;text-transform:none">— amostras</span>
+      </div>
+      <p style="font-size:11px;color:#a89e92;margin-bottom:14px;line-height:1.5">87.6% dos alertas que KIRA emite caem em "OUTROS" — narrativa textual livre que nenhuma categoria captura. Aqui está o que ele realmente vê. Inteligência rica perdida quando se olha só pelos rótulos.</p>
+
+      <div id="cp-categorias" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10px"></div>
+
+      <input type="text" id="cp-busca" placeholder="buscar palavra na narrativa…" style="width:100%;padding:9px 14px;border:1px solid #e0d8cc;border-radius:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;margin-bottom:12px;background:#fff;color:#3a3530;outline:none">
+
+      <div id="cp-amostras" style="max-height:420px;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:8px">
+        <div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px">Carregando narrativas KIRA…</div>
+      </div>
+
+      <details style="margin-top:18px;border-top:1px solid #ede6dc;padding-top:14px">
+        <summary style="cursor:pointer;font-size:11px;color:#8a7e72;font-family:'JetBrains Mono',monospace;letter-spacing:0.06em;text-transform:uppercase">Top 20 obras críticas — risco adiamento + idade &gt; 180d ▾</summary>
+        <div id="cp-top20" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
+      </details>
+
+      <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:0.04em">fonte: cruz-alertas.json · gerado <span id="cp-gerado">—</span></div>
+    </div>
+
     <!-- Separador visual: diagnóstico estrutural -->
     <div style="height:1px;background:linear-gradient(90deg,transparent,#e0d8cc,transparent);margin:28px 0"></div>
 
@@ -4803,9 +4827,104 @@ document.addEventListener('click', function(e) {
   }, 300);
 });
 
+// ============== V3 — CAIXA-PRETA KIRA ==============
+async function loadCaixaPreta() {
+  try {
+    var r = await fetch('dados/cruz-alertas.json?t=' + Date.now());
+    if (!r.ok) { console.warn('[caixa-preta] cruz-alertas.json: HTTP ' + r.status); return; }
+    var d = await r.json();
+
+    var $ = function(id){ return document.getElementById(id); };
+    var esc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+    var amostras = d.amostras_outros || [];
+    var totalOutros = (d.distribuicao_por_categoria || {}).OUTROS || amostras.length;
+    var elCount = $('cp-count'); if (elCount) elCount.textContent = amostras.length + ' visíveis · ' + totalOutros + ' totais';
+    var elGerado = $('cp-gerado'); if (elGerado) elGerado.textContent = d.gerado_em || '—';
+
+    // Categorias (chips)
+    var cats = d.distribuicao_por_categoria || {};
+    var totalAlertas = d.total_alertas_emitidos || Object.values(cats).reduce(function(a,b){return a+b;},0);
+    var entries = Object.entries(cats).sort(function(a,b){ return b[1]-a[1]; });
+    var catsEl = $('cp-categorias');
+    if (catsEl) {
+      catsEl.innerHTML = entries.map(function(e){
+        var k=e[0], v=e[1];
+        var pct = totalAlertas > 0 ? ((v/totalAlertas)*100).toFixed(1) : '0';
+        var isOutros = k === 'OUTROS';
+        return '<span style="background:' + (isOutros ? '#c45a5a' : 'rgba(184,160,128,0.15)') +
+               ';color:' + (isOutros ? '#fff' : '#3a3530') +
+               ';padding:5px 10px;border-radius:99px;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:6px">' +
+               esc(k) + ' <b style="font-weight:600">' + v + '</b> <span style="opacity:0.7">' + pct + '%</span></span>';
+      }).join('');
+    }
+
+    // Render amostras (com filtro por busca)
+    function renderAmostras(busca) {
+      var filtered = busca ? amostras.filter(function(s){ return String(s).toLowerCase().indexOf(busca.toLowerCase()) >= 0; }) : amostras;
+      var elList = $('cp-amostras');
+      if (!elList) return;
+      if (filtered.length === 0) {
+        elList.innerHTML = '<div style="color:#a89e92;font-size:12px;font-style:italic;padding:12px">Nenhuma narrativa contendo "' + esc(busca) + '"</div>';
+        if (elCount) elCount.textContent = '0 de ' + amostras.length + ' visíveis';
+        return;
+      }
+      elList.innerHTML = filtered.slice(0, 200).map(function(s){
+        var txt = esc(s);
+        // destaca termos críticos
+        var critical = /(CR[ÍI]TICO|ATEN[ÇC][ÃA]O|FINANCEIRO|INSATISFA[ÇC][ÃA]O|RECLAMAÇ[ÃA]O|reclamou|abandonou|bloquead|atraso|risco)/gi;
+        txt = txt.replace(critical, '<b style="color:#c45a5a;font-weight:600">$1</b>');
+        return '<div style="padding:10px 14px;background:#fff;border-left:2px solid #b8a080;border-radius:0 4px 4px 0;font-size:12px;line-height:1.55;color:#3a3530">' + txt + '</div>';
+      }).join('');
+      if (elCount) elCount.textContent = filtered.length + ' de ' + amostras.length + ' visíveis · ' + totalOutros + ' totais';
+    }
+    renderAmostras('');
+
+    // Listener de busca
+    var inputBusca = $('cp-busca');
+    if (inputBusca) {
+      var debounce;
+      inputBusca.addEventListener('input', function(e){
+        clearTimeout(debounce);
+        debounce = setTimeout(function(){ renderAmostras(e.target.value); }, 150);
+      });
+    }
+
+    // Top 20 críticas
+    var top20 = d.top20_mais_criticas_risco_adiamento_idade_gt_180 || [];
+    var elTop20 = $('cp-top20');
+    if (elTop20 && top20.length) {
+      elTop20.innerHTML = top20.map(function(o){
+        var alertas = (o.alertas || []).map(function(a){
+          return '<li style="margin:4px 0;font-size:11px;color:#5a5550;line-height:1.45">' + esc(a) + '</li>';
+        }).join('');
+        var cats = (o.categorias || []).map(function(c){
+          var color = c === 'RISCO_ADIAMENTO' ? '#c45a5a' : (c === 'OUTROS' ? '#8a7e72' : '#b89a4a');
+          return '<span style="font-size:9px;background:rgba(' + (c==='RISCO_ADIAMENTO'?'196,90,90':(c==='OUTROS'?'138,126,114':'184,154,74')) + ',0.12);color:' + color + ';padding:2px 6px;border-radius:99px;font-family:\'JetBrains Mono\',monospace;letter-spacing:0.04em">' + esc(c) + '</span>';
+        }).join(' ');
+        return '<div style="padding:12px 14px;background:#fff;border-left:3px solid #c45a5a;border-radius:0 4px 4px 0">' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;flex-wrap:wrap">' +
+            '<div style="flex:1;min-width:200px"><strong style="font-size:13px;color:#2a2520">' + esc(o.cliente||'?') + '</strong>' +
+              '<div style="font-size:10px;color:#a89e92;margin-top:2px">' + esc(o.cidade||'') + ' · ' + esc(o.fase||'') + ' · consultor: ' + esc(o.consultor||'—') + '</div></div>' +
+            '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#c45a5a;text-align:right;white-space:nowrap">' + (o.idade_dias||0) + 'd · ' + (o.qtd_alertas||0) + ' alertas</div>' +
+          '</div>' +
+          '<div style="margin:6px 0">' + cats + '</div>' +
+          (alertas ? '<ul style="margin:6px 0 0;padding-left:18px;list-style:disc">' + alertas + '</ul>' : '') +
+        '</div>';
+      }).join('');
+    } else if (elTop20) {
+      elTop20.innerHTML = '<div style="color:#a89e92;font-size:11px;font-style:italic">Sem obras críticas com risco de adiamento e idade &gt; 180d.</div>';
+    }
+  } catch(e) {
+    console.warn('[caixa-preta] fetch fallback:', e);
+    var elList = document.getElementById('cp-amostras');
+    if (elList) elList.innerHTML = '<div style="color:#c45a5a;font-size:12px;padding:12px">Falhou ao carregar cruz-alertas.json</div>';
+  }
+}
+
 // Disparar após dashboard carregar (não interfere com initDashboard)
-if (document.readyState === 'complete') { loadKiraInsights(); }
-else { window.addEventListener('load', loadKiraInsights); }
+if (document.readyState === 'complete') { loadKiraInsights(); loadCaixaPreta(); }
+else { window.addEventListener('load', function(){ loadKiraInsights(); loadCaixaPreta(); }); }
 </script>
 
 <div class="atena-portal" id="atenaPortal">
