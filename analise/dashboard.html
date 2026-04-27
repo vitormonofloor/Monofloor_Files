@@ -108,9 +108,10 @@
   .hero-summary strong { color: var(--accent); font-weight: 600; }
   .hero-guide{font-size:12px;color:#a89e92;text-align:center;margin-top:16px;font-style:italic;letter-spacing:0.02em}
   .hero-context{font-size:11px;color:#a89e92;text-align:center;margin-top:8px}
-  .score-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+  /* FASE 5.3 — score breakdown compacto · resumo em linha */
+  .score-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
   @media(max-width:600px){.score-breakdown{grid-template-columns:repeat(2,1fr)}}
-  .score-pillar{background:#ffffff;border:1px solid #e0d8cc;border-radius:4px;padding:8px 10px;text-align:center;cursor:pointer;transition:all .2s}
+  .score-pillar{background:#ffffff;border:1px solid #e0d8cc;border-radius:4px;padding:6px 8px;text-align:center;cursor:pointer;transition:all .2s}
   .score-pillar:hover{border-color:#b8a080;transform:translateY(-1px);box-shadow:0 2px 8px rgba(42,37,32,0.06)}
   .score-pillar.active{border-color:#b8a080;box-shadow:0 2px 12px rgba(184,160,128,0.15)}
   .score-pillar-label{font-size:8px;color:#8a7e72;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
@@ -614,7 +615,12 @@
   .ag-tog:not(.active) .ag-tog-dot{opacity:0.3}
   .ag-tog-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 
-  .ag-tl-wrap{position:relative;width:100%;height:90px;background:#faf7f2;border:1px solid #e0d8cc;border-radius:6px;overflow:hidden;margin-bottom:18px}
+  /* FASE 5.4 — timeline compacta (40px). Click "expandir" cresce pra 90px */
+  .ag-tl-wrap{position:relative;width:100%;height:40px;background:#faf7f2;border:1px solid #e0d8cc;border-radius:6px;overflow:hidden;margin-bottom:8px;transition:height .25s ease;cursor:pointer}
+  .ag-tl-wrap.expanded{height:90px;cursor:default}
+  .ag-tl-wrap::after{content:'expandir ↕';position:absolute;top:6px;right:8px;font-family:'JetBrains Mono',monospace;font-size:8px;color:#a89e92;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border:1px solid #e0d8cc;border-radius:3px;background:#fff;pointer-events:none;z-index:2;transition:opacity .2s}
+  .ag-tl-wrap.expanded::after{content:'recolher ↕';opacity:.6}
+  .ag-tl-wrap:hover::after{opacity:1}
   #ag-tl-svg{width:100%;height:100%;display:block}
   .ag-tl-tick{stroke:#d8d0c4;stroke-width:1}
   .ag-tl-tick.week{stroke:#c4b5a0;stroke-width:1.5}
@@ -753,7 +759,17 @@
 
   /* ============== LEITURA DO DIA ============== */
 
-  /* ============== BALDES (Carteira Detalhada) ============== */
+  /* ============== BALDES (Carteira Detalhada) — FASE 5.5 colapsa por padrão ============== */
+  .baldes-collapse{margin:14px 0}
+  .baldes-collapse summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#fff;border:1px solid #e0d8cc;border-radius:8px;border-left:3px solid #b8a080;transition:all .2s}
+  .baldes-collapse summary::-webkit-details-marker{display:none}
+  .baldes-collapse summary:hover{border-color:#b8a080;box-shadow:0 4px 12px rgba(42,37,32,0.05)}
+  .baldes-summary-info{display:flex;align-items:baseline;gap:10px}
+  .baldes-summary-num{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#2a2520}
+  .baldes-summary-lbl{font-size:11px;color:#8a7e72;letter-spacing:.04em}
+  .baldes-summary-cta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:4px;transition:transform .2s}
+  .baldes-collapse[open] summary{border-radius:8px 8px 0 0;border-bottom:1px dashed #e0d8cc}
+  .baldes-collapse[open] .baldes-summary-cta span{transform:rotate(90deg);display:inline-block}
   .baldes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin:18px 0}
   .balde{background:#ffffff;border:1px solid #e0d8cc;border-radius:8px;overflow:hidden;border-left:3px solid #c4b5a0;margin:0}
   .balde.crit{border-left-color:#c45a5a}
@@ -1103,7 +1119,7 @@
 
     <div>
       <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span id="dyn-total-obras">—</span> no painel</div><div class="kpi-edai">do total de <span id="dyn-total-obras-edai">—</span> obras no sistema</div></div>
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span id="dyn-total-obras">—</span> no painel</div></div>
         <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
         <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
         <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
@@ -1455,7 +1471,7 @@
       </div>
     </div>
 
-    <div class="ag-tl-wrap">
+    <div class="ag-tl-wrap" id="ag-tl-wrap" onclick="this.classList.toggle('expanded')" title="Clique para expandir">
       <svg id="ag-tl-svg" viewBox="0 0 1200 90" preserveAspectRatio="none"></svg>
     </div>
 
@@ -1964,9 +1980,19 @@
       <div class="section-title"><span class="section-pill pill-carteira">CARTEIRA</span> Baldes de Classificação</div>
       <div class="section-sub" id="baldes-sub">Todas as obras ativas classificadas por tipo de problema. Uma obra pode aparecer em mais de um balde. Clique para abrir.</div>
     </div>
-    <div class="baldes-grid" id="baldes-grid">
-      <!-- gerado por JS -->
-    </div>
+    <!-- FASE 5.5 — colapsa carteira em headline + grid escondida por padrão -->
+    <details class="baldes-collapse" id="baldes-collapse">
+      <summary class="baldes-summary">
+        <div class="baldes-summary-info">
+          <span class="baldes-summary-num" id="baldes-summary-total">—</span>
+          <span class="baldes-summary-lbl">pendências classificadas · <span id="baldes-summary-crit">—</span> críticas</span>
+        </div>
+        <span class="baldes-summary-cta">abrir carteira <span style="font-size:13px">▸</span></span>
+      </summary>
+      <div class="baldes-grid" id="baldes-grid">
+        <!-- gerado por JS -->
+      </div>
+    </details>
     <div class="baldes-footer">
       <a href="obras-mapa.html" class="baldes-cta">Ver todas as ativas com filtros avançados →</a>
     </div>
@@ -2210,6 +2236,45 @@ function applyGlobalFilter() {
         status.textContent = '';
       }
     }
+
+    // FASE 5.7 — recalcular KPIs do hero quando filtro está ativo
+    try {
+      if (anyActive && Array.isArray(Q2_OBRAS)) {
+        var filtradas = Q2_OBRAS.filter(function(o){
+          if (!o) return false;
+          var consOK = !fCons || (o.consultor && String(o.consultor).trim() === fCons);
+          // Q2_OBRAS não tem UF direto, derivar de cidade quando possível (fallback: pula filtro se não houver dado)
+          var ufOK = !fUf;
+          if (fUf && o.cidade) {
+            var ufFromCidade = String(o.cidade).match(/\/\s*([A-Z]{2})\s*$/);
+            ufOK = ufFromCidade ? ufFromCidade[1] === fUf : true;
+          }
+          // Equipe: Q3_EQUIPES → membros → comparar com escalação se houver. MVP: ignora se não há dado
+          var eqOK = !fEq;
+          return consOK && ufOK && eqOK;
+        });
+        var kpiAtivasEl = document.getElementById('kpi-ativas');
+        var kpiAtivasSub = kpiAtivasEl && kpiAtivasEl.parentElement && kpiAtivasEl.parentElement.querySelector('.sub');
+        if (kpiAtivasEl) {
+          kpiAtivasEl.textContent = filtradas.length;
+          kpiAtivasEl.classList.add('kpi-filtered');
+        }
+        if (kpiAtivasSub) {
+          kpiAtivasSub.innerHTML = '<span style="background:#f4f0e6;color:#5a4a2a;padding:1px 5px;border-radius:3px;font-size:9px;letter-spacing:.05em;font-family:JetBrains Mono,monospace">FILTRO ATIVO</span> de <span id="dyn-total-obras">' + Q2_OBRAS.length + '</span>';
+        }
+      } else {
+        // Restaura
+        var kpiAtivasEl2 = document.getElementById('kpi-ativas');
+        if (kpiAtivasEl2) {
+          kpiAtivasEl2.classList.remove('kpi-filtered');
+          if (Array.isArray(Q2_OBRAS)) kpiAtivasEl2.textContent = (AGG && AGG.total_ativas) || Q2_OBRAS.length;
+        }
+        var kpiSub = kpiAtivasEl2 && kpiAtivasEl2.parentElement && kpiAtivasEl2.parentElement.querySelector('.sub');
+        if (kpiSub && Array.isArray(Q2_OBRAS)) {
+          kpiSub.innerHTML = 'de <span id="dyn-total-obras">' + Q2_OBRAS.length + '</span> no painel';
+        }
+      }
+    } catch(e) { /* recompute silencioso */ }
   } catch(e) { console.error('applyGlobalFilter:', e); }
 }
 
@@ -2476,7 +2541,6 @@ function renderHero() {
   const totalObras = AGG.total_obras || '—';
   const totalObrasFmt = typeof totalObras === 'number' ? totalObras.toLocaleString('pt-BR') : totalObras;
   if ($('dyn-total-obras')) $('dyn-total-obras').textContent = totalObrasFmt;
-  if ($('dyn-total-obras-edai')) $('dyn-total-obras-edai').textContent = totalObrasFmt;
   if ($('dyn-ativas-scope')) $('dyn-ativas-scope').textContent = ativas;
   if ($('dyn-total-scope')) $('dyn-total-scope').textContent = totalObrasFmt;
 
@@ -3780,7 +3844,7 @@ function renderBaldes() {
         '</tr>';
     }).join('');
 
-    return '<details class="balde ' + b.sev + '">' +
+    return '<details class="balde ' + b.sev + '" data-sev="' + b.sev + '" data-count="' + list.length + '">' +
       '<summary>' +
         '<span class="balde-icon">' + b.icon + '</span>' +
         '<div class="balde-info">' +
@@ -3797,6 +3861,19 @@ function renderBaldes() {
       '</div>' +
     '</details>';
   }).join('');
+
+  // FASE 5.5 - popula resumo do <summary> da carteira colapsada
+  const baldesEls = grid.querySelectorAll('.balde[data-count]');
+  let totalPend = 0, totalCrit = 0;
+  baldesEls.forEach(b => {
+    const n = parseInt(b.dataset.count, 10) || 0;
+    totalPend += n;
+    if (b.dataset.sev === 'crit') totalCrit += n;
+  });
+  const totEl = document.getElementById('baldes-summary-total');
+  const critEl = document.getElementById('baldes-summary-crit');
+  if (totEl) totEl.textContent = totalPend;
+  if (critEl) critEl.textContent = totalCrit;
 }
 
 // ============== SNAPSHOT DATE + BADGE ==============
