@@ -301,6 +301,71 @@ body.embed .header{display:none}
       <span>Fonte: <b>cruz-cores.json</b></span>
     </div>
   `;
+
+  // X3 — Cruzamento cores × cronograma-fossil (carregado em sequência, opcional)
+  fetch('dados/cruz-x3-cor-bloqueia-atraso.json', {cache:'no-store'})
+    .then(r => r.ok ? r.json() : null)
+    .then(x3 => {
+      if (!x3 || !x3.obras) return;
+      const ativas = x3.obras.filter(o => o.painel_ativa);
+      const semCor = x3.obras.filter(o => o.cor_categoria === 'SEM_COR' || o.cor_categoria === 'PLACEHOLDER');
+      const ambas = x3.obras.filter(o => o.painel_ativa && (o.cor_categoria === 'SEM_COR' || o.cor_categoria === 'PLACEHOLDER'));
+      const fantasmas = x3.obras.filter(o => !o.painel_ativa).length;
+
+      const html = `
+        <div class="section" style="margin-top:24px">
+          <div class="section-title">
+            X3 — Cruzamento ATRASADA_GRAVE × cores indefinidas
+            <span class="small">cronograma-fossil + cores</span>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(196,90,90,0.06),rgba(184,160,128,0.04));padding:16px 18px;border-radius:6px;margin-bottom:14px">
+            <p style="font-size:12px;color:var(--text);margin-bottom:10px;line-height:1.55">
+              Das <b>${x3.obras.length} obras ATRASADA_GRAVE</b> no planejamento (atraso 96-132d):
+            </p>
+            <ul style="font-size:12px;color:var(--text);line-height:1.8;padding-left:22px;margin:0">
+              <li><b>${fantasmas}</b> já estão concluído/finalizado no painel — <span style="color:var(--text-muted)">planejamento não foi atualizado, "atraso" é fantasma</span></li>
+              <li><b>${ativas.length}</b> ainda ativas no painel — <span style="color:var(--text-muted)">atraso real, em execução/reparo/aguardando</span></li>
+              <li><b style="color:var(--red)">${ambas.length}</b> ainda ativas + sem cor real — <span style="color:var(--red)">candidatas a "cor bloqueia produção"</span></li>
+            </ul>
+          </div>
+          ${ambas.length > 0 ? `
+            <div class="section-title" style="border:none;margin-bottom:8px;padding:0">Obra(s) com bloqueio confirmado</div>
+            <div class="obras-list">
+              ${ambas.map((o, i) => `
+                <div class="obra-row" style="border-left-color:var(--red)">
+                  <div class="obra-rank">#${i+1}</div>
+                  <div>
+                    <div class="obra-cliente">${(o.cliente||'?').replace(/</g,'&lt;')}</div>
+                    <div class="obra-cidade">${(o.cidade||'').replace(/</g,'&lt;')}</div>
+                  </div>
+                  <div class="obra-cons">${(o.consultor||'').split(' ').slice(0,2).join(' ').replace(/</g,'&lt;')}</div>
+                  <div class="obra-fase" title="${(o.fase_painel||'').replace(/</g,'&lt;')}">${(o.fase_painel || '—').replace(/</g,'&lt;')}</div>
+                  <div class="obra-cat semcor">${o.cor_categoria}</div>
+                  <div class="obra-idade">+${o.dias_atraso}d</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          <p style="margin-top:12px;font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-style:italic">
+            Fonte: cruz-x3-cor-bloqueia-atraso.json · gerado ${(x3.gerado_em||'').slice(0,10)}
+          </p>
+        </div>
+      `;
+
+      const main = document.querySelector('main.main');
+      if (main) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        // Insere antes do footer-meta
+        const footer = main.querySelector('.footer-meta');
+        if (footer) {
+          main.insertBefore(div.firstElementChild, footer);
+        } else {
+          main.appendChild(div.firstElementChild);
+        }
+      }
+    })
+    .catch(()=>{});
 })();
 </script>
 
