@@ -1,0 +1,243 @@
+﻿{
+    "gerado_em":  "2026-04-15",
+    "fonte":  "analise/dados/painel-temporal.json",
+    "criterio":  "ativas (status NOT IN [finalizado,concluido,cancelado]) com consultorNome vazio/null/\"[]\"",
+    "total_orfas_ativas":  18,
+    "agregacoes":  {
+                       "por_status":  {
+                                          "reserva":  3,
+                                          "reparo":  8,
+                                          "aguardando_clima":  1,
+                                          "em_execucao":  1,
+                                          "planejamento":  2,
+                                          "contrato":  3
+                                      },
+                       "por_faseAtual":  {
+                                             "(vazio)":  2,
+                                             "OECT":  1,
+                                             "ENTRADA":  7,
+                                             "CLIENTE FINALIZADO":  5,
+                                             "CONTRATO":  3
+                                         },
+                       "por_cidade":  {
+                                          "Curitiba/Paraná":  1,
+                                          "RIO DE JANEIRO":  1,
+                                          "Divinópolis/Minas Gerais":  1,
+                                          "Nao informada":  1,
+                                          "São Paulo/São Paulo":  4,
+                                          "CEP 01241":  1,
+                                          "Belo Horizonte":  1,
+                                          "São Paulo SP":  1,
+                                          "Campinas":  1,
+                                          "SÃO PAULO":  4,
+                                          "São Caetano do Sul":  1,
+                                          "Humaitá CEP 22260":  1
+                                      },
+                       "idade_media_dias":  159.4,
+                       "idade_mediana_dias":  161,
+                       "n_180d_plus":  4,
+                       "bug_literal_array":  3,
+                       "realmente_vazias":  15
+                   },
+    "flag_critico_180d":  4,
+    "obras":  [
+                  {
+                      "id_curto":  "096df7d0",
+                      "id":  "096df7d0-a179-4a82-b719-0d392eec4bab",
+                      "cliente":  "Andrea Almeida",
+                      "cidade":  "Belo Horizonte",
+                      "status":  "reserva",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  161,
+                      "data_radar":  "2025-11-05",
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "0b692354",
+                      "id":  "0b692354-92ec-4168-8b74-3ab4b6400a2b",
+                      "cliente":  "BERNARDO MAGALHÃES",
+                      "cidade":  "RIO DE JANEIRO",
+                      "status":  "reparo",
+                      "faseAtual":  "CLIENTE FINALIZADO",
+                      "idade_dias":  243,
+                      "data_radar":  "2025-08-15",
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "1231fb6a",
+                      "id":  "1231fb6a-8d41-4ff1-a98c-635cc35a577c",
+                      "cliente":  "Roberto Tamio Murakami",
+                      "cidade":  "São Paulo/São Paulo",
+                      "status":  "reparo",
+                      "faseAtual":  "OECT",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "2369c899",
+                      "id":  "2369c899-509f-4deb-a767-03f244854492",
+                      "cliente":  "REPULLO ASSESSORIA EM INFORMATICA LTDA",
+                      "cidade":  "SÃO PAULO",
+                      "status":  "reparo",
+                      "faseAtual":  "CLIENTE FINALIZADO",
+                      "idade_dias":  205,
+                      "data_radar":  "2025-09-22",
+                      "bug_literal_array":  true
+                  },
+                  {
+                      "id_curto":  "249220c9",
+                      "id":  "249220c9-61de-4336-b923-f75c320f1339",
+                      "cliente":  "ELIZETE DE FÁTIMA MARCONCIN",
+                      "cidade":  "Curitiba/Paraná",
+                      "status":  "reparo",
+                      "faseAtual":  "",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "316cd248",
+                      "id":  "316cd248-95c7-4fee-a81c-736540d627c3",
+                      "cliente":  "PAULA DAYAN",
+                      "cidade":  "São Paulo/São Paulo",
+                      "status":  "planejamento",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "4734a637",
+                      "id":  "4734a637-a15d-4830-9096-a60fcd1d5b08",
+                      "cliente":  "RICARDO FRUGOLI",
+                      "cidade":  "SÃO PAULO",
+                      "status":  "contrato",
+                      "faseAtual":  "CONTRATO",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "501b5b94",
+                      "id":  "501b5b94-7185-4c88-a990-da23a069b7d5",
+                      "cliente":  "GLAUCIA ALVES",
+                      "cidade":  "Divinópolis/Minas Gerais",
+                      "status":  "reparo",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "5ebc1fc4",
+                      "id":  "5ebc1fc4-4c57-4075-96a7-53cf46970b61",
+                      "cliente":  "ANDRE SCHECHTMAN    ",
+                      "cidade":  "CEP 01241",
+                      "status":  "reparo",
+                      "faseAtual":  "CLIENTE FINALIZADO",
+                      "idade_dias":  154,
+                      "data_radar":  "2025-11-12",
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "6b4e6b8b",
+                      "id":  "6b4e6b8b-0f46-48bd-9a72-c72c1450f223",
+                      "cliente":  "LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LTDA (REAL COMERCIAL LTDA)",
+                      "cidade":  "São Paulo/São Paulo",
+                      "status":  "em_execucao",
+                      "faseAtual":  "",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "6f3e9db1",
+                      "id":  "6f3e9db1-98e6-4feb-b0b7-27c0a9aa8894",
+                      "cliente":  "MARIANA KLUMB",
+                      "cidade":  "São Paulo SP",
+                      "status":  "contrato",
+                      "faseAtual":  "CONTRATO",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "74ddff0e",
+                      "id":  "74ddff0e-d7d0-4b8d-92bd-d566496205ab",
+                      "cliente":  "Agatha Moreira e Rodrigo Simas",
+                      "cidade":  "Humaitá CEP 22260",
+                      "status":  "planejamento",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  28,
+                      "data_radar":  "2026-03-18",
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "8fe98c80",
+                      "id":  "8fe98c80-78f2-437f-b39e-976fc46e6f18",
+                      "cliente":  "Anelise (katharina)",
+                      "cidade":  "Nao informada",
+                      "status":  "reserva",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  119,
+                      "data_radar":  "2025-12-17",
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "a91c86c9",
+                      "id":  "a91c86c9-3f32-4d37-9470-891dd7214c3a",
+                      "cliente":  "Marcelo Edwin (Campinas)",
+                      "cidade":  "Campinas",
+                      "status":  "reserva",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  118,
+                      "data_radar":  "2025-12-18",
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "c6908776",
+                      "id":  "c6908776-f200-4b20-87eb-0e9d9a80eda7",
+                      "cliente":  "PAULA CORREA NOGUEIRA ",
+                      "cidade":  "SÃO PAULO",
+                      "status":  "aguardando_clima",
+                      "faseAtual":  "CLIENTE FINALIZADO",
+                      "idade_dias":  196,
+                      "data_radar":  "2025-10-01",
+                      "bug_literal_array":  true
+                  },
+                  {
+                      "id_curto":  "d51326f8",
+                      "id":  "d51326f8-e34e-45dd-a355-669d10df3182",
+                      "cliente":  "MAURICIO BATEMAN PELA",
+                      "cidade":  "São Paulo/São Paulo",
+                      "status":  "reparo",
+                      "faseAtual":  "ENTRADA",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "db76891b",
+                      "id":  "db76891b-3385-45fe-8899-550517789ae1",
+                      "cliente":  "MARIA H M COMPANY",
+                      "cidade":  "São Caetano do Sul",
+                      "status":  "contrato",
+                      "faseAtual":  "CONTRATO",
+                      "idade_dias":  null,
+                      "data_radar":  null,
+                      "bug_literal_array":  false
+                  },
+                  {
+                      "id_curto":  "e79c60c1",
+                      "id":  "e79c60c1-4169-4df5-b856-220fe82510db",
+                      "cliente":  "GABRIELA AZEVEDO FORLIN",
+                      "cidade":  "SÃO PAULO",
+                      "status":  "reparo",
+                      "faseAtual":  "CLIENTE FINALIZADO",
+                      "idade_dias":  211,
+                      "data_radar":  "2025-09-16",
+                      "bug_literal_array":  true
+                  }
+              ]
+}

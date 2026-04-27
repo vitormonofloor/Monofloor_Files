@@ -36,10 +36,12 @@
   .labs-tab.active::after { transform: scaleX(1); }
   @media(max-width:720px) { .labs-tab { padding: 10px 12px; font-size: 9px; } }
 
-  /* FASE 3.6 — hero descritivo com 6 cards */
-  .labs-hero { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 12px 0 20px; }
-  @media(max-width:1100px) { .labs-hero { grid-template-columns: repeat(3, 1fr); } }
-  @media(max-width:980px) { .labs-hero { grid-template-columns: repeat(2, 1fr); } }
+  /* FASE 3.6 — hero descritivo com 7 cards */
+  .labs-hero { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 12px 0 20px; }
+  @media(max-width:1280px) { .labs-hero { grid-template-columns: repeat(4, 1fr); } }
+  @media(max-width:980px) { .labs-hero { grid-template-columns: repeat(3, 1fr); } }
+  @media(max-width:720px) { .labs-hero { grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
   @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
   .lh-card { padding: 14px 16px; background: #ffffff; border: 1px solid #e8e0d4; border-left: 3px solid #b8a080; border-radius: 6px; cursor: pointer; transition: all .2s; text-align: left; font-family: inherit; color: inherit; display: flex; flex-direction: column; gap: 4px; min-height: 96px; }
   .lh-card:hover { border-color: #b8a080; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(42,37,32,0.06); }
@@ -128,9 +130,14 @@
       <div class="lh-title">Consultores</div>
       <div class="lh-q">Luana vs Wesley · 85% da carteira</div>
     </button>
+    <button class="lh-card" data-tab="agend-vt" type="button">
+      <div class="lh-cap">Cap 7</div>
+      <div class="lh-title">Cauda VT</div>
+      <div class="lh-q">15 obras presas 246-260d na mesma fase</div>
+    </button>
   </div>
 
-  <!-- 6 ABAS -->
+  <!-- 7 ABAS -->
   <div class="labs-tabs">
     <button class="labs-tab active" data-tab="jornada">Jornada da Obra</button>
     <button class="labs-tab" data-tab="bloqueadores">Bloqueadores</button>
@@ -138,6 +145,7 @@
     <button class="labs-tab" data-tab="escopo">Escopo</button>
     <button class="labs-tab" data-tab="funil">Funil</button>
     <button class="labs-tab" data-tab="consultores">Consultores</button>
+    <button class="labs-tab" data-tab="agend-vt">Cauda VT</button>
   </div>
 
   <!-- IFRAMES -->
@@ -148,6 +156,7 @@
     <iframe class="labs-frame" id="frame-escopo" data-src="escopo-lab.html?embed=1" loading="lazy"></iframe>
     <iframe class="labs-frame" id="frame-funil" data-src="funil-lab.html?embed=1" loading="lazy"></iframe>
     <iframe class="labs-frame" id="frame-consultores" data-src="consultores-lab.html?embed=1" loading="lazy"></iframe>
+    <iframe class="labs-frame" id="frame-agend-vt" data-src="agend-vt-lab.html?embed=1" loading="lazy"></iframe>
   </div>
 </div>
 
@@ -198,7 +207,7 @@ function getDeepLink() {
 
 function activateTab(name) {
   if (!name) return false;
-  var validTabs = ['jornada','bloqueadores','campo','escopo','funil','consultores'];
+  var validTabs = ['jornada','bloqueadores','campo','escopo','funil','consultores','agend-vt'];
   if (validTabs.indexOf(name) < 0) return false;
 
   // sincroniza hero cards + abas + frames

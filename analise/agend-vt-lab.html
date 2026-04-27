@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Cauda Longa AGEND.VT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--accent-dark:#6b4f30;
+  --text:#3a3530;--text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#3d8a5a;--red:#c45a5a;--amber:#b89a4a;--blue:#4a7ab8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;line-height:1.55}
+
+/* DOCK */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08)}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+body.embed .dock{display:none}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;flex-direction:column}
+.logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:lowercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-left:auto}
+body.embed .header{display:none}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:24px 24px 60px}
+.intro{margin-bottom:24px}
+.intro h1{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-0.01em}
+.intro .lead{font-size:13px;color:var(--text-muted);max-width:780px;line-height:1.55}
+.intro .scope-note{margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);padding:8px 12px;background:rgba(184,160,128,0.06);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:760px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;border-left:3px solid var(--accent)}
+.kpi-box.alert{border-left-color:var(--red)}
+.kpi-box.warn{border-left-color:var(--amber)}
+.kpi-box.ok{border-left-color:var(--green)}
+.kpi-val{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--text);line-height:1}
+.kpi-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;margin-top:6px}
+.kpi-detail{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px}
+.section-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.section-title .small{font-family:var(--font-sans);font-size:11px;text-transform:none;letter-spacing:0;color:var(--text-muted)}
+
+/* FAIXAS DE IDADE */
+.faixas{display:grid;grid-template-columns:1fr;gap:8px}
+.faixa{background:var(--bg);border-radius:6px;padding:12px 16px;display:flex;align-items:center;gap:14px}
+.faixa.recente{border-left:3px solid var(--green)}
+.faixa.meio{border-left:3px solid var(--amber)}
+.faixa.cauda{border-left:3px solid var(--red)}
+.faixa-label{flex:0 0 130px}
+.faixa-label .nome{font-size:13px;font-weight:600;color:var(--text)}
+.faixa-label .desc{font-size:10px;color:var(--text-muted);margin-top:1px}
+.faixa-bar-wrap{flex:1;height:18px;background:rgba(184,160,128,0.08);border-radius:9px;overflow:hidden;position:relative}
+.faixa-bar{height:100%;border-radius:9px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:600}
+.faixa.recente .faixa-bar{background:var(--green)}
+.faixa.meio .faixa-bar{background:var(--amber)}
+.faixa.cauda .faixa-bar{background:var(--red)}
+.faixa-meta{flex:0 0 200px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-align:right}
+.faixa-meta b{color:var(--text)}
+
+/* OBRAS LIST */
+.obras-list{display:flex;flex-direction:column;gap:6px}
+.obra-row{display:grid;grid-template-columns:36px 1fr 130px 110px 90px;gap:10px;padding:10px 14px;background:var(--bg);border-radius:6px;align-items:center;font-size:12px;border-left:3px solid var(--red)}
+.obra-row.luana{border-left-color:var(--blue)}
+.obra-row.wesley{border-left-color:var(--accent)}
+@media(max-width:760px){.obra-row{grid-template-columns:1fr;gap:4px}}
+.obra-rank{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);font-weight:600}
+.obra-cliente{font-weight:600;color:var(--text)}
+.obra-cidade{font-size:11px;color:var(--text-muted)}
+.obra-consultor{font-size:11px;color:var(--text);font-weight:500}
+.obra-idade{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--red);text-align:right}
+.obra-m2{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-align:right}
+
+/* CONSULTOR-DELTA */
+.cons-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:760px){.cons-grid{grid-template-columns:1fr}}
+.cons-card{background:var(--bg);padding:14px 16px;border-radius:6px;border-left:3px solid var(--text-muted)}
+.cons-card.alert{border-left-color:var(--red)}
+.cons-card.ok{border-left-color:var(--green)}
+.cons-name{font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px}
+.cons-bar{display:flex;align-items:center;gap:8px;margin:4px 0}
+.cons-bar-label{flex:0 0 60px;font-size:10px;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase}
+.cons-bar-track{flex:1;height:6px;background:rgba(184,160,128,0.1);border-radius:3px;overflow:hidden}
+.cons-bar-fill{height:100%;border-radius:3px}
+.cons-bar.cauda .cons-bar-fill{background:var(--red)}
+.cons-bar.total .cons-bar-fill{background:var(--accent)}
+.cons-bar-val{flex:0 0 50px;font-family:var(--font-mono);font-size:10px;color:var(--text);text-align:right;font-weight:600}
+.cons-delta{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted)}
+.cons-delta b{font-family:var(--font-mono);font-size:13px;font-weight:600}
+.cons-delta b.up{color:var(--red)}
+.cons-delta b.down{color:var(--green)}
+
+/* FOOTER */
+.footer-meta{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:20px}
+.footer-meta span b{color:var(--text)}
+
+/* LOADER */
+.loader{display:flex;align-items:center;justify-content:center;min-height:300px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+.error{padding:20px;background:rgba(196,90,90,0.08);border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central"><svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard"><svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="atena.html" class="dock-item" data-label="ATENA"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg></a>
+  <a href="labs.html" class="dock-item active" data-label="Labs"><svg viewBox="0 0 20 20"><path d="M7 3v5l-4 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-9V3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></a>
+</nav>
+
+<header class="header">
+  <a href="../hub.html" style="text-decoration:none;color:inherit">
+    <div class="header-brand">
+      <div class="logo-text">monofloor</div>
+      <div class="logo-sub">Laboratório · Cauda Longa AGEND.VT</div>
+    </div>
+  </a>
+  <div class="header-title">Obras presas em AGEND. VT-AFERIÇÃO</div>
+</header>
+
+<main class="main" id="root">
+  <div class="loader">Carregando cauda longa…</div>
+</main>
+
+<script>
+(async function(){
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.body.classList.add('embed');
+  }
+
+  const root = document.getElementById('root');
+  function fmt(n) { return (typeof n === 'number') ? Math.round(n).toLocaleString('pt-BR') : '—'; }
+  function fmtFloat(n) { return (typeof n === 'number') ? n.toLocaleString('pt-BR', {maximumFractionDigits: 1}) : '—'; }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function consClass(nome) {
+    const n = String(nome||'').toUpperCase();
+    if (n.includes('LUANA')) return 'luana';
+    if (n.includes('WESLEY')) return 'wesley';
+    return '';
+  }
+  function shortName(s) { return String(s||'').trim().split(/\s+/).slice(0,2).join(' '); }
+
+  let data;
+  try {
+    const r = await fetch('dados/cruz-agend-vt.json', {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+  } catch (e) {
+    root.innerHTML = '<div class="error">Não carregou dados/cruz-agend-vt.json — ' + escHtml(e.message) + '</div>';
+    return;
+  }
+
+  const grupos = data.grupos || {};
+  const recentes = grupos.recentes_lt90 || {};
+  const meio = grupos.meio_90_180 || {};
+  const cauda = grupos.cauda_longa_gt180 || {};
+  const totalFase = data.total_ativas_fase || 0;
+  const detalhe = data.cauda_longa_detalhe || [];
+  const padrao = data.padrao_cauda_vs_total?.por_consultor || {};
+
+  const pctCauda = totalFase > 0 ? ((cauda.n || 0) / totalFase * 100).toFixed(0) : '—';
+  const luanaPct = padrao['LUANA PATRICIA DE ANDRADE LIMA']?.cauda_pct ?? 0;
+
+  // Largura das barras por faixa (proporcional ao total da fase)
+  const w = (n) => totalFase > 0 ? Math.max(8, (n / totalFase * 100)) : 0;
+
+  // Faixa render
+  const faixaHtml = (cls, nome, desc, obj) => `
+    <div class="faixa ${cls}">
+      <div class="faixa-label">
+        <div class="nome">${escHtml(nome)}</div>
+        <div class="desc">${escHtml(desc)}</div>
+      </div>
+      <div class="faixa-bar-wrap">
+        <div class="faixa-bar" style="width:${w(obj.n||0)}%"><span>${obj.n || 0}</span></div>
+      </div>
+      <div class="faixa-meta">
+        idade média <b>${fmtFloat(obj.idade_media)}d</b> · mediana <b>${fmt(obj.idade_mediana)}d</b>
+      </div>
+    </div>`;
+
+  // Lista das 15 cauda longa
+  const obrasHtml = detalhe.map((o, idx) => `
+    <div class="obra-row ${consClass(o.consultor)}">
+      <div class="obra-rank">#${String(idx+1).padStart(2,'0')}</div>
+      <div>
+        <div class="obra-cliente">${escHtml((o.cliente||'').trim())}</div>
+        <div class="obra-cidade">${escHtml(o.cidade||'')} · ${escHtml(o.status||'')}</div>
+      </div>
+      <div class="obra-consultor">${escHtml(shortName(o.consultor))}</div>
+      <div class="obra-idade">${o.idade_dias}d</div>
+      <div class="obra-m2">${fmtFloat(o.projetoMetragem)} m²</div>
+    </div>`).join('');
+
+  // Padrão por consultor
+  const consConfig = [
+    { nome: 'LUANA PATRICIA DE ANDRADE LIMA', short: 'Luana', cls: 'alert' },
+    { nome: 'Wesley Matheus de Carvalho', short: 'Wesley', cls: 'ok' },
+    { nome: 'Pedro Marçal', short: 'Pedro', cls: '' }
+  ];
+
+  const consHtml = consConfig.map(c => {
+    const p = padrao[c.nome] || {};
+    const deltaPp = p.delta_pp ?? 0;
+    const dirCls = deltaPp > 5 ? 'up' : (deltaPp < -5 ? 'down' : '');
+    const dirSign = deltaPp > 0 ? '+' : '';
+    const wCauda = Math.max(2, p.cauda_pct || 0);
+    const wTotal = Math.max(2, p.total_pct || 0);
+    return `<div class="cons-card ${c.cls}">
+      <div class="cons-name">${escHtml(c.short)}</div>
+      <div class="cons-bar cauda">
+        <span class="cons-bar-label">cauda</span>
+        <div class="cons-bar-track"><div class="cons-bar-fill" style="width:${wCauda}%"></div></div>
+        <span class="cons-bar-val">${(p.cauda_pct||0).toFixed(0)}%</span>
+      </div>
+      <div class="cons-bar total">
+        <span class="cons-bar-label">total</span>
+        <div class="cons-bar-track"><div class="cons-bar-fill" style="width:${wTotal}%"></div></div>
+        <span class="cons-bar-val">${(p.total_pct||0).toFixed(0)}%</span>
+      </div>
+      <div class="cons-delta">
+        Concentração na cauda: <b class="${dirCls}">${dirSign}${(deltaPp||0).toFixed(1)}pp</b>
+        <span style="display:block;font-size:10px;margin-top:2px;font-style:italic">${p.cauda_n || 0} de ${p.total_n || 0} obras</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  root.innerHTML = `
+    <div class="intro">
+      <h1>${cauda.n || 0} obras presas há ${fmt(cauda.idade_mediana)}d em AGEND. VT-AFERIÇÃO</h1>
+      <p class="lead">Fase tem <b>${totalFase}</b> obras. <b>${cauda.n || 0}</b> delas (${pctCauda}%) estão paradas há mais de 180 dias na MESMA fase — sem agendamento de visita técnica de aferição. <b>${luanaPct.toFixed(0)}% concentradas em Luana</b>.</p>
+      <div class="scope-note">Snapshot · ${data.data_referencia} · Fonte: cruz-agend-vt.json · 3 faixas etárias (recentes &lt; 90d · meio 90-180d · cauda &gt; 180d)</div>
+    </div>
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-box alert">
+        <div class="kpi-val">${cauda.n || 0}</div>
+        <div class="kpi-label">cauda longa &gt; 180d</div>
+        <div class="kpi-detail">de ${totalFase} totais nessa fase</div>
+      </div>
+      <div class="kpi-box warn">
+        <div class="kpi-val">${fmtFloat(cauda.idade_media)}d</div>
+        <div class="kpi-label">idade média cauda</div>
+        <div class="kpi-detail">mediana ${fmt(cauda.idade_mediana)}d · max ${detalhe[0]?.idade_dias || '—'}d</div>
+      </div>
+      <div class="kpi-box ${luanaPct > 60 ? 'alert' : 'warn'}">
+        <div class="kpi-val">${luanaPct.toFixed(0)}%</div>
+        <div class="kpi-label">concentração luana</div>
+        <div class="kpi-detail">${padrao['LUANA PATRICIA DE ANDRADE LIMA']?.cauda_n || 0} de ${cauda.n || 0} obras</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-val">${fmtFloat(cauda.metragem_media)}</div>
+        <div class="kpi-label">m² médio cauda</div>
+        <div class="kpi-detail">obras grandes paradas</div>
+      </div>
+    </div>
+
+    <!-- 3 faixas -->
+    <div class="section">
+      <div class="section-title">
+        Distribuição por idade na fase
+        <span class="small">total: ${totalFase} obras</span>
+      </div>
+      <div class="faixas">
+        ${faixaHtml('recente', 'Recentes', '< 90 dias na fase', recentes)}
+        ${faixaHtml('meio', 'Meio', '90 a 180 dias', meio)}
+        ${faixaHtml('cauda', 'Cauda longa', '> 180 dias na MESMA fase', cauda)}
+      </div>
+    </div>
+
+    <!-- Lista nominal das 15 -->
+    <div class="section">
+      <div class="section-title">
+        Obras na cauda — listagem nominal
+        <span class="small">${detalhe.length} obras · azul=Luana · dourado=Wesley</span>
+      </div>
+      <div class="obras-list">
+        ${obrasHtml}
+      </div>
+    </div>
+
+    <!-- Concentração por consultor -->
+    <div class="section">
+      <div class="section-title">
+        Concentração na cauda × carteira total da fase
+        <span class="small">delta = cauda% − total%</span>
+      </div>
+      <div class="cons-grid">${consHtml}</div>
+      <p style="margin-top:14px;font-size:11px;color:var(--text-muted);font-style:italic;line-height:1.5">
+        Luana tem <b>${luanaPct.toFixed(0)}%</b> da cauda mas só <b>${(padrao['LUANA PATRICIA DE ANDRADE LIMA']?.total_pct||0).toFixed(0)}%</b> do total da fase. Cauda é desproporcionalmente dela. Wesley tem o oposto: 43% da fase, só 20% da cauda.
+      </p>
+    </div>
+
+    <div class="footer-meta">
+      <span>Fase Pipefy: <b>${escHtml(data.fase)}</b></span>
+      <span>Snapshot: <b>${data.data_referencia}</b></span>
+      <span>Total na fase: <b>${totalFase}</b></span>
+      <span>Cauda &gt; 180d: <b>${cauda.n || 0}</b></span>
+      <span>Fonte: <b>cruz-agend-vt.json</b></span>
+    </div>
+  `;
+})();
+</script>
+
+</body>
+</html>
