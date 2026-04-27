@@ -37,6 +37,7 @@ jobs:
                   analise/dados/dashboard-data.json \
                   analise/dados/backlog-historico.json \
                   analise/dados/headline.json \
+                  analise/dados/alertas/ \
                   analise/obras-mapa.html 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Sem mudanças — nada a commitar"

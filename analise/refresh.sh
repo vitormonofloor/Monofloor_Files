@@ -525,6 +525,71 @@ headline = {
 with open(os.path.join(DADOS, "headline.json"), "w") as f:
     json.dump(headline, f, ensure_ascii=False, indent=2)
 print(f"  headline.json: score={score} ativas={len(ativas)} alertas={n_zumbi+n_orfas+n_lote_vt} novos_hoje={novos_hoje}")
+
+# ════════════════════════════════════════════
+# ALERTA-YYYY-MM-DD.json — eventos do dia (FASE 4.4)
+# Detalhamento dos deltas críticos. Hub mostra contagem (novos_hoje), modal abre detalhes.
+# ════════════════════════════════════════════
+alerta_dir = os.path.join(DADOS, "alertas")
+os.makedirs(alerta_dir, exist_ok=True)
+alerta = {
+    "schema_version": 1,
+    "date": TODAY,
+    "gerado_em": NOW,
+    "eventos": [],
+    "resumo": {"total": 0, "negativos": 0, "positivos": 0}
+}
+
+def add_evento(tipo, titulo, descricao, severidade, alvo):
+    alerta["eventos"].append({
+        "tipo": tipo,
+        "titulo": titulo,
+        "descricao": descricao,
+        "severidade": severidade,
+        "alvo": alvo
+    })
+
+if mud:
+    if mud.get("zumbi_saiu"):
+        n = len(mud["zumbi_saiu"])
+        add_evento("zumbi_saiu", f"{n} obras encerradas", "saíram da fase CLIENTE FINALIZADO desde a varredura anterior", "info", "atena")
+    if mud.get("orfas_atribuida"):
+        n = len(mud["orfas_atribuida"])
+        add_evento("orfas_atribuida", f"{n} obras ganharam consultor", "atribuições recentes", "info", "atena")
+    if mud.get("lote_vt_destravada"):
+        n = len(mud["lote_vt_destravada"])
+        add_evento("lote_vt_destravada", f"{n} obras destravadas de VT", "saíram da fase AGEND. VT", "info", "atena")
+    if mud.get("lideres_formalizado"):
+        n = len(mud["lideres_formalizado"])
+        add_evento("lideres_formalizado", f"{n} líderes formalizados", "agora cadastrados em /api/equipes", "info", "atena")
+    if mud.get("conflitos_resolvido"):
+        n = len(mud["conflitos_resolvido"])
+        add_evento("conflitos_resolvido", f"{n} conflitos resolvidos", "não há mais aplicador escalado em ≥2 obras simultâneas", "info", "atena")
+
+# Detecção de pioras (delta dos indicadores principais)
+if hist and len(hist) >= 2:
+    prev_idx = hist[-2]["indices"] if hist[-2].get("indices") else {}
+    cur_idx = entrada_hoje["indices"]
+    pZ = (prev_idx.get("zumbi") or {}).get("total", 0)
+    cZ = (cur_idx.get("zumbi") or {}).get("total", 0)
+    pO = (prev_idx.get("orfas") or {}).get("total", 0)
+    cO = (cur_idx.get("orfas") or {}).get("total", 0)
+    pV = (prev_idx.get("lote_vt") or {}).get("total", 0)
+    cV = (cur_idx.get("lote_vt") or {}).get("total", 0)
+    if cZ > pZ:
+        add_evento("zumbi_subiu", f"+{cZ - pZ} zumbi vs anterior", f"de {pZ} para {cZ}", "alta", "atena")
+    if cO > pO:
+        add_evento("orfas_subiu", f"+{cO - pO} órfãs vs anterior", f"de {pO} para {cO}", "media", "atena")
+    if cV > pV:
+        add_evento("lote_vt_subiu", f"+{cV - pV} VT travadas vs anterior", f"de {pV} para {cV}", "media", "atena")
+
+alerta["resumo"]["total"] = len(alerta["eventos"])
+alerta["resumo"]["positivos"] = sum(1 for e in alerta["eventos"] if e["severidade"] == "info")
+alerta["resumo"]["negativos"] = alerta["resumo"]["total"] - alerta["resumo"]["positivos"]
+
+with open(os.path.join(alerta_dir, f"{TODAY}.json"), "w") as f:
+    json.dump(alerta, f, ensure_ascii=False, indent=2)
+print(f"  alertas/{TODAY}.json: {alerta['resumo']['total']} eventos ({alerta['resumo']['positivos']} positivos, {alerta['resumo']['negativos']} negativos)")
 PYEOF
 
 echo "[done] Refresh PESADO concluído em $NOW"

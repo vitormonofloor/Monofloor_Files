@@ -123,6 +123,17 @@ button.brief-acao:hover::after{opacity:1}
 /* Bloco 3: Insight */
 .brief-insight{font-size:13px;color:#6b6156;line-height:1.7;font-weight:300;font-style:italic;padding-left:14px;border-left:2px solid #e0d8cc;position:relative}
 .brief-insight-source{font-size:9px;color:#b8b0a4;margin-top:8px;font-family:'JetBrains Mono',monospace;font-style:normal}
+/* FASE 4.2 — achados reais ATENA */
+.brief-insight-item{font-style:normal;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe3}
+.brief-insight-item:last-of-type{border-bottom:none;padding-bottom:0;margin-bottom:6px}
+.brief-insight-sev{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;margin-right:8px;vertical-align:middle}
+.brief-insight-sev.sev-alta{background:#f6eaea;color:#6a2a2a}
+.brief-insight-sev.sev-media{background:#f4f0e6;color:#5a4a2a}
+.brief-insight-sev.sev-baixa{background:#eaf0f6;color:#2a4a6a}
+.brief-insight-titulo{display:inline;font-size:13px;font-weight:600;color:#2a2520;font-style:normal}
+.brief-insight-desc{font-size:12px;color:#6b6156;margin-top:4px;font-style:normal;line-height:1.5}
+.brief-insight-evid{font-size:10px;color:#8a7e72;margin-top:5px;font-family:'JetBrains Mono',monospace;font-style:normal;line-height:1.4}
+.brief-insight-evid span{color:#b8a080;text-transform:uppercase;letter-spacing:.05em;font-weight:500;margin-right:4px}
 
 /* Footer */
 .atena-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding:14px 0;border-top:1px solid #ede6dc}
@@ -404,12 +415,17 @@ async function atenaInit() {
     if (r2.ok) snapOntem = await r2.json();
   } catch(e) {}
 
-  // Carregar ultimo ATENA scan
-  let atenaScan = null;
-  try {
-    const r = await fetch('dados/atena/index.json?t=' + Date.now());
-    if (r.ok) atenaScan = await r.json();
-  } catch(e) {}
+  // FASE 4.2 — busca insights/oportunidades dos últimos 7 dias (arquivo mais recente vence)
+  let atenaInsights = null, atenaOportunidades = null;
+  for (let i = 0; i < 7 && (!atenaInsights || !atenaOportunidades); i++) {
+    const d = new Date(hoje.getTime() - i * 86400000).toISOString().slice(0, 10);
+    if (!atenaInsights) {
+      try { const r = await fetch('dados/atena/' + d + '-insights.json?t=' + Date.now()); if (r.ok) atenaInsights = await r.json(); } catch(e) {}
+    }
+    if (!atenaOportunidades) {
+      try { const r = await fetch('dados/atena/' + d + '-oportunidades.json?t=' + Date.now()); if (r.ok) atenaOportunidades = await r.json(); } catch(e) {}
+    }
+  }
 
   // FASE 2.3 — fontes para o novo KPI strip diagnóstico
   let headline = null, silenciosas = null, ocorrencias = null;
@@ -417,15 +433,19 @@ async function atenaInit() {
   try { const r = await fetch('dados/cruz-silenciosas.json?t=' + Date.now()); if (r.ok) silenciosas = await r.json(); } catch(e) {}
   try { const r = await fetch('dados/cruz-ocorrencias.json?t=' + Date.now()); if (r.ok) ocorrencias = await r.json(); } catch(e) {}
 
+  // FASE 4.1 — última entrada do backlog para alimentar mudanças vs anterior
+  const ultBacklog = (hist && hist.length) ? hist[hist.length - 1] : null;
+  const penBacklog = (hist && hist.length >= 2) ? hist[hist.length - 2] : null;
+
   renderBriefKPIs(hist, snapHoje, snapOntem);
-  renderBriefDiagnosticos(headline, silenciosas, ocorrencias);
-  renderBriefAcoes(hist, snapHoje);
-  renderBriefInsight(atenaScan);
+  renderBriefDiagnosticos(headline, silenciosas, ocorrencias, ultBacklog, penBacklog);
+  renderBriefAcoes(hist, snapHoje, ultBacklog);
+  renderBriefInsight(atenaInsights, atenaOportunidades);
   renderAtenaScore(headline, snapHoje);
 }
 
-// FASE 2.3 — popula os 4 KPIs diagnósticos
-function renderBriefDiagnosticos(headline, silenciosas, ocorrencias) {
+// FASE 2.3 — popula os 4 KPIs diagnósticos · FASE 4.3 — deltas inline
+function renderBriefDiagnosticos(headline, silenciosas, ocorrencias, ultBacklog, penBacklog) {
   // SCORE — fonte única (headline.json)
   if (headline && typeof headline.score === 'number') {
     var scoreEl = document.getElementById('bk-score');
@@ -435,6 +455,17 @@ function renderBriefDiagnosticos(headline, silenciosas, ocorrencias) {
       scoreCard.classList.remove('alert','warn');
       if (headline.score < 50) scoreCard.classList.add('alert');
       else if (headline.score < 70) scoreCard.classList.add('warn');
+    }
+    // FASE 4.3 — delta de alarmes vs anterior (proxy do score)
+    if (ultBacklog && penBacklog) {
+      var alA = (ultBacklog.indices.zumbi.total||0) + (ultBacklog.indices.orfas.total||0) + (ultBacklog.indices.lote_vt.total||0);
+      var alB = (penBacklog.indices.zumbi.total||0) + (penBacklog.indices.orfas.total||0) + (penBacklog.indices.lote_vt.total||0);
+      var diff = alA - alB;
+      var deltaEl = document.getElementById('bk-score-delta');
+      if (deltaEl) {
+        deltaEl.textContent = (diff > 0 ? '+' : '') + diff + ' alarmes vs ' + (penBacklog.date.split('-').reverse().slice(0,2).join('/'));
+        deltaEl.className = 'brief-kpi-delta ' + (diff > 0 ? 'up' : (diff < 0 ? 'down' : 'same'));
+      }
     }
   }
 
@@ -642,10 +673,30 @@ function renderBriefSparklines(hist, snapHoje) {
 // FASE 3.2 - cache global de obras por tipo (alimenta o modal de drill-down)
 window.ACAO_OBRAS = window.ACAO_OBRAS || {};
 
-function renderBriefAcoes(hist, snapHoje) {
+function renderBriefAcoes(hist, snapHoje, ultBacklog) {
   var el = document.getElementById('brief-acoes');
   if (!el) return;
   var acoes = [];
+
+  // FASE 4.1 — mudanças vs anterior (deltas do dia) entram primeiro
+  if (ultBacklog && ultBacklog.mudancas_vs_anterior) {
+    var mud = ultBacklog.mudancas_vs_anterior;
+    if (mud.zumbi_saiu && mud.zumbi_saiu.length > 0) {
+      acoes.push({tipo:'_delta', sev:'info', text:'<b>' + mud.zumbi_saiu.length + ' obras encerradas</b> — saíram da fase CLIENTE FINALIZADO desde a varredura anterior', meta:'evento positivo · sem ação necessária'});
+    }
+    if (mud.orfas_atribuida && mud.orfas_atribuida.length > 0) {
+      acoes.push({tipo:'_delta', sev:'info', text:'<b>' + mud.orfas_atribuida.length + ' obras ganharam consultor</b> — atribuições recentes', meta:'evento positivo · sem ação necessária'});
+    }
+    if (mud.lote_vt_destravada && mud.lote_vt_destravada.length > 0) {
+      acoes.push({tipo:'_delta', sev:'info', text:'<b>' + mud.lote_vt_destravada.length + ' obras destravadas de VT</b> — saíram da fase AGEND. VT', meta:'evento positivo · sem ação necessária'});
+    }
+    if (mud.lideres_formalizado && mud.lideres_formalizado.length > 0) {
+      acoes.push({tipo:'_delta', sev:'info', text:'<b>' + mud.lideres_formalizado.length + ' líderes formalizados</b> — agora cadastrados em /api/equipes', meta:'evento positivo · sem ação necessária'});
+    }
+    if (mud.conflitos_resolvido && mud.conflitos_resolvido.length > 0) {
+      acoes.push({tipo:'_delta', sev:'info', text:'<b>' + mud.conflitos_resolvido.length + ' conflitos de escala resolvidos</b>', meta:'evento positivo · sem ação necessária'});
+    }
+  }
 
   if (snapHoje && snapHoje.ativas) {
     var todas = snapHoje.ativas;
@@ -715,11 +766,33 @@ function renderBriefAcoes(hist, snapHoje) {
   }
 }
 
-function renderBriefInsight(atenaScan) {
+function renderBriefInsight(atenaInsights, atenaOportunidades) {
   var el = document.getElementById('brief-insight');
   if (!el) return;
 
-  // Pool de insights estaticos (baseados nos 26 cruzamentos)
+  // FASE 4.2 — prioriza achados reais (atena/{date}-insights.json + oportunidades.json)
+  var achados = [];
+  if (atenaInsights && Array.isArray(atenaInsights.achados)) achados = achados.concat(atenaInsights.achados);
+  if (atenaOportunidades && Array.isArray(atenaOportunidades.achados)) achados = achados.concat(atenaOportunidades.achados);
+
+  if (achados.length > 0) {
+    // Ordena por severidade (alta > media > baixa)
+    var ordem = { 'alta': 0, 'media': 1, 'baixa': 2 };
+    achados.sort(function(a, b){ return (ordem[a.severidade] || 99) - (ordem[b.severidade] || 99); });
+    var top = achados.slice(0, 2);
+    var dataExec = (atenaInsights && atenaInsights.executado_em) || (atenaOportunidades && atenaOportunidades.executado_em);
+    var fonte = dataExec ? ('ATENA · varredura ' + dataExec.slice(0, 10).split('-').reverse().join('/')) : 'ATENA · varredura recente';
+    el.innerHTML = top.map(function(a){
+      var sevPill = '<span class="brief-insight-sev sev-' + (a.severidade || 'baixa') + '">' + (a.severidade || 'baixa') + '</span>';
+      return '<div class="brief-insight-item">' + sevPill + '<div class="brief-insight-titulo">' + (a.titulo || '') + '</div>' +
+        (a.descricao ? '<div class="brief-insight-desc">' + a.descricao + '</div>' : '') +
+        (a.evidencia ? '<div class="brief-insight-evid"><span>evidência:</span> ' + a.evidencia + '</div>' : '') +
+        '</div>';
+    }).join('') + '<div class="brief-insight-source">' + fonte + '</div>';
+    return;
+  }
+
+  // Fallback: pool de insights estáticos (baseados nos 26 cruzamentos)
   var insights = [
     {quote:'Obras de piso+parede demoram 2\u00D7 mais que parede pura (mediana 238d vs 46d). Considere separar escopos combinados em fases.', source:'cruz-idade-tipo.json'},
     {quote:'Dois consultores (Luana e Wesley) concentram 85% das obras ativas e 91% das que passaram de 6 meses. Qualquer aus\u00EAncia colapsa a opera\u00E7\u00E3o.', source:'cruz-idade-consultor.json'},
