@@ -592,5 +592,64 @@ with open(os.path.join(alerta_dir, f"{TODAY}.json"), "w") as f:
 print(f"  alertas/{TODAY}.json: {alerta['resumo']['total']} eventos ({alerta['resumo']['positivos']} positivos, {alerta['resumo']['negativos']} negativos)")
 PYEOF
 
+# ─── Q4 — cruz-frescor.json ───
+# Mapeia idade de cada cruz-*.json (gerado_em / geradoEm / data_referencia)
+# Permite UI alertar quando snapshot está estático há muito tempo.
+echo "[Q4] Gerando cruz-frescor.json..."
+python3 -c "
+import json, os, datetime
+DADOS = '$DADOS'
+TODAY = '$TODAY'
+hoje = datetime.date.fromisoformat(TODAY)
+
+frescor = { 'gerado_em': '$NOW', 'snapshot_date': TODAY, 'cruzamentos': [] }
+for f in sorted(os.listdir(DADOS)):
+    if not f.startswith('cruz-') or not f.endswith('.json'):
+        continue
+    path = os.path.join(DADOS, f)
+    info = { 'arquivo': f, 'tamanho_kb': round(os.path.getsize(path) / 1024, 1) }
+    try:
+        with open(path, encoding='utf-8') as fh:
+            d = json.load(fh)
+        # tenta vários campos comuns
+        ge = d.get('gerado_em') or d.get('geradoEm') or d.get('data_referencia') or d.get('data_base')
+        if ge:
+            ge_str = str(ge)[:10]
+            try:
+                ge_date = datetime.date.fromisoformat(ge_str)
+                idade = (hoje - ge_date).days
+                info['gerado_em'] = ge_str
+                info['idade_dias'] = idade
+                if idade <= 1:
+                    info['frescor'] = 'fresco'
+                elif idade <= 7:
+                    info['frescor'] = 'recente'
+                elif idade <= 30:
+                    info['frescor'] = 'antigo'
+                else:
+                    info['frescor'] = 'estatico'
+            except:
+                info['gerado_em'] = ge_str
+                info['frescor'] = 'desconhecido'
+        else:
+            info['frescor'] = 'sem_data'
+    except Exception as e:
+        info['erro'] = str(e)[:80]
+        info['frescor'] = 'erro'
+    frescor['cruzamentos'].append(info)
+
+# resumo
+freq = {}
+for c in frescor['cruzamentos']:
+    f = c.get('frescor', 'sem_data')
+    freq[f] = freq.get(f, 0) + 1
+frescor['resumo'] = freq
+frescor['total'] = len(frescor['cruzamentos'])
+
+with open(os.path.join(DADOS, 'cruz-frescor.json'), 'w', encoding='utf-8') as fh:
+    json.dump(frescor, fh, ensure_ascii=False, indent=2)
+print(f'  cruz-frescor.json: {len(frescor[\"cruzamentos\"])} cruz-* avaliados (resumo: {freq})')
+"
+
 echo "[done] Refresh PESADO concluído em $NOW"
 rm -rf "$TMP"
