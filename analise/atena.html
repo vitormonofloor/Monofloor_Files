@@ -245,39 +245,50 @@ a:hover { text-decoration: underline; }
   <!-- PANEL: ATENA -->
   <div class="atena-panel active" id="panel-atena">
 
-  <!-- KPI STRIP -->
-  <div class="brief-kpis">
-    <div class="brief-kpi">
-      <div class="brief-kpi-val" id="bk-ativas">&mdash;</div>
-      <div class="brief-kpi-label">ATIVAS</div>
-      <div class="brief-kpi-delta" id="bk-ativas-delta"></div>
-      <div class="brief-kpi-spark" id="bk-spark-ativas"></div>
-    </div>
-    <div class="brief-kpi alert">
-      <div class="brief-kpi-val" id="bk-zumbi">&mdash;</div>
-      <div class="brief-kpi-label">ENC. S/ FECHAR</div>
-      <div class="brief-kpi-delta" id="bk-zumbi-delta"></div>
-      <div class="brief-kpi-spark" id="bk-spark-zumbi"></div>
-    </div>
-    <div class="brief-kpi warn">
-      <div class="brief-kpi-val" id="bk-orfas">&mdash;</div>
-      <div class="brief-kpi-label">SEM RESPONS&Aacute;VEL</div>
-      <div class="brief-kpi-delta" id="bk-orfas-delta"></div>
-      <div class="brief-kpi-spark" id="bk-spark-orfas"></div>
-    </div>
-    <div class="brief-kpi">
-      <div class="brief-kpi-val" id="bk-vt">&mdash;</div>
-      <div class="brief-kpi-label">VT TRAVADAS</div>
-      <div class="brief-kpi-delta" id="bk-vt-delta"></div>
-      <div class="brief-kpi-spark" id="bk-spark-vt"></div>
-    </div>
-  </div>
-
-  <!-- ACOES PRIORITARIAS -->
+  <!-- ACOES PRIORITARIAS (movidas para o topo na FASE 2.2 — ação antes do número) -->
   <div class="brief-section">
     <div class="brief-title">A&ccedil;&otilde;es priorit&aacute;rias</div>
     <div class="brief-acoes" id="brief-acoes">
       <div class="atena-loading">Carregando dados...</div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP — diagnóstico (FASE 2.3): SCORE / SILÊNCIO / ATRASO / CICLO_MEDIANO vs meta 150d -->
+  <div class="brief-kpis">
+    <div class="brief-kpi">
+      <div class="brief-kpi-val" id="bk-score">&mdash;</div>
+      <div class="brief-kpi-label">SCORE</div>
+      <div class="brief-kpi-delta" id="bk-score-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-score"></div>
+    </div>
+    <div class="brief-kpi warn">
+      <div class="brief-kpi-val" id="bk-silencio">&mdash;</div>
+      <div class="brief-kpi-label">SIL&Ecirc;NCIO %</div>
+      <div class="brief-kpi-delta" id="bk-silencio-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-silencio"></div>
+    </div>
+    <div class="brief-kpi alert">
+      <div class="brief-kpi-val" id="bk-atraso">&mdash;</div>
+      <div class="brief-kpi-label">ATRASO %</div>
+      <div class="brief-kpi-delta" id="bk-atraso-delta"></div>
+      <div class="brief-kpi-spark" id="bk-spark-atraso"></div>
+    </div>
+    <div class="brief-kpi">
+      <div class="brief-kpi-val" id="bk-ciclo">&mdash;</div>
+      <div class="brief-kpi-label">CICLO MED.</div>
+      <div class="brief-kpi-delta" id="bk-ciclo-delta">vs meta 150d</div>
+      <div class="brief-kpi-spark" id="bk-spark-ciclo"></div>
+    </div>
+  </div>
+
+  <!-- OUTROS INDICADORES (volume — sub-cards) -->
+  <div class="brief-section" id="brief-secundarios">
+    <div class="brief-title" style="opacity:.7">Outros indicadores</div>
+    <div class="brief-kpis" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px">
+      <div class="brief-kpi" style="padding:14px 16px"><div class="brief-kpi-val" id="bk-ativas" style="font-size:24px">&mdash;</div><div class="brief-kpi-label">ATIVAS</div><div class="brief-kpi-delta" id="bk-ativas-delta"></div></div>
+      <div class="brief-kpi alert" style="padding:14px 16px"><div class="brief-kpi-val" id="bk-zumbi" style="font-size:24px">&mdash;</div><div class="brief-kpi-label">ENC. S/ FECHAR</div><div class="brief-kpi-delta" id="bk-zumbi-delta"></div></div>
+      <div class="brief-kpi warn" style="padding:14px 16px"><div class="brief-kpi-val" id="bk-orfas" style="font-size:24px">&mdash;</div><div class="brief-kpi-label">SEM RESPONS&Aacute;VEL</div><div class="brief-kpi-delta" id="bk-orfas-delta"></div></div>
+      <div class="brief-kpi" style="padding:14px 16px"><div class="brief-kpi-val" id="bk-vt" style="font-size:24px">&mdash;</div><div class="brief-kpi-label">VT TRAVADAS</div><div class="brief-kpi-delta" id="bk-vt-delta"></div></div>
     </div>
   </div>
 
@@ -359,10 +370,54 @@ async function atenaInit() {
     if (r.ok) atenaScan = await r.json();
   } catch(e) {}
 
+  // FASE 2.3 — fontes para o novo KPI strip diagnóstico
+  let headline = null, silenciosas = null, ocorrencias = null;
+  try { const r = await fetch('dados/headline.json?t=' + Date.now()); if (r.ok) headline = await r.json(); } catch(e) {}
+  try { const r = await fetch('dados/cruz-silenciosas.json?t=' + Date.now()); if (r.ok) silenciosas = await r.json(); } catch(e) {}
+  try { const r = await fetch('dados/cruz-ocorrencias.json?t=' + Date.now()); if (r.ok) ocorrencias = await r.json(); } catch(e) {}
+
   renderBriefKPIs(hist, snapHoje, snapOntem);
+  renderBriefDiagnosticos(headline, silenciosas, ocorrencias);
   renderBriefAcoes(hist, snapHoje);
   renderBriefInsight(atenaScan);
-  renderAtenaScore(snapHoje);
+  renderAtenaScore(headline, snapHoje);
+}
+
+// FASE 2.3 — popula os 4 KPIs diagnósticos
+function renderBriefDiagnosticos(headline, silenciosas, ocorrencias) {
+  // SCORE — fonte única (headline.json)
+  if (headline && typeof headline.score === 'number') {
+    var scoreEl = document.getElementById('bk-score');
+    scoreEl.textContent = headline.score;
+    var scoreCard = scoreEl.closest('.brief-kpi');
+    if (scoreCard) {
+      scoreCard.classList.remove('alert','warn');
+      if (headline.score < 50) scoreCard.classList.add('alert');
+      else if (headline.score < 70) scoreCard.classList.add('warn');
+    }
+  }
+
+  // SILÊNCIO % — cruz-silenciosas
+  if (silenciosas && typeof silenciosas.total_silenciosas === 'number' && silenciosas.total_ativas) {
+    var pct = (silenciosas.total_silenciosas / silenciosas.total_ativas) * 100;
+    document.getElementById('bk-silencio').textContent = pct.toFixed(1) + '%';
+  }
+
+  // ATRASO % — cruz-ocorrencias (atRisk_detalhe com diasAtraso > 0 / total atRisk)
+  if (ocorrencias && Array.isArray(ocorrencias.atRisk_detalhe) && ocorrencias.atRisk_detalhe.length) {
+    var det = ocorrencias.atRisk_detalhe;
+    var comAtraso = det.filter(function(o){ return Number(o.diasAtraso) > 0; }).length;
+    var pctAtraso = (comAtraso / det.length) * 100;
+    document.getElementById('bk-atraso').textContent = pctAtraso.toFixed(1) + '%';
+  }
+
+  // CICLO MEDIANO — headline.score_componentes.ciclo_mediano
+  if (headline && headline.score_componentes && typeof headline.score_componentes.ciclo_mediano === 'number') {
+    document.getElementById('bk-ciclo').textContent = headline.score_componentes.ciclo_mediano + 'd';
+    var meta = headline.score_componentes.ciclo_meta || 150;
+    var diff = headline.score_componentes.ciclo_mediano - meta;
+    document.getElementById('bk-ciclo-delta').textContent = (diff > 0 ? '+' : '') + diff + 'd vs meta ' + meta + 'd';
+  }
 }
 
 function renderBriefKPIs(hist, snapHoje, snapOntem) {
@@ -609,8 +664,14 @@ function renderBriefInsight(atenaScan) {
     '<div class="brief-insight-source">fonte: ' + ins.source + '</div>';
 }
 
-function renderAtenaScore(snapHoje) {
+// FASE 2.3 \u2014 score vem do headline.json (fonte \u00fanica, f\u00f3rmula em SCORE-FORMULA.md).
+// Fallback: se headline indispon\u00edvel, calcula a partir do snapshot (mesma f\u00f3rmula antiga, marcado como aproxima\u00e7\u00e3o).
+function renderAtenaScore(headline, snapHoje) {
   var el = document.getElementById('atena-score');
+  if (headline && typeof headline.score === 'number') {
+    el.querySelector('.atena-score-num').textContent = headline.score;
+    return;
+  }
   if (!snapHoje || !snapHoje.ativas) {
     el.querySelector('.atena-score-num').textContent = '\u2014';
     return;
@@ -627,7 +688,8 @@ function renderAtenaScore(snapHoje) {
     Math.max(0,1-Math.min(idadeMedia/300,1))*30 +
     Math.max(0,1-Math.min(n180/total,0.5)*2)*20
   );
-  el.querySelector('.atena-score-num').textContent = score;
+  el.querySelector('.atena-score-num').textContent = score + '*';
+  el.title = 'Score aproximado (headline.json indispon\u00edvel)';
 }
 
 document.addEventListener('DOMContentLoaded', atenaInit);

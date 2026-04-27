@@ -13,7 +13,22 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .hub{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;position:relative}
 
 /* ═══ BRAND ═══ */
-.brand{text-align:center;margin-bottom:56px;opacity:0;animation:fadeUp 0.8s ease 0.3s forwards}
+.brand{text-align:center;margin-bottom:30px;opacity:0;animation:fadeUp 0.8s ease 0.3s forwards}
+/* FASE 2.1 — pill de score no topo do hub (fonte: headline.json) */
+.score-pill-wrap{display:flex;justify-content:center;margin-bottom:34px;opacity:0;animation:fadeUp 0.8s ease 0.5s forwards}
+.score-pill{display:inline-flex;align-items:center;gap:14px;padding:14px 22px 14px 18px;border:1px solid;border-radius:99px;background:#fff;text-decoration:none;font-family:'Plus Jakarta Sans',sans-serif;transition:transform .25s ease, box-shadow .25s ease;cursor:pointer}
+.score-pill:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(42,37,32,0.08)}
+.score-pill .sp-num{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:600;letter-spacing:-0.02em;line-height:1}
+.score-pill .sp-meta{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.score-pill .sp-lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;color:#8a7e72}
+.score-pill .sp-go{font-size:11px;color:#6b6156;margin-top:2px}
+.score-pill.green{border-color:#3d8a5a55;background:#f4faf6}
+.score-pill.green .sp-num{color:#2d5a3a}
+.score-pill.amber{border-color:#b89a4a55;background:#faf6ed}
+.score-pill.amber .sp-num{color:#5a4a2a}
+.score-pill.red{border-color:#c45a5a55;background:#faedea;animation:pillPulse 2.4s ease-in-out infinite}
+.score-pill.red .sp-num{color:#6a2a2a}
+@keyframes pillPulse{0%,100%{box-shadow:0 0 0 0 #c45a5a44}50%{box-shadow:0 0 0 8px #c45a5a00}}
 .brand-logo{height:40px;width:auto;filter:brightness(0) sepia(1) saturate(0.3) hue-rotate(350deg) brightness(0.25);margin-bottom:8px}
 .brand-tagline{font-size:9px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:#a89e92}
 
@@ -123,6 +138,16 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .trans-dash .db5{animation:bB5 3.2s ease-in-out infinite}
 
 @media(max-width:800px){.cards{grid-template-columns:1fr;max-width:320px;gap:32px}.card-desc{max-width:280px}.anim-box{height:56px}}
+
+/* FASE 2.4 — segunda fileira (mapa drill-down) */
+.cards-secondary{display:flex;justify-content:center;margin-top:18px;width:100%;max-width:960px;opacity:0;animation:fadeUp 0.8s ease 1.2s forwards}
+.card-mini{display:flex;align-items:center;gap:14px;padding:12px 18px;border:1px solid rgba(196,181,160,0.22);border-radius:99px;background:transparent;text-decoration:none;color:inherit;font-family:'Plus Jakarta Sans',sans-serif;transition:all .25s ease}
+.card-mini:hover{background:#fff;border-color:#c4b5a0;transform:translateY(-1px);box-shadow:0 4px 12px rgba(42,37,32,0.05)}
+.card-mini .cm-icon{width:24px;height:24px;color:#b8a080;flex-shrink:0}
+.card-mini .cm-text{display:flex;flex-direction:column;line-height:1.25}
+.card-mini .cm-name{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#3a3530}
+.card-mini .cm-desc{font-size:10px;color:#8a7e72;letter-spacing:0.3px}
+.card-mini .cm-go{width:18px;height:18px;color:#b8a080;flex-shrink:0;margin-left:4px}
 </style>
 <script src="auth.js"></script>
 </head>
@@ -134,6 +159,17 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
   <div class="brand">
     <img src="https://static.wixstatic.com/media/2bc4fe_d7fd788ceb094e96b86315e020950bda~mv2.png/v1/fill/w_506,h_156,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Artboard%201.png" alt="monofloor" class="brand-logo">
     <div class="brand-tagline">Central de Qualidade</div>
+  </div>
+
+  <!-- FASE 2.1 — SCORE PILL: única âncora numérica no above-the-fold -->
+  <div class="score-pill-wrap">
+    <a href="analise/atena.html" class="score-pill" id="hub-score-pill" onclick="event.preventDefault();goTo('atena','analise/atena.html')">
+      <span class="sp-num" id="hub-score-pill-num">—</span>
+      <span class="sp-meta">
+        <span class="sp-lbl">Score de saúde</span>
+        <span class="sp-go" id="hub-score-pill-sub">abrir briefing →</span>
+      </span>
+    </a>
   </div>
 
   <div class="cards">
@@ -219,6 +255,20 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
       <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </a>
 
+  </div>
+
+  <!-- FASE 2.4 — segunda fileira: drill-down rápido por obra -->
+  <div class="cards-secondary">
+    <a href="analise/obras-mapa.html" class="card-mini" onclick="event.preventDefault();goTo('mapa','analise/obras-mapa.html')">
+      <div class="cm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>
+      </div>
+      <div class="cm-text">
+        <span class="cm-name">mapa de obras</span>
+        <span class="cm-desc">drill-down · <span id="hub-mapa-n">—</span> ativas com flags acionáveis</span>
+      </div>
+      <div class="cm-go"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </a>
   </div>
 </div>
 
@@ -310,9 +360,11 @@ function goTo(dest, url) {
         var svg1 = document.getElementById('hub-ativas-svg1');
         var svg2 = document.getElementById('hub-ativas-svg2');
         var pill = document.getElementById('hub-ativas-pill');
+        var mapaN = document.getElementById('hub-mapa-n');
         if (svg1) svg1.textContent = h.ativas;
         if (svg2) svg2.textContent = h.ativas;
         if (pill) pill.textContent = h.ativas + ' obras';
+        if (mapaN) mapaN.textContent = h.ativas;
       }
 
       // score de saúde
@@ -321,6 +373,24 @@ function goTo(dest, url) {
         var s2 = document.getElementById('hub-score-svg2');
         if (s1) s1.textContent = h.score;
         if (s2) s2.textContent = h.score;
+
+        // FASE 2.1 — score pill destacado no topo
+        var pill = document.getElementById('hub-score-pill');
+        var pNum = document.getElementById('hub-score-pill-num');
+        var pSub = document.getElementById('hub-score-pill-sub');
+        if (pill && pNum) {
+          pNum.textContent = h.score;
+          pill.classList.remove('green','amber','red');
+          if (h.score < 50) pill.classList.add('red');
+          else if (h.score < 70) pill.classList.add('amber');
+          else pill.classList.add('green');
+          if (pSub && h.alertas) {
+            var nov = h.alertas.novos_hoje || 0;
+            pSub.textContent = (nov > 0)
+              ? (nov + ' evento' + (nov > 1 ? 's' : '') + ' hoje · abrir briefing →')
+              : 'abrir briefing →';
+          }
+        }
       }
     })
     .catch(function () { /* offline / file:// → mantém "—" e badge fica vermelho */ });
