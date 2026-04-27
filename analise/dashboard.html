@@ -928,6 +928,46 @@
     color: #b8a080;
     text-decoration: underline;
   }
+
+  /* ============== GLOBAL FILTER (MVP) ============== */
+  .global-filter {
+    position: sticky;
+    top: 56px; /* logo abaixo do header.top */
+    z-index: 25;
+    background: var(--card-2, #faf7f2);
+    border-bottom: 1px solid var(--border, #e0d8cc);
+    padding: 8px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .gf-label { font-weight: 500; color: var(--muted, #8a7e72); text-transform: uppercase; letter-spacing: 0.08em; font-size: 10px; }
+  .gf-select {
+    padding: 4px 8px;
+    border: 1px solid var(--border, #e0d8cc);
+    background: var(--card, #ffffff);
+    color: var(--text, #3a3530);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .gf-select:hover { border-color: var(--border-2, #c4b5a0); }
+  .gf-clear {
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid var(--border, #e0d8cc);
+    color: var(--muted, #8a7e72);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    font-family: inherit;
+  }
+  .gf-clear:hover { background: var(--border, #e0d8cc); color: var(--text, #3a3530); }
+  .gf-status { color: var(--accent, #b8a080); font-weight: 500; margin-left: auto; font-size: 11px; }
+  .gf-hidden { display: none !important; }
   </style>
 <script src="../auth.js"></script>
 </head>
@@ -973,6 +1013,22 @@
     </div>
   </div>
 </header>
+
+<!-- Filtro global — MVP. Filtra elementos com data-consultor / data-uf / data-equipe. -->
+<div class="global-filter" id="global-filter">
+  <div class="gf-label">Filtrar:</div>
+  <select id="gf-consultor" class="gf-select" aria-label="Filtrar por consultor">
+    <option value="">Todos os consultores</option>
+  </select>
+  <select id="gf-uf" class="gf-select" aria-label="Filtrar por UF">
+    <option value="">Todas as UFs</option>
+  </select>
+  <select id="gf-equipe" class="gf-select" aria-label="Filtrar por equipe">
+    <option value="">Todas as equipes</option>
+  </select>
+  <button id="gf-clear" class="gf-clear" hidden>&times; Limpar</button>
+  <span id="gf-status" class="gf-status"></span>
+</div>
 
 <div class="auto-agents">
   <div class="auto-agents-head">
@@ -1040,9 +1096,9 @@
     <div>
       <div class="hero-kpis">
         <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span id="dyn-total-obras">—</span> no painel</div><div class="kpi-edai">do total de <span id="dyn-total-obras-edai">—</span> obras no sistema</div></div>
-        <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai">apenas 12% da carteira ativa</div></div>
-        <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai">quase metade da carteira — acima de 6 meses</div></div>
-        <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: 4 com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
+        <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
+        <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
+        <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
@@ -1058,12 +1114,12 @@
   <section id="q1">
     <div class="q-head">
       <h2><span class="section-pill pill-prazo">PRAZO</span></h2>
-      <p class="sub">Das 34 obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
+      <p class="sub">Das <span id="q1-crono-total-sub">34</span> obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
       <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja <a href="../indicadores-v2.html">Indicadores</a>.</p>
     </div>
 
     <div class="q1-stacked-wrap">
-      <div class="q1-stacked-label">Distribuição das 34 obras "ativas" no planejamento por situação de prazo</div>
+      <div class="q1-stacked-label">Distribuição das <span id="q1-crono-total-label">34</span> obras "ativas" no planejamento por situação de prazo</div>
       <div class="q1-stacked" id="q1-stacked"></div>
       <div class="q1-stacked-legenda">Clique em uma faixa para ver as obras daquela categoria</div>
     </div>
@@ -1148,7 +1204,7 @@
   <section id="q3">
     <div class="q-head">
       <h2><span class="section-pill pill-equipe">EQUIPE</span></h2>
-      <p class="sub">Dois consultores (Luana e Wesley) concentram 85% de todas as obras ativas. Veja a distribuição de carga e as equipes operacionais.</p>
+      <p class="sub">Dois consultores (Luana e Wesley) concentram <span id="q3-bus-pct-sub">85%</span> de todas as obras ativas. Veja a distribuição de carga e as equipes operacionais.</p>
     </div>
 
     <!-- Bloco 1: Luana vs Wesley + KPIs aplicadores -->
@@ -1442,19 +1498,19 @@
 
     <!-- Ranking de ocorrências removido: consolidado no ki-risco (score cruzado) abaixo -->
 
-    <!-- Tarefas por responsável -->
-    <div class="ki-responsaveis">
-      <div class="ki-ranking-title">Carga de tarefas por responsável</div>
-      <div class="ki-resp-bars" id="ki-resp-bars"></div>
-    </div>
-
-    <!-- RANKING DE RISCO UNIFICADO -->
+    <!-- RANKING ÚNICO DE OBRAS — score composto normalizado -->
     <div class="ki-risco">
-      <div class="ki-ranking-title">Top 10 obras que precisam de atenção agora</div>
-      <p style="font-size:11px;color:#a89e92;margin-bottom:12px">Score calculado cruzando ocorrências + progresso + tarefas. Quanto maior, mais urgente.</p>
+      <div class="ki-ranking-title">Ranking único de obras — score composto</div>
+      <p style="font-size:11px;color:#a89e92;margin-bottom:12px" id="ki-risco-formula">Score 0–100 normalizado pela fórmula <code style="background:#f6eaea;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px">w1·ocorrências + w2·críticas + w3·atraso_progresso + w4·tarefas_abertas</code>. Pesos: w1=0.30, w2=0.30, w3=0.25, w4=0.15. Quanto maior, mais urgente.</p>
       <div class="ki-risco-list" id="ki-risco-list">
         <div style="color:#b8b0a4;font-size:12px;font-style:italic;padding:12px">Calculando ranking...</div>
       </div>
+    </div>
+
+    <!-- Tarefas por responsável (visualização complementar de pessoas, não de obras) -->
+    <div class="ki-responsaveis" style="margin-top:24px">
+      <div class="ki-ranking-title">Carga de tarefas por responsável <span style="color:#b8b0a4;font-weight:400;text-transform:none;letter-spacing:0;font-size:10px">(complementar — análise de pessoas)</span></div>
+      <div class="ki-resp-bars" id="ki-resp-bars"></div>
     </div>
 
     <!-- BENCHMARK + FANTASMAS -->
@@ -1989,6 +2045,7 @@ function initDashboard() {
   renderAtRiskTop();
   renderBaldes();
   initSideNav();
+  initGlobalFilter();
   // DOMContentLoaded-dependent inits
   if (document.readyState !== 'loading') {
     q2Init(); agInit(); loadBacklogHistory();
@@ -2001,6 +2058,152 @@ function initDashboard() {
 
 loadDashboardData();
 
+// ============== FILTRO GLOBAL (MVP) ==============
+// Filtro global — MVP. Evolui conforme cada seção adicionar data-consultor/data-uf/data-equipe nos itens filtráveis.
+// Estado é lido dos 3 selects no topo. applyGlobalFilter() itera sobre [data-consultor], [data-uf], [data-equipe]
+// e adiciona/remove a classe .gf-hidden. NÃO recomputa KPIs agregados — apenas oculta linhas/cards visualmente.
+function initGlobalFilter() {
+  try {
+    var selCons = document.getElementById('gf-consultor');
+    var selUf = document.getElementById('gf-uf');
+    var selEq = document.getElementById('gf-equipe');
+    var btnClear = document.getElementById('gf-clear');
+    if (!selCons || !selUf || !selEq) return;
+
+    // Popular consultores: prioriza AGG.top_consultores (chave => quantidade); fallback Q2_OBRAS.
+    var consultores = [];
+    try {
+      if (AGG && AGG.top_consultores && typeof AGG.top_consultores === 'object') {
+        consultores = Object.keys(AGG.top_consultores).filter(function(k){ return k && k.trim(); });
+      }
+      if (!consultores.length && Array.isArray(Q2_OBRAS)) {
+        var seen = {};
+        Q2_OBRAS.forEach(function(o){
+          var c = (o && o.consultor) ? String(o.consultor).trim() : '';
+          if (c && c !== '[]' && !seen[c]) { seen[c] = 1; consultores.push(c); }
+        });
+      }
+    } catch(e) { /* fallback silencioso */ }
+    consultores.sort(function(a,b){ return a.localeCompare(b, 'pt-BR'); });
+    consultores.forEach(function(c){
+      var opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      selCons.appendChild(opt);
+    });
+
+    // Popular UFs: AGG.top_ufs (chave => quantidade).
+    var ufs = [];
+    try {
+      if (AGG && AGG.top_ufs && typeof AGG.top_ufs === 'object') {
+        ufs = Object.keys(AGG.top_ufs).filter(function(k){ return k && k.trim() && k !== 'OUTROS'; });
+      }
+    } catch(e) { /* fallback silencioso */ }
+    ufs.sort();
+    ufs.forEach(function(u){
+      var opt = document.createElement('option');
+      opt.value = u; opt.textContent = u;
+      selUf.appendChild(opt);
+    });
+
+    // Popular equipes: Q3_EQUIPES (array com .nome).
+    var equipes = [];
+    try {
+      if (Array.isArray(Q3_EQUIPES)) {
+        Q3_EQUIPES.forEach(function(e){
+          if (e && e.nome && (e.ativo === undefined || e.ativo)) equipes.push(e.nome);
+        });
+      }
+    } catch(e) { /* fallback silencioso */ }
+    equipes.sort(function(a,b){ return a.localeCompare(b, 'pt-BR'); });
+    equipes.forEach(function(n){
+      var opt = document.createElement('option');
+      opt.value = n; opt.textContent = n;
+      selEq.appendChild(opt);
+    });
+
+    // Listeners
+    selCons.addEventListener('change', applyGlobalFilter);
+    selUf.addEventListener('change', applyGlobalFilter);
+    selEq.addEventListener('change', applyGlobalFilter);
+    if (btnClear) btnClear.addEventListener('click', function(){
+      selCons.value = ''; selUf.value = ''; selEq.value = '';
+      applyGlobalFilter();
+    });
+
+    // Re-aplicar quando elementos novos forem renderizados (rankings async, etc).
+    var container = document.querySelector('.container');
+    if (container && window.MutationObserver) {
+      var pending = false;
+      var mo = new MutationObserver(function(){
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(function(){ pending = false; applyGlobalFilter(); });
+      });
+      mo.observe(container, { childList: true, subtree: true });
+    }
+
+    applyGlobalFilter();
+  } catch(e) { console.error('initGlobalFilter:', e); }
+}
+
+function applyGlobalFilter() {
+  try {
+    var selCons = document.getElementById('gf-consultor');
+    var selUf = document.getElementById('gf-uf');
+    var selEq = document.getElementById('gf-equipe');
+    var btnClear = document.getElementById('gf-clear');
+    var status = document.getElementById('gf-status');
+    if (!selCons || !selUf || !selEq) return;
+
+    var fCons = (selCons.value || '').trim();
+    var fUf = (selUf.value || '').trim();
+    var fEq = (selEq.value || '').trim();
+    var anyActive = !!(fCons || fUf || fEq);
+
+    if (btnClear) btnClear.hidden = !anyActive;
+
+    // Itera elementos filtráveis: tem pelo menos um dos 3 atributos
+    var nodes = document.querySelectorAll('[data-consultor], [data-uf], [data-equipe]');
+    var totalElegiveis = 0, totalVisiveis = 0;
+    nodes.forEach(function(el){
+      totalElegiveis++;
+      var dc = el.getAttribute('data-consultor') || '';
+      var du = el.getAttribute('data-uf') || '';
+      var de = el.getAttribute('data-equipe') || '';
+      var hide = false;
+      // Se filtro ativo e elemento tem o atributo, comparar
+      if (fCons && dc && dc !== fCons) hide = true;
+      if (fUf && du && du !== fUf) hide = true;
+      if (fEq && de && de !== fEq) hide = true;
+      // Se filtro ativo mas elemento não tem o atributo correspondente, esconder também
+      if (fCons && !dc) hide = true;
+      if (fUf && !du) hide = true;
+      if (fEq && !de) hide = true;
+      if (hide) {
+        el.classList.add('gf-hidden');
+      } else {
+        el.classList.remove('gf-hidden');
+        totalVisiveis++;
+      }
+    });
+
+    // Status visual
+    if (status) {
+      if (anyActive) {
+        var partes = [];
+        if (fCons) partes.push('consultor: ' + fCons);
+        if (fUf) partes.push('UF: ' + fUf);
+        if (fEq) partes.push('equipe: ' + fEq);
+        var sufixo = totalElegiveis > 0
+          ? totalVisiveis + ' itens visíveis (de ' + totalElegiveis + ')'
+          : 'Nenhum elemento marcado com data-attr ainda — evoluindo por seção.';
+        status.textContent = partes.join(' · ') + ' — ' + sufixo;
+      } else {
+        status.textContent = '';
+      }
+    }
+  } catch(e) { console.error('applyGlobalFilter:', e); }
+}
 
 function q2EscHtml(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
@@ -2059,7 +2262,7 @@ function q2Filter(status){
     const idade = o.idade != null ? (o.idade + 'd') : '—';
     const idadeCls = o.idade >= 270 ? 'idade-esc' : o.idade >= 180 ? 'idade-crit' : o.idade >= 90 ? 'idade-warn' : 'idade-ok';
     const consultorCurto = o.consultor ? o.consultor.split(' ').slice(0,2).join(' ') : '—';
-    return '<tr data-id="' + q2EscHtml(o.id) + '" data-cliente="' + q2EscHtml(o.cliente||'') + '">'
+    return '<tr data-id="' + q2EscHtml(o.id) + '" data-cliente="' + q2EscHtml(o.cliente||'') + '" data-consultor="' + q2EscHtml(o.consultor||'') + '">'
       + '<td>' + q2EscHtml(o.cliente||'') + '</td>'
       + '<td>' + q2EscHtml(o.cidade||'') + '</td>'
       + '<td>' + q2EscHtml(o.fase||'') + '</td>'
@@ -2225,6 +2428,33 @@ function renderHero() {
   $('kpi-180-pct').textContent = pct(AGG.n_180_plus, ativas) + '% das ativas';
   $('kpi-orfas').textContent = AGG.sem_consultor_ativas;
 
+  // Edai dinâmicos (sem literais hardcoded)
+  const execN = AGG.status_dist.em_execucao || 0;
+  if ($('kpi-exec-edai')) {
+    $('kpi-exec-edai').textContent = ativas ? (pct(execN, ativas) + '% ') : 'parcela ';
+  }
+  if ($('kpi-180-edai')) {
+    const p180 = ativas ? pct(AGG.n_180_plus, ativas) : 0;
+    let qual = 'parte';
+    if (p180 >= 60) qual = 'mais da metade';
+    else if (p180 >= 45) qual = 'quase metade';
+    else if (p180 >= 30) qual = 'mais de um terço';
+    else if (p180 >= 20) qual = 'cerca de um quinto';
+    else qual = 'parcela';
+    $('kpi-180-edai').textContent = `${qual} da carteira — acima de 6 meses`;
+  }
+  // Órfãs com 180+: cruza EXT.orfas_ids com Q2_OBRAS pra contar idade>=180
+  if ($('kpi-orfas-180')) {
+    let orfas180 = 0;
+    try {
+      const orfaSet = new Set((EXT.orfas_ids || []).map(String));
+      (Q2_OBRAS || []).forEach(o => {
+        if (orfaSet.has(String(o.id)) && (o.idade || 0) >= 180) orfas180++;
+      });
+    } catch (e) { orfas180 = 0; }
+    $('kpi-orfas-180').textContent = orfas180;
+  }
+
   const naoExec = ativas - (AGG.status_dist.em_execucao || 0);
   $('hero-summary').innerHTML =
     `<strong>${ativas} obras ativas</strong> · ` +
@@ -2255,6 +2485,11 @@ function renderQ1() {
   if ($('q1-leve'))  $('q1-leve').textContent  = d.ATRASADA_LEVE  || 0;
   if ($('q1-medio')) $('q1-medio').textContent = d.ATRASADA_MEDIA || 0;
   if ($('q1-grave')) $('q1-grave').textContent = d.ATRASADA_GRAVE || 0;
+
+  // Total de obras com cronograma (dinâmico — substitui literal "34")
+  const cronoTotal = (EXT.cronograma && EXT.cronograma.total) || (Q1_TOTAIS && Q1_TOTAIS.TOTAL) || 0;
+  if ($('q1-crono-total-sub'))   $('q1-crono-total-sub').textContent   = cronoTotal || '—';
+  if ($('q1-crono-total-label')) $('q1-crono-total-label').textContent = cronoTotal || '—';
 
   // status real bar
   const sr = EXT.cronograma.status_real;
@@ -2468,6 +2703,7 @@ function renderQ3() {
   const bus180 = lw.luana.n180 + lw.wesley.n180;
   $('q3-bus-pct').textContent = pct(busTotal, ativas) + '%';
   $('q3-bus-180').textContent = pct(bus180, AGG.n_180_plus) + '%';
+  if ($('q3-bus-pct-sub')) $('q3-bus-pct-sub').textContent = pct(busTotal, ativas) + '%';
 
   const apl = EXT.aplicadores;
   $('apl-total').textContent = apl.total;
@@ -3538,8 +3774,8 @@ function renderBaldes() {
 
 // ============== SNAPSHOT DATE + BADGE ==============
 function renderSnapshotDate() {
-  // Tentar extrair snapshot_date do AGG; fallback: data hardcoded como constante
-  const snapISO = AGG.snapshot_date || '2026-04-15';
+  // Tentar extrair snapshot_date do AGG; fallback: data de hoje (evita literal defasado)
+  const snapISO = AGG.snapshot_date || new Date().toISOString().slice(0, 10);
   const parts = snapISO.split('-');
   const fmt = parts[2] + '/' + parts[1] + '/' + parts[0];
   if ($('stamp-snapshot')) $('stamp-snapshot').textContent = fmt;
@@ -3794,7 +4030,11 @@ function renderScoreBreakdown() {
   const el = document.getElementById('score-breakdown');
   if (!el) return;
 
-  const ativas = AGG.total_ativas || 208;
+  const ativas = AGG.total_ativas || 0;
+  if (!ativas) {
+    el.innerHTML = '<div class="hint" style="padding:12px;opacity:.7;">Score indisponível — total de obras ativas ausente no snapshot.</div>';
+    return;
+  }
   const n180 = AGG.n_180_plus;
   const idade_med = AGG.idade_mediana;
   const n_atRisk = EXT.ocorrencias.n_atRisk;
@@ -4060,7 +4300,7 @@ async function loadKiraInsights() {
       if (barsEl && resp.length) {
         barsEl.innerHTML = resp.slice(0, 6).map(function(r) {
           var pct = (r.total / maxResp * 100).toFixed(0);
-          return '<div class="ki-resp-row"><div class="ki-resp-name">' + (r.nome||'') + '</div><div class="ki-resp-bar-out"><div class="ki-resp-bar-in" style="width:' + pct + '%"></div></div><div class="ki-resp-count">' + r.total + '</div></div>';
+          return '<div class="ki-resp-row" data-consultor="' + (r.nome||'').replace(/"/g,'&quot;') + '"><div class="ki-resp-name">' + (r.nome||'') + '</div><div class="ki-resp-bar-out"><div class="ki-resp-bar-in" style="width:' + pct + '%"></div></div><div class="ki-resp-count">' + r.total + '</div></div>';
         }).join('');
       }
     }
@@ -4083,7 +4323,9 @@ async function loadKiraInsights() {
     }
   } catch(e) { console.error('KI progresso:', e); }
 
-  // 4. Ranking de risco unificado (cruzamento dos 3)
+  // 4. RANKING UNICO DE OBRAS - score composto normalizado
+  // scoreComposto = 100 * (w1*norm(ocs) + w2*norm(crit) + w3*atraso_progresso + w4*norm(tarefas))
+  // Pesos: w1=0.30 (ocorrencias), w2=0.30 (criticas), w3=0.25 (deficit progresso), w4=0.15 (tarefas abertas)
   try {
     var risco = {};
 
@@ -4116,15 +4358,52 @@ async function loadKiraInsights() {
       }
     } catch(e) {}
 
-    // Calcular score
-    var riscoList = Object.values(risco).map(function(r) {
-      var pctPenalty = r.pct !== null && r.pct !== undefined ? (100 - Math.max(0, Math.min(100, r.pct))) * 0.5 : 25;
-      r.score = (r.ocs * 10) + (r.crit * 30) + pctPenalty + (r.tarefas * 5);
+    // ---- Score composto normalizado ----
+    // Fonte 3: tarefas abertas por obra (top10 do cruz-tarefas)
+    try {
+      var r2c = await fetch('dados/cruz-tarefas.json?t=' + Date.now());
+      if (r2c.ok) {
+        var tfData = await r2c.json();
+        (tfData.por_obra_top10 || []).forEach(function(o) {
+          var nome = (o.cliente||'').trim().toUpperCase();
+          if (!nome) return;
+          var matched = false;
+          Object.values(risco).forEach(function(r) {
+            if (!matched && (r.cliente||'').trim().toUpperCase() === nome) {
+              r.tarefas = o.n_abertas || o.n_tarefas || 0;
+              matched = true;
+            }
+          });
+          if (!matched) {
+            risco['t_' + nome] = {id: null, cliente: o.cliente, ocs: 0, crit: 0, abertas: 0, pct: null, tarefas: o.n_abertas || o.n_tarefas || 0};
+          }
+        });
+      }
+    } catch(e) {}
+
+    var lista0 = Object.values(risco);
+    // Pesos do score-composto (somam 1.0)
+    var W_SCORE = { ocs: 0.30, crit: 0.30, atraso: 0.25, tarefas: 0.15 };
+
+    // Normalizacao min-max (clamp 0..1)
+    function _maxOf(arr, fn) { return arr.reduce(function(m,x){ var v=fn(x)||0; return v>m?v:m; }, 0); }
+    var _maxOcs   = _maxOf(lista0, function(r){ return r.ocs; })     || 1;
+    var _maxCrit  = _maxOf(lista0, function(r){ return r.crit; })    || 1;
+    var _maxTaref = _maxOf(lista0, function(r){ return r.tarefas; }) || 1;
+
+    var riscoList = lista0.map(function(r) {
+      var nOcs   = Math.min((r.ocs||0)/_maxOcs, 1);
+      var nCrit  = Math.min((r.crit||0)/_maxCrit, 1);
+      // atraso = deficit de progresso normalizado (0..1). Sem progresso conhecido => 0.5 (neutro)
+      var atraso = (r.pct === null || r.pct === undefined) ? 0.5 : Math.max(0, Math.min(100, 100 - r.pct)) / 100;
+      var nTaref = Math.min((r.tarefas||0)/_maxTaref, 1);
+      r.scoreComposto = 100 * (W_SCORE.ocs*nOcs + W_SCORE.crit*nCrit + W_SCORE.atraso*atraso + W_SCORE.tarefas*nTaref);
+      r.score = r.scoreComposto;
       return r;
     });
 
     // Ordenar e top 10
-    riscoList.sort(function(a, b) { return b.score - a.score; });
+    riscoList.sort(function(a, b) { return b.scoreComposto - a.scoreComposto; });
     var top10 = riscoList.slice(0, 10);
 
     var rkEl2 = document.getElementById('ki-risco-list');
@@ -4132,13 +4411,22 @@ async function loadKiraInsights() {
       rkEl2.innerHTML = top10.map(function(r, i) {
         var pctText = r.pct !== null && r.pct !== undefined ? r.pct.toFixed(0) + '%' : '\u2014';
         var pctCls = r.pct !== null ? (r.pct < 25 ? 'crit' : r.pct < 50 ? 'warn' : 'ok') : '';
-        return '<div class="ki-risco-item">' +
+        var _tip = 'score-composto=' + r.scoreComposto.toFixed(1) + ' | ocs=' + r.ocs + ' criticas=' + r.crit + ' progresso=' + pctText + ' tarefas=' + r.tarefas;
+        // Lookup do consultor em Q2_OBRAS pra alimentar filtro global
+        var _obraRef = null;
+        try {
+          if (Array.isArray(Q2_OBRAS)) {
+            _obraRef = Q2_OBRAS.find(function(o){ return o && (o.id === r.id || (r.cliente && o.cliente === r.cliente)); });
+          }
+        } catch(e) {}
+        var _consAttr = (_obraRef && _obraRef.consultor) ? ' data-consultor="' + String(_obraRef.consultor).replace(/"/g,'&quot;') + '"' : '';
+        return '<div class="ki-risco-item" data-score-composto="' + r.scoreComposto.toFixed(1) + '" title="' + _tip + '"' + _consAttr + '>' +
           '<div class="ki-risco-pos">' + (i+1) + '</div>' +
           '<div class="ki-risco-name">' + (r.cliente||r.id||'') + '</div>' +
           '<div class="ki-risco-metric ' + (r.ocs > 5 ? 'crit' : r.ocs > 0 ? 'warn' : '') + '">' + r.ocs + '<small>ocorrências</small></div>' +
           '<div class="ki-risco-metric ' + (r.crit > 0 ? 'crit' : '') + '">' + r.crit + '<small>críticas</small></div>' +
           '<div class="ki-risco-metric ' + pctCls + '">' + pctText + '<small>progresso</small></div>' +
-          '<div class="ki-risco-score">' + r.score.toFixed(0) + '</div>' +
+          '<div class="ki-risco-score">' + r.scoreComposto.toFixed(0) + '</div>' +
           '</div>';
       }).join('');
     } else if (rkEl2) {

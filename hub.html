@@ -170,13 +170,13 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
           <rect class="dash-line dl-1" x="52" y="10" width="50" height="2.5" rx="1.5"/>
           <rect class="dash-line dl-2" x="52" y="17" width="36" height="2.5" rx="1.5"/>
           <path class="dash-gauge" d="M62,42 A14,14 0 0,1 90,42"/>
-          <text class="dash-score" x="76" y="39" text-anchor="middle">58</text>
+          <text class="dash-score" id="hub-score-svg1" x="76" y="39" text-anchor="middle">58</text>
           <rect class="dash-bar db1" x="115" y="24" width="9" height="22" rx="2"/>
           <rect class="dash-bar db2" x="129" y="16" width="9" height="30" rx="2"/>
           <rect class="dash-bar db3" x="143" y="28" width="9" height="18" rx="2"/>
           <rect class="dash-bar db4" x="157" y="12" width="9" height="34" rx="2"/>
           <rect class="dash-bar db5" x="171" y="20" width="9" height="26" rx="2"/>
-          <text class="dash-num" x="215" y="28" text-anchor="middle">208</text>
+          <text class="dash-num" id="hub-ativas-svg1" x="215" y="28" text-anchor="middle">208</text>
           <text class="dash-num-label" x="215" y="38" text-anchor="middle">OBRAS</text>
         </svg>
       </div>
@@ -184,7 +184,7 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
       <div class="card-line"></div>
       <div class="card-desc">Análise profunda da carteira — diagnóstico, equipe, volume e pendências acionáveis.</div>
       <div class="card-pills">
-        <span class="pill">208 obras</span>
+        <span class="pill" id="hub-ativas-pill">208 obras</span>
         <span class="pill">Refresh · 30 min</span>
       </div>
       <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
@@ -241,13 +241,13 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
       <rect class="dash-line dl-1" x="35" y="12" width="60" height="3" rx="1.5"/>
       <rect class="dash-line dl-2" x="35" y="20" width="42" height="3" rx="1.5"/>
       <path class="dash-gauge" d="M45,52 A16,16 0 0,1 77,52"/>
-      <text class="dash-score" x="61" y="48" text-anchor="middle">58</text>
+      <text class="dash-score" id="hub-score-svg2" x="61" y="48" text-anchor="middle">58</text>
       <rect class="dash-bar db1" x="110" y="30" width="12" height="28" rx="2"/>
       <rect class="dash-bar db2" x="128" y="18" width="12" height="40" rx="2"/>
       <rect class="dash-bar db3" x="146" y="34" width="12" height="24" rx="2"/>
       <rect class="dash-bar db4" x="164" y="14" width="12" height="44" rx="2"/>
       <rect class="dash-bar db5" x="182" y="24" width="12" height="34" rx="2"/>
-      <text class="dash-num" x="235" y="34" text-anchor="middle">208</text>
+      <text class="dash-num" id="hub-ativas-svg2" x="235" y="34" text-anchor="middle">208</text>
       <text class="dash-num-label" x="235" y="46" text-anchor="middle">OBRAS</text>
     </svg>
   </div>
@@ -296,6 +296,53 @@ function goTo(dest, url) {
     window.location.href = url;
   }, 700);
 }
+
+// ═══ DADOS DINÂMICOS — popula nº de ativas e health score ═══
+(function hydrateHubNumbers() {
+  fetch('analise/dados/dashboard-data.json', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data) return;
+      var AGG = data.AGG || {};
+      var EXT = data.EXT || {};
+
+      // — total de obras ativas —
+      var ativas = AGG.total_ativas;
+      if (typeof ativas === 'number' && ativas > 0) {
+        var svg1 = document.getElementById('hub-ativas-svg1');
+        var svg2 = document.getElementById('hub-ativas-svg2');
+        var pill = document.getElementById('hub-ativas-pill');
+        if (svg1) svg1.textContent = ativas;
+        if (svg2) svg2.textContent = ativas;
+        if (pill) pill.textContent = ativas + ' obras';
+      }
+
+      // — health score (mesma fórmula de analise/dashboard.html → computeHealth) —
+      try {
+        var n180 = AGG.n_180_plus;
+        var idade_med = AGG.idade_mediana;
+        var n_atRisk = (EXT.ocorrencias && EXT.ocorrencias.n_atRisk) || 0;
+        var n_zumbi = EXT.zumbi_n || 0;
+        var reparo_total = (EXT.reparo && EXT.reparo.total) || 0;
+
+        if (typeof ativas === 'number' && ativas > 0
+            && typeof n180 === 'number'
+            && typeof idade_med === 'number') {
+          var sla = Math.max(0, 1 - (n180 / ativas));
+          var ftr = Math.max(0, 1 - ((reparo_total + n_zumbi) / ativas));
+          var idade = Math.max(0, 1 - (idade_med / 300));
+          var risk = Math.max(0, 1 - (n_atRisk / ativas));
+          var composite = (sla * 0.30 + ftr * 0.20 + idade * 0.30 + risk * 0.20) * 100;
+          var score = Math.round(composite);
+          var s1 = document.getElementById('hub-score-svg1');
+          var s2 = document.getElementById('hub-score-svg2');
+          if (s1) s1.textContent = score;
+          if (s2) s2.textContent = score;
+        }
+      } catch (e) { /* mantém fallback */ }
+    })
+    .catch(function () { /* offline / file:// → mantém fallback inline */ });
+})();
 </script>
 </body>
 </html>

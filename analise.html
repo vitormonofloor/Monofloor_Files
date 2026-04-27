@@ -216,7 +216,7 @@ svg.sparkline{width:100%;height:120px;display:block}
 </head>
 <body>
 
-<a href="indicadores.html" class="back-link">← Painel operacional</a>
+<a href="indicadores-v2.html" class="back-link">← Painel operacional</a>
 
 <!-- SLIDE 1: HERO -->
 <section class="slide hero">
@@ -226,7 +226,7 @@ svg.sparkline{width:100%;height:120px;display:block}
       <div class="subtitle">análise diária · monofloor</div>
     </div>
     <h1>Taxa de atraso e silêncio crescem, sobrecarga de trabalho é um problema</h1>
-    <div class="hero-meta">23/04/2026, 06:01:49 · <a href="indicadores.html">ver painel completo →</a></div>
+    <div class="hero-meta"><span id="hermes-timestamp" class="hermes-timestamp">23/04/2026, 06:01:49</span> · <a href="indicadores-v2.html">ver painel completo →</a></div>
   </div>
 </section>
 
@@ -330,7 +330,7 @@ svg.sparkline{width:100%;height:120px;display:block}
   
     <div class="insight-card">
       <div class="insight-title">Contrações detectadas</div>
-      <div class="insight-text">Foi detectada a contração de ALEXANDRE BASTOS DA SILVA, que está com status "pausado" mas tem 40 mensagens nos últimos 30 dias. Além disso, ANTONIO CARLOS CANTO PORTO NETO está com status "reparo" mas tem 39 mensagens nos últimos 30 dias.</div>
+      <div class="insight-text">Foi detectada a contradição de ALEXANDRE BASTOS DA SILVA, que está com status "pausado" mas tem 40 mensagens nos últimos 30 dias. Além disso, ANTONIO CARLOS CANTO PORTO NETO está com status "reparo" mas tem 39 mensagens nos últimos 30 dias.</div>
     </div>
   </div>
   </div>
@@ -356,8 +356,8 @@ svg.sparkline{width:100%;height:120px;display:block}
   
     <div class="acao-card prio-media">
       <div class="acao-prio">MEDIA</div>
-      <div class="acao-texto">Revisar as contrações detectadas</div>
-      <div class="acao-ctx">Foi detectada a contração de ALEXANDRE BASTOS DA SILVA e ANTONIO CARLOS CANTO PORTO NETO, que estão com status "pausado" e "reparo" respectivamente, mas têm mensagens nos últimos 30 dias.</div>
+      <div class="acao-texto">Revisar as contradições detectadas</div>
+      <div class="acao-ctx">Foi detectada a contradição de ALEXANDRE BASTOS DA SILVA e ANTONIO CARLOS CANTO PORTO NETO, que estão com status "pausado" e "reparo" respectivamente, mas têm mensagens nos últimos 30 dias.</div>
     </div>
   </div>
   </div>
@@ -369,13 +369,13 @@ svg.sparkline{width:100%;height:120px;display:block}
     <div class="slide-eyebrow">próximos 7 dias</div>
     <h2>O que monitorar</h2>
     <div class="semana-box">
-      <p>A próxima semana, vamos monitorar a carga de trabalho de Wesley Matheus de Carvalho e LUANA PATRICIA DE ANDRADE LIMA, a taxa de atraso e silêncio nos projetos e as contrações detectadas.</p>
+      <p>A próxima semana, vamos monitorar a carga de trabalho de Wesley Matheus de Carvalho e LUANA PATRICIA DE ANDRADE LIMA, a taxa de atraso e silêncio nos projetos e as contradições detectadas.</p>
     </div>
   </div>
 </section>
 
 <div class="footer">
-  Hermes v1.4 · análise gerada em 23/04/2026, 06:01:49 · <a href="indicadores.html">ver painel operacional →</a>
+  Hermes v1.4 · análise gerada em <span class="hermes-timestamp">23/04/2026, 06:01:49</span> · <a href="indicadores-v2.html">ver painel operacional →</a>
 </div>
 
 <!-- Hermes tooltip -->
@@ -660,6 +660,23 @@ document.querySelectorAll('.minor-item').forEach(function(item) {
     drillDiv.classList.add('open');
   });
 });
+</script>
+
+<!-- Atualização dinâmica do timestamp Hermes -->
+<script>
+(async () => {
+  try {
+    const r = await fetch('analise/dados/dashboard-data.json');
+    if (!r.ok) return;
+    const data = await r.json();
+    const ts = data.snapshot_ts || data.snapshot_date;
+    if (!ts) return;
+    const d = new Date(ts);
+    if (isNaN(d)) return;
+    const fmt = d.toLocaleString('pt-BR');
+    document.querySelectorAll('#hermes-timestamp, .hermes-timestamp').forEach(el => el.textContent = fmt);
+  } catch(e) {}
+})();
 </script>
 
 </body>

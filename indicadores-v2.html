@@ -33,6 +33,7 @@ header{padding:32px 0;display:flex;justify-content:space-between;align-items:cen
 .logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-faint);margin-top:2px}
 .header-meta{text-align:right;font-size:11px;color:var(--text-faint);line-height:1.6}
 .header-meta strong{color:var(--text-sub);font-weight:500}
+.scope-warning { color: #c87a3a; font-size: 0.85em; display: inline-block; margin-top: 4px; }
 
 /* ═══ SECTIONS ═══ */
 .section{margin-top:48px}
@@ -345,13 +346,16 @@ body{animation:pageIn 0.6s ease-out}
     <span class="logo-text">monofloor</span>
     <div class="logo-sub">Indicadores Operacionais</div>
   </div>
-  <div class="header-meta"><strong>16 abr 2026</strong> · 18:06<br>159 projetos ativos · atualizado a cada 6h</div>
+  <div class="header-meta">
+    <strong id="ind-base-data">16 abr 2026</strong> · <span id="ind-base-hora">atualizado no último refresh</span><br>
+    Base: <strong><span id="ind-base-n">159</span> obras ativas</strong> · fonte: planejamento.monofloor.cloud<br>
+  </div>
 </header>
 
 <!-- ═══ CONTEXT BLOCK ═══ -->
 <div class="context">
   <div class="context-items">
-    <div class="context-item"><span class="context-icon">📡</span><span class="context-item-text">Monitora <strong>159 obras ativas</strong> em tempo real, analisando mensagens de <strong>Telegram</strong> e <strong>WhatsApp</strong> dos grupos de cada obra.</span></div>
+    <div class="context-item"><span class="context-icon">📡</span><span class="context-item-text">Monitora <strong><span id="ind-ctx-base">159</span> obras ativas</strong> em tempo real, analisando mensagens de <strong>Telegram</strong> e <strong>WhatsApp</strong> dos grupos de cada obra.</span></div>
     <div class="context-item"><span class="context-icon">🤖</span><span class="context-item-text">A inteligência artificial detecta <strong>problemas</strong> automaticamente — desvios de qualidade, atrasos, reclamações, abandonos.</span></div>
     <div class="context-item"><span class="context-icon">🎯</span><span class="context-item-text">As metas vêm da <strong>Régua de Saúde Operacional</strong> — o padrão de como a empresa deve operar em cada setor.</span></div>
     <div class="context-item"><span class="context-icon">🔄</span><span class="context-item-text">Alimentado pelo agente <strong>Argos</strong>, que coleta e processa os dados <strong>4 vezes ao dia</strong> (a cada 6 horas). Período de análise: <strong>últimos 30 dias</strong>.</span></div>
@@ -368,16 +372,16 @@ body{animation:pageIn 0.6s ease-out}
     <div class="fire-card">
       <span class="fire-pill crit">0% resolvidas</span>
       <div class="fire-status"><span class="fire-dot red"></span><span class="fire-status-text red">Nenhum resolvido</span></div>
-      <div class="fire-number red">286</div>
+      <div class="fire-number red" id="ind-fire-ocorrencias">286</div>
       <div class="fire-unit">problemas detectados nas obras</div>
-      <div class="fire-insight">26 são críticos — nenhum foi resolvido</div>
+      <div class="fire-insight"><span id="ind-fire-criticas">26</span> são críticos — nenhum foi resolvido</div>
       <div class="fire-detail">Desvios de qualidade, reclamações de clientes e abandonos de obra — detectados pela IA nas mensagens dos grupos.</div>
       <a class="fire-action" href="#sec-problemas" onclick="event.stopPropagation();openKPI(1)">Ver ocorrências críticas <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
     <div class="fire-card">
       <span class="fire-pill warn">meta ≤15%</span>
       <div class="fire-status"><span class="fire-dot amber"></span><span class="fire-status-text amber">Acima da meta</span></div>
-      <div class="fire-number amber">32.1<span style="font-size:32px;font-weight:300">%</span></div>
+      <div class="fire-number amber"><span id="ind-fire-atraso">32.1</span><span style="font-size:32px;font-weight:300">%</span></div>
       <div class="fire-unit">taxa de atraso</div>
       <div class="fire-insight">Uma em cada três obras está atrasada</div>
       <div class="fire-detail">O dobro da meta de 15%. Piorou 2.3pp nas últimas 6 horas.</div>
@@ -401,15 +405,15 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
-          <div class="kpi-row"><span class="kpi-val gold">7.585</span><span class="kpi-delta good">↑312</span></div>
+          <div class="kpi-row"><span class="kpi-val gold" id="ind-msg-total">7.585</span><span class="kpi-delta good">↑312</span></div>
           <div class="kpi-label">Mensagens 30d</div>
-          <div class="kpi-sub">Telegram 4.716 · WhatsApp 2.869</div>
+          <div class="kpi-sub">Telegram <span id="ind-msg-tg">4.716</span> · WhatsApp <span id="ind-msg-wa">2.869</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
-          <div class="kpi-row"><span class="kpi-val blue">133</span><span class="kpi-delta good">↑2</span></div>
+          <div class="kpi-row"><span class="kpi-val blue" id="ind-proj-com-msg">133</span><span class="kpi-delta good">↑2</span></div>
           <div class="kpi-label">Projetos com msgs</div>
-          <div class="kpi-sub">de 159 (83.6%)</div>
+          <div class="kpi-sub">de <span id="ind-proj-base">159</span> (<span id="ind-proj-pct">83.6</span>%)</div>
         </div>
       </div>
     </div>
@@ -418,14 +422,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">286</span><span class="kpi-delta bad">↑14</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-ocorrencias">286</span><span class="kpi-delta bad">↑14</span></div>
           <div class="kpi-label">Ocorrências</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:100%"></div><div class="kpi-meter-mark" style="left:17%"></div></div>
           <div class="kpi-range"><span>0 resolvidas</span><span>meta ≤50</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">26</span><span class="kpi-delta bad">↑3</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-criticas">26</span><span class="kpi-delta bad">↑3</span></div>
           <div class="kpi-label">Críticas</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:86%"></div><div class="kpi-meter-mark" style="left:17%"></div></div>
           <div class="kpi-range"><span>resolução 0%</span><span>meta ≤5</span></div>
@@ -437,14 +441,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot amber"></div>
-          <div class="kpi-row"><span class="kpi-val amber">16.4%</span><span class="kpi-delta bad">↑1.2pp</span></div>
+          <div class="kpi-row"><span class="kpi-val amber" id="ind-silencio">16.4%</span><span class="kpi-delta bad">↑1.2pp</span></div>
           <div class="kpi-label">Taxa silêncio</div>
           <div class="kpi-meter"><div class="kpi-meter-fill amber" style="width:65%"></div><div class="kpi-meter-mark" style="left:40%"></div></div>
           <div class="kpi-range"><span>26 mudas</span><span>meta ≤10%</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">32.1%</span><span class="kpi-delta bad">↑2.3pp</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-atraso-pct">32.1%</span><span class="kpi-delta bad">↑2.3pp</span></div>
           <div class="kpi-label">Taxa atraso</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:85%"></div><div class="kpi-meter-mark" style="left:40%"></div></div>
           <div class="kpi-range"><span>51 obras</span><span>meta ≤15%</span></div>
@@ -459,14 +463,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">47.6%</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-pausa-pct">47.6%</span></div>
           <div class="kpi-label">Taxa de pausa</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:95%"></div><div class="kpi-meter-mark" style="left:20%"></div></div>
           <div class="kpi-range"><span>quase metade</span><span>meta ≤10%</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">238d</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-ciclo">238d</span></div>
           <div class="kpi-label">Ciclo médio</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:90%"></div><div class="kpi-meter-mark" style="left:56%"></div></div>
           <div class="kpi-range"><span>+88d acima</span><span>meta ≤150d</span></div>
@@ -478,14 +482,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">267</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-cores">267</span></div>
           <div class="kpi-label">Amostras CORES</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:100%"></div><div class="kpi-meter-mark" style="left:7%"></div></div>
           <div class="kpi-range"><span>260d avg</span><span>meta ≤20</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot red"></div>
-          <div class="kpi-row"><span class="kpi-val red">3%</span></div>
+          <div class="kpi-row"><span class="kpi-val red" id="ind-sla-vt">3%</span></div>
           <div class="kpi-label">SLA Visita Técnica</div>
           <div class="kpi-meter"><div class="kpi-meter-fill red" style="width:3%"></div><div class="kpi-meter-mark" style="left:90%"></div></div>
           <div class="kpi-range"><span>41 na fila</span><span>meta ≥90%</span></div>
@@ -497,14 +501,14 @@ body{animation:pageIn 0.6s ease-out}
       <div class="kpi-pair">
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
-          <div class="kpi-row"><span class="kpi-val green">R$151k</span><span class="kpi-delta good">↑8k</span></div>
+          <div class="kpi-row"><span class="kpi-val green" id="ind-ticket">R$151k</span><span class="kpi-delta good">↑8k</span></div>
           <div class="kpi-label">Ticket médio</div>
           <div class="kpi-meter"><div class="kpi-meter-fill green" style="width:100%"></div><div class="kpi-meter-mark" style="left:53%"></div></div>
           <div class="kpi-range"><span>89% acima</span><span>meta ≥80k</span></div>
         </div>
         <div class="kpi-item">
           <div class="kpi-dot green"></div>
-          <div class="kpi-row"><span class="kpi-val green">25</span><span class="kpi-delta good">↑3</span></div>
+          <div class="kpi-row"><span class="kpi-val green" id="ind-throughput">25</span><span class="kpi-delta good">↑3</span></div>
           <div class="kpi-label">Throughput/mês</div>
           <div class="kpi-meter"><div class="kpi-meter-fill green" style="width:83%"></div><div class="kpi-meter-mark" style="left:67%"></div></div>
           <div class="kpi-range"><span>concluídas</span><span>meta ≥20</span></div>
@@ -518,9 +522,9 @@ body{animation:pageIn 0.6s ease-out}
     <div class="spark-top">
       <span class="spark-title">Volume diário · 30 dias</span>
       <div class="spark-stats">
-        <div><div class="spark-stat-num">253</div><div class="spark-stat-label">média/dia</div></div>
-        <div><div class="spark-stat-num">412</div><div class="spark-stat-label">pico</div></div>
-        <div><div class="spark-stat-num">7.585</div><div class="spark-stat-label">total</div></div>
+        <div><div class="spark-stat-num" id="ind-spark-media">253</div><div class="spark-stat-label">média/dia</div></div>
+        <div><div class="spark-stat-num" id="ind-spark-pico">412</div><div class="spark-stat-label">pico</div></div>
+        <div><div class="spark-stat-num" id="ind-spark-total">7.585</div><div class="spark-stat-label">total</div></div>
       </div>
     </div>
     <div class="spark-area" id="sparkChart"></div>
@@ -760,6 +764,81 @@ function closeSev(ci,ti){var le=document.getElementById('sl-'+ci+'-'+ti);le.clas
       if (!wasOpen) card.classList.add('open');
     });
   });
+})();
+
+// ═══ FETCH DASHBOARD-DATA (refatoração C3 — MVP) ═══
+// Carrega analise/dados/dashboard-data.json e popula KPIs com chaves confiáveis.
+// IDs sem chave segura no JSON ficam com fallback hardcoded (TODO documentado).
+(async () => {
+  try {
+    const r = await fetch('analise/dados/dashboard-data.json', {cache:'no-store'});
+    if (!r.ok) { console.warn('[ind-v2] dashboard-data.json fetch falhou:', r.status); return; }
+    const data = await r.json();
+    const $ = (id) => document.getElementById(id);
+    const set = (id, val) => {
+      if (val === undefined || val === null || val === '') return;
+      const el = $(id); if (el) el.textContent = val;
+    };
+    const fmtBR = (n) => (typeof n === 'number') ? n.toLocaleString('pt-BR') : n;
+    const fmtData = (iso) => {
+      if (!iso) return null;
+      const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (!m) return null;
+      const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+      return `${parseInt(m[3],10)} ${meses[parseInt(m[2],10)-1]} ${m[1]}`;
+    };
+
+    const AGG = data.AGG || {};
+    const EXT = data.EXT || {};
+
+    // Header — base + data do snapshot
+    set('ind-base-data', fmtData(data.snapshot_date));
+    set('ind-base-n', AGG.total_ativas);
+    set('ind-ctx-base', AGG.total_ativas);
+    set('ind-proj-base', AGG.total_ativas);
+
+    // Ocorrências (fonte direta: KIRA via dashboard-data)
+    const ocTotal = EXT.ocorrencias && EXT.ocorrencias.total;
+    const ocCrit  = EXT.ocorrencias && EXT.ocorrencias.n_atRisk;
+    set('ind-fire-ocorrencias', fmtBR(ocTotal));
+    set('ind-ocorrencias',      fmtBR(ocTotal));
+    set('ind-fire-criticas',    fmtBR(ocCrit));
+    set('ind-criticas',         fmtBR(ocCrit));
+
+    // Taxa de pausa — derivada de status_dist
+    if (AGG.status_dist && AGG.total_ativas) {
+      const pausado = AGG.status_dist.pausado || 0;
+      const pct = (pausado / AGG.total_ativas) * 100;
+      set('ind-pausa-pct', pct.toFixed(1) + '%');
+    }
+    // Ciclo médio (idade_media é proxy aproximado, usa mediana mais estável)
+    if (typeof AGG.idade_mediana === 'number') {
+      set('ind-ciclo', AGG.idade_mediana + 'd');
+    }
+    // Amostras CORES — sem_cor_n é proxy disponível (obras sem cor escolhida)
+    if (typeof EXT.sem_cor_n === 'number') {
+      set('ind-cores', fmtBR(EXT.sem_cor_n));
+    }
+    // Projetos com mensagens — derivado de sem_wa_n (proxy: projetos com WA)
+    if (typeof EXT.sem_wa_n === 'number' && AGG.total_ativas) {
+      const comMsg = AGG.total_ativas - EXT.sem_wa_n;
+      const pct = (comMsg / AGG.total_ativas) * 100;
+      set('ind-proj-com-msg', comMsg);
+      set('ind-proj-pct', pct.toFixed(1));
+      // Taxa silêncio = % sem mensagens
+      const silencio = (EXT.sem_wa_n / AGG.total_ativas) * 100;
+      set('ind-silencio', silencio.toFixed(1) + '%');
+    }
+
+    // TODO chaves indisponíveis em dashboard-data.json (fallback hardcoded mantido):
+    //   ind-fire-atraso, ind-atraso-pct  → não há AGG.pct_atraso
+    //   ind-msg-total, ind-msg-tg, ind-msg-wa → não há volume de msgs agregado
+    //   ind-spark-* → não há série temporal diária
+    //   ind-sla-vt, ind-ticket, ind-throughput → fontes Pipefy/régua não estão neste JSON
+    //   ind-base-hora → não há hora exata no snapshot_date
+  } catch(e) {
+    console.warn('[ind-v2] fetch fallback ativado:', e);
+  }
 })();
 
 // Side-nav scroll spy

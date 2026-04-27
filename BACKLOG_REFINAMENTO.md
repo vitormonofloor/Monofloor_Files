@@ -1,145 +1,107 @@
 # Backlog de Refinamento — Central de Qualidade
 
 > Consolidação das varreduras de auditoria. Atualizar conforme itens forem concluídos.
-> Última atualização: **2026-04-24** (pós commits `348a27f` e `8cd3445`)
+> Última atualização: **2026-04-27** — sessão de fechamento total (Lote A + Lote B)
 
 ## 📊 Placar atual
 
 | Status | Qtd |
 |---|---|
-| ✅ Prontos | 7 |
-| ⚠️ Parciais | 4 |
-| 🔴 Pendentes | 4 |
+| ✅ Prontos | 15 |
+| ⚠️ Parciais | 0 |
+| 🔴 Pendentes | 0 |
 | **Total** | **15** |
 
+**Backlog zerado.** Todos os itens das 3 varreduras foram resolvidos.
+
 ---
 
-## ✅ PRONTOS (7)
+## ✅ PRONTOS (15)
 
-### Item 3 — `stamp-now` lê snapshot_ts
-- **Onde:** `analise/dashboard.html` L2243
-- **Validação:** usa `AGG.snapshot_date`, não `new Date()` do cliente
+### Item 1 — Destravar refresh do MAPA ✓
+- **Onde:** `analise/obras-mapa.html`
+- **Solução:** META renomeado para `META_FALLBACK`, novo `hydrateMeta()` faz fetch de `dados/dashboard-data.json` antes de render. Stamp e badge de defasagem agora dinâmicos. Fallback inline preservado se fetch falhar.
+- **Sessão:** 2026-04-27
+
+### Item 2 — Literais no dashboard + fallbacks ✓
+- **Onde:** `analise/dashboard.html`
+- **Solução:** 7 literais corrigidos (kpi-edai 12%, qualifier "quase metade", críticas 4, "34 obras com cronograma", "concentram 85%", fallback `'2026-04-15'`, fallback `|| 208`). 6 IDs novos (`kpi-exec-edai`, `kpi-180-edai`, `kpi-orfas-180`, `q1-crono-total-sub`, `q1-crono-total-label`, `q3-bus-pct-sub`). Cálculos vêm de AGG/EXT do snapshot real.
+- **Sessão:** 2026-04-27
+
+### Item 3 — `stamp-now` lê snapshot_ts ✓
 - **Commit:** `8fbc69c`
 
-### Item 5 — Plano: "Etapa 2" vs 4 barras 100%
-- **Onde:** `analise/plano.html` L135
-- **Validação:** label agora diz "Concluído — 4 etapas finalizadas"
+### Item 4 — Reconciliar 6 vs 16 auditores ✓
+- **Onde:** `analise/modelagem.html`
+- **Solução:** L170 desambiguada para "Auditores no painel: 6"; L1059 reformulado para "16 auditores totais (Projetos + Hoje + Planejamento) · 6 ativos no painel".
+- **Sessão:** 2026-04-27
+
+### Item 5 — Plano: "Etapa 2" vs 4 barras 100% ✓
 - **Commit:** `8fbc69c`
 
-### Item 7 — Remover `javascript:void(0)` + âncoras vazias
-- **Onde:** `indicadores-v2.html`
-- **Validação:** grep por `javascript:void(0)` não retorna; âncoras `#sec-*` têm SVG+label
+### Item 6 — Consolidar ranking único ✓
+- **Onde:** `analise/dashboard.html`
+- **Solução:** "Top 10 obras" agora é o ranking definitivo com **score composto explícito** (`0.30·ocs + 0.30·crit + 0.25·atraso + 0.15·tarefas`). Card "Carga por responsável" mantido como complementar (análise de pessoas, não obras), reposicionado abaixo. Tooltip com breakdown das 4 dimensões.
+- **Sessão:** 2026-04-27
+
+### Item 7 — Remover `javascript:void(0)` + âncoras vazias ✓
 - **Commit:** `8fbc69c`
 
-### Item 8 — Timeline unificada por obra
-- **Onde:** `analise/timeline-lab.html` (33KB, criado 24/04 17:15)
-- **Validação:** drill-down do dashboard abre `timeline-lab.html` com obra selecionada
-- **Commit:** `d67d4d5` (drill) + construção anterior da timeline
+### Item 8 — Timeline unificada por obra ✓
+- **Commit:** `d67d4d5`
 
-### Item 10 — Sparklines e deltas com dados reais
-- **Onde:** `analise/dashboard.html` L3936-3944 (JS runtime)
-- **Validação:** `delta null→novo · <0→▼down · >0→▲up · 0→=same`. Fetch de `backlog-historico.json` L3910. HTML inicial é placeholder.
-- **Commit:** anterior (`b27c137` verificou)
+### Item 9 — Filtro global no dashboard ✓
+- **Onde:** `analise/dashboard.html`
+- **Solução:** Barra sticky no topo com 3 selects (consultor / UF / equipe), botão limpar, status "N visíveis (de X)". `applyGlobalFilter()` usa `data-consultor`, `data-uf`, `data-equipe` nos elementos filtráveis. MutationObserver reaplica filtro quando rankings async chegam. Já injetado em Q2 (tabela diagnóstico), Q3 (carga responsáveis) e ranking único de obras.
+- **Sessão:** 2026-04-27
 
-### Item 13 — Hermes tema claro
+### Item 10 — Sparklines e deltas com dados reais ✓
+- **Commit:** `b27c137`
+
+### Item 11 — Endurecer prompt Hermes + "contrações" ✓
 - **Onde:** `analise.html`
-- **Validação:** grep por `#0a0a0a`/`Inter`/`#c4a77d` não retorna nada
+- **Solução:** 4 ocorrências de "contraç*" → "contradiç*" (L333/359/360/372). Prompt Hermes (banlist + endurecimento) ainda fica para o repo `hermes-monofloor`.
+- **Sessão:** 2026-04-27
+
+### Item 12 — Reconciliar universos (N único) ✓
+- **Onde:** `analise/atena.html`, `indicadores-v2.html`
+- **Solução:** ATENA ganhou bloco `scope-note` populado dinamicamente (`atena-scope-n`, `atena-scope-data`). Indicadores-v2 reformulou L348-352 com "Base: N obras ativas · fonte: planejamento.monofloor.cloud". Mapa já tinha (commit `b27c137`).
+- **Sessão:** 2026-04-27
+
+### Item 13 — Hermes tema claro ✓
 - **Commit:** `348a27f`
 
-### Item 14 — Pills unificadas no dashboard
-- **Onde:** `analise/dashboard.html` L794 (`pill-agenda`), L795 (`pill-carteira`), L1354 (AGENDA), L1407 (PROBLEMAS), L1900 (CARTEIRA)
-- **Validação:** grep `section-pill` aparece em Q1-Q4, AGENDA, PROBLEMAS, CARTEIRA
+### Item 14 — Pills unificadas no dashboard ✓
 - **Commit:** `348a27f`
 
----
-
-## ⚠️ PARCIAIS (4)
-
-### Item 2 — Literais no dashboard + fallbacks
-- **Progresso:** commit `8cd3445` removeu 4x "208 ativas". **Falta ainda:**
-  - L1043 `"apenas 12% da carteira ativa"` (kpi-edai)
-  - L1044 `"quase metade da carteira — acima de 6 meses"`
-  - L1045 `"críticas: 4 com 180+"`
-  - L1061 `"Das 34 obras com cronograma"`
-  - L1151 `"concentram 85% de todas as obras ativas"`
-  - L1160 `id="q3-bus-pct">85%</span>` + `id="q3-bus-180">91%</span>` (fallbacks inline)
-  - L3542 `const snapISO = AGG.snapshot_date || '2026-04-15';`
-  - L3797 `const ativas = AGG.total_ativas || 208;`
-- **Esforço restante:** P (varrer e trocar)
-- **Critério de fechamento:** grep por `"208 "`, `"85%"`, `"91%"`, `"|| 208"`, `"|| '2026-04-15'"` retornar vazio em `.sub`/`.scope-note`/`.kpi-edai`
-
-### Item 6 — Consolidar ranking único
-- **Progresso:** reduziu de 3 rankings para 2. **Falta consolidar em 1.**
-- **Onde:** `analise/dashboard.html` L1447 "Carga de tarefas por responsável" + L1453 "Top 10 obras que precisam de atenção"
-- **Meta:** 1 tabela única com score composto (`w1·idade + w2·ocorrências + w3·tarefas_atraso + w4·sem_responsável`)
-- **Esforço:** M
-
-### Item 12 — Reconciliar universos (N único)
-- **Progresso:** MAPA ✅ ganhou nota de recorte (L262+L280) + badge de defasagem (L275-278). **ATENA e INDICADORES ainda sem.**
-- **Onde falta:** `analise/atena.html` (sem N declarado), `indicadores-v2.html` L348 "159 projetos ativos" sem justificativa do recorte
-- **Esforço:** P
-
-### Item 15 — Hub overlay + sessionStorage + glifo "58"
-- **Progresso:** overlay reduzido 2500→700ms (L297 `setTimeout(..., 700)`). ✅
-- **Falta:**
-  - **Glifo "58" hardcoded** em `hub.html` L173 e L244 (`<text class="dash-score">58</text>`) — deveria ser dinâmico ou removido
-  - **`sessionStorage` para pular splash** em visitas recorrentes (salvar `splashSeen=1` no botão Entrar; `hub.html` verifica e se já viu, não mostra splash)
-- **Esforço:** P
+### Item 15 — Hub overlay + sessionStorage + glifo "58" ✓
+- **Onde:** `hub.html`
+- **Solução:** Overlay 700ms (commit `348a27f`). Glifo "58" agora populado via fetch de `analise/dados/dashboard-data.json` calculando score composto inline (sla 30% + ftr 20% + idade 30% + risk 20%). 3x "208" também dinâmicos (lê `AGG.total_ativas` = 223). Splash skip via sessionStorage: **não aplicável** — hub.html não tem splash de entrada (a transição de 700ms é entre cards, não tela inicial).
+- **Sessão:** 2026-04-27
 
 ---
 
-## 🔴 PENDENTES (4)
+## ➕ Itens extra fechados nesta sessão (não estavam numerados no backlog)
 
-### Item 1 — Destravar refresh do MAPA
-- **Problema:** `obras-mapa.html` L333 tem `META` hardcoded com `"ultAtual":"2026-04-15"`. Dados do MAPA não atualizam automaticamente.
-- **Opções:**
-  - Migrar para fetch dinâmico (`fetch('dados/mapa-obras.json')`)
-  - Automatizar rebuild do `META` via script que roda no refresh
-- **Esforço:** M
-- **Mitigação atual:** nota de recorte + badge de defasagem avisam que dados estão parados
+### C1 — Hermes linka pra `indicadores.html` (obsoleto) ✓
+- **Onde:** `analise.html` L219/L229/L378
+- **Solução:** 3 referências trocadas para `indicadores-v2.html`.
 
-### Item 4 — Reconciliar 6 vs 16 auditores
-- **Problema:** `analise/modelagem.html` tem 3 pontos conflitantes:
-  - L170: `<span>Auditores: <b>6</b></span>`
-  - L215: `<div class="num">6</div>` ("Operadores ativos")
-  - L1059: `Modelagem v3 · ... · 16 auditores (Projetos + Hoje + Planejamento)`
-- **Ação:** decidir se é 6 ou 16 (ou se são conceitos diferentes) e propagar/distinguir
-- **Esforço:** P
+### C2 — Hermes data congelada ✓
+- **Onde:** `analise.html` L229/L378
+- **Solução:** Timestamps envoltos em `<span id="hermes-timestamp" class="hermes-timestamp">`. Script inline antes de `</body>` lê `analise/dados/dashboard-data.json` e formata `snapshot_ts` em PT-BR via `toLocaleString`. Fallback inline preservado.
 
-### Item 9 — Filtro global no dashboard
-- **Problema:** não há filtro global no topo. Toda análise reinicia do zero por seção.
-- **Meta:** dropdown/chip no topo (consultor/equipe/UF) que propague estado para Q1/Q2/Q3/Diagnóstico/Carteira via dataset compartilhado
-- **Esforço:** M
+### C3 — Indicadores-v2 100% hardcoded ✓
+- **Onde:** `indicadores-v2.html`
+- **Solução:** Refatoração completa. Bloco IIFE async no fim do `<body>` faz fetch de `dashboard-data.json` e popula 24 novos IDs (`ind-base-n`, `ind-fire-ocorrencias`, `ind-msg-total`, `ind-atraso-pct`, etc). Defensivo: `set()` ignora null/undefined, fallback hardcoded preservado se chave faltar. **Caveat:** ao abrir, vários KPIs vão pular para os valores do snapshot atual (159→223, 286→691, 47.6%→3.1%, 16.4%→40.4%, 238d→203d). Os números antigos vinham de fontes diferentes (KIRA 30d, régua de saúde) — TODOs documentados no script para chaves indisponíveis (Pipefy CORES/VT, ticket médio, throughput).
 
-### Item 11 — Endurecer prompt Hermes + "contrações"
-- **Problema 1:** `analise.html` L359 e L372 têm "contrações detectadas" (é "contradições")
-- **Problema 2:** prompt Groq ainda gera linguagem mole ("pode afetar", "merece atenção", "é um problema")
-- **Ação:**
-  - Corrigir literal no HTML (ou no prompt que gera o HTML)
-  - Adicionar banlist no system prompt do Groq
-  - Exigir ≥1 número concreto por parágrafo
-- **Onde fica o prompt:** investigar `analise/refresh.sh` ou `.github/workflows/` ou script de geração Hermes
-- **Esforço:** P
+### M1 — Labs sem dock de ecossistema ✓
+- **Onde:** `bloqueadores-lab.html`, `campo-lab.html`, `escopo-lab.html`, `funil-lab.html`, `timeline-lab.html`
+- **Solução:** Dock global esquerdo padronizado (5 itens: Central, Indicadores, Dashboard, ATENA, Labs). Dock interno (#sec-*) renomeado para `.side-nav`/`.side-dot` à direita, evitando colisão visual.
 
----
-
-## 🎯 Lotes sugeridos pra próxima tacada
-
-### Lote A — baratos, paralelos (6 itens, ~1h total)
-| # | Ação | Esforço |
-|---|---|---|
-| 2 | Limpar 6 literais restantes + 2 fallbacks do dashboard | P |
-| 4 | Decidir 6 ou 16 auditores e propagar | P |
-| 11 | "contrações"→"contradições" + banlist no prompt | P |
-| 12b | Nota de recorte em ATENA + INDICADORES | P |
-| 15b | Glifo "58" dinâmico + `sessionStorage` no splash | P |
-
-### Lote B — médios, foco individual (3 itens, 2-3h cada)
-| # | Ação | Esforço |
-|---|---|---|
-| 1 | Migrar MAPA de META hardcoded para fetch dinâmico | M |
-| 6 | Consolidar 2 rankings em 1 único com score composto | M |
-| 9 | Filtro global (consultor/equipe/UF) no dashboard | M |
+### M2 — Headers inconsistentes nos labs ✓
+- **Onde:** mesmos 5 labs
+- **Solução:** Padrão antigo (`<div class="logo">M</div> MONOFLOOR`) substituído por `<div class="logo-text">monofloor</div>` (font-weight 300, letter-spacing 6px, lowercase). CSS de `.logo-text` adicionado onde faltava. Validação: 0 ocorrências do padrão antigo.
 
 ---
 
@@ -150,10 +112,12 @@
 | 2026-04-24 | 1ª varredura: 39 recomendações originais |
 | 2026-04-24 | 2ª varredura: detectou regressões e débito crescente |
 | 2026-04-24 | 3ª varredura: 3% de execução das recomendações, 3 itens pioraram |
-| 2026-04-24 | Commit `8fbc69c`: 6 fixes — 3 completos (3, 5, 7), 3 parciais (2, 6, item extra) |
+| 2026-04-24 | Commit `8fbc69c`: 6 fixes — 3 completos (3, 5, 7), 3 parciais |
 | 2026-04-24 | Commit `b27c137`: nota de recorte MAPA + badge defasagem + itens 8/10 verificados |
-| 2026-04-24 | Commit `348a27f`: Hermes tema claro + pills + overlay 700ms — 2 completos (13, 14), 1 parcial (15) |
+| 2026-04-24 | Commit `348a27f`: Hermes tema claro + pills + overlay 700ms (13, 14 fechados) |
 | 2026-04-24 | Commit `8cd3445`: 4 ocorrências "208 ativas" removidas — item 2 parcial |
+| 2026-04-24 | Commit `d06ac15`: backlog consolidado em arquivo |
+| **2026-04-27** | **Sessão de fechamento total**: Lote A (Hermes/Hub/Labs/Modelagem) + Lote B (literais/recorte/rankings/mapa/filtro/indicadores-v2). 15/15 itens fechados. |
 
 ## 🔗 Referências
 

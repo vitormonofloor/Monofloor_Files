@@ -50,6 +50,12 @@ a:hover { text-decoration: underline; }
 
 .atena-loading{font-size:12px;color:#b8b0a4;font-style:italic;padding:32px;text-align:center;background:#faf7f2;border-radius:8px;border:1px dashed #e0d8cc}
 
+/* Nota de recorte (universo declarado) */
+.scope-note{font-size:10px;color:#b8b0a4;margin:-20px 0 24px;font-style:italic;line-height:1.4;padding-bottom:16px;border-bottom:1px solid #f0ebe0}
+.scope-note strong{color:#8a7e72;font-weight:500;font-style:normal}
+.scope-note .scope-sep{margin:0 6px;color:#d0c8bc}
+.scope-note a{color:#b8a080}
+
 /* Bloco 1: KPI Strip */
 .brief-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
 .brief-kpi{background:#fff;border:1px solid #ede6dc;border-radius:8px;padding:14px 16px;position:relative}
@@ -220,6 +226,15 @@ a:hover { text-decoration: underline; }
     <div class="atena-date" id="atena-date">carregando...</div>
   </div>
 
+  <!-- NOTA DE RECORTE -->
+  <div class="scope-note">
+    Base: <strong id="atena-scope-n">&mdash;</strong> obras ativas
+    <span class="scope-sep">&middot;</span>
+    atualizado em <strong id="atena-scope-data">&mdash;</strong>
+    <span class="scope-sep">&middot;</span>
+    fonte: planejamento.monofloor.cloud
+  </div>
+
   <!-- TABS -->
   <div class="atena-tabs">
     <button class="atena-tab active" onclick="switchTab('atena')"><span class="atena-tab-icon">&#9672;</span> ATENA</button>
@@ -353,6 +368,15 @@ async function atenaInit() {
 function renderBriefKPIs(hist, snapHoje, snapOntem) {
   var ativas = snapHoje ? snapHoje.ativas.length : 0;
   document.getElementById('bk-ativas').textContent = ativas;
+
+  // Nota de recorte (universo declarado)
+  var scopeN = document.getElementById('atena-scope-n');
+  if (scopeN) scopeN.textContent = ativas.toString();
+  var scopeData = document.getElementById('atena-scope-data');
+  if (scopeData) {
+    var d = (snapHoje && snapHoje.snapshot_date) ? snapHoje.snapshot_date : null;
+    if (d) scopeData.textContent = String(d).split('-').reverse().join('/');
+  }
 
   // Delta ativas
   if (snapHoje && snapOntem && snapHoje.ativas && snapOntem.ativas) {

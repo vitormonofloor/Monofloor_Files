@@ -32,8 +32,9 @@ a:hover{text-decoration:underline}
 
 /* ─── HEADER ─── */
 .header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-.header-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:0.04em;color:var(--text)}
-.header-brand .logo{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px}
+.header-brand{display:flex;align-items:center;gap:10px}
+.logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:lowercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
 .header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase}
 
 /* ─── SEARCH / SELECTOR ─── */
@@ -154,13 +155,18 @@ a:hover{text-decoration:underline}
   <a href="atena.html" class="dock-item" data-label="ATENA">
     <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg>
   </a>
+  <a href="labs.html" class="dock-item active" data-label="Labs">
+    <svg viewBox="0 0 20 20"><path d="M7 2v6L3 16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2L13 8V2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </a>
 </nav>
 
 <!-- HEADER -->
 <header class="header">
   <div class="header-brand">
-    <div class="logo">M</div>
-    MONOFLOOR
+    <div>
+      <div class="logo-text">monofloor</div>
+      <div class="logo-sub">Jornada da Obra</div>
+    </div>
   </div>
   <span class="header-title">Jornada da Obra</span>
   <div class="search-wrap" id="search-wrap">
