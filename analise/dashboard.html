@@ -759,6 +759,20 @@
 
   /* ============== LEITURA DO DIA ============== */
 
+  /* ============== OPERACIONAL (FASE 6.B — absorvido de indicadores-v2) ============== */
+  .op-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0}
+  @media(max-width:720px){.op-grid{grid-template-columns:1fr}}
+  .op-card{background:#fff;border:1px solid #e0d8cc;border-left:3px solid #c4b5a0;border-radius:8px;padding:18px 20px}
+  .op-card-crit{border-left-color:#c45a5a}
+  .op-card-info{border-left-color:#4a7ab8}
+  .op-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:rgba(196,90,90,0.1);color:#c45a5a;margin-bottom:10px}
+  .op-num{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:600;color:#2a2520;line-height:1}
+  .op-unit{font-size:11px;color:#8a7e72;margin-top:4px;letter-spacing:.04em}
+  .op-detail{font-size:11px;color:#a89e92;margin-top:8px;line-height:1.5}
+  .op-meter{height:4px;background:#f0ebe3;border-radius:2px;overflow:hidden;margin-top:14px}
+  .op-meter-fill{height:100%;background:#c45a5a;border-radius:2px;transition:width .8s ease-out}
+  .op-range{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;margin-top:5px;letter-spacing:.04em}
+
   /* ============== BALDES (Carteira Detalhada) — FASE 5.5 colapsa por padrão ============== */
   .baldes-collapse{margin:14px 0}
   .baldes-collapse summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#fff;border:1px solid #e0d8cc;border-radius:8px;border-left:3px solid #b8a080;transition:all .2s}
@@ -1020,6 +1034,7 @@
   <a href="#q3" class="side-dot" data-label="EQUIPE"><svg viewBox="0 0 16 16"><circle cx="6" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3 2-4 4-4s4 1 4 4M8 14c0-3 2-4 3-4s3 1 3 4" fill="none" stroke="currentColor" stroke-width="1"/></svg></a>
   <a href="#q4" class="side-dot" data-label="VOLUME"><svg viewBox="0 0 16 16"><rect x="2" y="9" width="3" height="5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="6.5" y="5" width="3" height="9" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="11" y="2" width="3" height="12" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
   <a href="#agenda" class="side-dot" data-label="AGENDA"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="#operacional" class="side-dot" data-label="OPERACIONAL"><svg viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="13" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
   <a href="#problemas" class="side-dot" data-label="PROBLEMAS"><svg viewBox="0 0 16 16"><path d="M8 2L1 14h14L8 2z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 12v0.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
   <a href="#carteira" class="side-dot" data-label="CARTEIRA"><svg viewBox="0 0 16 16"><path d="M3 3h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 7h10M8 7v6" stroke="currentColor" stroke-width="1" opacity="0.5"/></svg></a>
 </nav>
@@ -1478,6 +1493,34 @@
     <div class="ag-lista">
       <h4>Próximos 10 marcos</h4>
       <ul id="ag-lista-ul"></ul>
+    </div>
+  </section>
+
+  <!-- ============== OPERACIONAL — absorve indicadores-v2 (FASE 6.B) ============== -->
+  <section id="operacional">
+    <div class="q-head">
+      <h2><span class="section-pill" style="background:rgba(74,122,184,0.1);color:#4a7ab8">OPERACIONAL</span> Comunicação e silêncio</h2>
+      <p class="sub">Visão KIRA — atualizada a cada 6h. Detecta obras silenciosas (sem WhatsApp/Telegram) e cobertura de comunicação na carteira ativa.</p>
+    </div>
+
+    <div class="op-grid">
+      <div class="op-card op-card-crit">
+        <div class="op-pill">crítico</div>
+        <div class="op-num" id="op-silenciosas">—</div>
+        <div class="op-unit">obras silenciosas</div>
+        <div class="op-detail">sem WhatsApp/Telegram com atualização recente — KIRA não consegue monitorar</div>
+        <div class="op-meter"><div class="op-meter-fill" id="op-silenciosas-fill" style="width:0%"></div></div>
+        <div class="op-range"><span><span id="op-silenciosas-pct">—</span>% da carteira</span><span>meta ≤10%</span></div>
+      </div>
+
+      <div class="op-card op-card-info">
+        <div class="op-pill" style="background:rgba(74,122,184,0.15);color:#4a7ab8">cobertura</div>
+        <div class="op-num" id="op-com-msg">—</div>
+        <div class="op-unit">obras com WhatsApp ativo</div>
+        <div class="op-detail">grupo com mensagens nos últimos 30 dias — pulso operacional saudável</div>
+        <div class="op-meter"><div class="op-meter-fill" id="op-com-msg-fill" style="background:#3d8a5a;width:0%"></div></div>
+        <div class="op-range"><span><span id="op-com-msg-pct">—</span>% da carteira</span><span>meta ≥80%</span></div>
+      </div>
     </div>
   </section>
 
@@ -2078,6 +2121,7 @@ function initDashboard() {
   renderAlertas();
   renderAtRiskTop();
   renderBaldes();
+  renderOperacional();
   initSideNav();
   initGlobalFilter();
   // DOMContentLoaded-dependent inits
@@ -3874,6 +3918,32 @@ function renderBaldes() {
   const critEl = document.getElementById('baldes-summary-crit');
   if (totEl) totEl.textContent = totalPend;
   if (critEl) critEl.textContent = totalCrit;
+}
+
+// ============== OPERACIONAL (FASE 6.B — silêncio + cobertura via cruz-silenciosas.json) ==============
+function renderOperacional() {
+  fetch('dados/cruz-silenciosas.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(s){
+      if (!s) return;
+      var totalAtivas = s.total_ativas || 0;
+      var nSilencio = s.total_silenciosas || 0;
+      var nComMsg = s.ativas_com_whatsapp || 0;
+      var pctSilencio = totalAtivas ? (nSilencio / totalAtivas * 100) : 0;
+      var pctComMsg = totalAtivas ? (nComMsg / totalAtivas * 100) : 0;
+
+      var $$ = function(id){ return document.getElementById(id); };
+      if ($$('op-silenciosas')) $$('op-silenciosas').textContent = nSilencio;
+      if ($$('op-com-msg')) $$('op-com-msg').textContent = nComMsg;
+      if ($$('op-silenciosas-pct')) $$('op-silenciosas-pct').textContent = pctSilencio.toFixed(1);
+      if ($$('op-com-msg-pct')) $$('op-com-msg-pct').textContent = pctComMsg.toFixed(1);
+
+      requestAnimationFrame(function(){
+        if ($$('op-silenciosas-fill')) $$('op-silenciosas-fill').style.width = Math.min(100, pctSilencio).toFixed(1) + '%';
+        if ($$('op-com-msg-fill')) $$('op-com-msg-fill').style.width = Math.min(100, pctComMsg).toFixed(1) + '%';
+      });
+    })
+    .catch(function(){ /* silencioso — seção mostra "—" */ });
 }
 
 // ============== SNAPSHOT DATE + BADGE ==============
