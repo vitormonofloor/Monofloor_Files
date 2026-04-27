@@ -457,6 +457,74 @@ if os.path.exists(dd_path):
 with open(dd_path, "w") as f:
     json.dump(dd, f, ensure_ascii=False)
 print(f"  dashboard-data.json: {len(ativas)} ativas, snapshot {TODAY}")
+
+# ════════════════════════════════════════════
+# HEADLINE.JSON — fonte única dos números-âncora
+# Lido por hub.html, dashboard.html, atena.html, indicadores-v2.html, obras-mapa.html
+# Fórmula do score documentada em dados/SCORE-FORMULA.md
+# ════════════════════════════════════════════
+total_at = max(1, len(ativas))
+n_zumbi = len(zumbi_ids)
+n_orfas = len(orfas_ids)
+n_lote_vt = len(lote_ids)
+n_180 = dd["AGG"]["n_180_plus"]
+n_270 = dd["AGG"]["n_270_plus"]
+mediana = dd["AGG"]["idade_mediana"] or 0
+meta_ciclo = 150
+
+pct_zumbi = round(n_zumbi / total_at * 100, 1)
+pct_orfas = round(n_orfas / total_at * 100, 1)
+pct_180 = round(n_180 / total_at * 100, 1)
+pct_lote_vt = round(n_lote_vt / total_at * 100, 1)
+excesso_ciclo = round(max(0, (mediana - meta_ciclo) / meta_ciclo) * 100, 1) if mediana else 0
+
+# Pesos — alteração requer atualizar dados/SCORE-FORMULA.md
+PESO_ZUMBI = 0.8
+PESO_ORFAS = 0.5
+PESO_180 = 0.2
+PESO_CICLO = 0.3
+PESO_LOTE_VT = 0.6
+
+penalidade = (
+    PESO_ZUMBI * pct_zumbi
+    + PESO_ORFAS * pct_orfas
+    + PESO_180 * pct_180
+    + PESO_CICLO * excesso_ciclo
+    + PESO_LOTE_VT * pct_lote_vt
+)
+score = max(0, round(100 - penalidade))
+
+# Eventos novos hoje (deltas vs anterior)
+mud = entrada_hoje.get("mudancas_vs_anterior") or {}
+novos_hoje = sum(len(v) for v in mud.values()) if mud else 0
+
+headline = {
+    "schema_version": 1,
+    "snapshot_date": TODAY,
+    "atualizado_em": NOW,
+    "ativas": len(ativas),
+    "score": score,
+    "score_componentes": {
+        "zumbi_pct": pct_zumbi,
+        "orfas_pct": pct_orfas,
+        "ciclo_180_pct": pct_180,
+        "ciclo_mediano": mediana,
+        "ciclo_meta": meta_ciclo,
+        "lote_vt_270d": n_lote_vt
+    },
+    "alertas": {
+        "zumbi": n_zumbi,
+        "orfas": n_orfas,
+        "lote_vt_270d": n_lote_vt,
+        "ciclo_270_plus": n_270,
+        "novos_hoje": novos_hoje
+    },
+    "fonte": "refresh.sh + dashboard-data.json + backlog-historico.json"
+}
+
+with open(os.path.join(DADOS, "headline.json"), "w") as f:
+    json.dump(headline, f, ensure_ascii=False, indent=2)
+print(f"  headline.json: score={score} ativas={len(ativas)} alertas={n_zumbi+n_orfas+n_lote_vt} novos_hoje={novos_hoje}")
 PYEOF
 
 echo "[done] Refresh PESADO concluído em $NOW"
