@@ -53,6 +53,43 @@
     margin-bottom: 6px;
   }
   .section-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; padding-left: 14px; border-left: 3px solid #b8a080; }
+
+  /* VEREDITO LOTE 6 — Eixos estratégicos (TEMPO/VOLUME/CAPACIDADE) */
+  .estrategicos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0}
+  @media(max-width:880px){.estrategicos-grid{grid-template-columns:1fr}}
+  .est-card{background:#fff;border:1px solid #e0d8cc;border-left:4px solid #4a7ab8;border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;min-height:200px}
+  .est-card:nth-child(2){border-left-color:#3d8a5a}
+  .est-card:nth-child(3){border-left-color:#b89a4a}
+  .est-titulo{font-family:'JetBrains Mono',monospace;font-size:9px;color:#4a7ab8;letter-spacing:.18em;font-weight:700;text-transform:uppercase}
+  .est-card:nth-child(2) .est-titulo{color:#3d8a5a}
+  .est-card:nth-child(3) .est-titulo{color:#b89a4a}
+  .est-pergunta{font-size:11px;color:#8a7e72;font-style:italic;line-height:1.4;margin-bottom:6px}
+  .est-corpo{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .est-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:#2a2520;line-height:1;letter-spacing:-0.02em}
+  .est-num .est-unit{font-size:14px;color:#8a7e72;margin-left:4px;font-weight:400}
+  .est-rotulo{font-size:11px;color:#6b6156;line-height:1.4}
+  .est-meter{position:relative;height:5px;background:#f0ebe3;border-radius:3px;overflow:hidden;margin-top:4px}
+  .est-meter-fill{height:100%;background:#4a7ab8;border-radius:3px;width:0;transition:width .8s ease-out}
+  .est-card:nth-child(2) .est-meter-fill{background:#3d8a5a}
+  .est-card:nth-child(3) .est-meter-fill{background:#b89a4a}
+  .est-meter-mark{position:absolute;top:-2px;width:2px;height:9px;background:#3a3530;border-radius:1px;left:50%}
+  .est-detalhe{font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.04em;margin-top:4px}
+  .est-fonte{font-family:'JetBrains Mono',monospace;font-size:8px;color:#b8b0a4;border-top:1px dashed #e0d8cc;padding-top:8px;margin-top:8px;letter-spacing:.04em}
+  .est-rodape{font-size:11px;color:#8a7e72;margin-top:10px;padding:10px 14px;background:#fdfaf4;border-left:2px solid #c4b5a0;border-radius:0 4px 4px 0;line-height:1.6}
+  .est-rodape strong{color:#3a3530;font-weight:600}
+  .est-rodape code{font-family:'JetBrains Mono',monospace;font-size:10px;background:#ede6dc;padding:1px 4px;border-radius:2px}
+
+  /* VEREDITO LOTE 4 — Mapa de autoridades por seção (PRINCIPIO.md I2) */
+  .section-fontes{margin-top:14px;padding:8px 12px;background:#fdfaf4;border-left:2px solid #d8c8a8;border-radius:0 4px 4px 0;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.04em;line-height:1.7;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .section-fontes .sf-label{color:#b8a080;font-weight:600;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
+  .section-fontes .sf-item{display:inline-flex;align-items:center;gap:5px}
+  .section-fontes .sf-item b{color:#3a3530;font-weight:600;text-transform:none;letter-spacing:0}
+  .section-fontes .sf-tag{font-size:8px;padding:2px 6px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+  .section-fontes .sf-tag.painel-amigo{background:#e8f2ec;color:#2d5a3a}
+  .section-fontes .sf-tag.pipefy{background:#f4f0e6;color:#5a4a2a}
+  .section-fontes .sf-tag.kira{background:#eaf0f6;color:#2a4a6a}
+  .section-fontes .sf-tag.planejamento{background:#f6eaea;color:#6a2a2a}
+  .section-fontes .sf-tag.calculado{background:#ede6dc;color:#6b6156}
   .section-sub { font-size: 12px; color: var(--muted); margin-top: 4px; max-width: 760px; }
 
   /* ============== HERO ============== */
@@ -1033,6 +1070,7 @@
 
 <nav class="side-nav" id="side-nav">
   <a href="#hero" class="side-dot active" data-label="SA&Uacute;DE"><svg viewBox="0 0 16 16"><path d="M8 3C6 1 2 1 2 5c0 4 6 8 6 8s6-4 6-8c0-4-4-4-6-2z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="#estrategicos" class="side-dot" data-label="ESTRATÉGICOS"><svg viewBox="0 0 16 16"><path d="M2 14L6 10L9 13L14 4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M10 4h4v4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></a>
   <a href="#q1" class="side-dot" data-label="PRAZO"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4v4l3 2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
   <a href="#q2" class="side-dot" data-label="PARADAS"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M6 6v4M10 6v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
   <a href="#q3" class="side-dot" data-label="EQUIPE"><svg viewBox="0 0 16 16"><circle cx="6" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3 2-4 4-4s4 1 4 4M8 14c0-3 2-4 3-4s3 1 3 4" fill="none" stroke="currentColor" stroke-width="1"/></svg></a>
@@ -1144,6 +1182,68 @@
         <div class="score-detail-inner" id="score-detail-inner"></div>
       </div>
     </div>
+    <div class="section-fontes">
+      <span class="sf-label">Fontes</span>
+      <span class="sf-item"><span class="sf-tag calculado">Calc.</span><b>SCORE</b> via SCORE-FORMULA.md</span>
+      <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>idade · status · m²</span>
+      <span class="sf-item"><span class="sf-tag pipefy">Pipefy</span>marcos administrativos</span>
+    </div>
+  </section>
+
+  <!-- ============== VEREDITO LOTE 6 — ESTRATÉGICOS (cobertura por eixo da diretoria) ============== -->
+  <section id="estrategicos">
+    <div class="q-head">
+      <h2><span class="section-pill" style="background:rgba(74,122,184,0.1);color:#4a7ab8">ESTRATÉGICOS</span></h2>
+      <p class="sub">Os 3 eixos que a diretoria pergunta primeiro: TEMPO (estamos rápidos?) · VOLUME (entregamos quanto?) · CAPACIDADE (cabe mais?).</p>
+    </div>
+
+    <div class="estrategicos-grid">
+      <div class="est-card">
+        <div class="est-titulo">TEMPO</div>
+        <div class="est-pergunta">Quanto tempo nossa carteira leva?</div>
+        <div class="est-corpo">
+          <div class="est-num"><span id="est-ciclo-num">—</span><span class="est-unit">d</span></div>
+          <div class="est-rotulo">ciclo mediano · meta <span id="est-ciclo-meta">150d</span></div>
+          <div class="est-meter"><div class="est-meter-fill" id="est-ciclo-fill"></div><div class="est-meter-mark" id="est-ciclo-mark"></div></div>
+          <div class="est-detalhe" id="est-ciclo-detalhe">—</div>
+        </div>
+        <div class="est-fonte">Painel-amigo · idade_dias agregada</div>
+      </div>
+
+      <div class="est-card">
+        <div class="est-titulo">VOLUME</div>
+        <div class="est-pergunta">Quanto m² estamos movimentando?</div>
+        <div class="est-corpo">
+          <div class="est-num"><span id="est-m2-num">—</span><span class="est-unit">m²</span></div>
+          <div class="est-rotulo">em execução · de <span id="est-m2-total">—</span> m² ativos</div>
+          <div class="est-meter"><div class="est-meter-fill" id="est-m2-fill"></div></div>
+          <div class="est-detalhe" id="est-m2-detalhe">—</div>
+        </div>
+        <div class="est-fonte">Painel-amigo · projetoMetragem × status</div>
+      </div>
+
+      <div class="est-card">
+        <div class="est-titulo">CAPACIDADE</div>
+        <div class="est-pergunta">Estamos no limite ou cabe mais obra?</div>
+        <div class="est-corpo">
+          <div class="est-num"><span id="est-cap-num">—</span><span class="est-unit">%</span></div>
+          <div class="est-rotulo">obras em campo / total ativo</div>
+          <div class="est-meter"><div class="est-meter-fill" id="est-cap-fill"></div></div>
+          <div class="est-detalhe" id="est-cap-detalhe">—</div>
+        </div>
+        <div class="est-fonte">Painel-amigo · status=em_execucao (proxy)</div>
+      </div>
+    </div>
+
+    <div class="est-rodape">
+      <strong>Limitação honesta:</strong> comparativo mensal (este mês vs anterior) ainda em formação — apenas <span id="est-backlog-n">—</span> dias de histórico. Próximas execuções do <code>refresh.sh</code> acumulam séries para tendência.
+    </div>
+
+    <div class="section-fontes">
+      <span class="sf-label">Fontes</span>
+      <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>universo de 227 ativas · m² · status</span>
+      <span class="sf-item"><span class="sf-tag calculado">Calc.</span>ocupação como proxy (em_execucao/ativas)</span>
+    </div>
   </section>
 
   <!-- ============== Q1 — PRAZO ============== -->
@@ -1201,6 +1301,7 @@
         </table>
       </div>
     </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag planejamento">Planejamento</span>cronograma · datas previstas · <span class="sf-tag painel-amigo">Painel-amigo</span>idade · status</div>
   </section>
 
   <!-- ============== Q2 — POR QUE PARADO ============== -->
@@ -1234,6 +1335,7 @@
       16 obras encerradas sem fechar (CLIENTE FINALIZADO sem fechar) + 18 sem responsável (sem consultor) + VT travada de 15 obras congeladas há 260 dias.
       O somatório supera <span class="mono">23%</span> da carteira ativa total — todas paradas por motivo administrativo.
     </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>status · pausas · idade · <span class="sf-tag kira">KIRA</span>contexto narrativo</div>
   </section>
 
   <!-- ============== Q3 — EQUIPE ============== -->
@@ -1282,6 +1384,7 @@
         </div>
       </div>
     </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>/api/equipes · /api/escalacao-diaria · <span class="sf-tag pipefy">Pipefy</span>responsável administrativo</div>
   </section>
 
   <!-- ============== Q4 — VOLUME ============== -->
@@ -1437,6 +1540,7 @@
         </table>
       </div>
     </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>projetoMetragem · cidade · status · <span class="sf-tag pipefy">Pipefy</span>faseAtual</div>
   </section>
 
   <!-- ============== AGENDA OPERACIONAL — destaque home ============== -->
@@ -1491,6 +1595,7 @@
       <h4>Próximos 10 marcos</h4>
       <ul id="ag-lista-ul"></ul>
     </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>data_radar · <span class="sf-tag pipefy">Pipefy</span>marcos · datas planejadas</div>
   </section>
 
   <!-- ============== OPERACIONAL — absorve indicadores-v2 (FASE 6.B) ============== -->
@@ -1519,6 +1624,7 @@
         <div class="op-range"><span><span id="op-com-msg-pct">—</span>% da carteira</span><span>meta ≥80%</span></div>
       </div>
     </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag kira">KIRA</span>whatsappSummary · clima_geral · <span class="sf-tag painel-amigo">Painel-amigo</span>universo declarado</div>
   </section>
 
   <!-- ============== PROBLEMAS ============== -->
@@ -1867,6 +1973,11 @@
       </button>
     </div>
     </div><!-- /diag-bloco backlog -->
+    <div class="section-fontes">
+      <span class="sf-label">Fontes</span>
+      <span class="sf-item"><span class="sf-tag kira">KIRA</span>alertas · ocorrências · risco_adiamento · atRisk_detalhe</span>
+      <span class="sf-item"><span class="sf-tag calculado">Calc.</span>cruz-x1..x8 · cruz-obras-feridas (meta-cruzamento)</span>
+    </div>
   </section><!-- /problemas -->
 
   <!-- ============== MODAL: ENCERRADAS SEM FECHAR ============== -->
@@ -2076,6 +2187,14 @@
         <!-- gerado por JS -->
       </div>
     </details>
+    <div class="section-fontes">
+      <span class="sf-label">Fontes</span>
+      <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>universo de obras ativas</span>
+      <span class="sf-item"><span class="sf-tag kira">KIRA</span>flags por obra (silenciosa, atRisk, risco_adiamento)</span>
+      <span class="sf-item"><span class="sf-tag pipefy">Pipefy</span>fase · status</span>
+      <span class="sf-item"><span class="sf-tag calculado">Calc.</span>cruzamentos consolidados</span>
+    </div>
+
     <div class="baldes-footer">
       <a href="obras-mapa.html" class="baldes-cta">Ver todas as ativas com filtros avançados →</a>
     </div>
@@ -2162,6 +2281,7 @@ function initDashboard() {
   renderAtRiskTop();
   renderBaldes();
   renderOperacional();
+  renderEstrategicos();
   renderAutoAgentHealth();
   initSideNav();
   initGlobalFilter();
@@ -4026,6 +4146,64 @@ function renderAutoAgentHealth() {
     }
     applyDot('dot-atena', null, 24);
   })();
+}
+
+// ============== VEREDITO LOTE 6 — ESTRATÉGICOS (TEMPO/VOLUME/CAPACIDADE) ==============
+function renderEstrategicos() {
+  // TEMPO — ciclo mediano + meta
+  fetch('dados/headline.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(h){
+      if (!h || !h.score_componentes) return;
+      var ciclo = h.score_componentes.ciclo_mediano;
+      var meta = h.score_componentes.ciclo_meta || 150;
+      if (typeof ciclo === 'number') {
+        document.getElementById('est-ciclo-num').textContent = ciclo;
+        document.getElementById('est-ciclo-meta').textContent = meta + 'd';
+        var fillPct = Math.min(100, (ciclo / 300) * 100);
+        var markPct = Math.min(100, (meta / 300) * 100);
+        document.getElementById('est-ciclo-fill').style.width = fillPct + '%';
+        document.getElementById('est-ciclo-mark').style.left = markPct + '%';
+        var diff = ciclo - meta;
+        document.getElementById('est-ciclo-detalhe').textContent = (diff > 0 ? '+' + diff : diff) + 'd vs meta · ' + (h.score_componentes.ciclo_180_pct || 0).toFixed(1) + '% das obras com 180+';
+      }
+    })
+    .catch(function(){});
+
+  // VOLUME e CAPACIDADE — agregação direta de Q2_OBRAS (dashboard-data já carregado)
+  try {
+    if (Array.isArray(Q2_OBRAS) && Q2_OBRAS.length) {
+      var totalAtivas = Q2_OBRAS.length;
+      var emExec = Q2_OBRAS.filter(function(o){ return o.status === 'em_execucao'; });
+      var totalM2 = Q2_OBRAS.reduce(function(a,o){ return a + (Number(o.m2) || 0); }, 0);
+      var execM2 = emExec.reduce(function(a,o){ return a + (Number(o.m2) || 0); }, 0);
+
+      // VOLUME
+      document.getElementById('est-m2-num').textContent = Math.round(execM2).toLocaleString('pt-BR');
+      document.getElementById('est-m2-total').textContent = Math.round(totalM2).toLocaleString('pt-BR');
+      document.getElementById('est-m2-fill').style.width = totalM2 ? Math.min(100, (execM2/totalM2)*100) + '%' : '0%';
+      var pctVol = totalM2 ? (execM2 / totalM2 * 100) : 0;
+      document.getElementById('est-m2-detalhe').textContent = pctVol.toFixed(1) + '% do volume ativo está em campo';
+
+      // CAPACIDADE
+      var pctCap = (emExec.length / totalAtivas) * 100;
+      document.getElementById('est-cap-num').textContent = pctCap.toFixed(1);
+      document.getElementById('est-cap-fill').style.width = Math.min(100, pctCap) + '%';
+      document.getElementById('est-cap-detalhe').textContent = emExec.length + ' obras em campo · ' + totalAtivas + ' ativas no total';
+    }
+  } catch(e) { console.warn('renderEstrategicos:', e); }
+
+  // Backlog histórico para honestidade do comparativo
+  fetch('dados/backlog-historico.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(b){
+      if (Array.isArray(b)) {
+        var n = b.length;
+        var el = document.getElementById('est-backlog-n');
+        if (el) el.textContent = n;
+      }
+    })
+    .catch(function(){});
 }
 
 // ============== OPERACIONAL (FASE 6.B — silêncio + cobertura via cruz-silenciosas.json) ==============

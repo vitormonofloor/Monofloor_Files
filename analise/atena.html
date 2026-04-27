@@ -137,6 +137,24 @@ button.brief-acao:hover::after{opacity:1}
 .brief-insight-evid span{color:#b8a080;text-transform:uppercase;letter-spacing:.05em;font-weight:500;margin-right:4px}
 
 /* Footer */
+/* VEREDITO LOTE 3 — Recomendação assinada Vitor */
+.recomendacao-bloco{margin:32px 0 20px;padding:24px 28px;background:linear-gradient(135deg,#fdfaf4 0%,#f7f1e8 100%);border:1px solid #d8c8a8;border-left:4px solid #b8a080;border-radius:8px;box-shadow:0 4px 14px rgba(184,160,128,0.08)}
+.recomendacao-tag{font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;text-transform:uppercase;letter-spacing:0.18em;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e8d8b8}
+.recomendacao-corpo{font-size:14px;color:#3a3530;line-height:1.7;font-weight:400}
+.recomendacao-corpo strong{color:#2a2520;font-weight:600}
+.recomendacao-corpo .ra-evidencia{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a7e72;background:rgba(184,160,128,0.06);padding:2px 6px;border-radius:3px;letter-spacing:0.04em}
+.recomendacao-corpo .ra-acao{display:block;margin-top:14px;padding:10px 14px;background:#fff;border-left:2px solid #b8a080;font-size:13px;color:#2a2520;line-height:1.6;border-radius:0 4px 4px 0}
+.recomendacao-corpo .ra-acao strong{color:#b8a080;text-transform:uppercase;font-size:9px;letter-spacing:.1em;display:block;margin-bottom:4px}
+.recomendacao-corpo .ra-cta{display:inline-flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.recomendacao-corpo .ra-cta a{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;padding:6px 10px;border-radius:4px;border:1px solid #c4b5a0;background:#fff;color:#6b6156;text-decoration:none;transition:all .15s ease}
+.recomendacao-corpo .ra-cta a:hover{background:#b8a080;color:#fff;border-color:#b8a080}
+.recomendacao-assinatura{display:flex;align-items:flex-end;gap:16px;margin-top:20px;padding-top:16px}
+.recomendacao-assinatura .ra-linha{flex:0 0 50px;height:1px;background:linear-gradient(90deg,transparent,#3a3530,transparent);margin-bottom:14px}
+.recomendacao-assinatura .ra-info{flex:1}
+.recomendacao-assinatura .ra-nome{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;color:#2a2520;letter-spacing:.01em;font-style:italic}
+.recomendacao-assinatura .ra-cargo{font-size:10px;color:#8a7e72;margin-top:2px;letter-spacing:.04em}
+.recomendacao-assinatura .ra-data{font-family:'JetBrains Mono',monospace;font-size:10px;color:#a89e92;letter-spacing:.04em;text-transform:uppercase}
+
 .atena-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding:14px 0;border-top:1px solid #ede6dc}
 .atena-score{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .atena-score-num{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:600;color:#2a2520;letter-spacing:-0.02em}
@@ -352,6 +370,22 @@ button.brief-acao:hover::after{opacity:1}
     </div>
   </div>
 
+  <!-- VEREDITO LOTE 3 — RECOMENDAÇÃO ASSINADA -->
+  <div class="recomendacao-bloco" id="recomendacao-bloco">
+    <div class="recomendacao-tag">Recomendação do período</div>
+    <div class="recomendacao-corpo" id="recomendacao-corpo">
+      <div class="atena-loading">Consolidando recomendação...</div>
+    </div>
+    <div class="recomendacao-assinatura">
+      <div class="ra-linha"></div>
+      <div class="ra-info">
+        <div class="ra-nome">Vitor Gomes</div>
+        <div class="ra-cargo">Gerente de Qualidade · Monofloor</div>
+      </div>
+      <div class="ra-data" id="recomendacao-data">—</div>
+    </div>
+  </div>
+
   <!-- RODAPE: score + link -->
   <div class="atena-footer">
     <div class="atena-score" id="atena-score">
@@ -426,6 +460,11 @@ async function atenaInit() {
   try { const r = await fetch('dados/cruz-silenciosas.json?t=' + Date.now()); if (r.ok) silenciosas = await r.json(); } catch(e) {}
   try { const r = await fetch('dados/cruz-ocorrencias.json?t=' + Date.now()); if (r.ok) ocorrencias = await r.json(); } catch(e) {}
 
+  // VEREDITO LOTE 3 — fontes para Recomendação assinada
+  let feridas = null, alertaHoje = null;
+  try { const r = await fetch('dados/cruz-obras-feridas.json?t=' + Date.now()); if (r.ok) feridas = await r.json(); } catch(e) {}
+  try { const hojeISOAlerta = hoje.toISOString().slice(0,10); const r = await fetch('dados/alertas/' + hojeISOAlerta + '.json?t=' + Date.now()); if (r.ok) alertaHoje = await r.json(); } catch(e) {}
+
   // FASE 4.1 — última entrada do backlog para alimentar mudanças vs anterior
   const ultBacklog = (hist && hist.length) ? hist[hist.length - 1] : null;
   const penBacklog = (hist && hist.length >= 2) ? hist[hist.length - 2] : null;
@@ -434,7 +473,95 @@ async function atenaInit() {
   renderBriefDiagnosticos(headline, silenciosas, ocorrencias, ultBacklog, penBacklog);
   renderBriefAcoes(hist, snapHoje, ultBacklog);
   renderBriefInsight(atenaInsights, atenaOportunidades);
+  renderRecomendacao(feridas, atenaInsights, atenaOportunidades, headline, alertaHoje);
   renderAtenaScore(headline, snapHoje);
+}
+
+// VEREDITO LOTE 3 — Recomendação assinada do Gerente de Qualidade
+function renderRecomendacao(feridas, atenaInsights, atenaOportunidades, headline, alertaHoje) {
+  var corpo = document.getElementById('recomendacao-corpo');
+  var dataEl = document.getElementById('recomendacao-data');
+  if (!corpo) return;
+
+  // Data formatada BR
+  var hoje = new Date();
+  var ddmm = String(hoje.getDate()).padStart(2,'0') + '/' + String(hoje.getMonth()+1).padStart(2,'0') + '/' + hoje.getFullYear();
+  if (dataEl) dataEl.textContent = ddmm;
+
+  // Coleta sinais críticos
+  var temFeridas = feridas && feridas.total_feridas > 0;
+  var nFeridas = temFeridas ? feridas.total_feridas : 0;
+  var nFeridas3 = (feridas && feridas.total_em_3_plus) || 0;
+  var caso1 = (feridas && feridas.obras && feridas.obras[0]) || null;
+  var caso2 = (feridas && feridas.obras && feridas.obras[1]) || null;
+
+  var achados = [];
+  if (atenaInsights && Array.isArray(atenaInsights.achados)) achados = achados.concat(atenaInsights.achados);
+  if (atenaOportunidades && Array.isArray(atenaOportunidades.achados)) achados = achados.concat(atenaOportunidades.achados);
+  var altoRisco = achados.filter(function(a){ return (a.severidade||'').toLowerCase() === 'alta'; });
+
+  var score = (headline && typeof headline.score === 'number') ? headline.score : null;
+  var scoreLabel = score === null ? 'indisponível' : (score < 50 ? 'crítico' : score < 70 ? 'atenção' : 'saudável');
+  var statusAlerta = (alertaHoje && alertaHoje.status_label) ? alertaHoje.status_label : null;
+
+  // Monta narrativa
+  var html = '';
+
+  // Abertura: estado da carteira
+  if (score !== null) {
+    html += '<p>A carteira fechou o período com <strong>score ' + score + '/100</strong> ('
+      + scoreLabel + '). ';
+    if (statusAlerta) html += '<span class="ra-evidencia">' + statusAlerta + '</span>. ';
+    html += '</p>';
+  }
+
+  // Caso emblemático
+  if (caso1) {
+    html += '<p><strong>Atenção máxima nesta semana</strong>: ';
+    html += '<strong>' + caso1.cliente + '</strong>';
+    if (caso1.consultor) html += ' (' + caso1.consultor + ')';
+    if (caso1.idade_dias) html += ' — ' + caso1.idade_dias + ' dias';
+    html += ' aparece em <strong>' + caso1.n_tags + ' diagnósticos críticos simultaneamente</strong>';
+    if (caso1.tags && caso1.tags.length) html += ': <span class="ra-evidencia">' + caso1.tags.join(' · ') + '</span>';
+    html += '. ';
+    if (caso2 && caso2.n_tags >= 2) {
+      html += 'Em segundo lugar, <strong>' + caso2.cliente + '</strong>';
+      if (caso2.idade_dias) html += ' (' + caso2.idade_dias + 'd)';
+      html += ' em ' + caso2.n_tags + ' sistemas.';
+    }
+    html += '</p>';
+  }
+
+  // Volume crítico
+  if (temFeridas) {
+    html += '<p>No conjunto, <strong>' + nFeridas + ' obras estão feridas em 2+ sistemas</strong>';
+    if (nFeridas3 > 0) html += ' · destas, <strong>' + nFeridas3 + ' acumulam 3 ou mais diagnósticos críticos</strong>';
+    html += ' (cruz-obras-feridas).</p>';
+  }
+
+  // Ação recomendada
+  html += '<div class="ra-acao"><strong>Recomendação</strong>';
+  if (caso1) {
+    html += 'Escalar pessoalmente <strong>' + caso1.cliente + '</strong> esta semana (drill-down: jornada · pipefy · responsável). ';
+  }
+  if (nFeridas3 > 0) {
+    html += 'Tratar como prioridade absoluta as ' + nFeridas3 + ' obras com 3+ diagnósticos cruzados — risco de churn ou ação legal.';
+  } else if (nFeridas > 0) {
+    html += 'Revisar lista das ' + nFeridas + ' obras feridas no Banner de Achados (Dashboard · Problemas).';
+  }
+  if (altoRisco.length > 0) {
+    html += ' Acompanhar também: ' + altoRisco.slice(0,1).map(function(a){ return a.titulo || ''; }).join(' · ') + '.';
+  }
+  html += '</div>';
+
+  // CTAs
+  html += '<div class="ra-cta">';
+  html += '<a href="dashboard.html#problemas">Banner de achados</a>';
+  html += '<a href="obras-mapa.html">Mapa drill-down</a>';
+  if (caso1 && caso1.id) html += '<a href="labs.html?tab=jornada&obraId=' + encodeURIComponent(caso1.id) + '">Jornada do caso</a>';
+  html += '</div>';
+
+  corpo.innerHTML = html;
 }
 
 // FASE 2.3 — popula os 4 KPIs diagnósticos · FASE 4.3 — deltas inline
