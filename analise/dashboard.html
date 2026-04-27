@@ -1528,6 +1528,25 @@
       <p class="sub">Ocorrências, tarefas, progresso, diagnóstico estrutural e ações pendentes — tudo consolidado.</p>
     </div>
 
+    <!-- ============== UX1+UX2 — BANNER ACHADOS ============== -->
+    <div class="achados-banner" id="achados-banner" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(196,90,90,0.06),rgba(184,160,128,0.04));border:1px solid #e0d8cc;border-radius:8px;padding:18px 22px">
+      <div class="ki-ranking-title" style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ede6dc;padding-bottom:8px;margin-bottom:14px">
+        <span>Achados consolidados — meta-cruzamento</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;font-weight:400;letter-spacing:0;text-transform:none">7 cruzamentos × N obras feridas</span>
+      </div>
+
+      <!-- Resumo dos 7 cruzamentos como chips -->
+      <div id="achados-chips" style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10px"></div>
+
+      <!-- Top obras feridas (UX2) -->
+      <div style="margin-top:6px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.06em;color:#8a7e72;text-transform:uppercase;margin-bottom:8px">Obras presentes em 3+ sistemas — máxima atenção</div>
+        <div id="achados-feridas" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+
+      <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:0.04em">fontes: cruz-obras-feridas.json + cruz-x1..x8.json</div>
+    </div>
+
     <div class="ki-grid">
       <!-- Card 1: Taxa de Resolução -->
       <div class="ki-card ki-alert">
@@ -4922,9 +4941,125 @@ async function loadCaixaPreta() {
   }
 }
 
+// ============== UX1+UX2 — BANNER ACHADOS CONSOLIDADO ==============
+async function loadAchadosBanner() {
+  try {
+    function fetchSafe(url) {
+      return fetch(url, {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+    }
+    var esc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+    // Carrega tudo em paralelo
+    var [feridas, x1, x2, x3, x4, x5, x6, x8] = await Promise.all([
+      fetchSafe('dados/cruz-obras-feridas.json'),
+      fetchSafe('dados/cruz-x1-risco-duplo.json'),
+      fetchSafe('dados/cruz-x2-lider-oculto-critico.json'),
+      fetchSafe('dados/cruz-x3-cor-bloqueia-atraso.json'),
+      fetchSafe('dados/cruz-x4-success-dna-consultor.json'),
+      fetchSafe('dados/cruz-x5-pipefy-painel-divergencia.json'),
+      fetchSafe('dados/cruz-x6-aplicador-ocioso-lider-oculto.json'),
+      fetchSafe('dados/cruz-x8-rapido-vs-reparo.json'),
+    ]);
+
+    if (!feridas) {
+      var b = document.getElementById('achados-banner');
+      if (b) b.style.display = 'none';
+      return;
+    }
+
+    // === Chips dos 7 cruzamentos ===
+    var chips = [];
+    if (x1) {
+      var n = x1.total || 0;
+      chips.push({ label: 'X1 risco duplo', val: n, cls: n > 0 ? 'crit' : 'ok', tip: 'silenciosas × alertas' });
+    }
+    if (x2) {
+      chips.push({ label: 'X2 líder oculto', val: x2.total_em_atRisk + '/' + x2.total_obras_lider_oculto, cls: 'crit', tip: 'líder oculto + atRisk' });
+    }
+    if (x3) {
+      var ativaSemCor = (x3.obras || []).filter(function(o){ return o.painel_ativa && (o.cor_categoria === 'SEM_COR' || o.cor_categoria === 'PLACEHOLDER'); }).length;
+      chips.push({ label: 'X3 cor bloqueia atraso', val: ativaSemCor + '/' + x3.total, cls: ativaSemCor > 0 ? 'crit' : 'warn', tip: 'ATRASADA_GRAVE + sem cor real' });
+    }
+    if (x4) {
+      var w = x4.consultor_share && x4.consultor_share.wesley;
+      chips.push({ label: 'X4 DNA Wesley rápidas', val: (w ? w.share_rapidas : '—') + '%', cls: 'info', tip: 'Wesley dominante em obras finalizadas <150d' });
+    }
+    if (x5) {
+      chips.push({ label: 'X5 divergência Pipefy×painel', val: x5.total_divergencias, cls: 'crit', tip: 'zumbis + fantasmas + sumidas' });
+    }
+    if (x6) {
+      var oc = x6.contexto && x6.contexto.em_0_obras;
+      chips.push({ label: 'X6 aplicadores ociosos', val: oc, cls: 'warn', tip: 'em 0 obras agora' });
+    }
+    if (x8) {
+      var w8 = x8.por_consultor && x8.por_consultor.wesley;
+      chips.push({ label: 'X8 Wesley reparos', val: (w8 ? w8.share_reparos : '—') + '%', cls: 'warn', tip: 'share carteira ' + (w8 ? w8.share_carteira : '—') + '%' });
+    }
+
+    var chipsHtml = chips.map(function(c){
+      var bg = c.cls === 'crit' ? 'rgba(196,90,90,0.12)' : (c.cls === 'warn' ? 'rgba(184,154,74,0.12)' : (c.cls === 'ok' ? 'rgba(61,138,90,0.10)' : 'rgba(74,122,184,0.10)'));
+      var fg = c.cls === 'crit' ? '#c45a5a' : (c.cls === 'warn' ? '#b89a4a' : (c.cls === 'ok' ? '#3d8a5a' : '#4a7ab8'));
+      return '<span style="background:' + bg + ';color:' + fg + ';padding:5px 10px;border-radius:99px;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:6px" title="' + esc(c.tip) + '">' +
+             esc(c.label) + ' <b style="font-weight:600">' + esc(String(c.val)) + '</b></span>';
+    }).join('');
+    var elChips = document.getElementById('achados-chips');
+    if (elChips) elChips.innerHTML = chipsHtml;
+
+    // === Top obras feridas (3+ tags) ===
+    var feridasMaisCriticas = (feridas.obras || []).filter(function(o){ return o.n_tags >= 3; });
+    var feridasComDuasTags = (feridas.obras || []).filter(function(o){ return o.n_tags === 2; }).slice(0, 5);
+
+    var feridasHtml = '';
+    if (feridasMaisCriticas.length > 0) {
+      feridasHtml += feridasMaisCriticas.map(function(o, i){
+        var tagsHtml = (o.tags || []).map(function(t){
+          return '<span style="font-size:9px;background:rgba(196,90,90,0.12);color:#c45a5a;padding:2px 7px;border-radius:99px;font-family:\'JetBrains Mono\',monospace">' + esc(t) + '</span>';
+        }).join(' ');
+        return '<div style="padding:10px 14px;background:#fff;border-left:3px solid #c45a5a;border-radius:0 4px 4px 0">' +
+                 '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;flex-wrap:wrap">' +
+                   '<div style="flex:1;min-width:240px">' +
+                     '<strong style="font-size:13px;color:#2a2520">⚠ ' + esc(o.cliente) + '</strong>' +
+                     '<div style="font-size:10px;color:#a89e92;margin-top:2px">' +
+                       (o.consultor ? 'consultor: ' + esc(o.consultor) + ' · ' : '') +
+                       (o.idade_dias ? 'idade ' + o.idade_dias + 'd · ' : '') +
+                       '<b style="color:#c45a5a">' + o.n_tags + ' sistemas</b>' +
+                     '</div>' +
+                   '</div>' +
+                 '</div>' +
+                 '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + tagsHtml + '</div>' +
+               '</div>';
+      }).join('<div style="height:6px"></div>');
+    }
+
+    if (feridasComDuasTags.length > 0) {
+      feridasHtml += '<details style="margin-top:10px;border-top:1px dashed #e0d8cc;padding-top:10px">' +
+                     '<summary style="cursor:pointer;font-size:11px;color:#8a7e72;font-family:\'JetBrains Mono\',monospace;letter-spacing:0.06em;text-transform:uppercase">' +
+                       feridas.total_em_2_sist + ' obras em 2 sistemas ▾' +
+                     '</summary>' +
+                     '<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">' +
+                       feridasComDuasTags.map(function(o){
+                         var tags = (o.tags || []).join(' · ');
+                         return '<div style="padding:6px 12px;background:rgba(255,255,255,0.5);border-left:2px solid #b89a4a;border-radius:0 4px 4px 0;font-size:11px;color:#3a3530">' +
+                                  '<b>' + esc(o.cliente) + '</b>' +
+                                  (o.consultor ? ' <span style="color:#a89e92">· ' + esc(o.consultor.split(' ').slice(0,2).join(' ')) + '</span>' : '') +
+                                  ' <span style="color:#a89e92;font-family:\'JetBrains Mono\',monospace;font-size:9px">' + esc(tags) + '</span>' +
+                                '</div>';
+                       }).join('') +
+                     '</div>' +
+                   '</details>';
+    }
+
+    var elFeridas = document.getElementById('achados-feridas');
+    if (elFeridas) elFeridas.innerHTML = feridasHtml || '<div style="color:#a89e92;font-size:11px;font-style:italic">Sem obras com 3+ flags simultâneas — saudável</div>';
+
+  } catch(e) {
+    console.warn('[achados-banner]', e);
+  }
+}
+
 // Disparar após dashboard carregar (não interfere com initDashboard)
-if (document.readyState === 'complete') { loadKiraInsights(); loadCaixaPreta(); }
-else { window.addEventListener('load', function(){ loadKiraInsights(); loadCaixaPreta(); }); }
+if (document.readyState === 'complete') { loadKiraInsights(); loadCaixaPreta(); loadAchadosBanner(); }
+else { window.addEventListener('load', function(){ loadKiraInsights(); loadCaixaPreta(); loadAchadosBanner(); }); }
 </script>
 
 <div class="atena-portal" id="atenaPortal">

@@ -163,10 +163,67 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .card-mini .cm-name{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#3a3530}
 .card-mini .cm-desc{font-size:10px;color:#8a7e72;letter-spacing:0.3px}
 .card-mini .cm-go{width:18px;height:18px;color:#b8a080;flex-shrink:0;margin-left:4px}
+
+/* UX4 — Botão "?" + modal "Como navegar" */
+.help-btn{position:fixed;top:14px;left:14px;z-index:9999;width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e0d8cc;color:#8a7e72;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all 0.25s;box-shadow:0 2px 8px rgba(42,37,32,0.06)}
+.help-btn:hover{background:#b8a080;color:#fff;transform:scale(1.05)}
+.help-overlay{position:fixed;inset:0;background:rgba(42,37,32,0.55);backdrop-filter:blur(4px);z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s}
+.help-overlay.open{display:flex;opacity:1}
+.help-modal{background:#fff;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;border-radius:14px;padding:28px 32px;box-shadow:0 16px 48px rgba(42,37,32,0.2);font-family:'Plus Jakarta Sans',sans-serif}
+.help-modal h2{font-size:16px;font-weight:600;letter-spacing:6px;text-transform:uppercase;color:#3a3530;margin-bottom:6px}
+.help-modal .help-sub{font-size:11px;color:#8a7e72;margin-bottom:22px;font-style:italic}
+.help-modal h3{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#b8a080;margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid #ede6dc;font-weight:600}
+.help-modal h3:first-of-type{margin-top:0}
+.help-route{display:flex;gap:12px;align-items:flex-start;padding:8px 0;font-size:13px;line-height:1.5}
+.help-route .step{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.08em;color:#fff;background:#b8a080;padding:3px 7px;border-radius:99px;flex-shrink:0;margin-top:2px}
+.help-route .arrow{color:#a89e92;font-family:'JetBrains Mono',monospace}
+.help-route b{color:#3a3530}
+.help-route .desc{color:#6b6156;font-size:12px;margin-top:2px}
+.help-perguntas{display:flex;flex-direction:column;gap:8px}
+.help-pergunta{padding:10px 14px;background:#f0ebe3;border-left:3px solid #b8a080;border-radius:0 6px 6px 0;font-size:12px;color:#3a3530}
+.help-pergunta b{color:#6b4f30}
+.help-pergunta .answer{color:#8a7e72;font-size:11px;margin-top:2px;display:block}
+.help-close{position:absolute;top:18px;right:22px;background:none;border:none;font-size:22px;color:#a89e92;cursor:pointer;line-height:1}
+.help-close:hover{color:#3a3530}
+.help-modal{position:relative}
+@media(max-width:640px){.help-modal{padding:22px 20px}.help-route{font-size:12px}}
 </style>
 <script src="auth.js"></script>
 </head>
 <body>
+
+<!-- UX4 — Help button + modal -->
+<button class="help-btn" id="help-btn" onclick="document.getElementById('help-overlay').classList.add('open')" title="Como navegar">?</button>
+<div class="help-overlay" id="help-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="help-modal">
+    <button class="help-close" onclick="document.getElementById('help-overlay').classList.remove('open')">×</button>
+    <h2>Como navegar</h2>
+    <div class="help-sub">Mapa rápido do site · 30 segundos de leitura</div>
+
+    <h3>Estrutura</h3>
+    <div class="help-route"><span class="step">1</span><div><b>HUB</b> · onde você está agora<div class="desc">score do dia + manchete narrativa KIRA + 4 portais</div></div></div>
+    <div class="help-route"><span class="step">2</span><div><b>DASHBOARD</b> <span class="arrow">→ analise/dashboard.html</span><div class="desc">visão estratégica · 9 quadrantes · banner de achados consolidado · Caixa-preta KIRA na seção PROBLEMAS</div></div></div>
+    <div class="help-route"><span class="step">3</span><div><b>ATENA</b> <span class="arrow">→ analise/atena.html</span><div class="desc">briefing executivo · 2 tabs (BRIEFING + EVOLUÇÃO) · ações dinâmicas vs ontem</div></div></div>
+    <div class="help-route"><span class="step">4</span><div><b>LABS</b> <span class="arrow">→ analise/labs.html</span><div class="desc">10 capítulos em 3 grupos: <b>Drill por obra</b> (Jornada) · <b>Sintomas operacionais</b> (Bloqueadores · Campo · Cauda VT · Reparos · Cores) · <b>Análise estratégica</b> (Escopo · Funil · Consultores · Histórico de Saúde)</div></div></div>
+
+    <h3>Pra qual pergunta?</h3>
+    <div class="help-perguntas">
+      <div class="help-pergunta"><b>"Como está a operação hoje?"</b><span class="answer">→ HUB (score + manchete) ou ATENA (briefing)</span></div>
+      <div class="help-pergunta"><b>"Quais obras precisam de ação agora?"</b><span class="answer">→ DASHBOARD #problemas (banner achados consolidado)</span></div>
+      <div class="help-pergunta"><b>"Qual o status real de UMA obra específica?"</b><span class="answer">→ LABS · Cap 1 Jornada da obra (drill individual)</span></div>
+      <div class="help-pergunta"><b>"O que está travando?"</b><span class="answer">→ LABS · grupo Sintomas (bloqueadores, cauda VT, reparos, cores)</span></div>
+      <div class="help-pergunta"><b>"Quem entrega mais? Quem trava mais?"</b><span class="answer">→ LABS · Cap 6 Consultores</span></div>
+      <div class="help-pergunta"><b>"Como evoluímos no tempo?"</b><span class="answer">→ LABS · Cap 10 Histórico de Saúde</span></div>
+    </div>
+
+    <h3>Atalhos visuais</h3>
+    <div style="font-size:11px;color:#6b6156;line-height:1.7">
+      <div>• Pill verde/âmbar/vermelho no canto superior direito = quão fresco está o dado (cor varia conforme tempo desde o último refresh)</div>
+      <div>• Clique no <b>score do dia</b> abre ATENA · clique na <b>manchete narrativa</b> abre dashboard #problemas</div>
+      <div>• Em qualquer ranking de obra, o nome <b>linka pra Jornada da Obra</b> (Cap 1)</div>
+    </div>
+  </div>
+</div>
 
 <div class="hub">
   <div class="particles" id="particles"></div>
@@ -481,6 +538,15 @@ function goTo(dest, url) {
     }
   });
 })();
+</script>
+<script>
+// UX4 — Esc fecha modal de ajuda
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') {
+    var ov = document.getElementById('help-overlay');
+    if (ov) ov.classList.remove('open');
+  }
+});
 </script>
 <script src="analise/headline-badge.js" data-src="analise/dados/headline.json" defer></script>
 </body>

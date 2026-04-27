@@ -36,13 +36,23 @@
   .labs-tab.active::after { transform: scaleX(1); }
   @media(max-width:720px) { .labs-tab { padding: 10px 12px; font-size: 9px; } }
 
-  /* FASE 3.6 — hero descritivo com 10 cards */
-  .labs-hero { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0 20px; }
-  @media(max-width:1500px) { .labs-hero { grid-template-columns: repeat(5, 1fr); } }
-  @media(max-width:1200px) { .labs-hero { grid-template-columns: repeat(4, 1fr); } }
-  @media(max-width:980px) { .labs-hero { grid-template-columns: repeat(3, 1fr); } }
-  @media(max-width:720px) { .labs-hero { grid-template-columns: repeat(2, 1fr); } }
-  @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
+  /* UX3 — agrupado em 3 temas */
+  .labs-hero-group { margin: 16px 0 12px; }
+  .labs-hero-group:first-of-type { margin-top: 8px; }
+  .lhg-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #8a7e72; margin-bottom: 8px; padding: 4px 0 6px;
+    border-bottom: 1px solid #ede6dc; display: flex; align-items: center; justify-content: space-between;
+  }
+  .lhg-title .lhg-tagline { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; letter-spacing: 0; text-transform: none; color: #a89e92; font-weight: 400; font-style: italic; }
+  .labs-hero { display: grid; gap: 8px; }
+  .labs-hero.cols-1 { grid-template-columns: 1fr; }
+  .labs-hero.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .labs-hero.cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media(max-width:1200px) { .labs-hero.cols-5 { grid-template-columns: repeat(4, 1fr); } .labs-hero.cols-4 { grid-template-columns: repeat(3, 1fr); } }
+  @media(max-width:980px) { .labs-hero.cols-5, .labs-hero.cols-4 { grid-template-columns: repeat(3, 1fr); } }
+  @media(max-width:720px) { .labs-hero.cols-5, .labs-hero.cols-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width:540px) { .labs-hero.cols-5, .labs-hero.cols-4, .labs-hero.cols-1 { grid-template-columns: 1fr; } }
   @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
   .lh-card { padding: 14px 16px; background: #ffffff; border: 1px solid #e8e0d4; border-left: 3px solid #b8a080; border-radius: 6px; cursor: pointer; transition: all .2s; text-align: left; font-family: inherit; color: inherit; display: flex; flex-direction: column; gap: 4px; min-height: 96px; }
   .lh-card:hover { border-color: #b8a080; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(42,37,32,0.06); }
@@ -96,58 +106,86 @@
     </div>
   </div>
 
-  <!-- FASE 3.6 — hero com 5 cards descritivos -->
-  <div class="labs-hero">
-    <button class="lh-card active" data-tab="jornada" type="button">
-      <div class="lh-cap">Cap 1</div>
-      <div class="lh-title">Jornada da obra</div>
-      <div class="lh-q">qual o status real de cada obra?</div>
-    </button>
-    <button class="lh-card" data-tab="bloqueadores" type="button">
-      <div class="lh-cap">Cap 2</div>
-      <div class="lh-title">Bloqueadores</div>
-      <div class="lh-q">o que mais trava o avanço?</div>
-    </button>
-    <button class="lh-card" data-tab="campo" type="button">
-      <div class="lh-cap">Cap 3</div>
-      <div class="lh-title">Campo</div>
-      <div class="lh-q">quem reporta · quem some?</div>
-    </button>
-    <button class="lh-card" data-tab="escopo" type="button">
-      <div class="lh-cap">Cap 4</div>
-      <div class="lh-title">Escopo</div>
-      <div class="lh-q">materiais e ambientes por obra</div>
-    </button>
-    <button class="lh-card" data-tab="funil" type="button">
-      <div class="lh-cap">Cap 5</div>
-      <div class="lh-title">Funil 28 fases</div>
-      <div class="lh-q">onde a obra se perde no fluxo?</div>
-    </button>
-    <button class="lh-card" data-tab="consultores" type="button">
-      <div class="lh-cap">Cap 6</div>
-      <div class="lh-title">Consultores</div>
-      <div class="lh-q">Luana vs Wesley · 85% da carteira</div>
-    </button>
-    <button class="lh-card" data-tab="agend-vt" type="button">
-      <div class="lh-cap">Cap 7</div>
-      <div class="lh-title">Cauda VT</div>
-      <div class="lh-q">15 obras presas 246-260d na mesma fase</div>
-    </button>
-    <button class="lh-card" data-tab="reparo" type="button">
-      <div class="lh-cap">Cap 8</div>
-      <div class="lh-title">Reparos</div>
-      <div class="lh-q">27 reparos · pico 315d · Nathan domina</div>
-    </button>
-    <button class="lh-card" data-tab="cores" type="button">
-      <div class="lh-cap">Cap 9</div>
-      <div class="lh-title">Cores</div>
-      <div class="lh-q">87 obras (41.8%) sem cor · bloqueia OEC</div>
-    </button>
-    <button class="lh-card" data-tab="historico-saude" type="button">
-      <div class="lh-cap">Cap 10</div>
-      <div class="lh-title">Histórico de Saúde</div>
-      <div class="lh-q">Índice ATENA + 5 alarmes ao longo do tempo</div>
-    </button>
+  <!-- UX3 — agrupado em 3 temas: Drill por obra · Sintomas operacionais · Análise estratégica -->
+
+  <!-- Drill por obra -->
+  <div class="labs-hero-group">
+    <div class="lhg-title">
+      <span>Drill por obra</span>
+      <span class="lhg-tagline">comece aqui se quer ver UMA obra específica</span>
+    </div>
+    <div class="labs-hero cols-1">
+      <button class="lh-card active" data-tab="jornada" type="button">
+        <div class="lh-cap">Cap 1</div>
+        <div class="lh-title">Jornada da obra</div>
+        <div class="lh-q">qual o status real de cada obra?</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sintomas operacionais -->
+  <div class="labs-hero-group">
+    <div class="lhg-title">
+      <span>Sintomas operacionais</span>
+      <span class="lhg-tagline">o que está travando · onde dói agora</span>
+    </div>
+    <div class="labs-hero cols-5">
+      <button class="lh-card" data-tab="bloqueadores" type="button">
+        <div class="lh-cap">Cap 2</div>
+        <div class="lh-title">Bloqueadores</div>
+        <div class="lh-q">o que mais trava o avanço?</div>
+      </button>
+      <button class="lh-card" data-tab="campo" type="button">
+        <div class="lh-cap">Cap 3</div>
+        <div class="lh-title">Campo</div>
+        <div class="lh-q">quem reporta · quem some?</div>
+      </button>
+      <button class="lh-card" data-tab="agend-vt" type="button">
+        <div class="lh-cap">Cap 7</div>
+        <div class="lh-title">Cauda VT</div>
+        <div class="lh-q">15 obras presas 246-260d na mesma fase</div>
+      </button>
+      <button class="lh-card" data-tab="reparo" type="button">
+        <div class="lh-cap">Cap 8</div>
+        <div class="lh-title">Reparos</div>
+        <div class="lh-q">27 reparos · pico 315d · Nathan domina</div>
+      </button>
+      <button class="lh-card" data-tab="cores" type="button">
+        <div class="lh-cap">Cap 9</div>
+        <div class="lh-title">Cores</div>
+        <div class="lh-q">87 obras (41.8%) sem cor · bloqueia OEC</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Análise estratégica -->
+  <div class="labs-hero-group">
+    <div class="lhg-title">
+      <span>Análise estratégica</span>
+      <span class="lhg-tagline">fluxo, pessoas, evolução no tempo</span>
+    </div>
+    <div class="labs-hero cols-4">
+      <button class="lh-card" data-tab="escopo" type="button">
+        <div class="lh-cap">Cap 4</div>
+        <div class="lh-title">Escopo</div>
+        <div class="lh-q">materiais e ambientes por obra</div>
+      </button>
+      <button class="lh-card" data-tab="funil" type="button">
+        <div class="lh-cap">Cap 5</div>
+        <div class="lh-title">Funil 28 fases</div>
+        <div class="lh-q">onde a obra se perde no fluxo?</div>
+      </button>
+      <button class="lh-card" data-tab="consultores" type="button">
+        <div class="lh-cap">Cap 6</div>
+        <div class="lh-title">Consultores</div>
+        <div class="lh-q">Luana vs Wesley · 85% da carteira</div>
+      </button>
+      <button class="lh-card" data-tab="historico-saude" type="button">
+        <div class="lh-cap">Cap 10</div>
+        <div class="lh-title">Histórico de Saúde</div>
+        <div class="lh-q">Índice ATENA + 5 alarmes ao longo do tempo</div>
+      </button>
+    </div>
   </div>
 
   <!-- 10 ABAS -->
