@@ -1,0 +1,397 @@
+﻿{
+    "total_ativas":  208,
+    "total_coerentes":  186,
+    "total_descasadas":  22,
+    "pct_descasadas":  10.58,
+    "matriz_status_x_fase":  {
+                                 "reserva":  {
+                                                 "ENTRADA":  3
+                                             },
+                                 "reparo":  {
+                                                "NULL":  1,
+                                                "LOGÍSTICA - EM ENTREGA":  1,
+                                                "OECT":  1,
+                                                "OBRA CONCLUÍDA":  1,
+                                                "ENTRADA":  2,
+                                                "AGEND. VT - ENTRADA":  1,
+                                                "CLIENTE FINALIZADO":  16,
+                                                "OBRA PAUSADA":  2,
+                                                "PÓS VENDAS ACIONADO":  2
+                                            },
+                                 "contrato":  {
+                                                  "CONTRATO":  4
+                                              },
+                                 "aguardando_clima":  {
+                                                          "INFORMAÇÕES PROJETOS":  1,
+                                                          "CLIENTE FINALIZADO":  3,
+                                                          "AGUARDANDO LIBERAÇÃO":  1,
+                                                          "OBRA EM EXECUÇÃO":  2
+                                                      },
+                                 "pausado":  {
+                                                 "INDÚSTRIA - EM PRODUÇÃO":  1,
+                                                 "OBRA PAUSADA":  6
+                                             },
+                                 "em_execucao":  {
+                                                     "OBRA EM EXECUÇÃO":  2,
+                                                     "NULL":  1,
+                                                     "INFORMAÇÕES LOGÍSTICAS":  1,
+                                                     "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO":  1,
+                                                     "CONFIRMAÇÕES OP 1":  1,
+                                                     "LOGÍSTICA - EM ENTREGA":  1,
+                                                     "AGUARDANDO LIBERAÇÃO":  3,
+                                                     "RESULTADO VT - ENTRADA":  1,
+                                                     "INDÚSTRIA - EM PRODUÇÃO":  2,
+                                                     "AGEND. VT - ENTRADA":  2,
+                                                     "CLIENTE FINALIZADO":  4,
+                                                     "OBRA CONCLUÍDA":  2,
+                                                     "LOGÍSTICA - MATERIAL ENTREGUE":  2,
+                                                     "REVISÃO FINAL OP":  1
+                                                 },
+                                 "planejamento":  {
+                                                      "PROJETOS  - 1ª REVISÃO":  4,
+                                                      "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO":  7,
+                                                      "CONFIRMAÇÕES OP 1":  8,
+                                                      "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO":  45,
+                                                      "LOGÍSTICA - EM COLETA":  1,
+                                                      "AGEND. VT - ACOMPANHAMENTO":  1,
+                                                      "EM CONTRATO":  9,
+                                                      "INFORMAÇÕES FINANCEIRAS":  1,
+                                                      "1º CONTATO OP.":  8,
+                                                      "INFORMAÇÕES PROJETOS":  1,
+                                                      "ENTRADA":  2,
+                                                      "RESULTADO VT - QUALIDADE":  1,
+                                                      "CLIENTE FINALIZADO":  3
+                                                  },
+                                 "aguardando_execucao":  {
+                                                             "INDÚSTRIA - EM PRODUÇÃO":  3,
+                                                             "LOGÍSTICA - MATERIAL ENTREGUE":  2,
+                                                             "LOGÍSTICA - EM ENTREGA":  4,
+                                                             "RESULTADO VT - ENTRADA":  1,
+                                                             "REVISÃO FINAL OP":  5,
+                                                             "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO":  1,
+                                                             "AGUARDANDO LIBERAÇÃO":  15,
+                                                             "AGEND. VT - ENTRADA":  2,
+                                                             "CLIENTE FINALIZADO":  3,
+                                                             "INFORMAÇÕES LOGÍSTICAS":  1,
+                                                             "EQUIPE DE EXECUÇÃO":  2
+                                                         },
+                                 "marcas_rolo_cera":  {
+                                                          "OBRA CONCLUÍDA":  1,
+                                                          "INFORMAÇÕES PROJETOS":  1,
+                                                          "CLIENTE FINALIZADO":  2,
+                                                          "OBRA PAUSADA":  2
+                                                      }
+                             },
+    "descasamentos_suspeitos":  [
+                                    {
+                                        "status":  "em_execucao",
+                                        "faseAtual":  "CLIENTE FINALIZADO",
+                                        "count":  4,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "2d00e03f",
+                                                          "cliente":  "JOÃO EDUARDO MARTINS KUHLMANN",
+                                                          "cidade":  "CURITIBA",
+                                                          "status":  "em_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Pedro Alexandre Santana",
+                                                          "idade_dias":  264
+                                                      },
+                                                      {
+                                                          "id_curto":  "2ee38aff",
+                                                          "cliente":  "MAJORELLE HOLDINGS LTDA",
+                                                          "cidade":  "CEP 80420",
+                                                          "status":  "em_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  159
+                                                      },
+                                                      {
+                                                          "id_curto":  "b8fbadd8",
+                                                          "cliente":  "ANDRE KEUNECKE SALERNO",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "em_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                                                          "idade_dias":  275
+                                                      },
+                                                      {
+                                                          "id_curto":  "c9560bb7",
+                                                          "cliente":  "VITOR FLAMIA DE BARROS COSTA ",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "em_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  211
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "planejamento",
+                                        "faseAtual":  "CLIENTE FINALIZADO",
+                                        "count":  3,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "097ee21f",
+                                                          "cliente":  "CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "planejamento",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  218
+                                                      },
+                                                      {
+                                                          "id_curto":  "a8eff05f",
+                                                          "cliente":  "MARISA NATALIA PINTO",
+                                                          "cidade":  "RIO DE JANEIRO",
+                                                          "status":  "planejamento",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  176
+                                                      },
+                                                      {
+                                                          "id_curto":  "ddb7768a",
+                                                          "cliente":  "RICARDO GUIMARAES VIEIRA",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "planejamento",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  205
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "aguardando_execucao",
+                                        "faseAtual":  "CLIENTE FINALIZADO",
+                                        "count":  3,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "0d8b5bb9",
+                                                          "cliente":  "CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA ",
+                                                          "cidade":  "Av. Visc. do Rio Branco",
+                                                          "status":  "aguardando_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  154
+                                                      },
+                                                      {
+                                                          "id_curto":  "1ea08f00",
+                                                          "cliente":  "PEDRO HENRIQUE SETTI SEIVERS",
+                                                          "cidade":  "SÃO BERNARDO DO CAMPO",
+                                                          "status":  "aguardando_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  260
+                                                      },
+                                                      {
+                                                          "id_curto":  "db4288be",
+                                                          "cliente":  "VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "aguardando_execucao",
+                                                          "faseAtual":  "CLIENTE FINALIZADO",
+                                                          "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                                                          "idade_dias":  313
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "OBRA PAUSADA",
+                                        "count":  2,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "192ee017",
+                                                          "cliente":  "GUILHERME WENTZ",
+                                                          "cidade":  "São Paulo",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "OBRA PAUSADA",
+                                                          "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                                                          "idade_dias":  175
+                                                      },
+                                                      {
+                                                          "id_curto":  "cecc85af",
+                                                          "cliente":  "ANTONIO CARLOS CANTO PORTO NETO",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "OBRA PAUSADA",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  264
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "PÓS VENDAS ACIONADO",
+                                        "count":  2,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "1ad11198",
+                                                          "cliente":  "PIERRE JULIEN CHAPRON",
+                                                          "cidade":  "SÃO PAULO",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "PÓS VENDAS ACIONADO",
+                                                          "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                                                          "idade_dias":  260
+                                                      },
+                                                      {
+                                                          "id_curto":  "906f9000",
+                                                          "cliente":  "NEWTON BRIAO MARQUES",
+                                                          "cidade":  "ARAUCARIA",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "PÓS VENDAS ACIONADO",
+                                                          "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                                                          "idade_dias":  188
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "ENTRADA",
+                                        "count":  2,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "501b5b94",
+                                                          "cliente":  "GLAUCIA ALVES",
+                                                          "cidade":  "Divinópolis/Minas Gerais",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "ENTRADA",
+                                                          "consultor":  "",
+                                                          "idade_dias":  null
+                                                      },
+                                                      {
+                                                          "id_curto":  "d51326f8",
+                                                          "cliente":  "MAURICIO BATEMAN PELA",
+                                                          "cidade":  "São Paulo/São Paulo",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "ENTRADA",
+                                                          "consultor":  "",
+                                                          "idade_dias":  null
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "NULL",
+                                        "count":  1,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "249220c9",
+                                                          "cliente":  "ELIZETE DE FÁTIMA MARCONCIN",
+                                                          "cidade":  "Curitiba/Paraná",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "",
+                                                          "consultor":  "",
+                                                          "idade_dias":  null
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "LOGÍSTICA - EM ENTREGA",
+                                        "count":  1,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "e9f43227",
+                                                          "cliente":  "JOSE ANTUNES SOBRINHO ",
+                                                          "cidade":  "FLORIANÓPOLIS",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "LOGÍSTICA - EM ENTREGA",
+                                                          "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                                                          "idade_dias":  86
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "AGEND. VT - ENTRADA",
+                                        "count":  1,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "1a869e86",
+                                                          "cliente":  "MISCI BRASIL COMERCIO DE MODA LTDA ",
+                                                          "cidade":  "RIO DE JANEIRO",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "AGEND. VT - ENTRADA",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  70
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "em_execucao",
+                                        "faseAtual":  "NULL",
+                                        "count":  1,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "6b4e6b8b",
+                                                          "cliente":  "LA PASTINA IMPORTAÇÃO EXPORTAÇÃO LTDA (REAL COMERCIAL LTDA)",
+                                                          "cidade":  "São Paulo/São Paulo",
+                                                          "status":  "em_execucao",
+                                                          "faseAtual":  "",
+                                                          "consultor":  "",
+                                                          "idade_dias":  null
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "OBRA CONCLUÍDA",
+                                        "count":  1,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "868406f1",
+                                                          "cliente":  "AVVA HOUSE LTDA - MOZART RODRIGUES",
+                                                          "cidade":  "FLORIANOPOLIS",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "OBRA CONCLUÍDA",
+                                                          "consultor":  "Wesley Matheus de Carvalho",
+                                                          "idade_dias":  166
+                                                      }
+                                                  ]
+                                    },
+                                    {
+                                        "status":  "reparo",
+                                        "faseAtual":  "OECT",
+                                        "count":  1,
+                                        "obras":  [
+                                                      {
+                                                          "id_curto":  "1231fb6a",
+                                                          "cliente":  "Roberto Tamio Murakami",
+                                                          "cidade":  "São Paulo/São Paulo",
+                                                          "status":  "reparo",
+                                                          "faseAtual":  "OECT",
+                                                          "consultor":  "",
+                                                          "idade_dias":  null
+                                                      }
+                                                  ]
+                                    }
+                                ],
+    "top5_descasamentos":  [
+                               {
+                                   "status":  "em_execucao",
+                                   "faseAtual":  "CLIENTE FINALIZADO",
+                                   "count":  4
+                               },
+                               {
+                                   "status":  "planejamento",
+                                   "faseAtual":  "CLIENTE FINALIZADO",
+                                   "count":  3
+                               },
+                               {
+                                   "status":  "aguardando_execucao",
+                                   "faseAtual":  "CLIENTE FINALIZADO",
+                                   "count":  3
+                               },
+                               {
+                                   "status":  "reparo",
+                                   "faseAtual":  "OBRA PAUSADA",
+                                   "count":  2
+                               },
+                               {
+                                   "status":  "reparo",
+                                   "faseAtual":  "PÓS VENDAS ACIONADO",
+                                   "count":  2
+                               }
+                           ],
+    "arquivo":  "C:\\Users\\vitor\\Monofloor_Files\\analise\\dados\\cruz-limbo.json"
+}

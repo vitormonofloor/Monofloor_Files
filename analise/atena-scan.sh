@@ -17,8 +17,16 @@ TODAY=$(TZ=America/Sao_Paulo date +%Y-%m-%d)
 NOW_UTC=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 echo "=== ATENA — Varredura $TODAY ==="
+# FASE 7.5 — valida arquivos antes de wc -c (evita falha silenciosa)
+if [ ! -f "$DASHBOARD" ]; then
+  echo "ERRO: dashboard.html não encontrado em $DASHBOARD"
+  exit 1
+fi
+if [ ! -f "$PAINEL" ]; then
+  echo "AVISO: painel-temporal.json não encontrado em $PAINEL — seguindo sem"
+fi
 echo "  dashboard: $(wc -c < "$DASHBOARD") bytes"
-echo "  painel-temporal: $(wc -c < "$PAINEL") bytes"
+[ -f "$PAINEL" ] && echo "  painel-temporal: $(wc -c < "$PAINEL") bytes"
 
 # ─────────────────────────────────────────
 # Usa python3 inline para todas as análises

@@ -732,7 +732,7 @@
 
   /* ============== DOCK ============== */
   .dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
-  @media(max-width:900px){.dock{display:none}}
+  /* FASE 7.2 - dock horizontal mobile (em vez de display:none) */ @media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
   .dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
   .dock-item svg{width:18px;height:18px}
   .dock-item:hover{color:#b8a080;background:rgba(184,160,128,0.08);text-decoration:none}
@@ -841,6 +841,10 @@
   .auto-agent:hover{border-color:#e0d8cc}
   .auto-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#c8bfb4}
   .auto-dot.ativo{background:#3d8a5a;box-shadow:0 0 6px rgba(61,138,90,0.4);animation:dotPulse 2.5s ease-in-out infinite}
+  /* FASE 7.4 — dot atrasado (>limite mas < 2x limite) e morto (>2x) */
+  .auto-dot.atrasado{background:#b89a4a;box-shadow:0 0 6px rgba(184,154,74,0.4)}
+  .auto-dot.morto{background:#c45a5a;box-shadow:0 0 6px rgba(196,90,90,0.5);animation:dotMorto 1.6s ease-in-out infinite}
+  @keyframes dotMorto{0%,100%{opacity:1}50%{opacity:.45}}
   @keyframes dotPulse{0%,100%{box-shadow:0 0 4px rgba(61,138,90,0.3)}50%{box-shadow:0 0 10px rgba(61,138,90,0.6)}}
   .auto-info{flex:1;min-width:0}
   .auto-nome{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:#2a2520;letter-spacing:0.05em}
@@ -1074,38 +1078,31 @@
     <span class="auto-tag">ALIMENTADO POR AGENTES AUT&Ocirc;NOMOS</span>
     <span class="auto-sub">Dados coletados, analisados e publicados sem interven&ccedil;&atilde;o manual</span>
   </div>
+  <!-- FASE 7.4 — auto-dot reflete heartbeat real (.ativo só com dado recente). HERMES removido na 6.A. -->
   <div class="auto-grid">
     <div class="auto-agent">
-      <div class="auto-dot ativo"></div>
+      <div class="auto-dot" id="dot-argos"></div>
       <div class="auto-info">
-        <div class="auto-nome"><a href="../indicadores-v2.html">ARGOS</a></div>
-        <div class="auto-papel">Extra&ccedil;&atilde;o de indicadores</div>
+        <div class="auto-nome"><a href="#operacional">ARGOS</a></div>
+        <div class="auto-papel">Extra&ccedil;&atilde;o de indicadores KIRA</div>
       </div>
-      <div class="auto-freq">a cada 6h</div>
+      <div class="auto-freq" id="freq-argos">a cada 6h</div>
     </div>
     <div class="auto-agent">
-      <div class="auto-dot ativo"></div>
-      <div class="auto-info">
-        <div class="auto-nome">HERMES</div>
-        <div class="auto-papel">An&aacute;lise narrativa di&aacute;ria</div>
-      </div>
-      <div class="auto-freq">1&times;/dia &middot; 8h</div>
-    </div>
-    <div class="auto-agent">
-      <div class="auto-dot ativo"></div>
+      <div class="auto-dot" id="dot-atena"></div>
       <div class="auto-info">
         <div class="auto-nome"><a href="atena.html">ATENA</a></div>
         <div class="auto-papel">Auditoria estrat&eacute;gica (5 olhos)</div>
       </div>
-      <div class="auto-freq">1&times;/dia &middot; 7h</div>
+      <div class="auto-freq" id="freq-atena">2&times;/dia &middot; 7h e 19h</div>
     </div>
     <div class="auto-agent refresh">
-      <div class="auto-dot ativo"></div>
+      <div class="auto-dot" id="dot-refresh"></div>
       <div class="auto-info">
         <div class="auto-nome">REFRESH</div>
         <div class="auto-papel">Atualiza&ccedil;&atilde;o de dados do painel</div>
       </div>
-      <div class="auto-freq">a cada 30 min</div>
+      <div class="auto-freq" id="freq-refresh">a cada 30 min</div>
     </div>
   </div>
   <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para indicadores em tempo real via KIRA, use <a href="../indicadores-v2.html">Indicadores</a> na nav acima. Bases distintas, métricas complementares.</div>
@@ -2122,6 +2119,7 @@ function initDashboard() {
   renderAtRiskTop();
   renderBaldes();
   renderOperacional();
+  renderAutoAgentHealth();
   initSideNav();
   initGlobalFilter();
   // DOMContentLoaded-dependent inits
@@ -3918,6 +3916,73 @@ function renderBaldes() {
   const critEl = document.getElementById('baldes-summary-crit');
   if (totEl) totEl.textContent = totalPend;
   if (critEl) critEl.textContent = totalCrit;
+}
+
+// ============== AUTO-AGENTS HEARTBEAT (FASE 7.4) ==============
+// Dot.ativo só quando heartbeat dentro do limite. Atrasado entre limite e 2x. Morto após 2x.
+function renderAutoAgentHealth() {
+  function classifyAge(ageH, limitH) {
+    if (ageH == null || ageH < 0) return { cls: 'morto', label: 'sem dados' };
+    if (ageH <= limitH) return { cls: 'ativo', label: 'no horário' };
+    if (ageH <= limitH * 2) return { cls: 'atrasado', label: 'atrasado' };
+    return { cls: 'morto', label: 'parado' };
+  }
+  function applyDot(id, ageH, limitH, freqId) {
+    var dot = document.getElementById(id);
+    if (!dot) return;
+    var c = classifyAge(ageH, limitH);
+    dot.classList.remove('ativo', 'atrasado', 'morto');
+    dot.classList.add(c.cls);
+    dot.title = c.label + (ageH != null ? ' · há ' + Math.round(ageH * 10) / 10 + 'h' : '');
+  }
+
+  // REFRESH: usa headline.atualizado_em (limite 1h, freq 30min)
+  fetch('dados/headline.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(h){
+      if (h && h.atualizado_em) {
+        var ageH = (Date.now() - new Date(h.atualizado_em).getTime()) / 3600000;
+        applyDot('dot-refresh', ageH, 1);
+      } else applyDot('dot-refresh', null, 1);
+    }).catch(function(){ applyDot('dot-refresh', null, 1); });
+
+  // ARGOS: usa gerado_em mais recente entre cruz-silenciosas/cruz-ocorrencias (limite 6h)
+  Promise.all([
+    fetch('dados/cruz-silenciosas.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
+    fetch('dados/cruz-ocorrencias.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+  ]).then(function(arr){
+    var datas = [];
+    if (arr[0] && arr[0].gerado_em) datas.push(arr[0].gerado_em);
+    if (arr[1] && (arr[1].geradoEm || arr[1].gerado_em)) datas.push(arr[1].geradoEm || arr[1].gerado_em);
+    if (datas.length) {
+      datas.sort();
+      var ageH = (Date.now() - new Date(datas[datas.length - 1]).getTime()) / 3600000;
+      applyDot('dot-argos', ageH, 6);
+    } else applyDot('dot-argos', null, 6);
+  });
+
+  // ATENA: tenta arquivo de hoje em atena/, retrocede 7 dias (limite 24h)
+  (async function(){
+    var hoje = new Date();
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(hoje.getTime() - i * 86400000).toISOString().slice(0, 10);
+      try {
+        var r = await fetch('dados/atena/' + d + '-insights.json?t=' + Date.now(), { method: 'HEAD' });
+        if (r.ok) {
+          var lm = r.headers.get('Last-Modified');
+          if (lm) {
+            var ageH = (Date.now() - new Date(lm).getTime()) / 3600000;
+            applyDot('dot-atena', ageH, 24);
+            return;
+          }
+          // sem Last-Modified mas existe → assume agora
+          applyDot('dot-atena', i * 24, 24);
+          return;
+        }
+      } catch(e) {}
+    }
+    applyDot('dot-atena', null, 24);
+  })();
 }
 
 // ============== OPERACIONAL (FASE 6.B — silêncio + cobertura via cruz-silenciosas.json) ==============

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -21,7 +21,7 @@ a:hover{text-decoration:underline}
 
 /* DOCK ECOSSISTEMA (esquerda) */
 .dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
-@media(max-width:900px){.dock{display:none}}
+/* FASE 7.2 - dock horizontal mobile (em vez de display:none) */ @media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
 .dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
 .dock-item svg{width:18px;height:18px}
 .dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08);text-decoration:none}
@@ -145,7 +145,7 @@ a:hover{text-decoration:underline}
 <header class="header">
   <div class="header-brand">
     <div>
-      <div class="logo-text">monofloor</div>
+      <a href="../hub.html" class="logo-text" style="text-decoration:none;color:inherit" title="Voltar ao hub">monofloor</a>
       <div class="logo-sub">Funil</div>
     </div>
   </div>

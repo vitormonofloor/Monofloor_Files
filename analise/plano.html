@@ -131,7 +131,7 @@
   <h1>Plano de Trabalho <span>· Central de Qualidade Monofloor</span></h1>
   <div class="sub">Mapa único das etapas, cruzamentos entregues e backlog de hipóteses a testar. Atualizado a cada passo concluído.</div>
   <div class="meta">
-    <span>Última atualização: <b>2026-04-15</b></span>
+    <span>Última atualização: <b>15/04/2026</b></span>
     <span>Etapa atual: <b>Concluído — 4 etapas finalizadas</b></span>
     <span>Cruzamentos entregues: <b>23</b></span>
     <span>Backlog: <b>0</b></span>
@@ -157,7 +157,7 @@
         <div class="desc">Inventário completo: ~60 campos, 12 status, 27 fases, datas, pessoas, atributos físicos, geografia, eventos, WhatsApp, checklist allFields, schema fantasma, anomalias.</div>
         <div class="files"><code>modelagem.html#campos</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
 
     <div class="task done">
@@ -167,7 +167,7 @@
         <div class="desc">Veredito byte-a-byte: espelho client-side de /api/projects. Descoberta: /api/escalacao-diaria, polling 10s WhatsApp, Kira decodificada.</div>
         <div class="files"><code>modelagem.html#hoje</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
 
     <div class="task done">
@@ -177,7 +177,7 @@
         <div class="desc">Backend SEPARADO em planejamento.monofloor.cloud. 2 schemas de equipes incompatíveis. Pipeline COMBINADO com 21+ etapas. Gap total de capacidade produtiva.</div>
         <div class="files"><code>modelagem.html#planejamento</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
   </div>
 </section>
@@ -199,7 +199,7 @@
       <div class="check">✓</div>
       <div class="body">
         <div class="title">#2 Extração massiva pipefyCreatedAt (1.028 obras, 95s)</div>
-        <div class="desc">Achado grande: Pipefy da Monofloor começou em 2025-06-04 — não há histórico anterior. Idade máxima possível ~315 dias. 51,46% cobertura na extração inicial.</div>
+        <div class="desc">Achado grande: Pipefy da Monofloor começou em 04/06/2025 — não há histórico anterior. Idade máxima possível ~315 dias. 51,46% cobertura na extração inicial.</div>
         <div class="files"><code>dados/pipefy-temporal.json</code> <code>dados/details/*.json (1028)</code></div>
       </div>
       <div class="meta">c2</div>
@@ -426,7 +426,7 @@
       <li><b>Bus factor = 2:</b> Luana + Wesley = 85% das ativas, 91% das 180+. Wesley concentra 62,5% dos zumbi; Luana concentra 80% da cauda longa de AGEND. VT.</li>
       <li><b>Cobertura de comunicação:</b> 43% das ativas nunca tiveram resumo WhatsApp; alertas perderam discriminação (117/118 têm alerta).</li>
       <li><b>Taxonomia quebrada:</b> 67% das ocorrências em "Outros"; 41,8% das obras sem cor real; alertas em texto livre escapam às regex.</li>
-      <li><b>Pipefy começou em 2025-06-04</b> — idade máxima possível = 315 dias. Histórico anterior precisa de fonte externa.</li>
+      <li><b>Pipefy começou em 04/06/2025</b> — idade máxima possível = 315 dias. Histórico anterior precisa de fonte externa.</li>
     </ul>
   </div>
 </section>
@@ -448,7 +448,7 @@
         <div class="desc">208 obras ativas em tabela única com 10 flags consolidados (zumbi, reparo, órfã, sem cor, sem WA, cauda VT, atraso grave, alertas, atRisk, escal. anômala). Filtros funcionais (busca, status, fase, consultor, UF, idade, toggles). Ordenação por coluna. Linha expansível com diagnóstico atRisk. <b>163/208 com pelo menos 1 flag</b>; 5 críticas com 4 flags simultâneas (LA PASTINA, ELIZETE, ANTONIO PORTO, Roberto Murakami, LUIS FERNANDO).</div>
         <div class="files"><code>obras-mapa.html</code> <code>build-mapa.ps1</code> <code>mapa-template.html</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
     <div class="task done">
       <div class="check">✓</div>
@@ -457,7 +457,7 @@
         <div class="desc">Workflow <code>refresh.yml</code> dispara a cada 30 min. <b>Refresh leve</b>: atualiza data.json com 5 listas em ~5s. <b>Refresh pesado</b> (1ª vez do dia): baixa details das ativas em paralelo, regenera painel-temporal, salva snapshot do dia, regera obras-mapa.html. Atraso máximo: 30 min. Custo: zero. Manual: botão "Run workflow" no Actions.</div>
         <div class="files"><code>.github/workflows/refresh.yml</code> <code>analise/refresh.sh</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
     <div class="task done">
       <div class="check">✓</div>
@@ -466,7 +466,7 @@
         <div class="desc">A partir de hoje, 1 JSON por dia em <code>analise/dados/snapshots/YYYY-MM-DD.json</code> com obras ativas (id, cliente, status, fase, consultor, idade). Em 7 dias já temos histórico de transição de fase que a API não dá. Em 30 dias dá pra medir adiamentos, tempo médio em cada fase, taxa de movimentação.</div>
         <div class="files"><code>analise/dados/snapshots/</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
   </div>
 </section>
@@ -481,7 +481,7 @@
         <div class="desc">Página única scrollável. Hero com índice de saúde (58/100, zona Atenção). 4 perguntas da diretoria + 4 achados estruturais (organograma sombra, cronograma fossilizado, cluster administrativo, cauda VT). Top 30 obras antigas. Dados embutidos (sem CORS). Atualizado a cada 30 min via refresh.yml.</div>
         <div class="files"><code>dashboard.html</code></div>
       </div>
-      <div class="meta">2026-04-15</div>
+      <div class="meta">15/04/2026</div>
     </div>
   </div>
 </section>
