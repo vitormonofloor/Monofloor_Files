@@ -1,18 +1,30 @@
 {
   "olho": "ux",
-  "executado_em": "2026-04-27T11:40:47Z",
+  "executado_em": "2026-04-27T22:53:48Z",
   "achados": [
     {
-      "severidade": "baixa",
-      "titulo": "31 botoes sem aria-label",
-      "descricao": "Botoes interativos devem ter aria-label para acessibilidade.",
-      "evidencia": "<button type=\"button\" class=\"q4-est rodando\" onclick=\"openQ4Modal('rodando')\" title=\"Ver lista de obras RODANDO\"> "
+      "severidade": "media",
+      "titulo": "1 IDs duplicados no HTML",
+      "descricao": "IDs HTML devem ser unicos. Duplicatas podem causar bugs no JS.",
+      "evidencia": "dyn-total-obras (3x)"
     },
     {
       "severidade": "baixa",
-      "titulo": "11 estilos inline longos (>80 chars)",
+      "titulo": "32 botoes sem aria-label",
+      "descricao": "Botoes interativos devem ter aria-label para acessibilidade.",
+      "evidencia": "<button id=\"gf-clear\" class=\"gf-clear\" hidden>&times; Limpar</button>"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "29 estilos inline longos (>80 chars)",
       "descricao": "Estilos inline extensos dificultam manutencao. Considerar mover para CSS.",
-      "evidencia": "style=\"height:1px;background:linear-gradient(90deg,transparent,#e0d8cc,transparent);margin:28px 0\"..."
+      "evidencia": "style=\"background:#f6eaea;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px\"..."
+    },
+    {
+      "severidade": "media",
+      "titulo": "Dashboard com 283 KB",
+      "descricao": "Arquivo monolitico com 283 KB. Paginas acima de 250 KB impactam tempo de carregamento.",
+      "evidencia": "dashboard.html = 282.6 KB, 5290 linhas"
     },
     {
       "severidade": "baixa",
@@ -22,21 +34,21 @@
     },
     {
       "severidade": "baixa",
-      "titulo": "11 chamadas console.* no codigo",
+      "titulo": "15 chamadas console.* no codigo",
       "descricao": "Console.log residuais devem ser removidos em producao.",
-      "evidencia": "11 ocorrencias"
+      "evidencia": "15 ocorrencias"
     }
   ],
   "metricas": {
-    "tamanho_kb": 246.7,
-    "linhas": 4636,
-    "ids_unicos": 160,
-    "ids_duplicados": 0,
+    "tamanho_kb": 282.6,
+    "linhas": 5290,
+    "ids_unicos": 195,
+    "ids_duplicados": 1,
     "scripts_inline": 2,
     "todos_fixme": 0,
     "imagens_total": 0,
     "imagens_sem_alt": 0,
-    "console_logs": 11
+    "console_logs": 15
   },
-  "comparativo_vs_anterior": "achados: 4->4 (+0), alta: 0->0 (+0)"
+  "comparativo_vs_anterior": "achados: 4->6 (+2), alta: 0->0 (+0)"
 }
