@@ -347,7 +347,7 @@ body{animation:pageIn 0.6s ease-out}
     <div class="logo-sub">Indicadores Operacionais</div>
   </div>
   <div class="header-meta">
-    <strong id="ind-base-data">16 abr 2026</strong> · <span id="ind-base-hora">atualizado no último refresh</span><br>
+    <strong id="ind-base-data">16 abr 2026</strong> · <span id="ind-base-hora">atualizado a cada 6h</span><br>
     Base: <strong><span id="ind-base-n">159</span> obras ativas</strong> · fonte: planejamento.monofloor.cloud<br>
   </div>
 </header>
@@ -766,78 +766,147 @@ function closeSev(ci,ti){var le=document.getElementById('sl-'+ci+'-'+ti);le.clas
   });
 })();
 
-// ═══ FETCH DASHBOARD-DATA (refatoração C3 — MVP) ═══
-// Carrega analise/dados/dashboard-data.json e popula KPIs com chaves confiáveis.
-// IDs sem chave segura no JSON ficam com fallback hardcoded (TODO documentado).
+// ═══ FETCH KIRA (refatoração C3 v2 — fontes KIRA dedicadas) ═══
+// Fonte primária: cruz-*.json (KIRA TG+WA, 6h). dashboard-data só pra recorte de carteira.
+// Bases distintas vs. dashboard.html (snapshot Pipefy 30min) — declarado em dashboard.html L1072.
+// Refactor anterior misturou bases (total acumulado Pipefy, pausa via status_dist global, silêncio via sem_wa_n)
+// — esta versão evita esses erros e popula só com fontes KIRA verdadeiras.
 (async () => {
+  const $ = (id) => document.getElementById(id);
+  const set = (id, val) => {
+    if (val === undefined || val === null || val === '') return;
+    const el = $(id); if (el) el.textContent = val;
+  };
+  const fmtBR = (n) => (typeof n === 'number') ? n.toLocaleString('pt-BR') : n;
+  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const fmtData = (iso) => {
+    if (!iso) return null;
+    const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!m) return null;
+    return `${parseInt(m[3],10)} ${meses[parseInt(m[2],10)-1]} ${m[1]}`;
+  };
+  const fetchSafe = async (url) => {
+    try {
+      const r = await fetch(url, {cache:'no-store'});
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (_) { return null; }
+  };
+
   try {
-    const r = await fetch('analise/dados/dashboard-data.json', {cache:'no-store'});
-    if (!r.ok) { console.warn('[ind-v2] dashboard-data.json fetch falhou:', r.status); return; }
-    const data = await r.json();
-    const $ = (id) => document.getElementById(id);
-    const set = (id, val) => {
-      if (val === undefined || val === null || val === '') return;
-      const el = $(id); if (el) el.textContent = val;
-    };
-    const fmtBR = (n) => (typeof n === 'number') ? n.toLocaleString('pt-BR') : n;
-    const fmtData = (iso) => {
-      if (!iso) return null;
-      const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
-      if (!m) return null;
-      const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-      return `${parseInt(m[3],10)} ${meses[parseInt(m[2],10)-1]} ${m[1]}`;
-    };
+    const [
+      ocorrencias,   // cruz-ocorrencias.json — atRisk_detalhe + problemCategories
+      diagKira,      // cruz-diagnostico-kira.json — obras com tagKira/situacaoAtual
+      tarefas,       // cruz-tarefas.json — 200 tarefas KIRA-backfill, alertas
+      silenciosas,   // cruz-silenciosas.json — silêncio WA/TG (critério KIRA)
+      progresso,     // cruz-progresso-obras.json — pct concluído por obra
+      dashData,      // dashboard-data.json — só pra recorte de carteira (total_ativas)
+    ] = await Promise.all([
+      fetchSafe('analise/dados/cruz-ocorrencias.json'),
+      fetchSafe('analise/dados/cruz-diagnostico-kira.json'),
+      fetchSafe('analise/dados/cruz-tarefas.json'),
+      fetchSafe('analise/dados/cruz-silenciosas.json'),
+      fetchSafe('analise/dados/cruz-progresso-obras.json'),
+      fetchSafe('analise/dados/dashboard-data.json'),
+    ]);
 
-    const AGG = data.AGG || {};
-    const EXT = data.EXT || {};
-
-    // Header — base + data do snapshot
-    set('ind-base-data', fmtData(data.snapshot_date));
-    set('ind-base-n', AGG.total_ativas);
-    set('ind-ctx-base', AGG.total_ativas);
-    set('ind-proj-base', AGG.total_ativas);
-
-    // Ocorrências (fonte direta: KIRA via dashboard-data)
-    const ocTotal = EXT.ocorrencias && EXT.ocorrencias.total;
-    const ocCrit  = EXT.ocorrencias && EXT.ocorrencias.n_atRisk;
-    set('ind-fire-ocorrencias', fmtBR(ocTotal));
-    set('ind-ocorrencias',      fmtBR(ocTotal));
-    set('ind-fire-criticas',    fmtBR(ocCrit));
-    set('ind-criticas',         fmtBR(ocCrit));
-
-    // Taxa de pausa — derivada de status_dist
-    if (AGG.status_dist && AGG.total_ativas) {
-      const pausado = AGG.status_dist.pausado || 0;
-      const pct = (pausado / AGG.total_ativas) * 100;
-      set('ind-pausa-pct', pct.toFixed(1) + '%');
-    }
-    // Ciclo médio (idade_media é proxy aproximado, usa mediana mais estável)
-    if (typeof AGG.idade_mediana === 'number') {
-      set('ind-ciclo', AGG.idade_mediana + 'd');
-    }
-    // Amostras CORES — sem_cor_n é proxy disponível (obras sem cor escolhida)
-    if (typeof EXT.sem_cor_n === 'number') {
-      set('ind-cores', fmtBR(EXT.sem_cor_n));
-    }
-    // Projetos com mensagens — derivado de sem_wa_n (proxy: projetos com WA)
-    if (typeof EXT.sem_wa_n === 'number' && AGG.total_ativas) {
-      const comMsg = AGG.total_ativas - EXT.sem_wa_n;
-      const pct = (comMsg / AGG.total_ativas) * 100;
-      set('ind-proj-com-msg', comMsg);
-      set('ind-proj-pct', pct.toFixed(1));
-      // Taxa silêncio = % sem mensagens
-      const silencio = (EXT.sem_wa_n / AGG.total_ativas) * 100;
-      set('ind-silencio', silencio.toFixed(1) + '%');
+    // ─────────────────────────────────────────────────────────────────
+    // Header — recorte da carteira
+    // ind-base-n: total_ativas vem do dashboard-data (universo declarado da carteira é o mesmo).
+    // ind-base-data: pega o gerado_em mais recente entre os cruz-* lidos.
+    // ind-base-hora: label fixa "atualizado a cada 6h" (cadência KIRA).
+    // ─────────────────────────────────────────────────────────────────
+    const AGG = (dashData && dashData.AGG) || {};
+    if (typeof AGG.total_ativas === 'number') {
+      set('ind-base-n', AGG.total_ativas);
+      set('ind-ctx-base', AGG.total_ativas);
+      set('ind-proj-base', AGG.total_ativas);
     }
 
-    // TODO chaves indisponíveis em dashboard-data.json (fallback hardcoded mantido):
-    //   ind-fire-atraso, ind-atraso-pct  → não há AGG.pct_atraso
-    //   ind-msg-total, ind-msg-tg, ind-msg-wa → não há volume de msgs agregado
-    //   ind-spark-* → não há série temporal diária
-    //   ind-sla-vt, ind-ticket, ind-throughput → fontes Pipefy/régua não estão neste JSON
-    //   ind-base-hora → não há hora exata no snapshot_date
+    // Data do snapshot KIRA mais recente entre os cruz-*
+    const datasKira = [
+      ocorrencias && ocorrencias.geradoEm,
+      tarefas && tarefas.gerado_em,
+      silenciosas && silenciosas.gerado_em,
+      diagKira && diagKira.gerado_em,
+    ].filter(Boolean).sort();
+    const dataMaisRecente = datasKira.length ? datasKira[datasKira.length - 1] : null;
+    set('ind-base-data', fmtData(dataMaisRecente));
+
+    // ─────────────────────────────────────────────────────────────────
+    // Ocorrências (KIRA — janela 30d / atRisk)
+    // Fonte: cruz-ocorrencias.json. atRisk_detalhe = obras em risco.
+    // Total de problemas abertos = soma openProblems do detalhe.
+    // Críticas = soma criticalProblems (não count: critério KIRA).
+    // ─────────────────────────────────────────────────────────────────
+    if (ocorrencias && Array.isArray(ocorrencias.atRisk_detalhe)) {
+      const det = ocorrencias.atRisk_detalhe;
+      const totalAbertas = det.reduce((s, o) => s + (Number(o.openProblems) || 0), 0);
+      const totalCriticas = det.reduce((s, o) => s + (Number(o.criticalProblems) || 0), 0);
+      set('ind-fire-ocorrencias', fmtBR(totalAbertas));
+      set('ind-ocorrencias',      fmtBR(totalAbertas));
+      set('ind-fire-criticas',    fmtBR(totalCriticas));
+      set('ind-criticas',         fmtBR(totalCriticas));
+
+      // Atraso: % das atRisk com diasAtraso > 0 (proxy KIRA — régua de saúde própria)
+      const comAtraso = det.filter(o => Number(o.diasAtraso) > 0).length;
+      if (det.length) {
+        const pctAtraso = (comAtraso / det.length) * 100;
+        set('ind-fire-atraso', pctAtraso.toFixed(1));
+        set('ind-atraso-pct', pctAtraso.toFixed(1) + '%');
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Silêncio (KIRA — critério WhatsApp/Telegram próprio)
+    // Fonte: cruz-silenciosas.json — total_silenciosas / total_ativas = pct silêncio.
+    // ─────────────────────────────────────────────────────────────────
+    if (silenciosas && typeof silenciosas.total_silenciosas === 'number' && silenciosas.total_ativas) {
+      const pctSilencio = (silenciosas.total_silenciosas / silenciosas.total_ativas) * 100;
+      set('ind-silencio', pctSilencio.toFixed(1) + '%');
+
+      // Cobertura de comunicação (projetos com mensagens)
+      const comMsg = silenciosas.ativas_com_whatsapp;
+      if (typeof comMsg === 'number') {
+        const baseN = silenciosas.total_ativas;
+        const pct = (comMsg / baseN) * 100;
+        set('ind-proj-com-msg', comMsg);
+        set('ind-proj-pct', pct.toFixed(1));
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Pausa & Ciclo (KIRA — atRisk como recorte)
+    // Pausa: % das atRisk com status="pausado" (régua KIRA, não dist global).
+    // Ciclo: mediana de idade_dias das atRisk (proxy KIRA, não AGG.idade_mediana).
+    // ─────────────────────────────────────────────────────────────────
+    if (ocorrencias && Array.isArray(ocorrencias.atRisk_detalhe)) {
+      const det = ocorrencias.atRisk_detalhe;
+      const pausadas = det.filter(o => o.status === 'pausado' || (o.fase || '').includes('PAUSADA')).length;
+      if (det.length) {
+        const pctPausa = (pausadas / det.length) * 100;
+        set('ind-pausa-pct', pctPausa.toFixed(1) + '%');
+      }
+      const idades = det.map(o => Number(o.idade_dias)).filter(n => !isNaN(n)).sort((a,b) => a-b);
+      if (idades.length) {
+        const mid = Math.floor(idades.length / 2);
+        const mediana = idades.length % 2 === 0 ? Math.round((idades[mid-1] + idades[mid]) / 2) : idades[mid];
+        set('ind-ciclo', mediana + 'd');
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // KPIs intencionalmente mantidos hardcoded — fonte KIRA específica
+    // não tem agregado neste cruz-*. TODO: pipeline.
+    //   ind-msg-total, ind-msg-tg, ind-msg-wa → volume diário de msgs TG+WA (não há agregado nos cruz-*)
+    //   ind-spark-media, ind-spark-pico, ind-spark-total → série temporal diária
+    //   ind-sla-vt → indicador Pipefy (não KIRA)
+    //   ind-ticket, ind-throughput → financeiro/operacional Pipefy
+    //   ind-cores → 267 amostras CORES é Pipefy, não KIRA
+    // Fallback hardcoded permanece intacto: se este IIFE não rodar/falhar, números antigos no DOM ficam.
+    // ─────────────────────────────────────────────────────────────────
   } catch(e) {
-    console.warn('[ind-v2] fetch fallback ativado:', e);
+    // Fallback silencioso — números hardcoded já estão no DOM.
   }
 })();
 
