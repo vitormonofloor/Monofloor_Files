@@ -587,9 +587,24 @@ alerta["resumo"]["total"] = len(alerta["eventos"])
 alerta["resumo"]["positivos"] = sum(1 for e in alerta["eventos"] if e["severidade"] == "info")
 alerta["resumo"]["negativos"] = alerta["resumo"]["total"] - alerta["resumo"]["positivos"]
 
+# VEREDITO — status semantico: distingue "sem mudancas" (esperado) de "vazio sem motivo claro"
+if not alerta["eventos"]:
+    if mud is None:
+        alerta["status"] = "sem_mudancas"
+        alerta["status_label"] = "Sem mudanças desde a varredura anterior"
+    else:
+        alerta["status"] = "estavel"
+        alerta["status_label"] = "Estado estável (mudanças detectadas mas não notáveis)"
+elif alerta["resumo"]["negativos"] > 0:
+    alerta["status"] = "atencao"
+    alerta["status_label"] = f"{alerta['resumo']['negativos']} alertas de piora detectados"
+else:
+    alerta["status"] = "positivo"
+    alerta["status_label"] = f"{alerta['resumo']['positivos']} eventos positivos no período"
+
 with open(os.path.join(alerta_dir, f"{TODAY}.json"), "w") as f:
     json.dump(alerta, f, ensure_ascii=False, indent=2)
-print(f"  alertas/{TODAY}.json: {alerta['resumo']['total']} eventos ({alerta['resumo']['positivos']} positivos, {alerta['resumo']['negativos']} negativos)")
+print(f"  alertas/{TODAY}.json: {alerta['resumo']['total']} eventos · status={alerta['status']}")
 PYEOF
 
 # ─── Q4 — cruz-frescor.json ───

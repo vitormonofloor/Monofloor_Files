@@ -233,9 +233,9 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
     <div class="brand-tagline">Central de Qualidade</div>
   </div>
 
-  <!-- FASE 2.1 — SCORE PILL: única âncora numérica no above-the-fold -->
+  <!-- FASE 2.1 — SCORE PILL · VEREDITO: classe .loading marca placeholder visualmente -->
   <div class="score-pill-wrap">
-    <a href="analise/atena.html" class="score-pill" id="hub-score-pill" onclick="event.preventDefault();goTo('atena','analise/atena.html')">
+    <a href="analise/atena.html" class="score-pill loading" id="hub-score-pill" onclick="event.preventDefault();goTo('atena','analise/atena.html')">
       <span class="sp-num" id="hub-score-pill-num">—</span>
       <span class="sp-meta">
         <span class="sp-lbl">Score de saúde</span>
@@ -461,7 +461,7 @@ function goTo(dest, url) {
         var pSub = document.getElementById('hub-score-pill-sub');
         if (pill && pNum) {
           pNum.textContent = h.score;
-          pill.classList.remove('green','amber','red');
+          pill.classList.remove('green','amber','red','loading');
           if (h.score < 50) pill.classList.add('red');
           else if (h.score < 70) pill.classList.add('amber');
           else pill.classList.add('green');

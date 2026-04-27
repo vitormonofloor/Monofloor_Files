@@ -60,7 +60,8 @@ a:hover { text-decoration: underline; }
 .brief-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
 .brief-kpi{background:#fff;border:1px solid #ede6dc;border-radius:8px;padding:14px 16px;position:relative;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
 .brief-kpi:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(42,37,32,0.06)}
-.brief-kpi::after{content:'\2197';position:absolute;top:8px;right:10px;font-size:11px;color:#c8bfb4;opacity:0;transition:opacity .15s ease}
+/* VEREDITO F1.2 - opacity baseline 0.35 garante affordance em mobile/touch */
+.brief-kpi::after{content:'\2197';position:absolute;top:8px;right:10px;font-size:11px;color:#b8a080;opacity:0.35;transition:opacity .15s ease}
 .brief-kpi:hover::after{opacity:1}
 .brief-kpi.alert{border-left:3px solid #c45a5a}
 .brief-kpi.warn{border-left:3px solid #b89a4a}
