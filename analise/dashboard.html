@@ -511,6 +511,13 @@
   .q4-modal-tbl td.num{text-align:right;font-family:'JetBrains Mono',monospace;color:#b8a080}
   .q4-modal-tbl tr:hover td{background:#f5f0e8}
   .q4-modal-tbl .pill{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;text-transform:uppercase;letter-spacing:0.05em;background:#e8e0d4;color:#8a7e72}
+  /* FASE 3.1 — drill-down e CTAs por obra */
+  .q4-cta{white-space:nowrap;display:flex;gap:4px;flex-wrap:wrap}
+  .q4-cta-btn{font-size:9px;letter-spacing:.05em;text-transform:uppercase;font-weight:500;padding:4px 8px;border-radius:3px;border:1px solid #c4b5a0;background:#fff;color:#6b6156;text-decoration:none;font-family:inherit;white-space:nowrap}
+  .q4-cta-btn:hover{background:#f0ebe3;border-color:#b8a080;color:#3a3530}
+  .q4-cta-btn.primary{background:#b8a080;color:#fff;border-color:#b8a080}
+  .q4-cta-btn.primary:hover{background:#9a8060}
+  .q4-row-clickable{cursor:default}
   .q4-resp{font-size:11px;line-height:1.4}
   .q4-resp .escalada{color:#3d8a5a;font-weight:500}
   .q4-resp .op{color:#b8a080;font-weight:500}
@@ -3088,14 +3095,30 @@ function q4ModalRender(grupoId, obras){
     } else {
       respHtml = '<span class="vazio">sem responsável</span>';
     }
-    return '<tr>'+
+    // FASE 3.1 — linha clicável com drill-down para timeline-lab via deep-link
+    var idAttr = o.id ? ' data-obra-id="'+q4EscHtml(o.id)+'"' : '';
+    var pipefyAttr = o.pipefyCardId ? ' data-pipefy-id="'+q4EscHtml(o.pipefyCardId)+'"' : '';
+    return '<tr class="q4-row-clickable"'+idAttr+pipefyAttr+'>'+
       '<td>'+q4EscHtml(o.cliente||'')+'</td>'+
       '<td>'+q4EscHtml(o.cidade||'')+'</td>'+
       '<td><span class="pill">'+q4EscHtml(statusHumano(o.status||''))+'</span></td>'+
       '<td class="num">'+(o.m2 ? o.m2.toLocaleString('pt-BR',{maximumFractionDigits:0}) : '—')+'</td>'+
       '<td class="q4-resp">'+respHtml+'</td>'+
+      '<td class="q4-cta">'+
+        (o.id ? '<a href="../analise/labs.html?tab=jornada&obraId='+encodeURIComponent(o.id)+'" target="_blank" rel="noopener" class="q4-cta-btn" onclick="event.stopPropagation()">jornada</a>' : '')+
+        (o.pipefyCardId ? '<a href="https://app.pipefy.com/open-cards/'+encodeURIComponent(o.pipefyCardId)+'" target="_blank" rel="noopener" class="q4-cta-btn primary" onclick="event.stopPropagation()">pipefy</a>' : '')+
+      '</td>'+
     '</tr>';
   }).join('');
+
+  // FASE 3.1 — Adiciona header "Ações" se ainda não tem
+  var thead = modal.querySelector('thead tr');
+  if (thead && !thead.querySelector('th.q4-cta-th')) {
+    var th = document.createElement('th');
+    th.className = 'q4-cta-th';
+    th.textContent = 'Ações';
+    thead.appendChild(th);
+  }
 }
 
 function closeQ4Modal(){

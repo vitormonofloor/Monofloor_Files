@@ -36,6 +36,17 @@
   .labs-tab.active::after { transform: scaleX(1); }
   @media(max-width:720px) { .labs-tab { padding: 10px 12px; font-size: 9px; } }
 
+  /* FASE 3.6 — hero descritivo com 5 cards */
+  .labs-hero { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 12px 0 20px; }
+  @media(max-width:980px) { .labs-hero { grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
+  .lh-card { padding: 14px 16px; background: #ffffff; border: 1px solid #e8e0d4; border-left: 3px solid #b8a080; border-radius: 6px; cursor: pointer; transition: all .2s; text-align: left; font-family: inherit; color: inherit; display: flex; flex-direction: column; gap: 4px; min-height: 96px; }
+  .lh-card:hover { border-color: #b8a080; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(42,37,32,0.06); }
+  .lh-card.active { background: #f7f1e8; border-left-color: #6b4f30; }
+  .lh-cap { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #b8a080; letter-spacing: 0.1em; text-transform: uppercase; }
+  .lh-title { font-size: 12px; font-weight: 600; color: #2a2520; line-height: 1.3; }
+  .lh-q { font-size: 10px; color: #8a7e72; line-height: 1.4; font-style: italic; margin-top: auto; }
+
   .labs-content { position: relative; }
   .labs-frame { width: 100%; border: none; height: calc(100vh - 140px); min-height: 600px; display: none; background: transparent; border-radius: 0 0 8px 8px; }
   .labs-frame.active { display: block; }
@@ -82,6 +93,35 @@
       <div class="labs-logo-text">monofloor</div>
       <div class="labs-logo-sub">Laboratório de Análises</div>
     </div>
+  </div>
+
+  <!-- FASE 3.6 — hero com 5 cards descritivos -->
+  <div class="labs-hero">
+    <button class="lh-card active" data-tab="jornada" type="button">
+      <div class="lh-cap">Cap 1</div>
+      <div class="lh-title">Jornada da obra</div>
+      <div class="lh-q">qual o status real de cada obra?</div>
+    </button>
+    <button class="lh-card" data-tab="bloqueadores" type="button">
+      <div class="lh-cap">Cap 2</div>
+      <div class="lh-title">Bloqueadores</div>
+      <div class="lh-q">o que mais trava o avanço?</div>
+    </button>
+    <button class="lh-card" data-tab="campo" type="button">
+      <div class="lh-cap">Cap 3</div>
+      <div class="lh-title">Campo</div>
+      <div class="lh-q">quem reporta · quem some?</div>
+    </button>
+    <button class="lh-card" data-tab="escopo" type="button">
+      <div class="lh-cap">Cap 4</div>
+      <div class="lh-title">Escopo</div>
+      <div class="lh-q">materiais e ambientes por obra</div>
+    </button>
+    <button class="lh-card" data-tab="funil" type="button">
+      <div class="lh-cap">Cap 5</div>
+      <div class="lh-title">Funil 28 fases</div>
+      <div class="lh-q">onde a obra se perde no fluxo?</div>
+    </button>
   </div>
 
   <!-- 5 ABAS -->
@@ -136,26 +176,71 @@
 </div>
 
 <script>
-// Tab switching com lazy loading de iframes
-document.querySelectorAll('.labs-tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    // Remove active de todas as tabs e frames
-    document.querySelectorAll('.labs-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.labs-frame').forEach(function(f) { f.classList.remove('active'); });
+// FASE 3.5 — deep-link: ?tab=funil ou #obraId=xxx&tab=jornada
+// Permite navegação direta de qualquer painel: labs.html?tab=jornada&obraId=abc123
+function getDeepLink() {
+  var qs = new URLSearchParams(location.search);
+  var hash = location.hash.replace(/^#/, '');
+  var hashParams = new URLSearchParams(hash);
+  return {
+    tab: qs.get('tab') || hashParams.get('tab') || null,
+    obraId: qs.get('obraId') || hashParams.get('obraId') || null
+  };
+}
 
-    // Ativa a tab clicada
-    tab.classList.add('active');
-    var frameId = 'frame-' + tab.dataset.tab;
-    var frame = document.getElementById(frameId);
-    if (frame) {
-      frame.classList.add('active');
-      // Lazy load: se tem data-src mas não src real, carregar agora
-      if (frame.dataset.src && !frame.getAttribute('src')) {
-        frame.src = frame.dataset.src;
+function activateTab(name) {
+  if (!name) return false;
+  var validTabs = ['jornada','bloqueadores','campo','escopo','funil'];
+  if (validTabs.indexOf(name) < 0) return false;
+
+  // sincroniza hero cards + abas + frames
+  document.querySelectorAll('.lh-card').forEach(function(c){ c.classList.toggle('active', c.dataset.tab === name); });
+  document.querySelectorAll('.labs-tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab === name); });
+  document.querySelectorAll('.labs-frame').forEach(function(f){ f.classList.remove('active'); });
+
+  var frame = document.getElementById('frame-' + name);
+  if (frame) {
+    frame.classList.add('active');
+    if (frame.dataset.src && !frame.getAttribute('src')) {
+      // se houver obraId, anexa como query (cada lab pode ler quando suportar)
+      var src = frame.dataset.src;
+      var dl = getDeepLink();
+      if (dl.obraId) {
+        src += (src.indexOf('?') >= 0 ? '&' : '?') + 'obraId=' + encodeURIComponent(dl.obraId);
       }
+      frame.src = src;
     }
+  }
+  return true;
+}
+
+// hero cards e abas usam o mesmo handler
+function bindTabClicks(selector) {
+  document.querySelectorAll(selector).forEach(function(el){
+    el.addEventListener('click', function(){ activateTab(el.dataset.tab); });
   });
-});
+}
+bindTabClicks('.labs-tab');
+bindTabClicks('.lh-card');
+
+// Inicialização: respeita deep-link na URL
+(function initFromURL(){
+  var dl = getDeepLink();
+  if (dl.tab) {
+    activateTab(dl.tab);
+  } else if (dl.obraId) {
+    // tem obraId mas não tab → assume jornada (cap 1)
+    activateTab('jornada');
+  }
+  // Se a aba inicial é jornada (default), e veio com obraId, garante que iframe recebe
+  if (dl.obraId && document.getElementById('frame-jornada').classList.contains('active')) {
+    var frame = document.getElementById('frame-jornada');
+    var src = frame.getAttribute('src') || frame.dataset.src;
+    if (src && src.indexOf('obraId=') < 0) {
+      frame.src = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'obraId=' + encodeURIComponent(dl.obraId);
+    }
+  }
+})();
 </script>
 </body>
 </html>
