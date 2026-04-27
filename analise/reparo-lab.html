@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Reparos por idade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--accent-dark:#6b4f30;
+  --text:#3a3530;--text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#3d8a5a;--red:#c45a5a;--amber:#b89a4a;--blue:#4a7ab8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;line-height:1.55}
+
+/* DOCK */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08)}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+body.embed .dock{display:none}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;flex-direction:column}
+.logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:lowercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-left:auto}
+body.embed .header{display:none}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:24px 24px 60px}
+.intro{margin-bottom:24px}
+.intro h1{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-0.01em}
+.intro .lead{font-size:13px;color:var(--text-muted);max-width:780px;line-height:1.55}
+.intro .scope-note{margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);padding:8px 12px;background:rgba(184,160,128,0.06);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:760px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;border-left:3px solid var(--accent)}
+.kpi-box.alert{border-left-color:var(--red)}
+.kpi-box.warn{border-left-color:var(--amber)}
+.kpi-box.ok{border-left-color:var(--green)}
+.kpi-val{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--text);line-height:1}
+.kpi-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;margin-top:6px}
+.kpi-detail{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px}
+.section-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.section-title .small{font-family:var(--font-sans);font-size:11px;text-transform:none;letter-spacing:0;color:var(--text-muted)}
+
+/* HIPOTESE BUSTER */
+.hipotese{background:linear-gradient(135deg,rgba(196,90,90,0.06),rgba(184,160,128,0.04));border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:16px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.hip-quote{flex:1;min-width:240px}
+.hip-cap{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-dark);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.hip-cap::before{content:'KIRA';font-weight:600;background:var(--accent);color:var(--card);padding:2px 6px;border-radius:3px;font-size:9px}
+.hip-text{font-size:13px;color:var(--text);text-decoration:line-through;font-style:italic;margin-bottom:4px}
+.hip-real{font-size:14px;font-weight:600;color:var(--green);font-family:var(--font-mono)}
+.hip-bar{flex:0 0 280px;background:var(--bg);padding:14px;border-radius:6px}
+.hip-bar-row{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:11px}
+.hip-bar-label{flex:0 0 60px;color:var(--text);font-weight:500}
+.hip-bar-track{flex:1;height:8px;background:rgba(184,160,128,0.1);border-radius:4px;overflow:hidden}
+.hip-bar-fill{height:100%;background:var(--red);border-radius:4px}
+.hip-bar-fill.muted{background:var(--text-muted)}
+.hip-bar-val{flex:0 0 56px;text-align:right;font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text)}
+
+/* DIST GRID */
+.dist-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:920px){.dist-grid{grid-template-columns:1fr}}
+.dist-block h4{font-size:11px;color:var(--text-muted);margin-bottom:8px;font-weight:500;letter-spacing:0.05em}
+.dist-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px}
+.dist-row .label{flex:1;color:var(--text);font-weight:500;text-transform:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dist-row .bar-wrap{flex:0 0 80px;height:5px;background:rgba(184,160,128,0.1);border-radius:3px;overflow:hidden}
+.dist-row .bar{height:100%;background:var(--accent);border-radius:3px}
+.dist-row .v{flex:0 0 32px;text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:600}
+.dist-row.dim .label{color:var(--text-muted)}
+.dist-row.dim .bar{background:var(--text-muted)}
+
+/* OBRAS LIST */
+.obras-list{display:flex;flex-direction:column;gap:6px}
+.obra-row{display:grid;grid-template-columns:36px 1fr 130px 120px 90px 80px;gap:10px;padding:10px 14px;background:var(--bg);border-radius:6px;align-items:center;font-size:12px;border-left:3px solid var(--red)}
+.obra-row.luana{border-left-color:var(--blue)}
+.obra-row.wesley{border-left-color:var(--accent)}
+.obra-row.zumbi{border-left-color:var(--accent-dark);background:rgba(196,90,90,0.04)}
+@media(max-width:900px){.obra-row{grid-template-columns:1fr;gap:4px}}
+.obra-rank{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);font-weight:600}
+.obra-cliente{font-weight:600;color:var(--text)}
+.obra-cidade{font-size:11px;color:var(--text-muted)}
+.obra-cons,.obra-prestador{font-size:11px;color:var(--text);font-weight:500}
+.obra-fase{font-size:10px;color:var(--text-muted);font-family:var(--font-mono);text-transform:none}
+.obra-idade{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--red);text-align:right}
+
+/* FOOTER */
+.footer-meta{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:20px}
+.footer-meta span b{color:var(--text)}
+
+/* LOADER */
+.loader{display:flex;align-items:center;justify-content:center;min-height:300px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+.error{padding:20px;background:rgba(196,90,90,0.08);border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central"><svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard"><svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="atena.html" class="dock-item" data-label="ATENA"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg></a>
+  <a href="labs.html" class="dock-item active" data-label="Labs"><svg viewBox="0 0 20 20"><path d="M7 2v6L3 16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2L13 8V2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+</nav>
+
+<header class="header">
+  <a href="../hub.html" style="text-decoration:none;color:inherit">
+    <div class="header-brand">
+      <div class="logo-text">monofloor</div>
+      <div class="logo-sub">Laboratório · Reparos por idade</div>
+    </div>
+  </a>
+  <div class="header-title">Reparos críticos · ranking</div>
+</header>
+
+<main class="main" id="root">
+  <div class="loader">Carregando reparos…</div>
+</main>
+
+<script>
+(async function(){
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.body.classList.add('embed');
+  }
+
+  const root = document.getElementById('root');
+  function fmt(n) { return (typeof n === 'number') ? Math.round(n).toLocaleString('pt-BR') : '—'; }
+  function fmtFloat(n) { return (typeof n === 'number') ? n.toLocaleString('pt-BR', {maximumFractionDigits: 1}) : '—'; }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function clean(s) {
+    return String(s||'').trim()
+      .replace(/Ã§/g,'ç').replace(/Ãµ/g,'õ').replace(/Ã£/g,'ã').replace(/Ã¡/g,'á').replace(/Ã©/g,'é').replace(/Ã­/g,'í').replace(/Ãº/g,'ú')
+      .replace(/Ã¢/g,'â').replace(/Ã´/g,'ô').replace(/Ã/g,'Á');
+  }
+  function consClass(nome) {
+    const n = String(nome||'').toUpperCase();
+    if (n.includes('LUANA')) return 'luana';
+    if (n.includes('WESLEY')) return 'wesley';
+    return '';
+  }
+  function shortName(s) { return clean(String(s||'').trim().split(/\s+/).slice(0,2).join(' ')); }
+
+  let data;
+  try {
+    const r = await fetch('dados/cruz-reparo.json', {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+  } catch (e) {
+    root.innerHTML = '<div class="error">Não carregou dados/cruz-reparo.json — ' + escHtml(e.message) + '</div>';
+    return;
+  }
+
+  const totalReparos = data.total_reparos || 0;
+  const idade = data.idade_dias || {};
+  const coerencia = data.coerencia_fase || {};
+  const zumbiCount = coerencia.zumbi_outras_fases || 0;
+  const cfCount = coerencia.CLIENTE_FINALIZADO_coerente || 0;
+  const hipWesley = data.hipotese_wesley || {};
+  const lista = data.lista_completa || [];
+  const top10 = data.top10_mais_antigos || [];
+  const porPrest = data.por_prestador_aplicador || {};
+  const porResp = data.por_responsavelOperacoes || {};
+  const porCons = data.por_consultor || {};
+  const porFase = data.por_faseAtual || {};
+
+  // Sort util
+  const entries = (obj) => Object.entries(obj || {}).sort((a,b) => b[1]-a[1]);
+
+  const distRows = (obj, total) => entries(obj).map(([k,v]) => {
+    const pct = total > 0 ? (v/total*100) : 0;
+    const isVazio = !k || k === '(vazio)' || k === '[]' || k === 'null';
+    return `<div class="dist-row ${isVazio?'dim':''}">
+      <span class="label" title="${escHtml(clean(k))}">${escHtml(clean(isVazio ? 'sem cadastro' : k))}</span>
+      <div class="bar-wrap"><div class="bar" style="width:${Math.min(100, pct)}%"></div></div>
+      <span class="v">${v}</span>
+    </div>`;
+  }).join('');
+
+  // Hipótese buster — Wesley NÃO concentra 100%
+  const wesleyPct = hipWesley.pct_consultor || 0;
+  const luanaPct = ((porCons['LUANA PATRICIA DE ANDRADE LIMA'] || 0) / totalReparos * 100);
+  const outrosPct = 100 - wesleyPct - luanaPct;
+
+  // Lista — usar top10 destacado, depois resto
+  const top10Ids = new Set(top10.map(o => o.cliente));
+  const restantes = lista.filter(o => !top10Ids.has(o.cliente));
+
+  const obraRow = (o, idx) => {
+    const isZumbi = o.faseAtual && o.faseAtual !== 'CLIENTE FINALIZADO' && o.faseAtual !== 'PÓS VENDAS ACIONADO';
+    return `<div class="obra-row ${consClass(o.consultor || o.consultorOperacional)} ${isZumbi ? 'zumbi' : ''}">
+      <div class="obra-rank">#${String(idx+1).padStart(2,'0')}</div>
+      <div>
+        <div class="obra-cliente">${escHtml(clean(o.cliente))}</div>
+        <div class="obra-cidade">${escHtml(clean(o.cidade))}</div>
+      </div>
+      <div class="obra-cons">${escHtml(shortName(o.consultor || o.consultorOperacional))}</div>
+      <div class="obra-prestador">${escHtml(clean(o.prestador || '—'))}</div>
+      <div class="obra-fase" title="${escHtml(o.faseAtual||'')}">${escHtml(o.faseAtual||'—')}</div>
+      <div class="obra-idade">${o.idade_dias}d</div>
+    </div>`;
+  };
+
+  root.innerHTML = `
+    <div class="intro">
+      <h1>${totalReparos} obras em reparo · idade média ${fmt(idade.media)} dias</h1>
+      <p class="lead">Carteira de reparo ativa. <b>${cfCount}</b> em CLIENTE FINALIZADO coerente · <b>${zumbiCount}</b> zumbis em outras fases (não chegaram em pós-venda formal). Pico: <b>${idade.max} dias</b>.</p>
+      <div class="scope-note">Snapshot · ${data.data_base} · Fonte: cruz-reparo.json · ${totalReparos} obras ativas com status=reparo</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-strip">
+      <div class="kpi-box alert">
+        <div class="kpi-val">${totalReparos}</div>
+        <div class="kpi-label">obras em reparo</div>
+        <div class="kpi-detail">todas ativas · 0 inativas</div>
+      </div>
+      <div class="kpi-box warn">
+        <div class="kpi-val">${fmtFloat(idade.media)}d</div>
+        <div class="kpi-label">idade média</div>
+        <div class="kpi-detail">mediana ${fmt(idade.mediana)}d</div>
+      </div>
+      <div class="kpi-box alert">
+        <div class="kpi-val">${idade.max}d</div>
+        <div class="kpi-label">mais antiga</div>
+        <div class="kpi-detail">acima de 10 meses</div>
+      </div>
+      <div class="kpi-box ${zumbiCount > 5 ? 'warn' : 'ok'}">
+        <div class="kpi-val">${zumbiCount}</div>
+        <div class="kpi-label">zumbis fora do CF</div>
+        <div class="kpi-detail">de ${totalReparos} totais</div>
+      </div>
+    </div>
+
+    <!-- HIPÓTESE BUSTER -->
+    <div class="hipotese">
+      <div class="hip-quote">
+        <div class="hip-cap">Hipótese auditada</div>
+        <div class="hip-text">"Wesley concentra 100% dos reparos"</div>
+        <div class="hip-real">REJEITADA — Wesley faz ${wesleyPct.toFixed(1)}% (${hipWesley.wesley_como_consultor} de ${totalReparos})</div>
+      </div>
+      <div class="hip-bar">
+        <div class="hip-bar-row">
+          <span class="hip-bar-label">Wesley</span>
+          <div class="hip-bar-track"><div class="hip-bar-fill" style="width:${wesleyPct}%"></div></div>
+          <span class="hip-bar-val">${wesleyPct.toFixed(0)}%</span>
+        </div>
+        <div class="hip-bar-row">
+          <span class="hip-bar-label">Luana</span>
+          <div class="hip-bar-track"><div class="hip-bar-fill" style="background:var(--blue);width:${luanaPct}%"></div></div>
+          <span class="hip-bar-val">${luanaPct.toFixed(0)}%</span>
+        </div>
+        <div class="hip-bar-row">
+          <span class="hip-bar-label">Outros</span>
+          <div class="hip-bar-track"><div class="hip-bar-fill muted" style="width:${outrosPct}%"></div></div>
+          <span class="hip-bar-val">${outrosPct.toFixed(0)}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISTRIBUIÇÕES -->
+    <div class="section">
+      <div class="section-title">Distribuição operacional · 3 ângulos</div>
+      <div class="dist-grid">
+        <div class="dist-block">
+          <h4>Por prestador (aplicador)</h4>
+          ${distRows(porPrest, totalReparos)}
+        </div>
+        <div class="dist-block">
+          <h4>Por responsável operações</h4>
+          ${distRows(porResp, totalReparos)}
+        </div>
+        <div class="dist-block">
+          <h4>Por consultor (Pipefy)</h4>
+          ${distRows(porCons, totalReparos)}
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:11px;color:var(--text-muted);font-style:italic;line-height:1.5">
+        Nathan aparece como prestador em <b>${porPrest['Nathan'] || 0} de ${totalReparos}</b> reparos
+        (${((porPrest['Nathan']||0)/totalReparos*100).toFixed(0)}%) — concentração relevante. <b>${porPrest['(vazio)'] || 0}</b> reparos sem prestador atribuído.
+      </p>
+    </div>
+
+    <!-- DIST POR FASE -->
+    <div class="section">
+      <div class="section-title">
+        Distribuição por fase atual no Pipefy
+        <span class="small">${cfCount} em CF · ${zumbiCount} fora</span>
+      </div>
+      <div class="dist-block" style="max-width:520px">${distRows(porFase, totalReparos)}</div>
+      <p style="margin-top:12px;font-size:11px;color:var(--text-muted);font-style:italic;line-height:1.5">
+        Reparos em ${zumbiCount} fases que não são CLIENTE FINALIZADO ou PÓS VENDAS ACIONADO indicam obras que <b>retornaram ao fluxo principal</b> sem fechar o ciclo formal. Sinal de processo quebrado ou retrabalho não-administrativo.
+      </p>
+    </div>
+
+    <!-- TOP 10 -->
+    <div class="section">
+      <div class="section-title">
+        Top 10 mais antigos
+        <span class="small">acima de 200 dias em reparo</span>
+      </div>
+      <div class="obras-list">
+        ${top10.map((o, i) => obraRow(o, i)).join('')}
+      </div>
+    </div>
+
+    <!-- TODOS -->
+    <details class="section" style="padding:0;background:transparent;border:none">
+      <summary style="cursor:pointer;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)">Demais reparos (${restantes.length}) ▾</summary>
+      <div style="margin-top:8px;padding:14px 0">
+        <div class="obras-list">
+          ${restantes.map((o, i) => obraRow(o, i + top10.length)).join('')}
+        </div>
+      </div>
+    </details>
+
+    <div class="footer-meta">
+      <span>Total: <b>${totalReparos}</b> obras</span>
+      <span>Snapshot: <b>${data.data_base}</b></span>
+      <span>Coerentes (CF): <b>${cfCount}</b></span>
+      <span>Zumbis: <b>${zumbiCount}</b></span>
+      <span>Fonte: <b>cruz-reparo.json</b></span>
+    </div>
+  `;
+})();
+</script>
+
+</body>
+</html>
