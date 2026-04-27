@@ -1,7 +1,8 @@
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-$today = '2026-04-24'
+# Q1 — usa data atual (antes era '2026-04-24' chumbado)
+$today = (Get-Date -Format 'yyyy-MM-dd')
 $todayDate = [DateTime]::Parse($today)
 $jsonPath = 'C:\Users\vitor\Monofloor_Files\analise\dados\dashboard-data.json'
 $pipefyPath = 'C:\Users\vitor\Monofloor_Files\analise\dados\pipefy-dates.json'

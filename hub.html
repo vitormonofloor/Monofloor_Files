@@ -29,6 +29,21 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .score-pill.red{border-color:#c45a5a55;background:#faedea;animation:pillPulse 2.4s ease-in-out infinite}
 .score-pill.red .sp-num{color:#6a2a2a}
 @keyframes pillPulse{0%,100%{box-shadow:0 0 0 0 #c45a5a44}50%{box-shadow:0 0 0 8px #c45a5a00}}
+
+/* V1 — manchete narrativa KIRA (sinais quentes do dia) */
+.kira-headline{display:flex;justify-content:center;margin:-22px auto 30px;opacity:0;animation:fadeUp 0.8s ease 0.7s forwards;max-width:760px;width:100%;padding:0 16px}
+.kh-pill{display:inline-flex;align-items:center;gap:10px;padding:7px 14px;background:rgba(255,255,255,0.5);border:1px solid rgba(184,160,128,0.22);border-radius:99px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#6b6156;text-decoration:none;transition:all .25s ease;backdrop-filter:blur(4px);max-width:100%}
+.kh-pill:hover{background:#fff;border-color:rgba(184,160,128,0.45);box-shadow:0 4px 14px rgba(42,37,32,0.06);color:#3a3530}
+.kh-dot{width:6px;height:6px;border-radius:50%;background:#c45a5a;flex:0 0 auto;animation:khDot 1.6s ease-in-out infinite}
+@keyframes khDot{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
+.kh-frag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.04em;white-space:nowrap}
+.kh-frag b{color:#3a3530;font-weight:600}
+.kh-frag.crit b{color:#c45a5a}
+.kh-frag.warn b{color:#b89a4a}
+.kh-sep{color:#c4b5a0;font-weight:300}
+.kh-arrow{font-size:11px;color:#a89e92;margin-left:4px}
+.kh-pill:hover .kh-arrow{color:#b8a080;transform:translateX(2px);transition:all .2s}
+@media(max-width:720px){.kh-pill{flex-wrap:wrap;justify-content:center;text-align:center;border-radius:14px;padding:8px 14px}.kh-frag{white-space:normal}}
 .brand-logo{height:40px;width:auto;filter:brightness(0) sepia(1) saturate(0.3) hue-rotate(350deg) brightness(0.25);margin-bottom:8px}
 .brand-tagline{font-size:9px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:#a89e92}
 
@@ -169,6 +184,15 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
         <span class="sp-lbl">Score de saúde</span>
         <span class="sp-go" id="hub-score-pill-sub">abrir briefing →</span>
       </span>
+    </a>
+  </div>
+
+  <!-- V1 — manchete narrativa KIRA (sinais quentes do dia) -->
+  <div class="kira-headline" id="kira-headline" style="display:none">
+    <a href="analise/dashboard.html#problemas" class="kh-pill" id="kh-pill" onclick="event.preventDefault();goTo('dashboard','analise/dashboard.html#problemas')">
+      <span class="kh-dot"></span>
+      <span class="kh-content" id="kh-content">carregando sinais…</span>
+      <span class="kh-arrow">→</span>
     </a>
   </div>
 
@@ -394,6 +418,68 @@ function goTo(dest, url) {
       }
     })
     .catch(function () { /* offline / file:// → mantém "—" e badge fica vermelho */ });
+})();
+
+// ═══ V1 — Manchete narrativa KIRA ═══
+// Lê 3 fontes em paralelo e monta frase com sinais quentes do dia
+(function loadKiraHeadline() {
+  function fetchSafe(url) {
+    return fetch(url, { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  Promise.all([
+    fetchSafe('analise/dados/cruz-silenciosas.json'),
+    fetchSafe('analise/dados/cruz-alertas.json'),
+    fetchSafe('analise/dados/headline.json'),
+  ]).then(function (results) {
+    var sil = results[0] || {};
+    var alt = results[1] || {};
+    var hd = results[2] || {};
+
+    var fragments = [];
+
+    // Frag 1 — clima Tenso/Crítico (cruz-silenciosas)
+    var clima = sil.clima_geral_distribuicao || {};
+    var nTenso = (clima.Tenso || 0) + (clima['Crítico'] || clima.Critico || 0);
+    if (nTenso > 0) {
+      fragments.push('<span class="kh-frag crit"><b>' + nTenso + '</b> obras tensas/críticas</span>');
+    }
+
+    // Frag 2 — sem WhatsApp (cruz-silenciosas)
+    var semWa = sil.ativas_sem_whatsapp || sil.total_silenciosas || 0;
+    if (semWa > 0) {
+      fragments.push('<span class="kh-frag warn"><b>' + semWa + '</b> sem WhatsApp ativo</span>');
+    }
+
+    // Frag 3 — críticas com risco de adiamento + idade > 180 (cruz-alertas)
+    var critRisco = alt.qtd_obras_criticas_risco_idade_gt180 || 0;
+    if (critRisco > 0) {
+      fragments.push('<span class="kh-frag crit"><b>' + critRisco + '</b> com risco adiamento &gt;180d</span>');
+    }
+
+    // Frag 4 — ciclo > 270d (headline)
+    var n270 = (hd.alertas && hd.alertas.ciclo_270_plus) || 0;
+    if (n270 > 0) {
+      fragments.push('<span class="kh-frag"><b>' + n270 + '</b> em 270d+</span>');
+    }
+
+    // Frag 5 — novos hoje (headline)
+    var nov = (hd.alertas && hd.alertas.novos_hoje) || 0;
+    if (nov > 0) {
+      fragments.push('<span class="kh-frag"><b>' + nov + '</b> novos hoje</span>');
+    }
+
+    if (fragments.length === 0) return; // mantém oculto
+
+    var content = document.getElementById('kh-content');
+    var wrap = document.getElementById('kira-headline');
+    if (content && wrap) {
+      content.innerHTML = fragments.slice(0, 4).join('<span class="kh-sep"> · </span>');
+      wrap.style.display = 'flex';
+    }
+  });
 })();
 </script>
 <script src="analise/headline-badge.js" data-src="analise/dados/headline.json" defer></script>
