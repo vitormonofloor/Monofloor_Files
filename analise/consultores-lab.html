@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Consultores · Luana vs Wesley</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--accent-dark:#6b4f30;
+  --text:#3a3530;--text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#3d8a5a;--red:#c45a5a;--amber:#b89a4a;--blue:#4a7ab8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;line-height:1.55}
+
+/* DOCK */
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08)}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+body.embed .dock{display:none}
+
+/* HEADER */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;flex-direction:column}
+.logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:lowercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-left:auto}
+body.embed .header{display:none}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:24px 24px 60px}
+.intro{margin-bottom:24px}
+.intro h1{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-0.01em}
+.intro .lead{font-size:13px;color:var(--text-muted);max-width:740px}
+.intro .scope-note{margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);padding:8px 12px;background:rgba(184,160,128,0.06);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
+
+/* COMPARE GRID */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:760px){.compare-grid{grid-template-columns:1fr}}
+
+.consultor-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px}
+.consultor-card.luana{border-left:3px solid var(--blue)}
+.consultor-card.wesley{border-left:3px solid var(--accent)}
+.cc-name{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.cc-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:14px}
+.cc-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.cc-kpi{background:var(--bg);padding:8px 10px;border-radius:6px;text-align:center}
+.cc-kpi .v{font-family:var(--font-mono);font-size:18px;font-weight:600;color:var(--text);line-height:1}
+.cc-kpi .l{font-family:var(--font-mono);font-size:8px;letter-spacing:0.08em;color:var(--text-muted);text-transform:uppercase;margin-top:4px;display:block}
+.cc-kpi.alert .v{color:var(--red)}
+.cc-kpi.warn .v{color:var(--amber)}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px}
+.section-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.section-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:760px){.section-pair{grid-template-columns:1fr;gap:16px}}
+.pair-col h4{font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:8px;letter-spacing:0.05em}
+
+/* BARS / DIST */
+.dist-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px}
+.dist-row .label{flex:0 0 130px;color:var(--text);font-weight:500;text-transform:lowercase}
+.dist-row .bar-wrap{flex:1;height:6px;background:rgba(184,160,128,0.1);border-radius:3px;overflow:hidden}
+.dist-row .bar{height:100%;background:var(--accent);border-radius:3px;transition:width 0.4s ease}
+.dist-row.luana .bar{background:var(--blue)}
+.dist-row .v{flex:0 0 64px;text-align:right;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)}
+.dist-row .v b{color:var(--text)}
+
+/* PERCENTIS */
+.percentis{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+.pc-cell{text-align:center;padding:6px 4px;background:var(--bg);border-radius:4px}
+.pc-cell .v{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text);line-height:1}
+.pc-cell .l{font-family:var(--font-mono);font-size:8px;color:var(--text-muted);text-transform:uppercase;margin-top:2px;display:block}
+
+/* DELTAS */
+.deltas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:8px}
+.delta-card{background:var(--bg);padding:10px 12px;border-radius:6px;border-left:3px solid var(--accent)}
+.delta-card.up{border-left-color:var(--red)}
+.delta-card.down{border-left-color:var(--green)}
+.delta-card.neutral{border-left-color:var(--text-muted)}
+.delta-label{font-size:10px;color:var(--text-muted);font-weight:500;margin-bottom:2px;letter-spacing:0.04em}
+.delta-value{font-family:var(--font-mono);font-size:14px;font-weight:600;color:var(--text);line-height:1.2}
+.delta-detail{font-size:10px;color:var(--text-muted);margin-top:2px;font-style:italic}
+
+/* HIPOTESES */
+.hipoteses{background:linear-gradient(135deg,rgba(184,160,128,0.08),rgba(74,122,184,0.04));border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:16px}
+.hipoteses-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.hipoteses-title::before{content:'KIRA';font-weight:600;background:var(--accent);color:var(--card);padding:2px 6px;border-radius:3px;font-size:9px}
+.hipoteses-list{display:flex;flex-direction:column;gap:8px}
+.hipotese-item{padding:8px 12px;background:rgba(255,255,255,0.5);border-radius:6px;font-size:13px;color:var(--text);border-left:2px solid var(--accent)}
+
+/* FOOTER */
+.footer-meta{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:20px}
+.footer-meta span b{color:var(--text)}
+
+/* LOADER */
+.loader{display:flex;align-items:center;justify-content:center;min-height:300px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+.error{padding:20px;background:rgba(196,90,90,0.08);border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central"><svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard"><svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="atena.html" class="dock-item" data-label="ATENA"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg></a>
+  <a href="labs.html" class="dock-item active" data-label="Labs"><svg viewBox="0 0 20 20"><path d="M7 3v5l-4 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-9V3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></a>
+</nav>
+
+<header class="header">
+  <a href="../hub.html" style="text-decoration:none;color:inherit">
+    <div class="header-brand">
+      <div class="logo-text">monofloor</div>
+      <div class="logo-sub">Laboratório · Consultores</div>
+    </div>
+  </a>
+  <div class="header-title">Comparativo Luana vs Wesley</div>
+</header>
+
+<main class="main" id="root">
+  <div class="loader">Carregando comparativo…</div>
+</main>
+
+<script>
+(async function(){
+  // Detect embed mode (iframe via labs.html)
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.body.classList.add('embed');
+  }
+
+  const root = document.getElementById('root');
+
+  function fmt(n) { return (typeof n === 'number') ? n.toLocaleString('pt-BR', {maximumFractionDigits: 1}) : '—'; }
+  function fmtPct(n) { return (typeof n === 'number') ? n.toFixed(1) + '%' : '—'; }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  let data;
+  try {
+    const r = await fetch('dados/cruz-luana-vs-wesley.json', {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+  } catch (e) {
+    root.innerHTML = '<div class="error">Não foi possível carregar dados/cruz-luana-vs-wesley.json — ' + escHtml(e.message) + '</div>';
+    return;
+  }
+
+  const luana = data.luana;
+  const wesley = data.wesley;
+  const dif = data.diferencas || {};
+  const total = (luana.n_obras || 0) + (wesley.n_obras || 0);
+  const pctCarteira = data.total_ativas ? ((total / data.total_ativas) * 100).toFixed(0) : '—';
+
+  // ── Render ──
+  const distRow = (label, lObj, wObj, side) => {
+    const lN = lObj?.n || 0, lP = lObj?.pct || 0;
+    const wN = wObj?.n || 0, wP = wObj?.pct || 0;
+    const obj = side === 'luana' ? lObj : wObj;
+    const n = obj?.n || 0, pct = obj?.pct || 0;
+    return `<div class="dist-row ${side}">
+      <span class="label">${escHtml(label)}</span>
+      <div class="bar-wrap"><div class="bar" style="width:${Math.min(100, pct * 2)}%"></div></div>
+      <span class="v"><b>${n}</b> · ${fmtPct(pct)}</span>
+    </div>`;
+  };
+
+  const distFor = (cons, side) => {
+    const entries = Object.entries(cons.status_dist || {})
+      .sort((a,b) => (b[1].n||0) - (a[1].n||0));
+    return entries.map(([k,v]) => `<div class="dist-row ${side}">
+      <span class="label">${escHtml(k.replace(/_/g,' '))}</span>
+      <div class="bar-wrap"><div class="bar" style="width:${Math.min(100, (v.pct||0) * 2)}%"></div></div>
+      <span class="v"><b>${v.n}</b> · ${fmtPct(v.pct)}</span>
+    </div>`).join('');
+  };
+
+  const top5For = (obj, side) => {
+    return Object.entries(obj || {})
+      .sort((a,b) => (b[1].n||0) - (a[1].n||0))
+      .slice(0,5)
+      .map(([k,v]) => `<div class="dist-row ${side}">
+        <span class="label" style="flex:0 0 165px" title="${escHtml(k)}">${escHtml(k.length > 22 ? k.slice(0,20)+'…' : k)}</span>
+        <div class="bar-wrap"><div class="bar" style="width:${Math.min(100, (v.pct||0) * 2)}%"></div></div>
+        <span class="v"><b>${v.n}</b> · ${fmtPct(v.pct)}</span>
+      </div>`).join('');
+  };
+
+  const percentis = (obj, color) => `<div class="percentis">
+    <div class="pc-cell"><span class="v" style="color:${color}">${obj.p25 ?? '—'}</span><span class="l">P25</span></div>
+    <div class="pc-cell"><span class="v" style="color:${color}">${obj.p50_mediana ?? '—'}</span><span class="l">Mediana</span></div>
+    <div class="pc-cell"><span class="v" style="color:${color}">${obj.p75 ?? '—'}</span><span class="l">P75</span></div>
+    <div class="pc-cell"><span class="v" style="color:${color}">${obj.p90 ?? '—'}</span><span class="l">P90</span></div>
+    <div class="pc-cell"><span class="v" style="color:${color}">${obj.max ?? '—'}</span><span class="l">Max</span></div>
+  </div>`;
+
+  // Delta card
+  const delta = (label, value, detail, dir) => `<div class="delta-card ${dir}">
+    <div class="delta-label">${escHtml(label)}</div>
+    <div class="delta-value">${value}</div>
+    ${detail ? `<div class="delta-detail">${escHtml(detail)}</div>` : ''}
+  </div>`;
+
+  // Hipóteses
+  const hipoteses = (data.hipotese || []).map(h => `<div class="hipotese-item">${escHtml(h)}</div>`).join('');
+
+  root.innerHTML = `
+    <div class="intro">
+      <h1>Os 2 consultores que cobrem ${pctCarteira}% da carteira</h1>
+      <p class="lead">Comparativo nominal entre Luana (${luana.n_obras} obras) e Wesley (${wesley.n_obras}) — total ${total} de ${data.total_ativas} ativas. Análise de carteira, fluxo, idade e risco lado a lado.</p>
+      <div class="scope-note">Snapshot · ${data.geradoEm?.slice(0,10) || '—'} · Base: ${data.total_ativas} ativas no painel à época · Fonte: cruz-luana-vs-wesley.json</div>
+    </div>
+
+    <!-- KPIs principais -->
+    <div class="compare-grid">
+      <div class="consultor-card luana">
+        <div class="cc-name">Consultor</div>
+        <div class="cc-title">${escHtml(luana.nome)}</div>
+        <div class="cc-kpis">
+          <div class="cc-kpi"><span class="v">${luana.n_obras}</span><span class="l">obras</span></div>
+          <div class="cc-kpi ${luana.n_180d_plus > 40 ? 'warn' : ''}"><span class="v">${luana.n_180d_plus}</span><span class="l">180d+</span></div>
+          <div class="cc-kpi ${luana.n_270d_plus > 0 ? 'alert' : ''}"><span class="v">${luana.n_270d_plus}</span><span class="l">270d+</span></div>
+          <div class="cc-kpi"><span class="v">${luana.n_pausadas}</span><span class="l">pausadas</span></div>
+          <div class="cc-kpi"><span class="v">${luana.n_reparo}</span><span class="l">reparo</span></div>
+          <div class="cc-kpi ${luana.n_zumbi_cliente_finalizado > 0 ? 'alert' : ''}"><span class="v">${luana.n_zumbi_cliente_finalizado}</span><span class="l">zumbi</span></div>
+        </div>
+      </div>
+      <div class="consultor-card wesley">
+        <div class="cc-name">Consultor</div>
+        <div class="cc-title">${escHtml(wesley.nome)}</div>
+        <div class="cc-kpis">
+          <div class="cc-kpi"><span class="v">${wesley.n_obras}</span><span class="l">obras</span></div>
+          <div class="cc-kpi ${wesley.n_180d_plus > 40 ? 'warn' : ''}"><span class="v">${wesley.n_180d_plus}</span><span class="l">180d+</span></div>
+          <div class="cc-kpi ${wesley.n_270d_plus > 0 ? 'alert' : ''}"><span class="v">${wesley.n_270d_plus}</span><span class="l">270d+</span></div>
+          <div class="cc-kpi"><span class="v">${wesley.n_pausadas}</span><span class="l">pausadas</span></div>
+          <div class="cc-kpi"><span class="v">${wesley.n_reparo}</span><span class="l">reparo</span></div>
+          <div class="cc-kpi ${wesley.n_zumbi_cliente_finalizado > 0 ? 'alert' : ''}"><span class="v">${wesley.n_zumbi_cliente_finalizado}</span><span class="l">zumbi</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISTRIBUIÇÃO STATUS -->
+    <div class="section">
+      <div class="section-title">Distribuição por status — onde a carteira está parada</div>
+      <div class="section-pair">
+        <div class="pair-col">
+          <h4>Luana</h4>
+          ${distFor(luana, 'luana')}
+        </div>
+        <div class="pair-col">
+          <h4>Wesley</h4>
+          ${distFor(wesley, 'wesley')}
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP 5 FASES PIPEFY -->
+    <div class="section">
+      <div class="section-title">Top 5 fases Pipefy — onde mais cards estão parados</div>
+      <div class="section-pair">
+        <div class="pair-col">
+          <h4>Luana</h4>
+          ${top5For(luana.fase_top5, 'luana')}
+        </div>
+        <div class="pair-col">
+          <h4>Wesley</h4>
+          ${top5For(wesley.fase_top5, 'wesley')}
+        </div>
+      </div>
+    </div>
+
+    <!-- IDADE -->
+    <div class="section">
+      <div class="section-title">Idade da carteira (dias) — quanto tempo as obras carregam</div>
+      <div class="section-pair">
+        <div class="pair-col">
+          <h4>Luana — média ${fmt(luana.idade.media)}d</h4>
+          ${percentis(luana.idade, 'var(--blue)')}
+        </div>
+        <div class="pair-col">
+          <h4>Wesley — média ${fmt(wesley.idade.media)}d</h4>
+          ${percentis(wesley.idade, 'var(--accent-dark)')}
+        </div>
+      </div>
+    </div>
+
+    <!-- METRAGEM -->
+    <div class="section">
+      <div class="section-title">Metragem (m²) — porte das obras</div>
+      <div class="section-pair">
+        <div class="pair-col">
+          <h4>Luana</h4>
+          <div class="percentis" style="grid-template-columns:repeat(4,1fr)">
+            <div class="pc-cell"><span class="v" style="color:var(--blue)">${fmt(luana.metragem.media)}</span><span class="l">média</span></div>
+            <div class="pc-cell"><span class="v" style="color:var(--blue)">${fmt(luana.metragem.mediana)}</span><span class="l">mediana</span></div>
+            <div class="pc-cell"><span class="v" style="color:var(--blue)">${fmt(luana.metragem.min)}</span><span class="l">min</span></div>
+            <div class="pc-cell"><span class="v" style="color:var(--blue)">${fmt(luana.metragem.max)}</span><span class="l">max</span></div>
+          </div>
+        </div>
+        <div class="pair-col">
+          <h4>Wesley</h4>
+          <div class="percentis" style="grid-template-columns:repeat(4,1fr)">
+            <div class="pc-cell"><span class="v" style="color:var(--accent-dark)">${fmt(wesley.metragem.media)}</span><span class="l">média</span></div>
+            <div class="pc-cell"><span class="v" style="color:var(--accent-dark)">${fmt(wesley.metragem.mediana)}</span><span class="l">mediana</span></div>
+            <div class="pc-cell"><span class="v" style="color:var(--accent-dark)">${fmt(wesley.metragem.min)}</span><span class="l">min</span></div>
+            <div class="pc-cell"><span class="v" style="color:var(--accent-dark)">${fmt(wesley.metragem.max)}</span><span class="l">max</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPO E CIDADE -->
+    <div class="section">
+      <div class="section-title">Tipo de obra</div>
+      <div class="section-pair">
+        <div class="pair-col"><h4>Luana</h4>${top5For(luana.tipo_obra_top, 'luana')}</div>
+        <div class="pair-col"><h4>Wesley</h4>${top5For(wesley.tipo_obra_top, 'wesley')}</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Concentração geográfica</div>
+      <div class="section-pair">
+        <div class="pair-col"><h4>Luana</h4>${top5For(luana.cidade_top5, 'luana')}</div>
+        <div class="pair-col"><h4>Wesley</h4>${top5For(wesley.cidade_top5, 'wesley')}</div>
+      </div>
+    </div>
+
+    <!-- DELTAS -->
+    <div class="section">
+      <div class="section-title">Diferenças (Luana − Wesley) — onde diverge mais</div>
+      <div class="deltas-grid">
+        ${delta('Idade mediana', `${dif.mediana_idade_dif > 0 ? '+' : ''}${fmt(dif.mediana_idade_dif)}d`, 'Luana ' + (dif.mediana_idade_dif > 0 ? 'mais antiga' : 'mais nova'), dif.mediana_idade_dif > 0 ? 'up' : (dif.mediana_idade_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Idade média', `${dif.media_idade_dif > 0 ? '+' : ''}${fmt(dif.media_idade_dif)}d`, 'média Luana − Wesley', dif.media_idade_dif > 0 ? 'up' : (dif.media_idade_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Obras 180d+', `${dif.n_180d_dif > 0 ? '+' : ''}${dif.n_180d_dif}`, 'Luana ' + (dif.n_180d_dif > 0 ? 'tem mais cauda' : 'tem menos'), dif.n_180d_dif > 0 ? 'up' : (dif.n_180d_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Obras 270d+', `${dif.n_270d_dif > 0 ? '+' : ''}${dif.n_270d_dif}`, 'cauda crônica', dif.n_270d_dif > 0 ? 'up' : (dif.n_270d_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Zumbis (CLIENTE FINALIZ.)', `${dif.zumbi_dif > 0 ? '+' : ''}${dif.zumbi_dif}`, dif.zumbi_dif < 0 ? 'Wesley acumula mais' : 'Luana acumula mais', dif.zumbi_dif > 0 ? 'up' : (dif.zumbi_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Pausadas', `${dif.pausadas_dif > 0 ? '+' : ''}${dif.pausadas_dif}`, 'obras paradas', dif.pausadas_dif > 0 ? 'up' : (dif.pausadas_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Reparos', `${dif.reparo_dif > 0 ? '+' : ''}${dif.reparo_dif}`, dif.reparo_dif < 0 ? 'Wesley concentra' : 'Luana concentra', dif.reparo_dif > 0 ? 'up' : (dif.reparo_dif < 0 ? 'down' : 'neutral'))}
+        ${delta('Metragem mediana', `${dif.metragem_mediana_dif > 0 ? '+' : ''}${fmt(dif.metragem_mediana_dif)}m²`, 'porte mediano', 'neutral')}
+      </div>
+    </div>
+
+    <!-- HIPOTESES -->
+    ${hipoteses ? `<div class="hipoteses">
+      <div class="hipoteses-title">Hipóteses · agente narrativo</div>
+      <div class="hipoteses-list">${hipoteses}</div>
+    </div>` : ''}
+
+    <div class="footer-meta">
+      <span>Gerado: <b>${data.geradoEm?.replace('T',' ').slice(0,16) || '—'}</b></span>
+      <span>Carteira ativa à época: <b>${data.total_ativas}</b> obras</span>
+      <span>Cobertura comparativo: <b>${total}</b> obras (${pctCarteira}%)</span>
+      <span>Fonte: <b>cruz-luana-vs-wesley.json</b></span>
+    </div>
+  `;
+})();
+</script>
+
+</body>
+</html>
