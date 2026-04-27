@@ -1020,8 +1020,8 @@
   <a href="../hub.html" class="dock-item" data-label="Central">
     <svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
   </a>
-  <a href="../indicadores-v2.html" class="dock-item" data-label="Indicadores">
-    <svg viewBox="0 0 20 20"><path d="M1 10h4l2-6 3 12 2-8 2 4h5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+  <a href="labs.html" class="dock-item" data-label="Labs">
+    <svg viewBox="0 0 20 20"><path d="M7 2v6L3 16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2L13 8V2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
   </a>
   <a href="dashboard.html" class="dock-item active" data-label="Dashboard">
     <svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
@@ -1105,7 +1105,7 @@
       <div class="auto-freq" id="freq-refresh">a cada 30 min</div>
     </div>
   </div>
-  <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para indicadores em tempo real via KIRA, use <a href="../indicadores-v2.html">Indicadores</a> na nav acima. Bases distintas, métricas complementares.</div>
+  <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para sinais KIRA em tempo real (silêncio, cobertura WhatsApp), veja a seção <a href="#operacional">Operacional</a> abaixo. Bases distintas, métricas complementares.</div>
 </div>
 
 <div class="container">
@@ -1151,7 +1151,7 @@
     <div class="q-head">
       <h2><span class="section-pill pill-prazo">PRAZO</span></h2>
       <p class="sub">Das <span id="q1-crono-total-sub">34</span> obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
-      <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja <a href="../indicadores-v2.html">Indicadores</a>.</p>
+      <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja a seção <a href="#operacional">Operacional</a>.</p>
     </div>
 
     <div class="q1-stacked-wrap">
@@ -1208,7 +1208,7 @@
     <div class="q-head">
       <h2><span class="section-pill pill-paradas">OBRAS PARADAS</span></h2>
       <p class="sub">Todas as obras ativas agrupadas por situação. Clique numa categoria para ver quais obras estão ali e o diagnóstico.</p>
-      <p class="scope-note">Base: carteira completa (<span id="dyn-ativas-scope">—</span> ativas de <span id="dyn-total-scope">—</span> no sistema). Métricas complementares nos <a href="../indicadores-v2.html">Indicadores</a> (comunicação operacional, 148 monitoradas).</p>
+      <p class="scope-note">Base: carteira completa (<span id="dyn-ativas-scope">—</span> ativas de <span id="dyn-total-scope">—</span> no sistema). Métricas complementares na seção <a href="#operacional">Operacional</a> (comunicação · silêncio · cobertura WhatsApp).</p>
     </div>
 
     <!-- Mini-dashboard de filtros -->
