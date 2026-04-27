@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MONOFLOOR · Obras aguardando cor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0ebe3;--card:#ffffff;--accent:#b8a080;--accent-dark:#6b4f30;
+  --text:#3a3530;--text-muted:#8a7e72;--border:rgba(184,160,128,0.18);
+  --green:#3d8a5a;--red:#c45a5a;--amber:#b89a4a;--blue:#4a7ab8;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);min-height:100vh;line-height:1.55}
+
+.dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+@media(max-width:900px){.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}}
+.dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+.dock-item svg{width:18px;height:18px}
+.dock-item:hover{color:var(--accent);background:rgba(184,160,128,0.08)}
+.dock-item.active{color:var(--accent)}
+.dock-item::after{content:attr(data-label);position:absolute;left:40px;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+.dock-item:hover::after{color:#8a7e72}
+body.embed .dock{display:none}
+
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.header-brand{display:flex;flex-direction:column}
+.logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:lowercase;color:var(--text)}
+.logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+.header-title{font-size:13px;color:var(--text-muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-left:auto}
+body.embed .header{display:none}
+
+.main{max-width:1200px;margin:0 auto;padding:24px 24px 60px}
+.intro{margin-bottom:24px}
+.intro h1{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-0.01em}
+.intro .lead{font-size:13px;color:var(--text-muted);max-width:780px;line-height:1.55}
+.intro .scope-note{margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);padding:8px 12px;background:rgba(184,160,128,0.06);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:760px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;border-left:3px solid var(--accent)}
+.kpi-box.alert{border-left-color:var(--red)}
+.kpi-box.warn{border-left-color:var(--amber)}
+.kpi-box.ok{border-left-color:var(--green)}
+.kpi-val{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--text);line-height:1}
+.kpi-label{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;margin-top:6px}
+.kpi-detail{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* CATEGORIA STRIP */
+.cat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:760px){.cat-strip{grid-template-columns:1fr}}
+.cat-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:14px}
+.cat-box.placeholder{border-left:3px solid var(--amber)}
+.cat-box.semcor{border-left:3px solid var(--red)}
+.cat-box.definida{border-left:3px solid var(--green)}
+.cat-num{font-family:var(--font-mono);font-size:28px;font-weight:600;color:var(--text);line-height:1}
+.cat-info{flex:1}
+.cat-name{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text);margin-bottom:2px}
+.cat-desc{font-size:11px;color:var(--text-muted);line-height:1.4}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:16px}
+.section-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.section-title .small{font-family:var(--font-sans);font-size:11px;text-transform:none;letter-spacing:0;color:var(--text-muted)}
+
+/* DIST GRID */
+.dist-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+@media(max-width:920px){.dist-grid{grid-template-columns:1fr}}
+.dist-block h4{font-size:11px;color:var(--text-muted);margin-bottom:10px;font-weight:500;letter-spacing:0.05em}
+.dist-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px}
+.dist-row .label{flex:1;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dist-row .bar-wrap{flex:0 0 80px;height:5px;background:rgba(184,160,128,0.1);border-radius:3px;overflow:hidden}
+.dist-row .bar{height:100%;background:var(--accent);border-radius:3px}
+.dist-row.warn .bar{background:var(--amber)}
+.dist-row.alert .bar{background:var(--red)}
+.dist-row .v{flex:0 0 56px;text-align:right;font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:600}
+.dist-row .v small{color:var(--text-muted);font-weight:400;font-size:9px}
+.dist-row.dim .label{color:var(--text-muted)}
+.dist-row.dim .bar{background:var(--text-muted)}
+
+/* OBRAS LIST */
+.obras-list{display:flex;flex-direction:column;gap:6px}
+.obra-row{display:grid;grid-template-columns:36px 1fr 130px 100px 100px 70px;gap:10px;padding:10px 14px;background:var(--bg);border-radius:6px;align-items:center;font-size:12px;border-left:3px solid var(--amber)}
+.obra-row.semcor{border-left-color:var(--red)}
+.obra-row.placeholder{border-left-color:var(--amber)}
+@media(max-width:900px){.obra-row{grid-template-columns:1fr;gap:4px}}
+.obra-rank{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);font-weight:600}
+.obra-cliente{font-weight:600;color:var(--text)}
+.obra-cidade{font-size:11px;color:var(--text-muted)}
+.obra-cons{font-size:11px;color:var(--text);font-weight:500}
+.obra-fase{font-size:10px;color:var(--text-muted);font-family:var(--font-mono)}
+.obra-cat{font-size:9px;font-family:var(--font-mono);letter-spacing:0.04em;text-transform:uppercase;padding:3px 7px;border-radius:99px;text-align:center;font-weight:600}
+.obra-cat.placeholder{background:rgba(184,154,74,0.12);color:var(--amber)}
+.obra-cat.semcor{background:rgba(196,90,90,0.12);color:var(--red)}
+.obra-idade{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--red);text-align:right}
+
+/* FOOTER */
+.footer-meta{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);display:flex;flex-wrap:wrap;gap:20px}
+.footer-meta span b{color:var(--text)}
+
+.loader{display:flex;align-items:center;justify-content:center;min-height:300px;color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+.error{padding:20px;background:rgba(196,90,90,0.08);border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:13px}
+</style>
+</head>
+<body>
+
+<nav class="dock">
+  <a href="../hub.html" class="dock-item" data-label="Central"><svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
+  <a href="dashboard.html" class="dock-item" data-label="Dashboard"><svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+  <a href="atena.html" class="dock-item" data-label="ATENA"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="10" y="13.5" text-anchor="middle" font-family="serif" font-size="10" fill="currentColor">&#937;</text></svg></a>
+  <a href="labs.html" class="dock-item active" data-label="Labs"><svg viewBox="0 0 20 20"><path d="M7 2v6L3 16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2L13 8V2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><line x1="7" y1="2" x2="13" y2="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
+</nav>
+
+<header class="header">
+  <a href="../hub.html" style="text-decoration:none;color:inherit">
+    <div class="header-brand">
+      <div class="logo-text">monofloor</div>
+      <div class="logo-sub">Laboratório · Obras aguardando cor</div>
+    </div>
+  </a>
+  <div class="header-title">Cor indefinida · bloqueio OEC</div>
+</header>
+
+<main class="main" id="root">
+  <div class="loader">Carregando obras sem cor…</div>
+</main>
+
+<script>
+(async function(){
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.body.classList.add('embed');
+  }
+
+  const root = document.getElementById('root');
+  function fmt(n) { return (typeof n === 'number') ? Math.round(n).toLocaleString('pt-BR') : '—'; }
+  function fmtFloat(n) { return (typeof n === 'number') ? n.toLocaleString('pt-BR', {maximumFractionDigits: 1}) : '—'; }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function clean(s) { return String(s||'').trim(); }
+  function shortName(s) { return clean(String(s||'').trim().split(/\s+/).slice(0,2).join(' ')); }
+
+  let data;
+  try {
+    const r = await fetch('dados/cruz-cores.json', {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+  } catch (e) {
+    root.innerHTML = '<div class="error">Não carregou dados/cruz-cores.json — ' + escHtml(e.message) + '</div>';
+    return;
+  }
+
+  const total = data.total_ativas_sem_cor_real || 0;
+  const ativas = data.total_ativas || 0;
+  const pct = data.pct_sem_cor_real || 0;
+  const cats = data.por_categoria || {};
+  const placeholder = cats.PLACEHOLDER || {};
+  const semcor = cats.SEM_COR || {};
+  const definida = cats.DEFINIDA || {};
+  const top20 = data.top20_criticas || [];
+  const porStatus = data.por_status_indefinidas || {};
+  const porFase = data.por_fase_indefinidas || {};
+  const porCons = data.por_consultor_indefinidas || {};
+
+  // Helper: linha de distribuição
+  const entries = (obj) => Object.entries(obj || {}).map(([k,v]) => [k, v.total || 0, v.idade_media]).sort((a,b) => b[1]-a[1]);
+
+  const distRows = (obj) => entries(obj).map(([k,n,ia]) => {
+    const pctRow = total > 0 ? (n/total*100) : 0;
+    const isVazio = !k || k === '(sem consultor)' || k === '[]' || k === '(sem fase)' || k === 'null';
+    const cls = ia && ia > 180 ? 'alert' : (ia && ia > 120 ? 'warn' : '');
+    return `<div class="dist-row ${cls} ${isVazio?'dim':''}">
+      <span class="label" title="${escHtml(k)}">${escHtml(isVazio ? clean(k).replace(/^\(|\)$/g,'') : k)}</span>
+      <div class="bar-wrap"><div class="bar" style="width:${Math.min(100, pctRow)}%"></div></div>
+      <span class="v">${n}${ia ? ' <small>·' + Math.round(ia) + 'd</small>' : ''}</span>
+    </div>`;
+  }).join('');
+
+  // Top 20 row
+  const obraRow = (o, idx) => {
+    const cat = (o.categoria || '').toLowerCase();
+    return `<div class="obra-row ${cat === 'sem_cor' ? 'semcor' : 'placeholder'}">
+      <div class="obra-rank">#${String(idx+1).padStart(2,'0')}</div>
+      <div>
+        <div class="obra-cliente">${escHtml(clean(o.cliente))}</div>
+        <div class="obra-cidade">${escHtml(o.status||'')}</div>
+      </div>
+      <div class="obra-cons">${escHtml(shortName(o.consultor))}</div>
+      <div class="obra-fase" title="${escHtml(o.fase||'')}">${escHtml(o.fase || '—')}</div>
+      <div class="obra-cat ${cat}">${escHtml(o.categoria||'')}</div>
+      <div class="obra-idade">${o.idade}d</div>
+    </div>`;
+  };
+
+  // Faixa CLIENTE FINALIZADO sem cor — zumbi-cor
+  const cfSemCor = (porFase['CLIENTE FINALIZADO']?.total) || 0;
+  const cfIdade = (porFase['CLIENTE FINALIZADO']?.idade_media) || 0;
+  const agendVTSemCor = (porFase['AGEND. VT - AFERIÇÃO/ORIENTAÇÃO']?.total) || 0;
+
+  root.innerHTML = `
+    <div class="intro">
+      <h1>${total} obras (${pct.toFixed(1)}%) sem cor real definida</h1>
+      <p class="lead">De ${ativas} obras ativas, <b>${total} estão bloqueando a OEC</b> (Ordem de Execução de Cor — pré-requisito para fase de produção).
+      <b>${cfSemCor} já chegaram em CLIENTE FINALIZADO no Pipefy</b> com cor indefinida (idade média ${Math.round(cfIdade)}d) — zumbi-cor: terminaram administrativamente sem fechar a cor formalmente.</p>
+      <div class="scope-note">Snapshot · ${data.gerado_em} · Fonte: cruz-cores.json · 3 categorias: PLACEHOLDER (À DEFINIR no campo) · SEM_COR (campo vazio) · DEFINIDA (cor real preenchida)</div>
+    </div>
+
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-box alert">
+        <div class="kpi-val">${total}</div>
+        <div class="kpi-label">obras sem cor</div>
+        <div class="kpi-detail">de ${ativas} ativas · ${pct.toFixed(1)}%</div>
+      </div>
+      <div class="kpi-box alert">
+        <div class="kpi-val">${cfSemCor}</div>
+        <div class="kpi-label">zumbi-cor</div>
+        <div class="kpi-detail">CF + sem cor · ${Math.round(cfIdade)}d média</div>
+      </div>
+      <div class="kpi-box warn">
+        <div class="kpi-val">${agendVTSemCor}</div>
+        <div class="kpi-label">VT-aferição sem cor</div>
+        <div class="kpi-detail">bloqueia próxima fase</div>
+      </div>
+      <div class="kpi-box ${data.criticas_avancadas_sem_cor?.total > 0 ? 'alert' : 'ok'}">
+        <div class="kpi-val">${data.criticas_avancadas_sem_cor?.total || 0}</div>
+        <div class="kpi-label">crítica avançada</div>
+        <div class="kpi-detail">indústria/logística/exec sem cor &gt;180d</div>
+      </div>
+    </div>
+
+    <!-- CATEGORIAS -->
+    <div class="cat-strip">
+      <div class="cat-box placeholder">
+        <div class="cat-num">${placeholder.total || 0}</div>
+        <div class="cat-info">
+          <div class="cat-name">PLACEHOLDER</div>
+          <div class="cat-desc">Campo preenchido com "À DEFINIR" — alguém escreveu mas não decidiu. <b>Idade média ${fmtFloat(placeholder.idade_media)}d</b>.</div>
+        </div>
+      </div>
+      <div class="cat-box semcor">
+        <div class="cat-num">${semcor.total || 0}</div>
+        <div class="cat-info">
+          <div class="cat-name">SEM_COR</div>
+          <div class="cat-desc">Campo vazio · ninguém tocou. <b>Idade média ${fmtFloat(semcor.idade_media)}d</b> — sinal de inércia.</div>
+        </div>
+      </div>
+      <div class="cat-box definida">
+        <div class="cat-num">${definida.total || 0}</div>
+        <div class="cat-info">
+          <div class="cat-name">DEFINIDA</div>
+          <div class="cat-desc">Cor real preenchida (não placeholder). <b>${((definida.total || 0)/(ativas)*100).toFixed(0)}%</b> da carteira · idade ${fmtFloat(definida.idade_media)}d.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISTRIBUIÇÕES -->
+    <div class="section">
+      <div class="section-title">
+        Distribuições das ${total} indefinidas · 3 ângulos
+        <span class="small">cor da barra: amarelo &gt;120d · vermelho &gt;180d</span>
+      </div>
+      <div class="dist-grid">
+        <div class="dist-block">
+          <h4>Por status</h4>
+          ${distRows(porStatus)}
+        </div>
+        <div class="dist-block">
+          <h4>Por fase Pipefy</h4>
+          ${distRows(porFase)}
+        </div>
+        <div class="dist-block">
+          <h4>Por consultor</h4>
+          ${distRows(porCons)}
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:11px;color:var(--text-muted);font-style:italic;line-height:1.5">
+        Wesley tem ${porCons['Wesley Matheus de Carvalho']?.total || 0} obras sem cor (idade média ${Math.round(porCons['Wesley Matheus de Carvalho']?.idade_media || 0)}d) · Luana ${porCons['LUANA PATRICIA DE ANDRADE LIMA']?.total || 0} (${Math.round(porCons['LUANA PATRICIA DE ANDRADE LIMA']?.idade_media || 0)}d). Distribuição é proporcional à carteira de cada um.
+      </p>
+    </div>
+
+    <!-- TOP 20 -->
+    <div class="section">
+      <div class="section-title">
+        Top 20 críticas — mais antigas sem cor
+        <span class="small">${top20.length} obras · vermelho=SEM_COR · amarelo=PLACEHOLDER</span>
+      </div>
+      <div class="obras-list">
+        ${top20.map((o, i) => obraRow(o, i)).join('')}
+      </div>
+    </div>
+
+    <div class="footer-meta">
+      <span>Total ativas: <b>${ativas}</b></span>
+      <span>Sem cor real: <b>${total}</b> (${pct.toFixed(1)}%)</span>
+      <span>Zumbi-cor (CF): <b>${cfSemCor}</b></span>
+      <span>Snapshot: <b>${data.gerado_em}</b></span>
+      <span>Fonte: <b>cruz-cores.json</b></span>
+    </div>
+  `;
+})();
+</script>
+
+</body>
+</html>

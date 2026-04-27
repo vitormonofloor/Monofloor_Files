@@ -36,9 +36,10 @@
   .labs-tab.active::after { transform: scaleX(1); }
   @media(max-width:720px) { .labs-tab { padding: 10px 12px; font-size: 9px; } }
 
-  /* FASE 3.6 — hero descritivo com 8 cards */
-  .labs-hero { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin: 12px 0 20px; }
-  @media(max-width:1400px) { .labs-hero { grid-template-columns: repeat(4, 1fr); } }
+  /* FASE 3.6 — hero descritivo com 9 cards */
+  .labs-hero { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin: 12px 0 20px; }
+  @media(max-width:1500px) { .labs-hero { grid-template-columns: repeat(5, 1fr); } }
+  @media(max-width:1200px) { .labs-hero { grid-template-columns: repeat(4, 1fr); } }
   @media(max-width:980px) { .labs-hero { grid-template-columns: repeat(3, 1fr); } }
   @media(max-width:720px) { .labs-hero { grid-template-columns: repeat(2, 1fr); } }
   @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
@@ -137,9 +138,14 @@
       <div class="lh-title">Reparos</div>
       <div class="lh-q">27 reparos · pico 315d · Nathan domina</div>
     </button>
+    <button class="lh-card" data-tab="cores" type="button">
+      <div class="lh-cap">Cap 9</div>
+      <div class="lh-title">Cores</div>
+      <div class="lh-q">87 obras (41.8%) sem cor · bloqueia OEC</div>
+    </button>
   </div>
 
-  <!-- 8 ABAS -->
+  <!-- 9 ABAS -->
   <div class="labs-tabs">
     <button class="labs-tab active" data-tab="jornada">Jornada da Obra</button>
     <button class="labs-tab" data-tab="bloqueadores">Bloqueadores</button>
@@ -149,6 +155,7 @@
     <button class="labs-tab" data-tab="consultores">Consultores</button>
     <button class="labs-tab" data-tab="agend-vt">Cauda VT</button>
     <button class="labs-tab" data-tab="reparo">Reparos</button>
+    <button class="labs-tab" data-tab="cores">Cores</button>
   </div>
 
   <!-- IFRAMES -->
@@ -161,6 +168,7 @@
     <iframe class="labs-frame" id="frame-consultores" data-src="consultores-lab.html?embed=1" loading="lazy"></iframe>
     <iframe class="labs-frame" id="frame-agend-vt" data-src="agend-vt-lab.html?embed=1" loading="lazy"></iframe>
     <iframe class="labs-frame" id="frame-reparo" data-src="reparo-lab.html?embed=1" loading="lazy"></iframe>
+    <iframe class="labs-frame" id="frame-cores" data-src="cores-lab.html?embed=1" loading="lazy"></iframe>
   </div>
 </div>
 
@@ -211,7 +219,7 @@ function getDeepLink() {
 
 function activateTab(name) {
   if (!name) return false;
-  var validTabs = ['jornada','bloqueadores','campo','escopo','funil','consultores','agend-vt','reparo'];
+  var validTabs = ['jornada','bloqueadores','campo','escopo','funil','consultores','agend-vt','reparo','cores'];
   if (validTabs.indexOf(name) < 0) return false;
 
   // sincroniza hero cards + abas + frames
