@@ -891,6 +891,23 @@
   .auto-nome a:hover{color:#b8a080;text-decoration:underline}
   .auto-papel{font-size:10px;color:#8a7e72;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .auto-freq{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;white-space:nowrap;flex-shrink:0;font-weight:500}
+  /* Card de a&ccedil;&atilde;o: dispara refresh-all via Cloudflare Worker */
+  .auto-action{display:flex;align-items:center;gap:10px;padding:10px 12px;background:linear-gradient(135deg,#fff 0%,#faf7f2 100%);border:1px solid #d8cfc2;border-radius:6px;transition:all .25s ease;font-family:inherit;color:#5a5048;cursor:pointer;width:100%;text-align:left;font-size:inherit}
+  .auto-action:hover:not(:disabled){border-color:#3d8a5a;background:linear-gradient(135deg,#f4faf6 0%,#eaf3ed 100%);color:#2a5a3a;box-shadow:0 2px 8px rgba(61,138,90,0.1)}
+  .auto-action:focus-visible{outline:2px solid #b8a080;outline-offset:2px}
+  .auto-action:disabled{cursor:wait}
+  .auto-action.success{border-color:#3d8a5a;background:#eaf3ed;color:#2a5a3a}
+  .auto-action.error{border-color:#c45a5a;background:#f6eaea;color:#8a3a3a}
+  .auto-action-ico{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;line-height:1;color:#b8a080;flex-shrink:0;transition:transform .35s ease}
+  .auto-action:hover:not(:disabled) .auto-action-ico{transform:rotate(180deg);color:#3d8a5a}
+  .auto-action.loading .auto-action-ico{animation:spinIco 1s linear infinite;color:#b8a080}
+  .auto-action.success .auto-action-ico{color:#3d8a5a;transform:none;animation:none}
+  .auto-action.error .auto-action-ico{color:#c45a5a;transform:none;animation:none}
+  @keyframes spinIco{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  .auto-action-info{flex:1;min-width:0}
+  .auto-action-nome{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.05em;color:inherit;line-height:1.2}
+  .auto-action-papel{font-size:10px;color:#8a7e72;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .auto-action.success .auto-action-papel,.auto-action.error .auto-action-papel{color:inherit;opacity:0.75}
 
   /* ============== EVOLUÇÃO ============== */
   .auto-evolucao{margin-top:12px;padding-top:12px;border-top:1px solid #e8e0d4}
@@ -1144,6 +1161,13 @@
       </div>
       <div class="auto-freq" id="freq-refresh">a cada 30 min</div>
     </div>
+    <button class="auto-action" id="btn-refresh-all" type="button" aria-label="For&ccedil;ar atualiza&ccedil;&atilde;o de todos os agentes agora">
+      <span class="auto-action-ico" id="btn-refresh-all-ico" aria-hidden="true">&#x21bb;</span>
+      <div class="auto-action-info">
+        <div class="auto-action-nome" id="btn-refresh-all-nome">ATUALIZAR AGORA</div>
+        <div class="auto-action-papel" id="btn-refresh-all-papel">Dispara os 3 agentes em paralelo</div>
+      </div>
+    </button>
   </div>
   <div class="auto-fonte"><b>Fonte de dados:</b> snapshot do painel (atualizado a cada 30 min). Para sinais KIRA em tempo real (silêncio, cobertura WhatsApp), veja a seção <a href="#operacional">Operacional</a> abaixo. Bases distintas, métricas complementares.</div>
 </div>
@@ -4158,6 +4182,64 @@ function renderAutoAgentHealth() {
     applyDot('dot-atena', null, 24);
   })();
 }
+
+// ============== BOTÃO REFRESH ALL ==============
+// Dispara workflow refresh-all.yml via Cloudflare Worker (proxy server-side com GH_TOKEN).
+// Sem abrir nova aba. Estados: idle → loading → success/error → idle.
+(function setupRefreshAllButton(){
+  var WORKER_URL = 'https://monofloor-refresh.vitor-monofloor.workers.dev';
+  var btn = document.getElementById('btn-refresh-all');
+  if (!btn) return;
+  var nomeEl = document.getElementById('btn-refresh-all-nome');
+  var papelEl = document.getElementById('btn-refresh-all-papel');
+  var DEFAULT_NOME = 'ATUALIZAR AGORA';
+  var DEFAULT_PAPEL = 'Dispara os 3 agentes em paralelo';
+
+  function setState(state, nome, papel) {
+    btn.classList.remove('loading','success','error');
+    if (state) btn.classList.add(state);
+    if (nomeEl) nomeEl.textContent = nome || DEFAULT_NOME;
+    if (papelEl) papelEl.textContent = papel || DEFAULT_PAPEL;
+  }
+  function reset() {
+    btn.disabled = false;
+    setState(null);
+  }
+
+  btn.addEventListener('click', function(){
+    if (btn.disabled) return;
+    btn.disabled = true;
+    setState('loading', 'DISPARANDO...', 'Chamando GitHub Actions');
+
+    fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(function(r){
+        return r.json().then(function(d){ return { status: r.status, data: d }; }).catch(function(){ return { status: r.status, data: {} }; });
+      })
+      .then(function(res){
+        if (res.status === 200 && res.data.ok) {
+          setState('success', 'DISPARADO', 'Aguarde 2-3 min para completar');
+          setTimeout(reset, 10000);
+        } else if (res.status === 429) {
+          var sec = (res.data && res.data.retry_after) || 60;
+          setState('error', 'AGUARDE', 'Rate limit · ' + sec + 's');
+          setTimeout(reset, 5000);
+        } else {
+          var msg = (res.data && res.data.error) || ('HTTP ' + res.status);
+          setState('error', 'FALHOU', msg.length > 36 ? msg.slice(0,33) + '...' : msg);
+          console.warn('[refresh-all] erro:', res);
+          setTimeout(reset, 6000);
+        }
+      })
+      .catch(function(e){
+        setState('error', 'ERRO DE REDE', 'Worker offline?');
+        console.warn('[refresh-all] fetch falhou:', e);
+        setTimeout(reset, 6000);
+      });
+  });
+})();
 
 // ============== VEREDITO LOTE 6 — ESTRATÉGICOS (TEMPO/VOLUME/CAPACIDADE) ==============
 // PACOTE A.1 — null-checks em todo getElementById pra evitar crash silencioso
