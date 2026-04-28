@@ -870,9 +870,12 @@
   .pill-volume{background:#e8f2ec;color:#3d8a5a;border:1px solid #c8e0d0}
   .pill-agenda{background:rgba(184,160,128,0.12);color:#b8a080;border:1px solid rgba(184,160,128,0.2)}
   .pill-carteira{background:rgba(138,126,114,0.08);color:#8a7e72;border:1px solid rgba(138,126,114,0.15)}
-  .auto-agents-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+  .auto-agents-head{display:flex;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:8px}
   .auto-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.18em;color:#b8a080;text-transform:uppercase}
   .auto-sub{font-size:11px;color:#b8b0a4;font-style:italic}
+  .refresh-all-btn{margin-left:auto;align-self:center;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid #e0d8cc;color:#b8a080;text-decoration:none;font-size:16px;font-weight:600;line-height:1;transition:all .35s ease;cursor:pointer}
+  .refresh-all-btn:hover{background:#3d8a5a;border-color:#3d8a5a;color:#fff;transform:rotate(180deg);box-shadow:0 4px 12px rgba(61,138,90,0.25)}
+  .refresh-all-btn:focus-visible{outline:2px solid #b8a080;outline-offset:2px}
   .auto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   @media(max-width:800px){.auto-grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:480px){.auto-grid{grid-template-columns:1fr}}
@@ -1117,6 +1120,7 @@
   <div class="auto-agents-head">
     <span class="auto-tag">ALIMENTADO POR AGENTES AUT&Ocirc;NOMOS</span>
     <span class="auto-sub">Dados coletados, analisados e publicados sem interven&ccedil;&atilde;o manual</span>
+    <a class="refresh-all-btn" href="https://github.com/vitormonofloor/Monofloor_Files/actions/workflows/refresh-all.yml" target="_blank" rel="noopener" title="For&ccedil;ar atualiza&ccedil;&atilde;o de todos os agentes (Refresh + ARGOS + ATENA) &mdash; abre Actions, clique 'Run workflow'" aria-label="Atualizar todos os agentes agora">&#x21bb;</a>
   </div>
   <!-- FASE 7.4 — auto-dot reflete heartbeat real (.ativo só com dado recente). HERMES removido na 6.A. -->
   <div class="auto-grid">
