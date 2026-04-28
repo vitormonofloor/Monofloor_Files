@@ -47,6 +47,23 @@ with open(os.path.join(DIR, 'data.json'), 'w') as f:
 print(f'  data.json OK ({len(p)} projects)')
 "
 
+# ─── 1.5) Atualizar atualizado_em do headline.json (também no modo LEVE) ───
+# Sem isso, o headline.json fica congelado no timestamp do 1º refresh do dia (modo PESADO),
+# e o dot REFRESH no painel amarelece após 1h. Os números (ativas, score) continuam sendo
+# do snapshot do dia (design intencional), mas o timestamp avança a cada refresh.
+if [ -f "$DADOS/headline.json" ]; then
+  python3 -c "
+import json, os
+HL = os.path.join('$DADOS', 'headline.json')
+h = json.load(open(HL))
+h['atualizado_em'] = '$NOW'
+h['snapshot_date'] = '$TODAY'
+with open(HL, 'w') as f:
+    json.dump(h, f, ensure_ascii=False, indent=2)
+print('  headline.json: atualizado_em refreshed')
+" || echo "AVISO: bump headline.json falhou"
+fi
+
 # ─── 2) PESADO? ───
 if [ -f "$SNAP" ]; then
   echo "[done] Snapshot do dia já existe. Refresh LEVE concluído."

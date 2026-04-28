@@ -4220,8 +4220,16 @@ function renderAutoAgentHealth() {
       })
       .then(function(res){
         if (res.status === 200 && res.data.ok) {
-          setState('success', 'DISPARADO', 'Aguarde 2-3 min para completar');
-          setTimeout(reset, 10000);
+          setState('success', 'DISPARADO', 'Acompanhe os dots ao lado');
+          // dispara polling agressivo dos dots por 4 min (a cada 10s)
+          // pra refletir mudança assim que cada agente terminar
+          var pollCount = 0;
+          var pollId = setInterval(function(){
+            if (typeof renderAutoAgentHealth === 'function') renderAutoAgentHealth();
+            pollCount++;
+            if (pollCount >= 24) clearInterval(pollId); // 24 × 10s = 4 min
+          }, 10000);
+          setTimeout(reset, 4000);
         } else if (res.status === 429) {
           var sec = (res.data && res.data.retry_after) || 60;
           setState('error', 'AGUARDE', 'Rate limit · ' + sec + 's');
