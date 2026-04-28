@@ -113,7 +113,8 @@ button.brief-acao:hover::after{opacity:1}
 .acao-modal{display:none;position:fixed;inset:0;z-index:1000;align-items:flex-start;justify-content:center;padding:30px 20px;overflow-y:auto}
 .acao-modal.open{display:flex}
 .acao-modal-bg{position:fixed;inset:0;background:rgba(42,37,32,0.5);backdrop-filter:blur(4px)}
-.acao-modal-box{position:relative;background:#ffffff;border:1px solid #e0d8cc;border-radius:12px;max-width:780px;width:100%;padding:28px 32px;box-shadow:0 20px 60px rgba(42,37,32,0.15);z-index:1}
+/* PACOTE E.5 — sombra mais leve para acaoModal (modal de ação · acima) */
+.acao-modal-box{position:relative;background:#ffffff;border:1px solid #e0d8cc;border-radius:12px;max-width:780px;width:100%;padding:28px 32px;box-shadow:0 16px 48px rgba(42,37,32,0.12);z-index:1}
 .acao-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:1px solid #ede6dc;padding-bottom:14px;margin-bottom:18px}
 .acao-modal-title{font-size:18px;color:#2a2520;margin:0;font-weight:600;letter-spacing:-0.01em}
 .acao-modal-sub{font-size:11px;color:#8a7e72;margin-top:4px;letter-spacing:.05em}
@@ -181,7 +182,8 @@ button.brief-acao:hover::after{opacity:1}
 .evo-modal{display:none;position:fixed;inset:0;z-index:1000;align-items:flex-start;justify-content:center;padding:30px 20px;overflow-y:auto}
 .evo-modal.open{display:flex}
 .evo-modal-bg{position:fixed;inset:0;background:rgba(42,37,32,0.5);backdrop-filter:blur(4px)}
-.evo-modal-box{position:relative;background:#ffffff;border:1px solid #e0d8cc;border-radius:12px;max-width:900px;width:100%;padding:32px;box-shadow:0 20px 60px rgba(42,37,32,0.15);z-index:1}
+/* PACOTE E.5 — sombra mais profunda para evoModal (deeper context · timeline) */
+.evo-modal-box{position:relative;background:#ffffff;border:1px solid #e0d8cc;border-radius:12px;max-width:900px;width:100%;padding:32px;box-shadow:0 24px 72px rgba(42,37,32,0.18);z-index:1}
 .evo-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:#a89e92;font-size:22px;cursor:pointer;line-height:1;padding:4px 10px;border-radius:4px}
 .evo-close:hover{background:#f5f0e8;color:#3a3530}
 .evo-header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e8e0d4}
@@ -266,7 +268,8 @@ button.brief-acao:hover::after{opacity:1}
 @keyframes shieldRotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .atena-shield-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle, rgba(184,160,128,0.25) 0%, transparent 65%);opacity:0;animation:shieldGlowPulse 2.5s ease-in-out 0.3s infinite}
 @keyframes shieldGlowPulse{0%,100%{opacity:0.3;transform:scale(0.9)}50%{opacity:0.7;transform:scale(1.1)}}
-.atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#a89060;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(184,160,128,0.5)}
+/* PACOTE E.3 — color #6b6156 (muted forte) é mais legível no fade-in que #a89060 fraco */
+.atena-portal-title{font-size:48px;letter-spacing:20px;padding-left:20px;color:#6b6156;text-transform:uppercase;font-weight:200;opacity:0;margin-top:24px;animation:atenaTitleFade 2s ease-out 0.5s forwards;text-shadow:0 0 40px rgba(184,160,128,0.5)}
 @keyframes atenaTitleFade{0%{opacity:0;letter-spacing:40px}60%{opacity:1;letter-spacing:20px}100%{opacity:1;letter-spacing:20px}}
 .atena-portal-tagline{font-size:11px;letter-spacing:6px;padding-left:6px;color:#6b6156;text-transform:uppercase;opacity:0;margin-top:8px;animation:atenaTagFade 2s ease-out 0.8s forwards}
 @keyframes atenaTagFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
