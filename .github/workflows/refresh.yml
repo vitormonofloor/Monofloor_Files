@@ -25,7 +25,19 @@ jobs:
       - name: Run refresh script
         id: refresh
         continue-on-error: true
-        run: bash analise/refresh.sh
+        run: |
+          mkdir -p analise/dados
+          {
+            echo "================================================"
+            echo "WORKFLOW STEP RUNNING at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "GITHUB_SHA=$GITHUB_SHA"
+            echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
+            echo "PWD=$(pwd)"
+            echo "================================================"
+          } > analise/dados/.refresh-log.txt
+          bash analise/refresh.sh
+          echo "REFRESH_EXIT_CODE=$?" >> analise/dados/.refresh-log.txt
+          echo "WORKFLOW STEP DONE at $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> analise/dados/.refresh-log.txt
         env:
           TZ: America/Sao_Paulo
 
