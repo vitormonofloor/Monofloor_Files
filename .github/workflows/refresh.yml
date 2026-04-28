@@ -46,24 +46,27 @@ jobs:
         run: |
           git config user.name "monofloor-bot"
           git config user.email "bot@monofloor.local"
-          git add analise/data.json \
-                  analise/dados/painel-temporal.json \
-                  analise/dados/snapshots/ \
-                  analise/dados/dashboard-data.json \
-                  analise/dados/backlog-historico.json \
-                  analise/dados/headline.json \
-                  analise/dados/alertas/ \
-                  analise/dados/.refresh-log.txt \
-                  analise/obras-mapa.html 2>/dev/null || true
+          # git add -A pega TODOS os arquivos modificados (respeitando .gitignore).
+          # Antes era lista fixa que deixava arquivos unstaged → pull --rebase quebrava.
+          git add -A
           if git diff --staged --quiet; then
             echo "Sem mudanças — nada a commitar"
-          else
-            STAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
-            git commit -m "🔄 Refresh automático $STAMP"
-            for i in 1 2 3; do
-              git pull --rebase && git push && break || sleep 5
-            done
+            exit 0
           fi
+          STAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+          git commit -m "🔄 Refresh automático $STAMP"
+          # Loop de push com backoff. --autostash garante que pull --rebase nunca
+          # falhe por unstaged changes. exit 1 no final pra ter visibilidade real.
+          for i in 1 2 3 4 5 6 7 8; do
+            if git pull --rebase --autostash && git push; then
+              echo "✅ Push OK na tentativa $i"
+              exit 0
+            fi
+            echo "⚠ Tentativa $i falhou, aguardando $((i * 3))s..."
+            sleep $((i * 3))
+          done
+          echo "::error::Push falhou após 8 tentativas"
+          exit 1
 
       - name: Fail if refresh script failed
         if: steps.refresh.outcome == 'failure'
