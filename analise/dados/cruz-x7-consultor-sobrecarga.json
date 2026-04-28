@@ -1,0 +1,78 @@
+{
+    "gerado_em":  "2026-04-28T12:06:49Z",
+    "cruzamento":  "X7: consultor x sobrecarga 180+ - candidatos a redistribuicao",
+    "pergunta":  "Quais consultores acumulam carga excessiva (muitas obras OU alta percentagem com 180+ dias)?",
+    "metodo":  "Agrega painel-temporal por consultorNome (ativa=true, exclui null/vazio/[]). Severidade: crit se \u003e25 obras OU \u003e60 pct 180+; warn se \u003e15 obras OU \u003e40 pct",
+    "total_consultores":  7,
+    "total_com_sobrecarga":  4,
+    "contexto":  {
+                     "candidatos_redistribuicao":  "Wesley Matheus de Carvalho | LUANA PATRICIA DE ANDRADE LIMA | Pedro MarÃ§al | Juliana Santos",
+                     "threshold_crit":  "25 obras OU 60 pct obras 180+",
+                     "threshold_warn":  "15 obras OU 40 pct obras 180+"
+                 },
+    "consultores":  [
+                        {
+                            "consultor":  "Wesley Matheus de Carvalho",
+                            "total_ativas":  92,
+                            "obras_180_plus":  50,
+                            "pct_180_plus":  54.3,
+                            "idade_media":  179,
+                            "idade_mediana":  192,
+                            "severidade":  "crit"
+                        },
+                        {
+                            "consultor":  "LUANA PATRICIA DE ANDRADE LIMA",
+                            "total_ativas":  90,
+                            "obras_180_plus":  55,
+                            "pct_180_plus":  61.1,
+                            "idade_media":  194,
+                            "idade_mediana":  238,
+                            "severidade":  "crit"
+                        },
+                        {
+                            "consultor":  "Pedro Alexandre Santana",
+                            "total_ativas":  7,
+                            "obras_180_plus":  2,
+                            "pct_180_plus":  28.6,
+                            "idade_media":  97,
+                            "idade_mediana":  41,
+                            "severidade":  "ok"
+                        },
+                        {
+                            "consultor":  "Pedro MarÃ§al",
+                            "total_ativas":  4,
+                            "obras_180_plus":  3,
+                            "pct_180_plus":  75,
+                            "idade_media":  221,
+                            "idade_mediana":  272,
+                            "severidade":  "crit"
+                        },
+                        {
+                            "consultor":  "Juliana Santos",
+                            "total_ativas":  2,
+                            "obras_180_plus":  2,
+                            "pct_180_plus":  100,
+                            "idade_media":  272,
+                            "idade_mediana":  272,
+                            "severidade":  "crit"
+                        },
+                        {
+                            "consultor":  "ThaÃ­sa de Lara Barbosa",
+                            "total_ativas":  1,
+                            "obras_180_plus":  0,
+                            "pct_180_plus":  0,
+                            "idade_media":  0,
+                            "idade_mediana":  0,
+                            "severidade":  "ok"
+                        },
+                        {
+                            "consultor":  "Renata Garcia Penna",
+                            "total_ativas":  1,
+                            "obras_180_plus":  0,
+                            "pct_180_plus":  0,
+                            "idade_media":  0,
+                            "idade_mediana":  0,
+                            "severidade":  "ok"
+                        }
+                    ]
+}

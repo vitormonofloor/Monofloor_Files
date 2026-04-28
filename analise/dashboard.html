@@ -5145,8 +5145,8 @@ async function loadAchadosBanner() {
     }
     var esc = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
 
-    // Carrega tudo em paralelo
-    var [feridas, x1, x2, x3, x4, x5, x6, x8] = await Promise.all([
+    // Carrega tudo em paralelo · PACOTE D.5 — X7 incluso
+    var [feridas, x1, x2, x3, x4, x5, x6, x7, x8] = await Promise.all([
       fetchSafe('dados/cruz-obras-feridas.json'),
       fetchSafe('dados/cruz-x1-risco-duplo.json'),
       fetchSafe('dados/cruz-x2-lider-oculto-critico.json'),
@@ -5154,6 +5154,7 @@ async function loadAchadosBanner() {
       fetchSafe('dados/cruz-x4-success-dna-consultor.json'),
       fetchSafe('dados/cruz-x5-pipefy-painel-divergencia.json'),
       fetchSafe('dados/cruz-x6-aplicador-ocioso-lider-oculto.json'),
+      fetchSafe('dados/cruz-x7-consultor-sobrecarga.json'),
       fetchSafe('dados/cruz-x8-rapido-vs-reparo.json'),
     ]);
 
@@ -5186,6 +5187,9 @@ async function loadAchadosBanner() {
     if (x6) {
       var oc = x6.contexto && x6.contexto.em_0_obras;
       chips.push({ label: 'X6 aplicadores ociosos', val: oc, cls: 'warn', tip: 'em 0 obras agora' });
+    }
+    if (x7) {
+      chips.push({ label: 'X7 consultores sobrecarga', val: x7.total_com_sobrecarga + '/' + x7.total_consultores, cls: x7.total_com_sobrecarga > 0 ? 'crit' : 'ok', tip: 'candidatos a redistribuição (>25 obras OU >60% 180+)' });
     }
     if (x8) {
       var w8 = x8.por_consultor && x8.por_consultor.wesley;

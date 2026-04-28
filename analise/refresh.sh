@@ -223,13 +223,15 @@ for o in ativas:
         orfas_ids.append(sid)
         orfas_cli[sid] = (o.get("clienteNome") or "").strip()
 
-# 3) LOTE VT
+# 3) LOTE VT (cauda longa) — VEREDITO PACOTE D.1
+# Antes: banda fixa 258-262d (oscilou 48→0→0→3 em 4 dias por causa da janela móvel).
+# Agora: idade >= 180d em fase AGEND. VT — métrica honesta de cauda longa real.
 lote_ids, lote_cli = [], {}
 for o in ativas:
     fase = (o.get("faseAtual") or "").upper()
     if "AGEND" in fase and "VT" in fase:
         idade = o.get("idade_dias")
-        if idade and 258 <= idade <= 262:
+        if idade and idade >= 180:
             sid = o["id"][:8]
             lote_ids.append(sid)
             lote_cli[sid] = (o.get("clienteNome") or "").strip()
