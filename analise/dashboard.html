@@ -4122,20 +4122,18 @@ function renderAutoAgentHealth() {
       } else applyDot('dot-refresh', null, 1);
     }).catch(function(){ applyDot('dot-refresh', null, 1); });
 
-  // ARGOS: usa gerado_em mais recente entre cruz-silenciosas/cruz-ocorrencias (limite 6h)
-  Promise.all([
-    fetch('dados/cruz-silenciosas.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
-    fetch('dados/cruz-ocorrencias.json?t=' + Date.now()).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
-  ]).then(function(arr){
-    var datas = [];
-    if (arr[0] && arr[0].gerado_em) datas.push(arr[0].gerado_em);
-    if (arr[1] && (arr[1].geradoEm || arr[1].gerado_em)) datas.push(arr[1].geradoEm || arr[1].gerado_em);
-    if (datas.length) {
-      datas.sort();
-      var ageH = (Date.now() - new Date(datas[datas.length - 1]).getTime()) / 3600000;
-      applyDot('dot-argos', ageH, 6);
-    } else applyDot('dot-argos', null, 6);
-  });
+  // ARGOS: usa Last-Modified de argos-output.html (que ARGOS atualiza no commit) — limite 6h
+  // Antes lia cruz-silenciosas/cruz-ocorrencias (que NÃO são gerados pelo ARGOS atual).
+  fetch('dados/argos-output.html?t=' + Date.now(), { method: 'HEAD' })
+    .then(function(r){
+      if (!r.ok) { applyDot('dot-argos', null, 6); return; }
+      var lm = r.headers.get('Last-Modified');
+      if (lm) {
+        var ageH = (Date.now() - new Date(lm).getTime()) / 3600000;
+        applyDot('dot-argos', ageH, 6);
+      } else applyDot('dot-argos', 0, 6);
+    })
+    .catch(function(){ applyDot('dot-argos', null, 6); });
 
   // ATENA: tenta arquivo de hoje em atena/, retrocede 7 dias (limite 24h)
   (async function(){

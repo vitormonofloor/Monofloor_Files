@@ -1,0 +1,40 @@
+name: Refresh ALL — Dispara todos agentes
+
+# Botão único pra pedir "atualizar tudo agora": dispara em paralelo
+# os 3 workflows (Refresh, ARGOS, ATENA). Útil pro Vitor quando quer
+# forçar atualização sem esperar o cron.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Disparar Refresh Monofloor Data
+        run: gh workflow run refresh.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Disparar ARGOS — Indicadores KIRA
+        run: gh workflow run argos.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Disparar ATENA — Varredura Diária
+        run: gh workflow run atena.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resumo
+        run: |
+          echo "✅ 3 workflows disparados em paralelo:"
+          echo "   - Refresh: dados/headline.json + snapshots + dashboard-data"
+          echo "   - ARGOS:   dados/argos-output.html + Telegram"
+          echo "   - ATENA:   dados/atena/{date}-*.json"
+          echo ""
+          echo "Aguarde ~2-3 min para todos completarem e GH Pages publicar."
