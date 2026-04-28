@@ -36,13 +36,6 @@
     background: var(--card); border-bottom: 1px solid var(--border);
     padding: 14px 28px;
   }
-  /* Reserva 70px nas laterais quando os menus dock/side-nav aparecem (>900px),
-     pra conteúdo nunca encostar/sobrepor com os ícones. Mobile usa padding original. */
-  @media (min-width: 901px) {
-    header.top { padding-left: 70px; padding-right: 70px; }
-    .auto-agents { padding-left: 70px; padding-right: 70px; }
-    .container { padding-left: 70px; padding-right: 70px; }
-  }
   .top-row { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
   .top .logo { display: flex; align-items: center; gap: 12px; }
   .top .logo-text { font-size: 15px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; color: var(--text); }
@@ -864,6 +857,13 @@
 
   /* ============== AUTO-AGENTS ============== */
   .auto-agents{padding:10px 24px;background:linear-gradient(135deg,#f0ebe3 0%,#faf7f2 100%);border-bottom:1px solid #e8e0d4;max-width:1600px;margin:0 auto 12px}
+  /* Reserva 70px lateral em telas >900px (onde dock/side-nav aparecem). Vem aqui no fim
+     pra vencer cascata de regras base anteriores como .container { padding: 28px } da L55. */
+  @media (min-width: 901px) {
+    header.top { padding-left: 70px; padding-right: 70px; }
+    .auto-agents { padding-left: 70px; padding-right: 70px; }
+    .container { padding-left: 70px; padding-right: 70px; }
+  }
   .auto-fonte{font-size:11px;color:#a89e92;margin-top:12px;padding-top:10px;border-top:1px solid #e8e0d4;line-height:1.5}
   .auto-fonte b{color:#8a7e72;font-weight:500}
   .auto-fonte a{color:#b8a080;text-decoration:none}
