@@ -82,6 +82,16 @@ a:hover { text-decoration: underline; }
 .brief-kpi-meter-lbl{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:7px;color:#a89e92;margin-top:14px}
 @media(max-width:600px){.brief-kpis{grid-template-columns:repeat(2,1fr)}}
 
+/* PACOTE C.1 — section-fontes na ATENA (mapa de autoridades · PRINCIPIO.md I2) */
+.section-fontes{margin:8px 0 18px;padding:8px 12px;background:#fdfaf4;border-left:2px solid #d8c8a8;border-radius:0 4px 4px 0;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.04em;line-height:1.7;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.section-fontes .sf-label{color:#b8a080;font-weight:600;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
+.section-fontes .sf-item{display:inline-flex;align-items:center;gap:5px}
+.section-fontes .sf-tag{font-size:8px;padding:2px 6px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.section-fontes .sf-tag.painel-amigo{background:#e8f2ec;color:#2d5a3a}
+.section-fontes .sf-tag.pipefy{background:#f4f0e6;color:#5a4a2a}
+.section-fontes .sf-tag.kira{background:#eaf0f6;color:#2a4a6a}
+.section-fontes .sf-tag.calculado{background:#ede6dc;color:#6b6156}
+
 /* Bloco 2: Acoes prioritarias */
 .brief-section{margin-bottom:24px}
 .brief-title{font-size:10px;color:#b8a080;text-transform:uppercase;letter-spacing:0.12em;font-weight:600;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #ede6dc}
@@ -351,6 +361,14 @@ button.brief-acao:hover::after{opacity:1}
     </div>
   </div>
 
+  <!-- PACOTE C.1 — fontes do KPI strip diagnóstico -->
+  <div class="section-fontes">
+    <span class="sf-label">Fontes do KPI strip</span>
+    <span class="sf-item"><span class="sf-tag calculado">Calc.</span>SCORE via SCORE-FORMULA.md</span>
+    <span class="sf-item"><span class="sf-tag kira">KIRA</span>SILÊNCIO % · ATRASO %</span>
+    <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>CICLO MEDIANO · idade_dias</span>
+  </div>
+
   <!-- OUTROS INDICADORES (volume — sub-cards) -->
   <div class="brief-section" id="brief-secundarios">
     <div class="brief-title" style="opacity:.7">Outros indicadores</div>
@@ -368,6 +386,14 @@ button.brief-acao:hover::after{opacity:1}
     <div class="brief-insight" id="brief-insight">
       <div class="atena-loading">Carregando dados...</div>
     </div>
+  </div>
+
+  <!-- PACOTE C.1 — fontes da Recomendação -->
+  <div class="section-fontes" style="margin-bottom:0">
+    <span class="sf-label">Fontes da recomendação</span>
+    <span class="sf-item"><span class="sf-tag calculado">Calc.</span>cruz-obras-feridas (UX2)</span>
+    <span class="sf-item"><span class="sf-tag kira">KIRA</span>insights + oportunidades (atena/{date}-*.json)</span>
+    <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>ações sobre snapshot diário</span>
   </div>
 
   <!-- VEREDITO LOTE 3 — RECOMENDAÇÃO ASSINADA -->
@@ -487,6 +513,18 @@ function renderRecomendacao(feridas, atenaInsights, atenaOportunidades, headline
   var hoje = new Date();
   var ddmm = String(hoje.getDate()).padStart(2,'0') + '/' + String(hoje.getMonth()+1).padStart(2,'0') + '/' + hoje.getFullYear();
   if (dataEl) dataEl.textContent = ddmm;
+
+  // PACOTE C.2 — fallback se nenhum dado chegou (era pendurado em "Consolidando...")
+  var dadosOK = (feridas && feridas.total_feridas != null) || (atenaInsights && atenaInsights.achados) || (headline && typeof headline.score === 'number');
+  if (!dadosOK) {
+    corpo.innerHTML = '<p>Sem cruzamentos disponíveis no momento. Recomendação genérica:</p>' +
+      '<div class="ra-acao"><strong>Recomendação</strong>Revisar <a href="dashboard.html#problemas">Banner de Achados</a> no Dashboard e priorizar obras com 3+ diagnósticos críticos. Verificar fontes de dados (cruz-obras-feridas, atena/insights) — possível falha no pipeline.</div>' +
+      '<div class="ra-cta">' +
+        '<a href="dashboard.html#problemas">Banner de achados</a>' +
+        '<a href="obras-mapa.html">Mapa drill-down</a>' +
+      '</div>';
+    return;
+  }
 
   // Coleta sinais críticos
   var temFeridas = feridas && feridas.total_feridas > 0;

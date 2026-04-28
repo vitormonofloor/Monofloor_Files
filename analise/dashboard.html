@@ -2295,6 +2295,16 @@ function initDashboard() {
       q2Init(); agInit(); loadBacklogHistory();
     });
   }
+
+  // PACOTE C.4 — auto-scroll para a âncora se URL veio com hash (ex: vindo da KIRA manchete do hub)
+  if (location.hash) {
+    setTimeout(function(){
+      try {
+        var alvo = document.querySelector(location.hash);
+        if (alvo) alvo.scrollIntoView({behavior:'smooth', block:'start'});
+      } catch(e) { /* hash inválido — ignora */ }
+    }, 400); // espera renders assíncronos terminarem
+  }
 }
 
 loadDashboardData();

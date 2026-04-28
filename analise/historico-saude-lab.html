@@ -474,6 +474,27 @@ body.embed .header{display:none}
       <span>Snapshots backlog: <b>${(backlog || []).length}</b></span>
       <span>Próxima ATENA: <b>${atenaIdx?.proxima_varredura ? new Date(atenaIdx.proxima_varredura).toLocaleString('pt-BR') : '—'}</b></span>
     </div>
+
+    <!-- PACOTE C.3 — closure narrativo: jornada do diretor termina aqui com decisão -->
+    <section class="conclusao-lab" style="margin-top:32px;padding:22px 26px;background:linear-gradient(135deg,#fdfaf4 0%,#f7f1e8 100%);border:1px solid #d8c8a8;border-left:4px solid #b8a080;border-radius:8px">
+      <h3 style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;text-transform:uppercase;letter-spacing:.18em;font-weight:700;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid #e8d8b8">Próxima ação</h3>
+      <p style="font-size:13px;color:#3a3530;line-height:1.7;margin:0 0 12px">
+        Score atual: <strong>${scoreAtual ?? '—'}</strong>${scoreAtual ? ` (${scoreAtual < 50 ? 'crítico' : scoreAtual < 70 ? 'atenção' : 'saudável'})` : ''}.
+        Meta operacional: <strong>70</strong>.
+      </p>
+      <p style="font-size:12px;color:#6b6156;line-height:1.6;margin:0 0 14px">
+        Para mover o ponteiro no próximo ciclo, atacar pelos 3 vetores que têm maior efeito sobre o score:
+      </p>
+      <ul style="font-size:12px;color:#3a3530;line-height:1.8;margin:0;padding-left:20px">
+        <li><a href="bloqueadores-lab.html" style="color:#b8a080;font-weight:600">Bloqueadores</a> — destravar obras presas em fase</li>
+        <li><a href="consultores-lab.html" style="color:#b8a080;font-weight:600">Consultores</a> — redistribuir carga (Luana 55, Wesley 50)</li>
+        <li><a href="reparo-lab.html" style="color:#b8a080;font-weight:600">Reparos</a> — atacar a cauda longa de obras devolvidas</li>
+      </ul>
+      <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10px">
+        <a href="atena.html" style="text-transform:uppercase;letter-spacing:.06em;font-weight:500;padding:8px 12px;border-radius:4px;background:#b8a080;color:#fff;text-decoration:none">Voltar ao briefing →</a>
+        <a href="dashboard.html" style="text-transform:uppercase;letter-spacing:.06em;font-weight:500;padding:8px 12px;border-radius:4px;border:1px solid #c4b5a0;background:#fff;color:#6b6156;text-decoration:none">Ver dashboard completo</a>
+      </div>
+    </section>
   `;
 })();
 </script>
