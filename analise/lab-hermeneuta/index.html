@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab HERMENEUTA — Painel × KIRA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0ebe3;color:#3a3530;margin:0;padding:0;line-height:1.5}
+    .wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
+
+    /* Header */
+    header{padding-bottom:20px;margin-bottom:28px;border-bottom:1px solid #d8d0c4}
+    .lab-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:4px 10px;border:1px solid #d8c8a8;border-radius:3px;margin-bottom:14px}
+    h1{font-size:24px;font-weight:600;margin:0 0 6px;letter-spacing:-0.01em}
+    h1 .accent{color:#b8a080}
+    .sub{font-size:13px;color:#8a7e72;line-height:1.6;max-width:760px}
+
+    /* Status bar */
+    .status-bar{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px;padding:14px 18px;background:#fff;border:1px solid #e0d8cc;border-left:3px solid #b8a080;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px}
+    .st-item{display:flex;flex-direction:column;gap:2px}
+    .st-label{font-size:8px;color:#a89e92;text-transform:uppercase;letter-spacing:.08em}
+    .st-val{font-size:18px;font-weight:600;color:#2a2520}
+    .st-val.crit{color:#c45a5a}
+    .st-val.warn{color:#b89a4a}
+    .st-val.ok{color:#3d8a5a}
+
+    /* Disparador */
+    .disparador{margin:24px 0;padding:18px 22px;background:linear-gradient(135deg,#fdfaf4 0%,#f7f1e8 100%);border:1px solid #d8c8a8;border-left:4px solid #b8a080;border-radius:8px}
+    .disparador-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+    .disp-titulo{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+    .disp-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6156;display:flex;align-items:center;gap:6px}
+    .disp-status .dot{width:8px;height:8px;border-radius:50%;background:#c8bfb4}
+    .disp-status.copiado .dot{background:#3d8a5a;animation:pulseDot 1.2s ease-in-out 2}
+    @keyframes pulseDot{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(61,138,90,0.4)}50%{transform:scale(1.4);box-shadow:0 0 0 8px rgba(61,138,90,0)}}
+    .disp-instr{font-size:12px;color:#6b6156;line-height:1.6;margin-bottom:14px}
+    .disp-instr code{font-family:'JetBrains Mono',monospace;font-size:11px;background:#ede6dc;padding:2px 6px;border-radius:3px;color:#3a3530}
+    .disp-botoes{display:flex;gap:8px;flex-wrap:wrap}
+    .disp-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;padding:10px 16px;border-radius:6px;border:1px solid #c4b5a0;background:#fff;color:#3a3530;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+    .disp-btn:hover{background:#b8a080;color:#fff;border-color:#b8a080;transform:translateY(-1px);box-shadow:0 4px 12px rgba(184,160,128,0.18)}
+    .disp-btn.primary{background:#b8a080;color:#fff;border-color:#b8a080}
+    .disp-btn.primary:hover{background:#9a8060}
+    .disp-btn .qtd{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px}
+    .disp-btn .lbl{font-size:11px;opacity:.85}
+
+    /* Filtros */
+    .filtros{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
+    .filtro-btn{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:6px 12px;border-radius:99px;border:1px solid #d8d0c4;background:#fff;color:#6b6156;cursor:pointer;transition:all .2s}
+    .filtro-btn:hover{border-color:#b8a080;color:#3a3530}
+    .filtro-btn.active{background:#b8a080;color:#fff;border-color:#b8a080}
+
+    /* Lista de discordâncias */
+    .lista{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+    .obra{background:#fff;border:1px solid #e0d8cc;border-radius:6px;padding:18px 20px;border-left:3px solid #c4b5a0;transition:all .15s}
+    .obra:hover{box-shadow:0 4px 14px rgba(42,37,32,0.05)}
+    .obra.concorda{border-left-color:#3d8a5a;opacity:.72}
+    .obra.discorda-alta{border-left-color:#c45a5a}
+    .obra.discorda-media{border-left-color:#b89a4a}
+    .obra.discorda-baixa{border-left-color:#4a7ab8}
+    .obra.inconclusivo{border-left-color:#c8bfb4;opacity:.55}
+
+    .obra-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+    .obra-cli{font-size:14px;font-weight:600;color:#2a2520;line-height:1.3}
+    .obra-cli small{display:block;font-size:10px;color:#8a7e72;font-weight:400;margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+    .obra-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;flex-shrink:0}
+    .obra-tag.alta{background:#f6eaea;color:#6a2a2a}
+    .obra-tag.media{background:#f4f0e6;color:#5a4a2a}
+    .obra-tag.baixa{background:#eaf0f6;color:#2a4a6a}
+    .obra-tag.concorda{background:#e8f2ec;color:#2d5a3a}
+    .obra-tag.inconclusivo{background:#ede6dc;color:#6b6156}
+
+    .obra-conf{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0;padding:10px 14px;background:#fdfaf4;border-radius:4px;font-size:12px}
+    @media(max-width:600px){.obra-conf{grid-template-columns:1fr}}
+    .conf-col-label{font-size:9px;color:#a89e92;text-transform:uppercase;letter-spacing:.06em;font-family:'JetBrains Mono',monospace;margin-bottom:3px}
+    .conf-col-val{font-size:13px;color:#3a3530;line-height:1.4}
+    .conf-col-val strong{color:#2a2520;font-weight:600}
+
+    .obra-evid{font-size:11px;color:#6b6156;line-height:1.6;padding:10px 14px;background:#f7f1e8;border-left:2px solid #b8a080;border-radius:0 4px 4px 0;margin-top:8px;font-style:italic}
+    .obra-evid::before{content:'evidência';display:block;font-size:8px;color:#b8a080;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:5px;font-style:normal}
+
+    /* Empty state */
+    .empty{padding:60px 20px;text-align:center;color:#8a7e72;font-size:13px;background:#fff;border:1px dashed #d8d0c4;border-radius:8px}
+    .empty strong{display:block;color:#3a3530;font-size:15px;margin-bottom:6px}
+    .empty code{font-family:'JetBrains Mono',monospace;font-size:11px;background:#f0ebe3;padding:2px 6px;border-radius:3px}
+
+    footer{margin-top:40px;padding-top:20px;border-top:1px solid #e8e0d4;color:#b8b0a4;font-size:11px;text-align:center;line-height:1.6}
+    footer a{color:#b8a080;text-decoration:none}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="lab-tag">LAB · sandbox isolada · sem risco no site principal</span>
+    <h1>Hermeneuta · <span class="accent">Painel × KIRA</span></h1>
+    <p class="sub">Onde o que o sistema declara sobre uma obra <strong>discorda</strong> do que o cliente está dizendo no grupo (Telegram/WhatsApp). KIRA já capturou a narrativa — este lab interpreta e sinaliza divergências.</p>
+
+    <div class="status-bar">
+      <div class="st-item"><span class="st-label">Suspeitas analisadas</span><span class="st-val" id="st-total">—</span></div>
+      <div class="st-item"><span class="st-label">Concordam</span><span class="st-val ok" id="st-concorda">—</span></div>
+      <div class="st-item"><span class="st-label">Discordam (alta)</span><span class="st-val crit" id="st-disc-alta">—</span></div>
+      <div class="st-item"><span class="st-label">Discordam (média)</span><span class="st-val warn" id="st-disc-media">—</span></div>
+      <div class="st-item"><span class="st-label">Inconclusivo</span><span class="st-val" id="st-inc">—</span></div>
+      <div class="st-item"><span class="st-label">Última análise</span><span class="st-val" id="st-data" style="font-size:13px">—</span></div>
+    </div>
+  </header>
+
+  <!-- Disparador (Opção 1: copia comando pro clipboard) -->
+  <div class="disparador">
+    <div class="disparador-head">
+      <span class="disp-titulo">Rodar análise</span>
+      <span class="disp-status" id="disp-status"><span class="dot"></span><span id="disp-status-text">aguardando · clique pra copiar comando</span></span>
+    </div>
+    <div class="disp-instr">
+      Clique num dos botões → o comando é copiado pro clipboard → cole no Claude Code (terminal) → eu executo e atualizo este painel.
+      Comando padrão: <code>rodar hermeneuta nas N primeiras obras</code>.
+    </div>
+    <div class="disp-botoes">
+      <button class="disp-btn primary" data-cmd="rodar hermeneuta nas 10 primeiras obras">
+        <span class="qtd">10</span><span class="lbl">obras · rápido (~3 min)</span>
+      </button>
+      <button class="disp-btn" data-cmd="rodar hermeneuta nas 30 primeiras obras">
+        <span class="qtd">30</span><span class="lbl">obras · médio (~7 min)</span>
+      </button>
+      <button class="disp-btn" data-cmd="rodar hermeneuta nas 95 obras suspeitas">
+        <span class="qtd">95</span><span class="lbl">obras · completo (~15 min)</span>
+      </button>
+      <button class="disp-btn" data-cmd="recarregar discordancias.json no painel hermeneuta" style="margin-left:auto" title="Recarrega o JSON sem rodar análise">
+        <span class="lbl">↻ recarregar tela</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="filtros">
+    <button class="filtro-btn active" data-filtro="todos">Todos</button>
+    <button class="filtro-btn" data-filtro="discorda-alta">Discorda · alta</button>
+    <button class="filtro-btn" data-filtro="discorda-media">Discorda · média</button>
+    <button class="filtro-btn" data-filtro="discorda-baixa">Discorda · baixa</button>
+    <button class="filtro-btn" data-filtro="concorda">Concorda</button>
+    <button class="filtro-btn" data-filtro="inconclusivo">Inconclusivo</button>
+  </div>
+
+  <div class="lista" id="lista"></div>
+
+  <footer>
+    Lab HERMENEUTA · sandbox isolada · sem cron · roda sob demanda via Claude Code<br>
+    Snapshot dos dados: <span id="footer-snapshot">—</span> · <a href="README.md">README</a> · <a href="agente/hermeneuta-prompt.md">prompt</a>
+  </footer>
+
+</div>
+
+<script>
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+async function load(){
+  let d;
+  try {
+    const r = await fetch('dados/discordancias.json?t='+Date.now(), {cache:'no-store'});
+    d = await r.json();
+  } catch(e) {
+    document.getElementById('lista').innerHTML = '<div class="empty"><strong>Erro ao carregar</strong>dados/discordancias.json não pôde ser lido.</div>';
+    return;
+  }
+
+  // Status bar
+  document.getElementById('st-total').textContent = d.total_obras_analisadas || 0;
+  document.getElementById('st-concorda').textContent = d.total_concorda || 0;
+  document.getElementById('st-disc-alta').textContent = (d.obras||[]).filter(o => o.concorda===false && o.confianca==='alta').length;
+  document.getElementById('st-disc-media').textContent = (d.obras||[]).filter(o => o.concorda===false && o.confianca==='media').length;
+  document.getElementById('st-inc').textContent = d.total_inconclusivo || 0;
+  document.getElementById('st-data').textContent = d.gerado_em ? d.gerado_em.replace('T', ' ').slice(0, 16) + ' UTC' : '— (não rodado ainda)';
+  document.getElementById('footer-snapshot').textContent = d.gerado_em ? d.gerado_em.slice(0,10) : '—';
+
+  // Estado vazio
+  if (!d.obras || d.obras.length === 0) {
+    document.getElementById('lista').innerHTML = '<div class="empty"><strong>Sandbox pronta · nenhuma análise ainda</strong>Para gerar discordâncias: peça ao Claude Code <code>"rodar hermeneuta nas 10 primeiras obras"</code>. Ele despacha subagentes em paralelo, lê narrativas KIRA, confronta com painel e popula este JSON. Depois recarregue a página.</div>';
+    return;
+  }
+
+  // Render lista
+  window._OBRAS = d.obras;
+  renderLista('todos');
+
+  document.querySelectorAll('.filtro-btn').forEach(b => b.addEventListener('click', ()=>{
+    document.querySelectorAll('.filtro-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    renderLista(b.dataset.filtro);
+  }));
+}
+
+function renderLista(filtro){
+  const obras = window._OBRAS || [];
+  let lista = obras;
+  if (filtro === 'concorda') lista = obras.filter(o => o.concorda === true);
+  else if (filtro === 'inconclusivo') lista = obras.filter(o => o.concorda === null || o.concorda === undefined);
+  else if (filtro === 'discorda-alta') lista = obras.filter(o => o.concorda === false && o.confianca === 'alta');
+  else if (filtro === 'discorda-media') lista = obras.filter(o => o.concorda === false && o.confianca === 'media');
+  else if (filtro === 'discorda-baixa') lista = obras.filter(o => o.concorda === false && o.confianca === 'baixa');
+
+  if (lista.length === 0) {
+    document.getElementById('lista').innerHTML = '<div class="empty">Nenhuma obra nesse filtro.</div>';
+    return;
+  }
+
+  document.getElementById('lista').innerHTML = lista.map(o => {
+    let cls, tag, tagText;
+    if (o.concorda === true) { cls = 'concorda'; tag = 'concorda'; tagText = 'concorda'; }
+    else if (o.concorda === false) {
+      cls = 'discorda-' + (o.confianca || 'baixa');
+      tag = o.confianca || 'baixa';
+      tagText = 'discorda · ' + (o.confianca || 'baixa');
+    }
+    else { cls = 'inconclusivo'; tag = 'inconclusivo'; tagText = 'inconclusivo'; }
+
+    let confHtml = '';
+    if (o.concorda === false) {
+      confHtml = '<div class="obra-conf">' +
+        '<div><div class="conf-col-label">Painel diz</div><div class="conf-col-val">' + esc(o.status_painel || '—') + '</div></div>' +
+        '<div><div class="conf-col-label">KIRA sugere</div><div class="conf-col-val"><strong>' + esc(o.estado_inferido || '—') + '</strong></div></div>' +
+        '</div>';
+    }
+
+    return '<div class="obra ' + cls + '">' +
+             '<div class="obra-head">' +
+               '<div class="obra-cli">' + esc(o.cliente) +
+                 '<small>' + esc(o.obra_id || '').slice(0,8) + (o.categoria_divergencia ? ' · ' + esc(o.categoria_divergencia) : '') + '</small>' +
+               '</div>' +
+               '<span class="obra-tag ' + tag + '">' + tagText + '</span>' +
+             '</div>' +
+             confHtml +
+             (o.evidencia ? '<div class="obra-evid">' + esc(o.evidencia) + '</div>' : '') +
+           '</div>';
+  }).join('');
+}
+
+load();
+
+// Disparador — copia comando pro clipboard + feedback visual
+document.querySelectorAll('.disp-btn').forEach(b => {
+  b.addEventListener('click', async () => {
+    const cmd = b.dataset.cmd;
+    const status = document.getElementById('disp-status');
+    const statusText = document.getElementById('disp-status-text');
+
+    // Caso especial: recarregar tela sem rodar
+    if (cmd === 'recarregar discordancias.json no painel hermeneuta') {
+      location.reload();
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(cmd);
+      status.classList.add('copiado');
+      statusText.innerHTML = '<strong>copiado · cole no Claude Code:</strong> "' + cmd + '"';
+      setTimeout(() => {
+        status.classList.remove('copiado');
+        statusText.textContent = 'aguardando · clique pra copiar comando';
+      }, 8000);
+    } catch(e) {
+      // Fallback se clipboard API falhar (file:// em alguns browsers)
+      const textarea = document.createElement('textarea');
+      textarea.value = cmd;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try { document.execCommand('copy'); statusText.textContent = 'copiado · cole no Claude Code'; }
+      catch(_) { statusText.textContent = 'falha ao copiar · selecione manualmente: ' + cmd; }
+      document.body.removeChild(textarea);
+    }
+  });
+});
+</script>
+
+</body>
+</html>
