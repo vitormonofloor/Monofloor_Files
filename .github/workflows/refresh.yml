@@ -23,11 +23,14 @@ jobs:
           fetch-depth: 1
 
       - name: Run refresh script
+        id: refresh
+        continue-on-error: true
         run: bash analise/refresh.sh
         env:
           TZ: America/Sao_Paulo
 
       - name: Commit and push if changed
+        if: always()
         run: |
           git config user.name "monofloor-bot"
           git config user.email "bot@monofloor.local"
@@ -49,3 +52,9 @@ jobs:
               git pull --rebase && git push && break || sleep 5
             done
           fi
+
+      - name: Fail if refresh script failed
+        if: steps.refresh.outcome == 'failure'
+        run: |
+          echo "::error::refresh.sh saiu com erro — veja .refresh-log.txt no repo pra detalhes"
+          exit 1
