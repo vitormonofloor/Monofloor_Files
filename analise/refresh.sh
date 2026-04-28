@@ -20,18 +20,34 @@ SNAP="$SNAPSHOTS/$TODAY.json"
 
 echo "=== Refresh Monofloor === $NOW"
 
+# DEBUG LOG — diagnose silent failures (script declares success but doesn't update files)
+LOG="$DADOS/.refresh-log.txt"
+{
+  echo "================================================"
+  echo "RUN START: $NOW (TZ=America/Sao_Paulo, TODAY=$TODAY)"
+  echo "================================================"
+} > "$LOG"
+log() { echo "[$(date -u +%H:%M:%S)] $*" >> "$LOG"; }
+
 # ─── 1) LEVE: fetch 5 listas ───
 echo "[1] Fetch listas..."
-curl -sf --max-time 30 "$API/projects?limit=2000" -o "$TMP/projects.json" || { echo "ERRO: /projects falhou"; exit 1; }
-curl -sf --max-time 30 "$API/dashboard"         -o "$TMP/dashboard.json"  || echo "AVISO: /dashboard falhou"
-curl -sf --max-time 30 "$API/analise"            -o "$TMP/analise.json"   || echo "AVISO: /analise falhou"
-curl -sf --max-time 30 "$API/escalacao-diaria"   -o "$TMP/escalacao.json" || echo "AVISO: /escalacao falhou"
-curl -sf --max-time 30 "$API/equipes"            -o "$TMP/equipes.json"   || echo "AVISO: /equipes falhou"
+log "STEP 1: fetch listas"
+curl -sf --max-time 30 "$API/projects?limit=2000" -o "$TMP/projects.json" \
+  && log "  /projects OK ($(wc -c < "$TMP/projects.json") bytes)" \
+  || { log "  /projects FAILED"; echo "ERRO: /projects falhou"; exit 1; }
+curl -sf --max-time 30 "$API/dashboard"         -o "$TMP/dashboard.json"  && log "  /dashboard OK" || log "  /dashboard FAILED (continua)"
+curl -sf --max-time 30 "$API/analise"            -o "$TMP/analise.json"   && log "  /analise OK"   || log "  /analise FAILED (continua)"
+curl -sf --max-time 30 "$API/escalacao-diaria"   -o "$TMP/escalacao.json" && log "  /escalacao OK" || log "  /escalacao FAILED (continua)"
+curl -sf --max-time 30 "$API/equipes"            -o "$TMP/equipes.json"   && log "  /equipes OK"   || log "  /equipes FAILED (continua)"
 
 # Validar projects (obrigatório)
-python3 -c "import json; json.load(open('$TMP/projects.json'))" 2>/dev/null || { echo "ERRO: projects.json inválido"; exit 1; }
+log "STEP 1.1: validar projects.json"
+python3 -c "import json; json.load(open('$TMP/projects.json'))" 2>>"$LOG" \
+  && log "  projects.json válido" \
+  || { log "  projects.json INVÁLIDO"; echo "ERRO: projects.json inválido"; exit 1; }
 
 # Montar data.json
+log "STEP 1.2: montar data.json"
 python3 -c "
 import json, os
 TMP = '$TMP'
@@ -45,7 +61,9 @@ eq = json.load(open(os.path.join(TMP, 'equipes.json'))) if os.path.exists(os.pat
 with open(os.path.join(DIR, 'data.json'), 'w') as f:
     json.dump({'projects':p,'dashboard':d,'analise':a,'escalacao':e,'equipes':eq,'fetchedAt':NOW}, f, ensure_ascii=False)
 print(f'  data.json OK ({len(p)} projects)')
-"
+" 2>>"$LOG"
+PYRC=$?
+log "  data.json python exit_code=$PYRC ($([ -f "$DIR/data.json" ] && echo "$(wc -c < "$DIR/data.json") bytes" || echo "MISSING"))"
 
 # ─── 1.5) Atualizar atualizado_em do headline.json (também no modo LEVE) ───
 # Sem isso, o headline.json fica congelado no timestamp do 1º refresh do dia (modo PESADO),
@@ -53,8 +71,9 @@ print(f'  data.json OK ({len(p)} projects)')
 # do snapshot do dia (design intencional), mas o timestamp avança a cada refresh.
 # encoding='utf-8-sig' na leitura tolera BOM (caso headline.json tenha sido escrito por PowerShell).
 # Escrita sem BOM (UTF-8 puro), assim o arquivo fica consistente após o 1º run pós-fix.
+log "STEP 1.5: bump headline.json"
 if [ -f "$DADOS/headline.json" ]; then
-  HL="$DADOS/headline.json" NOW_VAL="$NOW" TODAY_VAL="$TODAY" python3 << 'PYEOF'
+  HL="$DADOS/headline.json" NOW_VAL="$NOW" TODAY_VAL="$TODAY" python3 << 'PYEOF' 2>&1
 import json, os, sys
 HL = os.environ['HL']
 try:
@@ -64,18 +83,24 @@ try:
     h['snapshot_date'] = os.environ['TODAY_VAL']
     with open(HL, 'w', encoding='utf-8') as f:
         json.dump(h, f, ensure_ascii=False, indent=2)
-    print(f"  headline.json: atualizado_em={h['atualizado_em']} refreshed")
+    print(f"  headline.json bump: atualizado_em={h['atualizado_em']}")
 except Exception as e:
-    print(f"  AVISO: bump headline.json falhou: {e!r}", file=sys.stderr)
+    print(f"  AVISO: bump headline.json falhou: {e!r}")
 PYEOF
+  HLRC=$?
+  log "  headline bump exit=$HLRC"
+else
+  log "  headline.json AUSENTE — pulando bump"
 fi
 
 # ─── 2) PESADO? ───
 if [ -f "$SNAP" ]; then
+  log "STEP 2: modo LEVE — snapshot do dia já existe, saindo OK"
   echo "[done] Snapshot do dia já existe. Refresh LEVE concluído."
   rm -rf "$TMP"
   exit 0
 fi
+log "STEP 2: modo PESADO — sem snapshot"
 echo "[2] Modo PESADO — snapshot do dia não existe"
 
 # ─── 3) Fetch details das ativas ───
