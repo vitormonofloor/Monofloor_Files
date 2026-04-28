@@ -1027,45 +1027,6 @@
     text-decoration: underline;
   }
 
-  /* ============== GLOBAL FILTER (MVP) ============== */
-  .global-filter {
-    position: sticky;
-    top: 56px; /* logo abaixo do header.top */
-    z-index: 25;
-    background: var(--card-2, #faf7f2);
-    border-bottom: 1px solid var(--border, #e0d8cc);
-    padding: 8px 28px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-    flex-wrap: wrap;
-  }
-  .gf-label { font-weight: 500; color: var(--muted, #8a7e72); text-transform: uppercase; letter-spacing: 0.08em; font-size: 10px; }
-  .gf-select {
-    padding: 4px 8px;
-    border: 1px solid var(--border, #e0d8cc);
-    background: var(--card, #ffffff);
-    color: var(--text, #3a3530);
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .gf-select:hover { border-color: var(--border-2, #c4b5a0); }
-  .gf-clear {
-    padding: 4px 10px;
-    background: transparent;
-    border: 1px solid var(--border, #e0d8cc);
-    color: var(--muted, #8a7e72);
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 11px;
-    font-family: inherit;
-  }
-  .gf-clear:hover { background: var(--border, #e0d8cc); color: var(--text, #3a3530); }
-  .gf-status { color: var(--accent, #b8a080); font-weight: 500; margin-left: auto; font-size: 11px; }
-  .gf-hidden { display: none !important; }
   </style>
 <script src="../auth.js"></script>
 </head>
@@ -1113,22 +1074,6 @@
     </div>
   </div>
 </header>
-
-<!-- Filtro global — MVP. Filtra elementos com data-consultor / data-uf / data-equipe. -->
-<div class="global-filter" id="global-filter">
-  <div class="gf-label">Filtrar:</div>
-  <select id="gf-consultor" class="gf-select" aria-label="Filtrar por consultor">
-    <option value="">Todos os consultores</option>
-  </select>
-  <select id="gf-uf" class="gf-select" aria-label="Filtrar por UF">
-    <option value="">Todas as UFs</option>
-  </select>
-  <select id="gf-equipe" class="gf-select" aria-label="Filtrar por equipe">
-    <option value="">Todas as equipes</option>
-  </select>
-  <button id="gf-clear" class="gf-clear" hidden>&times; Limpar</button>
-  <span id="gf-status" class="gf-status"></span>
-</div>
 
 <div class="auto-agents">
   <div class="auto-agents-head">
@@ -2310,7 +2255,6 @@ function initDashboard() {
   renderEstrategicos();
   renderAutoAgentHealth();
   initSideNav();
-  initGlobalFilter();
   // DOMContentLoaded-dependent inits
   if (document.readyState !== 'loading') {
     q2Init(); agInit(); loadBacklogHistory();
@@ -2333,191 +2277,6 @@ function initDashboard() {
 
 loadDashboardData();
 
-// ============== FILTRO GLOBAL (MVP) ==============
-// Filtro global — MVP. Evolui conforme cada seção adicionar data-consultor/data-uf/data-equipe nos itens filtráveis.
-// Estado é lido dos 3 selects no topo. applyGlobalFilter() itera sobre [data-consultor], [data-uf], [data-equipe]
-// e adiciona/remove a classe .gf-hidden. NÃO recomputa KPIs agregados — apenas oculta linhas/cards visualmente.
-function initGlobalFilter() {
-  try {
-    var selCons = document.getElementById('gf-consultor');
-    var selUf = document.getElementById('gf-uf');
-    var selEq = document.getElementById('gf-equipe');
-    var btnClear = document.getElementById('gf-clear');
-    if (!selCons || !selUf || !selEq) return;
-
-    // Popular consultores: prioriza AGG.top_consultores (chave => quantidade); fallback Q2_OBRAS.
-    var consultores = [];
-    try {
-      if (AGG && AGG.top_consultores && typeof AGG.top_consultores === 'object') {
-        consultores = Object.keys(AGG.top_consultores).filter(function(k){ return k && k.trim(); });
-      }
-      if (!consultores.length && Array.isArray(Q2_OBRAS)) {
-        var seen = {};
-        Q2_OBRAS.forEach(function(o){
-          var c = (o && o.consultor) ? String(o.consultor).trim() : '';
-          if (c && c !== '[]' && !seen[c]) { seen[c] = 1; consultores.push(c); }
-        });
-      }
-    } catch(e) { /* fallback silencioso */ }
-    consultores.sort(function(a,b){ return a.localeCompare(b, 'pt-BR'); });
-    consultores.forEach(function(c){
-      var opt = document.createElement('option');
-      opt.value = c; opt.textContent = c;
-      selCons.appendChild(opt);
-    });
-
-    // Popular UFs: AGG.top_ufs (chave => quantidade).
-    var ufs = [];
-    try {
-      if (AGG && AGG.top_ufs && typeof AGG.top_ufs === 'object') {
-        ufs = Object.keys(AGG.top_ufs).filter(function(k){ return k && k.trim() && k !== 'OUTROS'; });
-      }
-    } catch(e) { /* fallback silencioso */ }
-    ufs.sort();
-    ufs.forEach(function(u){
-      var opt = document.createElement('option');
-      opt.value = u; opt.textContent = u;
-      selUf.appendChild(opt);
-    });
-
-    // Popular equipes: Q3_EQUIPES (array com .nome).
-    var equipes = [];
-    try {
-      if (Array.isArray(Q3_EQUIPES)) {
-        Q3_EQUIPES.forEach(function(e){
-          if (e && e.nome && (e.ativo === undefined || e.ativo)) equipes.push(e.nome);
-        });
-      }
-    } catch(e) { /* fallback silencioso */ }
-    equipes.sort(function(a,b){ return a.localeCompare(b, 'pt-BR'); });
-    equipes.forEach(function(n){
-      var opt = document.createElement('option');
-      opt.value = n; opt.textContent = n;
-      selEq.appendChild(opt);
-    });
-
-    // Listeners
-    selCons.addEventListener('change', applyGlobalFilter);
-    selUf.addEventListener('change', applyGlobalFilter);
-    selEq.addEventListener('change', applyGlobalFilter);
-    if (btnClear) btnClear.addEventListener('click', function(){
-      selCons.value = ''; selUf.value = ''; selEq.value = '';
-      applyGlobalFilter();
-    });
-
-    // Re-aplicar quando elementos novos forem renderizados (rankings async, etc).
-    var container = document.querySelector('.container');
-    if (container && window.MutationObserver) {
-      var pending = false;
-      var mo = new MutationObserver(function(){
-        if (pending) return;
-        pending = true;
-        requestAnimationFrame(function(){ pending = false; applyGlobalFilter(); });
-      });
-      mo.observe(container, { childList: true, subtree: true });
-    }
-
-    applyGlobalFilter();
-  } catch(e) { console.error('initGlobalFilter:', e); }
-}
-
-function applyGlobalFilter() {
-  try {
-    var selCons = document.getElementById('gf-consultor');
-    var selUf = document.getElementById('gf-uf');
-    var selEq = document.getElementById('gf-equipe');
-    var btnClear = document.getElementById('gf-clear');
-    var status = document.getElementById('gf-status');
-    if (!selCons || !selUf || !selEq) return;
-
-    var fCons = (selCons.value || '').trim();
-    var fUf = (selUf.value || '').trim();
-    var fEq = (selEq.value || '').trim();
-    var anyActive = !!(fCons || fUf || fEq);
-
-    if (btnClear) btnClear.hidden = !anyActive;
-
-    // Itera elementos filtráveis: tem pelo menos um dos 3 atributos
-    var nodes = document.querySelectorAll('[data-consultor], [data-uf], [data-equipe]');
-    var totalElegiveis = 0, totalVisiveis = 0;
-    nodes.forEach(function(el){
-      totalElegiveis++;
-      var dc = el.getAttribute('data-consultor') || '';
-      var du = el.getAttribute('data-uf') || '';
-      var de = el.getAttribute('data-equipe') || '';
-      var hide = false;
-      // Se filtro ativo e elemento tem o atributo, comparar
-      if (fCons && dc && dc !== fCons) hide = true;
-      if (fUf && du && du !== fUf) hide = true;
-      if (fEq && de && de !== fEq) hide = true;
-      // Se filtro ativo mas elemento não tem o atributo correspondente, esconder também
-      if (fCons && !dc) hide = true;
-      if (fUf && !du) hide = true;
-      if (fEq && !de) hide = true;
-      if (hide) {
-        el.classList.add('gf-hidden');
-      } else {
-        el.classList.remove('gf-hidden');
-        totalVisiveis++;
-      }
-    });
-
-    // Status visual
-    if (status) {
-      if (anyActive) {
-        var partes = [];
-        if (fCons) partes.push('consultor: ' + fCons);
-        if (fUf) partes.push('UF: ' + fUf);
-        if (fEq) partes.push('equipe: ' + fEq);
-        var sufixo = totalElegiveis > 0
-          ? totalVisiveis + ' itens visíveis (de ' + totalElegiveis + ')'
-          : 'Nenhum elemento marcado com data-attr ainda — evoluindo por seção.';
-        status.textContent = partes.join(' · ') + ' — ' + sufixo;
-      } else {
-        status.textContent = '';
-      }
-    }
-
-    // FASE 5.7 — recalcular KPIs do hero quando filtro está ativo
-    try {
-      if (anyActive && Array.isArray(Q2_OBRAS)) {
-        var filtradas = Q2_OBRAS.filter(function(o){
-          if (!o) return false;
-          var consOK = !fCons || (o.consultor && String(o.consultor).trim() === fCons);
-          // Q2_OBRAS não tem UF direto, derivar de cidade quando possível (fallback: pula filtro se não houver dado)
-          var ufOK = !fUf;
-          if (fUf && o.cidade) {
-            var ufFromCidade = String(o.cidade).match(/\/\s*([A-Z]{2})\s*$/);
-            ufOK = ufFromCidade ? ufFromCidade[1] === fUf : true;
-          }
-          // Equipe: Q3_EQUIPES → membros → comparar com escalação se houver. MVP: ignora se não há dado
-          var eqOK = !fEq;
-          return consOK && ufOK && eqOK;
-        });
-        var kpiAtivasEl = document.getElementById('kpi-ativas');
-        var kpiAtivasSub = kpiAtivasEl && kpiAtivasEl.parentElement && kpiAtivasEl.parentElement.querySelector('.sub');
-        if (kpiAtivasEl) {
-          kpiAtivasEl.textContent = filtradas.length;
-          kpiAtivasEl.classList.add('kpi-filtered');
-        }
-        if (kpiAtivasSub) {
-          kpiAtivasSub.innerHTML = '<span style="background:#f4f0e6;color:#5a4a2a;padding:1px 5px;border-radius:3px;font-size:9px;letter-spacing:.05em;font-family:JetBrains Mono,monospace">FILTRO ATIVO</span> de <span class="dyn-total-obras">' + Q2_OBRAS.length + '</span>';
-        }
-      } else {
-        // Restaura
-        var kpiAtivasEl2 = document.getElementById('kpi-ativas');
-        if (kpiAtivasEl2) {
-          kpiAtivasEl2.classList.remove('kpi-filtered');
-          if (Array.isArray(Q2_OBRAS)) kpiAtivasEl2.textContent = (AGG && AGG.total_ativas) || Q2_OBRAS.length;
-        }
-        var kpiSub = kpiAtivasEl2 && kpiAtivasEl2.parentElement && kpiAtivasEl2.parentElement.querySelector('.sub');
-        if (kpiSub && Array.isArray(Q2_OBRAS)) {
-          kpiSub.innerHTML = 'de <span class="dyn-total-obras">' + Q2_OBRAS.length + '</span> no painel';
-        }
-      }
-    } catch(e) { /* recompute silencioso */ }
-  } catch(e) { console.error('applyGlobalFilter:', e); }
-}
 
 function q2EscHtml(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
