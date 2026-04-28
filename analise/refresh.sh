@@ -51,17 +51,23 @@ print(f'  data.json OK ({len(p)} projects)')
 # Sem isso, o headline.json fica congelado no timestamp do 1º refresh do dia (modo PESADO),
 # e o dot REFRESH no painel amarelece após 1h. Os números (ativas, score) continuam sendo
 # do snapshot do dia (design intencional), mas o timestamp avança a cada refresh.
+# encoding='utf-8-sig' na leitura tolera BOM (caso headline.json tenha sido escrito por PowerShell).
+# Escrita sem BOM (UTF-8 puro), assim o arquivo fica consistente após o 1º run pós-fix.
 if [ -f "$DADOS/headline.json" ]; then
-  python3 -c "
-import json, os
-HL = os.path.join('$DADOS', 'headline.json')
-h = json.load(open(HL))
-h['atualizado_em'] = '$NOW'
-h['snapshot_date'] = '$TODAY'
-with open(HL, 'w') as f:
-    json.dump(h, f, ensure_ascii=False, indent=2)
-print('  headline.json: atualizado_em refreshed')
-" || echo "AVISO: bump headline.json falhou"
+  HL="$DADOS/headline.json" NOW_VAL="$NOW" TODAY_VAL="$TODAY" python3 << 'PYEOF'
+import json, os, sys
+HL = os.environ['HL']
+try:
+    with open(HL, encoding='utf-8-sig') as f:
+        h = json.load(f)
+    h['atualizado_em'] = os.environ['NOW_VAL']
+    h['snapshot_date'] = os.environ['TODAY_VAL']
+    with open(HL, 'w', encoding='utf-8') as f:
+        json.dump(h, f, ensure_ascii=False, indent=2)
+    print(f"  headline.json: atualizado_em={h['atualizado_em']} refreshed")
+except Exception as e:
+    print(f"  AVISO: bump headline.json falhou: {e!r}", file=sys.stderr)
+PYEOF
 fi
 
 # ─── 2) PESADO? ───
