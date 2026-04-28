@@ -1,0 +1,56 @@
+name: ARGOS — Indicadores KIRA
+
+# Migrado do Railway (trial expirou 2026-04-28) para GitHub Actions.
+# Executa cicloCompleto() do agente argos-monofloor a cada 6h:
+#   1. Extrai projects + messages + ocorrências de cliente.monofloor.cloud
+#   2. Computa indicadores agregados
+#   3. Publica HTML em analise/dados/argos-output.html (não indicadores.html — esse é redirect)
+#   4. Notifica Telegram com resumo
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # a cada 6h: 00, 06, 12, 18 UTC
+  workflow_dispatch:        # permite rodar manualmente
+
+permissions:
+  contents: write
+
+concurrency:
+  group: argos
+  cancel-in-progress: false
+
+jobs:
+  argos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout argos-monofloor
+        uses: actions/checkout@v4
+        with:
+          repository: vitormonofloor/argos-monofloor
+          path: argos
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd argos
+          npm ci --omit=dev || npm install --omit=dev
+
+      - name: Run ARGOS (RUN_ONCE)
+        run: |
+          cd argos
+          node index.js
+        env:
+          RUN_ONCE: "1"
+          KIRA_API_URL: "https://cliente.monofloor.cloud/api"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: "vitormonofloor/Monofloor_Files"
+          GITHUB_FILE: "analise/dados/argos-output.html"
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          VITOR_CHAT_ID: "8151246424"
+          INTERVALO_HORAS: "6"
