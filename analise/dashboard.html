@@ -1169,7 +1169,7 @@
 
     <div>
       <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span id="dyn-total-obras">—</span> no painel</div></div>
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span class="dyn-total-obras">—</span> no painel</div></div>
         <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
         <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
         <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
@@ -2465,7 +2465,7 @@ function applyGlobalFilter() {
           kpiAtivasEl.classList.add('kpi-filtered');
         }
         if (kpiAtivasSub) {
-          kpiAtivasSub.innerHTML = '<span style="background:#f4f0e6;color:#5a4a2a;padding:1px 5px;border-radius:3px;font-size:9px;letter-spacing:.05em;font-family:JetBrains Mono,monospace">FILTRO ATIVO</span> de <span id="dyn-total-obras">' + Q2_OBRAS.length + '</span>';
+          kpiAtivasSub.innerHTML = '<span style="background:#f4f0e6;color:#5a4a2a;padding:1px 5px;border-radius:3px;font-size:9px;letter-spacing:.05em;font-family:JetBrains Mono,monospace">FILTRO ATIVO</span> de <span class="dyn-total-obras">' + Q2_OBRAS.length + '</span>';
         }
       } else {
         // Restaura
@@ -2476,7 +2476,7 @@ function applyGlobalFilter() {
         }
         var kpiSub = kpiAtivasEl2 && kpiAtivasEl2.parentElement && kpiAtivasEl2.parentElement.querySelector('.sub');
         if (kpiSub && Array.isArray(Q2_OBRAS)) {
-          kpiSub.innerHTML = 'de <span id="dyn-total-obras">' + Q2_OBRAS.length + '</span> no painel';
+          kpiSub.innerHTML = 'de <span class="dyn-total-obras">' + Q2_OBRAS.length + '</span> no painel';
         }
       }
     } catch(e) { /* recompute silencioso */ }
@@ -2745,7 +2745,8 @@ function renderHero() {
   // Hidratar totais dinâmicos
   const totalObras = AGG.total_obras || '—';
   const totalObrasFmt = typeof totalObras === 'number' ? totalObras.toLocaleString('pt-BR') : totalObras;
-  if ($('dyn-total-obras')) $('dyn-total-obras').textContent = totalObrasFmt;
+  // PACOTE A.2 — virou classe (era ID duplicado em 3 lugares · só o 1º era atualizado)
+  document.querySelectorAll('.dyn-total-obras').forEach(function(el){ el.textContent = totalObrasFmt; });
   if ($('dyn-ativas-scope')) $('dyn-ativas-scope').textContent = ativas;
   if ($('dyn-total-scope')) $('dyn-total-scope').textContent = totalObrasFmt;
 
@@ -4149,7 +4150,12 @@ function renderAutoAgentHealth() {
 }
 
 // ============== VEREDITO LOTE 6 — ESTRATÉGICOS (TEMPO/VOLUME/CAPACIDADE) ==============
+// PACOTE A.1 — null-checks em todo getElementById pra evitar crash silencioso
 function renderEstrategicos() {
+  // helper: set textContent só se elemento existe
+  function set(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+  function setStyle(id, prop, val) { var el = document.getElementById(id); if (el) el.style[prop] = val; }
+
   // TEMPO — ciclo mediano + meta
   fetch('dados/headline.json?t=' + Date.now())
     .then(function(r){ return r.ok ? r.json() : null; })
@@ -4158,40 +4164,40 @@ function renderEstrategicos() {
       var ciclo = h.score_componentes.ciclo_mediano;
       var meta = h.score_componentes.ciclo_meta || 150;
       if (typeof ciclo === 'number') {
-        document.getElementById('est-ciclo-num').textContent = ciclo;
-        document.getElementById('est-ciclo-meta').textContent = meta + 'd';
+        set('est-ciclo-num', ciclo);
+        set('est-ciclo-meta', meta + 'd');
         var fillPct = Math.min(100, (ciclo / 300) * 100);
         var markPct = Math.min(100, (meta / 300) * 100);
-        document.getElementById('est-ciclo-fill').style.width = fillPct + '%';
-        document.getElementById('est-ciclo-mark').style.left = markPct + '%';
+        setStyle('est-ciclo-fill', 'width', fillPct + '%');
+        setStyle('est-ciclo-mark', 'left', markPct + '%');
         var diff = ciclo - meta;
-        document.getElementById('est-ciclo-detalhe').textContent = (diff > 0 ? '+' + diff : diff) + 'd vs meta · ' + (h.score_componentes.ciclo_180_pct || 0).toFixed(1) + '% das obras com 180+';
+        set('est-ciclo-detalhe', (diff > 0 ? '+' + diff : diff) + 'd vs meta · ' + (h.score_componentes.ciclo_180_pct || 0).toFixed(1) + '% das obras com 180+');
       }
     })
-    .catch(function(){});
+    .catch(function(e){ console.warn('renderEstrategicos headline:', e && e.message); });
 
   // VOLUME e CAPACIDADE — agregação direta de Q2_OBRAS (dashboard-data já carregado)
   try {
     if (Array.isArray(Q2_OBRAS) && Q2_OBRAS.length) {
       var totalAtivas = Q2_OBRAS.length;
-      var emExec = Q2_OBRAS.filter(function(o){ return o.status === 'em_execucao'; });
-      var totalM2 = Q2_OBRAS.reduce(function(a,o){ return a + (Number(o.m2) || 0); }, 0);
+      var emExec = Q2_OBRAS.filter(function(o){ return o && o.status === 'em_execucao'; });
+      var totalM2 = Q2_OBRAS.reduce(function(a,o){ return a + (Number(o && o.m2) || 0); }, 0);
       var execM2 = emExec.reduce(function(a,o){ return a + (Number(o.m2) || 0); }, 0);
 
       // VOLUME
-      document.getElementById('est-m2-num').textContent = Math.round(execM2).toLocaleString('pt-BR');
-      document.getElementById('est-m2-total').textContent = Math.round(totalM2).toLocaleString('pt-BR');
-      document.getElementById('est-m2-fill').style.width = totalM2 ? Math.min(100, (execM2/totalM2)*100) + '%' : '0%';
+      set('est-m2-num', Math.round(execM2).toLocaleString('pt-BR'));
+      set('est-m2-total', Math.round(totalM2).toLocaleString('pt-BR'));
+      setStyle('est-m2-fill', 'width', totalM2 ? Math.min(100, (execM2/totalM2)*100) + '%' : '0%');
       var pctVol = totalM2 ? (execM2 / totalM2 * 100) : 0;
-      document.getElementById('est-m2-detalhe').textContent = pctVol.toFixed(1) + '% do volume ativo está em campo';
+      set('est-m2-detalhe', pctVol.toFixed(1) + '% do volume ativo está em campo');
 
       // CAPACIDADE
-      var pctCap = (emExec.length / totalAtivas) * 100;
-      document.getElementById('est-cap-num').textContent = pctCap.toFixed(1);
-      document.getElementById('est-cap-fill').style.width = Math.min(100, pctCap) + '%';
-      document.getElementById('est-cap-detalhe').textContent = emExec.length + ' obras em campo · ' + totalAtivas + ' ativas no total';
+      var pctCap = totalAtivas ? (emExec.length / totalAtivas) * 100 : 0;
+      set('est-cap-num', pctCap.toFixed(1));
+      setStyle('est-cap-fill', 'width', Math.min(100, pctCap) + '%');
+      set('est-cap-detalhe', emExec.length + ' obras em campo · ' + totalAtivas + ' ativas no total');
     }
-  } catch(e) { console.warn('renderEstrategicos:', e); }
+  } catch(e) { console.warn('renderEstrategicos Q2_OBRAS:', e && e.message); }
 
   // Backlog histórico para honestidade do comparativo
   fetch('dados/backlog-historico.json?t=' + Date.now())
@@ -4203,7 +4209,7 @@ function renderEstrategicos() {
         if (el) el.textContent = n;
       }
     })
-    .catch(function(){});
+    .catch(function(e){ console.warn('renderEstrategicos backlog:', e && e.message); });
 }
 
 // ============== OPERACIONAL (FASE 6.B — silêncio + cobertura via cruz-silenciosas.json) ==============
