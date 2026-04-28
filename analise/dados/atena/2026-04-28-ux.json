@@ -1,12 +1,12 @@
 {
   "olho": "ux",
-  "executado_em": "2026-04-28T11:41:36Z",
+  "executado_em": "2026-04-28T20:07:54Z",
   "achados": [
     {
-      "severidade": "media",
-      "titulo": "1 IDs duplicados no HTML",
-      "descricao": "IDs HTML devem ser unicos. Duplicatas podem causar bugs no JS.",
-      "evidencia": "dyn-total-obras (3x)"
+      "severidade": "baixa",
+      "titulo": "1 marcadores TODO/FIXME encontrados no HTML",
+      "descricao": "Existem 1 comentarios de desenvolvimento pendentes no dashboard.html",
+      "evidencia": "todo getElementById pra evitar crash silencioso"
     },
     {
       "severidade": "baixa",
@@ -22,9 +22,9 @@
     },
     {
       "severidade": "media",
-      "titulo": "Dashboard com 303 KB",
-      "descricao": "Arquivo monolitico com 303 KB. Paginas acima de 250 KB impactam tempo de carregamento.",
-      "evidencia": "dashboard.html = 303.0 KB, 5603 linhas"
+      "titulo": "Dashboard com 304 KB",
+      "descricao": "Arquivo monolitico com 304 KB. Paginas acima de 250 KB impactam tempo de carregamento.",
+      "evidencia": "dashboard.html = 304.0 KB, 5623 linhas"
     },
     {
       "severidade": "baixa",
@@ -34,21 +34,21 @@
     },
     {
       "severidade": "baixa",
-      "titulo": "17 chamadas console.* no codigo",
+      "titulo": "19 chamadas console.* no codigo",
       "descricao": "Console.log residuais devem ser removidos em producao.",
-      "evidencia": "17 ocorrencias"
+      "evidencia": "19 ocorrencias"
     }
   ],
   "metricas": {
-    "tamanho_kb": 303.0,
-    "linhas": 5603,
-    "ids_unicos": 212,
-    "ids_duplicados": 1,
+    "tamanho_kb": 304.0,
+    "linhas": 5623,
+    "ids_unicos": 211,
+    "ids_duplicados": 0,
     "scripts_inline": 2,
-    "todos_fixme": 0,
+    "todos_fixme": 1,
     "imagens_total": 0,
     "imagens_sem_alt": 0,
-    "console_logs": 17
+    "console_logs": 19
   },
   "comparativo_vs_anterior": "achados: 6->6 (+0), alta: 0->0 (+0)"
 }
