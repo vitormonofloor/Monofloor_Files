@@ -54,6 +54,8 @@
   @media(max-width:720px) { .labs-hero.cols-5, .labs-hero.cols-4 { grid-template-columns: repeat(2, 1fr); } }
   @media(max-width:540px) { .labs-hero.cols-5, .labs-hero.cols-4, .labs-hero.cols-1 { grid-template-columns: 1fr; } }
   @media(max-width:540px) { .labs-hero { grid-template-columns: 1fr; } }
+  /* PACOTE B.4 — esconder tagline em mobile pequeno, evita aperto */
+  @media(max-width:540px) { .lhg-title .lhg-tagline { display: none; } }
   .lh-card { padding: 14px 16px; background: #ffffff; border: 1px solid #e8e0d4; border-left: 3px solid #b8a080; border-radius: 6px; cursor: pointer; transition: all .2s; text-align: left; font-family: inherit; color: inherit; display: flex; flex-direction: column; gap: 4px; min-height: 96px; }
   .lh-card:hover { border-color: #b8a080; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(42,37,32,0.06); }
   .lh-card.active { background: #f7f1e8; border-left-color: #6b4f30; }

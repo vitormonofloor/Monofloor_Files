@@ -57,6 +57,8 @@
   /* VEREDITO LOTE 6 — Eixos estratégicos (TEMPO/VOLUME/CAPACIDADE) */
   .estrategicos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0}
   @media(max-width:880px){.estrategicos-grid{grid-template-columns:1fr}}
+  /* PACOTE B.3 — em mobile, altura adapta ao conteúdo · evita seção alongada */
+  @media(max-width:880px){.est-card{min-height:auto !important}}
   .est-card{background:#fff;border:1px solid #e0d8cc;border-left:4px solid #4a7ab8;border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;min-height:200px}
   .est-card:nth-child(2){border-left-color:#3d8a5a}
   .est-card:nth-child(3){border-left-color:#b89a4a}
