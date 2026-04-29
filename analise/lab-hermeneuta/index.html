@@ -98,10 +98,11 @@
     <p class="sub">Onde o que o sistema declara sobre uma obra <strong>discorda</strong> do que o cliente está dizendo no grupo (Telegram/WhatsApp). KIRA já capturou a narrativa — este lab interpreta e sinaliza divergências.</p>
 
     <div class="status-bar">
-      <div class="st-item"><span class="st-label">Suspeitas analisadas</span><span class="st-val" id="st-total">—</span></div>
-      <div class="st-item"><span class="st-label">Concordam</span><span class="st-val ok" id="st-concorda">—</span></div>
-      <div class="st-item"><span class="st-label">Discordam (alta)</span><span class="st-val crit" id="st-disc-alta">—</span></div>
-      <div class="st-item"><span class="st-label">Discordam (média)</span><span class="st-val warn" id="st-disc-media">—</span></div>
+      <div class="st-item"><span class="st-label">Obras analisadas</span><span class="st-val" id="st-total">—</span></div>
+      <div class="st-item"><span class="st-label">Coerentes</span><span class="st-val ok" id="st-coerente">—</span></div>
+      <div class="st-item"><span class="st-label">Status desatualizado</span><span class="st-val crit" id="st-desatualizado">—</span></div>
+      <div class="st-item"><span class="st-label">⚠ Detratores</span><span class="st-val crit" id="st-detrator">—</span></div>
+      <div class="st-item"><span class="st-label">Abandono</span><span class="st-val warn" id="st-abandono">—</span></div>
       <div class="st-item"><span class="st-label">Inconclusivo</span><span class="st-val" id="st-inc">—</span></div>
       <div class="st-item"><span class="st-label">Última análise</span><span class="st-val" id="st-data" style="font-size:13px">—</span></div>
     </div>
@@ -135,11 +136,13 @@
 
   <div class="filtros">
     <button class="filtro-btn active" data-filtro="todos">Todos</button>
-    <button class="filtro-btn" data-filtro="discorda-alta">Discorda · alta</button>
-    <button class="filtro-btn" data-filtro="discorda-media">Discorda · média</button>
-    <button class="filtro-btn" data-filtro="discorda-baixa">Discorda · baixa</button>
-    <button class="filtro-btn" data-filtro="concorda">Concorda</button>
+    <button class="filtro-btn" data-filtro="status_desatualizado">Status desatualizado</button>
+    <button class="filtro-btn" data-filtro="detrator">⚠ Detratores</button>
+    <button class="filtro-btn" data-filtro="abandono">Abandono / silêncio</button>
+    <button class="filtro-btn" data-filtro="coerente">Coerentes</button>
     <button class="filtro-btn" data-filtro="inconclusivo">Inconclusivo</button>
+    <!-- legado v1 (compatível com discordancias.json antigo) -->
+    <button class="filtro-btn" data-filtro="legado_discorda" style="opacity:.4">v1 · Discorda</button>
   </div>
 
   <div class="lista" id="lista"></div>
@@ -164,12 +167,31 @@ async function load(){
     return;
   }
 
-  // Status bar
-  document.getElementById('st-total').textContent = d.total_obras_analisadas || 0;
-  document.getElementById('st-concorda').textContent = d.total_concorda || 0;
-  document.getElementById('st-disc-alta').textContent = (d.obras||[]).filter(o => o.concorda===false && o.confianca==='alta').length;
-  document.getElementById('st-disc-media').textContent = (d.obras||[]).filter(o => o.concorda===false && o.confianca==='media').length;
-  document.getElementById('st-inc').textContent = d.total_inconclusivo || 0;
+  // Status bar — suporta schema v2 (veredito) e v1 legado (concorda)
+  const obras = d.obras || [];
+  const v2 = obras.some(o => o.veredito); // detecta se já é schema v2
+  document.getElementById('st-total').textContent = obras.length;
+
+  let coerente, desat, detrator, abandono, inc;
+  if (v2) {
+    coerente  = obras.filter(o => o.veredito === 'coerente').length;
+    desat     = obras.filter(o => o.veredito === 'status_desatualizado').length;
+    detrator  = obras.filter(o => (o.flags||[]).includes('detrator') || o.veredito === 'detrator').length;
+    abandono  = obras.filter(o => o.veredito === 'abandono').length;
+    inc       = obras.filter(o => o.veredito === 'inconclusivo').length;
+  } else {
+    // schema v1 legado · mapear: concorda=true → coerente; concorda=false → desatualizado
+    coerente  = obras.filter(o => o.concorda === true).length;
+    desat     = obras.filter(o => o.concorda === false).length;
+    detrator  = 0;
+    abandono  = 0;
+    inc       = obras.filter(o => o.concorda === null || o.concorda === undefined).length;
+  }
+  document.getElementById('st-coerente').textContent = coerente;
+  document.getElementById('st-desatualizado').textContent = desat;
+  document.getElementById('st-detrator').textContent = detrator;
+  document.getElementById('st-abandono').textContent = abandono;
+  document.getElementById('st-inc').textContent = inc;
   document.getElementById('st-data').textContent = d.gerado_em ? d.gerado_em.replace('T', ' ').slice(0, 16) + ' UTC' : '— (não rodado ainda)';
   document.getElementById('footer-snapshot').textContent = d.gerado_em ? d.gerado_em.slice(0,10) : '—';
 
@@ -190,14 +212,24 @@ async function load(){
   }));
 }
 
+// Resolve veredito unificado · suporta v1 (concorda) e v2 (veredito)
+function resolveVeredito(o) {
+  if (o.veredito) return o.veredito;
+  if (o.concorda === true) return 'coerente';
+  if (o.concorda === false) return 'status_desatualizado';
+  return 'inconclusivo';
+}
+
 function renderLista(filtro){
   const obras = window._OBRAS || [];
   let lista = obras;
-  if (filtro === 'concorda') lista = obras.filter(o => o.concorda === true);
-  else if (filtro === 'inconclusivo') lista = obras.filter(o => o.concorda === null || o.concorda === undefined);
-  else if (filtro === 'discorda-alta') lista = obras.filter(o => o.concorda === false && o.confianca === 'alta');
-  else if (filtro === 'discorda-media') lista = obras.filter(o => o.concorda === false && o.confianca === 'media');
-  else if (filtro === 'discorda-baixa') lista = obras.filter(o => o.concorda === false && o.confianca === 'baixa');
+
+  if (filtro === 'coerente') lista = obras.filter(o => resolveVeredito(o) === 'coerente');
+  else if (filtro === 'status_desatualizado') lista = obras.filter(o => resolveVeredito(o) === 'status_desatualizado');
+  else if (filtro === 'detrator') lista = obras.filter(o => (o.flags||[]).includes('detrator') || resolveVeredito(o) === 'detrator');
+  else if (filtro === 'abandono') lista = obras.filter(o => resolveVeredito(o) === 'abandono' || (o.flags||[]).includes('silencio_anomalo'));
+  else if (filtro === 'inconclusivo') lista = obras.filter(o => resolveVeredito(o) === 'inconclusivo');
+  else if (filtro === 'legado_discorda') lista = obras.filter(o => o.concorda === false);
 
   if (lista.length === 0) {
     document.getElementById('lista').innerHTML = '<div class="empty">Nenhuma obra nesse filtro.</div>';
@@ -205,32 +237,73 @@ function renderLista(filtro){
   }
 
   document.getElementById('lista').innerHTML = lista.map(o => {
+    const v = resolveVeredito(o);
+    const isDetrator = (o.flags||[]).includes('detrator') || v === 'detrator';
+
+    // classe + tag
     let cls, tag, tagText;
-    if (o.concorda === true) { cls = 'concorda'; tag = 'concorda'; tagText = 'concorda'; }
-    else if (o.concorda === false) {
-      cls = 'discorda-' + (o.confianca || 'baixa');
-      tag = o.confianca || 'baixa';
-      tagText = 'discorda · ' + (o.confianca || 'baixa');
+    if (isDetrator) { cls = 'discorda-alta'; tag = 'alta'; tagText = '⚠ DETRATOR'; }
+    else if (v === 'coerente') { cls = 'concorda'; tag = 'concorda'; tagText = 'coerente'; }
+    else if (v === 'status_desatualizado') {
+      const conf = o.confianca || 'baixa';
+      cls = 'discorda-' + conf;
+      tag = conf;
+      tagText = 'status desatualizado · ' + conf;
     }
+    else if (v === 'abandono') { cls = 'discorda-media'; tag = 'media'; tagText = 'abandono / silêncio'; }
     else { cls = 'inconclusivo'; tag = 'inconclusivo'; tagText = 'inconclusivo'; }
 
+    // schema v2: pega de o.painel/o.kira; v1: monta a partir de o.status_painel/o.estado_inferido
+    const statusAtual = (o.painel && o.painel.status_atual) || o.status_painel_raw || (o.status_painel ? o.status_painel.split('·')[0].trim() : '—');
+    const faseAtual = (o.painel && o.painel.fase_atual) || o.fase_painel_raw || '';
+    const idade = (o.painel && o.painel.idade_dias) || null;
+    const statusSugerido = o.status_sugerido || o.estado_inferido || null;
+    const tipoDemanda = o.tipo_demanda || o.categoria_divergencia || null;
+    const acaoConsultor = o.acao_consultor || null;
+    const diasSilencio = o.kira && o.kira.dias_silencio;
+
+    // Bloco painel × kira (apenas se há divergência)
     let confHtml = '';
-    if (o.concorda === false) {
+    if (v === 'status_desatualizado' || v === 'abandono' || isDetrator) {
+      const lblPainel = '<strong>' + esc(statusAtual) + '</strong>' + (faseAtual ? ' · <small style="color:#8a7e72">' + esc(faseAtual) + '</small>' : '') + (idade ? ' · ' + idade + 'd' : '');
+      const lblKira = statusSugerido ? '<strong>' + esc(statusSugerido) + '</strong>' : '—';
+      const labelKira = (o.veredito === 'status_desatualizado') ? 'KIRA sugere' : (isDetrator ? 'KIRA detectou' : 'Estado real');
       confHtml = '<div class="obra-conf">' +
-        '<div><div class="conf-col-label">Painel diz</div><div class="conf-col-val">' + esc(o.status_painel || '—') + '</div></div>' +
-        '<div><div class="conf-col-label">KIRA sugere</div><div class="conf-col-val"><strong>' + esc(o.estado_inferido || '—') + '</strong></div></div>' +
+        '<div><div class="conf-col-label">Painel diz</div><div class="conf-col-val">' + lblPainel + '</div></div>' +
+        '<div><div class="conf-col-label">' + labelKira + '</div><div class="conf-col-val">' + lblKira +
+          (tipoDemanda ? ' <small style="color:#8a7e72">· ' + esc(tipoDemanda.replace(/_/g, ' ')) + '</small>' : '') +
+        '</div></div>' +
         '</div>';
     }
 
+    // Flags (visuais · só se houver)
+    let flagsHtml = '';
+    if (o.flags && o.flags.length) {
+      flagsHtml = '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">' +
+        o.flags.map(f => '<span style="font-family:\'JetBrains Mono\',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:' +
+          (f === 'detrator' ? '#f6eaea;color:#6a2a2a' : f === 'silencio_anomalo' ? '#f4f0e6;color:#5a4a2a' : '#ede6dc;color:#6b6156') +
+        '">' + esc(f.replace(/_/g, ' ')) + '</span>').join('') +
+        '</div>';
+    }
+
+    // Ação do consultor (se houver)
+    const acaoHtml = acaoConsultor ? '<div style="margin-top:10px;padding:8px 12px;background:#fff;border-left:2px solid #b8a080;border-radius:0 4px 4px 0;font-size:11px;color:#3a3530"><strong style="color:#b8a080;font-family:\'JetBrains Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:3px">Próxima ação</strong>' + esc(acaoConsultor) + '</div>' : '';
+
+    // Silêncio info
+    const silencioHtml = (diasSilencio != null && diasSilencio >= 15) ?
+      '<small style="color:#b89a4a;font-family:\'JetBrains Mono\',monospace;font-size:9px;display:inline-block;margin-left:6px">silêncio ' + diasSilencio + 'd</small>' : '';
+
     return '<div class="obra ' + cls + '">' +
              '<div class="obra-head">' +
-               '<div class="obra-cli">' + esc(o.cliente) +
-                 '<small>' + esc(o.obra_id || '').slice(0,8) + (o.categoria_divergencia ? ' · ' + esc(o.categoria_divergencia) : '') + '</small>' +
+               '<div class="obra-cli">' + esc(o.cliente) + silencioHtml +
+                 '<small>' + esc((o.obra_id || '').slice(0,8)) + (tipoDemanda && v === 'status_desatualizado' ? ' · ' + esc(tipoDemanda.replace(/_/g, ' ')) : '') + '</small>' +
                '</div>' +
                '<span class="obra-tag ' + tag + '">' + tagText + '</span>' +
              '</div>' +
              confHtml +
              (o.evidencia ? '<div class="obra-evid">' + esc(o.evidencia) + '</div>' : '') +
+             flagsHtml +
+             acaoHtml +
            '</div>';
   }).join('');
 }
