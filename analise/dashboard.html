@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Central de Qualidade Monofloor — Dashboard Executivo</title>
+<script>
+  // Modo admin: ativa via ?admin=1 (salva em localStorage). Desativa via ?admin=0.
+  // Em modo admin, blocos "Fontes" ficam visíveis. Leitor externo nunca vê.
+  // Roda inline no <head> pra não ter FOUC (flicker dos fontes aparecendo e sumindo).
+  (function(){
+    try {
+      var sp = new URLSearchParams(location.search);
+      var v = sp.get('admin');
+      if (v === '1') localStorage.setItem('mfAdmin','1');
+      if (v === '0') localStorage.removeItem('mfAdmin');
+      if (localStorage.getItem('mfAdmin') === '1') {
+        document.documentElement.classList.add('admin-mode');
+      }
+    } catch(e) { /* SSR/old browser fallback: fontes ficam escondidas */ }
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -82,7 +98,9 @@
   .est-rodape code{font-family:'JetBrains Mono',monospace;font-size:10px;background:#ede6dc;padding:1px 4px;border-radius:2px}
 
   /* VEREDITO LOTE 4 — Mapa de autoridades por seção (PRINCIPIO.md I2) */
-  .section-fontes{margin-top:14px;padding:8px 12px;background:#fdfaf4;border-left:2px solid #d8c8a8;border-radius:0 4px 4px 0;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.04em;line-height:1.7;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  /* .section-fontes: escondido por padrão (info de admin/audit). Visível só no modo admin (html.admin-mode). */
+  .section-fontes{display:none}
+  html.admin-mode .section-fontes{margin-top:14px;padding:8px 12px;background:#fdfaf4;border-left:2px solid #d8c8a8;border-radius:0 4px 4px 0;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.04em;line-height:1.7;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
   .section-fontes .sf-label{color:#b8a080;font-weight:600;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
   .section-fontes .sf-item{display:inline-flex;align-items:center;gap:5px}
   .section-fontes .sf-item b{color:#3a3530;font-weight:600;text-transform:none;letter-spacing:0}
