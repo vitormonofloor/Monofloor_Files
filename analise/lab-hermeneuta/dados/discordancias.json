@@ -1,150 +1,242 @@
 {
-  "gerado_em": "2026-04-28T22:30:00Z",
-  "agente_versao": "v1",
-  "prompt_versao": "v1",
+  "schema_version": "v2",
+  "agente_versao": "v2",
+  "prompt_versao": "v2",
+  "gerado_em": "2026-04-29T15:30:00Z",
   "total_obras_analisadas": 10,
-  "total_concorda": 3,
-  "total_discorda": 6,
+  "total_coerente": 3,
+  "total_status_desatualizado": 5,
+  "total_detrator": 1,
+  "total_abandono": 0,
   "total_inconclusivo": 1,
-  "discorda_por_confianca": {
-    "alta": 6,
-    "media": 0,
-    "baixa": 0
-  },
-  "discorda_por_categoria": {
-    "finalizada-mas-ativa": 5,
-    "reparo-resolvido": 1
+  "tipos_demanda": {
+    "patologia": 5,
+    "dano_terceiro": 2,
+    "retorno_servico": 2,
+    "retrabalho_acabamento": 0,
+    "finalizacao": 0,
+    "pausa": 0
   },
   "obras": [
     {
       "obra_id": "48b04da7-5596-4a5a-9b73-6b9f8c665c65",
       "cliente": "FILIPE AUGUSTO MARINI LOPES",
-      "status_painel_raw": "reparo",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": "Reaplicação parcial lavabo opção 1",
-      "concorda": true,
-      "status_painel": "Em reparo · CLIENTE FINALIZADO",
-      "estado_inferido": "",
+      "painel": {
+        "status_atual": "reparo",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": null
+      },
+      "kira": {
+        "tag": "Reaplicação parcial lavabo opção 1",
+        "ultima_msg_data": "2026-04-01",
+        "dias_silencio": 26,
+        "clima": "Tenso"
+      },
+      "veredito": "coerente",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "dano_terceiro",
+      "flags": ["data_prevista_passada", "silencio_anomalo"],
+      "acao_consultor": "Confirmar escopo aprovado pelo cliente e definir data de envio de prestador SP a Curitiba · cobrar definição de custo com Bidesi",
       "confianca": "alta",
-      "evidencia": "Em 01/04/2026, um caso urgente foi aberto referente a dano no piso monolítico da entrada de um apartamento em Curitiba, causado pela abertura do piso para reparo de vazamento de gás. (...) a aprovação do cliente final ainda está pendente, o que mantém o caso em aberto e sem data de resolução.",
-      "categoria_divergencia": null
+      "evidencia": "dano no piso monolítico da entrada de um apartamento em Curitiba, causado pela abertura do piso para reparo de vazamento de gás"
     },
     {
       "obra_id": "e306a80c-d465-46e1-8530-54777ef90614",
       "cliente": "LESLE FATIMA MENOTTI TRINTIM",
-      "status_painel_raw": "concluido",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": null,
-      "concorda": false,
-      "status_painel": "Concluído · CLIENTE FINALIZADO",
-      "estado_inferido": "Obra em crise pós-entrega com escopo de reparo formalizado em duas etapas (final de abril e julho); cliente ameaçou processo judicial e Reclame Aqui",
+      "painel": {
+        "status_atual": "concluido",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": null
+      },
+      "kira": {
+        "tag": null,
+        "ultima_msg_data": "2026-04-02",
+        "dias_silencio": 25,
+        "clima": "Crítico"
+      },
+      "veredito": "detrator",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "patologia",
+      "flags": ["detrator", "data_prevista_passada"],
+      "acao_consultor": "Mudar status pra reparo · confirmar com Lesle datas formais (final de abril e julho) · formalizar escopo em contrato · monitorar Reclame Aqui",
       "confianca": "alta",
-      "evidencia": "Cliente declara que pagou R$43.000 e ameaça processo judicial caso não haja visita presencial até a semana seguinte (...) Comunicado de plano em duas etapas: primeira no final de abril (quinta e sexta) e segunda em julho para rodapés e banheiro",
-      "categoria_divergencia": "finalizada-mas-ativa"
+      "evidencia": "Após ameaças de processo judicial e Reclame Aqui, a diretoria se envolveu diretamente, com visita do diretor Rodrigo em 20/03 e definição de escopo técnico: reaplicação do banheiro, ajuste de rodapés e aplicação de resina à base de zinco para tratamento das marcas"
     },
     {
       "obra_id": "43002c92-53dc-4e3a-a291-432b0b2a87f2",
       "cliente": "MICHELLE CRISTINA FREITAS GARDENAL",
-      "status_painel_raw": "concluido",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": "material produção início 22/04",
-      "concorda": false,
-      "status_painel": "Concluído · CLIENTE FINALIZADO",
-      "estado_inferido": "Obra com problema de qualidade ativa (área externa e banheiro), cronograma de reparos pendente, cliente cobrando retorno e solicitando agendamento",
+      "painel": {
+        "status_atual": "concluido",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": null
+      },
+      "kira": {
+        "tag": "material produção início 22/04",
+        "ultima_msg_data": "2026-04-01",
+        "dias_silencio": 26,
+        "clima": "Tenso"
+      },
+      "veredito": "status_desatualizado",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "patologia",
+      "flags": ["data_prevista_passada"],
+      "acao_consultor": "Mudar status pra reparo · enviar cronograma formal de reparos para Michelle (banheiro e área externa) · responder cobranças de 26/03 e 01/04 antes de escalar pra detrator",
       "confianca": "alta",
-      "evidencia": "01/04: Michelle cobra novamente retorno e pergunta se já pode agendar reparo do banheiro e da área externa (...) o cronograma de reparos não foi enviado à cliente até 01/04",
-      "categoria_divergencia": "finalizada-mas-ativa"
+      "evidencia": "A cliente Michelle Gardenal registrou um problema de qualidade no piso (área externa e banheiro) em fevereiro de 2026 ... a empresa não entregou o cronograma de reparos prometido, gerando duas cobranças consecutivas da cliente"
     },
     {
       "obra_id": "d73999fc-43a2-4c9d-9e54-ceb926c04fc0",
       "cliente": "GINACERCHI CREMA",
-      "status_painel_raw": "reparo",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": null,
-      "concorda": true,
-      "status_painel": "Em reparo · CLIENTE FINALIZADO",
-      "estado_inferido": "",
+      "painel": {
+        "status_atual": "reparo",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": null
+      },
+      "kira": {
+        "tag": null,
+        "ultima_msg_data": "2026-04-01",
+        "dias_silencio": 26,
+        "clima": "Tenso"
+      },
+      "veredito": "coerente",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "patologia",
+      "flags": ["silencio_anomalo"],
+      "acao_consultor": "Confirmar formalmente visita 18/04 · validar execução de cortes pelo cliente até 11/04 · documentar responsabilidades por escrito sobre fissuras externas",
       "confianca": "alta",
-      "evidencia": "A obra no rancho do cliente Caio encontra-se em fase de reparo/reaplicação (...) ficou acordado que o cliente realizará os cortes nas áreas com desplacamento até 11/04, e a Monofloor retornará para visita e reaplicação em 18/04.",
-      "categoria_divergencia": null
+      "evidencia": "A obra no rancho do cliente Caio encontra-se em fase de reparo/reaplicação, com histórico de patologias (fissuras e desplacamento) atribuídas pelo cliente ao não cumprimento do tempo de secagem pela equipe de aplicação da Monofloor"
     },
     {
       "obra_id": "bb189051-265d-45a7-9af3-7fbd448160ee",
       "cliente": "RODRIGO LOTUFO VAZ GUIMARÃES",
-      "status_painel_raw": "concluido",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": null,
-      "concorda": false,
-      "status_painel": "Concluído · CLIENTE FINALIZADO",
-      "estado_inferido": "Obra com avarias identificadas pós-marcenaria, em tratativa de reparos pontuais, agendamento proposto para 28/04 com desconto de uma diária; cliente reside no imóvel",
+      "painel": {
+        "status_atual": "concluido",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": null
+      },
+      "kira": {
+        "tag": null,
+        "ultima_msg_data": "2026-04-07",
+        "dias_silencio": 20,
+        "clima": "Tenso"
+      },
+      "veredito": "status_desatualizado",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "dano_terceiro",
+      "flags": ["data_prevista_passada", "silencio_anomalo"],
+      "acao_consultor": "Mudar status pra reparo · enviar orçamento atualizado com desconto formalizado · confirmar agendamento 28/04 · responder pendências técnicas em aberto desde 12/03",
       "confianca": "alta",
-      "evidencia": "O cliente Rodrigo identificou avarias no piso após o período de marcenaria e acionou a Monofloor para reparos pontuais (...) Em 07/04, o caso foi assumido pela atendente Mayara, com concessão de desconto de uma diária pela diretoria e proposta de agendamento para 28/04.",
-      "categoria_divergencia": "finalizada-mas-ativa"
+      "evidencia": "O cliente Rodrigo identificou avarias no piso após o período de marcenaria e acionou a Monofloor para reparos pontuais, rejeitando a reaplicação total por já estar residindo no apartamento"
     },
     {
       "obra_id": "27470ed1-6481-40c8-8177-baac06b06334",
       "cliente": "CAROLINA TREMEL PEZUTTO",
-      "status_painel_raw": "concluido",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": null,
-      "concorda": false,
-      "status_painel": "Concluído · CLIENTE FINALIZADO",
-      "estado_inferido": "Reparo pago realizado em 19/03 contestado pela cliente em 24/03 por diferença de cor e textura; equipe técnica acionada sem resolução registrada",
+      "painel": {
+        "status_atual": "concluido",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": 165
+      },
+      "kira": {
+        "tag": null,
+        "ultima_msg_data": "2026-03-24",
+        "dias_silencio": 34,
+        "clima": "Tenso"
+      },
+      "veredito": "status_desatualizado",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "retorno_servico",
+      "flags": ["silencio_anomalo"],
+      "acao_consultor": "Mudar status pra reparo · acionar equipe técnica para corrigir reparo de 19/03 (cor/textura divergente) e retornar à cliente até 30/04",
       "confianca": "alta",
-      "evidencia": "24/03: Carolina contesta a qualidade do reparo executado: cor e textura visivelmente diferentes da aplicação original. Resumo executivo: 'A equipe técnica foi acionada no mesmo dia, mas a conversa encerra sem resolução ou prazo definido. Há risco real de novo ciclo de atendimento pós-reparo frustrado'",
-      "categoria_divergencia": "reparo-resolvido"
+      "evidencia": "A cliente aprovou e pagou por um reparo pontual realizado em 19/03, porém em 24/03 contestou a execução, relatando diferença visível de cor e textura em relação à aplicação original. A equipe técnica foi acionada no mesmo dia, mas a conversa encerra sem resolução ou prazo definido."
     },
     {
       "obra_id": "097ee21f-3e27-4904-9929-86aa8b1d6fba",
       "cliente": "CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)",
-      "status_painel_raw": "planejamento",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": "Retorno terça pendente",
-      "concorda": false,
-      "status_painel": "Planejamento · CLIENTE FINALIZADO",
-      "estado_inferido": "Execução principal concluída em 25/02; resta aplicação no Hall do elevador reagendada para 22/04, condicionada a ajustes do cliente — obra parcialmente ativa, não finalizada",
+      "painel": {
+        "status_atual": "planejamento",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": 230
+      },
+      "kira": {
+        "tag": "Retorno terça pendente",
+        "ultima_msg_data": "2026-04-07",
+        "dias_silencio": 20,
+        "clima": "Neutro"
+      },
+      "veredito": "status_desatualizado",
+      "status_sugerido": "aguardando_execucao",
+      "tipo_demanda": "retorno_servico",
+      "flags": ["data_prevista_passada"],
+      "acao_consultor": "Atualizar painel pra aguardando_execucao · confirmar formalmente com Luis Antônio se 22/04 ocorreu (data já passada) e rever próximos passos do Hall do elevador",
       "confianca": "alta",
-      "evidencia": "Resumo executivo: 'A execução principal do Monofloor foi concluída em 25/02/2026... Resta pendente a aplicação no Hall do elevador, que sofreu atrasos por necessidade de análise técnica da regularização (3,5 cm de massa) e está agora remarcada para 22/04/2026'",
-      "categoria_divergencia": "finalizada-mas-ativa"
+      "evidencia": "A execução principal do Monofloor foi concluída em 25/02/2026, dentro do prazo estimado de 18 dias úteis... Resta pendente a aplicação no Hall do elevador, que sofreu atrasos por necessidade de análise técnica da regularização (3,5 cm de massa) e está agora remarcada para 22/04/2026"
     },
     {
       "obra_id": "a79f00f0-19b1-43d4-b9d7-6ab8d219c205",
       "cliente": "KRYSTAL LURI NUMA",
-      "status_painel_raw": "concluido",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": "Aguardando definição escopo prazo",
-      "concorda": false,
-      "status_painel": "Concluído · CLIENTE FINALIZADO",
-      "estado_inferido": "Emergência ativa: ralo de banheiro sem verniz com risco de infiltração desde 02/04, fissuras progressivas na sala não resolvidas desde fev/25, arquiteta formalmente insatisfeita, aguardando técnico emergencial",
+      "painel": {
+        "status_atual": "concluido",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": 244
+      },
+      "kira": {
+        "tag": "Aguardando definição escopo prazo",
+        "ultima_msg_data": "2026-04-08",
+        "dias_silencio": 19,
+        "clima": "Tenso"
+      },
+      "veredito": "status_desatualizado",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "patologia",
+      "flags": [],
+      "acao_consultor": "Mudar status pra reparo · enviar técnico emergencial para envernizar ralo do banheiro antes de 01/05 e responder dúvidas da arquiteta Marcela",
       "confianca": "alta",
-      "evidencia": "URGENTE: Ralo do banheiro sem verniz desde 02/04 — risco de infiltração. Fissuras progressivas na sala sem solução desde fev/25. Arquiteta Marcela insatisfeita formalmente. Aguarda envio de técnico emergencial e resposta às dúvidas da arquiteta. Janela de execução: antes de 01/05.",
-      "categoria_divergencia": "finalizada-mas-ativa"
+      "evidencia": "URGENTE: Ralo do banheiro sem verniz desde 02/04 — risco de infiltração. Fissuras progressivas na sala sem solução desde fev/25. Arquiteta Marcela insatisfeita formalmente."
     },
     {
       "obra_id": "d4b3ea28-e546-4065-b5c5-8950bb53ef39",
       "cliente": "LUIZ GUSTAVO MIGUEL REBEIS",
-      "status_painel_raw": "reparo",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": "1ª demão aplicada retorna amanhã",
-      "concorda": true,
-      "status_painel": "Reparo · CLIENTE FINALIZADO",
-      "estado_inferido": "",
+      "painel": {
+        "status_atual": "reparo",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": 273
+      },
+      "kira": {
+        "tag": "1ª demão aplicada retorna amanhã",
+        "ultima_msg_data": "2026-04-14",
+        "dias_silencio": 13,
+        "clima": "Tenso"
+      },
+      "veredito": "coerente",
+      "status_sugerido": "reparo",
+      "tipo_demanda": "patologia",
+      "flags": [],
+      "acao_consultor": "Manter status reparo · enviar orçamento das duas modalidades (pontual e reaplicação) prometido em 14/04 e definir tecnicamente o ponto do box (risco de infiltração reconhecido)",
       "confianca": "alta",
-      "evidencia": "A obra apresenta pontos de retoque identificados desde fevereiro, com duas visitas técnicas realizadas (24/02 e 19/03)... Orçamentos para as duas modalidades de reparo (pontual e reaplicação) foram prometidos em 14/04. Tag KIRA confirma '1ª demão aplicada retorna amanhã' — coerente com status 'reparo'.",
-      "categoria_divergencia": null
+      "evidencia": "Risco de infiltração identificado pela própria equipe Monofloor no ponto do box (14/04): Mayara reconhece que o local 'pode se tornar um ponto de infiltração' — problema técnico grave em aberto"
     },
     {
       "obra_id": "2369c899-509f-4deb-a767-03f244854492",
       "cliente": "REPULLO ASSESSORIA EM INFORMATICA LTDA",
-      "status_painel_raw": "reparo",
-      "fase_painel_raw": "CLIENTE FINALIZADO",
-      "tag_kira": "Lixamento peça aguardando decisão",
-      "concorda": null,
-      "status_painel": "Reparo · CLIENTE FINALIZADO",
-      "estado_inferido": "Sem narrativa KIRA detalhada (pendenciaManual=null, situacaoAtual=null) — apenas tag curta sugere reparo em andamento, coerente com status mas sem evidência textual robusta",
+      "painel": {
+        "status_atual": "reparo",
+        "fase_atual": "CLIENTE FINALIZADO",
+        "idade_dias": 217
+      },
+      "kira": {
+        "tag": "Lixamento peça aguardando decisão",
+        "ultima_msg_data": null,
+        "dias_silencio": null,
+        "clima": null
+      },
+      "veredito": "inconclusivo",
+      "status_sugerido": null,
+      "tipo_demanda": null,
+      "flags": [],
+      "acao_consultor": "Solicitar varredura KIRA do grupo · sem resumoExecutivo disponível para inferir coerência",
       "confianca": "baixa",
-      "evidencia": "Tag KIRA: 'Lixamento peça aguardando decisão' · pendenciaManual ausente · situacaoAtual ausente — narrativa insuficiente para inferir divergência",
-      "categoria_divergencia": null
+      "evidencia": "Lixamento peça aguardando decisão"
     }
   ]
 }
