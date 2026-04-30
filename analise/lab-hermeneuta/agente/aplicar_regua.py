@@ -23,17 +23,17 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 DOSSIES_DIR = ROOT / "dados" / "dossies"
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
 SNAPSHOT_PATH = ROOT / "agente" / "telethon" / "telegram-snapshot.json"
 
-HOJE = datetime(2026, 4, 30, tzinfo=timezone.utc)
+HOJE = datetime.now(timezone.utc)
 
 # SLAs PP:001 da Monofloor (dias antes do início X)
 MARCOS_SLA = [
@@ -315,7 +315,7 @@ def main():
     discord["regua_aplicada_em"] = HOJE.strftime("%Y-%m-%dT%H:%M:%SZ")
     discord["regua_buckets"] = bucket_count
 
-    DISCORD_PATH.write_text(json.dumps(discord, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(DISCORD_PATH, discord)
     print()
     print("Distribuição por bucket:")
     for b, n in sorted(bucket_count.items(), key=lambda x: -x[1]):

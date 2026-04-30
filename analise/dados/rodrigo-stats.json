@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-04-30T22:23:23Z",
+  "atualizado_em": "2026-04-30T22:38:21Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1037,
@@ -10,9 +10,9 @@
     "m2_em_execucao": 3490
   },
   "por_status": {
+    "em_execucao": 30,
     "aguardando_execucao": 53,
     "planejamento": 105,
-    "em_execucao": 30,
     "finalizado": 541,
     "aguardando_clima": 4,
     "contrato": 6,
@@ -38,7 +38,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2027,
+    "pending_tasks": 2024,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2345,6 +2345,9 @@
       "nome": "Equipe Wiguens",
       "lider": "Wiguens Louis",
       "lider_id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
+      "lider_cadastro_id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
+      "lider_cadastro_nome": "Wiguens Louis",
+      "lider_remapeado": false,
       "ativos": 13,
       "total_cadastrados": 19,
       "escalados_hoje": 12,
@@ -2410,6 +2413,9 @@
       "nome": "Equipe João",
       "lider": "João Carlos",
       "lider_id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
+      "lider_cadastro_id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
+      "lider_cadastro_nome": "João Carlos",
+      "lider_remapeado": false,
       "ativos": 0,
       "total_cadastrados": 11,
       "escalados_hoje": 1,
@@ -2437,14 +2443,32 @@
     {
       "id": "gilmar",
       "nome": "Equipe Gilmar",
-      "lider": "Gilmar",
-      "lider_id": "74bd4572-d00f-4c28-9e77-abd6b6c13d61",
+      "lider": "Gilmar Gomes Rafael",
+      "lider_id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
+      "lider_cadastro_id": "74bd4572-d00f-4c28-9e77-abd6b6c13d61",
+      "lider_cadastro_nome": "Gilmar",
+      "lider_remapeado": true,
       "ativos": 1,
       "total_cadastrados": 12,
-      "escalados_hoje": 0,
-      "util_pct": 0.0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
+      "escalados_hoje": 1,
+      "util_pct": 100.0,
+      "obras_hoje": 2,
+      "obras_lideradas": [
+        {
+          "id": "fb8b0ed7-c47a-4ae6-ad0f-ec20cd4e8c7c",
+          "cliente": "Tamara Newman Lobato Souza",
+          "cidade": "São Paulo/São Paulo",
+          "fase": "OECT",
+          "status": "em_execucao"
+        },
+        {
+          "id": "dec2480f-fc69-4d44-9dbc-d3820badf218",
+          "cliente": "MARINA PIRES DE AGUIAR",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        }
+      ],
       "obras_membros": [],
       "estado": "parcial"
     },
@@ -2453,6 +2477,9 @@
       "nome": "Equipe Júlio",
       "lider": "Júlio Miranda",
       "lider_id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
+      "lider_cadastro_id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
+      "lider_cadastro_nome": "Júlio Miranda",
+      "lider_remapeado": false,
       "ativos": 8,
       "total_cadastrados": 10,
       "escalados_hoje": 4,
@@ -2480,14 +2507,46 @@
     {
       "id": "egberto",
       "nome": "Equipe Egberto",
-      "lider": "Egberto Sulivan",
-      "lider_id": "0f02222c-ece8-4e55-8434-3e2c763408d8",
+      "lider": "Egberto Sullivan Tavares de Oliveira",
+      "lider_id": "8c9780dd-8585-460a-a3b2-9ba5571955e5",
+      "lider_cadastro_id": "0f02222c-ece8-4e55-8434-3e2c763408d8",
+      "lider_cadastro_nome": "Egberto Sulivan",
+      "lider_remapeado": true,
       "ativos": 0,
       "total_cadastrados": 12,
-      "escalados_hoje": 0,
+      "escalados_hoje": 1,
       "util_pct": 0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
+      "obras_hoje": 4,
+      "obras_lideradas": [
+        {
+          "id": "210669e6-c8a4-4e88-93d9-291011a7b51b",
+          "cliente": "JOYCE BAHIENSE GOMES ",
+          "cidade": "RIO DE JANEIRO",
+          "fase": "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "b58ccbee-7eb5-47c8-abf9-87cd44855898",
+          "cliente": "MONICA ESMERALDA BRUCKMANN MAYNETTO",
+          "cidade": "RIO DE JANEIRO",
+          "fase": "OBRA CONCLUÍDA",
+          "status": "finalizado"
+        },
+        {
+          "id": "2088ab88-2d39-41a1-95e8-33f5ebfbb9d2",
+          "cliente": "FERNANDO TEMBRA RODRIGUEZ",
+          "cidade": "RIO DE JANEIRO",
+          "fase": "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
+          "cliente": "JULIANA KOMEL DE OLIVEIRA",
+          "cidade": "RIO DE JANEIRO / RJ",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        }
+      ],
       "obras_membros": [],
       "estado": "fantasma"
     },
@@ -2496,6 +2555,9 @@
       "nome": "Equipe Michael",
       "lider": "Cosme Eduardo Soares Ragno",
       "lider_id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
+      "lider_cadastro_id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
+      "lider_cadastro_nome": "Cosme Eduardo Soares Ragno",
+      "lider_remapeado": false,
       "ativos": 9,
       "total_cadastrados": 12,
       "escalados_hoje": 9,

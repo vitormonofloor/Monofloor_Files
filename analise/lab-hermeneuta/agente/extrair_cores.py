@@ -25,16 +25,16 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
 SNAPSHOT_PATH = ROOT / "agente" / "telethon" / "telegram-snapshot.json"
 
-HOJE = datetime(2026, 4, 30, tzinfo=timezone.utc)
+HOJE = datetime.now(timezone.utc)
 
 # Padrão "COR: ALGO" até quebra de linha ou pontuação forte
 RE_COR = re.compile(r"COR\s*:\s*([^\n\r]{2,80})", re.IGNORECASE | re.MULTILINE)
@@ -205,7 +205,7 @@ def main():
         "por_bucket": {k: dict(v.most_common(10)) for k, v in por_bucket.items()},
     }
 
-    DISCORD_PATH.write_text(json.dumps(discord, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(DISCORD_PATH, discord)
 
     print()
     print("=== Top 10 cores · obras ATIVAS (cor atual definida) ===")

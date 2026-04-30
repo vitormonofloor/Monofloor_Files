@@ -16,16 +16,16 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent  # lab-hermeneuta
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
 DETAILS_DIR = ROOT.parent / "dados" / "details"  # analise/dados/details (irmão do lab)
 
-HOJE = datetime(2026, 4, 30, tzinfo=timezone.utc)
+HOJE = datetime.now(timezone.utc)
 
 
 def parse_iso(s: str):
@@ -113,7 +113,7 @@ def main():
         dr_str = f"{dr}d" if dr is not None else "—"
         print(f"{cliente:<42} {tag:<35} {clima:<10} {dt_str:<14} {dr_str}")
 
-    DISCORD_PATH.write_text(json.dumps(discord, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(DISCORD_PATH, discord)
     print(f"\n[OK] {DISCORD_PATH}")
 
 

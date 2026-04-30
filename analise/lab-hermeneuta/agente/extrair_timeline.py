@@ -18,10 +18,10 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, read_json_safe, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 DOSSIES_DIR = ROOT / "dados" / "dossies"
@@ -29,7 +29,7 @@ DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
 SNAPSHOT_PATH = ROOT / "agente" / "telethon" / "telegram-snapshot.json"
 
 JANELA_DIAS = 28
-HOJE = datetime(2026, 4, 30, tzinfo=timezone.utc)
+HOJE = datetime.now(timezone.utc)
 LIMITE = HOJE - timedelta(days=JANELA_DIAS)
 
 
@@ -215,7 +215,7 @@ def main():
         }
         total_eventos += len(eventos)
 
-    DISCORD_PATH.write_text(json.dumps(discord, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(DISCORD_PATH, discord)
     print(f"[OK] {DISCORD_PATH}")
     print(f"     {total_eventos} eventos injetados em {len(discord.get('obras', []))} obras")
     print(f"     janela: {LIMITE.strftime('%Y-%m-%d')} → {HOJE.strftime('%Y-%m-%d')} ({JANELA_DIAS}d)")

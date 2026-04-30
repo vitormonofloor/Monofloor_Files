@@ -39,6 +39,9 @@ fetch "$API_CLI/projects?limit=2000"   "$TMP/projects.json"; sleep 1
 # /api/prestadores do cliente (180 cadastrados, 115 ativos = fonte da aba Aplicadores)
 fetch "$API_CLI/prestadores?limit=500" "$TMP/prestadores.json"; sleep 1
 # /api/escalacao-diaria — quem está escalado em qual obra hoje (lider + membros)
+# NOTA 2026-04-30: parâmetro ?date=YYYY-MM-DD é ACEITO mas IGNORADO pelo backend —
+# sempre retorna escalação do dia atual. Não dá pra prever obras futuras por esse
+# endpoint. "Agenda futura" precisa de outra fonte (ainda não mapeada).
 fetch "$API_CLI/escalacao-diaria"      "$TMP/escalacao.json"; sleep 1
 # /api/equipes — 6 equipes operacionais (Wiguens, João, Gilmar, Júlio, Egberto, Michael)
 fetch "$API_CLI/equipes"               "$TMP/equipes.json"; sleep 1
@@ -357,6 +360,33 @@ n_180_total = sum(1 for p in ativas_obras for i in [idade_de(p)] if i is not Non
 # 6 equipes oficiais (Wiguens, João, Gilmar, Júlio, Egberto, Michael).
 # Pra cada equipe: ativos, escalados hoje, util_pct, obras_hoje.
 # Cruza /api/equipes + /api/escalacao-diaria + /api/projects.
+#
+# BUG DE CADASTRO descoberto 2026-04-30: 3 equipes têm liderId apontando pro
+# prestador ANTIGO/INATIVO (Gilmar 74bd45→inativo / Egberto 0f0222→inativo /
+# João Victor era inativo). O líder REAL ativo tem outro UUID com mesmo nome.
+# Solução: pra cada equipe, identificar o líder ativo via match de nome.
+
+def resolver_lider_real(eq_dict):
+    """Retorna (lider_id_efetivo, lider_nome_efetivo, foi_remapeado)."""
+    cadastro_id = eq_dict.get("liderId")
+    lider = eq_dict.get("lider") or {}
+    cadastro_nome = lider.get("nome") or ""
+    cadastro_ativo = lider.get("ativo") in (True, 1)
+    if cadastro_ativo:
+        return cadastro_id, cadastro_nome, False
+    # Cadastro inativo: tentar achar prestador ATIVO com mesmo primeiro nome
+    if cadastro_nome:
+        primeiro = cadastro_nome.strip().split()[0].lower() if cadastro_nome.strip() else ""
+        candidatos = [
+            p for p in prest_ativos
+            if (p.get("nome") or "").strip().lower().startswith(primeiro + " ")
+            and (p.get("funcao") or "").startswith(("LIDER", "APLICADOR_3"))
+        ]
+        if candidatos:
+            c = candidatos[0]
+            return c.get("id"), c.get("nome"), True
+    return cadastro_id, cadastro_nome, False
+
 def proj_label(oid):
     p = proj_by_id.get(oid, {}) or {}
     return {
@@ -377,23 +407,25 @@ for eq in eq_list:
     n_ativos = len(membros_ativos)
     n_total = len(membros_all)
 
-    lider = eq.get("lider") or {}
-    lider_id = eq.get("liderId") or lider.get("id")
-    lider_nome = lider.get("nome") or "?"
+    lider_cadastro_id = eq.get("liderId")
+    lider_cadastro_nome = (eq.get("lider") or {}).get("nome") or "?"
+    lider_real_id, lider_real_nome, foi_remapeado = resolver_lider_real(eq)
+    # Lista de UUIDs aceitos como "líder dessa equipe" (cadastro + real)
+    lider_ids_aceitos = {lider_cadastro_id, lider_real_id} - {None}
 
-    # Escalados hoje: membros (ativos OU não — escalação é fonte da verdade) + líder
+    # Escalados hoje: membros (ativos OU não — escalação é fonte da verdade) + ambos os UUIDs do líder
     membros_ids_set = set((m.get("id") for m in membros_all if m and m.get("id")))
-    if lider_id: membros_ids_set.add(lider_id)
+    membros_ids_set |= lider_ids_aceitos
     escalados_ids = membros_ids_set & em_campo_ids
     n_escalados = len(escalados_ids)
 
-    # Obras hoje da equipe = obras onde o líder está como liderId OU obras onde
-    # algum membro da equipe está escalado
+    # Obras hoje da equipe = obras onde algum UUID do líder está como liderId OU
+    # obras onde algum membro da equipe está escalado
     obras_lideradas = []
     obras_membros = []
     for obra_id, eqd in esc.items():
         if not isinstance(eqd, dict): continue
-        if eqd.get("liderId") == lider_id:
+        if eqd.get("liderId") in lider_ids_aceitos:
             obras_lideradas.append(obra_id)
         elif any(m in membros_ids_set for m in (eqd.get("membrosIds") or [])):
             obras_membros.append(obra_id)
@@ -405,8 +437,11 @@ for eq in eq_list:
     equipes_detalhe.append({
         "id": (eq.get("nome") or "").lower().replace(" ", "-").replace("equipe-", ""),
         "nome": eq.get("nome") or "?",
-        "lider": lider_nome,
-        "lider_id": lider_id,
+        "lider": lider_real_nome,
+        "lider_id": lider_real_id,
+        "lider_cadastro_id": lider_cadastro_id,
+        "lider_cadastro_nome": lider_cadastro_nome,
+        "lider_remapeado": foi_remapeado,
         "ativos": n_ativos,
         "total_cadastrados": n_total,
         "escalados_hoje": n_escalados,

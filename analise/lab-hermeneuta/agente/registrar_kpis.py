@@ -21,10 +21,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
@@ -117,7 +117,7 @@ def main():
         pontos = pontos[-LIMITE_PONTOS:]
 
     historico["kpis"] = pontos
-    HISTORICO_PATH.write_text(json.dumps(historico, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(HISTORICO_PATH, historico)
 
     print(f"[OK] {HISTORICO_PATH}")
     print(f"     {len(pontos)} pontos no histórico")

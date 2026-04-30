@@ -19,10 +19,10 @@ import json
 import sys
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 JSON_PATH = ROOT / "dados" / "discordancias-v3.json"
@@ -158,7 +158,7 @@ def main():
         data["resumo_executivo"] = resumo + nota
 
     # Salva
-    JSON_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(JSON_PATH, data)
     print(f"[OK] {JSON_PATH} atualizado")
     print()
     print("Realocações:")

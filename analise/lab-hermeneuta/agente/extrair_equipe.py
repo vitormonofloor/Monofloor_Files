@@ -18,10 +18,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
@@ -29,7 +29,7 @@ EQUIPES_PATH = ROOT / "dados" / "equipes-snapshot.json"
 OVERRIDES_PATH = ROOT / "dados" / "equipe-overrides.json"
 SNAPSHOT_PATH = ROOT / "agente" / "telethon" / "telegram-snapshot.json"
 
-HOJE = datetime(2026, 4, 30, tzinfo=timezone.utc)
+HOJE = datetime.now(timezone.utc)
 JANELA_DIAS = 28  # janela pra considerar pessoa "ativa em campo"
 
 
@@ -218,7 +218,7 @@ def main():
         n_externos = len([n for n in nao_mapeados if not n["eh_monofloor_interno"]])
         print(f"{cliente:<42} {lider_str:<25} {n_aplic:<8} {n_externos}")
 
-    DISCORD_PATH.write_text(json.dumps(discord, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(DISCORD_PATH, discord)
     print(f"\n[OK] {DISCORD_PATH}")
 
 
