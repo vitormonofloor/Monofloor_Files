@@ -1,0 +1,54 @@
+{
+  "olho": "ux",
+  "executado_em": "2026-04-30T11:24:33Z",
+  "achados": [
+    {
+      "severidade": "baixa",
+      "titulo": "1 marcadores TODO/FIXME encontrados no HTML",
+      "descricao": "Existem 1 comentarios de desenvolvimento pendentes no dashboard.html",
+      "evidencia": "todo getElementById pra evitar crash silencioso"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "31 botoes sem aria-label",
+      "descricao": "Botoes interativos devem ter aria-label para acessibilidade.",
+      "evidencia": "<button type=\"button\" class=\"q4-est rodando\" onclick=\"openQ4Modal('rodando')\" title=\"Ver lista de obras RODANDO\"> "
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "40 estilos inline longos (>80 chars)",
+      "descricao": "Estilos inline extensos dificultam manutencao. Considerar mover para CSS.",
+      "evidencia": "style=\"margin-bottom:24px;background:linear-gradient(135deg,rgba(196,90,90,0.06),rgba(184,160,128,0.04));border:1px soli..."
+    },
+    {
+      "severidade": "media",
+      "titulo": "Dashboard com 301 KB",
+      "descricao": "Arquivo monolitico com 301 KB. Paginas acima de 250 KB impactam tempo de carregamento.",
+      "evidencia": "dashboard.html = 300.9 KB, 5498 linhas"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "3 blocos <script> inline com >100 chars",
+      "descricao": "Scripts inline extensos dificultam cache e manutencao.",
+      "evidencia": "3 blocos encontrados"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "19 chamadas console.* no codigo",
+      "descricao": "Console.log residuais devem ser removidos em producao.",
+      "evidencia": "19 ocorrencias"
+    }
+  ],
+  "metricas": {
+    "tamanho_kb": 300.9,
+    "linhas": 5498,
+    "ids_unicos": 209,
+    "ids_duplicados": 0,
+    "scripts_inline": 3,
+    "todos_fixme": 1,
+    "imagens_total": 0,
+    "imagens_sem_alt": 0,
+    "console_logs": 19
+  },
+  "comparativo_vs_anterior": "achados: 6->6 (+0), alta: 0->0 (+0)"
+}

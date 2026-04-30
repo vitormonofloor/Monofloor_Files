@@ -1,0 +1,44 @@
+{
+  "olho": "oportunidades",
+  "executado_em": "2026-04-30T11:24:33Z",
+  "achados": [
+    {
+      "severidade": "baixa",
+      "titulo": "21 cruzamentos bidimensionais nao explorados",
+      "descricao": "Combinacoes de dimensoes que poderiam revelar padroes novos.",
+      "evidencia": "consultor-fase, consultor-geo, consultor-idade, consultor-metragem, consultor-status, consultor-tipo, fase-geo, fase-idade"
+    },
+    {
+      "severidade": "media",
+      "titulo": "Consultores com acumulo de obras antigas (>180d)",
+      "descricao": "Oportunidade de redistribuicao ou priorizacao.",
+      "evidencia": "LUANA PATRICIA DE ANDRADE LIMA: 61 obras (media 261d); Wesley Matheus de Carvalho: 51 obras (media 243d); Pedro Marçal: 3 obras (media 284d)"
+    },
+    {
+      "severidade": "alta",
+      "titulo": "7 fases com gargalo (>=5 obras + media >150d)",
+      "descricao": "Fases onde obras acumulam com idade elevada. Candidatas a intervencao.",
+      "evidencia": "CLIENTE FINALIZADO: 59 obras, media 253d; OBRA PAUSADA: 8 obras, media 244d; AGUARDANDO LIBERAÇÃO: 17 obras, media 206d; LOGÍSTICA - EM ENTREGA: 7 obras, media 199d; CONFIRMAÇÕES OP 1: 8 obras, media 189d"
+    },
+    {
+      "severidade": "media",
+      "titulo": "19 obras ativas sem data_radar",
+      "descricao": "Obras sem data de entrada no radar. Sem data, nao eh possivel calcular SLAs.",
+      "evidencia": "d51326f8; 58129f10; 2b5e9e85; 2498f5be; a681cf05; 65dc9222; 7f45fa66; fb8b0ed7"
+    },
+    {
+      "severidade": "baixa",
+      "titulo": "Concentracao regional: 68 cidades",
+      "descricao": "Distribuicao geografica das obras ativas.",
+      "evidencia": "SÃO PAULO: 100; RIO DE JANEIRO: 16; CURITIBA: 13; SÃO PAULO / SP: 13; São Paulo/São Paulo: 8"
+    }
+  ],
+  "metricas": {
+    "cruzamentos_nao_explorados": 21,
+    "fases_gargalo": 7,
+    "obras_sem_radar": 19,
+    "cidades_distintas": 68,
+    "consultores_com_acumulo_180d": 3
+  },
+  "comparativo_vs_anterior": "achados: 5->5 (+0), alta: 1->1 (+0)"
+}
