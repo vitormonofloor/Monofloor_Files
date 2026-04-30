@@ -170,10 +170,12 @@
   .hero-kpi .val.green { color: var(--green); }
   .hero-kpi .val.blue { color: var(--blue); }
   .hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
-  /* Chip de canceladas — separa visualmente do que está em movimento */
-  .kpi-canceladas{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:3px 8px 3px 7px;background:#f4f0ec;border:1px dashed #c8bfb4;border-radius:99px;font-size:10px;color:#8a7e72;line-height:1.3}
-  .kpi-canceladas .kc-num{font-family:'JetBrains Mono',monospace;font-weight:600;color:#5a4e44}
-  .kpi-canceladas .kc-tag{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a89e92;padding:1px 5px;background:#fff;border-radius:3px}
+  /* Balanço — histórico fora da operação ativa (separado dos KPIs operacionais) */
+  .hero-balanco{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:8px 14px;background:#faf7f2;border:1px solid #ede6dc;border-radius:6px;font-size:11px;color:#8a7e72;line-height:1.5}
+  .hero-balanco .hb-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;padding-right:6px;border-right:1px solid #ede6dc;margin-right:4px}
+  .hero-balanco .hb-num{font-family:'JetBrains Mono',monospace;font-weight:600;color:#5a4e44}
+  .hero-balanco .hb-sep{color:#c8bfb4}
+  .hero-balanco .hb-total{margin-left:auto;font-weight:500;color:#6b6156}
   .kpi-edai{font-size:10px;color:#a89e92;margin-top:4px;font-style:italic;line-height:1.3}
 
   .hero-summary {
@@ -1187,13 +1189,23 @@
 
     <div>
       <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span class="dyn-total-obras">—</span> no painel</div><div class="kpi-canceladas" id="kpi-canceladas" hidden><span class="kc-num">—</span> canceladas <span class="kc-tag">arquivar</span></div></div>
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">carteira em movimento</div></div>
         <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
         <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
         <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
+
+      <!-- Balanço — obras fora da operação ativa (histórico). Vitor 2026-04-30 -->
+      <div class="hero-balanco" id="hero-balanco" hidden>
+        <span class="hb-tag">Balanço</span>
+        <span><span class="hb-num" id="hb-finalizadas">—</span> finalizadas / concluídas</span>
+        <span class="hb-sep">·</span>
+        <span><span class="hb-num" id="hb-canceladas">—</span> canceladas</span>
+        <span class="hb-sep">·</span>
+        <span class="hb-total"><span class="hb-num" id="hb-total">—</span> fora da operação</span>
+      </div>
 
       <div class="score-detail" id="score-detail">
         <div class="score-detail-line"></div>
@@ -2668,19 +2680,20 @@ function applyRodrigoCanon() {
         }
 
         // Total Ativas — usa "ativas saudáveis" (231, sem canceladas).
-        // Canceladas aparecem em chip separado abaixo do KPI.
+        // Canceladas + finalizadas aparecem em linha de Balanço separada (histórico).
         var ativas = ativasMov;
         if ($('kpi-ativas')) $('kpi-ativas').textContent = ativas;
-        // Chip "29 canceladas" — separação visual
-        var kc = $('kpi-canceladas');
-        if (kc) {
-          if (canceladas > 0) {
-            kc.hidden = false;
-            var kcNum = kc.querySelector('.kc-num');
-            if (kcNum) kcNum.textContent = canceladas;
-          } else {
-            kc.hidden = true;
-          }
+
+        // Linha BALANÇO — histórico fora da operação (Vitor 2026-04-30: separar
+        // do que está em movimento, serve pra balanço de fim de ano)
+        var finalizadas = R.totais.finalizados || 0;
+        var foraOperacao = finalizadas + canceladas;
+        var hb = $('hero-balanco');
+        if (hb) {
+          hb.hidden = false;
+          if ($('hb-finalizadas')) $('hb-finalizadas').textContent = finalizadas.toLocaleString('pt-BR');
+          if ($('hb-canceladas')) $('hb-canceladas').textContent = canceladas.toLocaleString('pt-BR');
+          if ($('hb-total')) $('hb-total').textContent = foraOperacao.toLocaleString('pt-BR');
         }
         // Em Execução (canônico Rodrigo)
         var emExec = R.totais.em_execucao;
