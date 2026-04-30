@@ -520,6 +520,15 @@
   .q2s-insight{margin-top:18px;padding:14px 16px;background:#fdfaf4;border:1px solid #e8d8b8;border-left:4px solid #b8a080;border-radius:6px;font-size:13px;line-height:1.6;color:#3a3530;position:relative}
   .q2s-insight::before{content:'⚡ Padrão visível';display:block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;color:#b8a080;text-transform:uppercase;margin-bottom:6px}
   .q2s-insight strong{color:#2a2520;font-style:normal;font-family:'JetBrains Mono',monospace;font-weight:600;background:rgba(184,160,128,0.18);padding:1px 6px;border-radius:3px}
+  /* Cluster paralisado — visual com identidade (Vitor 2026-04-30) */
+  .cluster-paralisado{margin-top:24px;padding:18px 22px;background:linear-gradient(135deg,#fff5f0 0%,#fef9f5 100%);border:1px solid #e8c8c8;border-left:4px solid #c45a5a;border-radius:8px;display:flex;flex-direction:column;gap:6px}
+  .cp-tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.16em;color:#c45a5a;text-transform:uppercase}
+  .cp-body{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .cp-num{font-family:'JetBrains Mono',monospace;font-size:42px;font-weight:600;color:#c45a5a;line-height:1;letter-spacing:-0.02em}
+  .cp-detalhe{font-size:13px;color:#3a3530;line-height:1.4;flex:1;min-width:200px}
+  .cp-detalhe strong{color:#c45a5a;font-weight:600}
+  .cp-componentes{font-size:11px;color:#8a7e72;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;flex-basis:100%;margin-top:6px;padding-top:6px;border-top:1px dashed #e8c8c8}
+  .cp-componentes strong{color:#5a4e44;font-weight:600}
 
   .idade-ok{color:#3d8a5a} .idade-warn{color:#b89a4a} .idade-crit{color:#c45a5a} .idade-esc{color:#b83a3a;font-weight:600}
 
@@ -1497,10 +1506,13 @@
       </div>
     </div>
 
-    <div class="key-finding crit" style="margin-top:18px;">
-      <strong>Cluster paralisado:</strong>
-      16 obras encerradas sem fechar (CLIENTE FINALIZADO sem fechar) + 18 sem responsável (sem consultor) + VT travada de 15 obras congeladas há 260 dias.
-      O somatório supera <span class="mono">23%</span> da carteira ativa total — todas paradas por motivo administrativo.
+    <div class="cluster-paralisado" id="q2-cluster-paralisado">
+      <div class="cp-tag">⚠ Cluster paralisado</div>
+      <div class="cp-body">
+        <div class="cp-num"><span id="q2-cp-total">—</span></div>
+        <div class="cp-detalhe">obras paradas por motivo <strong>administrativo</strong> · <span id="q2-cp-pct">—</span>% da carteira ativa</div>
+        <div class="cp-componentes" id="q2-cp-componentes">—</div>
+      </div>
     </div>
       <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel de Obras</span>status · pausas · idade · <span class="sf-tag kira">KIRA</span>contexto narrativo</div>
   </section>
@@ -2522,6 +2534,24 @@ function q2Init(){
   const todas = document.querySelector('.q2-fcard[data-status="TODAS"]');
   if (todas) todas.classList.add('active');
   q2Filter('TODAS');
+
+  // Cluster paralisado — dinâmico (Vitor 2026-04-30: era hardcoded e desatualizava)
+  q2RenderClusterParalisado();
+}
+
+function q2RenderClusterParalisado(){
+  if (!$('q2-cp-total')) return;
+  var zumbi = (EXT && EXT.zumbi_n) || 0;
+  var orfas = (EXT && EXT.orfas_n) || 0;
+  var ativas = (AGG && AGG.total_ativas) || 0;
+  var total = zumbi + orfas;
+  var pct = ativas ? (total / ativas * 100).toFixed(1) : 0;
+  $('q2-cp-total').textContent = total;
+  $('q2-cp-pct').textContent = pct;
+  var componentes = [];
+  if (zumbi) componentes.push('<strong>' + zumbi + '</strong> encerradas sem fechar');
+  if (orfas) componentes.push('<strong>' + orfas + '</strong> sem responsável');
+  $('q2-cp-componentes').innerHTML = componentes.join(' · ');
 }
 
 function q2Filter(status){
