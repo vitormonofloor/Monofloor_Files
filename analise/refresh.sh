@@ -152,11 +152,51 @@ try:
                 if cat in q1_totais:
                     q1_totais[cat] += 1
 
+        # Aplicar classificações manuais (Vitor edita q1-classificacoes.json)
+        cls_path = os.path.join(DADOS, 'q1-classificacoes.json')
+        cls = {}
+        if os.path.exists(cls_path):
+            try:
+                cls = json.load(open(cls_path, encoding='utf-8'))
+            except Exception:
+                cls = {}
+        faseada = set(cls.get('faseada', []) or [])
+        retrab_extra = set(cls.get('retrabalho_extra', []) or [])
+        cont_pausada = set(cls.get('continuacao_pausada', []) or [])
+
+        def classif(o):
+            cliente = o.get('cliente') or ''
+            status = o.get('status_real')
+            # 1. Cancelados/finalizados/concluidos = fantasma
+            if not o.get('painel_ativa'):
+                return 'FANTASMA'
+            # 2. Override manual
+            if cliente in faseada:
+                return 'FASEADA'
+            if cliente in retrab_extra:
+                return 'RETRABALHO'
+            if cliente in cont_pausada:
+                return 'CONTINUACAO'
+            # 3. Heurística por nome
+            if 'FASE' in cliente.upper():
+                return 'FASEADA'
+            # 4. Status sinaliza retrabalho
+            if status in ('reparo', 'marcas_rolo_cera'):
+                return 'RETRABALHO'
+            # 5. Resto = fluxo normal
+            return 'FLUXO_NORMAL'
+
+        for obra in q1:
+            obra['categoria_classif'] = classif(obra)
+
         dd['Q1_PLAN_OBRAS'] = q1
         dd['Q1_TOTAIS'] = q1_totais
         with open(dd_path, 'w', encoding='utf-8') as f:
             json.dump(dd, f, ensure_ascii=False)
-        print(f'  Q1_PLAN_OBRAS rehidratado: {atualizadas}/{len(q1)} cruzadas com /api/projects')
+        # Resumo categorias
+        from collections import Counter
+        cnt = Counter(o.get('categoria_classif', '?') for o in q1)
+        print(f'  Q1_PLAN_OBRAS rehidratado: {atualizadas}/{len(q1)} · ' + ' · '.join(f'{k}={v}' for k,v in cnt.most_common()))
 except Exception as e:
     print(f'  AVISO: rehidrata Q1 falhou: {e!r}')
 PYEOF

@@ -762,6 +762,11 @@
   .q1-divider::before,.q1-divider::after{content:'';flex:1;height:1px;background:#e0d8cc}
   .q1-divider-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;padding:0 8px}
   .q1-retrab-chip{display:inline-block;margin-left:6px;padding:3px 10px;background:#eaf0f6;border:1px solid #c8d8e8;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;color:#4a7ab8;text-transform:none}
+  .q1-cat-chip{display:inline-block;margin-left:6px;padding:3px 10px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:none}
+  .q1-cat-chip.retrab{background:#eaf0f6;border:1px solid #c8d8e8;color:#4a7ab8}
+  .q1-cat-chip.faseada{background:#f4f0e6;border:1px solid #e0d8c0;color:#8a6e2a}
+  .q1-cat-chip.continuacao{background:#f0eaf6;border:1px solid #d8c8e8;color:#6a4a8a}
+  .q1-cat-chip-nota{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:8px;color:#a89e92;font-style:italic;letter-spacing:.06em}
   /* Cumprimento de prazo — layout denso (Vitor 2026-04-30) */
   .q1-cumprimento-card{display:flex;flex-direction:column;gap:14px}
   .q1-cumpr-headline{font-size:14px;color:#3a3530;line-height:1.5;padding:10px 14px;background:#f6eaea;border:1px solid #e8c8c8;border-radius:6px;border-left:3px solid #c45a5a}
@@ -779,6 +784,11 @@
   .q1-cm-mark::after{content:'meta';position:absolute;top:-12px;left:-15px;width:40px;font-family:'JetBrains Mono',monospace;font-size:8px;color:#3d8a5a;text-align:center;font-weight:600}
   .q1-cm-detalhe{font-size:11px;color:#5a4e44;line-height:1.4}
   .q1-cumpr-nota{font-size:11px;color:#a89e92;font-style:italic;line-height:1.4}
+  /* Mini-bloco impacto m² (Vitor 2026-04-30) — dimensão do atraso vs capacidade */
+  .q1-impacto{padding:10px 14px;background:#f6eaea;border:1px solid #e8c8c8;border-radius:6px;margin-bottom:14px;font-size:12px;color:#3a3530;line-height:1.5}
+  .q1-impacto strong{color:#c45a5a;font-family:'JetBrains Mono',monospace}
+  .q1-impacto .qi-pct{font-family:'JetBrains Mono',monospace;font-weight:600;color:#8a3a3a}
+  .q1-impacto:empty{display:none}
   /* Top atrasadas — linha clicável */
   .q1-top-table tbody tr{cursor:pointer;transition:background .12s}
   .q1-top-table tbody tr:hover{background:#fdfaf4}
@@ -1356,10 +1366,13 @@
       </div>
     </div>
 
-    <!-- Separador visual + chip de retrabalho -->
+    <!-- Separador visual + 4 chips de categoria -->
     <div class="q1-divider">
-      <span class="q1-divider-tag">Estatística de prazo · <span id="q1-ativas-real-n">—</span> obras em fluxo normal</span>
-      <span class="q1-retrab-chip" id="q1-retrab-chip" hidden><span id="q1-retrab-n">—</span> em retrabalho/pós-entrega · não conta como atraso</span>
+      <span class="q1-divider-tag">Estatística de prazo · <span id="q1-ativas-real-n">—</span> em fluxo normal</span>
+      <span class="q1-cat-chip retrab" id="q1-chip-retrab" hidden><span id="q1-retrab-n">—</span> retrabalho</span>
+      <span class="q1-cat-chip faseada" id="q1-chip-faseada" hidden><span id="q1-faseada-n">—</span> faseada</span>
+      <span class="q1-cat-chip continuacao" id="q1-chip-continuacao" hidden><span id="q1-continuacao-n">—</span> continuação</span>
+      <span class="q1-cat-chip-nota">não contam como atraso</span>
     </div>
 
     <div class="q1-stacked-wrap">
@@ -1411,6 +1424,7 @@
 
       <div class="card">
         <div class="card-head"><div class="card-title">Top mais atrasadas</div><div class="card-sub">obras em fluxo normal · clique pra abrir</div></div>
+        <div class="q1-impacto" id="q1-impacto"></div>
         <table class="t q1-top-table"><thead><tr><th>Cliente</th><th>Cidade</th><th class="num">m²</th><th class="num">Atraso</th><th>Status / Fase</th></tr></thead>
         <tbody id="q1-top10"></tbody></table>
       </div>
@@ -2739,6 +2753,8 @@ function applyRodrigoCanon() {
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(R){
       if (!R || !R.totais) return;
+      // Disponibiliza globalmente pra outras funções (Q1, score, etc) reutilizarem
+      window._rodrigoStats = R;
       try {
         // Cálculo "ativas saudáveis" — exclui canceladas pra não misturar com obras
         // em movimento (Vitor 2026-04-30). Painel de Obras conta 260 (inclui canceladas);
@@ -2880,6 +2896,9 @@ function applyRodrigoCanon() {
         // SCORE — recalcular pilares e score circular sobre as 260 ativas
         // (Painel de Obras) + ciclo real (172d) em vez de mediana de idade (217d)
         try { recalcScoresFromRodrigo(R); } catch(e) { console.warn('recalcScores:', e); }
+        // Re-renderiza Q1 com window._rodrigoStats setado (capacidade mensal real
+        // vai pro mini-bloco de impacto, ciclo vai pra comparativo)
+        try { if (typeof renderQ1 === 'function') renderQ1(); if (typeof q1RenderStacked === 'function') q1RenderStacked(); } catch(e) { console.warn('re-render Q1:', e); }
       } catch (e) { console.warn('applyRodrigoCanon:', e); }
     })
     .catch(function(e){ console.warn('rodrigo-stats fetch:', e && e.message); });
@@ -2984,19 +3003,41 @@ const Q1_RETRAB_STATUSES = new Set(['reparo', 'marcas_rolo_cera']);
 
 function renderQ1() {
   // Q1 reformado (Vitor 2026-04-30): de "métrica de prazo corrompida" pra
-  // "higiene do cronograma" + estatística filtrada sobre obras em fluxo normal
-  // (excluindo fantasmas E retrabalho).
+  // "higiene do cronograma" + estatística filtrada sobre obras em FLUXO NORMAL.
+  // Classificação vem do refresh.sh (categoria_classif): FANTASMA, RETRABALHO,
+  // FASEADA, CONTINUACAO, FLUXO_NORMAL — usa overrides manuais de
+  // q1-classificacoes.json.
   const all = Q1_PLAN_OBRAS || [];
-  const fantasmas = all.filter(o => o.painel_ativa === false);
+
+  function classifFallback(o) {
+    if (o.categoria_classif) return o.categoria_classif;
+    // fallback se o JSON ainda não foi rehidratado pelo refresh
+    if (o.painel_ativa === false) return 'FANTASMA';
+    var cli = (o.cliente || '').toUpperCase();
+    if (cli.indexOf('FASE') >= 0) return 'FASEADA';
+    if (Q1_RETRAB_STATUSES.has(o.status_real)) return 'RETRABALHO';
+    return 'FLUXO_NORMAL';
+  }
+  all.forEach(o => { o._cat = classifFallback(o); });
+
+  const fantasmas = all.filter(o => o._cat === 'FANTASMA');
+  const retrabalho = all.filter(o => o._cat === 'RETRABALHO');
+  const faseadas = all.filter(o => o._cat === 'FASEADA');
+  const continuacoes = all.filter(o => o._cat === 'CONTINUACAO');
+  const fluxoNormal = all.filter(o => o._cat === 'FLUXO_NORMAL');
   const ativasReais = all.filter(o => o.painel_ativa === true);
-  const retrabalho = ativasReais.filter(o => Q1_RETRAB_STATUSES.has(o.status_real));
-  const fluxoNormal = ativasReais.filter(o => !Q1_RETRAB_STATUSES.has(o.status_real));
   const cronoTotal = all.length;
 
-  // Chip de retrabalho
-  if ($('q1-retrab-n')) $('q1-retrab-n').textContent = retrabalho.length;
-  var retChip = $('q1-retrab-chip');
-  if (retChip) retChip.hidden = retrabalho.length === 0;
+  // 4 chips de categoria
+  function setChip(id, n) {
+    var elN = $(id.replace('q1-chip-','q1-') + '-n');
+    var chip = $(id);
+    if (chip) chip.hidden = n === 0;
+    if (elN) elN.textContent = n;
+  }
+  setChip('q1-chip-retrab', retrabalho.length);
+  setChip('q1-chip-faseada', faseadas.length);
+  setChip('q1-chip-continuacao', continuacoes.length);
 
   // Banner FANTASMAS
   if ($('q1-fantasmas-num')) $('q1-fantasmas-num').textContent = fantasmas.length;
@@ -3062,6 +3103,29 @@ function renderQ1() {
     }
   } else {
     if ($('q1-cumpr-headline')) $('q1-cumpr-headline').innerHTML = '<strong>Sem obras em fluxo normal no cronograma.</strong>';
+  }
+
+  // Mini-bloco IMPACTO — soma m² das atrasadas em fluxo normal vs capacidade mensal (Vitor 2026-04-30)
+  if ($('q1-impacto')) {
+    var atrasadasFluxo = fluxoNormal.filter(o => (o.dias_atraso || 0) > 0);
+    var m2Atrasadas = 0;
+    if (Array.isArray(Q2_OBRAS)) {
+      var q2IdxImp = {};
+      Q2_OBRAS.forEach(function(o){ if (o && o.cliente) q2IdxImp[o.cliente] = o; });
+      atrasadasFluxo.forEach(function(o){
+        var m = q2IdxImp[o.cliente];
+        if (m && m.m2) m2Atrasadas += Number(m.m2) || 0;
+      });
+    }
+    var capMensal = (window._rodrigoStats && window._rodrigoStats.capacidade && window._rodrigoStats.capacidade.capacidade_mensal_produtiva) || 9196;
+    var pctCap = capMensal ? Math.round(m2Atrasadas / capMensal * 100) : 0;
+    if (atrasadasFluxo.length > 0) {
+      $('q1-impacto').innerHTML =
+        '<strong>' + atrasadasFluxo.length + ' obras · ' + Math.round(m2Atrasadas).toLocaleString('pt-BR') + ' m²</strong> atrasados · '
+        + '<span class="qi-pct">≈ ' + pctCap + '% da capacidade mensal</span> (' + capMensal.toLocaleString('pt-BR') + ' m²/mês)';
+    } else {
+      $('q1-impacto').innerHTML = '';
+    }
   }
 
   // Top mais atrasadas — enriquecida com m² + cidade + fase (cruzamento com Q2_OBRAS)
