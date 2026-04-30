@@ -762,6 +762,33 @@
   .q1-divider::before,.q1-divider::after{content:'';flex:1;height:1px;background:#e0d8cc}
   .q1-divider-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;padding:0 8px}
   .q1-retrab-chip{display:inline-block;margin-left:6px;padding:3px 10px;background:#eaf0f6;border:1px solid #c8d8e8;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;color:#4a7ab8;text-transform:none}
+  /* Cumprimento de prazo — layout denso (Vitor 2026-04-30) */
+  .q1-cumprimento-card{display:flex;flex-direction:column;gap:14px}
+  .q1-cumpr-headline{font-size:14px;color:#3a3530;line-height:1.5;padding:10px 14px;background:#f6eaea;border:1px solid #e8c8c8;border-radius:6px;border-left:3px solid #c45a5a}
+  .q1-cumpr-headline strong{color:#2a2520}
+  .q1-cumpr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .q1-cumpr-stat{padding:10px 8px;background:#faf7f2;border:1px solid #e8e0d4;border-radius:6px;text-align:center}
+  .q1-cs-num{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#3a3530;line-height:1}
+  .q1-cs-unit{display:inline-block;font-size:10px;color:#a89e92;margin-left:2px}
+  .q1-cs-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.12em;color:#8a7e72;margin-top:6px;text-transform:uppercase}
+  .q1-cumpr-meta{padding:10px 12px;background:#fdfaf4;border:1px solid #ede6dc;border-radius:6px}
+  .q1-cm-lbl{font-size:10px;color:#8a7e72;margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
+  .q1-cm-bar{position:relative;height:10px;background:#ede6dc;border-radius:5px;overflow:hidden;margin-bottom:6px}
+  .q1-cm-fill{height:100%;background:linear-gradient(90deg,#b89a4a 0%,#c45a5a 70%);transition:width .4s}
+  .q1-cm-mark{position:absolute;top:-4px;width:2px;height:18px;background:#3d8a5a;border-radius:1px}
+  .q1-cm-mark::after{content:'meta';position:absolute;top:-12px;left:-15px;width:40px;font-family:'JetBrains Mono',monospace;font-size:8px;color:#3d8a5a;text-align:center;font-weight:600}
+  .q1-cm-detalhe{font-size:11px;color:#5a4e44;line-height:1.4}
+  .q1-cumpr-nota{font-size:11px;color:#a89e92;font-style:italic;line-height:1.4}
+  /* Top atrasadas — linha clicável */
+  .q1-top-table tbody tr{cursor:pointer;transition:background .12s}
+  .q1-top-table tbody tr:hover{background:#fdfaf4}
+  .q1-top-table .q1-tt-cli{font-weight:500;color:#3a3530}
+  .q1-top-table .q1-tt-fase{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;margin-top:2px}
+  .q1-top-table .q1-tt-status{display:inline-block;padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .q1-top-table .q1-tt-status.exec{background:#e8f2ec;color:#3d8a5a}
+  .q1-top-table .q1-tt-status.aguard{background:#f4f0e6;color:#b89a4a}
+  .q1-top-table .q1-tt-status.plan{background:#eaf0f6;color:#4a7ab8}
+  .q1-top-table .q1-tt-status.outro{background:#ede6dc;color:#8a7e72}
 
   /* ===== Q-HEAD (títulos de seção) — FASE 2.5: hierarquia tipográfica explícita ===== */
   .q-head{margin-bottom:18px;padding-left:14px;border-left:3px solid #b8a080}
@@ -1342,16 +1369,49 @@
     </div>
 
     <div class="grid-2">
-      <div class="card">
-        <div class="card-head"><div class="card-title">Cumprimento de prazo</div><div class="card-sub">só obras de fato ativas</div></div>
-        <div class="key-finding warn" id="q1-cumprimento">
-          <strong>—</strong>
+      <div class="card q1-cumprimento-card">
+        <div class="card-head"><div class="card-title">Cumprimento de prazo</div><div class="card-sub">só obras em fluxo normal</div></div>
+
+        <!-- Resumo no topo -->
+        <div class="q1-cumpr-headline" id="q1-cumpr-headline">—</div>
+
+        <!-- Mini-stats: 4 medidas chave -->
+        <div class="q1-cumpr-grid">
+          <div class="q1-cumpr-stat">
+            <div class="q1-cs-num" id="q1-cs-mediana">—</div>
+            <div class="q1-cs-unit">d</div>
+            <div class="q1-cs-lbl">Mediana</div>
+          </div>
+          <div class="q1-cumpr-stat">
+            <div class="q1-cs-num" id="q1-cs-p75">—</div>
+            <div class="q1-cs-unit">d</div>
+            <div class="q1-cs-lbl">p75</div>
+          </div>
+          <div class="q1-cumpr-stat">
+            <div class="q1-cs-num" id="q1-cs-p90">—</div>
+            <div class="q1-cs-unit">d</div>
+            <div class="q1-cs-lbl">p90</div>
+          </div>
+          <div class="q1-cumpr-stat">
+            <div class="q1-cs-num" id="q1-cs-max">—</div>
+            <div class="q1-cs-unit">d</div>
+            <div class="q1-cs-lbl">Máximo</div>
+          </div>
         </div>
+
+        <!-- Comparativo com meta -->
+        <div class="q1-cumpr-meta">
+          <div class="q1-cm-lbl">vs ciclo total real (mediana <span id="q1-cm-ciclo">172d</span>) · meta 150d</div>
+          <div class="q1-cm-bar"><div class="q1-cm-fill" id="q1-cm-fill"></div><div class="q1-cm-mark" id="q1-cm-mark" title="Meta 150d"></div></div>
+          <div class="q1-cm-detalhe" id="q1-cm-detalhe">—</div>
+        </div>
+
+        <div class="q1-cumpr-nota" id="q1-cumpr-nota"></div>
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Top mais atrasadas</div><div class="card-sub">só ativas reais</div></div>
-        <table class="t"><thead><tr><th>Cliente</th><th>Consultor</th><th class="num">Atraso</th><th>Status real</th></tr></thead>
+        <div class="card-head"><div class="card-title">Top mais atrasadas</div><div class="card-sub">obras em fluxo normal · clique pra abrir</div></div>
+        <table class="t q1-top-table"><thead><tr><th>Cliente</th><th>Cidade</th><th class="num">m²</th><th class="num">Atraso</th><th>Status / Fase</th></tr></thead>
         <tbody id="q1-top10"></tbody></table>
       </div>
     </div>
@@ -2954,43 +3014,86 @@ function renderQ1() {
   const cobertura = N ? Math.round(N / carteiraAtiva * 100) : 0;
   if ($('q1-cobertura-pct')) $('q1-cobertura-pct').textContent = cobertura;
 
-  // Cumprimento de prazo — só fluxo normal (sem retrabalho/fantasmas)
+  // Cumprimento de prazo — layout denso (Vitor 2026-04-30): mini-stats + barra vs meta
+  function pctile(arr, p) {
+    if (!arr.length) return 0;
+    const idx = Math.min(arr.length - 1, Math.floor(arr.length * p));
+    return arr[idx] || 0;
+  }
   if (N > 0) {
     const atrasos = fluxoNormal.map(o => o.dias_atraso || 0).sort((a,b) => a-b);
     const noPrazo = atrasos.filter(a => a <= 0).length;
     const atrasadas = N - noPrazo;
-    function pctile(arr, p) {
-      if (!arr.length) return 0;
-      const idx = Math.min(arr.length - 1, Math.floor(arr.length * p));
-      return arr[idx] || 0;
-    }
     const positivos = atrasos.filter(a => a > 0);
     const med = positivos.length ? pctile(positivos, 0.5) : 0;
     const p75 = positivos.length ? pctile(positivos, 0.75) : 0;
     const p90 = positivos.length ? pctile(positivos, 0.9) : 0;
     const max = positivos.length ? positivos[positivos.length - 1] : 0;
 
-    if ($('q1-cumprimento')) {
-      var sufixoRetrab = retrabalho.length ? ' · ' + retrabalho.length + ' em retrabalho/pós-entrega não entram' : '';
-      $('q1-cumprimento').innerHTML = noPrazo === 0
-        ? `<strong>${atrasadas} de ${N} obras em fluxo normal atrasadas (${Math.round(atrasadas/N*100)}%).</strong> Mediana <span class="mono">${med}d</span> · p75 <span class="mono">${p75}d</span> · p90 <span class="mono">${p90}d</span> · máx <span class="mono">${max}d</span>.<br><em style="color:#a89e92">Amostra fraca (${N} obras${sufixoRetrab}) — limpar fantasmas e cobrir mais obras no Painel de Obras vai dar relevância estatística.</em>`
-        : `<strong>${noPrazo} no prazo · ${atrasadas} atrasadas</strong> de ${N} em fluxo normal. Mediana atraso <span class="mono">${med}d</span> · máx <span class="mono">${max}d</span>.${sufixoRetrab ? '<br><em style="color:#a89e92">' + retrabalho.length + ' em retrabalho não entram nessa estatística.</em>' : ''}`;
+    // Headline
+    if ($('q1-cumpr-headline')) {
+      $('q1-cumpr-headline').innerHTML = noPrazo === 0
+        ? `<strong>${atrasadas} de ${N} obras (${Math.round(atrasadas/N*100)}%) atrasadas</strong> · todas em fluxo normal já passaram da data prevista`
+        : `<strong>${noPrazo} no prazo · ${atrasadas} atrasadas</strong> de ${N} obras em fluxo normal`;
+    }
+    // Mini-stats
+    if ($('q1-cs-mediana')) $('q1-cs-mediana').textContent = med;
+    if ($('q1-cs-p75')) $('q1-cs-p75').textContent = p75;
+    if ($('q1-cs-p90')) $('q1-cs-p90').textContent = p90;
+    if ($('q1-cs-max')) $('q1-cs-max').textContent = max;
+
+    // Comparativo com meta
+    var ciclo = (window._rodrigoStats && window._rodrigoStats.tempo && window._rodrigoStats.tempo.ciclo_total_mediana) || 172;
+    if ($('q1-cm-ciclo')) $('q1-cm-ciclo').textContent = ciclo + 'd';
+    // Barra: posição da mediana de atraso vs uma escala (0-200d)
+    var maxScale = Math.max(200, p90 + 20);
+    var pctMed = (med / maxScale) * 100;
+    var pctMeta = (150 / maxScale) * 100; // marca da meta (150d) ao longo da escala
+    if ($('q1-cm-fill')) $('q1-cm-fill').style.width = Math.min(100, pctMed) + '%';
+    if ($('q1-cm-mark')) $('q1-cm-mark').style.left = Math.min(100, pctMeta) + '%';
+    if ($('q1-cm-detalhe')) {
+      var diffMeta = ciclo - 150;
+      $('q1-cm-detalhe').innerHTML = `Atraso mediano de <strong class="mono">${med}d</strong> sobre data prevista do cronograma · ciclo total real <strong class="mono">${ciclo}d</strong> (${diffMeta > 0 ? '+' + diffMeta : diffMeta}d vs meta 150d)`;
+    }
+    // Nota
+    if ($('q1-cumpr-nota')) {
+      var sufRet = retrabalho.length ? ' · ' + retrabalho.length + ' em retrabalho não entram' : '';
+      $('q1-cumpr-nota').innerHTML = `Amostra fraca (${N} obras${sufRet}). Limpar fantasmas e cobrir mais obras vai dar relevância estatística.`;
     }
   } else {
-    if ($('q1-cumprimento')) $('q1-cumprimento').innerHTML = '<strong>Sem obras em fluxo normal no cronograma.</strong>';
+    if ($('q1-cumpr-headline')) $('q1-cumpr-headline').innerHTML = '<strong>Sem obras em fluxo normal no cronograma.</strong>';
   }
 
-  // Top mais atrasadas — só fluxo normal
+  // Top mais atrasadas — enriquecida com m² + cidade + fase (cruzamento com Q2_OBRAS)
+  function statusClass(s) {
+    if (s === 'em_execucao') return 'exec';
+    if (s === 'aguardando_execucao' || s === 'aguardando_clima') return 'aguard';
+    if (s === 'planejamento') return 'plan';
+    return 'outro';
+  }
+  // Index Q2_OBRAS por nome de cliente pra cruzar rápido
+  var q2Idx = {};
+  if (Array.isArray(Q2_OBRAS)) {
+    Q2_OBRAS.forEach(function(o){ if (o && o.cliente) q2Idx[o.cliente] = o; });
+  }
   const top = fluxoNormal.slice().sort((a,b) => (b.dias_atraso||0) - (a.dias_atraso||0)).slice(0, 10);
   const tb = top.map(o => {
     const cl = o.dias_atraso >= 90 ? 'red' : (o.dias_atraso >= 30 ? 'amber' : '');
-    return `<tr>
-      <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
-      <td class="ct">${escHtml(o.consultor || '—')}</td>
+    var match = q2Idx[o.cliente] || {};
+    var cidade = match.cidade || '—';
+    var m2 = match.m2 ? Math.round(match.m2).toLocaleString('pt-BR') : '—';
+    var fase = match.fase || o.fase_real || '—';
+    var statusLabel = statusHumano(o.status_real || '—');
+    var statusCls = statusClass(o.status_real);
+    var rowClick = match.id ? `onclick="if(typeof openObraJornada==='function')openObraJornada('${match.id}'); else window.open('https://cliente.monofloor.cloud/app/projeto/${match.id}','_blank')"` : '';
+    return `<tr ${rowClick}>
+      <td class="q1-tt-cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
+      <td class="ct">${escHtml(cidade)}</td>
+      <td class="num">${m2}</td>
       <td class="num ${cl}">${o.dias_atraso}d</td>
-      <td><span class="ct">${escHtml(statusHumano(o.status_real || '—'))}</span></td>
+      <td><span class="q1-tt-status ${statusCls}">${escHtml(statusLabel)}</span><div class="q1-tt-fase" title="${escHtml(fase)}">${escHtml(fase.length > 30 ? fase.slice(0,30)+'…' : fase)}</div></td>
     </tr>`;
-  }).join('') || '<tr><td colspan="4" style="text-align:center;color:#a89e92;padding:20px;font-style:italic">Sem obras ativas no cronograma.</td></tr>';
+  }).join('') || '<tr><td colspan="5" style="text-align:center;color:#a89e92;padding:20px;font-style:italic">Sem obras em fluxo normal no cronograma.</td></tr>';
   $('q1-top10').innerHTML = tb;
 }
 
