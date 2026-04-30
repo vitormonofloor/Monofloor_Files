@@ -638,6 +638,10 @@
   .q4-uf-path{transition:fill .15s,stroke-width .15s}
   .q4-uf-path.tem-volume{cursor:pointer}
   .q4-uf-path.tem-volume:hover{stroke:#2a2520 !important;stroke-width:1.4 !important;filter:brightness(1.08)}
+  .q4-uf-filtro-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#5a4a30;background:#f5edd9;border:1px solid #d4b886;padding:2px 4px 2px 8px;border-radius:10px;margin-left:8px;letter-spacing:0.04em;text-transform:none}
+  .q4-uf-filtro-badge b{color:#8a6a20;font-family:'JetBrains Mono',monospace}
+  .q4-uf-filtro-x{background:none;border:none;color:#8a7e72;cursor:pointer;font-size:13px;line-height:1;padding:0 4px;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .q4-uf-filtro-x:hover{background:#c45a5a;color:#fff}
   .q4-uf-legenda{margin-top:10px;display:flex;flex-direction:column;gap:8px}
   .q4-uf-leg-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#8a7e72;flex-wrap:wrap}
   .q4-uf-leg-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:2px;margin-left:6px}
@@ -3956,8 +3960,36 @@ function q4Init(){
   q4RenderFunil();
 }
 
+function q4FiltroUfObras(){
+  if (!_q4UfSelecionado) return Q2_OBRAS;
+  return Q2_OBRAS.filter(o => q4ResolverUF(o.cidade) === _q4UfSelecionado);
+}
+
+function q4RenderUfFiltroBadge(elId){
+  const card = document.getElementById(elId);
+  if (!card) return;
+  const cardEl = card.closest('.q4-sec-card');
+  if (!cardEl) return;
+  const h4 = cardEl.querySelector('h4');
+  if (!h4) return;
+  // Remove badge anterior (idempotente)
+  const existing = h4.querySelector('.q4-uf-filtro-badge');
+  if (existing) existing.remove();
+  if (_q4UfSelecionado) {
+    const badge = document.createElement('span');
+    badge.className = 'q4-uf-filtro-badge';
+    badge.innerHTML = 'filtrado: <b>'+_q4UfSelecionado+'</b> <button type="button" class="q4-uf-filtro-x" title="Limpar filtro">✕</button>';
+    badge.querySelector('button').addEventListener('click', () => {
+      _q4UfSelecionado = null;
+      q4RenderUFs(); q4RenderFases(); q4RenderFunil();
+    });
+    h4.appendChild(badge);
+  }
+}
+
 function q4RenderFases(){
-  const obras = Q2_OBRAS;
+  const obras = q4FiltroUfObras();
+  q4RenderUfFiltroBadge('q4-fases-bars');
   const por = {};
   obras.forEach(o=>{
     const f = o.fase || '(sem fase)';
@@ -4072,6 +4104,8 @@ function q4UfCorEscala(m2, max){
 
 // Cache do SVG (carregado uma vez)
 let _q4MapaSvgCache = null;
+// UF selecionada no mapa (filtra Top fases e Funil). null = sem filtro.
+let _q4UfSelecionado = null;
 
 async function q4LoadMapa(){
   if (_q4MapaSvgCache) return _q4MapaSvgCache;
@@ -4136,23 +4170,37 @@ function q4RenderUFs(){
     Object.keys(Q4_UF_NOMES).forEach(uf => {
       const v = por[uf] || {n:0, m2:0};
       const cor = q4UfCorEscala(v.m2, max);
+      const isSel = _q4UfSelecionado === uf;
       // O SVG tem múltiplos polygons com mesmo id (ex: SP em vários territórios).
       // Aplicamos a TODOS que tenham id=UF.
       const els = svgEl.querySelectorAll('#'+uf+', [id="'+uf+'"]');
       els.forEach(p => {
-        p.setAttribute('fill', cor.fill);
-        p.setAttribute('stroke', cor.stroke);
-        p.setAttribute('stroke-width', '0.6');
+        p.setAttribute('fill', isSel ? '#5a4a30' : cor.fill);
+        p.setAttribute('stroke', isSel ? '#2a2520' : cor.stroke);
+        p.setAttribute('stroke-width', isSel ? '1.6' : '0.6');
         p.classList.add('q4-uf-path');
-        if (v.n > 0) p.classList.add('tem-volume');
-        // Tooltip nativo via <title>
-        if (!p.querySelector('title')) {
-          const tt = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-          tt.textContent = v.n
-            ? Q4_UF_NOMES[uf]+': '+v.n+' obras · '+v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²'
-            : Q4_UF_NOMES[uf]+': sem obras';
-          p.appendChild(tt);
+        if (v.n > 0) {
+          p.classList.add('tem-volume');
+          // Click: seleciona/deseleciona UF e re-renderiza tudo
+          p.style.pointerEvents = 'auto';
+          p.addEventListener('click', () => {
+            _q4UfSelecionado = (_q4UfSelecionado === uf) ? null : uf;
+            q4RenderUFs();
+            q4RenderFases();
+            q4RenderFunil();
+          });
+        } else {
+          p.style.pointerEvents = 'none';
         }
+        // Tooltip nativo via <title>
+        const ttExist = p.querySelector('title');
+        if (ttExist) ttExist.remove();
+        const tt = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        const acao = v.n ? (isSel ? ' · clique pra limpar filtro' : ' · clique pra filtrar') : '';
+        tt.textContent = v.n
+          ? Q4_UF_NOMES[uf]+': '+v.n+' obras · '+v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²'+acao
+          : Q4_UF_NOMES[uf]+': sem obras';
+        p.appendChild(tt);
       });
     });
   });
@@ -4184,7 +4232,8 @@ function openQ4UfModal(){
 }
 
 function q4RenderFunil(){
-  var obras = Q2_OBRAS;
+  q4RenderUfFiltroBadge('q4-funil-bars');
+  var obras = q4FiltroUfObras();
   // Ordem do funil pré-execução conforme PP:001 (cronologia desde ENTRADA até pré-campo).
   // OBRA EM EXECUÇÃO foi REMOVIDA (não é pré, é execução). EQUIPE DE EXECUÇÃO mantida
   // (último estágio antes de campo).
