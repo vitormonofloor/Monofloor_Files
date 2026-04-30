@@ -3941,58 +3941,168 @@ function q4RenderFases(){
   const el = document.getElementById('q4-fases-bars');
   if (!el) return;
   el.innerHTML = list.map(([f, v])=>`
-    <button class="q3-cap-row q4-fase-btn" data-fase="${escHtml(f)}" type="button" title="Clique para ver as obras nesta fase">
-      <div class="nome" title="${escHtml(f)}">${escHtml(f)}</div>
+    <button class="q3-cap-row q4-fase-btn" data-fase="${escHtml(f)}" type="button" title="Clique para ver as ${v.n} obras nesta fase (${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})} m²)">
+      <div class="nome" title="${escHtml(f)}">${escHtml(f)} <span style="color:#a89e92;font-size:10px">(${v.n})</span></div>
       <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
-      <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
+      <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})} m²</div>
     </button>`).join('');
   el.querySelectorAll('.q4-fase-btn').forEach(b => {
     b.addEventListener('click', () => openFaseModal(b.dataset.fase));
   });
 }
 
+// Mapa CIDADE → UF — coletado de Q2_OBRAS (auditoria 2026-04-30: 74% caía em "OUTROS"
+// porque regex \b...\b em JS não trata acentos consistente). Cobertura por nome
+// + fallback de UF/estado completo no fim da string.
+const Q4_CIDADE_UF = (function(){
+  const SP_CIDADES = ['SAO PAULO','SÃO PAULO','MOGI DAS CRUZES','BERTIOGA','SAO CAETANO DO SUL','SÃO CAETANO DO SUL','SAO SEBASTIAO','SÃO SEBASTIÃO','CAMPINAS','PIRACICABA','MARILIA','MARÍLIA','PAULINIA','PAULÍNIA','IBIUNA','IBIÚNA','ITAIM BIBI','PORTO FELIZ','SANTOS','JUNDIAI','JUNDIAÍ','RIBEIRAO PRETO','RIBEIRÃO PRETO','SAO BERNARDO','SÃO BERNARDO','SAO BERNARDO DO CAMPO','SÃO BERNARDO DO CAMPO','SANTO ANDRE','SANTO ANDRÉ','OSASCO','GUARULHOS','BARUERI','COTIA','VINHEDO','VALINHOS','SOROCABA','TAUBATE','TAUBATÉ','SAO JOSE DOS CAMPOS','SÃO JOSÉ DOS CAMPOS','ITU','SALTO','INDAIATUBA'];
+  const RJ_CIDADES = ['RIO DE JANEIRO','NITEROI','NITERÓI','PETROPOLIS','PETRÓPOLIS','MARICA','MARICÁ','BUZIOS','BÚZIOS','ARMACAO DOS BUZIOS','ARMAÇÃO DOS BÚZIOS','TERESOPOLIS','TERESÓPOLIS','ANGRA DOS REIS','PARATY'];
+  const PR_CIDADES = ['CURITIBA','CURITBA','LONDRINA','MARINGA','MARINGÁ','FOZ DO IGUACU','FOZ DO IGUAÇU','CASCAVEL','PINHAIS','SAO JOSE DOS PINHAIS','SÃO JOSÉ DOS PINHAIS'];
+  const MG_CIDADES = ['BELO HORIZONTE','DIVINOPOLIS','DIVINÓPOLIS','UBERLANDIA','UBERLÂNDIA','JUIZ DE FORA','CONTAGEM','BETIM','MONTES CLAROS','UBERABA','SETE LAGOAS'];
+  const SC_CIDADES = ['FLORIANOPOLIS','FLORIANÓPOLIS','BALNEARIO CAMBORIU','BALNEÁRIO CAMBORIU','BALNEÁRIO CAMBORIÚ','PORTO BELO','BLUMENAU','JOINVILLE','ITAJAI','ITAJAÍ','BOMBINHAS','ITAPEMA'];
+  const RS_CIDADES = ['PORTO ALEGRE','PELOTAS','CAXIAS DO SUL','GRAMADO','CANOAS','SANTA MARIA','NOVO HAMBURGO'];
+  const ES_CIDADES = ['VITORIA','VITÓRIA','VILA VELHA','SERRA','CARIACICA','GUARAPARI'];
+  const BA_CIDADES = ['SALVADOR','PORTO SEGURO','FEIRA DE SANTANA','LAURO DE FREITAS','CAMACARI','CAMAÇARI'];
+  const DF_CIDADES = ['BRASILIA','BRASÍLIA'];
+  const GO_CIDADES = ['GOIANIA','GOIÂNIA','APARECIDA DE GOIANIA','APARECIDA DE GOIÂNIA','ANAPOLIS','ANÁPOLIS'];
+  const PE_CIDADES = ['RECIFE','OLINDA','JABOATAO','JABOATÃO','CARUARU'];
+  const m = {};
+  SP_CIDADES.forEach(c => m[c] = 'SP');
+  RJ_CIDADES.forEach(c => m[c] = 'RJ');
+  PR_CIDADES.forEach(c => m[c] = 'PR');
+  MG_CIDADES.forEach(c => m[c] = 'MG');
+  SC_CIDADES.forEach(c => m[c] = 'SC');
+  RS_CIDADES.forEach(c => m[c] = 'RS');
+  ES_CIDADES.forEach(c => m[c] = 'ES');
+  BA_CIDADES.forEach(c => m[c] = 'BA');
+  DF_CIDADES.forEach(c => m[c] = 'DF');
+  GO_CIDADES.forEach(c => m[c] = 'GO');
+  PE_CIDADES.forEach(c => m[c] = 'PE');
+  return m;
+})();
+
+const Q4_ESTADO_NOME_UF = {
+  'SAO PAULO': 'SP', 'SÃO PAULO': 'SP',
+  'RIO DE JANEIRO': 'RJ',
+  'PARANA': 'PR', 'PARANÁ': 'PR',
+  'MINAS GERAIS': 'MG',
+  'SANTA CATARINA': 'SC',
+  'RIO GRANDE DO SUL': 'RS',
+  'ESPIRITO SANTO': 'ES', 'ESPÍRITO SANTO': 'ES',
+  'BAHIA': 'BA',
+  'GOIAS': 'GO', 'GOIÁS': 'GO',
+  'DISTRITO FEDERAL': 'DF',
+  'PERNAMBUCO': 'PE',
+  'CEARA': 'CE', 'CEARÁ': 'CE',
+  'MATO GROSSO': 'MT',
+  'MATO GROSSO DO SUL': 'MS',
+  'TOCANTINS': 'TO',
+};
+
+function q4ResolverUF(cidadeRaw){
+  if (!cidadeRaw) return '?';
+  const c = String(cidadeRaw).trim().toUpperCase();
+  if (!c || c === 'EXTERNA' || c.startsWith('CEP ') || /^(R\.|RUA|AV\.|AVENIDA|TRAV\.)/i.test(c)) return '?';
+  // 1. UF de 2 letras no fim ("PIRACICABA / SP", "Porto Feliz/SP")
+  let m = c.match(/[\/,\s]\s*([A-Z]{2})\s*$/);
+  if (m && /^(SP|RJ|PR|SC|MG|RS|BA|GO|DF|ES|CE|PE|MT|MS|TO|MA|PI|AM|RO|AC|AP|RR|AL|SE|PB|RN)$/.test(m[1])) {
+    return m[1];
+  }
+  // 2. Estado completo no fim ("Divinópolis/Minas Gerais")
+  m = c.match(/[\/,]\s*([A-ZÁÂÃÉÊÍÓÔÕÚÇ\s]+?)\s*$/);
+  if (m) {
+    const est = m[1].trim();
+    if (Q4_ESTADO_NOME_UF[est]) return Q4_ESTADO_NOME_UF[est];
+  }
+  // 3. Cidade exata (split por / ou , pra pegar só a primeira parte)
+  const primeiraParte = c.split(/[\/,]/)[0].trim();
+  if (Q4_CIDADE_UF[primeiraParte]) return Q4_CIDADE_UF[primeiraParte];
+  if (Q4_CIDADE_UF[c]) return Q4_CIDADE_UF[c];
+  return '?';
+}
+
 function q4RenderUFs(){
   const obras = Q2_OBRAS;
   const por = {};
+  let semUf = 0;
   obras.forEach(o=>{
-    let uf = 'OUTROS';
-    const c = (o.cidade||'').toUpperCase();
-    const m = c.match(/\/\s*(SP|RJ|PR|SC|MG|RS|BA|GO|DF|ES|CE|PE|MT|MS|TO|MA|PI|AM|RO|AC|AP|RR|AL|SE|PB|RN)\s*$/);
-    if (m) uf = m[1];
-    else if (c.match(/\bS[ÃA]O PAULO\b/)) uf = 'SP';
-    else if (c.match(/\bRIO DE JANEIRO\b/)) uf = 'RJ';
-    else if (c.match(/\bCURITIBA\b|\bPARAN[ÁA]\b/)) uf = 'PR';
-    else if (c.match(/\bBRAS[ÍI]LIA\b/)) uf = 'DF';
-    else if (c.match(/\bBELO HORIZONTE\b|\bMINAS GERAIS\b|\bDIVIN[ÓO]POLIS\b/)) uf = 'MG';
-    else if (c.match(/\bFLORIAN[ÓO]POLIS\b|\bBALNE[ÁA]RIO CAMBORIU\b|\bPORTO BELO\b/)) uf = 'SC';
-    else if (c.match(/\bPORTO ALEGRE\b|\bPELOTAS\b/)) uf = 'RS';
-    else if (c.match(/\bVIT[ÓO]RIA\b/)) uf = 'ES';
-    else if (c.match(/\bPORTO SEGURO\b/)) uf = 'BA';
+    const uf = q4ResolverUF(o.cidade);
+    if (uf === '?') semUf++;
     if (!por[uf]) por[uf] = {n:0, m2:0};
     por[uf].n++; por[uf].m2 += (o.m2||0);
   });
   const list = Object.entries(por).sort((a,b)=>b[1].m2-a[1].m2).slice(0,7);
   const max = list[0]?.[1].m2 || 1;
   const el = document.getElementById('q4-uf-bars');
-  if (el) el.innerHTML = list.map(([uf, v])=>`
-    <div class="q3-cap-row">
-      <div class="nome">${uf} <span style="color:#a89e92">(${v.n} obras)</span></div>
-      <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
-      <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})}</div>
-    </div>`).join('');
+  if (el) {
+    let html = list.map(([uf, v])=>`
+      <div class="q3-cap-row">
+        <div class="nome">${uf === '?' ? '<span style="color:#c45a5a" title="Cidade sem UF identificável (ex: EXTERNA, CEP, endereço)">?</span>' : uf} <span style="color:#a89e92">(${v.n} obras)</span></div>
+        <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
+        <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})} m²</div>
+      </div>`).join('');
+    if (semUf > 0) {
+      html += `<div style="font-size:10px;color:#a89e92;margin-top:8px;font-style:italic">⚠ ${semUf} obras sem UF identificável (cadastro do painel com endereço/EXTERNA no campo cidade).</div>`;
+    }
+    el.innerHTML = html;
+  }
 }
 
 function q4RenderFunil(){
   var obras = Q2_OBRAS;
-  var faseOrdem = ['ENTRADA','1º CONTATO OP.','EM CONTRATO','CONTRATO','INFORMAÇÕES PROJETOS','INFORMAÇÕES FINANCEIRAS','INFORMAÇÕES LOGÍSTICAS','AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','PROJETOS  - 1ª REVISÃO','CONFIRMAÇÕES OP 1','REVISÃO FINAL OP','INDÚSTRIA - EM PRODUÇÃO','LOGÍSTICA - EM COLETA','LOGÍSTICA - EM ENTREGA','LOGÍSTICA - MATERIAL ENTREGUE','AGEND. VT - ENTRADA','RESULTADO VT - ENTRADA','EQUIPE DE EXECUÇÃO','AGUARDANDO LIBERAÇÃO','OBRA EM EXECUÇÃO'];
+  // Ordem do funil pré-execução conforme PP:001 (cronologia desde ENTRADA até pré-campo).
+  // OBRA EM EXECUÇÃO foi REMOVIDA (não é pré, é execução). EQUIPE DE EXECUÇÃO mantida
+  // (último estágio antes de campo).
+  // Adicionadas as 3 fases que existiam no painel mas faltavam: OECT (entrada inicial),
+  // RESULTADO VT - QUALIDADE, AGEND. VT - ACOMPANHAMENTO.
+  var faseOrdem = [
+    'ENTRADA',
+    '1º CONTATO OP.',
+    'OECT',
+    'EM CONTRATO',
+    'CONTRATO',
+    'INFORMAÇÕES PROJETOS',
+    'INFORMAÇÕES FINANCEIRAS',
+    'INFORMAÇÕES LOGÍSTICAS',
+    'AGEND. VT - AFERIÇÃO/ORIENTAÇÃO',
+    'RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO',
+    'AGEND. VT - ACOMPANHAMENTO',
+    'RESULTADO VT - QUALIDADE',
+    'PROJETOS  - 1ª REVISÃO', // 2 espaços propositais (cadastro do painel)
+    'CONFIRMAÇÕES OP 1',
+    'REVISÃO FINAL OP',
+    'INDÚSTRIA - EM PRODUÇÃO',
+    'LOGÍSTICA - EM COLETA',
+    'LOGÍSTICA - EM ENTREGA',
+    'LOGÍSTICA - MATERIAL ENTREGUE',
+    'AGEND. VT - ENTRADA',
+    'RESULTADO VT - ENTRADA',
+    'EQUIPE DE EXECUÇÃO',
+    'AGUARDANDO LIBERAÇÃO'
+  ];
   var por = {};
   obras.forEach(function(o){var f=o.fase||'(sem)'; por[f]=(por[f]||0)+1;});
   var funil = faseOrdem.filter(function(f){return por[f]>0;}).map(function(f){return{fase:f,n:por[f]};});
   if (funil.length===0) funil = Object.entries(por).sort(function(a,b){return b[1]-a[1];}).slice(0,8).map(function(e){return{fase:e[0],n:e[1]};});
   var max = funil.reduce(function(a,f){return Math.max(a,f.n);},1);
   var el = document.getElementById('q4-funil-bars');
-  if(el) el.innerHTML = funil.slice(0,8).map(function(f){
-    var short = f.fase.replace('AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','VT Aferição').replace('RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','Resultado VT').replace('INDÚSTRIA - EM PRODUÇÃO','Indústria').replace('LOGÍSTICA - EM ENTREGA','Log. Entrega').replace('LOGÍSTICA - EM COLETA','Log. Coleta').replace('LOGÍSTICA - MATERIAL ENTREGUE','Log. Entregue').replace('AGUARDANDO LIBERAÇÃO','Ag. Liberação').replace('CONFIRMAÇÕES OP 1','Confirmações').replace('OBRA EM EXECUÇÃO','Em Execução').replace('1º CONTATO OP.','1º Contato').replace('EQUIPE DE EXECUÇÃO','Equipe Exec.');
+  if(el) el.innerHTML = funil.slice(0,10).map(function(f){
+    var short = f.fase
+      .replace('AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','VT Aferição')
+      .replace('RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','Resultado VT')
+      .replace('AGEND. VT - ACOMPANHAMENTO','VT Acompanh.')
+      .replace('RESULTADO VT - QUALIDADE','Result. VT Qual.')
+      .replace('INDÚSTRIA - EM PRODUÇÃO','Indústria')
+      .replace('LOGÍSTICA - EM ENTREGA','Log. Entrega')
+      .replace('LOGÍSTICA - EM COLETA','Log. Coleta')
+      .replace('LOGÍSTICA - MATERIAL ENTREGUE','Log. Entregue')
+      .replace('AGUARDANDO LIBERAÇÃO','Ag. Liberação')
+      .replace('CONFIRMAÇÕES OP 1','Confirmações')
+      .replace('1º CONTATO OP.','1º Contato')
+      .replace('EQUIPE DE EXECUÇÃO','Equipe Exec.')
+      .replace('AGEND. VT - ENTRADA','VT Entrada')
+      .replace('RESULTADO VT - ENTRADA','Result. VT Ent.')
+      .replace('PROJETOS  - 1ª REVISÃO','Projetos 1ª Rev.');
     return '<div class="q3-cap-row"><div class="nome" title="'+f.fase+'">'+short+'</div><div class="bar-out"><div class="bar-use" style="width:'+(f.n/max*100).toFixed(0)+'%;background:linear-gradient(90deg,#4a7ab8,#3d8a5a)"></div></div><div class="pct">'+f.n+'</div></div>';
   }).join('');
 }
