@@ -4500,7 +4500,10 @@ function q4TipoColor(tipo){
 }
 
 function openFaseModal(fase){
-  const obras = Q2_OBRAS.filter(o => o.fase === fase);
+  // Respeita filtro UF do mapa: se o usuário clicou num estado, modal mostra
+  // só obras daquela UF dentro da fase.
+  const baseObras = q4FiltroUfObras();
+  const obras = baseObras.filter(o => o.fase === fase);
 
   const linhas = obras.map(o => {
     const datas = Q4_DATAS[o.id] || null;
@@ -4529,14 +4532,16 @@ function openFaseModal(fase){
   });
 
   const totalM2 = obras.reduce((a, o) => a + (o.m2 || 0), 0);
-  const totalGlobal = Q2_OBRAS.reduce((a, o) => a + (o.m2 || 0), 0);
+  // Denominador do % é coerente com filtro UF (se filtrado, % é dentro do UF)
+  const totalGlobal = baseObras.reduce((a, o) => a + (o.m2 || 0), 0);
   const pct = totalGlobal ? (totalM2 / totalGlobal * 100).toFixed(1) : '0';
 
-  document.getElementById('q4-fase-title').textContent = fase;
+  const tituloFase = _q4UfSelecionado ? fase + ' · ' + _q4UfSelecionado : fase;
+  document.getElementById('q4-fase-title').textContent = tituloFase;
   document.getElementById('q4-fase-stats').innerHTML =
     '<span>'+obras.length+' obras</span>'+
     '<span>'+totalM2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²</span>'+
-    '<span>'+pct+'% do volume</span>';
+    '<span>'+pct+'% do volume'+(_q4UfSelecionado ? ' em '+_q4UfSelecionado : '')+'</span>';
 
   // Inicializa timeline com as linhas calculadas (a tabela é renderizada dentro do init)
   q4TimelineInit(linhas, fase);
