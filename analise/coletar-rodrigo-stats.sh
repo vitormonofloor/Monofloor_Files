@@ -227,18 +227,68 @@ por_cargo_label = { CARGO_LABEL.get(k, k): v for k, v in por_cargo.items() }
 # Escalação hoje: dict {obraId: {liderId, membrosIds[]}}
 esc = escalacao if isinstance(escalacao, dict) else {}
 em_campo_ids = set()
-appearance_count = Counter()
+appearance = {}  # id -> [obraId, ...]
 for obra_id, eq in esc.items():
     if not isinstance(eq, dict): continue
     lid = eq.get("liderId")
     if lid:
         em_campo_ids.add(lid)
-        appearance_count[lid] += 1
+        appearance.setdefault(lid, []).append(obra_id)
     for m in (eq.get("membrosIds") or []):
         if m:
             em_campo_ids.add(m)
-            appearance_count[m] += 1
-em_2_obras = sum(1 for n in appearance_count.values() if n >= 2)
+            appearance.setdefault(m, []).append(obra_id)
+
+# Lookup de nomes/cargos
+prest_by_id = { p.get("id"): p for p in prest_list if isinstance(p, dict) and p.get("id") }
+proj_by_id = { p.get("id"): p for p in projects if isinstance(p, dict) and p.get("id") }
+
+# Conflitos: pessoas escaladas em 2+ obras hoje (qualquer cargo)
+conflitos_detalhe = []
+for pid, obra_ids in appearance.items():
+    obras_unicas = list(dict.fromkeys(obra_ids))  # mantém ordem, remove dups
+    if len(obras_unicas) >= 2:
+        p = prest_by_id.get(pid, {})
+        cargo_raw = p.get("funcao") or "?"
+        conflitos_detalhe.append({
+            "id": pid,
+            "nome": p.get("nome") or pid[:8],
+            "cargo": CARGO_LABEL.get(cargo_raw, cargo_raw),
+            "qtd_obras": len(obras_unicas),
+            "obras": [
+                {
+                    "id": oid,
+                    "cliente": (proj_by_id.get(oid, {}) or {}).get("clienteNome") or oid[:8],
+                }
+                for oid in obras_unicas
+            ],
+        })
+conflitos_detalhe.sort(key=lambda x: (-x["qtd_obras"], x["nome"]))
+
+# Ociosos: prestadores ativos que NÃO aparecem em em_campo_ids hoje
+ociosos_detalhe = []
+for p in prest_ativos:
+    if p.get("id") not in em_campo_ids:
+        cargo_raw = p.get("funcao") or "?"
+        ociosos_detalhe.append({
+            "id": p.get("id"),
+            "nome": p.get("nome") or "?",
+            "cargo": CARGO_LABEL.get(cargo_raw, cargo_raw),
+        })
+ociosos_detalhe.sort(key=lambda x: (x["cargo"], x["nome"]))
+
+# Em campo hoje (lista resumida pra eventual drill-down de "Em campo")
+em_campo_detalhe = []
+for pid in em_campo_ids:
+    p = prest_by_id.get(pid, {})
+    cargo_raw = p.get("funcao") or "?"
+    em_campo_detalhe.append({
+        "id": pid,
+        "nome": p.get("nome") or pid[:8],
+        "cargo": CARGO_LABEL.get(cargo_raw, cargo_raw),
+        "qtd_obras": len(set(appearance.get(pid, []))),
+    })
+em_campo_detalhe.sort(key=lambda x: (-x["qtd_obras"], x["nome"]))
 
 canon["aplicadores"] = {
     "total_cadastrados": len(prest_list),
@@ -247,8 +297,11 @@ canon["aplicadores"] = {
     "por_cargo": dict(por_cargo_label),
     "obras_com_equipe_hoje": len(esc),
     "pessoas_em_campo_hoje": len(em_campo_ids),
-    "em_2_ou_mais_obras_hoje": em_2_obras,
+    "em_2_ou_mais_obras_hoje": len(conflitos_detalhe),
     "ociosos_hoje": max(0, len(prest_ativos) - len(em_campo_ids)),
+    "conflitos_detalhe": conflitos_detalhe,
+    "ociosos_detalhe": ociosos_detalhe,
+    "em_campo_detalhe": em_campo_detalhe,
     "fonte": "cliente.monofloor.cloud/api/prestadores + /api/escalacao-diaria",
 }
 

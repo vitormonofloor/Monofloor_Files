@@ -259,6 +259,10 @@
   .kpi .val.green { color: var(--green); }
   .kpi .val.blue { color: var(--blue); }
   .kpi .val.scarlet { color: var(--scarlet); }
+  .kpi-clickable { cursor: pointer; transition: border-color .15s, transform .15s; }
+  .kpi-clickable:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .kpi-clickable .kpi-arrow { float: right; color: var(--muted-2); font-size: 10px; opacity: .6; }
+  .kpi-clickable:hover .kpi-arrow { color: var(--accent); opacity: 1; }
 
   /* ============== BARS ============== */
   .barlist { display: flex; flex-direction: column; gap: 8px; }
@@ -1539,8 +1543,8 @@
         <div class="kpi-row">
           <div class="kpi"><div class="lbl">Total ativos</div><div class="val" id="apl-total">—</div></div>
           <div class="kpi"><div class="lbl">Escalados hoje</div><div class="val green" id="apl-escal">—</div><div class="sub" id="apl-escal-pct">—</div></div>
-          <div class="kpi"><div class="lbl">Ociosos</div><div class="val warn" id="apl-ocio">—</div></div>
-          <div class="kpi"><div class="lbl">Em 2+ obras hoje</div><div class="val crit" id="apl-conflito">—</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
+          <div class="kpi kpi-clickable" onclick="openBacklog('aplic-ociosos')" title="Ver lista"><div class="lbl">Ociosos <span class="kpi-arrow">↗</span></div><div class="val warn" id="apl-ocio">—</div><div class="sub">aplicadores ativos sem escalação hoje</div></div>
+          <div class="kpi kpi-clickable" onclick="openBacklog('aplic-conflitos')" title="Ver lista"><div class="lbl">Em 2+ obras hoje <span class="kpi-arrow">↗</span></div><div class="val crit" id="apl-conflito">—</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
         </div>
       </div>
     </div>
@@ -2273,42 +2277,38 @@
     </div>
   </div>
 
-  <!-- ============== MODAL: CONFLITOS HOJE ============== -->
-  <div class="bk-modal" id="modal-conflitos">
+  <!-- ============== MODAL: APLICADORES EM 2+ OBRAS HOJE ============== -->
+  <div class="bk-modal" id="modal-aplic-conflitos">
     <div class="bk-modal-bg" onclick="closeBacklog()"></div>
     <div class="bk-modal-box">
       <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
-      <h3>Conflitos físicos hoje <span>3 aplicadores · ação: validar escalação</span></h3>
+      <h3>Em 2+ obras hoje <span id="aplic-conf-sub">— · ação: validar escalação</span></h3>
       <p class="bk-action-detail">
-        <strong style="color:#b8a080">Por que:</strong> 3 aplicadores não-líderes escalados em 2 obras simultâneas no MESMO dia. Adalberto e Otávio estão nas mesmas 2 obras (Adriana Peres + Rafik Freua) — pode ser equipe dividida intencional ou erro de escalação. Líderes em múltiplas obras (João Carlos, Wiguens, Júlio) são esperados e não contam aqui.
+        <strong style="color:#b8a080">Por que:</strong> aplicadores escalados em 2 ou mais obras no MESMO dia. Líderes coordenando várias obras é normal — o sinal de alerta é Aplicador/Preparador/Ajudante em 2+ obras (provavelmente erro de escalação ou equipe dividida).
       </p>
-      <div class="bk-mov">
-        <h4>Movimentações recentes (últimos 7 dias)</h4>
-        <ul></ul>
-        <p class="bk-empty">Sem movimentações registradas. Histórico começa hoje.</p>
-      </div>
       <table class="t">
         <thead><tr>
-          <th>Aplicador</th><th>Função</th><th>Equipe</th>
-          <th>Obra 1</th><th>Obra 2</th><th>Ação</th>
+          <th>Aplicador</th><th>Cargo</th><th>Qtd obras</th><th>Obras</th>
         </tr></thead>
-        <tbody>
-          <tr><td>Adalberto Carlos Gomes Neto</td><td class="ct">PREPARADOR</td><td class="ct">Equipe Michael</td>
-            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/71a54604-b018-477e-9e72-231a345dc4de" target="_blank">71a54604</a> Adriana Peres</td>
-            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/feb975f6-4192-48b5-9b2a-ba62eaa779f1" target="_blank">feb975f6</a> Rafik Freua</td>
-            <td><span class="chip am">Validar com encarregado</span></td>
-          </tr>
-          <tr><td>Otávio Alves de Almeida</td><td class="ct">APLICADOR_2</td><td class="ct">Equipe Michael</td>
-            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/71a54604-b018-477e-9e72-231a345dc4de" target="_blank">71a54604</a> Adriana Peres</td>
-            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/feb975f6-4192-48b5-9b2a-ba62eaa779f1" target="_blank">feb975f6</a> Rafik Freua</td>
-            <td><span class="chip am">Validar com encarregado</span></td>
-          </tr>
-          <tr><td>Luiz Taciano</td><td class="ct">APLICADOR_1</td><td class="ct">Equipe Wiguens</td>
-            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/28aa71f9-beb1-404c-9fb3-0955f1daa8a9" target="_blank">28aa71f9</a> Flávio Fava</td>
-            <td class="ct"><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/c1621370-4f28-4e9b-9f02-10032f9bf7a0" target="_blank">c1621370</a> Manoela Latini 2ª fase</td>
-            <td><span class="chip am">Validar com encarregado</span></td>
-          </tr>
-        </tbody>
+        <tbody id="aplic-conf-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============== MODAL: APLICADORES OCIOSOS HOJE ============== -->
+  <div class="bk-modal" id="modal-aplic-ociosos">
+    <div class="bk-modal-bg" onclick="closeBacklog()"></div>
+    <div class="bk-modal-box">
+      <button class="bk-close" onclick="closeBacklog()" aria-label="Fechar">×</button>
+      <h3>Ociosos hoje <span id="aplic-ocio-sub">— · ação: rever escalação</span></h3>
+      <p class="bk-action-detail">
+        <strong style="color:#b8a080">Por que:</strong> aplicadores ativos cadastrados que NÃO foram escalados em nenhuma obra hoje. Pode ser folga, ausência justificada, ou capacidade ociosa real (gente parada com obra esperando).
+      </p>
+      <table class="t">
+        <thead><tr>
+          <th>Aplicador</th><th>Cargo</th>
+        </tr></thead>
+        <tbody id="aplic-ocio-tbody"></tbody>
       </table>
     </div>
   </div>
@@ -3019,6 +3019,34 @@ function applyRodrigoCanon() {
             }
             if ($('apl-ocio')) $('apl-ocio').textContent = apl.ociosos_hoje;
             if ($('apl-conflito')) $('apl-conflito').textContent = apl.em_2_ou_mais_obras_hoje;
+            // Modal: 2+ obras hoje
+            var conflitos = apl.conflitos_detalhe || [];
+            var subC = $('aplic-conf-sub');
+            if (subC) subC.textContent = conflitos.length + ' aplicador' + (conflitos.length === 1 ? '' : 'es') + ' · ação: validar escalação';
+            var tbC = $('aplic-conf-tbody');
+            if (tbC) {
+              tbC.innerHTML = conflitos.length === 0
+                ? '<tr><td colspan="4" class="ct" style="color:#9b9085;font-style:italic">Sem conflitos hoje.</td></tr>'
+                : conflitos.map(function(p){
+                    var obrasHtml = (p.obras || []).map(function(o){
+                      return '<a class="portal" href="https://cliente.monofloor.cloud/app/projetos/' + o.id + '" target="_blank">' + escHtml(o.cliente) + '</a>';
+                    }).join(' · ');
+                    return '<tr><td>' + escHtml(p.nome) + '</td><td class="ct">' + escHtml(p.cargo) + '</td>'
+                      + '<td class="num ct">' + p.qtd_obras + '</td><td class="ct">' + obrasHtml + '</td></tr>';
+                  }).join('');
+            }
+            // Modal: ociosos
+            var ociosos = apl.ociosos_detalhe || [];
+            var subO = $('aplic-ocio-sub');
+            if (subO) subO.textContent = ociosos.length + ' aplicador' + (ociosos.length === 1 ? '' : 'es') + ' · ação: rever escalação';
+            var tbO = $('aplic-ocio-tbody');
+            if (tbO) {
+              tbO.innerHTML = ociosos.length === 0
+                ? '<tr><td colspan="2" class="ct" style="color:#9b9085;font-style:italic">Todos os ativos estão escalados hoje.</td></tr>'
+                : ociosos.map(function(p){
+                    return '<tr><td>' + escHtml(p.nome) + '</td><td class="ct">' + escHtml(p.cargo) + '</td></tr>';
+                  }).join('');
+            }
           }
           var lw = R.lw;
           if (lw && lw.luana && lw.wesley) {
