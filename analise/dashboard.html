@@ -1540,7 +1540,7 @@
           <div class="kpi"><div class="lbl">Total ativos</div><div class="val" id="apl-total">—</div></div>
           <div class="kpi"><div class="lbl">Escalados hoje</div><div class="val green" id="apl-escal">—</div><div class="sub" id="apl-escal-pct">—</div></div>
           <div class="kpi"><div class="lbl">Ociosos</div><div class="val warn" id="apl-ocio">—</div></div>
-          <div class="kpi"><div class="lbl">Conflitos físicos</div><div class="val crit">3</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
+          <div class="kpi"><div class="lbl">Em 2+ obras hoje</div><div class="val crit" id="apl-conflito">—</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
         </div>
       </div>
     </div>
@@ -3004,6 +3004,50 @@ function applyRodrigoCanon() {
             + (EXT && EXT.ocorrencias && EXT.ocorrencias.n_atRisk ? EXT.ocorrencias.n_atRisk + ' em risco' : '');
         }
 
+        // ============== Q3 — sobrescreve com canônicos do painel ==============
+        // Antes: EXT.lw e EXT.aplicadores vinham do PESADO (1×/dia) — ficavam
+        // defasados durante o dia e tinham números chutados (35 ativos, 85% busfactor).
+        // Agora: rodrigo-stats.json traz tudo fresh a cada 30min, com 115 ativos
+        // (canônico aba Aplicadores) e Luana/Wesley calculados sobre /api/projects fresh.
+        try {
+          var apl = R.aplicadores;
+          if (apl) {
+            if ($('apl-total')) $('apl-total').textContent = apl.ativos;
+            if ($('apl-escal')) $('apl-escal').textContent = apl.pessoas_em_campo_hoje;
+            if ($('apl-escal-pct') && apl.ativos) {
+              $('apl-escal-pct').textContent = Math.round(apl.pessoas_em_campo_hoje / apl.ativos * 100) + '%';
+            }
+            if ($('apl-ocio')) $('apl-ocio').textContent = apl.ociosos_hoje;
+            if ($('apl-conflito')) $('apl-conflito').textContent = apl.em_2_ou_mais_obras_hoje;
+          }
+          var lw = R.lw;
+          if (lw && lw.luana && lw.wesley) {
+            // Cards Luana × Wesley (substitui EXT.lw que vinha do PESADO)
+            var q3lw = $('q3-lw');
+            if (q3lw) {
+              var cells = [{ name: 'LUANA', d: lw.luana }, { name: 'WESLEY', d: lw.wesley }];
+              q3lw.innerHTML = cells.map(function(c){
+                return '<div class="vs-cell">'
+                  + '<div class="vs-name">' + c.name + '</div>'
+                  + '<div class="vs-stats">'
+                  + '<div class="vs-stat"><div class="lbl">Obras</div><div class="v">' + c.d.n + '</div></div>'
+                  + '<div class="vs-stat"><div class="lbl">Mediana idade</div><div class="v warn">' + c.d.mediana + 'd</div></div>'
+                  + '<div class="vs-stat"><div class="lbl">180+ dias</div><div class="v crit">' + c.d.n180 + '</div></div>'
+                  + '<div class="vs-stat"><div class="lbl">270+ dias</div><div class="v ' + (c.d.n270 > 0 ? 'crit' : '') + '">' + c.d.n270 + '</div></div>'
+                  + '<div class="vs-stat"><div class="lbl">Enc. sem fechar</div><div class="v ' + (c.d.zumbi > 5 ? 'crit' : '') + '">' + c.d.zumbi + '</div></div>'
+                  + '<div class="vs-stat"><div class="lbl">Em reparo</div><div class="v ' + (c.d.reparo > 5 ? 'warn' : '') + '">' + c.d.reparo + '</div></div>'
+                  + '</div></div>';
+              }).join('');
+            }
+            // Bus factor (% concentração) — substitui hardcode 85%/91%
+            var pct = (lw.concentracao_pct || 0).toFixed(0) + '%';
+            var pct180 = (lw.concentracao_180_pct || 0).toFixed(0) + '%';
+            if ($('q3-bus-pct')) $('q3-bus-pct').textContent = pct;
+            if ($('q3-bus-pct-sub')) $('q3-bus-pct-sub').textContent = pct;
+            if ($('q3-bus-180')) $('q3-bus-180').textContent = pct180;
+          }
+        } catch (e) { console.warn('Q3 canon:', e); }
+
         // SCORE — recalcular pilares e score circular sobre as 260 ativas
         // (Painel de Obras) + ciclo real (172d) em vez de mediana de idade (217d)
         try { recalcScoresFromRodrigo(R); } catch(e) { console.warn('recalcScores:', e); }
@@ -3482,39 +3526,10 @@ function flagsForObra(o) {
 function renderQ2() { /* substituido por q2Init() — disparado em DOMContentLoaded */ }
 
 // ============== Q3 ==============
+// Os números canônicos (Luana/Wesley, aplicadores) vêm do rodrigo-stats.json
+// via applyRodrigoCanon() — fresh a cada 30min. Esta função só faz o que
+// não depende desses (drill-down de equipes operacionais).
 function renderQ3() {
-  const lw = EXT.lw;
-  const cells = [
-    { name: 'LUANA', d: lw.luana },
-    { name: 'WESLEY', d: lw.wesley }
-  ];
-  $('q3-lw').innerHTML = cells.map(c => `
-    <div class="vs-cell">
-      <div class="vs-name">${c.name}</div>
-      <div class="vs-stats">
-        <div class="vs-stat"><div class="lbl">Obras</div><div class="v">${c.d.n}</div></div>
-        <div class="vs-stat"><div class="lbl">Mediana idade</div><div class="v warn">${c.d.mediana}d</div></div>
-        <div class="vs-stat"><div class="lbl">180+ dias</div><div class="v crit">${c.d.n180}</div></div>
-        <div class="vs-stat"><div class="lbl">270+ dias</div><div class="v ${c.d.n270 > 0 ? 'crit' : ''}">${c.d.n270}</div></div>
-        <div class="vs-stat"><div class="lbl">Enc. sem fechar</div><div class="v ${c.d.zumbi > 5 ? 'crit' : ''}">${c.d.zumbi}</div></div>
-        <div class="vs-stat"><div class="lbl">Em reparo</div><div class="v ${c.d.reparo > 5 ? 'warn' : ''}">${c.d.reparo}</div></div>
-      </div>
-    </div>
-  `).join('');
-
-  const ativas = AGG.total_ativas;
-  const busTotal = lw.luana.n + lw.wesley.n;
-  const bus180 = lw.luana.n180 + lw.wesley.n180;
-  $('q3-bus-pct').textContent = pct(busTotal, ativas) + '%';
-  $('q3-bus-180').textContent = pct(bus180, AGG.n_180_plus) + '%';
-  if ($('q3-bus-pct-sub')) $('q3-bus-pct-sub').textContent = pct(busTotal, ativas) + '%';
-
-  const apl = EXT.aplicadores;
-  $('apl-total').textContent = apl.total;
-  $('apl-escal').textContent = apl.escalados;
-  $('apl-escal-pct').textContent = pct(apl.escalados, apl.total) + '%';
-  $('apl-ocio').textContent = apl.ociosos;
-
   // Drill-down de equipes: render cards + capacidade + obras
   q3Init();
 }

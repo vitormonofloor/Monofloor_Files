@@ -4,7 +4,131 @@
 
 ---
 
-## v2 — 2026-04-29 (calibrado com nomenclatura operacional Monofloor)
+## v3 — 2026-04-29 (input agora são dossiês ricos dos secretários · não mais KIRA cru)
+
+### O que mudou de v2 → v3
+
+- **Input**: agora vem de `dados/dossies/{obra_id}.json` gerado por subagentes secretários, NÃO mais de `details-snapshot/{ID}.json` do KIRA. Os dossiês têm narrativa em prosa, evidências citadas com `msg_id`, datas mencionadas, ações pendentes, alertas — tudo já interpretado.
+- **Output adicional**: além do veredicto por obra, gerar agregados (padrões cross-obras, ranking de ações por consultor).
+- **Princípios centrais (v2)** continuam válidos: telegram > painel, os 10 status, dicionário de palavras-chave, regra do silêncio.
+
+### Princípio central (mantém)
+
+**Quando painel e telegram divergem, a verdade está no telegram.** O painel é responsabilidade do consultor atualizar. Telegram é o pulso real.
+
+### Canais (não confundir)
+- **Telegram** = canal INTERNO Monofloor (consultor + aplicadores + fiscais). Cliente final NÃO posta lá por design.
+- **WhatsApp** = canal de alinhamento direto com cliente (capturado pelo KIRA → `pendenciaManual.whatsappSummary`).
+- "Cliente ausente do Telegram" NÃO é flag nem padrão · é o normal. Voz do cliente real vem do WhatsApp KIRA.
+
+### Input
+
+Você vai receber 10 dossiês em `C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta\dados\dossies\*.json`. Cada dossiê tem:
+
+- `obra_id`, `cliente`, `consultor`
+- `painel`: { status, fase_atual, metragem, cidade, idade_dias }
+- `telegram`: { grupo_nome, membros, msgs_analisadas, primeira_msg_data, ultima_msg_data, dias_silencio, autores_distintos, autores_lista }
+- `leitura_secretario`: { narrativa_atual, historico_resumido, ultima_atividade_significativa, acoes_pendentes[], tom_grupo, datas_mencionadas[], evidencias_fortes[], tipo_demanda_provavel, veredicto_preliminar, alertas[], confianca }
+
+O secretário já interpretou. Sua função é **validar, refinar e agregar**.
+
+### Output
+
+Gere **um único arquivo** `dados/discordancias-v3.json` com este schema:
+
+```json
+{
+  "gerado_em": "2026-04-29T...",
+  "total_obras": 10,
+  "resumo_executivo": "Parágrafo de 4-6 linhas em prosa sintetizando o estado das 10 obras analisadas. Cite o veredicto agregado, principais alertas e o que demanda ação imediata.",
+
+  "obras": [
+    {
+      "obra_id": "uuid",
+      "cliente": "...",
+      "consultor": "...",
+
+      "painel": { "status_atual": "...", "fase_atual": "...", "idade_dias": 272 },
+
+      "telegram": {
+        "ultima_msg": "2026-04-22",
+        "dias_silencio": 7,
+        "tom_grupo": "ativo|tenso|silencio|cliente_satisfeito|cliente_reclamando|inconclusivo"
+      },
+
+      "veredicto": "coerente | status_desatualizado | abandono | detrator | inconclusivo",
+      "status_sugerido": "...",
+      "tipo_demanda": "patologia | dano_terceiro | retrabalho_acabamento | retorno_servico | execucao_normal | finalizacao | pausa | null",
+
+      "flags": ["detrator_latente", "aplicador_indefinido", "consultor_divergente", "silencio_anomalo", "retrabalho_de_retrabalho", "escopo_aumentando", "risco_tecnico"],
+
+      "acao_consultor": "Frase curta com a próxima ação concreta. Ex: 'Atualizar status pra aguardando_execucao · confirmar aplicador até 02/05'",
+
+      "prazo_acao": "YYYY-MM-DD ou null",
+      "urgencia": "alta | media | baixa",
+
+      "evidencia_principal": {
+        "trecho": "Citação literal do dossiê do secretário",
+        "fonte": "msg_id do telegram OU referência ao campo do dossiê"
+      },
+
+      "confianca": 0.85,
+      "secretario_concordou": true
+    }
+  ],
+
+  "agregados": {
+    "veredictos": { "coerente": N, "status_desatualizado": N, "abandono": N, "detrator": N, "inconclusivo": N },
+    "tipo_demanda": { "patologia": N, "retorno_servico": N, "execucao_normal": N, ... },
+    "flags_recorrentes": [
+      { "flag": "cliente_ausente", "ocorrencias": 8, "obras": ["MICHELLE", "VANESSA", ...] }
+    ],
+    "consultores": [
+      {
+        "nome": "Wesley Matheus",
+        "obras_analisadas": 3,
+        "obras_com_acao": 2,
+        "acoes_priorizadas": ["frase 1", "frase 2"]
+      }
+    ],
+    "padroes_cross_obras": [
+      "Insight em prosa. Ex: 'Hipótese de fracionamento incorreto do verniz Hiper aparece em 1 obra (Getúlio) com possível propagação a outras obras do mesmo aplicador — vale rastrear.'"
+    ]
+  }
+}
+```
+
+### Regras de validação dos dossiês dos secretários
+
+1. **Concordância padrão**: o secretário viu de perto. Se o veredicto preliminar dele faz sentido com a narrativa, mantenha (`secretario_concordou: true`).
+2. **Quando discordar**: se o secretário marcou `coerente_status` mas a narrativa mostra divergência clara, sobreescreva. Idem caso contrário. Marque `secretario_concordou: false` e justifique brevemente em `evidencia_principal`.
+3. **Abandono > silêncio**: regra silêncio v2 ainda vale. Se status ATIVO + silêncio 30+d + data prevista PASSADA, reclassifique como `abandono` mesmo se o secretário disse `coerente`.
+4. **Detrator manifesto vs latente**: detrator (flag) só se houver evidência textual de conflito agudo (Reclame Aqui, advogado, processo). Histórico de quase-distrato é `detrator_latente` em flags · não muda veredicto.
+5. **Confiança**: pegue a do secretário e ajuste · se você teve que sobrescrever, baixe.
+
+### Agregados — como gerar
+
+**flags_recorrentes**: conte quantas obras têm cada flag · liste as que aparecem 2+ vezes.
+
+**consultores**: agrupe obras por consultor. Pra cada consultor, listar as ações priorizadas (ordem: alta urgência primeiro). Se consultor é `[]` ou ausente, agrupe sob "SEM CONSULTOR" e marque urgência alta (precisa atribuição).
+
+**padroes_cross_obras**: identifique 3-5 insights que CRUZAM obras. Exemplos:
+- "Aplicador indefinido a <30d do início é padrão recorrente em N obras: ..."
+- "Risco técnico de fracionamento do verniz Hiper detectado em 1 obra (Getúlio) com possível propagação a outras"
+- "N obras com clima TENSO/CRÍTICO no KIRA WhatsApp · canal de cliente sinalizando insatisfação"
+
+**NÃO inclua** padrões sobre "cliente ausente do Telegram" — é design, não problema. Telegram é canal interno Monofloor; cliente fica no WhatsApp (capturado pelo KIRA).
+
+### Regras de comportamento
+
+- **Não invente.** Cite trecho literal do dossiê em `evidencia_principal.trecho`.
+- **Português técnico** · sem floreio · sem opinião.
+- Output APENAS o JSON puro · começa com `{` e termina com `}` · sem markdown ao redor.
+- Salve em `C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta\dados\discordancias-v3.json` (UTF-8, indent 2).
+
+---
+
+## v2 — 2026-04-29 (calibrado com nomenclatura operacional Monofloor) [DESCONTINUADO · ver v3]
 
 ### Princípio central
 
@@ -157,3 +281,4 @@ Primeira versão · genérica · não conhecia nomenclatura Monofloor · classif
 
 - 2026-04-28 (v1): inicial
 - 2026-04-29 (v2): incorpora nomenclatura operacional Monofloor (10 status, dicionário, regra silêncio, detratores)
+- 2026-04-29 (v3): muda input pra dossiês dos secretários · adiciona output agregado (cross-obras, ranking por consultor)

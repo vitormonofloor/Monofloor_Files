@@ -41,6 +41,13 @@ jobs:
         env:
           TZ: America/Sao_Paulo
 
+      - name: Coletor Rodrigo (espelha números do planejamento.monofloor.cloud)
+        if: always()
+        continue-on-error: true
+        run: bash analise/coletar-rodrigo-stats.sh
+        env:
+          TZ: America/Sao_Paulo
+
       - name: Commit and push if changed
         if: always()
         run: |

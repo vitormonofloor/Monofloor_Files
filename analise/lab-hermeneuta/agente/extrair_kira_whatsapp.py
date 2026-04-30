@@ -1,0 +1,121 @@
+"""
+Espelha o KIRA WhatsApp Summary do detail de cada obra
+=======================================================
+
+KIRA já capturou e sumariza WhatsApp das obras · grava em
+`pendenciaManual.whatsappSummary` no detail. Este script espelha esse
+conteúdo no discordancias-v3.json pra que a tela mostre voz direta do
+cliente — resolve o ponto cego "cliente ausente em 10/10 grupos Telegram".
+
+Lê de: ../dados/details/{obra_id}.json (mantido pelo refresh.sh)
+Não duplica, só espelha. Custo zero.
+"""
+
+import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except AttributeError:
+    pass
+
+ROOT = Path(__file__).parent.parent  # lab-hermeneuta
+DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
+DETAILS_DIR = ROOT.parent / "dados" / "details"  # analise/dados/details (irmão do lab)
+
+HOJE = datetime(2026, 4, 30, tzinfo=timezone.utc)
+
+
+def parse_iso(s: str):
+    if not s: return None
+    try:
+        d = datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+        if d.tzinfo is None: d = d.replace(tzinfo=timezone.utc)
+        return d
+    except Exception:
+        return None
+
+
+def extrair_obra(detail_path: Path) -> dict:
+    """Extrai whatsappSummary + tagKira + situacaoAtual do detail."""
+    if not detail_path.exists():
+        return {"erro": "detail não encontrado"}
+
+    try:
+        d = json.loads(detail_path.read_text(encoding="utf-8-sig"))
+    except Exception as e:
+        return {"erro": f"falha ao parsear: {e}"}
+
+    pm = d.get("pendenciaManual") or {}
+    ws = pm.get("whatsappSummary") or {}
+
+    gerado = parse_iso(ws.get("geradoEm"))
+    dias_desde_resumo = (HOJE - gerado).days if gerado else None
+
+    # tagKiraUpdatedAt é o sinal mais recente de que o KIRA está ativo
+    tag_atualizada = parse_iso(d.get("tagKiraUpdatedAt"))
+    dias_desde_tag = (HOJE - tag_atualizada).days if tag_atualizada else None
+
+    return {
+        "tag_kira": d.get("tagKira"),
+        "tag_kira_atualizada_em": d.get("tagKiraUpdatedAt"),
+        "tag_dias_atras": dias_desde_tag,
+        "situacao_atual": d.get("situacaoAtual"),
+        "whatsapp": {
+            "periodo": ws.get("periodo"),
+            "gerado_em": ws.get("geradoEm"),
+            "dias_desde_resumo": dias_desde_resumo,
+            "clima_geral": ws.get("climaGeral"),
+            "clima_descricao": ws.get("climaDescricao"),
+            "tempo_resposta": ws.get("tempoResposta"),
+            "tempo_resposta_detalhes": ws.get("tempoRespostaDetalhes"),
+            "total_mensagens": ws.get("totalMensagens"),
+            "resumo_executivo": ws.get("resumoExecutivo"),
+            "alertas": ws.get("alertas") or [],
+            "eventos": ws.get("eventos") or [],
+            "pendencias": ws.get("pendencias") or [],
+            "participantes": ws.get("participantes") or [],
+        } if ws else None,
+    }
+
+
+def main():
+    if not DISCORD_PATH.exists():
+        print(f"ERRO: {DISCORD_PATH} não existe")
+        sys.exit(1)
+    if not DETAILS_DIR.exists():
+        print(f"ERRO: {DETAILS_DIR} não existe · refresh.sh precisa ter rodado")
+        sys.exit(1)
+
+    discord = json.loads(DISCORD_PATH.read_text(encoding="utf-8"))
+
+    print(f"{'Cliente':<42} {'Tag KIRA':<35} {'Clima':<10} {'Tag atualiz.':<14} {'Resumo'}")
+    print("-" * 120)
+
+    for obra in discord.get("obras", []):
+        oid = obra.get("obra_id")
+        detail_path = DETAILS_DIR / f"{oid}.json"
+        info = extrair_obra(detail_path)
+        obra["kira_whatsapp"] = info
+
+        cliente = (obra.get("cliente") or "")[:40]
+        if "erro" in info:
+            print(f"{cliente:<42} {'(erro: ' + info['erro'][:25] + ')':<35} {'—':<10}")
+            continue
+        tag = (info.get("tag_kira") or "—")[:33]
+        ws = info.get("whatsapp") or {}
+        clima = ws.get("clima_geral") or "—"
+        dt = info.get("tag_dias_atras")
+        dt_str = f"{dt}d" if dt is not None else "—"
+        dr = ws.get("dias_desde_resumo")
+        dr_str = f"{dr}d" if dr is not None else "—"
+        print(f"{cliente:<42} {tag:<35} {clima:<10} {dt_str:<14} {dr_str}")
+
+    DISCORD_PATH.write_text(json.dumps(discord, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"\n[OK] {DISCORD_PATH}")
+
+
+if __name__ == "__main__":
+    main()

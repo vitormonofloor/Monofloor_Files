@@ -36,6 +36,10 @@ fetch() {
 
 # /api/projects do cliente (1035 obras = fonte das contagens reais)
 fetch "$API_CLI/projects?limit=2000"   "$TMP/projects.json"; sleep 1
+# /api/prestadores do cliente (180 cadastrados, 115 ativos = fonte da aba Aplicadores)
+fetch "$API_CLI/prestadores?limit=500" "$TMP/prestadores.json"; sleep 1
+# /api/escalacao-diaria — quem está escalado em qual obra hoje (lider + membros)
+fetch "$API_CLI/escalacao-diaria"      "$TMP/escalacao.json"; sleep 1
 # Endpoints de operação/capacidade/alertas continuam no planejamento
 fetch "$API_PLN/orchestrator/status"   "$TMP/orch.json";     sleep 1
 fetch "$API_PLN/analytics/capacity"    "$TMP/cap.json";      sleep 1
@@ -73,6 +77,8 @@ def load(name):
         return {}
 
 projects = load("projects")  # lista de 1035 obras do cliente
+prestadores = load("prestadores")  # 180 cadastrados (115 ativos)
+escalacao = load("escalacao")  # {obraId: {liderId, membrosIds[]}} de hoje
 orch = load("orch")
 cap = load("cap")
 alerts = load("alerts")
@@ -200,10 +206,113 @@ if em2026:
 else:
     canon["tempo"] = {"obras_base": 0, "periodo": "2026", "fonte": "Painel de Obras — snapshot indisponível"}
 
+# ============== APLICADORES (aba Aplicadores do painel) ==============
+# Painel mostra "115 prestadores ativos" + breakdown por cargo.
+# Mapping cargo→label do painel: LIDER→Encarregado · APLICADOR_3→Líder de Campo
+# (resto bate direto). Usar labels do painel pra UI fica natural pro Vitor.
+CARGO_LABEL = {
+    "LIDER": "Encarregado",
+    "APLICADOR_3": "Líder de Campo",
+    "APLICADOR_2": "Aplicador 2",
+    "APLICADOR_1": "Aplicador 1",
+    "PREPARADOR": "Preparador",
+    "AJUDANTE": "Ajudante",
+}
+prest_list = prestadores if isinstance(prestadores, list) else []
+prest_ativos = [p for p in prest_list if isinstance(p, dict) and p.get("ativo") == 1]
+prest_inativos = [p for p in prest_list if isinstance(p, dict) and p.get("ativo") != 1]
+por_cargo = Counter(p.get("funcao") or "?" for p in prest_ativos)
+por_cargo_label = { CARGO_LABEL.get(k, k): v for k, v in por_cargo.items() }
+
+# Escalação hoje: dict {obraId: {liderId, membrosIds[]}}
+esc = escalacao if isinstance(escalacao, dict) else {}
+em_campo_ids = set()
+appearance_count = Counter()
+for obra_id, eq in esc.items():
+    if not isinstance(eq, dict): continue
+    lid = eq.get("liderId")
+    if lid:
+        em_campo_ids.add(lid)
+        appearance_count[lid] += 1
+    for m in (eq.get("membrosIds") or []):
+        if m:
+            em_campo_ids.add(m)
+            appearance_count[m] += 1
+em_2_obras = sum(1 for n in appearance_count.values() if n >= 2)
+
+canon["aplicadores"] = {
+    "total_cadastrados": len(prest_list),
+    "ativos": len(prest_ativos),
+    "inativos": len(prest_inativos),
+    "por_cargo": dict(por_cargo_label),
+    "obras_com_equipe_hoje": len(esc),
+    "pessoas_em_campo_hoje": len(em_campo_ids),
+    "em_2_ou_mais_obras_hoje": em_2_obras,
+    "ociosos_hoje": max(0, len(prest_ativos) - len(em_campo_ids)),
+    "fonte": "cliente.monofloor.cloud/api/prestadores + /api/escalacao-diaria",
+}
+
+# ============== LUANA × WESLEY (consultoras dominantes) ==============
+# Calculado a partir de /api/projects fresh — sem isso o card do Q3 mostra
+# números congelados de quando o PESADO rodou (1×/dia).
+SKIP_STATUS = {"finalizado", "concluido", "cancelado"}
+ativas_obras = [p for p in projects if isinstance(p, dict) and p.get("status") not in SKIP_STATUS]
+total_ativas = len(ativas_obras)
+
+# Idade real vem do painel-temporal (cruzamento com snapshot Pipefy).
+# createdAt do /api/projects é a data de migração no painel do Rodrigo, não a real.
+idade_por_id = {}
+try:
+    with open(f"{DADOS}/painel-temporal.json", encoding="utf-8") as f:
+        for o in json.load(f):
+            if o.get("id") and o.get("idade_dias") is not None:
+                idade_por_id[o["id"]] = o["idade_dias"]
+except Exception:
+    pass
+
+def idade_de(p):
+    pid = p.get("id")
+    if pid and pid in idade_por_id:
+        return idade_por_id[pid]
+    cd = p.get("createdAt") or p.get("created_at")
+    d = parse_date(cd)
+    if not d: return None
+    return (hoje - d).days
+
+def stats_consultor(nome_alvo):
+    obras = [p for p in ativas_obras if (p.get("consultorNome") or "").strip().upper().startswith(nome_alvo)]
+    idades = [idade_de(p) for p in obras]
+    idades_validas = sorted(i for i in idades if i is not None)
+    return {
+        "n": len(obras),
+        "mediana": idades_validas[len(idades_validas)//2] if idades_validas else 0,
+        "n180": sum(1 for i in idades_validas if i >= 180),
+        "n270": sum(1 for i in idades_validas if i >= 270),
+        "zumbi": sum(1 for p in obras if (p.get("faseAtual") or "").strip().upper() == "CLIENTE FINALIZADO" and p.get("status") != "reparo"),
+        "reparo": sum(1 for p in obras if p.get("status") in ("reparo", "marcas_rolo_cera")),
+        "pausadas": sum(1 for p in obras if p.get("status") == "pausado"),
+    }
+
+luana = stats_consultor("LUANA")
+wesley = stats_consultor("WESLEY")
+n_180_total = sum(1 for p in ativas_obras for i in [idade_de(p)] if i is not None and i >= 180)
+
+canon["lw"] = {
+    "luana": luana,
+    "wesley": wesley,
+    "total_ativas": total_ativas,
+    "n_180_total": n_180_total,
+    "concentracao_pct": round((luana["n"] + wesley["n"]) / max(1, total_ativas) * 100, 1),
+    "concentracao_180_pct": round((luana["n180"] + wesley["n180"]) / max(1, n_180_total) * 100, 1) if n_180_total else 0,
+    "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)",
+}
+
 out = f"{DADOS}/rodrigo-stats.json"
 with open(out, "w", encoding="utf-8") as f:
     json.dump(canon, f, ensure_ascii=False, indent=2)
 print(f"  rodrigo-stats.json: total={total} ativas={ativas} em_exec={em_exec_count} ({round(m2_em_execucao)}m²) prox15d={canon['proximos']['15d']['obras']} prox30d={canon['proximos']['30d']['obras']} prox60d={canon['proximos']['60d']['obras']}")
+print(f"  aplicadores: {canon['aplicadores']['ativos']} ativos · {canon['aplicadores']['pessoas_em_campo_hoje']} em campo · {canon['aplicadores']['ociosos_hoje']} ociosos")
+print(f"  Luana={luana['n']} obras · Wesley={wesley['n']} obras · concentração={canon['lw']['concentracao_pct']}%")
 PYEOF
 
 rm -rf "$TMP"
