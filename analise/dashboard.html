@@ -4267,10 +4267,19 @@ function q4RenderFunil(){
   var por = {};
   obras.forEach(function(o){var f=o.fase||'(sem)'; por[f]=(por[f]||0)+1;});
   var funil = faseOrdem.filter(function(f){return por[f]>0;}).map(function(f){return{fase:f,n:por[f]};});
-  if (funil.length===0) funil = Object.entries(por).sort(function(a,b){return b[1]-a[1];}).slice(0,8).map(function(e){return{fase:e[0],n:e[1]};});
-  var max = funil.reduce(function(a,f){return Math.max(a,f.n);},1);
   var el = document.getElementById('q4-funil-bars');
-  if(el) el.innerHTML = funil.slice(0,10).map(function(f){
+  if(!el) return;
+  if (funil.length === 0) {
+    // Sem obras em fase pré-execução. NÃO cair em fallback "top fases gerais"
+    // (era bug: mostrava CLIENTE FINALIZADO num card "pré-execução").
+    var msg = _q4UfSelecionado
+      ? 'Sem obras em fase pré-execução em <b>' + _q4UfSelecionado + '</b>. As obras desse estado já saíram do funil.'
+      : 'Sem obras em fase pré-execução no momento.';
+    el.innerHTML = '<div style="padding:18px 4px;color:#a89e92;font-size:11px;font-style:italic">' + msg + '</div>';
+    return;
+  }
+  var max = funil.reduce(function(a,f){return Math.max(a,f.n);},1);
+  el.innerHTML = funil.slice(0,10).map(function(f){
     var short = f.fase
       .replace('AGEND. VT - AFERIÇÃO/ORIENTAÇÃO','VT Aferição')
       .replace('RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO','Resultado VT')
@@ -4289,7 +4298,7 @@ function q4RenderFunil(){
       .replace('PROJETOS  - 1ª REVISÃO','Projetos 1ª Rev.');
     return '<div class="q3-cap-row"><div class="nome" title="'+f.fase+'">'+short+'</div><div class="bar-out"><div class="bar-use" style="width:'+(f.n/max*100).toFixed(0)+'%;background:linear-gradient(90deg,#4a7ab8,#3d8a5a)"></div></div><div class="pct">'+f.n+'</div></div>';
   }).join('');
-}
+} // q4RenderFunil end
 
 // ============== Q4 — modal por estado operacional ==============
 const Q4_GRUPOS = {
