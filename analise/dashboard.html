@@ -2279,7 +2279,9 @@ function initDashboard() {
   renderBaldes();
   renderOperacional();
   renderEstrategicos();
-  applyRodrigoCanon();  // sobrescreve KPIs canônicos com números do painel do Rodrigo (fonte única de verdade)
+  // applyRodrigoCanon() suspenso — /api/stats retorna view limitada (164/18/10) que NÃO bate
+  // com a tela do Rodrigo (263/35/5). Sem acesso à lógica do JS dele, manter espelho seria
+  // mentir. Aguardando: DevTools específico ou outro endpoint canônico.
   renderAutoAgentHealth();
   initSideNav();
   // DOMContentLoaded-dependent inits
