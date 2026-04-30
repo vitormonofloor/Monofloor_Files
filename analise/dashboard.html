@@ -747,6 +747,20 @@
   .q1-seg.empty .q1-seg-num{color:#c8bfb4}
   .q1-seg.empty:hover{filter:none;transform:none;cursor:default}
   .q1-stacked-legenda{font-size:11px;color:#a89e92;text-align:right;margin-top:8px;font-style:italic}
+  /* Banner de fantasmas (call-to-action) — destaque do Q1 reformado */
+  .q1-fantasmas-banner{display:flex;gap:18px;align-items:center;background:linear-gradient(135deg,#fff5e6 0%,#fef9f0 100%);border:1px solid #e8c8a0;border-left:4px solid #c45a5a;border-radius:8px;padding:18px 22px;margin:16px 0 28px}
+  .q1-fb-num{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:600;color:#c45a5a;line-height:1;display:flex;align-items:baseline;gap:4px;flex-shrink:0;min-width:120px}
+  .q1-fb-unit{font-size:13px;color:#8a7e72;font-weight:400}
+  .q1-fb-body{flex:1}
+  .q1-fb-titulo{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c45a5a;text-transform:uppercase;margin-bottom:6px}
+  .q1-fb-desc{font-size:13px;color:#3a3530;line-height:1.55;margin-bottom:10px}
+  .q1-fb-cta{display:flex;gap:10px}
+  .q1-fb-btn{padding:8px 16px;background:#c45a5a;border:none;color:#fff;font-family:inherit;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;transition:all .15s}
+  .q1-fb-btn:hover{background:#b04a4a;transform:translateY(-1px);box-shadow:0 4px 12px rgba(196,90,90,0.25)}
+  /* Divider de seção dentro do Q1 */
+  .q1-divider{display:flex;align-items:center;gap:12px;margin:24px 0 14px}
+  .q1-divider::before,.q1-divider::after{content:'';flex:1;height:1px;background:#e0d8cc}
+  .q1-divider-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;padding:0 8px}
 
   /* ===== Q-HEAD (títulos de seção) — FASE 2.5: hierarquia tipográfica explícita ===== */
   .q-head{margin-bottom:18px;padding-left:14px;border-left:3px solid #b8a080}
@@ -1297,40 +1311,44 @@
     </div>
   </section>
 
-  <!-- ============== Q1 — PRAZO ============== -->
+  <!-- ============== Q1 — HIGIENE DO CRONOGRAMA ============== -->
   <section id="q1">
     <div class="q-head">
-      <h2><span class="section-pill pill-prazo">PRAZO</span></h2>
-      <p class="sub">Das <span id="q1-crono-total-sub">34</span> obras com cronograma no sistema de planejamento, quantas estão no prazo. A barra mostra a distribuição do atraso.</p>
-      <p class="scope-note">Base: sistema de planejamento (planejamento.monofloor.cloud). Para taxa de atraso operacional em tempo real, veja a seção <a href="#operacional">Operacional</a>.</p>
+      <h2><span class="section-pill pill-prazo">HIGIENE DO CRONOGRAMA</span></h2>
+      <p class="sub">Das <span id="q1-crono-total-sub">34</span> obras com cronograma carregado no Painel de Obras, <strong><span id="q1-fantasmas-n">—</span> já foram concluídas mas não foram "limpas"</strong> da agenda — operador esqueceu de mover. Distorce a visão de prazo.</p>
+    </div>
+
+    <!-- BLOCO 1 — Fantasmas (call-to-action) -->
+    <div class="q1-fantasmas-banner" id="q1-fantasmas-banner">
+      <div class="q1-fb-num"><span id="q1-fantasmas-num">—</span><span class="q1-fb-unit">obras</span></div>
+      <div class="q1-fb-body">
+        <div class="q1-fb-titulo">Fantasmas no cronograma — limpar</div>
+        <div class="q1-fb-desc">Obras já marcadas como <b>finalizadas/concluídas</b> no Painel de Obras, mas ainda aparecem como "ativas" na aba de cronograma do Painel de Obras. Distorcem todos os cálculos de prazo. <strong>Pedir ao operador pra mover essas obras.</strong></div>
+        <div class="q1-fb-cta"><button class="q1-fb-btn" onclick="openQ1FantasmasModal()">Ver lista das fantasmas →</button></div>
+      </div>
+    </div>
+
+    <!-- Separador visual -->
+    <div class="q1-divider">
+      <span class="q1-divider-tag">Estatística de prazo · sobre <span id="q1-ativas-real-n">—</span> obras de fato ativas</span>
     </div>
 
     <div class="q1-stacked-wrap">
-      <div class="q1-stacked-label">Distribuição das <span id="q1-crono-total-label">34</span> obras "ativas" no planejamento por situação de prazo</div>
+      <div class="q1-stacked-label">Distribuição das <span id="q1-crono-total-label">—</span> obras ativas reais por situação de prazo</div>
       <div class="q1-stacked" id="q1-stacked"></div>
-      <div class="q1-stacked-legenda">Clique em uma faixa para ver as obras daquela categoria</div>
+      <div class="q1-stacked-legenda">Clique em uma faixa para ver as obras · amostra fraca: estatística sobre <span id="q1-ativas-real-n2">—</span> obras (representa só <span id="q1-cobertura-pct">—</span>% da carteira de 228 ativas)</div>
     </div>
 
-    <div class="grid-3">
+    <div class="grid-2">
       <div class="card">
-        <div class="card-head"><div class="card-title">Cumprimento de prazo</div></div>
-        <div class="key-finding crit">
-          <strong>100% das obras "ativas" no planejamento estão atrasadas.</strong>
-          Mediana de atraso: <span class="mono">83 dias</span> · p75: <span class="mono">98d</span> · p90: <span class="mono">111d</span> · máx: <span class="mono">132d</span>.
+        <div class="card-head"><div class="card-title">Cumprimento de prazo</div><div class="card-sub">só obras de fato ativas</div></div>
+        <div class="key-finding warn" id="q1-cumprimento">
+          <strong>—</strong>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Status real das "atrasadas"</div><div class="card-sub">no painel temporal</div></div>
-        <div class="barlist" id="q1-status-real"></div>
-        <div class="key-finding warn" style="margin-top:14px;">
-          <strong>58,8% das obras "ativas" no planejamento já foram concluídas no painel.</strong>
-          Sistema de planejamento opera sobre realidade desatualizada — métrica de prazo está corrompida na fonte.
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head"><div class="card-title">Top 10 mais atrasadas</div><div class="card-sub">vs. data prevista</div></div>
+        <div class="card-head"><div class="card-title">Top mais atrasadas</div><div class="card-sub">só ativas reais</div></div>
         <table class="t"><thead><tr><th>Cliente</th><th>Consultor</th><th class="num">Atraso</th><th>Status real</th></tr></thead>
         <tbody id="q1-top10"></tbody></table>
       </div>
@@ -2885,45 +2903,71 @@ function recalcScoresFromRodrigo(R) {
 
 // ============== Q1 ==============
 function renderQ1() {
-  const d = EXT.cronograma.distribuicao;
-  // KPIs antigos foram substituídos pela stacked bar (q1RenderStacked); leitura defensiva.
-  if ($('q1-leve'))  $('q1-leve').textContent  = d.ATRASADA_LEVE  || 0;
-  if ($('q1-medio')) $('q1-medio').textContent = d.ATRASADA_MEDIA || 0;
-  if ($('q1-grave')) $('q1-grave').textContent = d.ATRASADA_GRAVE || 0;
+  // Q1 reformado (Vitor 2026-04-30): de "métrica de prazo corrompida" pra
+  // "higiene do cronograma" + estatística filtrada sobre ativas reais.
+  const all = Q1_PLAN_OBRAS || [];
+  const fantasmas = all.filter(o => o.painel_ativa === false);
+  const ativasReais = all.filter(o => o.painel_ativa === true);
+  const cronoTotal = all.length;
 
-  // Total de obras com cronograma (dinâmico — substitui literal "34")
-  const cronoTotal = (EXT.cronograma && EXT.cronograma.total) || (Q1_TOTAIS && Q1_TOTAIS.TOTAL) || 0;
-  if ($('q1-crono-total-sub'))   $('q1-crono-total-sub').textContent   = cronoTotal || '—';
-  if ($('q1-crono-total-label')) $('q1-crono-total-label').textContent = cronoTotal || '—';
+  // Banner FANTASMAS
+  if ($('q1-fantasmas-num')) $('q1-fantasmas-num').textContent = fantasmas.length;
+  if ($('q1-fantasmas-n')) $('q1-fantasmas-n').textContent = fantasmas.length;
+  if ($('q1-crono-total-sub')) $('q1-crono-total-sub').textContent = cronoTotal;
 
-  // status real bar
-  const sr = EXT.cronograma.status_real;
-  const total = Object.values(sr).reduce((a,b) => a+b, 0);
-  const sorted = Object.entries(sr).sort((a,b) => b[1]-a[1]);
-  const max = sorted[0][1];
-  const c = sorted.map(([k,v]) => {
-    const isFin = k === 'finalizado' || k === 'concluido';
-    const cls = isFin ? 'am' : (k === 'reparo' ? 'rd' : '');
-    return `<div class="barlist-row">
-      <div class="barlist-lbl">${STATUS_LBL[k] || k}</div>
-      <div class="barlist-bar ${cls}"><span style="width:${(v/max)*100}%"></span></div>
-      <div class="barlist-val">${v}</div>
-    </div>`;
-  }).join('');
-  $('q1-status-real').innerHTML = c;
+  // Estatística sobre ativas REAIS
+  const N = ativasReais.length;
+  if ($('q1-ativas-real-n')) $('q1-ativas-real-n').textContent = N;
+  if ($('q1-ativas-real-n2')) $('q1-ativas-real-n2').textContent = N;
+  if ($('q1-crono-total-label')) $('q1-crono-total-label').textContent = N;
 
-  // top10
-  const tb = EXT.crono_top10.slice(0, 10).map(o => {
+  // Cobertura sobre carteira ativa total (228)
+  const carteiraAtiva = (window._rodrigoStats && window._rodrigoStats.totais && (window._rodrigoStats.totais.ativas - (window._rodrigoStats.por_status?.cancelado || 0))) || (AGG && AGG.total_ativas) || 228;
+  const cobertura = N ? Math.round(N / carteiraAtiva * 100) : 0;
+  if ($('q1-cobertura-pct')) $('q1-cobertura-pct').textContent = cobertura;
+
+  // Cumprimento de prazo (das ativas reais)
+  if (N > 0) {
+    const atrasos = ativasReais.map(o => o.dias_atraso || 0).sort((a,b) => a-b);
+    const noPrazo = atrasos.filter(a => a <= 0).length;
+    const atrasadas = N - noPrazo;
+    function pctile(arr, p) {
+      if (!arr.length) return 0;
+      const idx = Math.min(arr.length - 1, Math.floor(arr.length * p));
+      return arr[idx] || 0;
+    }
+    const positivos = atrasos.filter(a => a > 0);
+    const med = positivos.length ? pctile(positivos, 0.5) : 0;
+    const p75 = positivos.length ? pctile(positivos, 0.75) : 0;
+    const p90 = positivos.length ? pctile(positivos, 0.9) : 0;
+    const max = positivos.length ? positivos[positivos.length - 1] : 0;
+
+    if ($('q1-cumprimento')) {
+      $('q1-cumprimento').innerHTML = noPrazo === 0
+        ? `<strong>${atrasadas} de ${N} obras ativas atrasadas (${Math.round(atrasadas/N*100)}%).</strong> Mediana <span class="mono">${med}d</span> · p75 <span class="mono">${p75}d</span> · p90 <span class="mono">${p90}d</span> · máx <span class="mono">${max}d</span>. <em style="color:#a89e92">Amostra fraca (${N} obras) — limpar fantasmas e cobrir mais obras no Painel de Obras vai dar relevância estatística.</em>`
+        : `<strong>${noPrazo} no prazo · ${atrasadas} atrasadas</strong> de ${N} ativas. Mediana atraso <span class="mono">${med}d</span> · máx <span class="mono">${max}d</span>.`;
+    }
+  } else {
+    if ($('q1-cumprimento')) $('q1-cumprimento').innerHTML = '<strong>Sem obras ativas reais no cronograma após filtrar fantasmas.</strong>';
+  }
+
+  // Top mais atrasadas — só ativas reais
+  const top = ativasReais.slice().sort((a,b) => (b.dias_atraso||0) - (a.dias_atraso||0)).slice(0, 10);
+  const tb = top.map(o => {
     const cl = o.dias_atraso >= 90 ? 'red' : (o.dias_atraso >= 30 ? 'amber' : '');
-    const ativaBadge = o.painel_ativa ? '<span class="chip am">ATIVA</span>' : '<span class="chip mut">FECHADA</span>';
     return `<tr>
       <td class="cli" title="${escHtml(o.cliente)}">${escHtml(o.cliente)}</td>
       <td class="ct">${escHtml(o.consultor || '—')}</td>
       <td class="num ${cl}">${o.dias_atraso}d</td>
-      <td>${ativaBadge} <span class="ct">${escHtml(statusHumano(o.status_real_painel))}</span></td>
+      <td><span class="ct">${escHtml(statusHumano(o.status_real || '—'))}</span></td>
     </tr>`;
-  }).join('');
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:#a89e92;padding:20px;font-style:italic">Sem obras ativas no cronograma.</td></tr>';
   $('q1-top10').innerHTML = tb;
+}
+
+// Abre modal das fantasmas (reusa openSyncModal('fossil') que já existe)
+function openQ1FantasmasModal() {
+  if (typeof openSyncModal === 'function') openSyncModal('fossil');
 }
 
 
@@ -3010,10 +3054,17 @@ function q1RenderStacked() {
     {key:'GRAVE',    cls:'grave',    label:'Grave (>90d)'}
   ];
 
-  const total = Q1_TOTAIS.TOTAL;
+  // Recalcula sobre ATIVAS REAIS — exclui fantasmas (Vitor 2026-04-30)
+  const ativasReais = (Q1_PLAN_OBRAS || []).filter(o => o.painel_ativa === true);
+  const counts = { NO_PRAZO: 0, LEVE: 0, MEDIA: 0, GRAVE: 0 };
+  ativasReais.forEach(o => {
+    if ((o.dias_atraso || 0) <= 0) counts.NO_PRAZO++;
+    else if (counts[o.categoria] !== undefined) counts[o.categoria]++;
+  });
+  const total = ativasReais.length;
 
   el.innerHTML = cats.map(c => {
-    const n = Q1_TOTAIS[c.key];
+    const n = counts[c.key];
     const pct = total ? (n/total*100) : 0;
     const flexBasis = n === 0 ? 'flex:0 1 80px' : `flex:${Math.max(pct, 5)} 1 0`;
     const cls = n === 0 ? `${c.cls} empty` : c.cls;
@@ -3034,8 +3085,15 @@ function openQ1Modal(cat) {
     GRAVE:    {title:'Obras com ATRASO GRAVE', help:'Obras com mais de 90 dias de atraso na dataTermino do planejamento.'}
   };
 
-  const obras = Q1_PLAN_OBRAS.filter(o => o.categoria === cat).sort((a,b)=>b.dias_atraso-a.dias_atraso);
-  const totalCat = Q1_TOTAIS[cat] || obras.length;
+  // Filtra ATIVAS REAIS (Vitor 2026-04-30) — fantasmas vão pro modal "fossil" separado
+  const obrasFiltradas = Q1_PLAN_OBRAS.filter(o => o.painel_ativa === true);
+  let obras;
+  if (cat === 'NO_PRAZO') {
+    obras = obrasFiltradas.filter(o => (o.dias_atraso || 0) <= 0).sort((a,b)=>(a.dias_atraso||0)-(b.dias_atraso||0));
+  } else {
+    obras = obrasFiltradas.filter(o => o.categoria === cat).sort((a,b)=>b.dias_atraso-a.dias_atraso);
+  }
+  const totalCat = obras.length;
   const detalhadas = obras.length;
 
   document.getElementById('q1-modal-title').textContent = labels[cat].title + ` (${totalCat})`;
