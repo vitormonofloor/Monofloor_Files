@@ -2279,6 +2279,7 @@ function initDashboard() {
   renderBaldes();
   renderOperacional();
   renderEstrategicos();
+  applyRodrigoCanon();  // sobrescreve KPIs canônicos com números do painel do Rodrigo (fonte única de verdade)
   renderAutoAgentHealth();
   initSideNav();
   // DOMContentLoaded-dependent inits
@@ -2578,6 +2579,75 @@ function renderHero() {
   } else {
     $('stamp-now').textContent = '—';
   }
+}
+
+// ============== ESPELHO RODRIGO — substitui KPIs canônicos ==============
+// Lê dados/rodrigo-stats.json (gerado pelo coletar-rodrigo-stats.sh a cada 30 min)
+// e SOBRESCREVE os campos que devem refletir 1:1 o painel do Rodrigo.
+// O que NÃO está no Rodrigo (180+, sem responsável, score, etc) continua calculado
+// dos nossos dados — visão complementar.
+function applyRodrigoCanon() {
+  fetch('dados/rodrigo-stats.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(R){
+      if (!R || !R.totais) return;
+      try {
+        // Total Ativas (canônico Rodrigo)
+        var ativas = R.totais.ativas;
+        if ($('kpi-ativas')) $('kpi-ativas').textContent = ativas;
+        // Em Execução (canônico Rodrigo)
+        var emExec = R.por_status.em_execucao;
+        if ($('kpi-exec')) $('kpi-exec').textContent = emExec;
+        // % exec sobre ativas (recalculado base Rodrigo)
+        if ($('kpi-exec-edai')) {
+          $('kpi-exec-edai').textContent = ativas
+            ? (Math.round(emExec / ativas * 100) + '% ')
+            : '— ';
+        }
+        // Total no painel (1.037)
+        var total = R.totais.total;
+        var totalFmt = total.toLocaleString('pt-BR');
+        document.querySelectorAll('.dyn-total-obras').forEach(function(el){ el.textContent = totalFmt; });
+        if ($('dyn-ativas-scope')) $('dyn-ativas-scope').textContent = ativas;
+        if ($('dyn-total-scope')) $('dyn-total-scope').textContent = totalFmt;
+
+        // CAPACIDADE (Estratégicos) — substitui o 12,1% errado por 35% real
+        var cap = R.capacidade;
+        if (cap) {
+          if ($('est-cap-num')) $('est-cap-num').textContent = cap.utilization_percent;
+          if ($('est-cap-fill')) $('est-cap-fill').style.width = Math.min(100, cap.utilization_percent || 0) + '%';
+          if ($('est-cap-detalhe')) {
+            $('est-cap-detalhe').textContent =
+              cap.aplicadores_necessarios + ' aplicadores necessários · '
+              + (cap.capacidade_semanal_m2_puro || 0).toLocaleString('pt-BR') + ' m²/semana · '
+              + 'máx saudável ' + (cap.max_obras_saudavel || '—') + ' obras';
+          }
+          // VOLUME m² — usa m2_em_obra do Rodrigo (canônico)
+          if ($('est-m2-num')) $('est-m2-num').textContent = Math.round(cap.m2_em_obra || 0).toLocaleString('pt-BR');
+          if ($('est-m2-detalhe')) {
+            $('est-m2-detalhe').textContent =
+              (cap.obras_ativas_capacity || 0) + ' obras em campo agora · '
+              + 'capacidade ' + (cap.capacidade_diaria_m2 || 0) + ' m²/dia';
+          }
+        }
+
+        // Hero summary — reescreve com canônicos do Rodrigo, mantendo derivados nossos
+        var hs = $('hero-summary');
+        if (hs && AGG) {
+          hs.innerHTML =
+            '<strong>' + ativas + ' obras ativas</strong> · '
+            + '<strong>' + emExec + '</strong> em execução · '
+            + '<strong>' + (AGG.n_180_plus || 0) + '</strong> com 180+ dias · '
+            + '<strong>' + (AGG.n_270_plus || 0) + '</strong> com 270+ (zona escarlate) · '
+            + 'mediana <span class="mono">' + (AGG.idade_mediana || '—') + 'd</span>, '
+            + 'média <span class="mono">' + (AGG.idade_media || '—') + 'd</span> · '
+            + (EXT && EXT.zumbi_n ? EXT.zumbi_n + ' encerradas sem fechar · ' : '')
+            + (EXT && EXT.orfas_n ? EXT.orfas_n + ' sem responsável · ' : '')
+            + (EXT && EXT.ocorrencias && EXT.ocorrencias.n_atRisk ? EXT.ocorrencias.n_atRisk + ' em risco' : '');
+        }
+      } catch (e) { console.warn('applyRodrigoCanon:', e); }
+    })
+    .catch(function(e){ console.warn('rodrigo-stats fetch:', e && e.message); });
 }
 
 // ============== Q1 ==============
