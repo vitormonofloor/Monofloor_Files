@@ -1,12 +1,13 @@
 {
-    "atualizado_em":  "2026-04-30T15:56:02Z",
-    "fonte":  "cliente.monofloor.cloud/api/projects (contagens) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
+    "atualizado_em":  "2026-04-30T16:06:04Z",
+    "fonte":  "cliente.monofloor.cloud/api/projects + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
     "totais":  {
                    "total":  1035,
                    "ativas":  260,
                    "finalizados":  775,
                    "em_execucao":  33,
-                   "pausados":  5
+                   "pausados":  5,
+                   "m2_em_execucao":  3762
                },
     "por_status":  {
                        "finalizado":  540,
@@ -21,6 +22,20 @@
                        "reparo":  21,
                        "pausado":  5
                    },
+    "proximos":  {
+                     "15d":  {
+                                 "obras":  44,
+                                 "m2":  6339
+                             },
+                     "30d":  {
+                                 "obras":  74,
+                                 "m2":  10066
+                             },
+                     "60d":  {
+                                 "obras":  116,
+                                 "m2":  19281
+                             }
+                 },
     "operacao_viva":  {
                           "active_journeys":  405,
                           "pending_tasks":  1999,
@@ -32,8 +47,6 @@
                        "aplicadores_total":  95,
                        "aplicadores_necessarios":  33,
                        "aplicadores_por_obra":  8.6,
-                       "obras_ativas_capacity":  11,
-                       "m2_em_obra":  3489.9900000000002,
                        "capacidade_diaria_m2":  418,
                        "capacidade_semanal_m2_puro":  9000,
                        "capacidade_semanal_m2_misto":  6300,

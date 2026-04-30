@@ -46,6 +46,7 @@ fetch "$API_PLN/analytics/weekly-forecast" "$TMP/fcast.json"
 NOW="$NOW" TMP="$TMP" DADOS="$DADOS" python3 << 'PYEOF'
 import json, os, sys
 from collections import Counter
+from datetime import datetime, timedelta, timezone
 TMP = os.environ['TMP']
 DADOS = os.environ['DADOS']
 NOW = os.environ['NOW']
@@ -70,9 +71,43 @@ status_count = Counter(p.get("status") or "sem_status" for p in projects if isin
 
 total = len(projects)
 finalizados = status_count.get("finalizado", 0) + status_count.get("concluido", 0)
-ativas = total - finalizados  # tudo que NÃO é finalizado/concluido (regra do frontend)
-em_exec = status_count.get("em_execucao", 0)
-pausadas = status_count.get("pausado", 0)
+ativas = total - finalizados
+em_exec_count = status_count.get("em_execucao", 0)
+pausados_count = status_count.get("pausado", 0)
+
+# m² em execução (canônico — soma de projetoMetragem das em_execucao)
+def m2_of(p):
+    try: return float(p.get("projetoMetragem") or 0)
+    except: return 0.0
+
+em_exec_obras = [p for p in projects if isinstance(p, dict) and p.get("status") == "em_execucao"]
+m2_em_execucao = sum(m2_of(p) for p in em_exec_obras)
+
+# Próximos N dias — alinhado com tela do Rodrigo (44 obras pra 15d):
+# obras com status IN (aguardando_execucao, planejamento, em_execucao, aguardando_clima)
+# E dataExecucaoPrevista entre hoje e hoje+N
+PROX_STATUSES = {"aguardando_execucao", "planejamento", "em_execucao", "aguardando_clima"}
+hoje = datetime.now(timezone.utc).date()
+
+def parse_date(s):
+    if not s: return None
+    try:
+        return datetime.fromisoformat(str(s).replace("Z","+00:00")).date()
+    except Exception:
+        try: return datetime.strptime(str(s)[:10], "%Y-%m-%d").date()
+        except Exception: return None
+
+def proximos(dias):
+    limite = hoje + timedelta(days=dias)
+    obras = []
+    for p in projects:
+        if not isinstance(p, dict): continue
+        if p.get("status") not in PROX_STATUSES: continue
+        d = parse_date(p.get("dataExecucaoPrevista"))
+        if d and hoje <= d <= limite:
+            obras.append(p)
+    m2 = sum(m2_of(p) for p in obras)
+    return {"obras": len(obras), "m2": round(m2)}
 
 current_load = cap.get("currentLoad", {}) or {}
 capacity_obj = cap.get("capacity", {}) or {}
@@ -81,15 +116,21 @@ recom = cap.get("recommendations", {}) or {}
 
 canon = {
     "atualizado_em": NOW,
-    "fonte": "cliente.monofloor.cloud/api/projects (contagens) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/* (capacidade/alertas)",
+    "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
     "totais": {
         "total": total,
         "ativas": ativas,
         "finalizados": finalizados,
-        "em_execucao": em_exec,
-        "pausados": pausadas,
+        "em_execucao": em_exec_count,
+        "pausados": pausados_count,
+        "m2_em_execucao": round(m2_em_execucao),
     },
     "por_status": dict(status_count),
+    "proximos": {
+        "15d": proximos(15),
+        "30d": proximos(30),
+        "60d": proximos(60),
+    },
     "operacao_viva": {
         "active_journeys": orch.get("activeJourneys", 0),
         "pending_tasks": orch.get("pendingTasks", 0),
@@ -101,8 +142,6 @@ canon = {
         "aplicadores_total": cap.get("totalApplicators", 0),
         "aplicadores_necessarios": current_load.get("applicatorsNeeded", 0),
         "aplicadores_por_obra": current_load.get("applicatorsPerProject", 0),
-        "obras_ativas_capacity": active_proj.get("count", 0),
-        "m2_em_obra": active_proj.get("totalM2", 0),
         "capacidade_diaria_m2": capacity_obj.get("dailyM2", 0),
         "capacidade_semanal_m2_puro": capacity_obj.get("weeklyPure", 0),
         "capacidade_semanal_m2_misto": capacity_obj.get("weeklyMixed", 0),
@@ -118,17 +157,13 @@ canon = {
         "por_severidade": alerts.get("bySeverity", {}),
         "detalhes": alerts.get("alerts", []),
     },
-    "agenda_hoje": {
-        "visitas": stats.get("visitasHoje", 0),
-        "entregas": stats.get("entregasHoje", 0),
-    },
     "weekly_forecast": fcast,
 }
 
 out = f"{DADOS}/rodrigo-stats.json"
 with open(out, "w", encoding="utf-8") as f:
     json.dump(canon, f, ensure_ascii=False, indent=2)
-print(f"  rodrigo-stats.json: ativas={ativas} total={stats.get('totalProjetos',0)} cap={current_load.get('utilizationPercent',0)}%")
+print(f"  rodrigo-stats.json: total={total} ativas={ativas} em_exec={em_exec_count} ({round(m2_em_execucao)}m²) prox15d={canon['proximos']['15d']['obras']} prox30d={canon['proximos']['30d']['obras']} prox60d={canon['proximos']['60d']['obras']}")
 PYEOF
 
 rm -rf "$TMP"

@@ -71,16 +71,25 @@
   .section-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; padding-left: 14px; border-left: 3px solid #b8a080; }
 
   /* VEREDITO LOTE 6 — Eixos estratégicos (TEMPO/VOLUME/CAPACIDADE) */
-  .estrategicos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0}
+  .estrategicos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:14px 0}
+  @media(max-width:1200px){.estrategicos-grid{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:880px){.estrategicos-grid{grid-template-columns:1fr}}
   /* PACOTE B.3 — em mobile, altura adapta ao conteúdo · evita seção alongada */
   @media(max-width:880px){.est-card{min-height:auto !important}}
   .est-card{background:#fff;border:1px solid #e0d8cc;border-left:4px solid #4a7ab8;border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;min-height:200px}
   .est-card:nth-child(2){border-left-color:#3d8a5a}
   .est-card:nth-child(3){border-left-color:#b89a4a}
+  .est-card:nth-child(4){border-left-color:#8a5cb0}
   .est-titulo{font-family:'JetBrains Mono',monospace;font-size:9px;color:#4a7ab8;letter-spacing:.18em;font-weight:700;text-transform:uppercase}
   .est-card:nth-child(2) .est-titulo{color:#3d8a5a}
   .est-card:nth-child(3) .est-titulo{color:#b89a4a}
+  .est-card:nth-child(4) .est-titulo{color:#8a5cb0}
+  /* Chips do card "Próximos dias" */
+  .est-chips{display:flex;gap:6px;margin:4px 0 6px 0;flex-wrap:wrap}
+  .est-chip{padding:4px 10px;border:1px solid #e0d8cc;border-radius:99px;background:#fff;color:#8a7e72;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:all .15s;line-height:1}
+  .est-chip:hover{border-color:#8a5cb0;color:#8a5cb0}
+  .est-chip.active{background:#8a5cb0;border-color:#8a5cb0;color:#fff}
+  .est-card:nth-child(4) .est-meter-fill{background:#8a5cb0}
   .est-pergunta{font-size:11px;color:#8a7e72;font-style:italic;line-height:1.4;margin-bottom:6px}
   .est-corpo{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px}
   .est-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:#2a2520;line-height:1;letter-spacing:-0.02em}
@@ -1191,7 +1200,7 @@
   <section id="estrategicos">
     <div class="q-head">
       <h2><span class="section-pill" style="background:rgba(74,122,184,0.1);color:#4a7ab8">ESTRATÉGICOS</span></h2>
-      <p class="sub">Os 3 eixos que a diretoria pergunta primeiro: TEMPO (estamos rápidos?) · VOLUME (entregamos quanto?) · CAPACIDADE (cabe mais?).</p>
+      <p class="sub">Os 4 eixos que a diretoria pergunta primeiro: TEMPO (estamos rápidos?) · VOLUME (em obra agora?) · CAPACIDADE (cabe mais?) · PRÓXIMOS DIAS (o que vem na frente?).</p>
     </div>
 
     <div class="estrategicos-grid">
@@ -1229,6 +1238,23 @@
           <div class="est-detalhe" id="est-cap-detalhe">—</div>
         </div>
         <div class="est-fonte">Painel-amigo · status=em_execucao (proxy)</div>
+      </div>
+
+      <div class="est-card">
+        <div class="est-titulo">PRÓXIMOS DIAS</div>
+        <div class="est-pergunta">O que vem na frente da operação?</div>
+        <div class="est-chips" id="est-prox-chips" role="tablist" aria-label="Janela de tempo">
+          <button type="button" class="est-chip" data-prox="15" role="tab">15d</button>
+          <button type="button" class="est-chip active" data-prox="30" role="tab" aria-selected="true">30d</button>
+          <button type="button" class="est-chip" data-prox="60" role="tab">60d</button>
+        </div>
+        <div class="est-corpo">
+          <div class="est-num"><span id="est-prox-num">—</span><span class="est-unit">obras</span></div>
+          <div class="est-rotulo"><span id="est-prox-m2">—</span> m² · janela <span id="est-prox-label">30d</span></div>
+          <div class="est-meter"><div class="est-meter-fill" id="est-prox-fill"></div></div>
+          <div class="est-detalhe" id="est-prox-detalhe">—</div>
+        </div>
+        <div class="est-fonte">Painel-amigo · dataExecucaoPrevista + status</div>
       </div>
     </div>
 
@@ -2622,13 +2648,47 @@ function applyRodrigoCanon() {
               + (cap.capacidade_semanal_m2_puro || 0).toLocaleString('pt-BR') + ' m²/semana · '
               + 'máx saudável ' + (cap.max_obras_saudavel || '—') + ' obras';
           }
-          // VOLUME m² — usa m2_em_obra do Rodrigo (canônico)
-          if ($('est-m2-num')) $('est-m2-num').textContent = Math.round(cap.m2_em_obra || 0).toLocaleString('pt-BR');
-          if ($('est-m2-detalhe')) {
-            $('est-m2-detalhe').textContent =
-              (cap.obras_ativas_capacity || 0) + ' obras em campo agora · '
-              + 'capacidade ' + (cap.capacidade_diaria_m2 || 0) + ' m²/dia';
-          }
+        }
+        // VOLUME m² — soma direta dos projetoMetragem das em_execucao (canônico, calculado no coletor)
+        if ($('est-m2-num') && R.totais && R.totais.m2_em_execucao != null) {
+          $('est-m2-num').textContent = Math.round(R.totais.m2_em_execucao).toLocaleString('pt-BR');
+        }
+        if ($('est-m2-detalhe') && R.totais) {
+          $('est-m2-detalhe').textContent =
+            R.totais.em_execucao + ' obras em execução agora · '
+            + (R.capacidade && R.capacidade.capacidade_diaria_m2 ? 'capacidade ' + R.capacidade.capacidade_diaria_m2 + ' m²/dia' : '');
+        }
+
+        // PRÓXIMOS DIAS — toggle 15/30/60 (default 30)
+        if (R.proximos) {
+          var proxState = '30';
+          var renderProx = function(janela) {
+            var p = R.proximos[janela + 'd'];
+            if (!p) return;
+            if ($('est-prox-num')) $('est-prox-num').textContent = p.obras;
+            if ($('est-prox-m2')) $('est-prox-m2').textContent = (p.m2 || 0).toLocaleString('pt-BR');
+            if ($('est-prox-label')) $('est-prox-label').textContent = janela + 'd';
+            // Barra: % obras dentro da janela vs total ativas (referência visual)
+            if ($('est-prox-fill') && R.totais.ativas) {
+              $('est-prox-fill').style.width = Math.min(100, (p.obras / R.totais.ativas * 100)) + '%';
+            }
+            if ($('est-prox-detalhe')) {
+              var meta = janela === '15' ? 'curto prazo' : (janela === '30' ? 'mês corrente' : 'horizonte 2 meses');
+              $('est-prox-detalhe').textContent = meta + ' · obras agendadas pra começar/já em obra';
+            }
+            document.querySelectorAll('#est-prox-chips .est-chip').forEach(function(c){
+              var a = c.getAttribute('data-prox') === janela;
+              c.classList.toggle('active', a);
+              c.setAttribute('aria-selected', a ? 'true' : 'false');
+            });
+          };
+          renderProx(proxState);
+          document.querySelectorAll('#est-prox-chips .est-chip').forEach(function(c){
+            c.addEventListener('click', function(){
+              proxState = c.getAttribute('data-prox');
+              renderProx(proxState);
+            });
+          });
         }
 
         // Hero summary — reescreve com canônicos do Rodrigo, mantendo derivados nossos
