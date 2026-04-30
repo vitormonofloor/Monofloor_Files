@@ -761,6 +761,7 @@
   .q1-divider{display:flex;align-items:center;gap:12px;margin:24px 0 14px}
   .q1-divider::before,.q1-divider::after{content:'';flex:1;height:1px;background:#e0d8cc}
   .q1-divider-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;padding:0 8px}
+  .q1-retrab-chip{display:inline-block;margin-left:6px;padding:3px 10px;background:#eaf0f6;border:1px solid #c8d8e8;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.06em;color:#4a7ab8;text-transform:none}
 
   /* ===== Q-HEAD (títulos de seção) — FASE 2.5: hierarquia tipográfica explícita ===== */
   .q-head{margin-bottom:18px;padding-left:14px;border-left:3px solid #b8a080}
@@ -1328,15 +1329,16 @@
       </div>
     </div>
 
-    <!-- Separador visual -->
+    <!-- Separador visual + chip de retrabalho -->
     <div class="q1-divider">
-      <span class="q1-divider-tag">Estatística de prazo · sobre <span id="q1-ativas-real-n">—</span> obras de fato ativas</span>
+      <span class="q1-divider-tag">Estatística de prazo · <span id="q1-ativas-real-n">—</span> obras em fluxo normal</span>
+      <span class="q1-retrab-chip" id="q1-retrab-chip" hidden><span id="q1-retrab-n">—</span> em retrabalho/pós-entrega · não conta como atraso</span>
     </div>
 
     <div class="q1-stacked-wrap">
-      <div class="q1-stacked-label">Distribuição das <span id="q1-crono-total-label">—</span> obras ativas reais por situação de prazo</div>
+      <div class="q1-stacked-label">Distribuição das <span id="q1-crono-total-label">—</span> obras em fluxo normal por situação de prazo</div>
       <div class="q1-stacked" id="q1-stacked"></div>
-      <div class="q1-stacked-legenda">Clique em uma faixa para ver as obras · amostra fraca: estatística sobre <span id="q1-ativas-real-n2">—</span> obras (representa só <span id="q1-cobertura-pct">—</span>% da carteira de 228 ativas)</div>
+      <div class="q1-stacked-legenda">Clique numa faixa pra ver as obras · amostra fraca: estatística sobre <span id="q1-ativas-real-n2">—</span> obras (representa só <span id="q1-cobertura-pct">—</span>% da carteira de 228 ativas)</div>
     </div>
 
     <div class="grid-2">
@@ -2554,6 +2556,20 @@ function escHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// Formata data ISO (YYYY-MM-DD ou YYYY-MM-DDTHH:MM:SS) pra padrão BR (DD/MM/YYYY).
+// Vitor 2026-04-30: padrão visual em todo o dashboard é BR. Se já vier em
+// outro formato (ex: "16/01/2026"), retorna como está.
+function fmtDateBR(s) {
+  if (!s) return '—';
+  var str = String(s).trim();
+  // Já está em BR (DD/MM/YYYY ou DD/MM/YY)
+  if (/^\d{1,2}\/\d{1,2}\/\d{2,4}/.test(str)) return str.slice(0, 10);
+  // ISO 8601 (YYYY-MM-DD ou com T)
+  var m = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return m[3] + '/' + m[2] + '/' + m[1];
+  return str;
+}
+
 // ============== HEALTH SCORE ==============
 function computeHealth() {
   const ativas = AGG.total_ativas;
@@ -2902,21 +2918,33 @@ function recalcScoresFromRodrigo(R) {
 }
 
 // ============== Q1 ==============
+// Status que indicam retrabalho/pós-entrega (obra original já completou cronograma,
+// voltou por defeito visual ou reparo). Não conta como "atraso de cronograma".
+const Q1_RETRAB_STATUSES = new Set(['reparo', 'marcas_rolo_cera']);
+
 function renderQ1() {
   // Q1 reformado (Vitor 2026-04-30): de "métrica de prazo corrompida" pra
-  // "higiene do cronograma" + estatística filtrada sobre ativas reais.
+  // "higiene do cronograma" + estatística filtrada sobre obras em fluxo normal
+  // (excluindo fantasmas E retrabalho).
   const all = Q1_PLAN_OBRAS || [];
   const fantasmas = all.filter(o => o.painel_ativa === false);
   const ativasReais = all.filter(o => o.painel_ativa === true);
+  const retrabalho = ativasReais.filter(o => Q1_RETRAB_STATUSES.has(o.status_real));
+  const fluxoNormal = ativasReais.filter(o => !Q1_RETRAB_STATUSES.has(o.status_real));
   const cronoTotal = all.length;
+
+  // Chip de retrabalho
+  if ($('q1-retrab-n')) $('q1-retrab-n').textContent = retrabalho.length;
+  var retChip = $('q1-retrab-chip');
+  if (retChip) retChip.hidden = retrabalho.length === 0;
 
   // Banner FANTASMAS
   if ($('q1-fantasmas-num')) $('q1-fantasmas-num').textContent = fantasmas.length;
   if ($('q1-fantasmas-n')) $('q1-fantasmas-n').textContent = fantasmas.length;
   if ($('q1-crono-total-sub')) $('q1-crono-total-sub').textContent = cronoTotal;
 
-  // Estatística sobre ativas REAIS
-  const N = ativasReais.length;
+  // Estatística sobre obras em FLUXO NORMAL (exclui retrabalho)
+  const N = fluxoNormal.length;
   if ($('q1-ativas-real-n')) $('q1-ativas-real-n').textContent = N;
   if ($('q1-ativas-real-n2')) $('q1-ativas-real-n2').textContent = N;
   if ($('q1-crono-total-label')) $('q1-crono-total-label').textContent = N;
@@ -2926,9 +2954,9 @@ function renderQ1() {
   const cobertura = N ? Math.round(N / carteiraAtiva * 100) : 0;
   if ($('q1-cobertura-pct')) $('q1-cobertura-pct').textContent = cobertura;
 
-  // Cumprimento de prazo (das ativas reais)
+  // Cumprimento de prazo — só fluxo normal (sem retrabalho/fantasmas)
   if (N > 0) {
-    const atrasos = ativasReais.map(o => o.dias_atraso || 0).sort((a,b) => a-b);
+    const atrasos = fluxoNormal.map(o => o.dias_atraso || 0).sort((a,b) => a-b);
     const noPrazo = atrasos.filter(a => a <= 0).length;
     const atrasadas = N - noPrazo;
     function pctile(arr, p) {
@@ -2943,16 +2971,17 @@ function renderQ1() {
     const max = positivos.length ? positivos[positivos.length - 1] : 0;
 
     if ($('q1-cumprimento')) {
+      var sufixoRetrab = retrabalho.length ? ' · ' + retrabalho.length + ' em retrabalho/pós-entrega não entram' : '';
       $('q1-cumprimento').innerHTML = noPrazo === 0
-        ? `<strong>${atrasadas} de ${N} obras ativas atrasadas (${Math.round(atrasadas/N*100)}%).</strong> Mediana <span class="mono">${med}d</span> · p75 <span class="mono">${p75}d</span> · p90 <span class="mono">${p90}d</span> · máx <span class="mono">${max}d</span>. <em style="color:#a89e92">Amostra fraca (${N} obras) — limpar fantasmas e cobrir mais obras no Painel de Obras vai dar relevância estatística.</em>`
-        : `<strong>${noPrazo} no prazo · ${atrasadas} atrasadas</strong> de ${N} ativas. Mediana atraso <span class="mono">${med}d</span> · máx <span class="mono">${max}d</span>.`;
+        ? `<strong>${atrasadas} de ${N} obras em fluxo normal atrasadas (${Math.round(atrasadas/N*100)}%).</strong> Mediana <span class="mono">${med}d</span> · p75 <span class="mono">${p75}d</span> · p90 <span class="mono">${p90}d</span> · máx <span class="mono">${max}d</span>.<br><em style="color:#a89e92">Amostra fraca (${N} obras${sufixoRetrab}) — limpar fantasmas e cobrir mais obras no Painel de Obras vai dar relevância estatística.</em>`
+        : `<strong>${noPrazo} no prazo · ${atrasadas} atrasadas</strong> de ${N} em fluxo normal. Mediana atraso <span class="mono">${med}d</span> · máx <span class="mono">${max}d</span>.${sufixoRetrab ? '<br><em style="color:#a89e92">' + retrabalho.length + ' em retrabalho não entram nessa estatística.</em>' : ''}`;
     }
   } else {
-    if ($('q1-cumprimento')) $('q1-cumprimento').innerHTML = '<strong>Sem obras ativas reais no cronograma após filtrar fantasmas.</strong>';
+    if ($('q1-cumprimento')) $('q1-cumprimento').innerHTML = '<strong>Sem obras em fluxo normal no cronograma.</strong>';
   }
 
-  // Top mais atrasadas — só ativas reais
-  const top = ativasReais.slice().sort((a,b) => (b.dias_atraso||0) - (a.dias_atraso||0)).slice(0, 10);
+  // Top mais atrasadas — só fluxo normal
+  const top = fluxoNormal.slice().sort((a,b) => (b.dias_atraso||0) - (a.dias_atraso||0)).slice(0, 10);
   const tb = top.map(o => {
     const cl = o.dias_atraso >= 90 ? 'red' : (o.dias_atraso >= 30 ? 'amber' : '');
     return `<tr>
@@ -2989,7 +3018,7 @@ function openSyncModal(tipo) {
       q4EscHtml(o.cliente),
       q4EscHtml(o.consultor || 'sem consultor'),
       `<span class="num idade-esc">+${o.dias_atraso}d</span>`,
-      q4EscHtml(o.dataTermino),
+      fmtDateBR(o.dataTermino),
       q4EscHtml(statusHumano(o.status_real))
     ]);
   } else if (tipo === 'limbo') {
@@ -3054,14 +3083,16 @@ function q1RenderStacked() {
     {key:'GRAVE',    cls:'grave',    label:'Grave (>90d)'}
   ];
 
-  // Recalcula sobre ATIVAS REAIS — exclui fantasmas (Vitor 2026-04-30)
-  const ativasReais = (Q1_PLAN_OBRAS || []).filter(o => o.painel_ativa === true);
+  // Recalcula sobre obras em FLUXO NORMAL — exclui fantasmas E retrabalho (Vitor 2026-04-30)
+  const RETRAB_STATUS = new Set(['reparo', 'marcas_rolo_cera']);
+  const fluxoNormal = (Q1_PLAN_OBRAS || []).filter(o =>
+    o.painel_ativa === true && !RETRAB_STATUS.has(o.status_real));
   const counts = { NO_PRAZO: 0, LEVE: 0, MEDIA: 0, GRAVE: 0 };
-  ativasReais.forEach(o => {
+  fluxoNormal.forEach(o => {
     if ((o.dias_atraso || 0) <= 0) counts.NO_PRAZO++;
     else if (counts[o.categoria] !== undefined) counts[o.categoria]++;
   });
-  const total = ativasReais.length;
+  const total = fluxoNormal.length;
 
   el.innerHTML = cats.map(c => {
     const n = counts[c.key];
@@ -3085,8 +3116,11 @@ function openQ1Modal(cat) {
     GRAVE:    {title:'Obras com ATRASO GRAVE', help:'Obras com mais de 90 dias de atraso na dataTermino do planejamento.'}
   };
 
-  // Filtra ATIVAS REAIS (Vitor 2026-04-30) — fantasmas vão pro modal "fossil" separado
-  const obrasFiltradas = Q1_PLAN_OBRAS.filter(o => o.painel_ativa === true);
+  // Filtra FLUXO NORMAL (Vitor 2026-04-30) — fantasmas vão pro modal "fossil"
+  // separado; retrabalho (reparo + marcas_rolo_cera) não conta como atraso.
+  const RETRAB_STATUS = new Set(['reparo', 'marcas_rolo_cera']);
+  const obrasFiltradas = Q1_PLAN_OBRAS.filter(o =>
+    o.painel_ativa === true && !RETRAB_STATUS.has(o.status_real));
   let obras;
   if (cat === 'NO_PRAZO') {
     obras = obrasFiltradas.filter(o => (o.dias_atraso || 0) <= 0).sort((a,b)=>(a.dias_atraso||0)-(b.dias_atraso||0));
@@ -3114,7 +3148,7 @@ function openQ1Modal(cat) {
         <td>${q4EscHtml(o.cliente||'')}</td>
         <td>${q4EscHtml(o.consultor||'sem consultor')}</td>
         <td class="num ${atrasoCls}">${o.dias_atraso > 0 ? '+' : ''}${o.dias_atraso}d</td>
-        <td>${q4EscHtml(o.dataTermino||'—')}</td>
+        <td>${fmtDateBR(o.dataTermino)}</td>
         <td>${q4EscHtml(statusHumano(o.status_real||'—'))}${fantasma}</td>
         <td>${q4EscHtml(o.fase_real||'—')}</td>
       </tr>`;
