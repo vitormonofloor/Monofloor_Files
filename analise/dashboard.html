@@ -2427,6 +2427,7 @@ function initDashboard() {
   renderBaldes();
   renderOperacional();
   renderEstrategicos();
+  loadQ1Classificacoes();  // carrega overrides manuais de classificação (faseada/retrabalho_extra/continuacao_pausada)
   applyRodrigoCanon();  // espelho dos números do Rodrigo (cliente.monofloor.cloud/api/projects + planejamento/analytics)
   renderAutoAgentHealth();
   initSideNav();
@@ -3001,6 +3002,27 @@ function recalcScoresFromRodrigo(R) {
 // voltou por defeito visual ou reparo). Não conta como "atraso de cronograma".
 const Q1_RETRAB_STATUSES = new Set(['reparo', 'marcas_rolo_cera']);
 
+// Cache da lista de overrides manuais (q1-classificacoes.json). Carregada uma
+// vez no fim de loadDashboardData, usada pelo classifFallback do Q1.
+window._q1Classif = window._q1Classif || { faseada: [], retrabalho_extra: [], continuacao_pausada: [] };
+
+// Carrega q1-classificacoes.json e re-renderiza Q1 quando chegar
+function loadQ1Classificacoes() {
+  fetch('dados/q1-classificacoes.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(c){
+      if (!c) return;
+      window._q1Classif = {
+        faseada: c.faseada || [],
+        retrabalho_extra: c.retrabalho_extra || [],
+        continuacao_pausada: c.continuacao_pausada || []
+      };
+      // Re-renderiza Q1 com classificações aplicadas
+      try { if (typeof renderQ1 === 'function') renderQ1(); if (typeof q1RenderStacked === 'function') q1RenderStacked(); } catch(e){}
+    })
+    .catch(function(){ /* fallback usa só heurística automática */ });
+}
+
 function renderQ1() {
   // Q1 reformado (Vitor 2026-04-30): de "métrica de prazo corrompida" pra
   // "higiene do cronograma" + estatística filtrada sobre obras em FLUXO NORMAL.
@@ -3011,11 +3033,19 @@ function renderQ1() {
 
   function classifFallback(o) {
     if (o.categoria_classif) return o.categoria_classif;
-    // fallback se o JSON ainda não foi rehidratado pelo refresh
+    // 1. Fantasma — status fechado
     if (o.painel_ativa === false) return 'FANTASMA';
-    var cli = (o.cliente || '').toUpperCase();
-    if (cli.indexOf('FASE') >= 0) return 'FASEADA';
+    // 2. Override manual via q1-classificacoes.json
+    var cli = o.cliente || '';
+    var c = window._q1Classif || {};
+    if ((c.faseada || []).indexOf(cli) >= 0) return 'FASEADA';
+    if ((c.retrabalho_extra || []).indexOf(cli) >= 0) return 'RETRABALHO';
+    if ((c.continuacao_pausada || []).indexOf(cli) >= 0) return 'CONTINUACAO';
+    // 3. Heurística por nome
+    if (cli.toUpperCase().indexOf('FASE') >= 0) return 'FASEADA';
+    // 4. Status sinaliza retrabalho
     if (Q1_RETRAB_STATUSES.has(o.status_real)) return 'RETRABALHO';
+    // 5. Resto = fluxo normal
     return 'FLUXO_NORMAL';
   }
   all.forEach(o => { o._cat = classifFallback(o); });
