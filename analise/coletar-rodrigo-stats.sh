@@ -195,10 +195,10 @@ if em2026:
         "meta_dias": 150,
         "obras_base": len(em2026),
         "periodo": "2026",
-        "fonte": f"Pipefy snapshot ({pipefy.get('resumo', {}).get('coletado_em', 'data desconhecida')})",
+        "fonte": f"Painel de Obras (snapshot {pipefy.get('resumo', {}).get('coletado_em', 'sem data')})",
     }
 else:
-    canon["tempo"] = {"obras_base": 0, "periodo": "2026", "fonte": "snapshot Pipefy indisponível"}
+    canon["tempo"] = {"obras_base": 0, "periodo": "2026", "fonte": "Painel de Obras — snapshot indisponível"}
 
 out = f"{DADOS}/rodrigo-stats.json"
 with open(out, "w", encoding="utf-8") as f:

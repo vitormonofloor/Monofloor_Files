@@ -1200,7 +1200,7 @@
       <span class="sf-label">Fontes</span>
       <span class="sf-item"><span class="sf-tag calculado">Calc.</span><b>SCORE</b> via SCORE-FORMULA.md</span>
       <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>idade · status · m²</span>
-      <span class="sf-item"><span class="sf-tag pipefy">Pipefy</span>marcos administrativos</span>
+      <span class="sf-item"><span class="sf-tag pipefy">Painel de Obras</span>marcos administrativos</span>
     </div>
   </section>
 
@@ -1225,7 +1225,7 @@
           </div>
           <div class="est-detalhe" id="est-ciclo-detalhe">—</div>
         </div>
-        <div class="est-fonte">Pipefy · obras finalizadas em <span id="est-tempo-periodo">2026</span></div>
+        <div class="est-fonte">Painel de Obras · obras finalizadas em <span id="est-tempo-periodo">2026</span></div>
       </div>
 
       <div class="est-card">
@@ -1419,7 +1419,7 @@
         </div>
       </div>
     </div>
-      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>/api/equipes · /api/escalacao-diaria · <span class="sf-tag pipefy">Pipefy</span>responsável administrativo</div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>/api/equipes · /api/escalacao-diaria · <span class="sf-tag pipefy">Painel de Obras</span>responsável administrativo</div>
   </section>
 
   <!-- ============== Q4 — VOLUME ============== -->
@@ -1575,7 +1575,7 @@
         </table>
       </div>
     </div>
-      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>projetoMetragem · cidade · status · <span class="sf-tag pipefy">Pipefy</span>faseAtual</div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>projetoMetragem · cidade · status · <span class="sf-tag pipefy">Painel de Obras</span>faseAtual</div>
   </section>
 
   <!-- ============== AGENDA OPERACIONAL — destaque home ============== -->
@@ -1630,7 +1630,7 @@
       <h4>Próximos 10 marcos</h4>
       <ul id="ag-lista-ul"></ul>
     </div>
-      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>data_radar · <span class="sf-tag pipefy">Pipefy</span>marcos · datas planejadas</div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel-amigo</span>data_radar · <span class="sf-tag pipefy">Painel de Obras</span>marcos · datas planejadas</div>
   </section>
 
   <!-- ============== OPERACIONAL — absorve indicadores-v2 (FASE 6.B) ============== -->
@@ -2226,7 +2226,7 @@
       <span class="sf-label">Fontes</span>
       <span class="sf-item"><span class="sf-tag painel-amigo">Painel-amigo</span>universo de obras ativas</span>
       <span class="sf-item"><span class="sf-tag kira">KIRA</span>flags por obra (silenciosa, atRisk, risco_adiamento)</span>
-      <span class="sf-item"><span class="sf-tag pipefy">Pipefy</span>fase · status</span>
+      <span class="sf-item"><span class="sf-tag pipefy">Painel de Obras</span>fase · status</span>
       <span class="sf-item"><span class="sf-tag calculado">Calc.</span>cruzamentos consolidados</span>
     </div>
 
@@ -3366,7 +3366,7 @@ function q4ModalRender(grupoId, obras){
       '<td class="q4-resp">'+respHtml+'</td>'+
       '<td class="q4-cta">'+
         (o.id ? '<a href="../analise/labs.html?tab=jornada&obraId='+encodeURIComponent(o.id)+'" target="_blank" rel="noopener" class="q4-cta-btn" onclick="event.stopPropagation()">jornada</a>' : '')+
-        (o.pipefyCardId ? '<a href="https://app.pipefy.com/open-cards/'+encodeURIComponent(o.pipefyCardId)+'" target="_blank" rel="noopener" class="q4-cta-btn primary" onclick="event.stopPropagation()">pipefy</a>' : '')+
+        (o.id ? '<a href="https://cliente.monofloor.cloud/app/projeto/'+encodeURIComponent(o.id)+'" target="_blank" rel="noopener" class="q4-cta-btn primary" onclick="event.stopPropagation()">painel</a>' : '')+
       '</td>'+
     '</tr>';
   }).join('');
@@ -4979,7 +4979,7 @@ async function loadKiraInsights() {
       var pf = await r6.json();
       var nf = pf.total_fantasmas_perigosas || 39;
       document.getElementById('ki-fantasmas').textContent = nf;
-      document.getElementById('ki-fantasmas-desc').textContent = nf + ' obras marcadas como finalizadas no sistema sem terem terminado de verdade no Pipefy. ' + (pf.total_sumidas_pipefy || 0) + ' sumiram completamente.';
+      document.getElementById('ki-fantasmas-desc').textContent = nf + ' obras marcadas como finalizadas no sistema sem terem terminado de verdade no Painel de Obras. ' + (pf.total_sumidas_pipefy || 0) + ' sumiram completamente.';
     }
   } catch(e) { console.error('KI fantasmas:', e); }
 
@@ -5224,7 +5224,7 @@ async function loadAchadosBanner() {
       chips.push({ label: 'X4 DNA Wesley rápidas', val: (w ? w.share_rapidas : '—') + '%', cls: 'info', tip: 'Wesley dominante em obras finalizadas <150d' });
     }
     if (x5) {
-      chips.push({ label: 'X5 divergência Pipefy×painel', val: x5.total_divergencias, cls: 'crit', tip: 'zumbis + fantasmas + sumidas' });
+      chips.push({ label: 'X5 divergência fases×status', val: x5.total_divergencias, cls: 'crit', tip: 'zumbis + fantasmas + sumidas' });
     }
     if (x6) {
       var oc = x6.contexto && x6.contexto.em_0_obras;
