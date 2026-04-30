@@ -170,6 +170,10 @@
   .hero-kpi .val.green { color: var(--green); }
   .hero-kpi .val.blue { color: var(--blue); }
   .hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
+  /* Chip de canceladas — separa visualmente do que está em movimento */
+  .kpi-canceladas{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:3px 8px 3px 7px;background:#f4f0ec;border:1px dashed #c8bfb4;border-radius:99px;font-size:10px;color:#8a7e72;line-height:1.3}
+  .kpi-canceladas .kc-num{font-family:'JetBrains Mono',monospace;font-weight:600;color:#5a4e44}
+  .kpi-canceladas .kc-tag{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a89e92;padding:1px 5px;background:#fff;border-radius:3px}
   .kpi-edai{font-size:10px;color:#a89e92;margin-top:4px;font-style:italic;line-height:1.3}
 
   .hero-summary {
@@ -1183,7 +1187,7 @@
 
     <div>
       <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span class="dyn-total-obras">—</span> no painel</div></div>
+        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">de <span class="dyn-total-obras">—</span> no painel</div><div class="kpi-canceladas" id="kpi-canceladas" hidden><span class="kc-num">—</span> canceladas <span class="kc-tag">arquivar</span></div></div>
         <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
         <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
         <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
@@ -2630,6 +2634,12 @@ function applyRodrigoCanon() {
     .then(function(R){
       if (!R || !R.totais) return;
       try {
+        // Cálculo "ativas saudáveis" — exclui canceladas pra não misturar com obras
+        // em movimento (Vitor 2026-04-30). Painel de Obras conta 260 (inclui canceladas);
+        // nós mostramos 231 + chip "29 canceladas" separado pra ficar honesto.
+        var canceladas = (R.por_status && R.por_status['cancelado']) || 0;
+        var ativasMov = R.totais.ativas - canceladas;  // ~231
+
         // TEMPO — substitui mediana de IDADE de ativas (que distorce) por
         // ciclo REAL das obras finalizadas em 2026
         if (R.tempo) {
@@ -2657,9 +2667,21 @@ function applyRodrigoCanon() {
           }
         }
 
-        // Total Ativas (canônico Rodrigo) — derivado de cliente.monofloor.cloud/api/projects
-        var ativas = R.totais.ativas;
+        // Total Ativas — usa "ativas saudáveis" (231, sem canceladas).
+        // Canceladas aparecem em chip separado abaixo do KPI.
+        var ativas = ativasMov;
         if ($('kpi-ativas')) $('kpi-ativas').textContent = ativas;
+        // Chip "29 canceladas" — separação visual
+        var kc = $('kpi-canceladas');
+        if (kc) {
+          if (canceladas > 0) {
+            kc.hidden = false;
+            var kcNum = kc.querySelector('.kc-num');
+            if (kcNum) kcNum.textContent = canceladas;
+          } else {
+            kc.hidden = true;
+          }
+        }
         // Em Execução (canônico Rodrigo)
         var emExec = R.totais.em_execucao;
         if ($('kpi-exec')) $('kpi-exec').textContent = emExec;
