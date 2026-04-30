@@ -202,6 +202,73 @@ except Exception as e:
 PYEOF
 fi
 
+# ─── 1.7) Rehidrata Q2_OBRAS com status fresh do Painel de Obras ───
+# Q2_OBRAS só era gerado no PESADO (1×/dia) — todos os outros refreshes preservavam.
+# Resultado: status mostrado no Q2 (Obras Paradas) ficava desatualizado o dia inteiro.
+# Esse bloco rebuild Q2_OBRAS a partir de /api/projects fresh, mantendo idade/m²
+# que já estavam calculados.
+log "STEP 1.7: rehidrata Q2_OBRAS"
+if [ -f "$DADOS/dashboard-data.json" ] && [ -f "$TMP/projects.json" ]; then
+  TMP_VAR="$TMP" DADOS_VAR="$DADOS" python3 << 'PYEOF' 2>&1
+import json, os
+from datetime import datetime, timezone
+TMP = os.environ['TMP_VAR']
+DADOS = os.environ['DADOS_VAR']
+dd_path = os.path.join(DADOS, 'dashboard-data.json')
+projects_path = os.path.join(TMP, 'projects.json')
+
+try:
+    projects = json.load(open(projects_path))
+    ativas_fresh = [p for p in projects if p.get('status') not in ('finalizado', 'concluido', 'cancelado')]
+
+    with open(dd_path, encoding='utf-8') as f:
+        dd = json.load(f)
+
+    q2_old = dd.get('Q2_OBRAS', [])
+    q2_old_by_id = { o.get('id'): o for o in q2_old }
+    hoje = datetime.now(timezone.utc).date()
+
+    q2_new = []
+    novas = 0
+    saiu = 0
+    for p in ativas_fresh:
+        pid = p.get('id')
+        old = q2_old_by_id.get(pid, {})
+        idade = old.get('idade')
+        if idade is None and p.get('createdAt'):
+            try:
+                d = datetime.fromisoformat(str(p['createdAt']).replace('Z','+00:00')).date()
+                idade = (hoje - d).days
+            except Exception:
+                idade = None
+        if not old: novas += 1
+        q2_new.append({
+            'id': pid,
+            'cliente': p.get('clienteNome'),
+            'cidade': p.get('projetoCidade'),
+            'fase': p.get('faseAtual'),
+            'consultor': p.get('consultorNome'),
+            'status': p.get('status'),
+            'm2': float(p.get('projetoMetragem') or 0),
+            'idade': idade,
+        })
+    saiu = max(0, len(q2_old) - len(q2_new))
+
+    dd['Q2_OBRAS'] = q2_new
+    # Recalcular AGG.total_ativas / status_dist (essas duas seções dependem de Q2_OBRAS)
+    if 'AGG' in dd:
+        dd['AGG']['total_ativas'] = len(q2_new)
+        from collections import Counter
+        dd['AGG']['status_dist'] = dict(Counter(o.get('status') or '?' for o in q2_new))
+
+    with open(dd_path, 'w', encoding='utf-8') as f:
+        json.dump(dd, f, ensure_ascii=False)
+    print(f'  Q2_OBRAS rehidratado: {len(q2_new)} obras (+{novas} novas, -{saiu} saíram)')
+except Exception as e:
+    print(f'  AVISO: rehidrata Q2 falhou: {e!r}')
+PYEOF
+fi
+
 # ─── 2) PESADO? ───
 if [ -f "$SNAP" ]; then
   log "STEP 2: modo LEVE — snapshot do dia já existe, saindo OK"
