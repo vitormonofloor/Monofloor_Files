@@ -21,7 +21,7 @@ Custo zero.
 import json
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -157,9 +157,7 @@ def main():
 
     # Por obra: extrai cores
     contador_atual = Counter()  # ranking · usa só "atual"
-    contador_geral = Counter()  # tudo já mencionado
     pendentes = []  # obras com cor a definir
-    por_bucket = defaultdict(Counter)  # cor por bucket temporal
 
     print(f"{'Cliente':<42} {'Cor atual':<35} {'Pend?':<6} {'Distintas'}")
     print("-" * 110)
@@ -174,13 +172,10 @@ def main():
         cores = extrair_cores_obra(snap)
         obra["cores"] = cores
 
-        # Atualiza agregados
+        # Atualiza agregados (só os que a tela usa)
         bucket_id = ((obra.get("regua") or {}).get("bucket") or {}).get("id") or "?"
         for c in cores["atual"]:
             contador_atual[c] += 1
-            por_bucket[bucket_id][c] += 1
-        for c in cores["definidas"]:
-            contador_geral[c] += 1
 
         if cores["tem_pendencia"] and not cores["atual"]:
             # Tem pendência E não tem cor definida ainda
@@ -196,13 +191,11 @@ def main():
         n_dist = len(cores["definidas"])
         print(f'{(obra.get("cliente") or "")[:40]:<42} {atual_str[:33]:<35} {"sim" if cores["tem_pendencia"] else "não":<6} {n_dist}')
 
-    # Top global
+    # Top global · só campos consumidos pela tela
     discord["cores_agregado"] = {
         "calculado_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "top_atual": contador_atual.most_common(15),
-        "top_geral": contador_geral.most_common(15),
         "obras_pendentes_decisao": pendentes,
-        "por_bucket": {k: dict(v.most_common(10)) for k, v in por_bucket.items()},
     }
 
     write_json_atomic(DISCORD_PATH, discord)

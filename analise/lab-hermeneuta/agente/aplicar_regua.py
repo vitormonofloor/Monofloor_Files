@@ -24,7 +24,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8
+from _util import write_json_atomic_validado, setup_utf8, validar_discord
 
 setup_utf8()
 
@@ -311,11 +311,9 @@ def main():
         x_str = data_x or "—"
         print(f"{cliente:<42} {status:<22} {x_str:<12} {d_str:<6} {bucket['label']}")
 
-    # Metadata global
-    discord["regua_aplicada_em"] = HOJE.strftime("%Y-%m-%dT%H:%M:%SZ")
-    discord["regua_buckets"] = bucket_count
+    # bucket_count usado só pra log local · não persiste no JSON
 
-    write_json_atomic(DISCORD_PATH, discord)
+    write_json_atomic_validado(DISCORD_PATH, discord, validator=validar_discord)
     print()
     print("Distribuição por bucket:")
     for b, n in sorted(bucket_count.items(), key=lambda x: -x[1]):

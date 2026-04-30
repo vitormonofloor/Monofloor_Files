@@ -60,20 +60,14 @@ Gere **um único arquivo** `dados/discordancias-v3.json` com este schema:
       "status_sugerido": "...",
       "tipo_demanda": "patologia | dano_terceiro | retrabalho_acabamento | retorno_servico | execucao_normal | finalizacao | pausa | null",
 
-      "flags": ["detrator_latente", "aplicador_indefinido", "consultor_divergente", "silencio_anomalo", "retrabalho_de_retrabalho", "escopo_aumentando", "risco_tecnico"],
+      "flags": ["detrator_latente", "aplicador_indefinido", "consultor_divergente", "silencio_anomalo", "retrabalho_de_retrabalho", "escopo_aumentando", "risco_tecnico", "detrator"],
 
       "acao_consultor": "Frase curta com a próxima ação concreta. Ex: 'Atualizar status pra aguardando_execucao · confirmar aplicador até 02/05'",
 
       "prazo_acao": "YYYY-MM-DD ou null",
       "urgencia": "alta | media | baixa",
 
-      "evidencia_principal": {
-        "trecho": "Citação literal do dossiê do secretário",
-        "fonte": "msg_id do telegram OU referência ao campo do dossiê"
-      },
-
-      "confianca": 0.85,
-      "secretario_concordou": true
+      "confianca": 0.85
     }
   ],
 
@@ -81,7 +75,7 @@ Gere **um único arquivo** `dados/discordancias-v3.json` com este schema:
     "veredictos": { "coerente": N, "status_desatualizado": N, "abandono": N, "detrator": N, "inconclusivo": N },
     "tipo_demanda": { "patologia": N, "retorno_servico": N, "execucao_normal": N, ... },
     "flags_recorrentes": [
-      { "flag": "cliente_ausente", "ocorrencias": 8, "obras": ["MICHELLE", "VANESSA", ...] }
+      { "flag": "aplicador_indefinido", "ocorrencias": 6, "obras": ["MICHELLE", "VANESSA", ...] }
     ],
     "consultores": [
       {
@@ -126,9 +120,27 @@ Gere **um único arquivo** `dados/discordancias-v3.json` com este schema:
 - Output APENAS o JSON puro · começa com `{` e termina com `}` · sem markdown ao redor.
 - Salve em `C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta\dados\discordancias-v3.json` (UTF-8, indent 2).
 
+### ⚠ Campos NÃO gerar (são injetados depois pela varredura.py)
+
+Estes campos no `discordancias-v3.json` são populados por scripts pós-IA (timeline, régua, equipe, cores, KIRA, KPIs). **NÃO inclua** no seu output · vão ser sobrescritos:
+
+Por obra:
+- `timeline_recente` — gerado por `extrair_timeline.py`
+- `regua` — gerado por `aplicar_regua.py`
+- `equipe_em_campo` — gerado por `extrair_equipe.py`
+- `cores` — gerado por `extrair_cores.py`
+- `kira_whatsapp` — gerado por `extrair_kira_whatsapp.py`
+- `refresh_status` — gerado por `varredura.py`
+- `consultor_formal` / `consultor_inferido` — gerado por `inferir_consultor.py`
+
+No top-level:
+- `regua_buckets`, `regua_aplicada_em`, `cores_agregado`, `ultima_varredura`, `total_msgs_novas_ultima_varredura` — gerados por scripts pós-IA
+
 ---
 
-## v2 — 2026-04-29 (calibrado com nomenclatura operacional Monofloor) [DESCONTINUADO · ver v3]
+<!-- ⚠ TUDO ABAIXO É HISTÓRICO · NÃO USAR · só referência. A versão ATIVA é a v3 acima. -->
+
+## v2 — 2026-04-29 (calibrado com nomenclatura operacional Monofloor) [⚠ DESCONTINUADO · NÃO USAR]
 
 ### Princípio central
 

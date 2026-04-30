@@ -23,11 +23,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8")
-    sys.stderr.reconfigure(encoding="utf-8")
-except AttributeError:
-    pass
+sys.path.insert(0, str(Path(__file__).parent))
+from _util import write_json_atomic, setup_utf8, fazer_backup
+
+setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 AGENTE = Path(__file__).parent
@@ -38,8 +37,58 @@ SNAPSHOT_PATH = TELETHON / "telegram-snapshot.json"
 SNAPSHOT_PREV = TELETHON / "telegram-snapshot-prev.json"
 DISCORD_PATH = DADOS / "discordancias-v3.json"
 LOG_PATH = AGENTE / "varredura.log"
+LOCK_PATH = AGENTE / ".varredura.lock"
+LOCK_MAX_IDADE_SEG = 30 * 60  # 30 minutos · uma varredura típica leva ~10s
 
 PYTHON = sys.executable
+
+
+def _pid_vivo(pid: int) -> bool:
+    """True se PID existe e está rodando · False se zombie/morto."""
+    try:
+        # No Windows e POSIX, kill(pid, 0) testa sem afetar o processo
+        os.kill(pid, 0)
+        return True
+    except (OSError, ProcessLookupError):
+        return False
+    except PermissionError:
+        # Processo existe mas sem permissão · considera vivo (caso raro)
+        return True
+
+
+def adquirir_lock():
+    """
+    Lock anti-concorrência · 3 níveis de check:
+    1. Sem lock = adquire e segue
+    2. Lock com PID vivo = aborta (outra varredura rodando)
+    3. Lock com PID morto OU TTL expirado = considera abandonado, reusa
+    """
+    if LOCK_PATH.exists():
+        try:
+            pid_str = LOCK_PATH.read_text(encoding="utf-8").strip()
+            pid_anterior = int(pid_str) if pid_str.isdigit() else 0
+        except (OSError, ValueError):
+            pid_anterior = 0
+
+        idade = datetime.now().timestamp() - LOCK_PATH.stat().st_mtime
+        pid_vivo = pid_anterior > 0 and _pid_vivo(pid_anterior)
+
+        if pid_vivo and idade < LOCK_MAX_IDADE_SEG:
+            log(f"ABORT: outra varredura rodando · PID {pid_anterior} vivo, lock há {int(idade)}s")
+            sys.exit(0)
+
+        # Lock fantasma (PID morto OU TTL expirado)
+        razao = "PID morto" if pid_anterior > 0 and not pid_vivo else f"TTL expirado ({int(idade)}s)"
+        log(f"AVISO: lock fantasma ({razao}) · removendo e prosseguindo")
+        LOCK_PATH.unlink(missing_ok=True)
+
+    LOCK_PATH.write_text(str(os.getpid()), encoding="utf-8")
+    log(f"Lock adquirido · PID {os.getpid()}")
+
+
+def liberar_lock():
+    """Remove lock no fim (chamado em finally)."""
+    LOCK_PATH.unlink(missing_ok=True)
 
 
 def log(msg: str):
@@ -57,7 +106,7 @@ def run(cmd: list, cwd: Path) -> bool:
     env["PYTHONIOENCODING"] = "utf-8"
     r = subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True, encoding="utf-8", env=env)
     if r.returncode != 0:
-        log(f"  ERRO (exit {r.returncode}): {r.stderr.strip()[:200]}")
+        log(f"  ERRO (exit {r.returncode}): {r.stderr.strip()[:2000]}")
         return False
     return True
 
@@ -114,9 +163,8 @@ def marcar_refresh_status(diff_msgs: dict):
         rs = o.get("refresh_status") or {}
         ja_acumuladas = rs.get("msgs_novas_desde_veredicto", 0)
 
-        # Se gerado_em mudou (rodou novo veredicto), zera contador
-        rs_veredicto = rs.get("veredicto_em_no_calculo")
-        if rs_veredicto != data.get("gerado_em"):
+        # Se gerado_em mudou (rodou novo veredicto IA), zera contador acumulado
+        if rs.get("veredicto_em") != data.get("gerado_em"):
             ja_acumuladas = 0
 
         o["refresh_status"] = {
@@ -124,23 +172,24 @@ def marcar_refresh_status(diff_msgs: dict):
             "msgs_novas_desde_veredicto": ja_acumuladas + novas_agora,
             "msgs_novas_ultima_varredura": novas_agora,
             "veredicto_em": data.get("gerado_em"),
-            "veredicto_em_no_calculo": data.get("gerado_em"),
             "horas_desde_veredicto": horas,
             "stale": (horas or 0) > 24 and (ja_acumuladas + novas_agora) > 0,
         }
 
     # Metadata global
     data["ultima_varredura"] = agora.strftime("%Y-%m-%dT%H:%M:%SZ")
-    data["total_msgs_novas_ultima_varredura"] = sum(diff_msgs.values())
 
-    DISCORD_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(DISCORD_PATH, data)
 
 
-def main():
-    log("=" * 60)
-    log("VARREDURA INICIADA")
+def _executar_pipeline():
+    """Pipeline propriamente dito · separado pra envolver em try/finally do lock."""
+    # 0. Backup do JSON principal antes de QUALQUER write (rolling 14 dias)
+    bkp = fazer_backup(DISCORD_PATH, pasta_backups=DADOS / "backups", manter=14)
+    if bkp:
+        log(f"Backup salvo · {bkp.name}")
 
-    # 1. Backup snapshot atual (se existe)
+    # 1. Backup snapshot Telegram pra calcular diff
     if SNAPSHOT_PATH.exists():
         shutil.copy2(SNAPSHOT_PATH, SNAPSHOT_PREV)
         log("Backup do snapshot anterior salvo")
@@ -189,17 +238,43 @@ def main():
     if not run([PYTHON, "extrair_kira_whatsapp.py"], AGENTE):
         log("FALHOU em extrair_kira_whatsapp.py (continua)")
 
-    # 9. Registra KPIs no histórico (pra sparkline / delta semanal)
+    # 9. Aplica overrides de consultor inferido (Repullo, Paula, Maria Heydi, Mayara)
+    # Crítico: sem isso os campos consultor_formal/consultor_inferido somem após IA regerar
+    log("Rodando inferir_consultor.py...")
+    if not run([PYTHON, "inferir_consultor.py"], AGENTE):
+        log("FALHOU em inferir_consultor.py (continua)")
+
+    # 10. Sanitiza JSON · remove flag cliente_ausente + campos mortos detectados pela auditoria
+    log("Rodando sanitizar_json.py...")
+    if not run([PYTHON, "sanitizar_json.py"], AGENTE):
+        log("FALHOU em sanitizar_json.py (continua)")
+
+    # 11. Registra KPIs no histórico (pra sparkline / delta semanal)
     log("Rodando registrar_kpis.py...")
     if not run([PYTHON, "registrar_kpis.py"], AGENTE):
         log("FALHOU em registrar_kpis.py (continua)")
 
-    # 10. Marca refresh_status nas obras
+    # 12. Marca refresh_status nas obras
     marcar_refresh_status(diff)
     log("refresh_status injetado em cada obra")
 
+    # 13. Sentinela · valida saúde do pipeline e gera dados/status.json
+    log("Rodando sentinela.py...")
+    if not run([PYTHON, "sentinela.py"], AGENTE):
+        log("FALHOU em sentinela.py (continua)")
+
     log("VARREDURA OK")
     log("=" * 60)
+
+
+def main():
+    log("=" * 60)
+    log("VARREDURA INICIADA")
+    adquirir_lock()
+    try:
+        _executar_pipeline()
+    finally:
+        liberar_lock()
 
 
 if __name__ == "__main__":

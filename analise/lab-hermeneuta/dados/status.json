@@ -1,0 +1,58 @@
+{
+  "geral": "warn",
+  "checked_at": "2026-04-30T23:17:49Z",
+  "contagem": {
+    "ok": 7,
+    "warn": 2,
+    "crit": 0
+  },
+  "checks": [
+    {
+      "nome": "Schema do JSON principal",
+      "status": "ok",
+      "detalhe": "10 obras válidas"
+    },
+    {
+      "nome": "Completude das obras",
+      "status": "ok",
+      "detalhe": "10 obras com todos campos"
+    },
+    {
+      "nome": "Sessão Telegram",
+      "status": "ok",
+      "detalhe": "10 obras coletadas"
+    },
+    {
+      "nome": "Frescor da varredura",
+      "status": "ok",
+      "detalhe": "última varredura há 0.0h"
+    },
+    {
+      "nome": "KIRA WhatsApp",
+      "status": "warn",
+      "detalhe": "tag KIRA mais recente há 16d (>1 semana)",
+      "sugestao": "Verificar se KIRA está rodando no dashboard principal"
+    },
+    {
+      "nome": "Lock de execução",
+      "status": "ok",
+      "detalhe": "varredura em curso · PID 21884"
+    },
+    {
+      "nome": "Backups disponíveis",
+      "status": "ok",
+      "detalhe": "1 backups · mais recente 0.2h"
+    },
+    {
+      "nome": "Drift de quantidade de obras",
+      "status": "ok",
+      "detalhe": "10 obras · estável (média 10.0)"
+    },
+    {
+      "nome": "Saúde do pipeline",
+      "status": "warn",
+      "detalhe": "2 falha(s) no log recente",
+      "sugestao": "Conferir varredura.log"
+    }
+  ]
+}

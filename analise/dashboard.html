@@ -634,10 +634,10 @@
   .q4-retrab-num span{font-family:'JetBrains Mono',monospace;font-size:18px;color:#8a6a20;font-weight:700;margin-right:4px}
   .q4-retrab-detalhe{font-size:11px;color:#7a6a52;margin-top:2px}
   .q4-retrab-bd{font-size:11px;color:#7a6a52;font-style:italic;font-family:'JetBrains Mono',monospace}
-  /* Cartograma do Brasil (Q4 Geografia) */
-  .q4-uf-cell{cursor:default;transition:opacity .15s}
-  .q4-uf-cell.tem:hover rect{stroke-width:2;stroke:#5a4a30}
-  .q4-uf-cell.tem{cursor:pointer}
+  /* Mapa real do Brasil (Q4 Geografia) */
+  .q4-uf-path{transition:fill .15s,stroke-width .15s}
+  .q4-uf-path.tem-volume{cursor:pointer}
+  .q4-uf-path.tem-volume:hover{stroke:#2a2520 !important;stroke-width:1.4 !important;filter:brightness(1.08)}
   .q4-uf-legenda{margin-top:10px;display:flex;flex-direction:column;gap:8px}
   .q4-uf-leg-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#8a7e72;flex-wrap:wrap}
   .q4-uf-leg-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:2px;margin-left:6px}
@@ -4049,21 +4049,9 @@ function q4ResolverUF(cidadeRaw){
   return '?';
 }
 
-// Cartograma do Brasil — cada UF é um quadrado posicionado em grid (linha,coluna)
-// que reflete aproximadamente a geografia. Não é cartograficamente preciso —
-// é simbólico, prioriza leitura rápida ("onde temos volume?"). Clique abre painel.
-const Q4_UF_GRID = {
-  // [linha, coluna]
-  RR:[0,2], AP:[0,4],
-  AM:[1,1], PA:[1,3], MA:[1,4], CE:[1,5], RN:[1,6],
-  AC:[2,0], RO:[2,1], TO:[2,3], PI:[2,4], PB:[2,6],
-  MT:[3,2], BA:[3,4], PE:[3,5], AL:[3,6],
-  GO:[4,3], DF:[4,4], SE:[4,5],
-  MS:[5,2], MG:[5,4], ES:[5,5],
-  PR:[6,3], SP:[6,4], RJ:[6,5],
-  SC:[7,4],
-  RS:[8,4]
-};
+// Mapa real do Brasil — SVG fiel com paths por UF (luisdalmolin/mapa-brasil-svg, MIT).
+// Carregado de dados/br-map.svg, cada estado tem id="UF" (2 letras).
+// Pintado dinamicamente pelo volume de obras. Hover/click destaca + tooltip.
 const Q4_UF_NOMES = {
   AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia', CE:'Ceará',
   DF:'Distrito Federal', ES:'Espírito Santo', GO:'Goiás', MA:'Maranhão',
@@ -4082,6 +4070,22 @@ function q4UfCorEscala(m2, max){
   return {fill:'#ede4d0', stroke:'#c4b896', txt:'#5a4a30'};
 }
 
+// Cache do SVG (carregado uma vez)
+let _q4MapaSvgCache = null;
+
+async function q4LoadMapa(){
+  if (_q4MapaSvgCache) return _q4MapaSvgCache;
+  try {
+    const r = await fetch('dados/br-map.svg?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    _q4MapaSvgCache = await r.text();
+    return _q4MapaSvgCache;
+  } catch(e) {
+    console.warn('q4LoadMapa falhou:', e);
+    return null;
+  }
+}
+
 function q4RenderUFs(){
   const obras = Q2_OBRAS;
   const por = {};
@@ -4095,41 +4099,10 @@ function q4RenderUFs(){
   const valores = Object.entries(por).filter(([u])=>u !== '?').map(([,v])=>v.m2);
   const max = Math.max(1, ...valores);
 
-  const cell = 50;     // largura/altura do quadrado
-  const gap = 4;
-  const cols = 7;
-  const rows = 9;
-  const padX = 10, padY = 10;
-  const W = padX*2 + cols*(cell+gap) - gap;
-  const H = padY*2 + rows*(cell+gap) - gap;
-
   const el = document.getElementById('q4-uf-mapa');
   if (!el) return;
 
-  let svg = '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;max-height:340px" xmlns="http://www.w3.org/2000/svg">';
-  Object.keys(Q4_UF_GRID).forEach(uf=>{
-    const [r,c] = Q4_UF_GRID[uf];
-    const x = padX + c*(cell+gap);
-    const y = padY + r*(cell+gap);
-    const v = por[uf] || {n:0, m2:0};
-    const cor = q4UfCorEscala(v.m2, max);
-    const tip = v.n
-      ? Q4_UF_NOMES[uf]+': '+v.n+' obras · '+v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²'
-      : Q4_UF_NOMES[uf]+': sem obras';
-    svg += '<g class="q4-uf-cell'+(v.n?' tem':'')+'" data-uf="'+uf+'">'+
-      '<title>'+tip+'</title>'+
-      '<rect x="'+x+'" y="'+y+'" width="'+cell+'" height="'+cell+'" rx="3" '+
-        'fill="'+cor.fill+'" stroke="'+cor.stroke+'" stroke-width="1"/>'+
-      '<text x="'+(x+cell/2)+'" y="'+(y+cell/2-4)+'" text-anchor="middle" '+
-        'font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="'+cor.txt+'">'+uf+'</text>'+
-      (v.n ? '<text x="'+(x+cell/2)+'" y="'+(y+cell/2+12)+'" text-anchor="middle" '+
-        'font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="'+cor.txt+'">'+v.n+'</text>' : '')+
-      '</g>';
-  });
-  svg += '</svg>';
-  el.innerHTML = svg;
-
-  // Legenda + Banner "?" clicável
+  // Render legenda imediato (não depende do SVG)
   const totalUfs = Object.keys(por).filter(u=>u !== '?' && por[u].n>0).length;
   const totalObrasUf = obras.length - obrasSemUf.length;
   const totalM2Uf = Object.entries(por).filter(([u])=>u !== '?').reduce((a,[,v])=>a+v.m2,0);
@@ -4147,6 +4120,42 @@ function q4RenderUFs(){
     leg.innerHTML = lh;
   }
   window._q4ObrasSemUf = obrasSemUf;
+
+  // Carregar SVG real e pintar
+  q4LoadMapa().then(svgText => {
+    if (!svgText) {
+      el.innerHTML = '<div style="padding:30px;text-align:center;color:#a89e92;font-style:italic">Mapa não carregou. Recarregue a página.</div>';
+      return;
+    }
+    el.innerHTML = svgText;
+    const svgEl = el.querySelector('svg');
+    if (!svgEl) return;
+    svgEl.setAttribute('style', 'width:100%;height:auto;max-height:380px;display:block');
+
+    // Pintar cada UF e adicionar interação
+    Object.keys(Q4_UF_NOMES).forEach(uf => {
+      const v = por[uf] || {n:0, m2:0};
+      const cor = q4UfCorEscala(v.m2, max);
+      // O SVG tem múltiplos polygons com mesmo id (ex: SP em vários territórios).
+      // Aplicamos a TODOS que tenham id=UF.
+      const els = svgEl.querySelectorAll('#'+uf+', [id="'+uf+'"]');
+      els.forEach(p => {
+        p.setAttribute('fill', cor.fill);
+        p.setAttribute('stroke', cor.stroke);
+        p.setAttribute('stroke-width', '0.6');
+        p.classList.add('q4-uf-path');
+        if (v.n > 0) p.classList.add('tem-volume');
+        // Tooltip nativo via <title>
+        if (!p.querySelector('title')) {
+          const tt = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+          tt.textContent = v.n
+            ? Q4_UF_NOMES[uf]+': '+v.n+' obras · '+v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²'
+            : Q4_UF_NOMES[uf]+': sem obras';
+          p.appendChild(tt);
+        }
+      });
+    });
+  });
 }
 
 function openQ4UfModal(){

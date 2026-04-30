@@ -81,12 +81,20 @@ def serialize_message(msg, sender_cache: dict) -> dict:
     }
 
 
-async def coletar_grupo(client: TelegramClient, grupo_id: int, limit: int) -> dict:
-    """Pega últimas `limit` mensagens do grupo · ordem cronológica (antiga→nova)."""
-    try:
-        entity = await client.get_entity(grupo_id)
-    except Exception as e:
-        return {"erro": f"get_entity falhou: {e}", "mensagens": []}
+async def coletar_grupo(client: TelegramClient, grupo_id: int, limit: int, max_retries: int = 2) -> dict:
+    """Pega últimas `limit` mensagens do grupo · ordem cronológica (antiga→nova). Retry em erro de rede."""
+    entity = None
+    last_err = None
+    for tentativa in range(max_retries + 1):
+        try:
+            entity = await client.get_entity(grupo_id)
+            break
+        except Exception as e:
+            last_err = e
+            if tentativa < max_retries:
+                await asyncio.sleep(2 ** tentativa)  # backoff: 1s, 2s
+    if entity is None:
+        return {"erro": f"get_entity falhou após {max_retries+1} tentativas: {last_err}", "mensagens": []}
 
     messages = []
     sender_cache = {}
@@ -196,12 +204,21 @@ async def main(limit: int):
                 },
             })
 
+        # Aborta se ≥30% das obras falharam (sinal de Telegram/sessão derrubada)
+        com_erro = sum(1 for o in out["obras"] if o["telegram"].get("erro"))
+        total_obras = len(out["obras"])
+        if total_obras > 0 and com_erro / total_obras >= 0.30:
+            print(f"\nABORT: {com_erro}/{total_obras} obras com erro Telegram (≥30%) · NÃO sobrescrevendo snapshot")
+            print(f"       isso evita perda silenciosa de mensagens · revise sessão Telegram (.session)")
+            sys.exit(2)  # exit 2 = erro recuperável · varredura.py aborta sem corromper
+
         out_path = ROOT / "telegram-snapshot.json"
         out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"\n[OK] {out_path}")
 
         total_msgs = sum(len(o["telegram"]["mensagens"]) for o in out["obras"])
-        print(f"     {len(out['obras'])} obras · {total_msgs} mensagens totais")
+        print(f"     {len(out['obras'])} obras · {total_msgs} mensagens totais"
+              + (f" · {com_erro} obras c/ erro" if com_erro else ""))
     finally:
         await client.disconnect()
 

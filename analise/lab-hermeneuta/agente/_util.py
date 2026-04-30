@@ -68,3 +68,98 @@ def setup_utf8():
         sys.stderr.reconfigure(encoding="utf-8")
     except AttributeError:
         pass
+
+
+# ============================================================
+# Schema validator · valida discordancias-v3.json antes de gravar
+# ============================================================
+
+CAMPOS_OBRIGATORIOS_OBRA = {
+    "obra_id", "cliente",  # mínimos absolutos
+}
+CAMPOS_RECOMENDADOS_OBRA = {
+    "consultor", "painel", "telegram", "veredicto", "flags", "urgencia",
+    "confianca", "timeline_recente", "regua", "equipe_em_campo", "cores",
+    "kira_whatsapp", "refresh_status",
+}
+CAMPOS_OBRIGATORIOS_TOPO = {"obras", "agregados"}
+
+
+def validar_discord(data: dict) -> list:
+    """
+    Valida estrutura do discordancias-v3.json.
+    Retorna lista de problemas (vazia = OK).
+    """
+    problemas = []
+    if not isinstance(data, dict):
+        return ["root não é dict"]
+
+    for campo in CAMPOS_OBRIGATORIOS_TOPO:
+        if campo not in data:
+            problemas.append(f"top-level: campo obrigatório '{campo}' faltando")
+
+    obras = data.get("obras") or []
+    if not isinstance(obras, list):
+        problemas.append("obras não é lista")
+        return problemas
+
+    for i, o in enumerate(obras):
+        if not isinstance(o, dict):
+            problemas.append(f"obra[{i}] não é dict")
+            continue
+        for campo in CAMPOS_OBRIGATORIOS_OBRA:
+            if campo not in o:
+                problemas.append(f"obra[{i}] ({(o.get('cliente') or 'sem cliente')[:25]}): obrigatório '{campo}' faltando")
+
+    return problemas
+
+
+def write_json_atomic_validado(path: Path, data, validator=None, indent: int = 2):
+    """
+    write_json_atomic + validação prévia. Se validator retornar problemas, RAISES.
+    Use pra writes críticos do discordancias-v3.json.
+    """
+    if validator:
+        problemas = validator(data)
+        if problemas:
+            preview = "; ".join(problemas[:3]) + (f" (+{len(problemas)-3} mais)" if len(problemas) > 3 else "")
+            raise ValueError(f"Validação de schema falhou · NÃO escrevendo: {preview}")
+    write_json_atomic(path, data, indent=indent)
+
+
+# ============================================================
+# Backup automático · rolling window
+# ============================================================
+
+def fazer_backup(arquivo: Path, pasta_backups: Path = None, manter: int = 14):
+    """
+    Copia `arquivo` pra pasta_backups/ com timestamp.
+    Mantém últimos `manter` backups, remove os mais antigos.
+    Default: 14 backups = 7 dias × 2 varreduras/dia.
+    """
+    arquivo = Path(arquivo)
+    if not arquivo.exists():
+        return None
+    if pasta_backups is None:
+        pasta_backups = arquivo.parent / "backups"
+    pasta_backups.mkdir(parents=True, exist_ok=True)
+
+    ts = now_utc().strftime("%Y%m%d-%H%M%S")
+    dest = pasta_backups / f"{arquivo.stem}.{ts}{arquivo.suffix}"
+    import shutil
+    shutil.copy2(arquivo, dest)
+
+    # Limpa antigos · mantém só os `manter` mais recentes do mesmo prefix
+    prefix = f"{arquivo.stem}."
+    existentes = sorted(
+        [p for p in pasta_backups.iterdir() if p.name.startswith(prefix) and p.suffix == arquivo.suffix],
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for antigo in existentes[manter:]:
+        try:
+            antigo.unlink()
+        except OSError:
+            pass
+
+    return dest

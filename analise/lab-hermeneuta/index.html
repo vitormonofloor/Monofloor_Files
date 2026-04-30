@@ -123,6 +123,8 @@
     .filtro-btn:hover{border-color:#b8a080;color:#3a3530}
     .filtro-btn.active{background:#b8a080;color:#fff;border-color:#b8a080}
     .filtro-btn .qtd{font-weight:700;font-size:9px;opacity:.85}
+    .acao-btn{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.04em;padding:6px 12px;border-radius:99px;border:1px solid #d8d0c4;background:#fff;color:#6b6156;cursor:pointer;transition:all .15s}
+    .acao-btn:hover{border-color:#b8a080;color:#3a3530;background:#fdfaf4}
 
     /* Lista de obras · accordion */
     .lista{display:flex;flex-direction:column;gap:8px}
@@ -189,7 +191,6 @@
     .tl-evento:last-child{border-bottom:none}
     .tl-evento.futuro{opacity:.65}
     .tl-data{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;font-weight:600}
-    .tl-data.hoje{color:#3d8a5a}
     .tl-data.futuro{color:#b89a4a;font-style:italic}
     .tl-corpo{color:#3a3530}
     .tl-autor{font-weight:600;color:#2a2520;font-size:10.5px}
@@ -230,7 +231,6 @@
     .kira-mini.critico{background:#f6eaea;border-color:#e0b8b8;color:#9a3a3a}
     .kira-mini.positivo{background:#e8f2ec;border-color:#9bbe8c;color:#2d5a3a}
     .kira-mini.neutro{background:#f0ebe3;border-color:#d8d0c4;color:#3a3530}
-    /* removido .stale · era interpretação errada */
     .kira-mini .icon{font-size:10px}
 
     .kira-bloco{margin-top:12px;padding:14px 16px;background:#fafff5;border:1px solid #b8d8c4;border-radius:5px}
@@ -352,6 +352,36 @@
 
     footer{margin-top:50px;padding-top:20px;border-top:1px solid #e8e0d4;color:#b8b0a4;font-size:11px;text-align:center;line-height:1.6}
     footer a{color:#b8a080;text-decoration:none}
+
+    /* Sentinela · indicador discreto de saúde do sistema */
+    .sentinela-btn{position:fixed;bottom:24px;left:24px;width:14px;height:14px;border-radius:50%;border:2px solid #fff;cursor:pointer;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:all .2s}
+    .sentinela-btn.ok{background:#3d8a5a}
+    .sentinela-btn.warn{background:#d4943a;animation:sentinela-pulse 2.5s ease-in-out infinite}
+    .sentinela-btn.crit{background:#c45a5a;animation:sentinela-pulse 1.4s ease-in-out infinite}
+    .sentinela-btn:hover{transform:scale(1.4)}
+    @keyframes sentinela-pulse{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.15)}50%{box-shadow:0 2px 16px currentColor}}
+
+    .sentinela-overlay{display:none;position:fixed;inset:0;background:rgba(58,53,48,.7);z-index:101;align-items:center;justify-content:center;padding:30px}
+    .sentinela-overlay.aberta{display:flex}
+    .sentinela-modal{max-width:600px;width:100%;background:#fdfaf4;border-radius:12px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:80vh;overflow-y:auto}
+    .sentinela-titulo{font-family:'JetBrains Mono',monospace;font-size:11px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+    .sentinela-geral{font-size:20px;font-weight:600;color:#2a2520;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+    .sentinela-geral .ponto{width:14px;height:14px;border-radius:50%}
+    .sentinela-geral .ponto.ok{background:#3d8a5a}
+    .sentinela-geral .ponto.warn{background:#d4943a}
+    .sentinela-geral .ponto.crit{background:#c45a5a}
+    .sentinela-geral .qtd{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a7e72;margin-left:auto}
+    .sentinela-check{display:grid;grid-template-columns:18px 1fr;gap:10px;padding:10px 0;border-bottom:1px dashed #e0d8cc;font-size:12.5px;line-height:1.45}
+    .sentinela-check:last-child{border-bottom:none}
+    .sentinela-ico{font-size:14px;line-height:1;text-align:center}
+    .sentinela-ico.ok{color:#3d8a5a}
+    .sentinela-ico.warn{color:#d4943a}
+    .sentinela-ico.crit{color:#c45a5a}
+    .sentinela-nome{font-weight:600;color:#2a2520}
+    .sentinela-detalhe{font-size:11px;color:#6b6156;margin-top:2px}
+    .sentinela-sugestao{font-size:11px;color:#9a3a3a;margin-top:3px;font-style:italic}
+    .sentinela-fechar{position:absolute;top:18px;right:22px;background:none;border:none;font-size:22px;cursor:pointer;color:#8a7e72}
+    .sentinela-fechar:hover{color:#3a3530}
 
     /* Lâmpada mágica · dashboard de apresentação */
     .lampada-btn{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f4d03f 0%,#e8b923 100%);border:none;cursor:pointer;font-size:24px;box-shadow:0 4px 16px rgba(212,164,40,.4);z-index:50;transition:all .2s;display:flex;align-items:center;justify-content:center}
@@ -496,8 +526,8 @@
   <div class="bucket-bar" id="bucket-bar"></div>
   <div class="filtros" id="filtros"></div>
   <div style="display:flex;gap:6px;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:9px">
-    <button class="filtro-btn" id="btn-expand-all">expandir todas</button>
-    <button class="filtro-btn" id="btn-collapse-all">colapsar todas</button>
+    <button class="acao-btn" id="btn-expand-all">expandir todas</button>
+    <button class="acao-btn" id="btn-collapse-all">colapsar todas</button>
   </div>
   <div class="lista" id="lista"></div>
 
@@ -516,6 +546,17 @@
   <!-- Padrões cross-obras -->
   <div class="section-title">Padrões cross-obras</div>
   <div class="padroes" id="padroes"></div>
+
+  <!-- Sentinela · indicador discreto de saúde -->
+  <div class="sentinela-btn ok" id="sentinela-btn" title="Carregando status..."></div>
+  <div class="sentinela-overlay" id="sentinela-overlay">
+    <div class="sentinela-modal" style="position:relative">
+      <button class="sentinela-fechar" id="sentinela-fechar">×</button>
+      <div class="sentinela-titulo">Sentinela · saúde do sistema</div>
+      <div class="sentinela-geral" id="sentinela-geral"></div>
+      <div id="sentinela-checks"></div>
+    </div>
+  </div>
 
   <!-- Lâmpada mágica · botão flutuante -->
   <button class="lampada-btn" id="lampada-btn" title="Dashboard de apresentação · destila tudo em indicadores visuais">
@@ -610,6 +651,7 @@ function fmtData(s){
 
 let DADOS = null;
 let HISTORICO = null;  // { kpis: [...] }
+let STATUS = null;  // sentinela: { geral, checks: [...] }
 
 async function load(){
   try {
@@ -624,6 +666,12 @@ async function load(){
     const r2 = await fetch('dados/historico-kpis.json?t='+Date.now(), {cache:'no-store'});
     if (r2.ok) HISTORICO = await r2.json();
   } catch(e) { HISTORICO = null; }
+  // Status da sentinela (opcional · pode não existir na 1ª rodada)
+  try {
+    const r3 = await fetch('dados/status.json?t='+Date.now(), {cache:'no-store'});
+    if (r3.ok) STATUS = await r3.json();
+  } catch(e) { STATUS = null; }
+  renderSentinela();
 
   const obras = DADOS.obras || [];
   const ag = DADOS.agregados || {};
@@ -877,8 +925,13 @@ function consultorBlock(o){
 
   const flagText = formalVazio ? 'painel vazio' : 'não atua no grupo';
   const evid = ci.evidencia || '';
+
+  // Trata caso especial: "MULTIPLOS · consultor formal ausente" não é nome de pessoa
+  const ehMultiplos = ci.nome && /^M[ÚU]LTIPLOS/i.test(ci.nome);
   const sugerido = ci.nome
-    ? `· sugerido: <span class="cons-sugerido">${esc(ci.nome)}</span>`
+    ? (ehMultiplos
+        ? `· <span class="cons-sugerido" style="font-style:italic;color:#b89a4a">sem dono claro · operação distribuída</span>`
+        : `· sugerido: <span class="cons-sugerido">${esc(ci.nome)}</span>`)
     : '';
 
   return `${formalHtml}<span class="cons-flag" title="${esc(evid)}">⚑ ${flagText}</span>${sugerido}`;
@@ -1119,7 +1172,8 @@ function renderCard(o){
     if (total > 0 || naoMap > 0) {
       // Mini badge
       const lider = (e.lideres || [])[0];
-      const liderTxt = lider ? `Líder <strong>${esc(lider.nome_oficial.split(' ').slice(0,2).join(' '))}</strong>` : '';
+      const liderNome = (lider && lider.nome_oficial) || (lider && lider.autor_nome_telegram) || '';
+      const liderTxt = lider ? `Líder <strong>${esc(liderNome.split(' ').slice(0,2).join(' '))}</strong>` : '';
       const partes = [];
       if (lider) partes.push(liderTxt);
       if (total > 0) partes.push(`${total} em campo`);
@@ -1130,7 +1184,7 @@ function renderCard(o){
       equipeMiniBadge = `<span class="${cls}" title="${esc(tip)}"><span class="icon">👥</span>${partes.join(' · ')}</span>`;
 
       // Bloco completo
-      const renderPessoa = (p, classe, icon) => {
+      const renderPessoa = (p, classe) => {
         const nome = p.nome_oficial || p.autor_nome_telegram || '?';
         const funcao = p.funcao || (classe === 'nao_mapeado' ? 'NÃO CADASTRADO' : '—');
         const equipe = p.equipe ? ` · ${esc(p.equipe)}` : '';
@@ -1144,10 +1198,10 @@ function renderCard(o){
       };
 
       const linhas = [];
-      for (const l of (e.lideres || [])) linhas.push(renderPessoa(l, 'lider', '👑'));
-      for (const a of (e.aplicadores || [])) linhas.push(renderPessoa(a, 'aplicador', '🔨'));
-      for (const o2 of (e.outros_cadastrados || [])) linhas.push(renderPessoa(o2, 'aplicador', '🔧'));
-      for (const n of (e.nao_mapeados || [])) linhas.push(renderPessoa(n, 'nao_mapeado', '?'));
+      for (const l of (e.lideres || [])) linhas.push(renderPessoa(l, 'lider'));
+      for (const a of (e.aplicadores || [])) linhas.push(renderPessoa(a, 'aplicador'));
+      for (const o2 of (e.outros_cadastrados || [])) linhas.push(renderPessoa(o2, 'aplicador'));
+      for (const n of (e.nao_mapeados || [])) linhas.push(renderPessoa(n, 'nao_mapeado'));
 
       const equipesLista = (e.equipes_presentes || []).join(' · ');
       equipeBlocoHtml = `<div class="equipe-bloco">
@@ -1169,15 +1223,16 @@ function renderCard(o){
       : 'Sem data de início definida';
     const marcosLinhas = (r.marcos_sla || []).map(m => {
       const dias = m.dias_restantes;
-      const diasTxt = dias < 0 ? `${Math.abs(dias)}d atrás` : (dias === 0 ? 'hoje' : `em ${dias}d`);
-      const diasCls = m.status === 'atrasado_critico' ? 'atrasado' : (m.status === 'alerta' ? 'alerta' : '');
-      const stLabel = m.status.replace(/_/g, ' ');
+      const diasTxt = dias == null ? '—' : (dias < 0 ? `${Math.abs(dias)}d atrás` : (dias === 0 ? 'hoje' : `em ${dias}d`));
+      const status = m.status || 'desconhecido';
+      const diasCls = status === 'atrasado_critico' ? 'atrasado' : (status === 'alerta' ? 'alerta' : '');
+      const stLabel = status.replace(/_/g, ' ');
       return `<div class="regua-marco">
-        <div class="marco-icon ${m.status}"></div>
-        <div class="marco-label">${esc(m.label)}</div>
+        <div class="marco-icon ${status}"></div>
+        <div class="marco-label">${esc(m.label || '')}</div>
         <div class="marco-prazo">X-${m.antes_x_dias}d · ${fmtBR(m.deadline)}</div>
         <div class="marco-dias ${diasCls}">${diasTxt}</div>
-        <div class="marco-status ${m.status}">${stLabel}</div>
+        <div class="marco-status ${status}">${stLabel}</div>
       </div>`;
     }).join('');
 
@@ -1189,9 +1244,10 @@ function renderCard(o){
     if (r.data_inicio_alterada && r.data_inicio_historico && r.data_inicio_historico.length >= 2) {
       const linhas = r.data_inicio_historico.map((h, i) => {
         const isAtual = i === r.data_inicio_historico.length - 1;
+        const msgData = h && h.msg_data ? String(h.msg_data) : '';
         return `<div style="display:flex;gap:10px;font-size:10.5px;padding:3px 0;${isAtual ? 'font-weight:600;color:#c45a5a' : 'color:#8a7e72'}">
           <span style="font-family:'JetBrains Mono',monospace;width:80px">${fmtBR(h.data_x)}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.75">mencionada em ${esc(h.msg_data)}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.75">mencionada em ${esc(msgData)}</span>
           ${isAtual ? '<span style="color:#c45a5a;font-size:9px">← atual</span>' : ''}
         </div>`;
       }).join('');
@@ -1317,7 +1373,7 @@ function renderDisparador(obrasStale){
 
   if (obrasStale.length > 0) {
     const ids = obrasStale.map(o => o.obra_id).join(',');
-    const nomes = obrasStale.map(o => `${o.cliente.split(' ').slice(0,2).join(' ')} (${o.refresh_status.msgs_novas_desde_veredicto})`).join(', ');
+    const nomes = obrasStale.map(o => `${(o.cliente || '').split(' ').slice(0,2).join(' ')} (${o.refresh_status.msgs_novas_desde_veredicto})`).join(', ');
     const cmdSelet = `rodar hermeneuta refresh seletivo nas ${obrasStale.length} obras stale: ${ids}`;
     html += `<button class="disp-btn primary" data-cmd="${esc(cmdSelet)}">
       <span><strong>⟳ Atualizar análise · ${obrasStale.length} obra${obrasStale.length>1?'s':''}</strong>
@@ -1373,7 +1429,7 @@ function renderCores(){
     const lista = pendentes.map(p => {
       const d = p.dias_ate_inicio;
       const dStr = d == null ? '—' : (d < 0 ? `${Math.abs(d)}d atrás` : `${d}d`);
-      return `<div style="font-size:10.5px;color:#3a3530;padding:2px 0">${esc(p.cliente.split(' ').slice(0,3).join(' '))} · <span style="font-family:'JetBrains Mono',monospace;color:#8a7e72">${dStr}</span></div>`;
+      return `<div style="font-size:10.5px;color:#3a3530;padding:2px 0">${esc((p.cliente || '').split(' ').slice(0,3).join(' '))} · <span style="font-family:'JetBrains Mono',monospace;color:#8a7e72">${dStr}</span></div>`;
     }).join('');
     html += `<div class="cor-stat" style="background:#fef0d4;border-color:#f0d8a0;flex-direction:column;align-items:flex-start">
       <div style="display:flex;gap:10px;align-items:center;width:100%">
@@ -1403,6 +1459,49 @@ function renderPadroes(){
 }
 
 load();
+
+// === Sentinela · badge de saúde + modal ===
+function renderSentinela(){
+  const btn = document.getElementById('sentinela-btn');
+  if (!STATUS) {
+    btn.className = 'sentinela-btn warn';
+    btn.title = 'Sentinela ainda não rodou · execute varredura';
+    return;
+  }
+  btn.className = `sentinela-btn ${STATUS.geral || 'ok'}`;
+  const c = STATUS.contagem || {};
+  btn.title = `Sentinela: ${(STATUS.geral || 'ok').toUpperCase()} · ${c.ok || 0} OK · ${c.warn || 0} avisos · ${c.crit || 0} críticos · clique pra detalhes`;
+}
+
+function abrirSentinela(){
+  if (!STATUS) {
+    alert('Sentinela ainda não rodou. Execute uma varredura.');
+    return;
+  }
+  const ov = document.getElementById('sentinela-overlay');
+  const checks = STATUS.checks || [];
+  const c = STATUS.contagem || {};
+  const geral = STATUS.geral || 'ok';
+  const txtGeral = {ok: 'Tudo certo', warn: 'Alguns avisos', crit: 'Atenção urgente'}[geral] || geral;
+
+  document.getElementById('sentinela-geral').innerHTML =
+    `<span class="ponto ${geral}"></span><span>${esc(txtGeral)}</span>` +
+    `<span class="qtd">${c.ok || 0} ok · ${c.warn || 0} aviso · ${c.crit || 0} crítico</span>`;
+
+  document.getElementById('sentinela-checks').innerHTML = checks.map(ch => {
+    const ico = {ok: '✓', warn: '⚠', crit: '✗'}[ch.status] || '?';
+    return `<div class="sentinela-check">
+      <div class="sentinela-ico ${ch.status}">${ico}</div>
+      <div>
+        <div class="sentinela-nome">${esc(ch.nome)}</div>
+        ${ch.detalhe ? `<div class="sentinela-detalhe">${esc(ch.detalhe)}</div>` : ''}
+        ${ch.sugestao && ch.status !== 'ok' ? `<div class="sentinela-sugestao">→ ${esc(ch.sugestao)}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  ov.classList.add('aberta');
+}
 
 // === Sparkline + delta vs 7d atrás ===
 // Pra cada KPI key, retorna {valores, delta, direcao}
@@ -1552,13 +1651,21 @@ function renderResumoVisual(){
   frase += ` <strong>${obrasUrgAlta.length}</strong> exigem ação <span class="crit">urgente</span> esta semana.`;
   document.getElementById('resumo-frase').innerHTML = frase;
 
-  // Chips com sparkline + delta vs 7d
+  // Chips com sparkline + delta vs 7d · key bate com o KPI registrado em historico-kpis
+  // Conta obras que precisam atenção (mesma fórmula do registrar_kpis.py)
+  const atencaoSet = new Set();
+  for (const o of obras) {
+    if (o.veredicto === 'status_desatualizado') atencaoSet.add(o.obra_id);
+    if ((o.regua || {}).data_inicio_alterada) atencaoSet.add(o.obra_id);
+    if ((o.flags || []).includes('detrator_latente')) atencaoSet.add(o.obra_id);
+    if (o.veredicto === 'detrator' || o.veredicto === 'abandono') atencaoSet.add(o.obra_id);
+  }
   const chips = [
     {num: total, label: 'Obras', cls: '', key: 'obras', invertido: false},
     {num: obrasUrgAlta.length, label: 'Urgência alta', cls: 'crit', key: 'urgencia_alta', invertido: true},
     {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit', key: 'datas_remarcadas', invertido: true},
     {num: detLat, label: 'Cliente em risco', cls: 'warn', key: 'cliente_em_risco', invertido: true},
-    {num: desat, label: 'Painel desatualizado', cls: 'crit', key: 'precisam_atencao', invertido: true},
+    {num: atencaoSet.size, label: 'Precisam atenção', cls: 'crit', key: 'precisam_atencao', invertido: true},
     {num: climaCritico, label: 'Clima tenso/crítico', cls: 'warn', key: null, invertido: true},
   ];
   document.getElementById('resumo-grid').innerHTML = chips.map(c =>
@@ -1858,6 +1965,12 @@ document.getElementById('resumo-toggle').addEventListener('click', () => {
   box.classList.toggle('expanded');
   document.getElementById('resumo-toggle').textContent = box.classList.contains('expanded') ? 'esconder texto ▴' : 'ver completo ▾';
 });
+
+// Sentinela · botão e overlay
+document.getElementById('sentinela-btn').addEventListener('click', abrirSentinela);
+const senOverlay = document.getElementById('sentinela-overlay');
+document.getElementById('sentinela-fechar').addEventListener('click', () => senOverlay.classList.remove('aberta'));
+senOverlay.addEventListener('click', (e) => { if (e.target === senOverlay) senOverlay.classList.remove('aberta'); });
 
 // Lâmpada mágica
 const lampOverlay = document.getElementById('lampada-overlay');
