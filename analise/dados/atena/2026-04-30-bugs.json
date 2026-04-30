@@ -1,6 +1,6 @@
 {
   "olho": "bugs",
-  "executado_em": "2026-04-30T11:24:33Z",
+  "executado_em": "2026-04-30T19:08:29Z",
   "achados": [
     {
       "severidade": "alta",
@@ -16,9 +16,15 @@
     },
     {
       "severidade": "media",
+      "titulo": "Strings hardcoded no HTML: datas fixas 2026-04-xx",
+      "descricao": "Encontrados 9 ocorrencias de datas fixas 2026-04-xx fixas no HTML. Deviam ser dinamicas.",
+      "evidencia": "2026-04-30"
+    },
+    {
+      "severidade": "media",
       "titulo": "Strings hardcoded no HTML: contagens hardcoded",
-      "descricao": "Encontrados 1 ocorrencias de contagens hardcoded fixas no HTML. Deviam ser dinamicas.",
-      "evidencia": "de 208"
+      "descricao": "Encontrados 2 ocorrencias de contagens hardcoded fixas no HTML. Deviam ser dinamicas.",
+      "evidencia": "de 208, de 228"
     }
   ],
   "metricas": {
@@ -31,5 +37,5 @@
     "idades_negativas": 0,
     "finalizados_sem_fase": 0
   },
-  "comparativo_vs_anterior": "achados: 3->3 (+0), alta: 1->1 (+0)"
+  "comparativo_vs_anterior": "achados: 3->4 (+1), alta: 1->1 (+0)"
 }
