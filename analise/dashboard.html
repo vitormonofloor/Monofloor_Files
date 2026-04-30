@@ -634,6 +634,16 @@
   .q4-retrab-num span{font-family:'JetBrains Mono',monospace;font-size:18px;color:#8a6a20;font-weight:700;margin-right:4px}
   .q4-retrab-detalhe{font-size:11px;color:#7a6a52;margin-top:2px}
   .q4-retrab-bd{font-size:11px;color:#7a6a52;font-style:italic;font-family:'JetBrains Mono',monospace}
+  /* Cartograma do Brasil (Q4 Geografia) */
+  .q4-uf-cell{cursor:default;transition:opacity .15s}
+  .q4-uf-cell.tem:hover rect{stroke-width:2;stroke:#5a4a30}
+  .q4-uf-cell.tem{cursor:pointer}
+  .q4-uf-legenda{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  .q4-uf-leg-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#8a7e72;flex-wrap:wrap}
+  .q4-uf-leg-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:2px;margin-left:6px}
+  .q4-uf-leg-info{margin-left:auto;font-style:italic;color:#a89e92;font-size:10px}
+  .q4-uf-semuf{display:flex;align-items:center;gap:6px;font-size:11px;color:#7a6a52;background:linear-gradient(135deg,#faf5ed,#f5edd9);border:1px solid #d4b886;border-left:3px solid #b89a4a;border-radius:5px;padding:8px 10px;cursor:pointer;width:100%;text-align:left;font-family:inherit;transition:all .15s}
+  .q4-uf-semuf:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(184,154,74,0.25);background:linear-gradient(135deg,#faf5ed,#efe2c4)}
   .q4-estados{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
   @media(max-width:900px){.q4-estados{grid-template-columns:1fr}}
   .q4-est{background:#ffffff;border:1px solid #e0d8cc;border-radius:8px;padding:18px 16px;border-left:4px solid #c4b5a0}
@@ -1702,8 +1712,9 @@
         <div id="q4-fases-bars"></div>
       </div>
       <div class="q4-sec-card">
-        <h4>Geografia (top UF)</h4>
-        <div id="q4-uf-bars"></div>
+        <h4>Geografia (mapa do Brasil)</h4>
+        <div id="q4-uf-mapa"></div>
+        <div id="q4-uf-legenda" class="q4-uf-legenda"></div>
       </div>
       <div class="q4-sec-card">
         <h4>Funil pré-execução</h4>
@@ -1765,6 +1776,23 @@
         <table class="q4-modal-tbl" id="q4-tbl-pendente">
           <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th><th class="num">m²</th><th>Equipe operacional</th></tr></thead>
           <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal: obras com UF não identificada (cidade mal cadastrada) -->
+    <div class="q4-modal" id="q4-modal-uf" role="dialog" aria-modal="true">
+      <div class="q4-modal-bg" onclick="closeQ4Modal()"></div>
+      <div class="q4-modal-box">
+        <button class="q4-close" onclick="closeQ4Modal()" aria-label="Fechar">×</button>
+        <div class="q4-modal-head">
+          <h3 id="q4-uf-modal-title">Obras com endereço incompleto</h3>
+          <div class="q4-modal-stats" id="q4-uf-modal-stats"></div>
+        </div>
+        <p class="q4-fase-help">Estas obras estão sem UF identificável (cadastro do painel tem endereço/EXTERNA/CEP no campo cidade). Clique em cada uma pra abrir no painel e arrumar.</p>
+        <table class="q4-modal-tbl">
+          <thead><tr><th>Cliente</th><th>Cidade cadastrada</th><th>Status</th><th class="num">m²</th><th>Abrir no painel</th></tr></thead>
+          <tbody id="q4-uf-modal-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -4021,31 +4049,129 @@ function q4ResolverUF(cidadeRaw){
   return '?';
 }
 
+// Cartograma do Brasil — cada UF é um quadrado posicionado em grid (linha,coluna)
+// que reflete aproximadamente a geografia. Não é cartograficamente preciso —
+// é simbólico, prioriza leitura rápida ("onde temos volume?"). Clique abre painel.
+const Q4_UF_GRID = {
+  // [linha, coluna]
+  RR:[0,2], AP:[0,4],
+  AM:[1,1], PA:[1,3], MA:[1,4], CE:[1,5], RN:[1,6],
+  AC:[2,0], RO:[2,1], TO:[2,3], PI:[2,4], PB:[2,6],
+  MT:[3,2], BA:[3,4], PE:[3,5], AL:[3,6],
+  GO:[4,3], DF:[4,4], SE:[4,5],
+  MS:[5,2], MG:[5,4], ES:[5,5],
+  PR:[6,3], SP:[6,4], RJ:[6,5],
+  SC:[7,4],
+  RS:[8,4]
+};
+const Q4_UF_NOMES = {
+  AC:'Acre', AL:'Alagoas', AP:'Amapá', AM:'Amazonas', BA:'Bahia', CE:'Ceará',
+  DF:'Distrito Federal', ES:'Espírito Santo', GO:'Goiás', MA:'Maranhão',
+  MT:'Mato Grosso', MS:'Mato Grosso do Sul', MG:'Minas Gerais', PA:'Pará',
+  PB:'Paraíba', PR:'Paraná', PE:'Pernambuco', PI:'Piauí', RJ:'Rio de Janeiro',
+  RN:'Rio Grande do Norte', RS:'Rio Grande do Sul', RO:'Rondônia', RR:'Roraima',
+  SC:'Santa Catarina', SP:'São Paulo', SE:'Sergipe', TO:'Tocantins'
+};
+
+function q4UfCorEscala(m2, max){
+  if (!m2) return {fill:'#f0ebe3', stroke:'#d8d0c4', txt:'#a89e92'};
+  const pct = m2 / max;
+  if (pct >= 0.7) return {fill:'#8a6a20', stroke:'#6e5418', txt:'#fff'};
+  if (pct >= 0.4) return {fill:'#b89a4a', stroke:'#9a7e36', txt:'#fff'};
+  if (pct >= 0.15) return {fill:'#d4be8a', stroke:'#b89a4a', txt:'#5a4a30'};
+  return {fill:'#ede4d0', stroke:'#c4b896', txt:'#5a4a30'};
+}
+
 function q4RenderUFs(){
   const obras = Q2_OBRAS;
   const por = {};
-  let semUf = 0;
+  const obrasSemUf = [];
   obras.forEach(o=>{
     const uf = q4ResolverUF(o.cidade);
-    if (uf === '?') semUf++;
+    if (uf === '?') obrasSemUf.push(o);
     if (!por[uf]) por[uf] = {n:0, m2:0};
     por[uf].n++; por[uf].m2 += (o.m2||0);
   });
-  const list = Object.entries(por).sort((a,b)=>b[1].m2-a[1].m2).slice(0,7);
-  const max = list[0]?.[1].m2 || 1;
-  const el = document.getElementById('q4-uf-bars');
-  if (el) {
-    let html = list.map(([uf, v])=>`
-      <div class="q3-cap-row">
-        <div class="nome">${uf === '?' ? '<span style="color:#c45a5a" title="Cidade sem UF identificável (ex: EXTERNA, CEP, endereço)">?</span>' : uf} <span style="color:#a89e92">(${v.n} obras)</span></div>
-        <div class="bar-out"><div class="bar-use" style="width:${(v.m2/max*100).toFixed(0)}%"></div></div>
-        <div class="pct">${v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})} m²</div>
-      </div>`).join('');
-    if (semUf > 0) {
-      html += `<div style="font-size:10px;color:#a89e92;margin-top:8px;font-style:italic">⚠ ${semUf} obras sem UF identificável (cadastro do painel com endereço/EXTERNA no campo cidade).</div>`;
+  const valores = Object.entries(por).filter(([u])=>u !== '?').map(([,v])=>v.m2);
+  const max = Math.max(1, ...valores);
+
+  const cell = 50;     // largura/altura do quadrado
+  const gap = 4;
+  const cols = 7;
+  const rows = 9;
+  const padX = 10, padY = 10;
+  const W = padX*2 + cols*(cell+gap) - gap;
+  const H = padY*2 + rows*(cell+gap) - gap;
+
+  const el = document.getElementById('q4-uf-mapa');
+  if (!el) return;
+
+  let svg = '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;max-height:340px" xmlns="http://www.w3.org/2000/svg">';
+  Object.keys(Q4_UF_GRID).forEach(uf=>{
+    const [r,c] = Q4_UF_GRID[uf];
+    const x = padX + c*(cell+gap);
+    const y = padY + r*(cell+gap);
+    const v = por[uf] || {n:0, m2:0};
+    const cor = q4UfCorEscala(v.m2, max);
+    const tip = v.n
+      ? Q4_UF_NOMES[uf]+': '+v.n+' obras · '+v.m2.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²'
+      : Q4_UF_NOMES[uf]+': sem obras';
+    svg += '<g class="q4-uf-cell'+(v.n?' tem':'')+'" data-uf="'+uf+'">'+
+      '<title>'+tip+'</title>'+
+      '<rect x="'+x+'" y="'+y+'" width="'+cell+'" height="'+cell+'" rx="3" '+
+        'fill="'+cor.fill+'" stroke="'+cor.stroke+'" stroke-width="1"/>'+
+      '<text x="'+(x+cell/2)+'" y="'+(y+cell/2-4)+'" text-anchor="middle" '+
+        'font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="'+cor.txt+'">'+uf+'</text>'+
+      (v.n ? '<text x="'+(x+cell/2)+'" y="'+(y+cell/2+12)+'" text-anchor="middle" '+
+        'font-family="Plus Jakarta Sans,sans-serif" font-size="9" fill="'+cor.txt+'">'+v.n+'</text>' : '')+
+      '</g>';
+  });
+  svg += '</svg>';
+  el.innerHTML = svg;
+
+  // Legenda + Banner "?" clicável
+  const totalUfs = Object.keys(por).filter(u=>u !== '?' && por[u].n>0).length;
+  const totalObrasUf = obras.length - obrasSemUf.length;
+  const totalM2Uf = Object.entries(por).filter(([u])=>u !== '?').reduce((a,[,v])=>a+v.m2,0);
+  const leg = document.getElementById('q4-uf-legenda');
+  if (leg) {
+    let lh = '<div class="q4-uf-leg-row"><span class="q4-uf-leg-dot" style="background:#ede4d0"></span>baixo'+
+            '<span class="q4-uf-leg-dot" style="background:#d4be8a"></span>médio'+
+            '<span class="q4-uf-leg-dot" style="background:#b89a4a"></span>alto'+
+            '<span class="q4-uf-leg-dot" style="background:#8a6a20"></span>top'+
+            '<span class="q4-uf-leg-info">'+totalUfs+' estados · '+totalObrasUf+' obras · '+totalM2Uf.toLocaleString('pt-BR',{maximumFractionDigits:0})+' m²</span></div>';
+    if (obrasSemUf.length > 0) {
+      lh += '<button type="button" class="q4-uf-semuf" onclick="openQ4UfModal()" title="Ver lista de cidades mal cadastradas">'+
+        '⚠ '+obrasSemUf.length+' obras sem UF identificável <span style="font-weight:700;color:#8a6a20">→ corrigir</span></button>';
     }
-    el.innerHTML = html;
+    leg.innerHTML = lh;
   }
+  window._q4ObrasSemUf = obrasSemUf;
+}
+
+function openQ4UfModal(){
+  const obras = window._q4ObrasSemUf || [];
+  const tbody = document.getElementById('q4-uf-modal-tbody');
+  const stats = document.getElementById('q4-uf-modal-stats');
+  if (stats) stats.innerHTML = '<span>'+obras.length+' obras</span>';
+  if (tbody) {
+    obras.sort((a,b)=>(b.m2||0)-(a.m2||0));
+    tbody.innerHTML = obras.map(o => {
+      const url = o.id ? 'https://cliente.monofloor.cloud/app/projetos/'+q4EscHtml(o.id) : '#';
+      const cidadeShow = o.cidade && o.cidade.trim()
+        ? '<span style="color:#c45a5a">'+q4EscHtml(o.cidade)+'</span>'
+        : '<span style="color:#a89e92;font-style:italic">(vazio)</span>';
+      return '<tr>'+
+        '<td>'+q4EscHtml(o.cliente||'')+'</td>'+
+        '<td>'+cidadeShow+'</td>'+
+        '<td><span class="pill">'+q4EscHtml(statusHumano(o.status||''))+'</span></td>'+
+        '<td class="num">'+(o.m2 ? o.m2.toLocaleString('pt-BR',{maximumFractionDigits:0}) : '—')+'</td>'+
+        '<td><a class="portal" href="'+url+'" target="_blank">Abrir →</a></td>'+
+        '</tr>';
+    }).join('');
+  }
+  document.getElementById('q4-modal-uf').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function q4RenderFunil(){
@@ -4300,6 +4426,17 @@ function q4TipoLabel(tipo){
   return ({dataExec:'execução prevista', dataVisita:'visita técnica', dataEntrada:'entrada na obra'})[tipo] || '';
 }
 
+// dataExec vem como YYYY-MM-DD (ISO) — converte pra DD/MM/YYYY consistente.
+// Outros tipos (dataVisita/dataEntrada) já vêm DD/MM/YYYY HH:MM, deixa como está.
+function q4FmtData(valor, tipo){
+  if (!valor) return '';
+  if (tipo === 'dataExec'){
+    const m = valor.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return m[3]+'/'+m[2]+'/'+m[1];
+  }
+  return valor;
+}
+
 function q4TipoColor(tipo){
   return ({dataExec:'#b8a080', dataVisita:'#3d8a5a', dataEntrada:'#4a7ab8'})[tipo] || '#888';
 }
@@ -4539,7 +4676,7 @@ function q4TlRenderTable(){
       const passada = q4DataPassada(data, tipo);
       const cls = passada ? 'q4-data-chip passada' : 'q4-data-chip';
       const corStyle = passada ? '' : ' style="border-left-color:'+q4TipoColor(tipo)+'"';
-      dataHtml = '<span class="'+cls+'"'+corStyle+'>'+q4EscHtml(data)+'<small>'+q4TipoLabel(tipo)+'</small></span>';
+      dataHtml = '<span class="'+cls+'"'+corStyle+'>'+q4EscHtml(q4FmtData(data, tipo))+'<small>'+q4TipoLabel(tipo)+'</small></span>';
     } else {
       dataHtml = '<span class="q4-data-chip" style="color:#b8b0a4">— sem data</span>';
     }
