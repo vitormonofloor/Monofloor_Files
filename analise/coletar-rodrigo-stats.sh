@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
-# Coletor Rodrigo — fetch dos 5 endpoints REST do planejamento.monofloor.cloud
-# Saída: analise/dados/rodrigo-stats.json (fonte canônica de números do painel do Rodrigo)
+# Coletor Rodrigo — fonte canônica de números do painel do Rodrigo.
+# Saída: analise/dados/rodrigo-stats.json
 # Chamado pelo refresh.yml a cada 30 min.
 #
+# DESCOBERTA 2026-04-30: o frontend planejamento.monofloor.cloud usa
+# cliente.monofloor.cloud como BACKEND DE DADOS. Os números visíveis na tela
+# (261 ativos, 34 em execução, 5 pausados, 774 finalizados) são derivados
+# diretamente do /api/projects do cliente. /api/stats do planejamento é
+# uma view limitada DIFERENTE — não usar pra contagens.
+#
 # Endpoints cobertos:
-#   /api/stats                       — KPIs canônicos (totalProjetos, projetosEm*, obrasPausadas, etc)
-#   /api/orchestrator/status         — operação viva (activeJourneys, pendingTasks)
-#   /api/analytics/capacity          — capacidade real (utilizationPercent, capacidade semanal/mensal, recomendações)
-#   /api/analytics/alerts            — alertas estruturados (stageDelay, noTeam, capacityRisk)
-#   /api/analytics/weekly-forecast   — projeção semanal
+#   cliente.monofloor.cloud/api/projects?limit=2000  — 1035 obras (fonte das contagens)
+#   planejamento.monofloor.cloud/api/orchestrator/status         — operação viva
+#   planejamento.monofloor.cloud/api/analytics/capacity          — capacidade real (utilizationPercent)
+#   planejamento.monofloor.cloud/api/analytics/alerts            — alertas estruturados
+#   planejamento.monofloor.cloud/api/analytics/weekly-forecast   — projeção semanal
 
-API="https://planejamento.monofloor.cloud/api"
+API_CLI="https://cliente.monofloor.cloud/api"
+API_PLN="https://planejamento.monofloor.cloud/api"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 DADOS="$DIR/dados"
 TMP="$DADOS/.tmp-rodrigo"
@@ -21,22 +28,24 @@ NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 echo "=== Coletor Rodrigo === $NOW"
 
 fetch() {
-  local path="$1" out="$2"
-  curl -sf --max-time 30 "$API/$path" -o "$out" \
-    && echo "  /api/$path OK ($(wc -c < "$out") bytes)" \
-    || { echo "  /api/$path FAILED"; echo '{}' > "$out"; }
+  local url="$1" out="$2"
+  curl -sf --max-time 30 "$url" -o "$out" \
+    && echo "  $url OK ($(wc -c < "$out") bytes)" \
+    || { echo "  $url FAILED"; echo '{}' > "$out"; }
 }
 
-# Fetch sequencial (1s entre chamadas pra evitar rate limit do Rodrigo)
-fetch "stats"                        "$TMP/stats.json";    sleep 1
-fetch "orchestrator/status"          "$TMP/orch.json";     sleep 1
-fetch "analytics/capacity"           "$TMP/cap.json";      sleep 1
-fetch "analytics/alerts"             "$TMP/alerts.json";   sleep 1
-fetch "analytics/weekly-forecast"    "$TMP/fcast.json"
+# /api/projects do cliente (1035 obras = fonte das contagens reais)
+fetch "$API_CLI/projects?limit=2000"   "$TMP/projects.json"; sleep 1
+# Endpoints de operação/capacidade/alertas continuam no planejamento
+fetch "$API_PLN/orchestrator/status"   "$TMP/orch.json";     sleep 1
+fetch "$API_PLN/analytics/capacity"    "$TMP/cap.json";      sleep 1
+fetch "$API_PLN/analytics/alerts"      "$TMP/alerts.json";   sleep 1
+fetch "$API_PLN/analytics/weekly-forecast" "$TMP/fcast.json"
 
 # Compor JSON canônico via Python (heredoc com env vars)
 NOW="$NOW" TMP="$TMP" DADOS="$DADOS" python3 << 'PYEOF'
 import json, os, sys
+from collections import Counter
 TMP = os.environ['TMP']
 DADOS = os.environ['DADOS']
 NOW = os.environ['NOW']
@@ -48,20 +57,22 @@ def load(name):
     except Exception:
         return {}
 
-stats = load("stats")
+projects = load("projects")  # lista de 1035 obras do cliente
 orch = load("orch")
 cap = load("cap")
 alerts = load("alerts")
 fcast = load("fcast")
 
-# Definição de "ativas" alinhada com Vitor 2026-04-29:
-# planejamento + aguardando_execucao + em_execucao + pausadas
-# (logística pós-obra fica fora; ela é "obra acabou, retirando material")
-em_plan = stats.get("projetosEmPlanejamento", 0)
-aguardando = stats.get("projetosAguardando", 0)
-em_exec = stats.get("projetosEmExecucao", 0)
-pausadas = stats.get("obrasPausadas", 0)
-ativas = em_plan + aguardando + em_exec + pausadas
+# Contagem por status (regra confirmada via reverse-engineer da tela do Rodrigo 2026-04-30)
+if not isinstance(projects, list):
+    projects = []
+status_count = Counter(p.get("status") or "sem_status" for p in projects if isinstance(p, dict))
+
+total = len(projects)
+finalizados = status_count.get("finalizado", 0) + status_count.get("concluido", 0)
+ativas = total - finalizados  # tudo que NÃO é finalizado/concluido (regra do frontend)
+em_exec = status_count.get("em_execucao", 0)
+pausadas = status_count.get("pausado", 0)
 
 current_load = cap.get("currentLoad", {}) or {}
 capacity_obj = cap.get("capacity", {}) or {}
@@ -70,26 +81,19 @@ recom = cap.get("recommendations", {}) or {}
 
 canon = {
     "atualizado_em": NOW,
-    "fonte": "planejamento.monofloor.cloud — 5 endpoints REST agregados",
+    "fonte": "cliente.monofloor.cloud/api/projects (contagens) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/* (capacidade/alertas)",
     "totais": {
-        "total": stats.get("totalProjetos", 0),
+        "total": total,
         "ativas": ativas,
-        "logistica_coleta": stats.get("logisticaColeta", 0),
-        "concluidas": stats.get("obrasConcluidas", 0),
-    },
-    "por_status": {
-        "em_planejamento": em_plan,
-        "aguardando_execucao": aguardando,
+        "finalizados": finalizados,
         "em_execucao": em_exec,
-        "pausadas": pausadas,
-        "logistica_coleta": stats.get("logisticaColeta", 0),
-        "concluidas": stats.get("obrasConcluidas", 0),
+        "pausados": pausadas,
     },
+    "por_status": dict(status_count),
     "operacao_viva": {
         "active_journeys": orch.get("activeJourneys", 0),
         "pending_tasks": orch.get("pendingTasks", 0),
         "executing_tasks": orch.get("executingTasks", 0),
-        "atividades_pendentes": stats.get("atividadesPendentes", 0),
     },
     "capacidade": {
         "utilization_percent": current_load.get("utilizationPercent", 0),

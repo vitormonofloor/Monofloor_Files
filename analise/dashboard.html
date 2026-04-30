@@ -2279,9 +2279,7 @@ function initDashboard() {
   renderBaldes();
   renderOperacional();
   renderEstrategicos();
-  // applyRodrigoCanon() suspenso — /api/stats retorna view limitada (164/18/10) que NÃO bate
-  // com a tela do Rodrigo (263/35/5). Sem acesso à lógica do JS dele, manter espelho seria
-  // mentir. Aguardando: DevTools específico ou outro endpoint canônico.
+  applyRodrigoCanon();  // espelho dos números do Rodrigo (cliente.monofloor.cloud/api/projects + planejamento/analytics)
   renderAutoAgentHealth();
   initSideNav();
   // DOMContentLoaded-dependent inits
@@ -2594,11 +2592,11 @@ function applyRodrigoCanon() {
     .then(function(R){
       if (!R || !R.totais) return;
       try {
-        // Total Ativas (canônico Rodrigo)
+        // Total Ativas (canônico Rodrigo) — derivado de cliente.monofloor.cloud/api/projects
         var ativas = R.totais.ativas;
         if ($('kpi-ativas')) $('kpi-ativas').textContent = ativas;
         // Em Execução (canônico Rodrigo)
-        var emExec = R.por_status.em_execucao;
+        var emExec = R.totais.em_execucao;
         if ($('kpi-exec')) $('kpi-exec').textContent = emExec;
         // % exec sobre ativas (recalculado base Rodrigo)
         if ($('kpi-exec-edai')) {
