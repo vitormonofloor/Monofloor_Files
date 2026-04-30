@@ -4597,7 +4597,12 @@ function q4TimelineInit(linhas, fase){
       const hojeRef = new Date();
       _q4TlState.deISO = hojeRef.toISOString().slice(0,10);
       if (d === 'mes'){
-        const fimMes = new Date(hojeRef.getFullYear(), hojeRef.getMonth()+1, 0);
+        // Se faltam <7 dias pro fim do mês, pula pro próximo (mesma regra da Agenda)
+        let fimMes = new Date(hojeRef.getFullYear(), hojeRef.getMonth()+1, 0);
+        const diasRestantes = (fimMes - hojeRef) / 86400000;
+        if (diasRestantes < 7) {
+          fimMes = new Date(hojeRef.getFullYear(), hojeRef.getMonth()+2, 0);
+        }
         _q4TlState.ateISO = fimMes.toISOString().slice(0,10);
       } else {
         const ate = new Date(hojeRef.getTime() + parseInt(d)*86400000);
@@ -4807,7 +4812,14 @@ function agInit() {
       const h = new Date();
       _agState.deISO = h.toISOString().slice(0,10);
       if (d === 'mes') {
-        const fim = new Date(h.getFullYear(), h.getMonth()+1, 0);
+        // "Mês todo" = até o fim do mês corrente. Mas se faltam <7 dias pro
+        // fim (ex: hoje 30/04), empurra pro fim do MÊS SEGUINTE — assim
+        // o botão sempre dá uma janela útil de 7+ dias.
+        let fim = new Date(h.getFullYear(), h.getMonth()+1, 0);
+        const diasRestantes = (fim - h) / 86400000;
+        if (diasRestantes < 7) {
+          fim = new Date(h.getFullYear(), h.getMonth()+2, 0);
+        }
         _agState.ateISO = fim.toISOString().slice(0,10);
       } else {
         const a = new Date(h.getTime() + parseInt(d)*86400000);
