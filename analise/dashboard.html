@@ -498,6 +498,21 @@
   .q2-diag-card h4{color:#2a2520;font-size:13px;margin-bottom:4px;font-weight:600}
   .q2-diag-card .meta{color:#8a7e72;font-size:11px;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
   .q2-diag-card .text{color:#6b6156;white-space:pre-wrap}
+  /* Síntese da categoria (Vitor 2026-04-30) — substitui texto longo por padrões */
+  .q2s-head{display:flex;align-items:baseline;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e0d8cc}
+  .q2s-head h4{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.16em;color:#3a3530;text-transform:uppercase;margin:0}
+  .q2s-head .q2s-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;margin-left:auto}
+  .q2s-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px dashed #ede6dc;font-size:12px;line-height:1.4}
+  .q2s-row:last-child{border-bottom:none}
+  .q2s-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;color:#a89e92;text-transform:uppercase;flex-shrink:0;width:115px;padding-top:2px}
+  .q2s-val{flex:1;color:#3a3530}
+  .q2s-val .q2s-bigN{font-family:'JetBrains Mono',monospace;font-weight:600;color:#2a2520}
+  .q2s-val .q2s-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;margin-left:4px}
+  .q2s-insight{margin-top:14px;padding:10px 12px;background:#fdfaf4;border:1px solid #ede6dc;border-left:3px solid #b8a080;border-radius:4px;font-size:12px;line-height:1.5;color:#3a3530;font-style:italic}
+  .q2s-insight strong{color:#b8a080;font-style:normal;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:.06em}
+  .q2s-flag{display:inline-block;padding:1px 6px;margin-left:4px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.06em}
+  .q2s-flag.crit{background:#f6eaea;color:#c45a5a}
+  .q2s-flag.warn{background:#f4f0e6;color:#b89a4a}
 
   .idade-ok{color:#3d8a5a} .idade-warn{color:#b89a4a} .idade-crit{color:#c45a5a} .idade-esc{color:#b83a3a;font-weight:600}
 
@@ -2535,22 +2550,82 @@ function q2Filter(status){
 }
 
 function q2ShowDiagFiltered(list){
-  const diags = list
-    .map(o => ({obra:o, diag: Q2_DIAG[o.id] || Q2_DIAG[o.cliente]}))
-    .filter(x => x.diag);
+  // Síntese da categoria (Vitor 2026-04-30): troca texto livre por padrões agregados.
+  // Mostra concentração geográfica, consultor dominante, fase principal, idade,
+  // sinais críticos, e termina com 1 frase de "padrão visível".
   const el = document.getElementById('q2-diag-content');
-  if (!diags.length) {
-    el.innerHTML = '<div class="q2-diag-empty">Nenhuma obra desta categoria tem diagnóstico de risco registrado. Selecione uma obra na lista para ver detalhes.</div>';
+  if (!list || !list.length) {
+    el.innerHTML = '<div class="q2-diag-empty">Sem obras nessa categoria.</div>';
     return;
   }
-  el.innerHTML = diags.slice(0, 5).map(function(item){
-    var obra = item.obra, diag = item.diag;
-    return '<div class="q2-diag-card">'
-      + '<h4>' + q2EscHtml(obra.cliente) + '</h4>'
-      + '<div class="meta">' + q2EscHtml(obra.cidade||'—') + ' · ' + q2EscHtml(obra.fase||'—') + ' · ' + (obra.idade != null ? (obra.idade + 'd') : '—') + ' · ' + q2EscHtml(obra.consultor||'sem consultor') + '</div>'
-      + '<div class="text">' + q2EscHtml(diag) + '</div>'
-      + '</div>';
-  }).join('');
+
+  function topN(arr, getKey, n) {
+    var map = {};
+    arr.forEach(o => { var k = getKey(o); if (!k) return; map[k] = (map[k]||0)+1; });
+    return Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0, n);
+  }
+  function shortCity(c) {
+    if (!c) return '';
+    return String(c).replace(/\s*\/\s*[A-Z]{2}.*$/i, '').trim();
+  }
+  function pct(n, total) { return total ? Math.round(n/total*100) + '%' : ''; }
+
+  var total = list.length;
+  var totalM2 = list.reduce((a,o)=>a+(o.m2||0), 0);
+  // Estatísticas de idade
+  var ages = list.map(o=>o.idade).filter(x => typeof x === 'number' && x >= 0).sort((a,b)=>a-b);
+  var med = ages.length ? ages[Math.floor(ages.length/2)] : null;
+  var n270 = list.filter(o=>(o.idade||0)>=270).length;
+  var n180 = list.filter(o=>(o.idade||0)>=180).length;
+  // Consultor / cidade / fase
+  var topCons = topN(list, o => (o.consultor||'').replace(/\b(de|da|dos|das|do)\b/g,' ').replace(/\s+/g,' ').trim().split(' ').slice(0,2).join(' ').toUpperCase(), 3);
+  var topCid = topN(list, o => shortCity(o.cidade).toUpperCase(), 3);
+  var topFase = topN(list, o => o.fase, 2);
+  // Sinais críticos
+  var semConsultor = list.filter(o => !o.consultor || o.consultor === '[]' || o.consultor === '').length;
+  var orfaSet = new Set((EXT && EXT.orfas_ids || []).map(String));
+  var orfas = list.filter(o => orfaSet.has(String(o.id))).length;
+
+  // Header
+  var html = '<div class="q2s-head">'
+    + '<h4>Síntese</h4>'
+    + '<span class="q2s-meta">' + total + ' obras · ' + Math.round(totalM2).toLocaleString('pt-BR') + ' m²</span>'
+    + '</div>';
+
+  // Linhas
+  function row(lbl, valHtml) {
+    return '<div class="q2s-row"><div class="q2s-lbl">' + lbl + '</div><div class="q2s-val">' + valHtml + '</div></div>';
+  }
+  function lista(top, total) {
+    return top.map(([k,v]) => '<span class="q2s-bigN">' + q2EscHtml(k) + '</span> <span class="q2s-pct">' + v + ' · ' + pct(v,total) + '</span>').join(' · ');
+  }
+
+  if (topCid.length) html += row('Concentração', lista(topCid, total));
+  if (topCons.length) html += row('Consultor', lista(topCons, total));
+  if (topFase.length) html += row('Fase preponderante', lista(topFase, total));
+  if (med != null) {
+    var idadeDetail = '<span class="q2s-bigN">' + med + 'd</span> mediana';
+    if (n270) idadeDetail += ' <span class="q2s-flag crit">' + n270 + ' com 270+</span>';
+    else if (n180) idadeDetail += ' <span class="q2s-flag warn">' + n180 + ' com 180+</span>';
+    html += row('Idade da carteira', idadeDetail);
+  }
+  if (semConsultor || orfas) {
+    var sinais = [];
+    if (semConsultor) sinais.push('<span class="q2s-bigN">' + semConsultor + '</span> sem consultor <span class="q2s-flag crit">!</span>');
+    if (orfas && orfas !== semConsultor) sinais.push('<span class="q2s-bigN">' + orfas + '</span> órfãs');
+    html += row('Sinais críticos', sinais.join(' · '));
+  }
+
+  // Insight / padrão visível
+  var insightParts = [];
+  if (topCid[0] && topCid[0][1] >= total*0.5) insightParts.push('concentração em <strong>' + q2EscHtml(topCid[0][0]) + '</strong> (' + pct(topCid[0][1], total) + ')');
+  if (topCons[0] && topCons[0][1] >= total*0.4) insightParts.push('<strong>' + q2EscHtml(topCons[0][0]) + '</strong> domina (' + pct(topCons[0][1], total) + ')');
+  if (n270 > 0 && n270 >= total*0.3) insightParts.push('<strong>' + n270 + ' obras zona escarlate</strong> (270+ dias)');
+  if (insightParts.length) {
+    html += '<div class="q2s-insight">Padrão visível: ' + insightParts.join(' · ') + '.</div>';
+  }
+
+  el.innerHTML = html;
 }
 
 function q2ShowDiag(id, cliente){
