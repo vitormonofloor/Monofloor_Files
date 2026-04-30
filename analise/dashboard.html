@@ -2744,9 +2744,105 @@ function applyRodrigoCanon() {
             + (EXT && EXT.orfas_n ? EXT.orfas_n + ' sem responsável · ' : '')
             + (EXT && EXT.ocorrencias && EXT.ocorrencias.n_atRisk ? EXT.ocorrencias.n_atRisk + ' em risco' : '');
         }
+
+        // SCORE — recalcular pilares e score circular sobre as 260 ativas
+        // (Painel de Obras) + ciclo real (172d) em vez de mediana de idade (217d)
+        try { recalcScoresFromRodrigo(R); } catch(e) { console.warn('recalcScores:', e); }
       } catch (e) { console.warn('applyRodrigoCanon:', e); }
     })
     .catch(function(e){ console.warn('rodrigo-stats fetch:', e && e.message); });
+}
+
+// ============== SCORE BREAKDOWN — recalcular alinhado com Painel de Obras ==============
+// Substitui o que renderScoreBreakdown() já fez:
+// - Denominador "ativas" passa a ser as 260 do Painel de Obras (status != finalizado/concluido)
+// - Pilar IDADE deixa de usar mediana de idade (217d distorcido) e passa a usar
+//   ciclo total mediano das obras concluídas em 2026 (172d, métrica histórica real)
+function recalcScoresFromRodrigo(R) {
+  if (!R || !R.totais || !Array.isArray(Q2_OBRAS) || !Q2_OBRAS.length) return;
+  // Filtrar ativas pelo critério Painel de Obras
+  var ativasObras = Q2_OBRAS.filter(function(o){
+    return o && o.status !== 'finalizado' && o.status !== 'concluido';
+  });
+  var ativas = ativasObras.length;
+  if (!ativas) return;
+
+  var n180 = ativasObras.filter(function(o){ return (o.idade || 0) >= 180; }).length;
+  var ciclo = (R.tempo && R.tempo.ciclo_total_mediana) || 172;
+  var nReparo = (EXT && EXT.reparo && EXT.reparo.total) || 0;
+  var nZumbi = (EXT && EXT.zumbi_n) || 0;
+  var nAtRisk = (EXT && EXT.ocorrencias && EXT.ocorrencias.n_atRisk) || 0;
+
+  var slaScore = Math.round(Math.max(0, 1 - (n180 / ativas)) * 30);
+  var ftrScore = Math.round(Math.max(0, 1 - ((nReparo + nZumbi) / ativas)) * 20);
+  // IDADE agora reflete o ciclo total real (172d das concluídas em 2026), não a mediana de
+  // idade das ativas (que é distorcida por outliers antigos)
+  var idadeScore = Math.round(Math.max(0, 1 - (ciclo / 300)) * 30);
+  var riskScore = Math.round(Math.max(0, 1 - (nAtRisk / ativas)) * 20);
+  var scoreTotal = slaScore + ftrScore + idadeScore + riskScore;
+
+  function corPorPct(pct) {
+    return pct < 50 ? '#c45a5a' : pct < 75 ? '#b89a4a' : '#3d8a5a';
+  }
+
+  var pillars = [
+    {label:'SLA/Prazo', value:slaScore, max:30,
+      color: corPorPct(slaScore/30*100),
+      titulo:'SLA / Prazo',
+      texto:'Mede quantas obras estão dentro do ciclo saudável (<180 dias). Hoje <b>'+n180+' de '+ativas+' obras ativas</b> ('+(n180/ativas*100).toFixed(0)+'%) passaram de 6 meses no radar — cada uma puxa este pilar pra baixo.',
+      metrica: n180+' obras com 180+ dias · base '+ativas+' ativas (Painel de Obras)'},
+    {label:'Qualidade', value:ftrScore, max:20,
+      color: corPorPct(ftrScore/20*100),
+      titulo:'Qualidade (FTR)',
+      texto:'Taxa de entrega sem retrabalho. Conta obras em <b>reparo ('+nReparo+')</b> e <b>encerradas sem fechar ('+nZumbi+')</b> como falhas. Quanto mais reparos e zumbis, mais este pilar cai.',
+      metrica: nReparo+' reparos + '+nZumbi+' enc. sem fechar = '+(nReparo+nZumbi)+' falhas de '+ativas+' ativas'},
+    {label:'Idade', value:idadeScore, max:30,
+      color: corPorPct(idadeScore/30*100),
+      titulo:'Tempo de obra',
+      texto:'Mede o tempo que uma obra leva de ponta a ponta. Saudável <b>abaixo de 150 dias</b>. Hoje o ciclo total mediano é <b>'+ciclo+'d</b> (base: obras finalizadas em 2026 no Painel de Obras).',
+      metrica:'Ciclo total '+ciclo+'d · meta <150d · base '+((R.tempo && R.tempo.obras_base) || 0)+' obras finalizadas'},
+    {label:'Risco', value:riskScore, max:20,
+      color: corPorPct(riskScore/20*100),
+      titulo:'Risco operacional',
+      texto:'Proporção de obras flagadas como "em risco" pelo sistema (alta ocorrência + atraso + reclamação). Hoje <b>'+nAtRisk+' de '+ativas+'</b> ('+(nAtRisk/ativas*100).toFixed(0)+'%) estão em risco.',
+      metrica: nAtRisk+' obras em risco · '+((EXT.ocorrencias && EXT.ocorrencias.total) || 0)+' ocorrências abertas'}
+  ];
+
+  // Re-renderizar score-breakdown
+  var el = document.getElementById('score-breakdown');
+  if (el) {
+    el.innerHTML = pillars.map(function(p, i){
+      return '<div class="score-pillar" data-idx="'+i+'" onclick="toggleScoreDetail('+i+')">'+
+        '<div class="score-pillar-label">'+p.label+'</div>'+
+        '<div class="score-pillar-bar"><div id="spbar-'+i+'" style="background:'+p.color+'"></div></div>'+
+        '<div class="score-pillar-value">'+p.value+'<span class="score-pillar-max">/'+p.max+'</span></div>'+
+      '</div>';
+    }).join('');
+    requestAnimationFrame(function(){
+      pillars.forEach(function(p, i){
+        var bar = document.getElementById('spbar-'+i);
+        if (bar) bar.style.width = (p.value/p.max*100).toFixed(0) + '%';
+      });
+    });
+    window._scorePillars = pillars;
+  }
+
+  // Score circular + veredito
+  var hn = document.getElementById('health-num');
+  if (hn) hn.textContent = scoreTotal;
+  var arc = document.getElementById('health-arc');
+  if (arc) {
+    var circ = 2 * Math.PI * 86;
+    arc.setAttribute('stroke-dasharray', circ);
+    arc.setAttribute('stroke-dashoffset', circ * (1 - scoreTotal/100));
+    var color = '#3d8a5a', lbl = 'Saudável', cls = 'health-green';
+    if (scoreTotal < 70) { color = '#b89a4a'; lbl = 'Atenção'; cls = 'health-amber'; }
+    if (scoreTotal < 50) { color = '#c45a5a'; lbl = 'Crítico'; cls = 'health-red'; }
+    arc.setAttribute('stroke', color);
+    if (hn) hn.setAttribute('fill', color);
+    var v = document.getElementById('health-veredito');
+    if (v) { v.textContent = lbl; v.className = 'health-veredito ' + cls; }
+  }
 }
 
 // ============== Q1 ==============
