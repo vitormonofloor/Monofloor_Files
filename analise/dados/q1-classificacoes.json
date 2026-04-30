@@ -1,0 +1,23 @@
+{
+  "_doc": "Classificações manuais das obras do Q1 (cronograma do Painel de Obras). Vitor edita conforme aparecem novas. Aplicado em refresh.sh após rehidrata Q1.",
+  "_atualizado_em": "2026-04-30",
+  "_atualizado_por": "Vitor (via Claude)",
+
+  "faseada": [
+    "AVVA HOUSE LTDA - MOZART RODRIGUES",
+    "MANOELA LATINI GAVASSI FRANCISCO 2ª FASE"
+  ],
+  "_doc_faseada": "Obras programadas em múltiplas fases. Quando 1ª fase termina, status pode ir pra concluido/planejamento mas vai ter 2ª fase em data prevista. Não é atraso. Detectada por nome (contém 'FASE') OU lista manual.",
+
+  "retrabalho_extra": [
+    "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)",
+    "GUILHERME HAIDAR BERJEAUT",
+    "ANTONIO CARLOS CANTO PORTO NETO"
+  ],
+  "_doc_retrabalho_extra": "Obras já finalizadas que voltaram ativas pra ajuste/reparo, mas estão com status genérico (planejamento/em_execucao) — não 'reparo' nem 'marcas_rolo_cera'. Status (reparo, marcas_rolo_cera) já vai pra retrabalho automaticamente; aqui ficam as exceções manuais.",
+
+  "continuacao_pausada": [
+    "CAROLINA RACHE GUIMARAES"
+  ],
+  "_doc_continuacao_pausada": "Obra pausada que retoma. Tem cronograma vencido mas vai recomeçar — não é fluxo normal nem retrabalho. Categoria própria pra não distorcer estatística."
+}
