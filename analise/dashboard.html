@@ -259,10 +259,36 @@
   .kpi .val.green { color: var(--green); }
   .kpi .val.blue { color: var(--blue); }
   .kpi .val.scarlet { color: var(--scarlet); }
-  .kpi-clickable { cursor: pointer; transition: border-color .15s, transform .15s; }
-  .kpi-clickable:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .kpi-clickable .kpi-arrow { float: right; color: var(--muted-2); font-size: 10px; opacity: .6; }
-  .kpi-clickable:hover .kpi-arrow { color: var(--accent); opacity: 1; }
+  .kpi-clickable {
+    cursor: pointer;
+    border-color: var(--accent);
+    background: linear-gradient(135deg, var(--card-2) 0%, rgba(196,167,125,0.07) 100%);
+    position: relative;
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .kpi-clickable::before {
+    content: '';
+    position: absolute; top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+  }
+  .kpi-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(196,167,125,0.18);
+    background: linear-gradient(135deg, var(--card-2) 0%, rgba(196,167,125,0.13) 100%);
+  }
+  .kpi-clickable .kpi-cta {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .kpi-clickable:hover .kpi-cta { text-decoration: underline; }
+  .kpi-clickable .kpi-arrow { display: none; }
 
   /* ============== BARS ============== */
   .barlist { display: flex; flex-direction: column; gap: 8px; }
@@ -1543,8 +1569,8 @@
         <div class="kpi-row">
           <div class="kpi"><div class="lbl">Total ativos</div><div class="val" id="apl-total">—</div></div>
           <div class="kpi"><div class="lbl">Escalados hoje</div><div class="val green" id="apl-escal">—</div><div class="sub" id="apl-escal-pct">—</div></div>
-          <div class="kpi kpi-clickable" onclick="openBacklog('aplic-ociosos')" title="Ver lista"><div class="lbl">Ociosos <span class="kpi-arrow">↗</span></div><div class="val warn" id="apl-ocio">—</div><div class="sub">aplicadores ativos sem escalação hoje</div></div>
-          <div class="kpi kpi-clickable" onclick="openBacklog('aplic-conflitos')" title="Ver lista"><div class="lbl">Em 2+ obras hoje <span class="kpi-arrow">↗</span></div><div class="val crit" id="apl-conflito">—</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div></div>
+          <div class="kpi kpi-clickable" onclick="openBacklog('aplic-ociosos')" title="Ver lista"><div class="lbl">Ociosos</div><div class="val warn" id="apl-ocio">—</div><div class="sub">aplicadores ativos sem escalação hoje</div><span class="kpi-cta">Ver lista →</span></div>
+          <div class="kpi kpi-clickable" onclick="openBacklog('aplic-conflitos')" title="Ver lista"><div class="lbl">Em 2+ obras hoje</div><div class="val crit" id="apl-conflito">—</div><div class="sub">mesma pessoa, mesmo dia, obras diferentes</div><span class="kpi-cta">Ver lista →</span></div>
         </div>
       </div>
     </div>
