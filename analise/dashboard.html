@@ -570,6 +570,22 @@
   .q3-grid{display:grid;grid-template-columns:280px 1fr;gap:16px}
   @media(max-width:900px){.q3-grid{grid-template-columns:1fr}}
 
+  .q3-rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:900px){.q3-rank-grid{grid-template-columns:1fr}}
+  .q3-rank-card{background:var(--card-2);border:1px solid var(--border);border-radius:6px;padding:14px 16px}
+  .q3-rank-head{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .q3-rank-head h4{font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin:0}
+  .q3-rank-icon{font-size:14px}
+  .q3-rank-sub{font-size:10px;color:var(--muted-2);font-style:italic;margin-left:auto}
+  .q3-rank-list{list-style:none;padding:0;margin:0;counter-reset:rank}
+  .q3-rank-list li{counter-increment:rank;display:grid;grid-template-columns:20px 1fr auto;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:12px;align-items:baseline}
+  .q3-rank-list li:last-child{border-bottom:none}
+  .q3-rank-list li::before{content:counter(rank);color:var(--accent);font-weight:700;font-size:11px}
+  .q3-rank-list .nm{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .q3-rank-list .nm small{display:block;color:var(--muted-2);font-size:10px}
+  .q3-rank-list .vl{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600;font-size:12px;white-space:nowrap}
+  .q3-rank-empty{padding:18px;text-align:center;color:var(--muted-2);font-size:11px;font-style:italic}
+
   .q3-eq-list{display:flex;flex-direction:column;gap:8px}
   .q3-eq-card{background:#ffffff;border:1px solid #e0d8cc;border-radius:6px;padding:12px;cursor:pointer;transition:all .15s;border-left:3px solid #c4b5a0;text-align:left;color:inherit;font:inherit;width:100%}
   .q3-eq-card:hover{border-color:#b8a080}
@@ -1593,7 +1609,27 @@
         </div>
       </div>
     </div>
-      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel de Obras</span>/api/equipes · /api/escalacao-diaria · <span class="sf-tag pipefy">Painel de Obras</span>responsável administrativo</div>
+
+    <!-- Bloco 3: Ranking 7d — quem mais trabalhou, mais ocioso, mais escalado -->
+    <div class="q3-equipes-head" style="margin-top:24px;">
+      <h3>Ranking últimos <span id="q3-rank-janela">7</span> dias</h3>
+      <div class="legenda" id="q3-rank-legenda">acumulado dia a dia · base: histórico-aplicadores.json</div>
+    </div>
+    <div class="q3-rank-grid" id="q3-rank-grid">
+      <div class="q3-rank-card">
+        <div class="q3-rank-head"><span class="q3-rank-icon">🔝</span><h4>Mais carga</h4><span class="q3-rank-sub">total de obras na janela</span></div>
+        <ol class="q3-rank-list" id="q3-rank-carga"></ol>
+      </div>
+      <div class="q3-rank-card">
+        <div class="q3-rank-head"><span class="q3-rank-icon">📅</span><h4>Mais escalado</h4><span class="q3-rank-sub">dias com escalação</span></div>
+        <ol class="q3-rank-list" id="q3-rank-escalado"></ol>
+      </div>
+      <div class="q3-rank-card">
+        <div class="q3-rank-head"><span class="q3-rank-icon">💤</span><h4>Mais ocioso</h4><span class="q3-rank-sub">dias sem escalação</span></div>
+        <ol class="q3-rank-list" id="q3-rank-ocioso"></ol>
+      </div>
+    </div>
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel de Obras</span>/api/equipes · /api/escalacao-diaria · /api/prestadores · histórico-aplicadores.json (acumula a cada refresh)</div>
   </section>
 
   <!-- ============== Q4 — VOLUME ============== -->
@@ -3063,6 +3099,7 @@ function applyRodrigoCanon() {
             }
             // Modal: ociosos
             var ociosos = apl.ociosos_detalhe || [];
+            // (continua abaixo)
             var subO = $('aplic-ocio-sub');
             if (subO) subO.textContent = ociosos.length + ' aplicador' + (ociosos.length === 1 ? '' : 'es') + ' · ação: rever escalação';
             var tbO = $('aplic-ocio-tbody');
@@ -3074,6 +3111,53 @@ function applyRodrigoCanon() {
                   }).join('');
             }
           }
+          // Equipes operacionais — sobrescreve Q3_EQUIPES (estava todo vazio)
+          if (Array.isArray(R.equipes) && R.equipes.length) {
+            Q3_EQUIPES = R.equipes.map(function(e){
+              return {
+                id: e.id || (e.nome || '').toLowerCase().replace(/\s+/g,'-').replace('equipe-',''),
+                nome: e.nome,
+                lider: e.lider,
+                lider_oculto: false,
+                estado: e.estado,
+                ativos: e.ativos,
+                escalados_hoje: e.escalados_hoje,
+                util_pct: e.util_pct,
+                obras_ids: (e.obras_lideradas || []).concat(e.obras_membros || []).map(function(o){ return o.id; }),
+                obras_lideradas: e.obras_lideradas,
+                obras_membros: e.obras_membros,
+              };
+            });
+            try { q3Init(); } catch(eq){ console.warn('q3Init reload:', eq); }
+          }
+
+          // Ranking 7d — quem mais carregou, mais escalado, mais ocioso
+          var hist = R.historico_aplicadores;
+          if (hist) {
+            var jan = hist.janela_dias || 0;
+            var diasAcum = hist.dias_acumulados || 0;
+            if ($('q3-rank-janela')) $('q3-rank-janela').textContent = Math.min(7, jan);
+            if ($('q3-rank-legenda')) {
+              $('q3-rank-legenda').textContent = diasAcum < 2
+                ? 'histórico recém-iniciado · só ' + diasAcum + 'd acumulado · cresce a cada refresh'
+                : 'acumulado em ' + jan + ' dia' + (jan === 1 ? '' : 's') + ' · base: histórico-aplicadores.json';
+            }
+            var renderRank = function(elId, data, valKey, valSuffix) {
+              var el = $(elId);
+              if (!el) return;
+              if (!data || !data.length) {
+                el.outerHTML = '<div class="q3-rank-empty">Sem dados na janela.</div>';
+                return;
+              }
+              el.innerHTML = data.slice(0, 5).map(function(p){
+                return '<li><span></span><span class="nm">' + escHtml(p.nome) + '<small>' + escHtml(p.cargo || '') + '</small></span><span class="vl">' + (p[valKey] || 0) + valSuffix + '</span></li>';
+              }).join('');
+            };
+            renderRank('q3-rank-carga', hist.top_carga_7d, 'total_obras', ' obras');
+            renderRank('q3-rank-escalado', hist.top_escalado_7d, 'dias_escalado', 'd');
+            renderRank('q3-rank-ocioso', hist.top_ocioso_7d, 'dias_ocioso', 'd');
+          }
+
           var lw = R.lw;
           if (lw && lw.luana && lw.wesley) {
             // Cards Luana × Wesley (substitui EXT.lw que vinha do PESADO)
@@ -3666,17 +3750,43 @@ function q3ShowObras(equipeId){
   const el = document.getElementById('q3-obras-content');
   if (!titleEl || !el) return;
 
-  titleEl.textContent = `${eq.nome} — ${eq.obras_ids.length} obra${eq.obras_ids.length !== 1 ? 's' : ''} liderada${eq.obras_ids.length !== 1 ? 's' : ''} hoje`;
+  // Preferir formato novo do rodrigo-stats (obras_lideradas + obras_membros com metadata).
+  // Fallback pro antigo (obras_ids + Q3_OBRAS_HOJE).
+  const lideradas = Array.isArray(eq.obras_lideradas) ? eq.obras_lideradas : [];
+  const membros = Array.isArray(eq.obras_membros) ? eq.obras_membros : [];
+  const obrasNovo = lideradas.concat(membros);
+  const totalNovo = obrasNovo.length;
 
-  if (!eq.obras_ids.length) {
-    el.innerHTML = '<div class="q3-obras-empty">Sem obras lideradas por esta equipe hoje. Aplicadores podem estar emprestados a outras equipes.</div>';
+  if (totalNovo > 0) {
+    titleEl.textContent = `${eq.nome} — ${totalNovo} obra${totalNovo !== 1 ? 's' : ''} hoje (${lideradas.length} liderada${lideradas.length !== 1 ? 's' : ''} · ${membros.length} com membros)`;
+    const renderRow = (o, tipo) => `
+      <tr>
+        <td><a class="portal" href="https://cliente.monofloor.cloud/app/projetos/${o.id}" target="_blank">${escHtml(o.cliente)}</a></td>
+        <td>${escHtml(o.cidade || '')}</td>
+        <td>${escHtml(o.fase || '')}</td>
+        <td><span class="pill" style="background:${q3StatusColor(o.status)}">${escHtml(STATUS_LBL[o.status] || o.status || '')}</span></td>
+        <td class="ct"><span class="chip ${tipo === 'lider' ? 'gn' : 'mut'}">${tipo === 'lider' ? 'líder' : 'membro'}</span></td>
+      </tr>`;
+    el.innerHTML = `
+      <table class="q3-obras-table">
+        <thead><tr><th>Cliente</th><th>Cidade</th><th>Fase</th><th>Status</th><th class="ct">Papel</th></tr></thead>
+        <tbody>
+          ${lideradas.map(o => renderRow(o, 'lider')).join('')}
+          ${membros.map(o => renderRow(o, 'membro')).join('')}
+        </tbody>
+      </table>`;
     return;
   }
 
+  // Fallback: formato antigo
+  titleEl.textContent = `${eq.nome} — ${(eq.obras_ids || []).length} obras hoje`;
+  if (!eq.obras_ids || !eq.obras_ids.length) {
+    el.innerHTML = '<div class="q3-obras-empty">Sem obras lideradas por esta equipe hoje. Aplicadores podem estar emprestados a outras equipes.</div>';
+    return;
+  }
   const obras = eq.obras_ids.map(id => Q3_OBRAS_HOJE[id]).filter(Boolean);
   const totalM2 = obras.reduce((a,o) => a + (o.m2 || 0), 0);
   const totalMembros = obras.reduce((a,o) => a + (o.n_membros || 0), 0);
-
   el.innerHTML = `
     <table class="q3-obras-table">
       <thead><tr><th>Cliente</th><th>Cidade</th><th>Status</th><th class="num">Membros</th><th class="num">m²</th></tr></thead>
@@ -3688,15 +3798,13 @@ function q3ShowObras(equipeId){
             <td><span class="pill" style="background:${q3StatusColor(o.status)}">${escHtml(STATUS_LBL[o.status] || o.status || '')}</span></td>
             <td class="num">${o.n_membros || '—'}</td>
             <td class="num">${o.m2 ? o.m2.toLocaleString('pt-BR',{maximumFractionDigits:2}) : '—'}</td>
-          </tr>
-        `).join('')}
+          </tr>`).join('')}
       </tbody>
     </table>
     <div class="q3-obras-summary">
       <span>Total escalado para esta equipe hoje · ${totalMembros} aplicadores</span>
       <span><b>${totalM2.toLocaleString('pt-BR',{maximumFractionDigits:0})} m²</b></span>
-    </div>
-  `;
+    </div>`;
 }
 
 function q3StatusColor(s){

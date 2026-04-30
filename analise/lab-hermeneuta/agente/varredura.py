@@ -189,7 +189,12 @@ def main():
     if not run([PYTHON, "extrair_kira_whatsapp.py"], AGENTE):
         log("FALHOU em extrair_kira_whatsapp.py (continua)")
 
-    # 9. Marca refresh_status nas obras
+    # 9. Registra KPIs no histórico (pra sparkline / delta semanal)
+    log("Rodando registrar_kpis.py...")
+    if not run([PYTHON, "registrar_kpis.py"], AGENTE):
+        log("FALHOU em registrar_kpis.py (continua)")
+
+    # 10. Marca refresh_status nas obras
     marcar_refresh_status(diff)
     log("refresh_status injetado em cada obra")
 

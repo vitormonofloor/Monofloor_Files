@@ -62,7 +62,15 @@
     .resumo-chip.crit{border-bottom-color:#c45a5a}
     .resumo-chip.warn{border-bottom-color:#d4943a}
     .resumo-chip.ok{border-bottom-color:#3d8a5a}
+    .resumo-chip{position:relative}
     .resumo-chip-num{font-size:24px;font-weight:700;color:#2a2520;line-height:1}
+    .resumo-chip-spark{margin-top:6px;height:18px;width:100%;display:block}
+    .resumo-chip-delta{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.04em;margin-top:3px;display:inline-flex;align-items:center;gap:3px}
+    .resumo-chip-delta.up{color:#c45a5a}
+    .resumo-chip-delta.down{color:#3d8a5a}
+    .resumo-chip-delta.neutro{color:#8a7e72}
+    .resumo-chip-delta.invertido.up{color:#3d8a5a}
+    .resumo-chip-delta.invertido.down{color:#c45a5a}
     .resumo-chip-num.crit{color:#c45a5a}
     .resumo-chip-num.warn{color:#d4943a}
     .resumo-chip-num.ok{color:#3d8a5a}
@@ -601,6 +609,7 @@ function fmtData(s){
 }
 
 let DADOS = null;
+let HISTORICO = null;  // { kpis: [...] }
 
 async function load(){
   try {
@@ -610,6 +619,11 @@ async function load(){
     document.getElementById('lista').innerHTML = '<div class="empty"><strong>Erro ao carregar</strong>dados/discordancias-v3.json não pôde ser lido.</div>';
     return;
   }
+  // Histórico opcional (pode não existir ainda)
+  try {
+    const r2 = await fetch('dados/historico-kpis.json?t='+Date.now(), {cache:'no-store'});
+    if (r2.ok) HISTORICO = await r2.json();
+  } catch(e) { HISTORICO = null; }
 
   const obras = DADOS.obras || [];
   const ag = DADOS.agregados || {};
@@ -730,9 +744,9 @@ function renderMeuFiltro(){
   ).join('');
   cont.classList.toggle('ativo', !!EU);
   cont.innerHTML = `
-    <span class="meu-filtro-label">Eu sou:</span>
+    <span class="meu-filtro-label">Consultor:</span>
     <select id="meu-filtro-select">${opts}</select>
-    ${EU ? `<span class="meu-filtro-badge"><strong>${minhas}</strong> de ${total} obras minhas</span>
+    ${EU ? `<span class="meu-filtro-badge"><strong>${minhas}</strong> de ${total} obras</span>
             <button class="meu-filtro-clear" id="meu-filtro-clear">limpar</button>` : ''}
   `;
   document.getElementById('meu-filtro-select').addEventListener('change', (e) => {
@@ -1390,6 +1404,77 @@ function renderPadroes(){
 
 load();
 
+// === Sparkline + delta vs 7d atrás ===
+// Pra cada KPI key, retorna {valores, delta, direcao}
+function serieKpi(key, dias = 14){
+  if (!HISTORICO || !HISTORICO.kpis) return null;
+  const agora = new Date();
+  const limite = new Date(agora.getTime() - dias * 24 * 3600 * 1000);
+  const pontos = HISTORICO.kpis
+    .filter(p => new Date(p.data) >= limite)
+    .map(p => ({ data: p.data, valor: p[key] || 0 }));
+  if (pontos.length < 2) return null;
+
+  const valores = pontos.map(p => p.valor);
+  // Delta vs 7d atrás (acha ponto mais próximo de 7d)
+  const ref7d = new Date(agora.getTime() - 7 * 24 * 3600 * 1000);
+  let pontoRef = pontos[0];
+  for (const p of pontos) {
+    if (new Date(p.data) <= ref7d) pontoRef = p;
+    else break;
+  }
+  const delta = valores[valores.length - 1] - pontoRef.valor;
+  const direcao = delta > 0 ? 'up' : (delta < 0 ? 'down' : 'neutro');
+  return { valores, delta, direcao, pontos };
+}
+
+// Sparkline SVG mínimo
+function sparklineSVG(valores, classeCor = '#b8a080'){
+  if (!valores || valores.length < 2) return '';
+  const w = 90, h = 16, pad = 1;
+  const min = Math.min(...valores);
+  const max = Math.max(...valores);
+  const range = (max - min) || 1;
+  const xStep = (w - 2 * pad) / (valores.length - 1);
+  const path = valores.map((v, i) => {
+    const x = pad + i * xStep;
+    const y = h - pad - ((v - min) / range) * (h - 2 * pad);
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  // último ponto destacado
+  const lx = pad + (valores.length - 1) * xStep;
+  const ly = h - pad - ((valores[valores.length-1] - min) / range) * (h - 2 * pad);
+  return `<svg class="resumo-chip-spark" viewBox="0 0 ${w} ${h}">
+    <path d="${path}" fill="none" stroke="${classeCor}" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2" fill="${classeCor}"/>
+  </svg>`;
+}
+
+// Renderiza um chip com sparkline + delta
+// `invertido` = true quando subir é RUIM (precisa atenção, urgência alta, etc) — cor inverte
+function chipComSpark(num, label, cls, kpiKey, invertido = true){
+  const serie = serieKpi(kpiKey);
+  let sparkHtml = '';
+  let deltaHtml = '';
+  if (serie) {
+    const corLinha = cls === 'crit' ? '#c45a5a' : (cls === 'warn' ? '#d4943a' : (cls === 'ok' ? '#3d8a5a' : '#b8a080'));
+    sparkHtml = sparklineSVG(serie.valores, corLinha);
+    if (serie.delta !== 0) {
+      const sinal = serie.delta > 0 ? '↑' : '↓';
+      const cls2 = invertido ? `invertido ${serie.direcao}` : serie.direcao;
+      deltaHtml = `<div class="resumo-chip-delta ${cls2}">${sinal} ${Math.abs(serie.delta)} vs 7d</div>`;
+    } else {
+      deltaHtml = `<div class="resumo-chip-delta neutro">= sem mudança</div>`;
+    }
+  }
+  return `<div class="resumo-chip ${cls}">
+    <div class="resumo-chip-num ${cls}">${num}</div>
+    <div class="resumo-chip-label">${esc(label)}</div>
+    ${sparkHtml}
+    ${deltaHtml}
+  </div>`;
+}
+
 function renderResumoVisual(){
   const obras = DADOS.obras || [];
   const ag = DADOS.agregados || {};
@@ -1467,17 +1552,18 @@ function renderResumoVisual(){
   frase += ` <strong>${obrasUrgAlta.length}</strong> exigem ação <span class="crit">urgente</span> esta semana.`;
   document.getElementById('resumo-frase').innerHTML = frase;
 
-  // Chips com 4-6 destaques
+  // Chips com sparkline + delta vs 7d
   const chips = [
-    {num: total, label: 'Obras', cls: ''},
-    {num: ok, label: 'Coerentes', cls: 'ok'},
-    {num: desat, label: 'Status desat.', cls: 'crit'},
-    {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit'},
-    {num: detLat, label: 'Detrator latente', cls: 'warn'},
-    {num: climaCritico, label: 'Clima tenso/crítico', cls: 'warn'},
+    {num: total, label: 'Obras', cls: '', key: 'obras', invertido: false},
+    {num: obrasUrgAlta.length, label: 'Urgência alta', cls: 'crit', key: 'urgencia_alta', invertido: true},
+    {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit', key: 'datas_remarcadas', invertido: true},
+    {num: detLat, label: 'Cliente em risco', cls: 'warn', key: 'cliente_em_risco', invertido: true},
+    {num: desat, label: 'Painel desatualizado', cls: 'crit', key: 'precisam_atencao', invertido: true},
+    {num: climaCritico, label: 'Clima tenso/crítico', cls: 'warn', key: null, invertido: true},
   ];
   document.getElementById('resumo-grid').innerHTML = chips.map(c =>
-    `<div class="resumo-chip ${c.cls}"><div class="resumo-chip-num ${c.cls}">${c.num}</div><div class="resumo-chip-label">${esc(c.label)}</div></div>`
+    c.key ? chipComSpark(c.num, c.label, c.cls, c.key, c.invertido)
+          : `<div class="resumo-chip ${c.cls}"><div class="resumo-chip-num ${c.cls}">${c.num}</div><div class="resumo-chip-label">${esc(c.label)}</div></div>`
   ).join('');
 
   // Top 3 ações urgentes (priorizadas por prazo · obras com urgência alta)

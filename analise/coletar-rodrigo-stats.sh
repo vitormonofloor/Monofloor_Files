@@ -40,6 +40,8 @@ fetch "$API_CLI/projects?limit=2000"   "$TMP/projects.json"; sleep 1
 fetch "$API_CLI/prestadores?limit=500" "$TMP/prestadores.json"; sleep 1
 # /api/escalacao-diaria — quem está escalado em qual obra hoje (lider + membros)
 fetch "$API_CLI/escalacao-diaria"      "$TMP/escalacao.json"; sleep 1
+# /api/equipes — 6 equipes operacionais (Wiguens, João, Gilmar, Júlio, Egberto, Michael)
+fetch "$API_CLI/equipes"               "$TMP/equipes.json"; sleep 1
 # Endpoints de operação/capacidade/alertas continuam no planejamento
 fetch "$API_PLN/orchestrator/status"   "$TMP/orch.json";     sleep 1
 fetch "$API_PLN/analytics/capacity"    "$TMP/cap.json";      sleep 1
@@ -79,6 +81,7 @@ def load(name):
 projects = load("projects")  # lista de 1035 obras do cliente
 prestadores = load("prestadores")  # 180 cadastrados (115 ativos)
 escalacao = load("escalacao")  # {obraId: {liderId, membrosIds[]}} de hoje
+equipes_raw = load("equipes")  # 6 equipes operacionais com líder + membros
 orch = load("orch")
 cap = load("cap")
 alerts = load("alerts")
@@ -349,6 +352,140 @@ def stats_consultor(nome_alvo):
 luana = stats_consultor("LUANA")
 wesley = stats_consultor("WESLEY")
 n_180_total = sum(1 for p in ativas_obras for i in [idade_de(p)] if i is not None and i >= 180)
+
+# ============== EQUIPES OPERACIONAIS ==============
+# 6 equipes oficiais (Wiguens, João, Gilmar, Júlio, Egberto, Michael).
+# Pra cada equipe: ativos, escalados hoje, util_pct, obras_hoje.
+# Cruza /api/equipes + /api/escalacao-diaria + /api/projects.
+def proj_label(oid):
+    p = proj_by_id.get(oid, {}) or {}
+    return {
+        "id": oid,
+        "cliente": p.get("clienteNome") or oid[:8],
+        "cidade": p.get("projetoCidade") or "",
+        "fase": p.get("faseAtual") or "",
+        "status": p.get("status") or "",
+    }
+
+equipes_detalhe = []
+eq_list = equipes_raw if isinstance(equipes_raw, list) else []
+for eq in eq_list:
+    if not isinstance(eq, dict): continue
+    membros_all = eq.get("membros") or []
+    # Filtro ativo: tolera bool true e int 1 (algumas equipes vêm sem ativo true mesmo)
+    membros_ativos = [m for m in membros_all if m and (m.get("ativo") is True or m.get("ativo") == 1)]
+    n_ativos = len(membros_ativos)
+    n_total = len(membros_all)
+
+    lider = eq.get("lider") or {}
+    lider_id = eq.get("liderId") or lider.get("id")
+    lider_nome = lider.get("nome") or "?"
+
+    # Escalados hoje: membros (ativos OU não — escalação é fonte da verdade) + líder
+    membros_ids_set = set((m.get("id") for m in membros_all if m and m.get("id")))
+    if lider_id: membros_ids_set.add(lider_id)
+    escalados_ids = membros_ids_set & em_campo_ids
+    n_escalados = len(escalados_ids)
+
+    # Obras hoje da equipe = obras onde o líder está como liderId OU obras onde
+    # algum membro da equipe está escalado
+    obras_lideradas = []
+    obras_membros = []
+    for obra_id, eqd in esc.items():
+        if not isinstance(eqd, dict): continue
+        if eqd.get("liderId") == lider_id:
+            obras_lideradas.append(obra_id)
+        elif any(m in membros_ids_set for m in (eqd.get("membrosIds") or [])):
+            obras_membros.append(obra_id)
+    obras_hoje_ids = list(dict.fromkeys(obras_lideradas + obras_membros))
+
+    util_pct = round(n_escalados / max(1, n_ativos) * 100, 1) if n_ativos else 0
+    estado = "fantasma" if n_ativos == 0 else ("parcial" if n_ativos < 5 else "saudavel")
+
+    equipes_detalhe.append({
+        "id": (eq.get("nome") or "").lower().replace(" ", "-").replace("equipe-", ""),
+        "nome": eq.get("nome") or "?",
+        "lider": lider_nome,
+        "lider_id": lider_id,
+        "ativos": n_ativos,
+        "total_cadastrados": n_total,
+        "escalados_hoje": n_escalados,
+        "util_pct": util_pct,
+        "obras_hoje": len(obras_hoje_ids),
+        "obras_lideradas": [proj_label(o) for o in obras_lideradas],
+        "obras_membros": [proj_label(o) for o in obras_membros if o not in obras_lideradas],
+        "estado": estado,
+    })
+
+canon["equipes"] = equipes_detalhe
+
+# ============== HISTÓRICO DIÁRIO DE APLICADORES ==============
+# Acumula por dia: quem foi escalado, em quantas obras, quem ficou ocioso.
+# Permite ranking 7d/30d (mais escalado, mais ocioso, mais carga).
+# Cresce 1 entry/dia. Só substitui hoje se já existir (idempotente em mesmo dia).
+hist_aplic_path = f"{DADOS}/historico-aplicadores.json"
+try:
+    with open(hist_aplic_path, encoding="utf-8") as f:
+        hist_aplic = json.load(f)
+except Exception:
+    hist_aplic = []
+
+today_str = hoje.isoformat()
+
+# Snapshot do dia: por pessoa ativa, qtd_obras de hoje
+snapshot_dia = {
+    "date": today_str,
+    "atualizado_em": NOW,
+    "total_ativos": len(prest_ativos),
+    "total_escalados": len(em_campo_ids),
+    "total_ociosos": max(0, len(prest_ativos) - len(em_campo_ids)),
+    "por_pessoa": {},
+}
+for p in prest_ativos:
+    pid = p.get("id")
+    if not pid: continue
+    obras_pessoa = appearance.get(pid, [])
+    snapshot_dia["por_pessoa"][pid] = {
+        "nome": p.get("nome") or pid[:8],
+        "cargo": CARGO_LABEL.get(p.get("funcao"), p.get("funcao") or "?"),
+        "obras_hoje": len(set(obras_pessoa)),
+        "escalado": pid in em_campo_ids,
+    }
+
+# Substitui entry de hoje se já existir
+hist_aplic = [h for h in hist_aplic if h.get("date") != today_str]
+hist_aplic.append(snapshot_dia)
+# Mantém últimos 90 dias
+hist_aplic = sorted(hist_aplic, key=lambda x: x.get("date", ""))[-90:]
+
+with open(hist_aplic_path, "w", encoding="utf-8") as f:
+    json.dump(hist_aplic, f, ensure_ascii=False, indent=2)
+
+# Ranking 7d (com base no histórico). Se só tem 1 dia, mostra hoje.
+ultimos_7 = [h for h in hist_aplic if h.get("date") and (hoje - datetime.strptime(h["date"], "%Y-%m-%d").date()).days <= 6]
+agg_7d = {}  # pid -> {nome, cargo, dias_escalado, total_obras, dias_ocioso}
+for h in ultimos_7:
+    for pid, info in (h.get("por_pessoa") or {}).items():
+        a = agg_7d.setdefault(pid, {"nome": info["nome"], "cargo": info["cargo"], "dias_escalado": 0, "dias_ocioso": 0, "total_obras": 0})
+        if info.get("escalado"):
+            a["dias_escalado"] += 1
+            a["total_obras"] += info.get("obras_hoje") or 0
+        else:
+            a["dias_ocioso"] += 1
+
+ranking = sorted(agg_7d.items(), key=lambda x: -x[1]["total_obras"])
+ranking_carga = [{"id": pid, **a} for pid, a in ranking[:10]]
+ranking_escalado = [{"id": pid, **a} for pid, a in sorted(agg_7d.items(), key=lambda x: -x[1]["dias_escalado"])[:10]]
+ranking_ocioso = [{"id": pid, **a} for pid, a in sorted(agg_7d.items(), key=lambda x: (-x[1]["dias_ocioso"], x[1]["nome"]))[:10] if a["dias_ocioso"] > 0]
+
+canon["historico_aplicadores"] = {
+    "dias_acumulados": len(hist_aplic),
+    "janela_dias": len(ultimos_7),
+    "top_carga_7d": ranking_carga,
+    "top_escalado_7d": ranking_escalado,
+    "top_ocioso_7d": ranking_ocioso,
+    "fonte": "historico-aplicadores.json (acumulado a cada refresh)",
+}
 
 canon["lw"] = {
     "luana": luana,
