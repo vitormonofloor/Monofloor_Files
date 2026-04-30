@@ -2765,16 +2765,19 @@ function applyRodrigoCanon() {
           });
         }
 
-        // Hero summary — reescreve com canônicos do Rodrigo, mantendo derivados nossos
+        // Hero summary — reescreve com canônicos do Rodrigo + ciclo real (não a mediana
+        // de idade das ativas, que é distorcida)
         var hs = $('hero-summary');
         if (hs && AGG) {
+          var n180 = AGG.n_180_plus || 0;
+          var pct180 = ativas ? Math.round(n180 / ativas * 100) : 0;
+          var ciclo = (R.tempo && R.tempo.ciclo_total_mediana) || 0;
           hs.innerHTML =
-            '<strong>' + ativas + ' obras ativas</strong> · '
+            '<strong>' + ativas + ' obras em movimento</strong> · '
             + '<strong>' + emExec + '</strong> em execução · '
-            + '<strong>' + (AGG.n_180_plus || 0) + '</strong> com 180+ dias · '
-            + '<strong>' + (AGG.n_270_plus || 0) + '</strong> com 270+ (zona escarlate) · '
-            + 'mediana <span class="mono">' + (AGG.idade_mediana || '—') + 'd</span>, '
-            + 'média <span class="mono">' + (AGG.idade_media || '—') + 'd</span> · '
+            + '<strong>' + n180 + '</strong> com 180+ dias (' + pct180 + '%) · '
+            + '<strong>' + (AGG.n_270_plus || 0) + '</strong> na zona escarlate (270+) · '
+            + (ciclo ? 'ciclo real <span class="mono">' + ciclo + 'd</span> (obras finalizadas em 2026, meta 150d) · ' : '')
             + (EXT && EXT.zumbi_n ? EXT.zumbi_n + ' encerradas sem fechar · ' : '')
             + (EXT && EXT.orfas_n ? EXT.orfas_n + ' sem responsável · ' : '')
             + (EXT && EXT.ocorrencias && EXT.ocorrencias.n_atRisk ? EXT.ocorrencias.n_atRisk + ' em risco' : '');
