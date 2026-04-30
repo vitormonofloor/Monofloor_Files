@@ -4936,7 +4936,7 @@ function agRenderSVG(linhas) {
     html += '<circle class="ag-tl-pt" cx="'+x+'" cy="'+y+'" r="4" fill="'+cor+'"'+
             ' data-cliente="'+escHtml(o.cliente||'')+'"'+
             ' data-fase="'+escHtml(o.fase||'')+'"'+
-            ' data-data="'+escHtml(dataValor)+'"'+
+            ' data-data="'+escHtml(q4FmtData(dataValor, tipo))+'"'+
             ' data-tipo="'+escHtml(q4TipoLabel(tipo))+'"'+
             ' data-m2="'+(o.m2||0)+'"/>';
   });
@@ -4978,7 +4978,7 @@ function agRenderLista(filt) {
     const o = l.obra, dataValor = l.dataValor, tipo = l.tipo;
     const cor = q4TipoColor(tipo);
     return '<li>'+
-      '<div class="ag-li-data">'+escHtml(dataValor)+'</div>'+
+      '<div class="ag-li-data">'+escHtml(q4FmtData(dataValor, tipo))+'</div>'+
       '<div>'+
         '<span class="ag-li-tipo" style="background:'+cor+'"></span>'+
         '<span class="ag-li-cliente">'+escHtml(o.cliente||'')+'</span>'+
