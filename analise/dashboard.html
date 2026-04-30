@@ -627,6 +627,13 @@
   .q3-obras-summary b{color:#b8a080;font-family:'JetBrains Mono',monospace}
 
   /* ===== Q4 — Estados operacionais ===== */
+  .q4-retrab-banner{display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#faf5ed 0%,#f5edd9 100%);border:1px solid #d4b886;border-left:4px solid #b89a4a;border-radius:6px;padding:12px 16px;margin:0 0 14px}
+  .q4-retrab-icon{font-size:22px;color:#b89a4a;font-weight:700;line-height:1}
+  .q4-retrab-body{flex:1}
+  .q4-retrab-num{font-size:14px;font-weight:600;color:#5a4a30}
+  .q4-retrab-num span{font-family:'JetBrains Mono',monospace;font-size:18px;color:#8a6a20;font-weight:700;margin-right:4px}
+  .q4-retrab-detalhe{font-size:11px;color:#7a6a52;margin-top:2px}
+  .q4-retrab-bd{font-size:11px;color:#7a6a52;font-style:italic;font-family:'JetBrains Mono',monospace}
   .q4-estados{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
   @media(max-width:900px){.q4-estados{grid-template-columns:1fr}}
   .q4-est{background:#ffffff;border:1px solid #e0d8cc;border-radius:8px;padding:18px 16px;border-left:4px solid #c4b5a0}
@@ -1671,6 +1678,16 @@
         <div class="q4-est-m2">—</div>
         <div class="q4-est-detail"></div>
       </button>
+    </div>
+
+    <!-- Banner retrabalho: pós-entrega (não soma no volume ativo) -->
+    <div class="q4-retrab-banner" id="q4-retrab-banner" hidden>
+      <div class="q4-retrab-icon">↩</div>
+      <div class="q4-retrab-body">
+        <div class="q4-retrab-num"><span id="q4-retrab-n">—</span> obras em retrabalho</div>
+        <div class="q4-retrab-detalhe">pós-entrega (cliente apontou defeito após cronograma cumprido) · <b>não somam</b> nos cards acima</div>
+      </div>
+      <div class="q4-retrab-bd" id="q4-retrab-bd">—</div>
     </div>
 
     <!-- Insight curto consolidando os 3 cards -->
@@ -3832,20 +3849,43 @@ function renderQ4() {
 }
 
 function q4Init(){
-  const obras = Q2_OBRAS;
+  // Q4_RETRAB_STATUSES = pós-entrega (cliente apontou defeito após cronograma).
+  // Não somam em RODANDO/ESTAGNADO/PENDENTE — vão pra banner separado.
+  // Mesmo critério usado no Q1 (feedback Vitor 2026-04-30).
+  const RETRAB_STATUSES = ['reparo','marcas_rolo_cera'];
+  const allObras = Q2_OBRAS;
+  const retrab = allObras.filter(o => RETRAB_STATUSES.includes(o.status));
+  const obras = allObras.filter(o => !RETRAB_STATUSES.includes(o.status));
 
   const grupos = {
     RODANDO: ['em_execucao'],
-    ESTAGNADO: ['pausado','reparo','marcas_rolo_cera','aguardando_clima'],
+    ESTAGNADO: ['pausado','aguardando_clima'],
     PENDENTE: ['planejamento','reserva','contrato','aguardando_execucao']
   };
 
   const totalM2 = obras.reduce((a,o)=>a+(o.m2||0), 0);
+  const retrabM2 = retrab.reduce((a,o)=>a+(o.m2||0), 0);
   const nFmt = v => v.toLocaleString('pt-BR',{maximumFractionDigits:0});
 
-  // Atualizar sub da seção com total real
+  // Banner retrabalho
+  const banner = document.getElementById('q4-retrab-banner');
+  if (banner) {
+    if (retrab.length > 0) {
+      banner.hidden = false;
+      const nEl = document.getElementById('q4-retrab-n');
+      if (nEl) nEl.textContent = retrab.length;
+      const bdEl = document.getElementById('q4-retrab-bd');
+      const breakdown = {};
+      retrab.forEach(o => { breakdown[o.status] = (breakdown[o.status]||0)+1; });
+      if (bdEl) bdEl.innerHTML = Object.entries(breakdown).map(([s,n]) => `${n} ${statusHumano(s).toLowerCase()}`).join(' · ') + ` · ${nFmt(retrabM2)} m²`;
+    } else {
+      banner.hidden = true;
+    }
+  }
+
+  // Atualizar sub da seção com total real (fluxo ativo, sem retrabalho)
   const subEl = document.getElementById('q4-sub');
-  if (subEl) subEl.textContent = `O que está efetivamente em obra (rodando), o que travou (estagnado) e o que ainda não começou (pendente). ${obras.length} obras, ${nFmt(totalM2)} m². Clique nos cards para ver as obras.`;
+  if (subEl) subEl.textContent = `O que está efetivamente em obra (rodando), o que travou (estagnado) e o que ainda não começou (pendente). ${obras.length} obras no fluxo ativo, ${nFmt(totalM2)} m². Clique nos cards para ver as obras.`;
 
   // Preencher os 3 cards
   Object.entries(grupos).forEach(([nome, statuses])=>{
@@ -3960,7 +4000,7 @@ function q4RenderFunil(){
 // ============== Q4 — modal por estado operacional ==============
 const Q4_GRUPOS = {
   rodando:   {label:'RODANDO',   sub:'em execução agora',                statuses:['em_execucao']},
-  estagnado: {label:'ESTAGNADO', sub:'travadas — precisam destravar',    statuses:['pausado','reparo','marcas_rolo_cera','aguardando_clima']},
+  estagnado: {label:'ESTAGNADO', sub:'travadas — precisam destravar',    statuses:['pausado','aguardando_clima']},
   pendente:  {label:'PENDENTE',  sub:'no funil pré-execução',            statuses:['planejamento','reserva','contrato','aguardando_execucao']}
 };
 
