@@ -40,7 +40,21 @@ fetch "$API_CLI/projects?limit=2000"   "$TMP/projects.json"; sleep 1
 fetch "$API_PLN/orchestrator/status"   "$TMP/orch.json";     sleep 1
 fetch "$API_PLN/analytics/capacity"    "$TMP/cap.json";      sleep 1
 fetch "$API_PLN/analytics/alerts"      "$TMP/alerts.json";   sleep 1
-fetch "$API_PLN/analytics/weekly-forecast" "$TMP/fcast.json"
+fetch "$API_PLN/analytics/weekly-forecast" "$TMP/fcast.json"; sleep 1
+
+# Snapshot Pipefy mais recente (cargo-assistente roda seg+sex 5h e commita).
+# Lista snapshots via API GitHub e baixa o mais novo.
+echo "  Listando snapshots Pipefy..."
+SNAP_NAME=$(curl -sf --max-time 20 \
+  "https://api.github.com/repos/vitormonofloor/cargo-assistente/contents/cerebro_monofloor/snapshots" \
+  | python3 -c "import json,sys; d=json.load(sys.stdin); print(sorted([x['name'] for x in d if x['name'].startswith('pipefy_cards_') and x['name'].endswith('.json')])[-1])" 2>/dev/null)
+if [ -n "$SNAP_NAME" ]; then
+  fetch "https://raw.githubusercontent.com/vitormonofloor/cargo-assistente/main/cerebro_monofloor/snapshots/$SNAP_NAME" "$TMP/pipefy_snap.json"
+  echo "  snapshot Pipefy: $SNAP_NAME"
+else
+  echo '{}' > "$TMP/pipefy_snap.json"
+  echo "  Sem snapshot Pipefy disponível"
+fi
 
 # Compor JSON canônico via Python (heredoc com env vars)
 NOW="$NOW" TMP="$TMP" DADOS="$DADOS" python3 << 'PYEOF'
@@ -63,6 +77,7 @@ orch = load("orch")
 cap = load("cap")
 alerts = load("alerts")
 fcast = load("fcast")
+pipefy = load("pipefy_snap")  # {resumo, cards[]} do agente_historico
 
 # Contagem por status (regra confirmada via reverse-engineer da tela do Rodrigo 2026-04-30)
 if not isinstance(projects, list):
@@ -159,6 +174,31 @@ canon = {
     },
     "weekly_forecast": fcast,
 }
+
+# ============== TEMPO (do snapshot Pipefy) ==============
+# Mediana de tempo das obras finalizadas em 2026 (substitui mediana de
+# idade das ativas — que distorce). 3 medidas pra ver onde tá o gargalo.
+def mediana(vals):
+    s = sorted(v for v in vals if v is not None and v > 0)
+    if not s: return 0
+    n = len(s)
+    return round(s[n // 2] if n % 2 == 1 else (s[n // 2 - 1] + s[n // 2]) / 2)
+
+cards = pipefy.get("cards", []) if isinstance(pipefy, dict) else []
+em2026 = [c for c in cards if isinstance(c, dict) and c.get("tf_finished_at") and str(c["tf_finished_at"]).startswith("2026")]
+
+if em2026:
+    canon["tempo"] = {
+        "ciclo_total_mediana": mediana(c.get("dias_admin") for c in em2026),
+        "pre_execucao_mediana": mediana(c.get("dias_contato_inicio") for c in em2026),
+        "execucao_mediana": mediana(c.get("dias_execucao") for c in em2026),
+        "meta_dias": 150,
+        "obras_base": len(em2026),
+        "periodo": "2026",
+        "fonte": f"Pipefy snapshot ({pipefy.get('resumo', {}).get('coletado_em', 'data desconhecida')})",
+    }
+else:
+    canon["tempo"] = {"obras_base": 0, "periodo": "2026", "fonte": "snapshot Pipefy indisponível"}
 
 out = f"{DADOS}/rodrigo-stats.json"
 with open(out, "w", encoding="utf-8") as f:

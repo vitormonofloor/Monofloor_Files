@@ -90,6 +90,14 @@
   .est-chip:hover{border-color:#8a5cb0;color:#8a5cb0}
   .est-chip.active{background:#8a5cb0;border-color:#8a5cb0;color:#fff}
   .est-card:nth-child(4) .est-meter-fill{background:#8a5cb0}
+  /* Breakdown do card TEMPO (3 medidas) */
+  .est-tempo-breakdown{display:flex;flex-direction:column;gap:4px;margin-top:8px;padding-top:8px;border-top:1px dashed #e8e0d4}
+  .tb-row{display:flex;align-items:baseline;gap:4px;font-size:11px;color:#6b6156;line-height:1.3}
+  .tb-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#3a3530;min-width:32px;text-align:right}
+  .tb-unit{font-size:9px;color:#a89e92;margin-right:6px}
+  .tb-lbl{flex:1}
+  .tb-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.05em;padding:2px 6px;border-radius:3px;background:rgba(196,90,90,0.1);color:#c45a5a;text-transform:uppercase}
+  .tb-tag:empty{display:none}
   .est-pergunta{font-size:11px;color:#8a7e72;font-style:italic;line-height:1.4;margin-bottom:6px}
   .est-corpo{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px}
   .est-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:#2a2520;line-height:1;letter-spacing:-0.02em}
@@ -1206,14 +1214,18 @@
     <div class="estrategicos-grid">
       <div class="est-card">
         <div class="est-titulo">TEMPO</div>
-        <div class="est-pergunta">Quanto tempo nossa carteira leva?</div>
+        <div class="est-pergunta">Quanto tempo uma obra leva?</div>
         <div class="est-corpo">
           <div class="est-num"><span id="est-ciclo-num">—</span><span class="est-unit">d</span></div>
-          <div class="est-rotulo">ciclo mediano · meta <span id="est-ciclo-meta">150d</span></div>
+          <div class="est-rotulo">ciclo total mediano · meta <span id="est-ciclo-meta">150d</span></div>
           <div class="est-meter"><div class="est-meter-fill" id="est-ciclo-fill"></div><div class="est-meter-mark" id="est-ciclo-mark"></div></div>
+          <div class="est-tempo-breakdown">
+            <div class="tb-row"><span class="tb-num" id="est-pre-num">—</span><span class="tb-unit">d</span><span class="tb-lbl">pré-execução</span><span class="tb-tag" id="est-pre-tag">—</span></div>
+            <div class="tb-row"><span class="tb-num" id="est-exec-num">—</span><span class="tb-unit">d</span><span class="tb-lbl">execução física</span></div>
+          </div>
           <div class="est-detalhe" id="est-ciclo-detalhe">—</div>
         </div>
-        <div class="est-fonte">Painel-amigo · idade_dias agregada</div>
+        <div class="est-fonte">Pipefy · obras finalizadas em <span id="est-tempo-periodo">2026</span></div>
       </div>
 
       <div class="est-card">
@@ -2618,6 +2630,33 @@ function applyRodrigoCanon() {
     .then(function(R){
       if (!R || !R.totais) return;
       try {
+        // TEMPO — substitui mediana de IDADE de ativas (que distorce) por
+        // ciclo REAL das obras finalizadas em 2026
+        if (R.tempo) {
+          var T = R.tempo;
+          if ($('est-ciclo-num')) $('est-ciclo-num').textContent = T.ciclo_total_mediana || '—';
+          if ($('est-ciclo-meta')) $('est-ciclo-meta').textContent = (T.meta_dias || 150) + 'd';
+          if ($('est-pre-num')) $('est-pre-num').textContent = T.pre_execucao_mediana || '—';
+          if ($('est-exec-num')) $('est-exec-num').textContent = T.execucao_mediana || '—';
+          if ($('est-tempo-periodo')) $('est-tempo-periodo').textContent = T.periodo || '2026';
+          // Tag GARGALO no maior dos dois (geralmente pré-execução)
+          if ($('est-pre-tag')) {
+            var pre = T.pre_execucao_mediana || 0;
+            var ex = T.execucao_mediana || 0;
+            $('est-pre-tag').textContent = (pre > ex * 2) ? 'GARGALO' : '';
+          }
+          // Barra: progresso vs meta. Se ultrapassou, fica vermelha
+          if ($('est-ciclo-fill')) {
+            var pctMeta = T.meta_dias ? (T.ciclo_total_mediana / T.meta_dias * 100) : 0;
+            $('est-ciclo-fill').style.width = Math.min(100, pctMeta) + '%';
+            $('est-ciclo-fill').style.background = pctMeta > 100 ? '#c45a5a' : '#4a7ab8';
+          }
+          if ($('est-ciclo-detalhe')) {
+            var diff = (T.ciclo_total_mediana || 0) - (T.meta_dias || 150);
+            $('est-ciclo-detalhe').textContent = (diff > 0 ? '+' + diff : diff) + 'd vs meta · base ' + (T.obras_base || 0) + ' obras finalizadas';
+          }
+        }
+
         // Total Ativas (canônico Rodrigo) — derivado de cliente.monofloor.cloud/api/projects
         var ativas = R.totais.ativas;
         if ($('kpi-ativas')) $('kpi-ativas').textContent = ativas;
