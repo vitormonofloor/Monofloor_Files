@@ -1,0 +1,1538 @@
+{
+    "atualizado_em":  "2026-04-30T14:55:16Z",
+    "fonte":  "planejamento.monofloor.cloud — 5 endpoints REST agregados",
+    "totais":  {
+                   "total":  1037,
+                   "ativas":  164,
+                   "logistica_coleta":  23,
+                   "concluidas":  368
+               },
+    "por_status":  {
+                       "em_planejamento":  72,
+                       "aguardando_execucao":  64,
+                       "em_execucao":  18,
+                       "pausadas":  10,
+                       "logistica_coleta":  23,
+                       "concluidas":  368
+                   },
+    "operacao_viva":  {
+                          "active_journeys":  405,
+                          "pending_tasks":  1999,
+                          "executing_tasks":  2,
+                          "atividades_pendentes":  5208
+                      },
+    "capacidade":  {
+                       "utilization_percent":  35,
+                       "status":  "healthy",
+                       "aplicadores_total":  95,
+                       "aplicadores_necessarios":  33,
+                       "aplicadores_por_obra":  8.6,
+                       "obras_ativas_capacity":  11,
+                       "m2_em_obra":  3489.9900000000002,
+                       "capacidade_diaria_m2":  418,
+                       "capacidade_semanal_m2_puro":  9000,
+                       "capacidade_semanal_m2_misto":  6300,
+                       "capacidade_mensal_m2_puro":  36000,
+                       "capacidade_mensal_m2_misto":  25200,
+                       "capacidade_mensal_produtiva":  9196,
+                       "max_obras_saudavel":  31,
+                       "max_obras_minimo":  47
+                   },
+    "alertas":  {
+                    "total":  8,
+                    "por_tipo":  {
+                                     "stageDelay":  5,
+                                     "noTeam":  3,
+                                     "capacityRisk":  0
+                                 },
+                    "por_severidade":  {
+                                           "high":  6,
+                                           "medium":  1,
+                                           "low":  1
+                                       },
+                    "detalhes":  [
+                                     {
+                                         "projectId":  "pf-mklv83tl-308135",
+                                         "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                         "cidade":  "CEP 91340",
+                                         "type":  "STAGE_DELAY",
+                                         "severity":  "HIGH",
+                                         "message":  "Projeto deveria estar em \"INFORMAÃ‡Ã•ES LOGÃSTICAS\" mas estÃ¡ em \"PROJETOS  - 1Âª REVISÃƒO\"",
+                                         "daysUntilEntry":  0,
+                                         "currentStage":  "PROJETOS  - 1Âª REVISÃƒO",
+                                         "expectedStage":  "INFORMAÃ‡Ã•ES LOGÃSTICAS"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83t6-308131",
+                                         "clienteNome":  "JONATHAS DE ALMEIDA NUNES LUKAS",
+                                         "cidade":  "CEP 13092",
+                                         "type":  "STAGE_DELAY",
+                                         "severity":  "HIGH",
+                                         "message":  "Projeto deveria estar em \"INFORMAÃ‡Ã•ES LOGÃSTICAS\" mas estÃ¡ em \"AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO\"",
+                                         "daysUntilEntry":  4,
+                                         "currentStage":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                         "expectedStage":  "INFORMAÃ‡Ã•ES LOGÃSTICAS"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83t6-308131",
+                                         "clienteNome":  "JONATHAS DE ALMEIDA NUNES LUKAS",
+                                         "cidade":  "CEP 13092",
+                                         "type":  "NO_TEAM",
+                                         "severity":  "HIGH",
+                                         "message":  "Projeto sem equipe definida a 4 dias do inÃ­cio",
+                                         "daysUntilEntry":  4,
+                                         "currentStage":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                         "expectedStage":  "Com equipe alocada"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83v6-314299",
+                                         "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                         "cidade":  "CEP 04531",
+                                         "type":  "STAGE_DELAY",
+                                         "severity":  "HIGH",
+                                         "message":  "Projeto deveria estar em \"INFORMAÃ‡Ã•ES LOGÃSTICAS\" mas estÃ¡ em \"PROJETOS  - 1Âª REVISÃƒO\"",
+                                         "daysUntilEntry":  4,
+                                         "currentStage":  "PROJETOS  - 1Âª REVISÃƒO",
+                                         "expectedStage":  "INFORMAÃ‡Ã•ES LOGÃSTICAS"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83v6-314299",
+                                         "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                         "cidade":  "CEP 04531",
+                                         "type":  "NO_TEAM",
+                                         "severity":  "HIGH",
+                                         "message":  "Projeto sem equipe definida a 4 dias do inÃ­cio",
+                                         "daysUntilEntry":  4,
+                                         "currentStage":  "PROJETOS  - 1Âª REVISÃƒO",
+                                         "expectedStage":  "Com equipe alocada"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83uz-958713",
+                                         "clienteNome":  "ELLIOTT ROBERT MICHEL FRES",
+                                         "cidade":  "CEP 88065",
+                                         "type":  "STAGE_DELAY",
+                                         "severity":  "HIGH",
+                                         "message":  "Projeto deveria estar em \"INFORMAÃ‡Ã•ES LOGÃSTICAS\" mas estÃ¡ em \"CONFIRMAÃ‡Ã•ES OP 1\"",
+                                         "daysUntilEntry":  11,
+                                         "currentStage":  "CONFIRMAÃ‡Ã•ES OP 1",
+                                         "expectedStage":  "INFORMAÃ‡Ã•ES LOGÃSTICAS"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83up-708520",
+                                         "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                         "cidade":  "CEP 23970",
+                                         "type":  "STAGE_DELAY",
+                                         "severity":  "MEDIUM",
+                                         "message":  "Projeto deveria estar em \"REVISÃƒO FINAL OP\" mas estÃ¡ em \"AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO\"",
+                                         "daysUntilEntry":  25,
+                                         "currentStage":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                         "expectedStage":  "REVISÃƒO FINAL OP"
+                                     },
+                                     {
+                                         "projectId":  "pf-mklv83up-708520",
+                                         "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                         "cidade":  "CEP 23970",
+                                         "type":  "NO_TEAM",
+                                         "severity":  "LOW",
+                                         "message":  "Projeto sem equipe definida a 25 dias do inÃ­cio",
+                                         "daysUntilEntry":  25,
+                                         "currentStage":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                         "expectedStage":  "Com equipe alocada"
+                                     }
+                                 ]
+                },
+    "agenda_hoje":  {
+                        "visitas":  2,
+                        "entregas":  1
+                    },
+    "weekly_forecast":  {
+                            "value":  [
+                                          {
+                                              "weekNumber":  1,
+                                              "startDate":  "2026-04-27",
+                                              "endDate":  "2026-05-04",
+                                              "starting":  {
+                                                               "count":  1,
+                                                               "totalM2":  198.06,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83tl-308135",
+                                                                                    "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                                                                    "cidade":  "CEP 91340",
+                                                                                    "metragemM2":  198.06,
+                                                                                    "linearTotal":  null,
+                                                                                    "dataEntrada":  "30/04/2026 03:00",
+                                                                                    "prazo":  18,
+                                                                                    "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                    "equipe":  "MUTIRÃƒO",
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "25/05/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  8,
+                                                                  "totalM2":  2668.48,
+                                                                  "totalLinear":  4.686,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sg-266944",
+                                                                                       "clienteNome":  "Pedro Henning",
+                                                                                       "cidade":  "JaguariaÃ­va",
+                                                                                       "metragemM2":  150,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/04/2026 09:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v1-307964",
+                                                                                       "clienteNome":  "NATHALIA ROBERTA MACARIO",
+                                                                                       "cidade":  "CEP 13.414",
+                                                                                       "metragemM2":  673.73,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "06/04/2026 03:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "REVISÃƒO FINAL OP",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "01/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83ss-108191",
+                                                                                       "clienteNome":  "FERNANDO TEMBRA RODRIGUEZ",
+                                                                                       "cidade":  "CEP 22430",
+                                                                                       "metragemM2":  140.04,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "06/04/2026 10:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "15/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83t7-371692",
+                                                                                       "clienteNome":  "MAYARA ULIANA CASAGRANDE",
+                                                                                       "cidade":  "CEP 22290",
+                                                                                       "metragemM2":  327.21,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "06/04/2026 13:00",
+                                                                                       "prazo":  18,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "29/04/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tq-815103",
+                                                                                       "clienteNome":  "RAFAEL DE OLIVEIRA BOTELHO CORREA",
+                                                                                       "cidade":  "CEP 22621",
+                                                                                       "metragemM2":  560.75,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "24/04/2026 12:00",
+                                                                                       "prazo":  25,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "28/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83s5-513315",
+                                                                                       "clienteNome":  "Andrea Almeida",
+                                                                                       "cidade":  "Belo Horizonte",
+                                                                                       "metragemM2":  450,
+                                                                                       "linearTotal":  0,
+                                                                                       "dataEntrada":  "25/03/2026 09:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "ENTRADA",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "05/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83vy-116954",
+                                                                                       "clienteNome":  "MARCELO WAJSKOP ABRAMOWICZ",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  168.69,
+                                                                                       "linearTotal":  4.686,
+                                                                                       "dataEntrada":  "30/03/2026 03:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "REVISÃƒO FINAL OP",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "08/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tl-308135",
+                                                                                       "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                                                                       "cidade":  "CEP 91340",
+                                                                                       "metragemM2":  198.06,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "30/04/2026 03:00",
+                                                                                       "prazo":  18,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "25/05/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  24,
+                                                               "applicatorsPerProject":  11.9,
+                                                               "utilizationPercent":  25
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  2,
+                                              "startDate":  "2026-05-04",
+                                              "endDate":  "2026-05-11",
+                                              "starting":  {
+                                                               "count":  2,
+                                                               "totalM2":  983.53,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83t6-308131",
+                                                                                    "clienteNome":  "JONATHAS DE ALMEIDA NUNES LUKAS",
+                                                                                    "cidade":  "CEP 13092",
+                                                                                    "metragemM2":  218.2,
+                                                                                    "linearTotal":  null,
+                                                                                    "dataEntrada":  "04/05/2026 03:00",
+                                                                                    "prazo":  15,
+                                                                                    "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                    "equipe":  null,
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "22/05/2026"
+                                                                                },
+                                                                                {
+                                                                                    "id":  "pf-mklv83v6-314299",
+                                                                                    "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                    "cidade":  "CEP 04531",
+                                                                                    "metragemM2":  765.33,
+                                                                                    "linearTotal":  null,
+                                                                                    "dataEntrada":  "04/05/2026 04:00",
+                                                                                    "prazo":  30,
+                                                                                    "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                    "equipe":  null,
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "12/06/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  8,
+                                                                  "totalM2":  2651.0699999999997,
+                                                                  "totalLinear":  4.686,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sg-266944",
+                                                                                       "clienteNome":  "Pedro Henning",
+                                                                                       "cidade":  "JaguariaÃ­va",
+                                                                                       "metragemM2":  150,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/04/2026 09:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83t6-308131",
+                                                                                       "clienteNome":  "JONATHAS DE ALMEIDA NUNES LUKAS",
+                                                                                       "cidade":  "CEP 13092",
+                                                                                       "metragemM2":  218.2,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 03:00",
+                                                                                       "prazo":  15,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "22/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v6-314299",
+                                                                                       "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  765.33,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 04:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83ss-108191",
+                                                                                       "clienteNome":  "FERNANDO TEMBRA RODRIGUEZ",
+                                                                                       "cidade":  "CEP 22430",
+                                                                                       "metragemM2":  140.04,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "06/04/2026 10:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "15/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tq-815103",
+                                                                                       "clienteNome":  "RAFAEL DE OLIVEIRA BOTELHO CORREA",
+                                                                                       "cidade":  "CEP 22621",
+                                                                                       "metragemM2":  560.75,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "24/04/2026 12:00",
+                                                                                       "prazo":  25,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "28/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83s5-513315",
+                                                                                       "clienteNome":  "Andrea Almeida",
+                                                                                       "cidade":  "Belo Horizonte",
+                                                                                       "metragemM2":  450,
+                                                                                       "linearTotal":  0,
+                                                                                       "dataEntrada":  "25/03/2026 09:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "ENTRADA",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "05/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83vy-116954",
+                                                                                       "clienteNome":  "MARCELO WAJSKOP ABRAMOWICZ",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  168.69,
+                                                                                       "linearTotal":  4.686,
+                                                                                       "dataEntrada":  "30/03/2026 03:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "REVISÃƒO FINAL OP",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "08/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tl-308135",
+                                                                                       "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                                                                       "cidade":  "CEP 91340",
+                                                                                       "metragemM2":  198.06,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "30/04/2026 03:00",
+                                                                                       "prazo":  18,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "25/05/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  24,
+                                                               "applicatorsPerProject":  11.9,
+                                                               "utilizationPercent":  25
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  3,
+                                              "startDate":  "2026-05-11",
+                                              "endDate":  "2026-05-18",
+                                              "starting":  {
+                                                               "count":  1,
+                                                               "totalM2":  165.19,
+                                                               "totalLinear":  103.98,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83uz-958713",
+                                                                                    "clienteNome":  "ELLIOTT ROBERT MICHEL FRES",
+                                                                                    "cidade":  "CEP 88065",
+                                                                                    "metragemM2":  165.19,
+                                                                                    "linearTotal":  103.98,
+                                                                                    "dataEntrada":  "11/05/2026 11:00",
+                                                                                    "prazo":  20,
+                                                                                    "pipefyFase":  "CONFIRMAÃ‡Ã•ES OP 1",
+                                                                                    "equipe":  "MUTIRÃƒO",
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "05/06/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  7,
+                                                                  "totalM2":  2197.57,
+                                                                  "totalLinear":  103.98,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sg-266944",
+                                                                                       "clienteNome":  "Pedro Henning",
+                                                                                       "cidade":  "JaguariaÃ­va",
+                                                                                       "metragemM2":  150,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/04/2026 09:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83t6-308131",
+                                                                                       "clienteNome":  "JONATHAS DE ALMEIDA NUNES LUKAS",
+                                                                                       "cidade":  "CEP 13092",
+                                                                                       "metragemM2":  218.2,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 03:00",
+                                                                                       "prazo":  15,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "22/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v6-314299",
+                                                                                       "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  765.33,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 04:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83ss-108191",
+                                                                                       "clienteNome":  "FERNANDO TEMBRA RODRIGUEZ",
+                                                                                       "cidade":  "CEP 22430",
+                                                                                       "metragemM2":  140.04,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "06/04/2026 10:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "15/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83uz-958713",
+                                                                                       "clienteNome":  "ELLIOTT ROBERT MICHEL FRES",
+                                                                                       "cidade":  "CEP 88065",
+                                                                                       "metragemM2":  165.19,
+                                                                                       "linearTotal":  103.98,
+                                                                                       "dataEntrada":  "11/05/2026 11:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "CONFIRMAÃ‡Ã•ES OP 1",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "05/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tq-815103",
+                                                                                       "clienteNome":  "RAFAEL DE OLIVEIRA BOTELHO CORREA",
+                                                                                       "cidade":  "CEP 22621",
+                                                                                       "metragemM2":  560.75,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "24/04/2026 12:00",
+                                                                                       "prazo":  25,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "28/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tl-308135",
+                                                                                       "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                                                                       "cidade":  "CEP 91340",
+                                                                                       "metragemM2":  198.06,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "30/04/2026 03:00",
+                                                                                       "prazo":  18,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "25/05/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  21,
+                                                               "applicatorsPerProject":  13.6,
+                                                               "utilizationPercent":  22
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  4,
+                                              "startDate":  "2026-05-18",
+                                              "endDate":  "2026-05-25",
+                                              "starting":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  5,
+                                                                  "totalM2":  1907.53,
+                                                                  "totalLinear":  103.98,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83t6-308131",
+                                                                                       "clienteNome":  "JONATHAS DE ALMEIDA NUNES LUKAS",
+                                                                                       "cidade":  "CEP 13092",
+                                                                                       "metragemM2":  218.2,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 03:00",
+                                                                                       "prazo":  15,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "22/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v6-314299",
+                                                                                       "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  765.33,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 04:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83uz-958713",
+                                                                                       "clienteNome":  "ELLIOTT ROBERT MICHEL FRES",
+                                                                                       "cidade":  "CEP 88065",
+                                                                                       "metragemM2":  165.19,
+                                                                                       "linearTotal":  103.98,
+                                                                                       "dataEntrada":  "11/05/2026 11:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "CONFIRMAÃ‡Ã•ES OP 1",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "05/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tq-815103",
+                                                                                       "clienteNome":  "RAFAEL DE OLIVEIRA BOTELHO CORREA",
+                                                                                       "cidade":  "CEP 22621",
+                                                                                       "metragemM2":  560.75,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "24/04/2026 12:00",
+                                                                                       "prazo":  25,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "28/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tl-308135",
+                                                                                       "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                                                                       "cidade":  "CEP 91340",
+                                                                                       "metragemM2":  198.06,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "30/04/2026 03:00",
+                                                                                       "prazo":  18,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "25/05/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  15,
+                                                               "applicatorsPerProject":  19,
+                                                               "utilizationPercent":  16
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  5,
+                                              "startDate":  "2026-05-25",
+                                              "endDate":  "2026-06-01",
+                                              "starting":  {
+                                                               "count":  1,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83up-708520",
+                                                                                    "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                    "cidade":  "CEP 23970",
+                                                                                    "metragemM2":  0,
+                                                                                    "linearTotal":  null,
+                                                                                    "dataEntrada":  "25/05/2026 13:00",
+                                                                                    "prazo":  30,
+                                                                                    "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                    "equipe":  null,
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "03/07/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  5,
+                                                                  "totalM2":  1689.33,
+                                                                  "totalLinear":  103.98,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v6-314299",
+                                                                                       "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  765.33,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 04:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83uz-958713",
+                                                                                       "clienteNome":  "ELLIOTT ROBERT MICHEL FRES",
+                                                                                       "cidade":  "CEP 88065",
+                                                                                       "metragemM2":  165.19,
+                                                                                       "linearTotal":  103.98,
+                                                                                       "dataEntrada":  "11/05/2026 11:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "CONFIRMAÃ‡Ã•ES OP 1",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "05/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tq-815103",
+                                                                                       "clienteNome":  "RAFAEL DE OLIVEIRA BOTELHO CORREA",
+                                                                                       "cidade":  "CEP 22621",
+                                                                                       "metragemM2":  560.75,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "24/04/2026 12:00",
+                                                                                       "prazo":  25,
+                                                                                       "pipefyFase":  "INDÃšSTRIA - EM PRODUÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "28/05/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83up-708520",
+                                                                                       "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                       "cidade":  "CEP 23970",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "25/05/2026 13:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "03/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tl-308135",
+                                                                                       "clienteNome":  "ALEXANDRE BARCELLOS RAMOS",
+                                                                                       "cidade":  "CEP 91340",
+                                                                                       "metragemM2":  198.06,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "30/04/2026 03:00",
+                                                                                       "prazo":  18,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "25/05/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  15,
+                                                               "applicatorsPerProject":  19,
+                                                               "utilizationPercent":  16
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  6,
+                                              "startDate":  "2026-06-01",
+                                              "endDate":  "2026-06-08",
+                                              "starting":  {
+                                                               "count":  1,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83sq-578563",
+                                                                                    "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                    "cidade":  "NÃ£o informada",
+                                                                                    "metragemM2":  0,
+                                                                                    "linearTotal":  null,
+                                                                                    "dataEntrada":  "01/06/2026 11:00",
+                                                                                    "prazo":  30,
+                                                                                    "pipefyFase":  "EM CONTRATO",
+                                                                                    "equipe":  null,
+                                                                                    "reserva":  true,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "10/07/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  4,
+                                                                  "totalM2":  930.52,
+                                                                  "totalLinear":  103.98,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sq-578563",
+                                                                                       "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                       "cidade":  "NÃ£o informada",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/06/2026 11:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "EM CONTRATO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "10/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v6-314299",
+                                                                                       "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  765.33,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 04:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83uz-958713",
+                                                                                       "clienteNome":  "ELLIOTT ROBERT MICHEL FRES",
+                                                                                       "cidade":  "CEP 88065",
+                                                                                       "metragemM2":  165.19,
+                                                                                       "linearTotal":  103.98,
+                                                                                       "dataEntrada":  "11/05/2026 11:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "CONFIRMAÃ‡Ã•ES OP 1",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "05/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83up-708520",
+                                                                                       "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                       "cidade":  "CEP 23970",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "25/05/2026 13:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "03/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  12,
+                                                               "applicatorsPerProject":  23.8,
+                                                               "utilizationPercent":  13
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  7,
+                                              "startDate":  "2026-06-08",
+                                              "endDate":  "2026-06-15",
+                                              "starting":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  3,
+                                                                  "totalM2":  765.33,
+                                                                  "totalLinear":  0,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sq-578563",
+                                                                                       "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                       "cidade":  "NÃ£o informada",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/06/2026 11:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "EM CONTRATO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "10/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83v6-314299",
+                                                                                       "clienteNome":  "NINA RODRIGUES FIALDINI",
+                                                                                       "cidade":  "CEP 04531",
+                                                                                       "metragemM2":  765.33,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "04/05/2026 04:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "PROJETOS  - 1Âª REVISÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "12/06/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83up-708520",
+                                                                                       "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                       "cidade":  "CEP 23970",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "25/05/2026 13:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "03/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  9,
+                                                               "applicatorsPerProject":  31.7,
+                                                               "utilizationPercent":  9
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  8,
+                                              "startDate":  "2026-06-15",
+                                              "endDate":  "2026-06-22",
+                                              "starting":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  2,
+                                                                  "totalM2":  0,
+                                                                  "totalLinear":  0,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sq-578563",
+                                                                                       "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                       "cidade":  "NÃ£o informada",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/06/2026 11:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "EM CONTRATO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "10/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83up-708520",
+                                                                                       "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                       "cidade":  "CEP 23970",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "25/05/2026 13:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "03/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  6,
+                                                               "applicatorsPerProject":  47.5,
+                                                               "utilizationPercent":  6
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  9,
+                                              "startDate":  "2026-06-22",
+                                              "endDate":  "2026-06-29",
+                                              "starting":  {
+                                                               "count":  1,
+                                                               "totalM2":  1008.65,
+                                                               "totalLinear":  226.71,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83tx-875790",
+                                                                                    "clienteNome":  "JOSEMAR RICARDO BALABAN",
+                                                                                    "cidade":  "CEP 81210",
+                                                                                    "metragemM2":  1008.65,
+                                                                                    "linearTotal":  226.71,
+                                                                                    "dataEntrada":  "22/06/2026 09:00",
+                                                                                    "prazo":  20,
+                                                                                    "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                    "equipe":  "MUTIRÃƒO",
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "17/07/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  3,
+                                                                  "totalM2":  1008.65,
+                                                                  "totalLinear":  226.71,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sq-578563",
+                                                                                       "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                       "cidade":  "NÃ£o informada",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/06/2026 11:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "EM CONTRATO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "10/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tx-875790",
+                                                                                       "clienteNome":  "JOSEMAR RICARDO BALABAN",
+                                                                                       "cidade":  "CEP 81210",
+                                                                                       "metragemM2":  1008.65,
+                                                                                       "linearTotal":  226.71,
+                                                                                       "dataEntrada":  "22/06/2026 09:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "17/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83up-708520",
+                                                                                       "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                       "cidade":  "CEP 23970",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "25/05/2026 13:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "03/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  9,
+                                                               "applicatorsPerProject":  31.7,
+                                                               "utilizationPercent":  9
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  10,
+                                              "startDate":  "2026-06-29",
+                                              "endDate":  "2026-07-06",
+                                              "starting":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  3,
+                                                                  "totalM2":  1008.65,
+                                                                  "totalLinear":  226.71,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sq-578563",
+                                                                                       "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                       "cidade":  "NÃ£o informada",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/06/2026 11:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "EM CONTRATO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "10/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tx-875790",
+                                                                                       "clienteNome":  "JOSEMAR RICARDO BALABAN",
+                                                                                       "cidade":  "CEP 81210",
+                                                                                       "metragemM2":  1008.65,
+                                                                                       "linearTotal":  226.71,
+                                                                                       "dataEntrada":  "22/06/2026 09:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "17/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83up-708520",
+                                                                                       "clienteNome":  "TITO LIVIO CAPOBIANCO JR 2Âª Fase",
+                                                                                       "cidade":  "CEP 23970",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "25/05/2026 13:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "03/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  9,
+                                                               "applicatorsPerProject":  31.7,
+                                                               "utilizationPercent":  9
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  11,
+                                              "startDate":  "2026-07-06",
+                                              "endDate":  "2026-07-13",
+                                              "starting":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  2,
+                                                                  "totalM2":  1008.65,
+                                                                  "totalLinear":  226.71,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83sq-578563",
+                                                                                       "clienteNome":  "CAMILA E ROBERTA (INTEGRALUX)",
+                                                                                       "cidade":  "NÃ£o informada",
+                                                                                       "metragemM2":  0,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "01/06/2026 11:00",
+                                                                                       "prazo":  30,
+                                                                                       "pipefyFase":  "EM CONTRATO",
+                                                                                       "equipe":  null,
+                                                                                       "reserva":  true,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "10/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tx-875790",
+                                                                                       "clienteNome":  "JOSEMAR RICARDO BALABAN",
+                                                                                       "cidade":  "CEP 81210",
+                                                                                       "metragemM2":  1008.65,
+                                                                                       "linearTotal":  226.71,
+                                                                                       "dataEntrada":  "22/06/2026 09:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "17/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  6,
+                                                               "applicatorsPerProject":  47.5,
+                                                               "utilizationPercent":  6
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  12,
+                                              "startDate":  "2026-07-13",
+                                              "endDate":  "2026-07-20",
+                                              "starting":  {
+                                                               "count":  1,
+                                                               "totalM2":  124.28,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+                                                                                {
+                                                                                    "id":  "pf-mklv83tt-813435",
+                                                                                    "clienteNome":  "FERNANDO VALDEMAR BALDIN",
+                                                                                    "cidade":  "CEP 815404",
+                                                                                    "metragemM2":  124.28,
+                                                                                    "linearTotal":  null,
+                                                                                    "dataEntrada":  "13/07/2026 12:00",
+                                                                                    "prazo":  15,
+                                                                                    "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                    "equipe":  "MUTIRÃƒO",
+                                                                                    "reserva":  false,
+                                                                                    "obraNoturna":  false,
+                                                                                    "trabalhaSabado":  false,
+                                                                                    "trabalhaDomingo":  false,
+                                                                                    "dataTerminoCalculada":  "31/07/2026"
+                                                                                }
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  2,
+                                                                  "totalM2":  1132.93,
+                                                                  "totalLinear":  226.71,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tt-813435",
+                                                                                       "clienteNome":  "FERNANDO VALDEMAR BALDIN",
+                                                                                       "cidade":  "CEP 815404",
+                                                                                       "metragemM2":  124.28,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "13/07/2026 12:00",
+                                                                                       "prazo":  15,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "31/07/2026"
+                                                                                   },
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tx-875790",
+                                                                                       "clienteNome":  "JOSEMAR RICARDO BALABAN",
+                                                                                       "cidade":  "CEP 81210",
+                                                                                       "metragemM2":  1008.65,
+                                                                                       "linearTotal":  226.71,
+                                                                                       "dataEntrada":  "22/06/2026 09:00",
+                                                                                       "prazo":  20,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "17/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  6,
+                                                               "applicatorsPerProject":  47.5,
+                                                               "utilizationPercent":  6
+                                                           }
+                                          },
+                                          {
+                                              "weekNumber":  13,
+                                              "startDate":  "2026-07-20",
+                                              "endDate":  "2026-07-27",
+                                              "starting":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "totalLinear":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "inExecution":  {
+                                                                  "count":  1,
+                                                                  "totalM2":  124.28,
+                                                                  "totalLinear":  0,
+                                                                  "projects":  [
+                                                                                   {
+                                                                                       "id":  "pf-mklv83tt-813435",
+                                                                                       "clienteNome":  "FERNANDO VALDEMAR BALDIN",
+                                                                                       "cidade":  "CEP 815404",
+                                                                                       "metragemM2":  124.28,
+                                                                                       "linearTotal":  null,
+                                                                                       "dataEntrada":  "13/07/2026 12:00",
+                                                                                       "prazo":  15,
+                                                                                       "pipefyFase":  "AGEND. VT - AFERIÃ‡ÃƒO/ORIENTAÃ‡ÃƒO",
+                                                                                       "equipe":  "MUTIRÃƒO",
+                                                                                       "reserva":  false,
+                                                                                       "obraNoturna":  false,
+                                                                                       "trabalhaSabado":  false,
+                                                                                       "trabalhaDomingo":  false,
+                                                                                       "dataTerminoCalculada":  "31/07/2026"
+                                                                                   }
+                                                                               ]
+                                                              },
+                                              "noturnas":  {
+                                                               "count":  0,
+                                                               "totalM2":  0,
+                                                               "projects":  [
+
+                                                                            ]
+                                                           },
+                                              "capacity":  {
+                                                               "applicatorsNeeded":  3,
+                                                               "applicatorsPerProject":  95,
+                                                               "utilizationPercent":  3
+                                                           }
+                                          }
+                                      ],
+                            "Count":  13
+                        }
+}
