@@ -93,6 +93,75 @@ else
   log "  headline.json AUSENTE — pulando bump"
 fi
 
+# ─── 1.6) Rehidrata Q1_PLAN_OBRAS com status fresh do Painel de Obras ───
+# Q1 não é regenerado por refresh.sh nem refresh-dashboard.ps1 (ambos só preservam).
+# Esse bloco cruza Q1_PLAN_OBRAS existente com /api/projects fresh e atualiza:
+# status_real, fase_real, painel_ativa, dias_atraso, categoria.
+# Sem isso, obras finalizadas no painel continuam aparecendo como "atrasadas ativas".
+log "STEP 1.6: rehidrata Q1_PLAN_OBRAS"
+if [ -f "$DADOS/dashboard-data.json" ] && [ -f "$TMP/projects.json" ]; then
+  TMP_VAR="$TMP" DADOS_VAR="$DADOS" python3 << 'PYEOF' 2>&1
+import json, os
+from datetime import datetime, timezone
+TMP = os.environ['TMP_VAR']
+DADOS = os.environ['DADOS_VAR']
+dd_path = os.path.join(DADOS, 'dashboard-data.json')
+projects_path = os.path.join(TMP, 'projects.json')
+
+try:
+    projects = json.load(open(projects_path))
+    by_cliente = { p.get('clienteNome'): p for p in projects if p.get('clienteNome') }
+
+    with open(dd_path, encoding='utf-8') as f:
+        dd = json.load(f)
+
+    q1 = dd.get('Q1_PLAN_OBRAS', [])
+    if not q1:
+        print('  Q1_PLAN_OBRAS vazio — pulando rehidrata')
+    else:
+        hoje = datetime.now(timezone.utc).date()
+        atualizadas = 0
+        for obra in q1:
+            p = by_cliente.get(obra.get('cliente'))
+            if not p:
+                continue
+            s = p.get('status')
+            obra['status_real'] = s
+            obra['fase_real'] = p.get('faseAtual') or obra.get('fase_real')
+            obra['painel_ativa'] = s not in ('finalizado', 'concluido', 'cancelado')
+            # Recalcular dias_atraso vs hoje
+            dt = obra.get('dataTermino')
+            if dt:
+                try:
+                    d = datetime.strptime(str(dt)[:10], '%Y-%m-%d').date()
+                    obra['dias_atraso'] = (hoje - d).days
+                except Exception:
+                    pass
+            a = obra.get('dias_atraso', 0) or 0
+            if a <= 0: obra['categoria'] = 'NO_PRAZO'
+            elif a <= 30: obra['categoria'] = 'LEVE'
+            elif a <= 90: obra['categoria'] = 'MEDIA'
+            else: obra['categoria'] = 'GRAVE'
+            atualizadas += 1
+
+        # Recalcular Q1_TOTAIS sobre obras com painel_ativa=True
+        q1_totais = {'NO_PRAZO': 0, 'LEVE': 0, 'MEDIA': 0, 'GRAVE': 0, 'TOTAL': len(q1)}
+        for o in q1:
+            if o.get('painel_ativa'):
+                cat = o.get('categoria', 'GRAVE')
+                if cat in q1_totais:
+                    q1_totais[cat] += 1
+
+        dd['Q1_PLAN_OBRAS'] = q1
+        dd['Q1_TOTAIS'] = q1_totais
+        with open(dd_path, 'w', encoding='utf-8') as f:
+            json.dump(dd, f, ensure_ascii=False)
+        print(f'  Q1_PLAN_OBRAS rehidratado: {atualizadas}/{len(q1)} cruzadas com /api/projects')
+except Exception as e:
+    print(f'  AVISO: rehidrata Q1 falhou: {e!r}')
+PYEOF
+fi
+
 # ─── 2) PESADO? ───
 if [ -f "$SNAP" ]; then
   log "STEP 2: modo LEVE — snapshot do dia já existe, saindo OK"
