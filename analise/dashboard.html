@@ -2612,12 +2612,6 @@ function q2ShowDiagFiltered(list){
   if (topCid.length) html += stat('Concentração', lista(topCid, total));
   if (topCons.length) html += stat('Consultor', lista(topCons, total));
   if (topFase.length) html += stat('Fase preponderante', lista(topFase, total));
-  if (med != null) {
-    var idadeDetail = '<span class="q2s-bigN">' + med + 'd</span> <span class="q2s-pct">mediana</span>';
-    if (n270) idadeDetail += ' <span class="q2s-flag crit">' + n270 + ' c/ 270+</span>';
-    else if (n180) idadeDetail += ' <span class="q2s-flag warn">' + n180 + ' c/ 180+</span>';
-    html += stat('Idade da carteira', idadeDetail);
-  }
   if (semConsultor || orfas) {
     var sinais = [];
     if (semConsultor) sinais.push('<span class="q2s-bigN">' + semConsultor + '</span> <span class="q2s-pct">sem consultor</span><span class="q2s-flag crit">crítico</span>');
