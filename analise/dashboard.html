@@ -498,21 +498,28 @@
   .q2-diag-card h4{color:#2a2520;font-size:13px;margin-bottom:4px;font-weight:600}
   .q2-diag-card .meta{color:#8a7e72;font-size:11px;margin-bottom:6px;font-family:'JetBrains Mono',monospace}
   .q2-diag-card .text{color:#6b6156;white-space:pre-wrap}
-  /* Síntese da categoria (Vitor 2026-04-30) — substitui texto longo por padrões */
-  .q2s-head{display:flex;align-items:baseline;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e0d8cc}
-  .q2s-head h4{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.16em;color:#3a3530;text-transform:uppercase;margin:0}
-  .q2s-head .q2s-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;margin-left:auto}
-  .q2s-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px dashed #ede6dc;font-size:12px;line-height:1.4}
-  .q2s-row:last-child{border-bottom:none}
-  .q2s-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;color:#a89e92;text-transform:uppercase;flex-shrink:0;width:115px;padding-top:2px}
-  .q2s-val{flex:1;color:#3a3530}
-  .q2s-val .q2s-bigN{font-family:'JetBrains Mono',monospace;font-weight:600;color:#2a2520}
-  .q2s-val .q2s-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;margin-left:4px}
-  .q2s-insight{margin-top:14px;padding:10px 12px;background:#fdfaf4;border:1px solid #ede6dc;border-left:3px solid #b8a080;border-radius:4px;font-size:12px;line-height:1.5;color:#3a3530;font-style:italic}
-  .q2s-insight strong{color:#b8a080;font-style:normal;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:.06em}
-  .q2s-flag{display:inline-block;padding:1px 6px;margin-left:4px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.06em}
-  .q2s-flag.crit{background:#f6eaea;color:#c45a5a}
-  .q2s-flag.warn{background:#f4f0e6;color:#b89a4a}
+  /* Síntese da categoria (Vitor 2026-04-30 v2) — visual com identidade dourada */
+  .q2s-wrap{padding:0;background:transparent}
+  .q2s-head{margin:0 0 18px 0;padding:14px 18px;background:linear-gradient(135deg,#b8a080 0%,#a89070 100%);border-radius:6px;color:#fff;display:flex;align-items:baseline;gap:8px}
+  .q2s-head h4{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0;color:#fff}
+  .q2s-head .q2s-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:#f5ecd9;margin-left:auto;font-weight:500}
+  .q2s-stats{display:flex;flex-direction:column;gap:8px}
+  .q2s-stat{padding:12px 16px;background:#ffffff;border:1px solid #e8e0d4;border-left:3px solid #b8a080;border-radius:4px;display:flex;align-items:center;gap:14px}
+  .q2s-stat:nth-child(2){border-left-color:#3d8a5a}
+  .q2s-stat:nth-child(3){border-left-color:#4a7ab8}
+  .q2s-stat:nth-child(4){border-left-color:#b89a4a}
+  .q2s-stat:nth-child(5){border-left-color:#c45a5a}
+  .q2s-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;flex-shrink:0;width:120px;line-height:1.4}
+  .q2s-stat-val{flex:1;color:#3a3530;font-size:13px;line-height:1.5}
+  .q2s-stat-val .q2s-bigN{font-family:'JetBrains Mono',monospace;font-weight:600;color:#2a2520;font-size:14px;letter-spacing:-0.01em}
+  .q2s-stat-val .q2s-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:#a89e92;margin-left:3px;font-weight:500}
+  .q2s-stat-val .q2s-divider{color:#d8c8a8;margin:0 6px;font-weight:300}
+  .q2s-flag{display:inline-block;padding:2px 7px;margin-left:6px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em}
+  .q2s-flag.crit{background:rgba(196,90,90,0.12);color:#c45a5a;border:1px solid rgba(196,90,90,0.25)}
+  .q2s-flag.warn{background:rgba(184,154,74,0.12);color:#b89a4a;border:1px solid rgba(184,154,74,0.25)}
+  .q2s-insight{margin-top:18px;padding:14px 16px;background:#fdfaf4;border:1px solid #e8d8b8;border-left:4px solid #b8a080;border-radius:6px;font-size:13px;line-height:1.6;color:#3a3530;position:relative}
+  .q2s-insight::before{content:'⚡ Padrão visível';display:block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;color:#b8a080;text-transform:uppercase;margin-bottom:6px}
+  .q2s-insight strong{color:#2a2520;font-style:normal;font-family:'JetBrains Mono',monospace;font-weight:600;background:rgba(184,160,128,0.18);padding:1px 6px;border-radius:3px}
 
   .idade-ok{color:#3d8a5a} .idade-warn{color:#b89a4a} .idade-crit{color:#c45a5a} .idade-esc{color:#b83a3a;font-weight:600}
 
@@ -2586,44 +2593,48 @@ function q2ShowDiagFiltered(list){
   var orfaSet = new Set((EXT && EXT.orfas_ids || []).map(String));
   var orfas = list.filter(o => orfaSet.has(String(o.id))).length;
 
-  // Header
-  var html = '<div class="q2s-head">'
+  // Header com gradient dourado
+  var html = '<div class="q2s-wrap">'
+    + '<div class="q2s-head">'
     + '<h4>Síntese</h4>'
     + '<span class="q2s-meta">' + total + ' obras · ' + Math.round(totalM2).toLocaleString('pt-BR') + ' m²</span>'
     + '</div>';
 
-  // Linhas
-  function row(lbl, valHtml) {
-    return '<div class="q2s-row"><div class="q2s-lbl">' + lbl + '</div><div class="q2s-val">' + valHtml + '</div></div>';
+  // Stats em mini-cards (cada um com borda colorida)
+  function stat(lbl, valHtml) {
+    return '<div class="q2s-stat"><div class="q2s-stat-lbl">' + lbl + '</div><div class="q2s-stat-val">' + valHtml + '</div></div>';
   }
   function lista(top, total) {
-    return top.map(([k,v]) => '<span class="q2s-bigN">' + q2EscHtml(k) + '</span> <span class="q2s-pct">' + v + ' · ' + pct(v,total) + '</span>').join(' · ');
+    return top.map(([k,v]) => '<span class="q2s-bigN">' + q2EscHtml(k) + '</span> <span class="q2s-pct">' + v + ' · ' + pct(v,total) + '</span>').join('<span class="q2s-divider">·</span>');
   }
 
-  if (topCid.length) html += row('Concentração', lista(topCid, total));
-  if (topCons.length) html += row('Consultor', lista(topCons, total));
-  if (topFase.length) html += row('Fase preponderante', lista(topFase, total));
+  html += '<div class="q2s-stats">';
+  if (topCid.length) html += stat('Concentração', lista(topCid, total));
+  if (topCons.length) html += stat('Consultor', lista(topCons, total));
+  if (topFase.length) html += stat('Fase preponderante', lista(topFase, total));
   if (med != null) {
-    var idadeDetail = '<span class="q2s-bigN">' + med + 'd</span> mediana';
-    if (n270) idadeDetail += ' <span class="q2s-flag crit">' + n270 + ' com 270+</span>';
-    else if (n180) idadeDetail += ' <span class="q2s-flag warn">' + n180 + ' com 180+</span>';
-    html += row('Idade da carteira', idadeDetail);
+    var idadeDetail = '<span class="q2s-bigN">' + med + 'd</span> <span class="q2s-pct">mediana</span>';
+    if (n270) idadeDetail += ' <span class="q2s-flag crit">' + n270 + ' c/ 270+</span>';
+    else if (n180) idadeDetail += ' <span class="q2s-flag warn">' + n180 + ' c/ 180+</span>';
+    html += stat('Idade da carteira', idadeDetail);
   }
   if (semConsultor || orfas) {
     var sinais = [];
-    if (semConsultor) sinais.push('<span class="q2s-bigN">' + semConsultor + '</span> sem consultor <span class="q2s-flag crit">!</span>');
-    if (orfas && orfas !== semConsultor) sinais.push('<span class="q2s-bigN">' + orfas + '</span> órfãs');
-    html += row('Sinais críticos', sinais.join(' · '));
+    if (semConsultor) sinais.push('<span class="q2s-bigN">' + semConsultor + '</span> <span class="q2s-pct">sem consultor</span><span class="q2s-flag crit">crítico</span>');
+    if (orfas && orfas !== semConsultor) sinais.push('<span class="q2s-bigN">' + orfas + '</span> <span class="q2s-pct">órfãs</span>');
+    html += stat('Sinais críticos', sinais.join('<span class="q2s-divider">·</span>'));
   }
+  html += '</div>';
 
-  // Insight / padrão visível
+  // Insight / padrão visível (com prefixo automático via CSS ::before)
   var insightParts = [];
   if (topCid[0] && topCid[0][1] >= total*0.5) insightParts.push('concentração em <strong>' + q2EscHtml(topCid[0][0]) + '</strong> (' + pct(topCid[0][1], total) + ')');
   if (topCons[0] && topCons[0][1] >= total*0.4) insightParts.push('<strong>' + q2EscHtml(topCons[0][0]) + '</strong> domina (' + pct(topCons[0][1], total) + ')');
-  if (n270 > 0 && n270 >= total*0.3) insightParts.push('<strong>' + n270 + ' obras zona escarlate</strong> (270+ dias)');
+  if (n270 > 0 && n270 >= total*0.3) insightParts.push('<strong>' + n270 + ' em zona escarlate</strong> (270+ dias)');
   if (insightParts.length) {
-    html += '<div class="q2s-insight">Padrão visível: ' + insightParts.join(' · ') + '.</div>';
+    html += '<div class="q2s-insight">' + insightParts.join(' · ') + '.</div>';
   }
+  html += '</div>';
 
   el.innerHTML = html;
 }
