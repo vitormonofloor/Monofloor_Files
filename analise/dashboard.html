@@ -152,6 +152,12 @@
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
   }
   .health-veredito { font-size: 13px; color: var(--text); margin-top: 6px; font-weight: 500; }
+  .health-delta{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+  .health-delta.subiu{background:rgba(61,138,90,0.12);color:#3d7a4a;border:1px solid rgba(61,138,90,0.25)}
+  .health-delta.desceu{background:rgba(196,90,90,0.12);color:#9a3030;border:1px solid rgba(196,90,90,0.25)}
+  .health-delta.estavel{background:rgba(168,158,146,0.12);color:#6b6156;border:1px solid rgba(168,158,146,0.25)}
+  .health-delta.inicial{background:rgba(168,158,146,0.08);color:#a89e92;border:1px solid rgba(168,158,146,0.18);font-weight:400;font-style:italic}
+  .hd-arrow{font-size:13px;line-height:1}
   .health-amber { color: var(--amber); }
   .health-red { color: var(--red); }
   .health-green { color: var(--green); }
@@ -178,6 +184,19 @@
   .hero-balanco .hb-total{margin-left:auto;font-weight:500;color:#6b6156}
   .kpi-edai{font-size:10px;color:#a89e92;margin-top:4px;font-style:italic;line-height:1.3}
 
+  /* Manchete narrativa: zona + 1-2 fatos do dia */
+  .hero-manchete{display:flex;gap:12px;align-items:center;margin:14px 0 4px;padding:12px 16px;background:linear-gradient(135deg,#fff,#faf7f2);border:1px solid #e0d8cc;border-left:4px solid #b8a080;border-radius:6px;flex-wrap:wrap}
+  .hero-manchete.zona-verde{border-left-color:#3d8a5a;background:linear-gradient(135deg,#fff,#f5fbf5)}
+  .hero-manchete.zona-amarela{border-left-color:#b89a4a;background:linear-gradient(135deg,#fff,#faf5ed)}
+  .hero-manchete.zona-vermelha{border-left-color:#c45a5a;background:linear-gradient(135deg,#fff,#fdf6f6)}
+  .hm-zona{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:3px 10px;border-radius:3px;white-space:nowrap}
+  .hero-manchete.zona-verde .hm-zona{background:#3d8a5a;color:#fff}
+  .hero-manchete.zona-amarela .hm-zona{background:#b89a4a;color:#fff}
+  .hero-manchete.zona-vermelha .hm-zona{background:#c45a5a;color:#fff}
+  .hm-frase{font-size:13px;color:#3a3328;line-height:1.5;flex:1}
+  .hm-frase strong{color:#2a2520;font-weight:600}
+  .hm-frase .hm-pos{color:#3d8a5a;font-weight:600}
+  .hm-frase .hm-neg{color:#c45a5a;font-weight:600}
   .hero-summary {
     grid-column: 2 / 3;
     margin-top: 8px; padding: 12px 24px;
@@ -626,6 +645,10 @@
   .q3-obras-summary{font-size:11px;color:#8a7e72;margin-top:10px;padding-top:8px;border-top:1px solid #e0d8cc;display:flex;justify-content:space-between}
   .q3-obras-summary b{color:#b8a080;font-family:'JetBrains Mono',monospace}
 
+  /* Q4 — sub-headers de seção */
+  .q4-subhead{font-size:11px;color:#6b6156;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid #ede6dc;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .q4-subhead:first-of-type{margin-top:14px}
+  .q4-subhead span{font-size:10px;color:#a89e92;font-weight:400;text-transform:none;letter-spacing:0;font-style:italic}
   /* ===== Q4 — Estados operacionais ===== */
   .q4-retrab-banner{display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#faf5ed 0%,#f5edd9 100%);border:1px solid #d4b886;border-left:4px solid #b89a4a;border-radius:6px;padding:12px 16px;margin:0 0 14px}
   .q4-retrab-icon{font-size:22px;color:#b89a4a;font-weight:700;line-height:1}
@@ -1462,6 +1485,10 @@
       </svg>
       <div class="health-lbl">Índice de Saúde Operacional</div>
       <div class="health-veredito" id="health-veredito">—</div>
+      <div class="health-delta" id="health-delta" hidden>
+        <span class="hd-arrow" id="hd-arrow">—</span>
+        <span class="hd-text" id="hd-text">—</span>
+      </div>
       <p class="hero-context">Abaixo de 65 = atenção operacional. Meta saudável: acima de 80.</p>
       <div class="score-breakdown" id="score-breakdown">
         <!-- gerado por JS -->
@@ -1474,6 +1501,12 @@
         <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
         <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
         <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
+      </div>
+
+      <!-- Manchete narrativa: zona + 1-2 fatos chave do dia -->
+      <div class="hero-manchete" id="hero-manchete" hidden>
+        <span class="hm-zona" id="hm-zona">—</span>
+        <span class="hm-frase" id="hm-frase">—</span>
       </div>
 
       <div class="hero-summary" id="hero-summary">—</div>
@@ -1791,7 +1824,8 @@
       <p class="sub" id="q4-sub">O que está efetivamente em obra (rodando), o que travou (estagnado) e o que ainda não começou (pendente). Clique nos cards para ver as obras.</p>
     </div>
 
-    <!-- BLOCO 1: 3 cards grandes por estado operacional (clicáveis → modal) -->
+    <!-- BLOCO 1: Estado da carteira -->
+    <h3 class="q4-subhead">Estado da carteira <span>onde estão as obras agora</span></h3>
     <div class="q4-estados">
       <button type="button" class="q4-est rodando" onclick="openQ4Modal('rodando')" title="Ver lista de obras RODANDO">
         <div class="q4-est-head">
@@ -1839,7 +1873,8 @@
       <b>Leitura:</b> calculando estado operacional…
     </div>
 
-    <!-- BLOCO 2: Distribuição secundária -->
+    <!-- BLOCO 2: Distribuições -->
+    <h3 class="q4-subhead">Distribuições <span>como o volume se divide por fase, geografia e funil</span></h3>
     <div class="q4-grid-sec" style="grid-template-columns:1fr 1fr 1fr">
       <div class="q4-sec-card">
         <h4>Top fases por volume</h4>
@@ -2573,6 +2608,164 @@ function renderHero() {
 // e SOBRESCREVE os campos que devem refletir 1:1 o painel do Rodrigo.
 // O que NÃO está no Rodrigo (180+, sem responsável, score, etc) continua calculado
 // dos nossos dados — visão complementar.
+// Score delta vs 7 dias atrás — precisa de score-historico.json
+function _renderScoreDelta(headline) {
+  var elBox = document.getElementById('health-delta');
+  var elArrow = document.getElementById('hd-arrow');
+  var elText = document.getElementById('hd-text');
+  if (!elBox || !elArrow || !elText) return;
+  fetch('dados/score-historico.json?t=' + Date.now())
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(hist){
+      var scoreHoje = headline && headline.score;
+      if (!Array.isArray(hist) || !hist.length || scoreHoje == null) return;
+      var hoje = new Date();
+      var refDt = new Date(hoje.getTime() - 7 * 86400000);
+      var refStr = refDt.toISOString().slice(0, 10);
+      // Buscar entry mais próxima de 7 dias atrás (com janela ±2 dias)
+      var ref = null;
+      var melhorDelta = Infinity;
+      hist.forEach(function(h){
+        if (!h.date || h.score == null) return;
+        var dh = new Date(h.date + 'T12:00:00');
+        var diff = Math.abs((refDt - dh) / 86400000);
+        if (diff <= 4 && diff < melhorDelta) {
+          melhorDelta = diff;
+          ref = h;
+        }
+      });
+      if (!ref) {
+        // Sem dado de 7d atrás → mostrar "início do histórico"
+        var firstEntry = hist[0];
+        if (firstEntry && firstEntry.date) {
+          var diasAcum = Math.round((hoje - new Date(firstEntry.date + 'T12:00:00')) / 86400000);
+          elBox.className = 'health-delta inicial';
+          elArrow.textContent = '◇';
+          elText.textContent = diasAcum < 7
+            ? 'histórico iniciado há ' + Math.max(0, diasAcum) + 'd · delta semanal em ' + (7 - diasAcum) + 'd'
+            : 'sem dado de 7d atrás (lacuna)';
+          elBox.hidden = false;
+        }
+        return;
+      }
+      var delta = scoreHoje - ref.score;
+      elBox.hidden = false;
+      if (delta > 0) {
+        elBox.className = 'health-delta subiu';
+        elArrow.textContent = '▲';
+        elText.textContent = '+' + delta + ' vs 7d (era ' + ref.score + ')';
+      } else if (delta < 0) {
+        elBox.className = 'health-delta desceu';
+        elArrow.textContent = '▼';
+        elText.textContent = delta + ' vs 7d (era ' + ref.score + ')';
+      } else {
+        elBox.className = 'health-delta estavel';
+        elArrow.textContent = '◆';
+        elText.textContent = 'estável vs 7d (' + ref.score + ')';
+      }
+    })
+    .catch(function(e){ console.warn('score-historico:', e); });
+}
+
+// Manchete narrativa do Hero — zona (verde/amarela/vermelha) + 1-2 fatos do dia
+// Lógica de zona:
+//   verde   = score ≥ 75 E sem alerta forte
+//   amarela = score 60-74 OU ciclo > meta+10% OU >5% atenção
+//   vermelha = score < 60 OU ciclo > meta+30% OU >10% atenção
+function _renderHeroManchete(R, ativas) {
+  var el = document.getElementById('hero-manchete');
+  var elZ = document.getElementById('hm-zona');
+  var elF = document.getElementById('hm-frase');
+  if (!el || !elZ || !elF) return;
+
+  // Score: lê do headline.json se disponível, senão recalcula com base em pilares
+  var score = (window._headline && window._headline.score) || 0;
+  if (!score && AGG && AGG.idade_mediana) {
+    // fallback: aproximação
+    score = Math.max(0, Math.min(100, 100 - Math.round(AGG.idade_mediana / 3)));
+  }
+
+  // Ciclo real (mediana de obras finalizadas em 2026)
+  var ciclo = (R.tempo && R.tempo.ciclo_total_mediana) || 0;
+  var meta = (R.tempo && R.tempo.meta_dias) || 150;
+  var cicloDelta = ciclo - meta;
+  var cicloPctExcesso = meta ? Math.round((cicloDelta / meta) * 100) : 0;
+
+  // Operacional KIRA
+  var op = R.operacional_kira || {};
+  var atencao = op.atencao || 0;
+  var totalKira = op.com_kira || 0;
+  var pctAtencao = totalKira ? (atencao / totalKira * 100) : 0;
+
+  // Retrabalho
+  var nReparo = (R.por_status && R.por_status['reparo']) || 0;
+  var nMarcas = (R.por_status && R.por_status['marcas_rolo_cera']) || 0;
+  var nRetrab = nReparo + nMarcas;
+  var pctRetrab = ativas ? (nRetrab / (ativas + nRetrab) * 100) : 0;
+
+  // Decidir zona
+  var zona, zonaTxt;
+  if (score >= 75 && cicloPctExcesso <= 10 && pctAtencao < 5) {
+    zona = 'verde'; zonaTxt = 'Zona verde';
+  } else if (score < 60 || cicloPctExcesso > 30 || pctAtencao > 10) {
+    zona = 'vermelha'; zonaTxt = 'Zona vermelha';
+  } else {
+    zona = 'amarela'; zonaTxt = 'Zona amarela';
+  }
+
+  // Construir 1-2 fatos relevantes (escolher os 2 mais altos)
+  var fatos = [];
+  if (cicloDelta > 0) {
+    fatos.push({
+      peso: cicloDelta,
+      txt: 'ciclo <strong>' + ciclo + 'd</strong> · <span class="hm-neg">+' + cicloDelta + 'd vs meta</span>'
+    });
+  } else if (cicloDelta < 0 && ciclo) {
+    fatos.push({
+      peso: Math.abs(cicloDelta),
+      txt: 'ciclo <strong>' + ciclo + 'd</strong> · <span class="hm-pos">' + cicloDelta + 'd vs meta</span>'
+    });
+  }
+  if (atencao > 0) {
+    fatos.push({
+      peso: atencao * 5,
+      txt: '<strong>' + atencao + '</strong> obras em atenção (KIRA)'
+    });
+  }
+  if (nRetrab > 0) {
+    fatos.push({
+      peso: nRetrab * 3,
+      txt: '<strong>' + nRetrab + '</strong> em retrabalho · ' + pctRetrab.toFixed(1) + '% da operação'
+    });
+  }
+  if (AGG && AGG.n_270_plus) {
+    fatos.push({
+      peso: AGG.n_270_plus * 4,
+      txt: '<strong>' + AGG.n_270_plus + '</strong> obras na zona escarlate (270+ dias)'
+    });
+  }
+  if (op.sem_kira > totalKira * 0.5) {
+    fatos.push({
+      peso: 30,
+      txt: '<strong>' + op.sem_kira + '</strong> obras invisíveis ao KIRA (sem grupo cadastrado)'
+    });
+  }
+  fatos.sort(function(a,b){ return b.peso - a.peso; });
+  var top2 = fatos.slice(0, 2).map(function(f){ return f.txt; }).join(' · ');
+
+  // Frase de abertura conforme zona
+  var prefixo = zona === 'verde'
+    ? 'Operação saudável.'
+    : zona === 'vermelha'
+      ? 'Operação precisa de atenção.'
+      : 'Operação estável com sinais a observar.';
+
+  elZ.textContent = zonaTxt;
+  elF.innerHTML = '<strong>' + prefixo + '</strong> ' + (top2 || 'Sem sinais críticos detectados.');
+  el.className = 'hero-manchete zona-' + zona;
+  el.hidden = false;
+}
+
 function applyRodrigoCanon() {
   fetch('dados/rodrigo-stats.json?t=' + Date.now())
     .then(function(r){ return r.ok ? r.json() : null; })
@@ -2702,6 +2895,9 @@ function applyRodrigoCanon() {
 
         // Hero summary — reescreve com canônicos do Rodrigo + ciclo real (não a mediana
         // de idade das ativas, que é distorcida)
+        // Manchete narrativa: zona (verde/amarela/vermelha) + 1-2 fatos do dia
+        try { _renderHeroManchete(R, ativas); } catch(e) { console.warn('manchete:', e); }
+
         var hs = $('hero-summary');
         if (hs && AGG) {
           var n180 = AGG.n_180_plus || 0;
@@ -4801,6 +4997,13 @@ function renderAutoAgentHealth() {
   fetch('dados/headline.json?t=' + Date.now())
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(h){
+      if (h) {
+        window._headline = h;
+        // Re-renderizar manchete agora que temos score real
+        try { if (window._rodrigoStats) _renderHeroManchete(window._rodrigoStats, AGG && AGG.total_ativas); } catch(e) {}
+        // Renderizar delta do score (precisa do histórico)
+        try { _renderScoreDelta(h); } catch(e) { console.warn('scoreDelta:', e); }
+      }
       if (h && h.atualizado_em) {
         var ageH = (Date.now() - new Date(h.atualizado_em).getTime()) / 3600000;
         applyDot('dot-refresh', ageH, 1);

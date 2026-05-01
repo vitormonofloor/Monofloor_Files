@@ -712,7 +712,7 @@
 
 <div class="wrap">
 
-  <p class="frase-explicativa" style="margin-top:24px"><strong>Mostra onde o painel oficial da obra diverge do que a equipe conversa no Telegram.</strong> Acompanhe ações pendentes, datas alteradas e clima do cliente.</p>
+  <p class="frase-explicativa" style="margin-top:24px">Cruza o <strong>Painel de Obras</strong> com a comunicação técnica no <strong>Telegram</strong> para revelar o que foi combinado mas não registrado: ações pendentes, datas remarcadas e clima do cliente.</p>
 
     <div class="status-bar" style="margin-top:18px">
       <div class="st-item"><span class="st-label">Obras</span><span class="st-val" id="st-total">—</span></div>
@@ -764,15 +764,15 @@
   <div class="consultor-grid" id="consultor-grid"></div>
 
   <!-- Tendência de cores -->
-  <div class="section-title">Tendência de cores · obras-piloto</div>
+  <div class="section-title">Tendência de cores · obras no piloto</div>
   <div class="cores-panel" id="cores-panel"></div>
 
   <!-- Flags recorrentes -->
   <div class="section-title">Flags recorrentes</div>
   <div class="flags-stats" id="flags-stats"></div>
 
-  <!-- Padrões cross-obras -->
-  <div class="section-title">Padrões cross-obras</div>
+  <!-- Padrões compartilhados entre obras -->
+  <div class="section-title">Padrões compartilhados entre obras</div>
   <div class="padroes" id="padroes"></div>
 
   <!-- Sentinela · indicador discreto de saúde -->
@@ -786,9 +786,9 @@
     </div>
   </div>
 
-  <!-- Lâmpada mágica · botão flutuante -->
-  <button class="lampada-btn" id="lampada-btn" title="Dashboard de apresentação · destila tudo em indicadores visuais">
-    💡<span class="lab">LAMP</span>
+  <!-- Lâmpada · modo apresentação -->
+  <button class="lampada-btn" id="lampada-btn" title="Modo apresentação · destila o estado da operação em sinais visuais" aria-label="Abrir modo apresentação">
+    💡
   </button>
 
   <!-- Overlay -->
@@ -798,8 +798,8 @@
   </div>
 
   <footer>
-    Lab Orion · monitoramento ativo das obras · varredura automática 12h e 18h<br>
-    Dados de: <span id="footer-snapshot">—</span>
+    Lab Orion · piloto com 10 de 227 obras ativas · varredura automática 12h e 18h<br>
+    Snapshot de: <span id="footer-snapshot">—</span>
   </footer>
 
 </div>
@@ -2018,13 +2018,13 @@ function renderLampada(){
   }).length;
 
   const kpis = [
-    {num: total, label: 'Obras analisadas', cls: ''},
-    {num: v.status_desatualizado || 0, label: 'Painel desatualizado', cls: 'crit'},
+    {num: total, label: 'Obras no piloto', cls: ''},
+    {num: v.status_desatualizado || 0, label: 'Painel de Obras desatualizado', cls: 'crit'},
     {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit'},
     {num: detratorLat ? detratorLat.ocorrencias : 0, label: 'Cliente em risco', cls: 'warn'},
     {num: aplicIndef ? aplicIndef.ocorrencias : 0, label: 'Aplicador a definir', cls: 'warn'},
     {num: consDiv ? consDiv.ocorrencias : 0, label: 'Consultor não atua', cls: 'crit'},
-    {num: climaCritico, label: 'Clima tenso/crítico (KIRA)', cls: 'warn'},
+    {num: climaCritico, label: 'Clima tenso · KIRA WhatsApp', cls: 'warn'},
     {num: obrasUrgAlta, label: 'Urgência alta', cls: 'crit'},
   ];
 
@@ -2126,7 +2126,7 @@ function renderLampada(){
     </div>`;
   }).join('');
 
-  // Padrões cross-obras · sintetizados em cards visuais
+  // Padrões compartilhados entre obras · sintetizados em cards visuais
   const padroes = (ag.padroes_cross_obras || []).slice(0, 6);
   const padroesHtml = padroes.map(p => {
     const x = parsePadrao(p);
@@ -2143,7 +2143,7 @@ function renderLampada(){
 
   const cabec = `<div class="lp-header">
     <h1 class="lp-titulo">Orion · <span class="accent">estado da operação</span></h1>
-    <div class="lp-sub">${total} obras-piloto · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)} · destila Telegram + Painel + KIRA + Equipes em sinais visuais</div>
+    <div class="lp-sub">${total} obras no piloto · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)} · destila Painel de Obras × Comunicação Telegram × KIRA WhatsApp × equipe em campo em sinais visuais</div>
   </div>`;
 
   document.getElementById('lampada-modal').innerHTML = `${cabec}
@@ -2167,7 +2167,7 @@ function renderLampada(){
     <div class="lp-section-title">Carga e urgência por consultor</div>
     <div class="lp-cons-grid">${consHtml || '<div style="color:#8a7e72;font-style:italic">Sem dados</div>'}</div>
 
-    <div class="lp-section-title">Padrões cross-obras detectados</div>
+    <div class="lp-section-title">Padrões compartilhados entre obras</div>
     <div class="lp-padroes-grid">${padroesHtml || '<div style="color:#8a7e72;font-style:italic">Sem padrões consolidados ainda</div>'}</div>
     <div style="margin-top:10px;font-size:9px;color:#a89e92;font-style:italic;font-family:'JetBrains Mono',monospace">Passe o mouse no card pra ver o texto completo do padrão</div>
 
@@ -2258,41 +2258,41 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
       <button class="onb-fechar" id="onb-fechar" aria-label="Fechar">×</button>
     </div>
 
-    <p class="onb-intro">O Lab Orion compara o <strong>Painel de Obras</strong> (oficial) com a <strong>Comunicação no Telegram</strong> (real) para mostrar divergências invisíveis ao KIRA — ações pendentes, datas alteradas, clima do cliente.</p>
+    <p class="onb-intro">O Lab Orion cruza o <strong>Painel de Obras</strong> (oficial · datas, fases, equipe) com a <strong>Comunicação Telegram</strong> (o que a equipe combina no dia-a-dia) para revelar o que escapa do radar — ações combinadas e não registradas, datas remarcadas, clima do cliente, equipe sem cadastro.</p>
 
     <div class="onb-cards">
       <div class="onb-card">
         <div class="onb-card-num">01 · varredura</div>
         <div class="onb-card-titulo">Coleta automática 12h e 18h</div>
-        <div class="onb-card-desc">Lê o painel oficial e os grupos do Telegram, compara mensagens novas, extrai datas, equipe, cores e clima do cliente. Atualiza dois snapshots por dia.</div>
+        <div class="onb-card-desc">Lê o <strong>Painel de Obras</strong> e os grupos técnicos do <strong>Telegram</strong>, compara mensagens novas, extrai datas, equipe em campo, cores aplicadas e clima do cliente. Dois snapshots por dia.</div>
       </div>
 
       <div class="onb-card">
         <div class="onb-card-num">02 · sentinela</div>
         <div class="onb-card-titulo">Equipe de prevenção e risco</div>
-        <div class="onb-card-desc">9 checks de saúde rodam após cada varredura: schema, sessão, frescor, KIRA, lock, backups, drift de obras. Pisca <strong>verde / âmbar / vermelho</strong> no canto.</div>
+        <div class="onb-card-desc">9 checks de saúde após cada varredura: schema, sessão Telegram, frescor dos dados, KIRA WhatsApp, lock, backups, drift de obras. Pisca <strong>verde / âmbar / vermelho</strong> no canto inferior esquerdo.</div>
       </div>
 
       <div class="onb-card">
         <div class="onb-card-num">03 · lâmpada</div>
-        <div class="onb-card-titulo">Sinal âmbar quando diverge</div>
-        <div class="onb-card-desc">Cada obra ganha uma lâmpada quando o painel oficial e o Telegram não conversam — data remarcada que não foi atualizada, ação acordada e não registrada, cliente reclamando.</div>
+        <div class="onb-card-titulo">Modo apresentação</div>
+        <div class="onb-card-desc">Botão flutuante no canto inferior direito. Destila o estado da operação em <strong>sinais visuais</strong> — KPIs, distribuição temporal, top cores, top obras de risco e carga por consultor. Bom pra reunião.</div>
       </div>
 
       <div class="onb-card">
         <div class="onb-card-num">04 · refresh seletivo</div>
         <div class="onb-card-titulo">Atualizar IA só quando precisar</div>
-        <div class="onb-card-desc">A análise pesada (IA) não roda automática — você dispara apenas para as obras que mudaram. Economiza tokens, mantém o foco no que importa.</div>
+        <div class="onb-card-desc">A análise pesada (IA) não roda automática. Você dispara só pras obras com mensagens novas (badge âmbar <code>⟳ N msgs novas</code>). Economiza tokens, mantém o foco no que mudou.</div>
       </div>
 
       <div class="onb-card">
         <div class="onb-card-num">05 · status bar</div>
         <div class="onb-card-titulo">Resumo executivo no topo</div>
-        <div class="onb-card-desc">Total de obras no piloto, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. Tudo o que importa em uma linha.</div>
+        <div class="onb-card-desc">Total de obras no piloto, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. <strong>Tudo o que importa numa linha.</strong></div>
       </div>
     </div>
 
-    <div class="onb-rodape">piloto · <strong>10 de 227 ativas</strong> · escalando após validação</div>
+    <div class="onb-rodape">piloto · <strong>10 de 227 obras ativas</strong> · escalando após validação</div>
   </div>
 </div>
 

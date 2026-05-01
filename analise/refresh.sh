@@ -752,6 +752,28 @@ with open(os.path.join(DADOS, "headline.json"), "w") as f:
     json.dump(headline, f, ensure_ascii=False, indent=2)
 print(f"  headline.json: score={score} ativas={len(ativas)} alertas={n_zumbi+n_orfas+n_lote_vt} novos_hoje={novos_hoje}")
 
+# Acumular score histórico — 1 entry por dia (substitui hoje se já existir).
+# Permite mostrar delta vs 7 dias atrás na manchete do dashboard.
+hist_score_path = os.path.join(DADOS, "score-historico.json")
+try:
+    hist_score = json.load(open(hist_score_path))
+except Exception:
+    hist_score = []
+hist_score = [h for h in hist_score if h.get("date") != TODAY]
+hist_score.append({
+    "date": TODAY,
+    "score": score,
+    "ativas": len(ativas),
+    "ciclo_mediano": mediana,
+    "zumbi": n_zumbi,
+    "orfas": n_orfas,
+    "lote_vt": n_lote_vt,
+})
+hist_score = sorted(hist_score, key=lambda x: x.get("date", ""))[-180:]  # 6 meses
+with open(hist_score_path, "w") as f:
+    json.dump(hist_score, f, ensure_ascii=False, indent=2)
+print(f"  score-historico.json: {len(hist_score)} entries (hoje score={score})")
+
 # ════════════════════════════════════════════
 # ALERTA-YYYY-MM-DD.json — eventos do dia (FASE 4.4)
 # Detalhamento dos deltas críticos. Hub mostra contagem (novos_hoje), modal abre detalhes.
