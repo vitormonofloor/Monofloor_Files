@@ -129,53 +129,67 @@
   .section-fontes .sf-tag.calculado{background:#ede6dc;color:#6b6156}
   .section-sub { font-size: 12px; color: var(--muted); margin-top: 4px; max-width: 760px; }
 
-  /* ============== HERO ============== */
+  /* ============== HERO (refator 2026-05-01) ============== */
   .hero {
-    display: grid; grid-template-columns: 280px 1fr; gap: 20px;
+    display: flex; flex-direction: column; gap: 14px;
     background: linear-gradient(180deg, #faf7f2, var(--card)); border: 1px solid var(--border);
-    padding: 20px; border-radius: 6px; margin-bottom: 24px;
+    padding: 18px 20px; border-radius: 6px; margin-bottom: 24px;
   }
-  .health-box {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 12px; border-right: 1px solid var(--border);
-    background: linear-gradient(180deg, #2a2520 0%, #3a3530 100%);
+
+  /* Row de cards: Score + 4 KPIs com mesmo peso visual */
+  .hero-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  @media(max-width:1100px){ .hero-row{grid-template-columns:1fr 1fr 1fr;} .hero-score{grid-column:1/-1} }
+  @media(max-width:720px){ .hero-row{grid-template-columns:1fr 1fr;} }
+
+  .hero-card {
+    background: var(--card-2);
+    border: 1px solid var(--border);
     border-radius: 6px;
+    padding: 14px 16px;
+    display: flex; flex-direction: column;
   }
-  .health-svg { width: 170px; height: 170px; }
+  .hero-card .lbl {
+    font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .hero-card .val {
+    font-family: 'JetBrains Mono', monospace; font-size: 38px; font-weight: 600;
+    line-height: 1; margin: 4px 0;
+  }
+  .hero-card .val.warn { color: var(--amber); }
+  .hero-card .val.crit { color: var(--red); }
+  .hero-card .val.scarlet { color: var(--scarlet); }
+  .hero-card .val.green { color: var(--green); }
+  .hero-card .val.blue { color: var(--blue); }
+  .hero-card .sub { font-size: 11px; color: var(--muted-2); margin-top: 2px; }
+  .hero-card .kpi-edai { font-size: 10px; color: var(--muted-2); margin-top: 4px; font-style: italic; }
+
+  /* Card do Score — mesmo padrão visual dos KPIs (sem fundo escuro) */
+  .hero-score {
+    align-items: center; text-align: center;
+    background: linear-gradient(180deg, #fff 0%, var(--card-2) 100%);
+  }
+  .hero-score .lbl { align-self: flex-start; }
+  .health-svg { width: 130px; height: 130px; margin: 4px auto 0; }
   .health-num {
-    font-family: 'JetBrains Mono', monospace; font-size: 56px; font-weight: 600;
-    fill: #f0ebe3; text-anchor: middle; dominant-baseline: central;
+    font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 600;
+    fill: var(--text); text-anchor: middle; dominant-baseline: central;
   }
-  .health-pct { font-size: 11px; fill: #a89e92; text-anchor: middle; }
-  .health-lbl {
-    margin-top: 12px; text-align: center; color: #c8bfb4;
-    font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
-  }
-  .health-veredito { font-size: 13px; color: var(--text); margin-top: 6px; font-weight: 500; }
-  .health-delta{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace}
+  .health-pct { font-size: 10px; fill: var(--muted-2); text-anchor: middle; }
+  .health-veredito { font-size: 12px; color: var(--text); margin-top: 4px; font-weight: 500; }
+  .health-delta{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace}
   .health-delta.subiu{background:rgba(61,138,90,0.12);color:#3d7a4a;border:1px solid rgba(61,138,90,0.25)}
   .health-delta.desceu{background:rgba(196,90,90,0.12);color:#9a3030;border:1px solid rgba(196,90,90,0.25)}
   .health-delta.estavel{background:rgba(168,158,146,0.12);color:#6b6156;border:1px solid rgba(168,158,146,0.25)}
   .health-delta.inicial{background:rgba(168,158,146,0.08);color:#a89e92;border:1px solid rgba(168,158,146,0.18);font-weight:400;font-style:italic}
-  .hd-arrow{font-size:13px;line-height:1}
+  .hd-arrow{font-size:12px;line-height:1}
   .health-amber { color: var(--amber); }
   .health-red { color: var(--red); }
   .health-green { color: var(--green); }
-
-  .hero-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-  .hero-kpi { padding: 8px 24px; border-right: 1px solid var(--border); }
-  .hero-kpi:last-child { border-right: none; }
-  .hero-kpi .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-  .hero-kpi .val {
-    font-family: 'JetBrains Mono', monospace; font-size: 38px; font-weight: 600;
-    margin: 6px 0 4px;
-  }
-  .hero-kpi .val.warn { color: var(--amber); }
-  .hero-kpi .val.crit { color: var(--red); }
-  .hero-kpi .val.scarlet { color: var(--scarlet); }
-  .hero-kpi .val.green { color: var(--green); }
-  .hero-kpi .val.blue { color: var(--blue); }
-  .hero-kpi .sub { font-size: 11px; color: var(--muted-2); }
   /* Balanço — histórico fora da operação ativa (separado dos KPIs operacionais) */
   .hero-balanco{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:8px 14px;background:#faf7f2;border:1px solid #ede6dc;border-radius:6px;font-size:11px;color:#8a7e72;line-height:1.5}
   .hero-balanco .hb-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;color:#a89e92;text-transform:uppercase;padding-right:6px;border-right:1px solid #ede6dc;margin-right:4px}
@@ -1474,58 +1488,57 @@
 
   <!-- ============== HERO ============== -->
   <section class="hero" id="hero">
-    <div class="health-box">
-      <svg class="health-svg" viewBox="0 0 200 200" id="health-svg">
-        <circle cx="100" cy="100" r="86" fill="none" stroke="#e0d8cc" stroke-width="14"/>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="#b89a4a" stroke-width="14"
-                stroke-dasharray="540" stroke-dashoffset="540" stroke-linecap="round"
-                transform="rotate(-90 100 100)" id="health-arc"/>
-        <text x="100" y="100" class="health-num" id="health-num">--</text>
-        <text x="100" y="135" class="health-pct">/ 100</text>
-      </svg>
-      <div class="health-lbl">Índice de Saúde Operacional</div>
-      <div class="health-veredito" id="health-veredito">—</div>
-      <div class="health-delta" id="health-delta" hidden>
-        <span class="hd-arrow" id="hd-arrow">—</span>
-        <span class="hd-text" id="hd-text">—</span>
-      </div>
-      <p class="hero-context">Abaixo de 65 = atenção operacional. Meta saudável: acima de 80.</p>
-      <div class="score-breakdown" id="score-breakdown">
-        <!-- gerado por JS -->
-      </div>
+    <!-- 1. Manchete narrativa — primeira coisa que o leitor vê -->
+    <div class="hero-manchete" id="hero-manchete" hidden>
+      <span class="hm-zona" id="hm-zona">—</span>
+      <span class="hm-frase" id="hm-frase">—</span>
     </div>
 
-    <div>
-      <div class="hero-kpis">
-        <div class="hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">carteira em movimento</div></div>
-        <div class="hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
-        <div class="hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
-        <div class="hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">obras sem consultor atribuído</div></div>
+    <!-- 2. Row de 5 cards: Score + 4 KPIs com mesmo peso visual -->
+    <div class="hero-row">
+      <div class="hero-card hero-score">
+        <div class="lbl">Saúde Operacional</div>
+        <svg class="health-svg" viewBox="0 0 200 200" id="health-svg">
+          <circle cx="100" cy="100" r="86" fill="none" stroke="#e0d8cc" stroke-width="14"/>
+          <circle cx="100" cy="100" r="86" fill="none" stroke="#b89a4a" stroke-width="14"
+                  stroke-dasharray="540" stroke-dashoffset="540" stroke-linecap="round"
+                  transform="rotate(-90 100 100)" id="health-arc"/>
+          <text x="100" y="100" class="health-num" id="health-num">--</text>
+          <text x="100" y="135" class="health-pct">/ 100</text>
+        </svg>
+        <div class="health-veredito" id="health-veredito">—</div>
+        <div class="health-delta" id="health-delta" hidden>
+          <span class="hd-arrow" id="hd-arrow">—</span>
+          <span class="hd-text" id="hd-text">—</span>
+        </div>
       </div>
-
-      <!-- Manchete narrativa: zona + 1-2 fatos chave do dia -->
-      <div class="hero-manchete" id="hero-manchete" hidden>
-        <span class="hm-zona" id="hm-zona">—</span>
-        <span class="hm-frase" id="hm-frase">—</span>
-      </div>
-
-      <div class="hero-summary" id="hero-summary">—</div>
-
-      <!-- Balanço — obras fora da operação ativa (histórico). Vitor 2026-04-30 -->
-      <div class="hero-balanco" id="hero-balanco" hidden>
-        <span class="hb-tag">Balanço</span>
-        <span><span class="hb-num" id="hb-finalizadas">—</span> finalizadas / concluídas</span>
-        <span class="hb-sep">·</span>
-        <span><span class="hb-num" id="hb-canceladas">—</span> canceladas</span>
-        <span class="hb-sep">·</span>
-        <span class="hb-total"><span class="hb-num" id="hb-total">—</span> fora da operação</span>
-      </div>
-
-      <div class="score-detail" id="score-detail">
-        <div class="score-detail-line"></div>
-        <div class="score-detail-inner" id="score-detail-inner"></div>
-      </div>
+      <div class="hero-card hero-kpi"><div class="lbl">Total Ativas</div><div class="val" id="kpi-ativas">—</div><div class="sub">carteira em movimento</div></div>
+      <div class="hero-card hero-kpi"><div class="lbl">Em Execução</div><div class="val blue" id="kpi-exec">—</div><div class="sub">obras em campo agora</div><div class="kpi-edai"><span id="kpi-exec-edai">—</span> da carteira ativa</div></div>
+      <div class="hero-card hero-kpi"><div class="lbl">180+ Dias</div><div class="val warn" id="kpi-180">—</div><div class="sub" id="kpi-180-pct">—</div><div class="kpi-edai" id="kpi-180-edai">—</div></div>
+      <div class="hero-card hero-kpi"><div class="lbl">Sem responsável</div><div class="val crit" id="kpi-orfas">—</div><div class="sub">críticas: <span id="kpi-orfas-180">—</span> com 180+</div><div class="kpi-edai">sem consultor atribuído</div></div>
     </div>
+
+    <!-- 3. Pilares do Score (linha discreta) -->
+    <div class="score-breakdown" id="score-breakdown"><!-- gerado por JS --></div>
+
+    <!-- 4. Balanço — obras fora da operação ativa (histórico, discreto) -->
+    <div class="hero-balanco" id="hero-balanco" hidden>
+      <span class="hb-tag">Balanço</span>
+      <span><span class="hb-num" id="hb-finalizadas">—</span> finalizadas / concluídas</span>
+      <span class="hb-sep">·</span>
+      <span><span class="hb-num" id="hb-canceladas">—</span> canceladas</span>
+      <span class="hb-sep">·</span>
+      <span class="hb-total"><span class="hb-num" id="hb-total">—</span> fora da operação</span>
+    </div>
+
+    <div class="score-detail" id="score-detail">
+      <div class="score-detail-line"></div>
+      <div class="score-detail-inner" id="score-detail-inner"></div>
+    </div>
+
+    <!-- Resumo narrativo escondido (preservado em window._heroSummary pra outras funções) -->
+    <span id="hero-summary" hidden></span>
+
     <div class="section-fontes">
       <span class="sf-label">Fontes</span>
       <span class="sf-item"><span class="sf-tag calculado">Calc.</span><b>SCORE</b> via SCORE-FORMULA.md</span>
