@@ -999,6 +999,48 @@
   /* ============== OPERACIONAL (FASE 6.B — absorvido de indicadores-v2) ============== */
   .op-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0}
   @media(max-width:720px){.op-grid{grid-template-columns:1fr}}
+  /* Operacional v2 — pulso single + 3 stats */
+  .op-pulso{display:grid;grid-template-columns:280px 1fr;gap:18px;background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:20px 22px;margin:14px 0 18px}
+  @media(max-width:720px){.op-pulso{grid-template-columns:1fr}}
+  .op-pulso-num{display:flex;flex-direction:column;justify-content:center;border-right:1px solid #e0d8cc;padding-right:18px}
+  @media(max-width:720px){.op-pulso-num{border-right:none;border-bottom:1px solid #e0d8cc;padding-right:0;padding-bottom:14px}}
+  .op-pulso-pct{font-family:'JetBrains Mono',monospace;font-size:42px;font-weight:700;color:#3d8a5a;line-height:1}
+  .op-pulso-pct.medio{color:#b89a4a}
+  .op-pulso-pct.baixo{color:#c45a5a}
+  .op-pulso-label{font-size:11px;color:#8a7e72;margin-top:6px;letter-spacing:0.04em}
+  .op-pulso-bar{height:6px;background:#f0ebe3;border-radius:3px;margin-top:10px;overflow:hidden}
+  .op-pulso-fill{height:100%;background:linear-gradient(90deg,#c45a5a,#b89a4a 50%,#3d8a5a);width:0%;transition:width .4s}
+  .op-pulso-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:720px){.op-pulso-stats{grid-template-columns:1fr}}
+  .op-stat{background:#f5f0e8;border:1px solid #e0d8cc;border-radius:6px;padding:14px 16px;position:relative}
+  .op-stat.saudavel{border-left:3px solid #3d8a5a}
+  .op-stat.atencao{border-left:3px solid #c45a5a}
+  .op-stat.sem-kira{border-left:3px solid #b89a4a}
+  .op-stat-n{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#2a2520;line-height:1}
+  .op-stat.atencao .op-stat-n{color:#c45a5a}
+  .op-stat.sem-kira .op-stat-n{color:#b89a4a}
+  .op-stat.saudavel .op-stat-n{color:#3d8a5a}
+  .op-stat-lbl{font-size:12px;color:#5a4a30;margin-top:6px;font-weight:500}
+  .op-stat-lbl small{font-size:10px;color:#8a7e72;font-weight:400;display:block;margin-top:2px}
+  .op-stat.kpi-clickable{cursor:pointer;transition:transform .15s,box-shadow .15s}
+  .op-stat.kpi-clickable:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(196,90,90,0.12)}
+  .op-stat .kpi-cta{display:inline-block;margin-top:8px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+  .op-stat.atencao .kpi-cta{color:#c45a5a}
+  .op-stat.sem-kira .kpi-cta{color:#b89a4a}
+  /* Lista de obras em atenção (inline, sem modal pra ver as principais) */
+  .op-feridas{margin-top:6px}
+  .op-feridas-head h4{font-size:12px;color:#6b6156;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin:0 0 12px}
+  .op-feridas-head h4 span{font-size:10px;color:#a89e92;font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px;font-style:italic}
+  #op-feridas-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:8px}
+  #op-feridas-list li{background:#fff;border:1px solid #e0d8cc;border-left:3px solid #c45a5a;border-radius:5px;padding:10px 14px;display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;font-size:12px}
+  #op-feridas-list li.critico{border-left-color:#9a3030;background:linear-gradient(135deg,#fff,#fae5e5)}
+  #op-feridas-list .op-li-cli{color:#2a2520;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #op-feridas-list .op-li-meta{font-size:10px;color:#8a7e72;font-family:'JetBrains Mono',monospace;margin-top:2px}
+  #op-feridas-list .op-clima-chip{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap}
+  #op-feridas-list .op-clima-chip.tenso{background:#faf0e0;color:#a07a30;border:1px solid #d4b886}
+  #op-feridas-list .op-clima-chip.critico{background:#fae5e5;color:#9a3030;border:1px solid #e8c0c0}
+  #op-feridas-list .op-li-link{font-size:10px;color:#b8a080;text-decoration:none;margin-left:6px}
+  #op-feridas-list .op-li-link:hover{color:#8a6a20;text-decoration:underline}
   .op-drill{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
   @media(max-width:720px){.op-drill{grid-template-columns:1fr}}
   .op-drill-card{background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:14px 16px}
@@ -1914,54 +1956,80 @@
       <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag painel-amigo">Painel de Obras</span>data_radar · <span class="sf-tag pipefy">Painel de Obras</span>marcos · datas planejadas</div>
   </section>
 
-  <!-- ============== OPERACIONAL — absorve indicadores-v2 (FASE 6.B) ============== -->
+  <!-- ============== OPERACIONAL — KIRA whatsappSummary (refator 2026-05-01) ============== -->
   <section id="operacional">
     <div class="q-head">
-      <h2><span class="section-pill" style="background:rgba(74,122,184,0.1);color:#4a7ab8">OPERACIONAL</span> Comunicação e silêncio</h2>
-      <p class="sub" id="op-sub">Detecta obras silenciosas (sem WhatsApp/Telegram com atualização recente) e cobertura de comunicação na carteira ativa.</p>
+      <h2><span class="section-pill" style="background:rgba(74,122,184,0.1);color:#4a7ab8">OPERACIONAL</span> Pulso da carteira</h2>
+      <p class="sub" id="op-sub">KIRA lê grupos WhatsApp das obras e classifica clima da conversa cliente×Monofloor. Aqui você vê o que está saudável, o que precisa olhar, e o que está fora do radar.</p>
     </div>
 
-    <!-- Banner de defasagem do dado -->
-    <div id="op-defasagem-banner" hidden style="display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,#faf5ed,#f5edd9);border:1px solid #d4b886;border-left:4px solid #b89a4a;border-radius:6px;padding:12px 16px;margin-bottom:16px">
-      <div style="font-size:22px;color:#b89a4a;font-weight:700;line-height:1">⚠</div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:600;color:#5a4a30">Dados KIRA congelados há <span id="op-defasagem-dias">—</span> dias</div>
-        <div style="font-size:11px;color:#7a6a52;margin-top:2px">Última atualização: <span id="op-defasagem-data" style="font-family:'JetBrains Mono',monospace">—</span>. O Painel de Obras parou de popular tagKira/whatsappGroupId — 100% das ativas estão com esses campos vazios. Refazer cruzamento exige outra fonte (KIRA cargo-assistente).</div>
+    <!-- KPI grande + linha de breakdown -->
+    <div class="op-pulso">
+      <div class="op-pulso-num">
+        <div class="op-pulso-pct" id="op-pulso-pct">—</div>
+        <div class="op-pulso-label">saudáveis (das que o KIRA monitora)</div>
+        <div class="op-pulso-bar"><div class="op-pulso-fill" id="op-pulso-fill"></div></div>
       </div>
-    </div>
-
-    <div class="op-grid">
-      <div class="op-card op-card-crit">
-        <div class="op-pill">crítico</div>
-        <div class="op-num" id="op-silenciosas">—</div>
-        <div class="op-unit">obras silenciosas</div>
-        <div class="op-detail">sem WhatsApp/Telegram com atualização recente — KIRA não consegue monitorar</div>
-        <div class="op-meter"><div class="op-meter-fill" id="op-silenciosas-fill" style="width:0%"></div></div>
-        <div class="op-range"><span><span id="op-silenciosas-pct">—</span>% da carteira</span><span>meta ≤10%</span></div>
-      </div>
-
-      <div class="op-card op-card-info">
-        <div class="op-pill" style="background:rgba(74,122,184,0.15);color:#4a7ab8">cobertura</div>
-        <div class="op-num" id="op-com-msg">—</div>
-        <div class="op-unit">obras com WhatsApp ativo</div>
-        <div class="op-detail">grupo com mensagens nos últimos 30 dias — pulso operacional saudável</div>
-        <div class="op-meter"><div class="op-meter-fill" id="op-com-msg-fill" style="background:#3d8a5a;width:0%"></div></div>
-        <div class="op-range"><span><span id="op-com-msg-pct">—</span>% da carteira</span><span>meta ≥80%</span></div>
+      <div class="op-pulso-stats">
+        <div class="op-stat saudavel">
+          <div class="op-stat-n" id="op-stat-saudavel">—</div>
+          <div class="op-stat-lbl">saudáveis<br><small>clima Positivo / Neutro</small></div>
+        </div>
+        <div class="op-stat atencao kpi-clickable" onclick="openOpAtencao()" title="Ver lista">
+          <div class="op-stat-n" id="op-stat-atencao">—</div>
+          <div class="op-stat-lbl">em atenção<br><small>clima Tenso / Crítico</small></div>
+          <span class="kpi-cta">Ver lista →</span>
+        </div>
+        <div class="op-stat sem-kira kpi-clickable" onclick="openOpSemKira()" title="Ver lista">
+          <div class="op-stat-n" id="op-stat-sem-kira">—</div>
+          <div class="op-stat-lbl">invisíveis pro KIRA<br><small>sem grupo ou sem mensagens</small></div>
+          <span class="kpi-cta">Ver lista →</span>
+        </div>
       </div>
     </div>
 
-    <!-- Drill-down: Top consultores com mais silenciosas + Top obras críticas -->
-    <div class="op-drill" id="op-drill" hidden>
-      <div class="op-drill-card">
-        <h4>Top consultores com mais silenciosas</h4>
-        <div id="op-cons-list"></div>
+    <!-- Lista de obras em atenção, direto na seção (sem precisar abrir modal) -->
+    <div class="op-feridas">
+      <div class="op-feridas-head">
+        <h4>Obras em atenção <span id="op-feridas-sub">— clima Tenso / Crítico — precisam acompanhamento</span></h4>
       </div>
-      <div class="op-drill-card">
-        <h4>Top obras silenciosas mais antigas</h4>
-        <ul id="op-obras-list"></ul>
+      <ul id="op-feridas-list"></ul>
+    </div>
+
+    <!-- Modal: lista completa em atenção -->
+    <div class="q4-modal" id="op-modal-atencao" role="dialog" aria-modal="true">
+      <div class="q4-modal-bg" onclick="closeQ4Modal()"></div>
+      <div class="q4-modal-box">
+        <button class="q4-close" onclick="closeQ4Modal()" aria-label="Fechar">×</button>
+        <div class="q4-modal-head">
+          <h3>Obras em atenção <span>clima Tenso ou Crítico — KIRA detectou</span></h3>
+          <div class="q4-modal-stats" id="op-modal-atencao-stats"></div>
+        </div>
+        <table class="q4-modal-tbl">
+          <thead><tr><th>Cliente</th><th>Consultor</th><th>Cidade</th><th>Fase</th><th>Clima</th><th class="num">Alertas</th><th>Abrir</th></tr></thead>
+          <tbody id="op-modal-atencao-tbody"></tbody>
+        </table>
       </div>
     </div>
-      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag kira">KIRA</span>whatsappSummary · clima_geral · <span class="sf-tag painel-amigo">Painel de Obras</span>universo declarado</div>
+
+    <!-- Modal: invisíveis pro KIRA -->
+    <div class="q4-modal" id="op-modal-semkira" role="dialog" aria-modal="true">
+      <div class="q4-modal-bg" onclick="closeQ4Modal()"></div>
+      <div class="q4-modal-box">
+        <button class="q4-close" onclick="closeQ4Modal()" aria-label="Fechar">×</button>
+        <div class="q4-modal-head">
+          <h3>Invisíveis pro KIRA <span>sem grupo cadastrado ou sem mensagens analisadas</span></h3>
+          <div class="q4-modal-stats" id="op-modal-semkira-stats"></div>
+        </div>
+        <p class="q4-fase-help">Estas obras estão na carteira mas o KIRA não tem dado pra elas — pode ser grupo WhatsApp não cadastrado ou conversa silenciosa. Cadastrar grupo e marcar pra KIRA monitorar resolve.</p>
+        <table class="q4-modal-tbl">
+          <thead><tr><th>Cliente</th><th>Consultor</th><th>Cidade</th><th>Fase</th><th>Tem grupo?</th><th>Abrir</th></tr></thead>
+          <tbody id="op-modal-semkira-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+      <div class="section-fontes"><span class="sf-label">Fontes</span> <span class="sf-tag kira">KIRA</span>pendenciaManual.whatsappSummary · climaGeral · alertas · <span class="sf-tag painel-amigo">Painel de Obras</span>/api/projects/{id} (cada detail)</div>
   </section>
 
   <!-- ============== PROBLEMAS ============== -->
@@ -5414,88 +5482,126 @@ function renderEstrategicos() {
 }
 
 // ============== OPERACIONAL (FASE 6.B — silêncio + cobertura via cruz-silenciosas.json) ==============
+// Cache das obras "sem KIRA" pra modal — populado de Q2_OBRAS quando rodrigo-stats carrega
+var _opObrasSemKira = [];
+
 function renderOperacional() {
-  fetch('dados/cruz-silenciosas.json?t=' + Date.now())
+  // Fonte canônica fresh: rodrigo-stats.json (refresh 30min, lê pendenciaManual.whatsappSummary)
+  fetch('dados/rodrigo-stats.json?t=' + Date.now())
     .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(s){
-      if (!s) return;
-      var totalAtivas = s.total_ativas || 0;
-      var nSilencio = s.total_silenciosas || 0;
-      var nComMsg = s.ativas_com_whatsapp || 0;
-      var pctSilencio = totalAtivas ? (nSilencio / totalAtivas * 100) : 0;
-      var pctComMsg = totalAtivas ? (nComMsg / totalAtivas * 100) : 0;
-
+    .then(function(R){
+      if (!R || !R.operacional_kira) return;
+      var op = R.operacional_kira;
       var $$ = function(id){ return document.getElementById(id); };
-      if ($$('op-silenciosas')) $$('op-silenciosas').textContent = nSilencio;
-      if ($$('op-com-msg')) $$('op-com-msg').textContent = nComMsg;
-      if ($$('op-silenciosas-pct')) $$('op-silenciosas-pct').textContent = pctSilencio.toFixed(1);
-      if ($$('op-com-msg-pct')) $$('op-com-msg-pct').textContent = pctComMsg.toFixed(1);
 
-      requestAnimationFrame(function(){
-        if ($$('op-silenciosas-fill')) $$('op-silenciosas-fill').style.width = Math.min(100, pctSilencio).toFixed(1) + '%';
-        if ($$('op-com-msg-fill')) $$('op-com-msg-fill').style.width = Math.min(100, pctComMsg).toFixed(1) + '%';
-      });
-
-      // Banner de defasagem — KIRA congelou no painel
-      if (s.gerado_em) {
-        var ger = new Date(s.gerado_em);
-        var hoje = new Date();
-        var diasDef = Math.round((hoje - ger) / 86400000);
-        if (diasDef > 2 && $$('op-defasagem-banner')) {
-          $$('op-defasagem-banner').hidden = false;
-          if ($$('op-defasagem-dias')) $$('op-defasagem-dias').textContent = diasDef;
-          if ($$('op-defasagem-data')) $$('op-defasagem-data').textContent = ger.toLocaleDateString('pt-BR');
-        }
-        if ($$('op-sub')) {
-          $$('op-sub').textContent = 'Detecta obras silenciosas (sem WhatsApp/Telegram com atualização recente) e cobertura de comunicação. Última atualização do KIRA: ' + ger.toLocaleDateString('pt-BR') + '.';
-        }
+      // KPI grande: % saudável (sobre as monitoradas)
+      var pct = op.saudavel_pct_no_monitorado || 0;
+      if ($$('op-pulso-pct')) {
+        $$('op-pulso-pct').textContent = pct + '%';
+        var cls = pct >= 80 ? '' : (pct >= 60 ? 'medio' : 'baixo');
+        $$('op-pulso-pct').className = 'op-pulso-pct ' + cls;
+      }
+      if ($$('op-pulso-fill')) {
+        requestAnimationFrame(function(){ $$('op-pulso-fill').style.width = Math.min(100, pct) + '%'; });
       }
 
-      // Drill-down: top consultores com mais silenciosas + top obras críticas
-      var drill = $$('op-drill');
-      if (drill && (s.por_consultor || s.top20_criticas)) {
-        drill.hidden = false;
+      if ($$('op-stat-saudavel')) $$('op-stat-saudavel').textContent = op.saudavel || 0;
+      if ($$('op-stat-atencao')) $$('op-stat-atencao').textContent = op.atencao || 0;
+      if ($$('op-stat-sem-kira')) $$('op-stat-sem-kira').textContent = op.sem_kira || 0;
+
+      // Sub honesto com data do KIRA
+      if (op.kira_atualizado_em && $$('op-sub')) {
+        var dt = new Date(op.kira_atualizado_em);
+        var diasAtras = Math.round((new Date() - dt) / 86400000);
+        var dataLabel = dt.toLocaleDateString('pt-BR');
+        var fresh = diasAtras <= 1 ? 'KIRA atualizado hoje' : ('KIRA atualizado em ' + dataLabel + ' · há ' + diasAtras + 'd');
+        $$('op-sub').textContent = 'KIRA lê grupos WhatsApp das obras e classifica clima da conversa cliente×Monofloor. ' + fresh + '.';
       }
-      var consList = $$('op-cons-list');
-      if (consList && Array.isArray(s.por_consultor)) {
-        // Filtra "(sem consultor)" e "[]"
-        var cons = s.por_consultor.filter(function(c){
-          var n = (c.consultor || '').trim();
-          return n && n !== '[]' && !n.toLowerCase().includes('(sem');
-        }).slice(0, 6);
-        if (cons.length) {
-          var max = cons[0].total_silenciosas || 1;
-          consList.innerHTML = cons.map(function(c){
-            var pct = (c.total_silenciosas / max * 100).toFixed(0);
-            return '<div class="op-cons-row">'+
-              '<div class="op-cons-nm" title="'+escHtml(c.consultor)+'">'+escHtml(c.consultor.split(' ')[0])+'</div>'+
-              '<div class="op-cons-bar"><div style="width:'+pct+'%"></div></div>'+
-              '<div class="op-cons-vl">'+c.total_silenciosas+'</div>'+
-            '</div>';
-          }).join('');
-        }
-      }
-      var obrasList = $$('op-obras-list');
-      if (obrasList && Array.isArray(s.top20_criticas)) {
-        // Filtra retrabalho (consistência com Q1/Q4)
-        var RETRAB = ['reparo','marcas_rolo_cera'];
-        var top = s.top20_criticas.filter(function(o){
-          return !RETRAB.includes(o.status);
-        }).slice(0, 5);
-        if (top.length) {
-          obrasList.innerHTML = top.map(function(o){
-            var consShort = (o.consultor || '').split(' ')[0] || '—';
-            return '<li>'+
-              '<span class="op-obra-cli">'+escHtml(o.cliente.trim())+'</span>'+
-              '<span class="op-obra-meta">'+escHtml(consShort)+' · '+escHtml(o.cidade||'—')+' · <b>'+(o.idade_dias||0)+'d</b></span>'+
+
+      // Lista inline das obras em atenção (mostra top 8, com chip de clima)
+      var feridas = op.obras_atencao || [];
+      var fSub = $$('op-feridas-sub');
+      if (fSub) fSub.textContent = '— ' + feridas.length + ' obra' + (feridas.length === 1 ? '' : 's') + ' · clima Tenso ou Crítico · precisam acompanhamento';
+      var fList = $$('op-feridas-list');
+      if (fList) {
+        if (!feridas.length) {
+          fList.innerHTML = '<li style="border-left-color:#3d8a5a;background:#f5fbf5;color:#3d7a4a;font-style:italic;font-weight:500">✓ Nenhuma obra em atenção no KIRA agora.</li>';
+        } else {
+          fList.innerHTML = feridas.slice(0, 8).map(function(o){
+            var climaCls = o.clima === 'Crítico' ? 'critico' : 'tenso';
+            var cls = o.clima === 'Crítico' ? 'critico' : '';
+            var url = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
+            var alertasTxt = o.n_alertas ? ' · ' + o.n_alertas + ' alerta' + (o.n_alertas === 1 ? '' : 's') : '';
+            return '<li class="' + cls + '">'+
+              '<div>'+
+                '<div class="op-li-cli">'+escHtml(o.cliente)+'</div>'+
+                '<div class="op-li-meta">'+escHtml(o.consultor)+' · '+escHtml(o.cidade || '—')+alertasTxt+'</div>'+
+              '</div>'+
+              '<div style="display:flex;align-items:center;gap:6px">'+
+                '<span class="op-clima-chip '+climaCls+'">'+escHtml(o.clima)+'</span>'+
+                '<a class="op-li-link" href="'+url+'" target="_blank">↗</a>'+
+              '</div>'+
             '</li>';
           }).join('');
-        } else {
-          obrasList.innerHTML = '<li style="color:#a89e92;font-style:italic">Sem obras silenciosas (excluindo retrabalho).</li>';
+          if (feridas.length > 8) {
+            fList.innerHTML += '<li style="border-left-color:transparent;background:transparent;color:#a89e92;font-style:italic;text-align:center;justify-content:center;cursor:pointer" onclick="openOpAtencao()">+ ' + (feridas.length - 8) + ' mais — ver todas</li>';
+          }
         }
       }
+
+      window._opObrasAtencao = feridas;
+      window._opObrasSemKira = op.obras_sem_kira || [];
     })
-    .catch(function(){ /* silencioso — seção mostra "—" */ });
+    .catch(function(e){ console.warn('renderOperacional:', e); });
+}
+
+function openOpAtencao() {
+  var obras = window._opObrasAtencao || [];
+  var stats = document.getElementById('op-modal-atencao-stats');
+  if (stats) stats.innerHTML = '<span>'+obras.length+' obras</span>';
+  var tbody = document.getElementById('op-modal-atencao-tbody');
+  if (tbody) {
+    tbody.innerHTML = obras.map(function(o){
+      var climaCls = o.clima === 'Crítico' ? 'critico' : 'tenso';
+      var url = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
+      return '<tr>'+
+        '<td>'+escHtml(o.cliente)+'</td>'+
+        '<td>'+escHtml(o.consultor)+'</td>'+
+        '<td>'+escHtml(o.cidade || '—')+'</td>'+
+        '<td>'+escHtml(o.fase || '—')+'</td>'+
+        '<td><span class="op-clima-chip '+climaCls+'">'+escHtml(o.clima)+'</span></td>'+
+        '<td class="num">'+(o.n_alertas || 0)+'</td>'+
+        '<td><a class="portal" href="'+url+'" target="_blank">Abrir →</a></td>'+
+      '</tr>';
+    }).join('');
+  }
+  document.getElementById('op-modal-atencao').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openOpSemKira() {
+  var obras = window._opObrasSemKira || [];
+  var stats = document.getElementById('op-modal-semkira-stats');
+  if (stats) stats.innerHTML = '<span>'+obras.length+' obras</span>';
+  var tbody = document.getElementById('op-modal-semkira-tbody');
+  if (tbody) {
+    tbody.innerHTML = obras.map(function(o){
+      var url = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
+      var grupoChip = o.tem_grupo
+        ? '<span style="color:#b89a4a;font-size:10px">tem grupo · sem msgs</span>'
+        : '<span style="color:#c45a5a;font-size:10px;font-weight:600">sem grupo cadastrado</span>';
+      return '<tr>'+
+        '<td>'+escHtml(o.cliente || '')+'</td>'+
+        '<td>'+escHtml(o.consultor || '—')+'</td>'+
+        '<td>'+escHtml(o.cidade || '—')+'</td>'+
+        '<td>'+escHtml(o.fase || '—')+'</td>'+
+        '<td>'+grupoChip+'</td>'+
+        '<td><a class="portal" href="'+url+'" target="_blank">Abrir →</a></td>'+
+      '</tr>';
+    }).join('');
+  }
+  document.getElementById('op-modal-semkira').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 // ============== SNAPSHOT DATE + BADGE ==============

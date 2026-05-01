@@ -51,6 +51,50 @@ fetch "$API_PLN/analytics/capacity"    "$TMP/cap.json";      sleep 1
 fetch "$API_PLN/analytics/alerts"      "$TMP/alerts.json";   sleep 1
 fetch "$API_PLN/analytics/weekly-forecast" "$TMP/fcast.json"; sleep 1
 
+# DETAILS das ativas — fonte do whatsappSummary KIRA (NÃO vem no /api/projects!)
+# Listing trunca tagKira/whatsappGroupId/whatsappSummary; só /api/projects/{id} popula.
+# Baixa em paralelo (até 10 simultâneos) — ~30s pra 230 obras ativas.
+mkdir -p "$TMP/details"
+echo "  Listando IDs ativas pra fetch detail..."
+export TMP_ENV="$TMP"
+python3 -c '
+import json, os
+TMP = os.environ["TMP_ENV"]
+ps = json.load(open(TMP + "/projects.json", encoding="utf-8"))
+SKIP = {"finalizado","concluido","cancelado"}
+ids = [p["id"] for p in ps if isinstance(p, dict) and p.get("status") not in SKIP and p.get("id")]
+with open(TMP + "/ids-ativas.txt", "w", encoding="utf-8") as f:
+    f.write("\n".join(ids))
+print(f"  IDs gerados: {len(ids)}")
+'
+N_ATIVAS=$(wc -l < "$TMP/ids-ativas.txt" 2>/dev/null || echo 0)
+echo "  $N_ATIVAS ativas — baixando details em paralelo..."
+# Loop sequencial — xargs/parallel no Git Bash Windows tem bugs de subshell.
+# 229 obras × ~0.8s = ~3min. Cabe no refresh 30min.
+# NÃO usa -f no curl (schannel renegotiation rompe -f mesmo com 200 OK).
+COUNT_OK=0
+COUNT_FAIL=0
+while IFS= read -r oid; do
+  oid=$(echo "$oid" | tr -d '\r\n ')
+  [ -z "$oid" ] && continue
+  out="$TMP/details/$oid.json"
+  curl -s --max-time 15 "$API_CLI/projects/$oid" -o "$out" 2>/dev/null
+  if [ -f "$out" ]; then
+    first=$(head -c 1 "$out" 2>/dev/null)
+    if [ "$first" = "{" ]; then
+      COUNT_OK=$((COUNT_OK + 1))
+    else
+      rm -f "$out"
+      COUNT_FAIL=$((COUNT_FAIL + 1))
+    fi
+  else
+    COUNT_FAIL=$((COUNT_FAIL + 1))
+  fi
+done < "$TMP/ids-ativas.txt"
+echo "  $COUNT_OK details OK · $COUNT_FAIL falharam"
+N_DET_OK=$(ls "$TMP/details"/*.json 2>/dev/null | wc -l)
+echo "  Total details no diretório: $N_DET_OK"
+
 # Snapshot Pipefy mais recente (cargo-assistente roda seg+sex 5h e commita).
 # Lista snapshots via API GitHub e baixa o mais novo.
 echo "  Listando snapshots Pipefy..."
@@ -513,6 +557,149 @@ ranking_carga = [{"id": pid, **a} for pid, a in ranking[:10]]
 ranking_escalado = [{"id": pid, **a} for pid, a in sorted(agg_7d.items(), key=lambda x: -x[1]["dias_escalado"])[:10]]
 ranking_ocioso = [{"id": pid, **a} for pid, a in sorted(agg_7d.items(), key=lambda x: (-x[1]["dias_ocioso"], x[1]["nome"]))[:10] if a["dias_ocioso"] > 0]
 
+# ============== KIRA WHATSAPP — fonte fresh por detail ==============
+# whatsappSummary só vem em /api/projects/{id} (não no listing). Pra cada ativa,
+# extrai clima, totalMensagens, dias_desde_ultimo_evento, alertas. Classifica:
+#   silenciosa = sem evento há ≥30 dias (ou whatsappGroupId ausente + idade > 60d)
+#   clima_critico = clima Crítico/Tenso
+#   saudavel = clima Positivo/Neutro + msgs recentes
+import os, glob
+RETRAB_K = {"reparo", "marcas_rolo_cera"}
+op_obras = []
+op_clima_dist = {"Positivo": 0, "Neutro": 0, "Tenso": 0, "Crítico": 0, "?": 0}
+op_kira_mais_recente = None
+det_dir = f"{TMP}/details"
+
+def parse_iso_kira(s):
+    if not s: return None
+    try:
+        d = datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+        if d.tzinfo is None: d = d.replace(tzinfo=timezone.utc)
+        return d
+    except Exception:
+        return None
+
+now_utc = datetime.now(timezone.utc)
+for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
+    if not fn.endswith(".json"): continue
+    try:
+        d = json.load(open(f"{det_dir}/{fn}", encoding="utf-8-sig"))
+    except Exception:
+        continue
+    pid = d.get("id")
+    if not pid or d.get("status") in ("finalizado", "concluido", "cancelado"):
+        continue
+
+    pm = d.get("pendenciaManual") or {}
+    ws = pm.get("whatsappSummary") or {}
+    clima = ws.get("climaGeral")
+    if clima not in op_clima_dist: clima = "?"
+    op_clima_dist[clima] += 1
+
+    # tagKiraUpdatedAt: sinal mais recente do KIRA (atualizado quando pipeline rodou)
+    tag_dt = parse_iso_kira(d.get("tagKiraUpdatedAt"))
+    if tag_dt and (op_kira_mais_recente is None or tag_dt > op_kira_mais_recente):
+        op_kira_mais_recente = tag_dt
+
+    # Eventos: lista de eventos no whatsappSummary (cada um tem 'data')
+    eventos = ws.get("eventos") or []
+    ultima_data = None
+    for ev in eventos:
+        ed = parse_iso_kira(ev.get("data") if isinstance(ev, dict) else None)
+        if ed and (ultima_data is None or ed > ultima_data):
+            ultima_data = ed
+    dias_sem_evento = (now_utc - ultima_data).days if ultima_data else None
+
+    total_msgs = ws.get("totalMensagens") or 0
+    alertas = ws.get("alertas") or []
+    n_alertas = len(alertas) if isinstance(alertas, list) else 0
+    has_grupo = bool(d.get("whatsappGroupId"))
+
+    # Classificação operacional — usa CLIMA do KIRA como sinal principal:
+    #   atencao   = climaGeral Tenso ou Crítico (precisa olhar)
+    #   saudavel  = climaGeral Positivo ou Neutro (referência)
+    #   sem_kira  = climaGeral vazio (KIRA não tem dado — sem grupo OU sem msgs)
+    #   retrabalho = status reparo/marcas (pós-entrega, fora do fluxo)
+    eh_retrabalho = d.get("status") in RETRAB_K
+    is_saudavel = clima in ("Positivo", "Neutro")
+    is_atencao = clima in ("Tenso", "Crítico")
+    is_sem_kira = (clima == "?")  # climaGeral vazio
+
+    op_obras.append({
+        "id": pid,
+        "cliente": (d.get("clienteNome") or "").strip(),
+        "consultor": (d.get("consultorNome") or "").strip(),
+        "cidade": (d.get("projetoCidade") or "").strip(),
+        "status": d.get("status"),
+        "fase": d.get("faseAtual"),
+        "m2": float(d.get("projetoMetragem") or 0),
+        "clima": clima,
+        "total_msgs": total_msgs,
+        "n_alertas": n_alertas,
+        "tag_kira_dias": (now_utc - tag_dt).days if tag_dt else None,
+        "dias_sem_evento": dias_sem_evento,
+        "tem_grupo": has_grupo,
+        "is_retrabalho": eh_retrabalho,
+        "is_atencao": is_atencao,
+        "is_saudavel": is_saudavel,
+        "is_sem_kira": is_sem_kira,
+    })
+
+# Agregação (excluindo retrabalho — segue regra Q1/Q4)
+op_fluxo = [o for o in op_obras if not o["is_retrabalho"]]
+n_total = len(op_fluxo)
+n_atencao = sum(1 for o in op_fluxo if o["is_atencao"])
+n_saudavel = sum(1 for o in op_fluxo if o["is_saudavel"])
+n_sem_kira = sum(1 for o in op_fluxo if o["is_sem_kira"])
+# % saudável usa apenas as obras com KIRA ativo (denominador honesto)
+n_com_kira = n_saudavel + n_atencao
+pct_saudavel = round(n_saudavel / max(1, n_com_kira) * 100, 1)
+
+# Lista das obras em ATENÇÃO ordenadas por gravidade (Crítico antes de Tenso)
+def gravidade_atencao(o):
+    s = 100 if o["clima"] == "Crítico" else 50
+    s += (o.get("n_alertas") or 0) * 5
+    s += (o.get("dias_sem_evento") or 0) // 7
+    return -s
+obras_atencao = sorted(
+    [o for o in op_fluxo if o["is_atencao"]],
+    key=gravidade_atencao
+)
+
+canon["operacional_kira"] = {
+    "kira_atualizado_em": op_kira_mais_recente.isoformat() if op_kira_mais_recente else None,
+    "total_fluxo": n_total,
+    "com_kira": n_com_kira,
+    "saudavel": n_saudavel,
+    "saudavel_pct_no_monitorado": pct_saudavel,  # % das que o KIRA acompanha
+    "atencao": n_atencao,
+    "sem_kira": n_sem_kira,
+    "clima_dist": op_clima_dist,
+    "obras_atencao": [
+        {
+            "id": o["id"],
+            "cliente": o["cliente"],
+            "consultor": (o["consultor"].split(" ")[0] if o["consultor"] else "—"),
+            "cidade": o["cidade"],
+            "fase": o["fase"],
+            "clima": o["clima"],
+            "n_alertas": o["n_alertas"],
+            "dias_sem_evento": o["dias_sem_evento"],
+        } for o in obras_atencao
+    ],
+    "obras_sem_kira": [
+        {
+            "id": o["id"],
+            "cliente": o["cliente"],
+            "consultor": (o["consultor"].split(" ")[0] if o["consultor"] else "—"),
+            "cidade": o["cidade"],
+            "fase": o["fase"],
+            "tem_grupo": o["tem_grupo"],
+        } for o in op_fluxo if o["is_sem_kira"]
+    ],
+    "fonte": "/api/projects/{id} pendenciaManual.whatsappSummary (cada detail fresh, ~3min coleta)",
+}
+
 canon["historico_aplicadores"] = {
     "dias_acumulados": len(hist_aplic),
     "janela_dias": len(ultimos_7),
@@ -538,6 +725,7 @@ with open(out, "w", encoding="utf-8") as f:
 print(f"  rodrigo-stats.json: total={total} ativas={ativas} em_exec={em_exec_count} ({round(m2_em_execucao)}m²) prox15d={canon['proximos']['15d']['obras']} prox30d={canon['proximos']['30d']['obras']} prox60d={canon['proximos']['60d']['obras']}")
 print(f"  aplicadores: {canon['aplicadores']['ativos']} ativos · {canon['aplicadores']['pessoas_em_campo_hoje']} em campo · {canon['aplicadores']['ociosos_hoje']} ociosos")
 print(f"  Luana={luana['n']} obras · Wesley={wesley['n']} obras · concentração={canon['lw']['concentracao_pct']}%")
+print(f"  KIRA: {n_total} no fluxo · {n_saudavel} saudáveis · {n_atencao} em atenção · {n_sem_kira} sem KIRA · {pct_saudavel}% saudável (sobre as {n_com_kira} monitoradas)")
 PYEOF
 
 rm -rf "$TMP"

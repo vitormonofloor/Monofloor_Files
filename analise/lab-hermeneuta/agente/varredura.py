@@ -263,6 +263,11 @@ def _executar_pipeline():
     if not run([PYTHON, "sentinela.py"], AGENTE):
         log("FALHOU em sentinela.py (continua)")
 
+    # 14. Publica no repo lab-hermeneuta-pub (Cloudflare Pages · lab.monofloor.cloud)
+    log("Rodando publicar.py...")
+    if not run([PYTHON, "publicar.py"], AGENTE):
+        log("FALHOU em publicar.py (continua · publicação é best-effort)")
+
     log("VARREDURA OK")
     log("=" * 60)
 
