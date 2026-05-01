@@ -1051,24 +1051,39 @@
   .op-clima-chip.critico{background:#fae5e5;color:#9a3030;border:1px solid #e8c0c0}
   .op-fcard-arrow{color:#b8a080;font-size:10px;transition:transform .2s}
   .op-fcard.aberto .op-fcard-arrow{transform:rotate(90deg);color:#8a6a20}
-  .op-fcard-body{display:none;padding:14px 18px;border-top:1px solid #ede6dc;background:#fafaf5}
+  .op-fcard-body{display:none;padding:18px 20px 16px;border-top:1px solid #ede6dc;background:#fafaf5}
   .op-fcard.aberto .op-fcard-body{display:block}
+  /* Headline do clima — primeira coisa que aparece */
+  .op-bd-headline{display:flex;gap:14px;align-items:flex-start;padding:10px 14px;background:#fff;border-left:3px solid #c45a5a;border:1px solid #ede6dc;border-left-width:3px;border-radius:4px;margin-bottom:14px}
+  .op-fcard.critico .op-bd-headline{border-left-color:#9a3030;background:linear-gradient(135deg,#fff,#fdf6f6)}
+  .op-bd-headline-icon{font-size:18px;line-height:1.2;color:#c45a5a}
+  .op-fcard.critico .op-bd-headline-icon{color:#9a3030}
+  .op-bd-headline-txt{font-size:12px;color:#3a3328;line-height:1.5;flex:1;font-style:italic}
+  .op-bd-headline-meta{font-size:10px;color:#8a7e72;font-family:'JetBrains Mono',monospace;margin-top:4px;font-style:normal}
+  /* Sections */
   .op-bd-section{margin-bottom:14px}
   .op-bd-section:last-child{margin-bottom:0}
-  .op-bd-titulo{font-size:10px;font-weight:700;color:#6b6156;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-  .op-bd-titulo .op-bd-icon{font-size:12px}
-  .op-bd-resumo{font-size:12px;color:#3a3328;line-height:1.5;background:#fff;border:1px solid #ede6dc;border-radius:4px;padding:10px 12px;font-style:italic}
+  .op-bd-titulo{font-size:10px;font-weight:700;color:#6b6156;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .op-bd-titulo .op-bd-icon{font-size:11px}
+  /* Items: título em destaque + descrição sutil (split em ':' do texto KIRA) */
   .op-bd-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
-  .op-bd-list li{font-size:12px;color:#3a3328;line-height:1.4;padding:8px 10px 8px 24px;background:#fff;border:1px solid #ede6dc;border-radius:4px;position:relative}
-  .op-bd-list.alertas li::before{content:'⚠';position:absolute;left:8px;top:8px;color:#c45a5a;font-weight:700;font-size:11px}
-  .op-bd-list.alertas li{border-left:2px solid #c45a5a}
-  .op-bd-list.pendencias li::before{content:'›';position:absolute;left:10px;top:7px;color:#b89a4a;font-weight:700;font-size:13px}
-  .op-bd-list.pendencias li{border-left:2px solid #b89a4a}
-  .op-bd-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:#8a7e72;font-family:'JetBrains Mono',monospace;margin-top:8px}
-  .op-bd-meta strong{color:#5a4a30;font-weight:700}
-  .op-bd-actions{margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:flex-end}
-  .op-bd-link{font-size:11px;color:#b8a080;text-decoration:none;border:1px solid #d4c8b4;padding:5px 12px;border-radius:4px;font-weight:500;transition:all .15s}
+  .op-bd-list li{font-size:12px;line-height:1.5;padding:8px 12px 8px 28px;background:#fff;border:1px solid #ede6dc;border-radius:4px;position:relative}
+  .op-bd-list.alertas li{border-left:3px solid #c45a5a}
+  .op-bd-list.alertas li::before{content:'⚠';position:absolute;left:9px;top:8px;color:#c45a5a;font-weight:700;font-size:11px}
+  .op-bd-list.pendencias li{border-left:3px solid #b89a4a}
+  .op-bd-list.pendencias li::before{content:'›';position:absolute;left:11px;top:6px;color:#b89a4a;font-weight:700;font-size:14px}
+  .op-bd-li-titulo{font-weight:700;color:#2a2520;margin-right:4px}
+  .op-bd-li-desc{color:#5a4a30}
+  /* Footer da expansão */
+  .op-bd-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px dashed #e0d8cc;gap:10px;flex-wrap:wrap}
+  .op-bd-footer-meta{font-size:10px;color:#8a7e72;font-family:'JetBrains Mono',monospace}
+  .op-bd-footer-meta strong{color:#5a4a30;font-weight:700}
+  .op-bd-link{font-size:11px;color:#b8a080;text-decoration:none;border:1px solid #d4c8b4;padding:5px 12px;border-radius:4px;font-weight:500;transition:all .15s;white-space:nowrap}
   .op-bd-link:hover{background:#b8a080;color:#fff;border-color:#b8a080}
+  /* Cor da borda do body conforme frescor — leitor sente "atualidade" */
+  .op-fcard.aberto.frescor-recente .op-fcard-body{border-top-color:#3d8a5a;box-shadow:inset 4px 0 0 #3d8a5a}
+  .op-fcard.aberto.frescor-medio .op-fcard-body{border-top-color:#b89a4a;box-shadow:inset 4px 0 0 #b89a4a}
+  .op-fcard.aberto.frescor-antigo .op-fcard-body{border-top-color:#a89e92;box-shadow:inset 4px 0 0 #a89e92}
   .op-fcard-vermais{padding:10px;text-align:center;color:#a89e92;font-size:11px;font-style:italic;cursor:pointer;background:#f5f0e8;border:1px solid #e0d8cc;border-radius:5px;transition:all .15s}
   .op-fcard-vermais:hover{background:#ede6dc;color:#5a4a30}
   .op-drill{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
@@ -5515,36 +5530,70 @@ function renderEstrategicos() {
 // Cache das obras "sem KIRA" pra modal — populado de Q2_OBRAS quando rodrigo-stats carrega
 var _opObrasSemKira = [];
 
+// Splita texto KIRA em "TÍTULO: descrição" — destaca título no item
+function _opSplitItem(txt) {
+  if (!txt) return { titulo: '', desc: '' };
+  var s = String(txt).trim();
+  // Procura primeiro ":" mas só se vier antes de uns 90 chars (caso contrário, pega tudo como descrição)
+  var idx = s.indexOf(':');
+  if (idx > 0 && idx <= 90) {
+    return { titulo: s.slice(0, idx).trim(), desc: s.slice(idx + 1).trim() };
+  }
+  return { titulo: '', desc: s };
+}
+
+function _opRenderItem(txt) {
+  var p = _opSplitItem(txt);
+  if (p.titulo) {
+    return '<li><span class="op-bd-li-titulo">' + escHtml(p.titulo) + '</span><span class="op-bd-li-desc">' + escHtml(p.desc) + '</span></li>';
+  }
+  return '<li><span class="op-bd-li-desc">' + escHtml(p.desc) + '</span></li>';
+}
+
 // Render de um card expansível na lista de "em atenção"
 function _opRenderFcard(o, idx) {
   var climaCls = o.clima === 'Crítico' ? 'critico' : 'tenso';
   var cardCls = o.clima === 'Crítico' ? 'op-fcard critico' : 'op-fcard';
   var alertasTxt = o.n_alertas ? o.n_alertas + ' alerta' + (o.n_alertas === 1 ? '' : 's') : '';
   var url = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
+
   // Chip de frescor da leitura KIRA — verde ≤7d, amarelo 8-30d, cinza 30-60d
   var dr = o.dias_desde_resumo;
   var frescorHtml = '';
-  if (dr === 0) frescorHtml = '<span class="op-frescor-chip recente" title="KIRA leu hoje">lido hoje</span>';
-  else if (dr === 1) frescorHtml = '<span class="op-frescor-chip recente" title="KIRA leu ontem">lido ontem</span>';
+  var frescorCls = '';
+  if (dr === 0) { frescorHtml = '<span class="op-frescor-chip recente" title="KIRA leu hoje">lido hoje</span>'; frescorCls = 'frescor-recente'; }
+  else if (dr === 1) { frescorHtml = '<span class="op-frescor-chip recente" title="KIRA leu ontem">lido ontem</span>'; frescorCls = 'frescor-recente'; }
   else if (dr !== null && dr !== undefined) {
     var fcls = dr <= 7 ? 'recente' : (dr <= 30 ? 'medio' : 'antigo');
+    frescorCls = 'frescor-' + fcls;
     frescorHtml = '<span class="op-frescor-chip ' + fcls + '" title="Última leitura KIRA">lido há ' + dr + 'd</span>';
   }
-  var alertasHtml = (o.alertas || []).slice(0, 4).map(function(a){
-    return '<li>' + escHtml(a) + '</li>';
-  }).join('');
-  var pendenciasHtml = (o.pendencias || []).slice(0, 4).map(function(p){
-    return '<li>' + escHtml(p) + '</li>';
-  }).join('');
-  var resumoHtml = o.resumo_exec ? '<div class="op-bd-resumo">' + escHtml(o.resumo_exec) + '</div>' : '';
-  var metaParts = [];
-  if (o.periodo) metaParts.push('Período: <strong>' + escHtml(o.periodo) + '</strong>');
-  if (o.total_msgs) metaParts.push('<strong>' + o.total_msgs + '</strong> mensagens analisadas');
-  if (o.tempo_resp) metaParts.push('Resposta: <strong>' + escHtml(o.tempo_resp) + '</strong>');
-  if (o.consultor) metaParts.push('Consultor: <strong>' + escHtml(o.consultor) + '</strong>');
-  if (o.cidade) metaParts.push(escHtml(o.cidade));
 
-  return '<li class="' + cardCls + '" data-idx="' + idx + '">'+
+  // Top 3 alertas e pendências (era 4) — sintetiza
+  var alertasHtml = (o.alertas || []).slice(0, 3).map(_opRenderItem).join('');
+  var pendenciasHtml = (o.pendencias || []).slice(0, 3).map(_opRenderItem).join('');
+
+  // Headline: climaDescricao (1 frase) — substitui o "Resumo do caso" (que era redundante com alertas)
+  var headlineHtml = '';
+  if (o.clima_desc) {
+    var metaInline = '';
+    var mp = [];
+    if (o.periodo) mp.push('Período KIRA: ' + escHtml(o.periodo));
+    if (o.total_msgs) mp.push(o.total_msgs + ' msgs');
+    if (mp.length) metaInline = '<div class="op-bd-headline-meta">' + mp.join(' · ') + '</div>';
+    headlineHtml = '<div class="op-bd-headline">'+
+      '<div class="op-bd-headline-icon">' + (o.clima === 'Crítico' ? '🔴' : '🟡') + '</div>'+
+      '<div class="op-bd-headline-txt">' + escHtml(o.clima_desc) + metaInline + '</div>'+
+    '</div>';
+  }
+
+  // Footer: meta + link
+  var footerMeta = [];
+  if (o.consultor) footerMeta.push('Consultor: <strong>' + escHtml(o.consultor) + '</strong>');
+  if (o.cidade) footerMeta.push(escHtml(o.cidade));
+  if (o.tempo_resp) footerMeta.push('Resposta: <strong>' + escHtml(o.tempo_resp) + '</strong>');
+
+  return '<li class="' + cardCls + ' ' + frescorCls + '" data-idx="' + idx + '">'+
     '<button type="button" class="op-fcard-head">'+
       '<div>'+
         '<div class="op-fcard-cli">' + escHtml(o.cliente) + '<small>' + escHtml(o.fase || '—') + '</small></div>'+
@@ -5555,11 +5604,13 @@ function _opRenderFcard(o, idx) {
       '<span class="op-fcard-arrow">▶</span>'+
     '</button>'+
     '<div class="op-fcard-body">'+
-      (alertasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">⚠</span>Alertas detectados pelo KIRA</div><ul class="op-bd-list alertas">' + alertasHtml + '</ul></div>' : '')+
+      headlineHtml +
+      (alertasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">⚠</span>Pontos críticos</div><ul class="op-bd-list alertas">' + alertasHtml + '</ul></div>' : '')+
       (pendenciasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">›</span>Pendências em aberto</div><ul class="op-bd-list pendencias">' + pendenciasHtml + '</ul></div>' : '')+
-      (resumoHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">📋</span>Resumo do caso</div>' + resumoHtml + '</div>' : '')+
-      (metaParts.length ? '<div class="op-bd-meta">' + metaParts.join(' · ') + '</div>' : '')+
-      '<div class="op-bd-actions"><a class="op-bd-link" href="' + url + '" target="_blank" rel="noopener">Abrir no painel ↗</a></div>'+
+      '<div class="op-bd-footer">'+
+        '<div class="op-bd-footer-meta">' + footerMeta.join(' · ') + '</div>'+
+        '<a class="op-bd-link" href="' + url + '" target="_blank" rel="noopener">Abrir no painel ↗</a>'+
+      '</div>'+
     '</div>'+
   '</li>';
 }
