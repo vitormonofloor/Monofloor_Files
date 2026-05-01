@@ -155,9 +155,13 @@ em_exec_obras = [p for p in projects if isinstance(p, dict) and p.get("status") 
 m2_em_execucao = sum(m2_of(p) for p in em_exec_obras)
 
 # Próximos N dias — alinhado com tela do Rodrigo (44 obras pra 15d):
-# obras com status IN (aguardando_execucao, planejamento, em_execucao, aguardando_clima)
+# Obras a INICIAR nos próximos N dias (forward-looking — não conta as que já estão
+# em execução; essas já aparecem no Q4 RODANDO e no Hero "Em execução").
+# Vitor 2026-05-01: "em execução já tem prazo, supostamente vão finalizar.
+# As que virão, essas importam ver."
+# Status: aguardando_execucao + planejamento + aguardando_clima
 # E dataExecucaoPrevista entre hoje e hoje+N
-PROX_STATUSES = {"aguardando_execucao", "planejamento", "em_execucao", "aguardando_clima"}
+PROX_STATUSES = {"aguardando_execucao", "planejamento", "aguardando_clima"}
 hoje = datetime.now(timezone.utc).date()
 
 def parse_date(s):

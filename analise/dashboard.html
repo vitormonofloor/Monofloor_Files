@@ -1556,7 +1556,7 @@
   <section id="estrategicos">
     <div class="q-head">
       <h2><span class="section-pill" style="background:rgba(74,122,184,0.1);color:#4a7ab8">ESTRATÉGICOS</span></h2>
-      <p class="sub">Os 4 eixos que a diretoria pergunta primeiro: TEMPO (estamos rápidos?) · VOLUME (em obra agora?) · CAPACIDADE (cabe mais?) · PRÓXIMOS DIAS (o que vem na frente?).</p>
+      <p class="sub">Os 4 eixos que a diretoria pergunta primeiro: TEMPO (estamos rápidos?) · VOLUME (em obra agora?) · CAPACIDADE (cabe mais?) · A INICIAR (o que vem na frente?).</p>
     </div>
 
     <div class="estrategicos-grid">
@@ -1601,7 +1601,7 @@
       </div>
 
       <div class="est-card">
-        <div class="est-titulo">PRÓXIMOS DIAS</div>
+        <div class="est-titulo">A INICIAR</div>
         <div class="est-pergunta">O que vem na frente da operação?</div>
         <div class="est-chips" id="est-prox-chips" role="tablist" aria-label="Janela de tempo">
           <button type="button" class="est-chip" data-prox="15" role="tab">15d</button>
@@ -2894,7 +2894,7 @@ function applyRodrigoCanon() {
             }
             if ($('est-prox-detalhe')) {
               var meta = janela === '15' ? 'curto prazo' : (janela === '30' ? 'mês corrente' : 'horizonte 2 meses');
-              $('est-prox-detalhe').textContent = meta + ' · obras agendadas pra começar/já em obra';
+              $('est-prox-detalhe').textContent = meta + ' · obras agendadas pra começar (não conta as já em execução)';
             }
             document.querySelectorAll('#est-prox-chips .est-chip').forEach(function(c){
               var a = c.getAttribute('data-prox') === janela;

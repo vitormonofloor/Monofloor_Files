@@ -517,24 +517,29 @@
     .lampada-fechar{position:absolute;top:30px;right:30px;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #d8d0c4;cursor:pointer;font-size:18px;color:#3a3530;display:flex;align-items:center;justify-content:center;z-index:101;transition:all .15s}
     .lampada-fechar:hover{background:#3a3530;color:#fff}
 
-    .lp-header{margin-bottom:32px;padding-bottom:18px;border-bottom:2px solid #b8a080}
-    .lp-titulo{font-size:32px;font-weight:700;color:#2a2520;letter-spacing:-0.02em;margin:0 0 4px}
-    .lp-titulo .accent{color:#b8a080}
-    .lp-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a7e72;letter-spacing:.04em}
+    .lp-header{margin-bottom:32px;padding-bottom:18px;border-bottom:1px solid #d8d0c4}
+    .lp-marca{font-size:13px;font-weight:300;color:#2a2520;letter-spacing:6px;text-transform:uppercase;line-height:1;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+    .lp-marca .accent{color:#b8a080;font-weight:400;letter-spacing:3px}
+    .lp-titulo{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:300;color:#2a2520;letter-spacing:.01em;margin:0 0 8px;line-height:1.2}
+    .lp-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8a7e72;letter-spacing:.04em;line-height:1.5}
 
     .lp-section-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;text-transform:uppercase;letter-spacing:.18em;font-weight:700;margin:30px 0 14px;padding-bottom:8px;border-bottom:1px solid #e0d8cc}
 
     /* KPI big numbers */
     .lp-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:8px}
-    .lp-kpi{background:#fff;border:1px solid #e0d8cc;border-radius:10px;padding:18px 16px;text-align:center;border-top:4px solid #b8a080}
+    .lp-kpi{background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:18px 14px 12px;text-align:center;border-top:3px solid #b8a080;cursor:pointer;font-family:inherit;transition:all .18s ease;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+    .lp-kpi:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 18px rgba(42,37,32,.12);border-color:#b8a080}
+    .lp-kpi:disabled{cursor:default;opacity:.55}
     .lp-kpi.crit{border-top-color:#c45a5a}
     .lp-kpi.warn{border-top-color:#d4943a}
     .lp-kpi.ok{border-top-color:#3d8a5a}
-    .lp-kpi-num{font-size:42px;font-weight:700;color:#2a2520;line-height:1;font-family:'Plus Jakarta Sans',sans-serif}
+    .lp-kpi-num{font-size:38px;font-weight:600;color:#2a2520;line-height:1;font-family:'Plus Jakarta Sans',sans-serif}
     .lp-kpi-num.crit{color:#c45a5a}
     .lp-kpi-num.warn{color:#d4943a}
     .lp-kpi-num.ok{color:#3d8a5a}
-    .lp-kpi-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-top:6px;line-height:1.4}
+    .lp-kpi-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-top:4px;line-height:1.4}
+    .lp-kpi-cta{font-family:'JetBrains Mono',monospace;font-size:8px;color:#b8a080;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-top:6px;opacity:0;transition:opacity .15s;line-height:1}
+    .lp-kpi:hover:not(:disabled) .lp-kpi-cta{opacity:1}
 
     /* Bar chart bucket */
     .lp-buckets{display:flex;flex-direction:column;gap:8px}
@@ -559,16 +564,27 @@
     .lp-cor-qtd{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#3a3530;text-align:right}
 
     /* Top riscos */
+    .lp-risco-info{font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.04em;line-height:1.55;margin:-6px 0 12px;font-style:italic}
+    .lp-risco-info strong{color:#3a3530;font-weight:600;font-style:normal}
     .lp-risco-row{padding:10px 12px;background:#fff;border:1px solid #e0d8cc;border-left:3px solid #c45a5a;border-radius:5px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-size:12px;line-height:1.4}
+    .lp-risco-row.risco-crit{border-left-color:#c45a5a}
+    .lp-risco-row.risco-alto{border-left-color:#d4943a}
+    .lp-risco-row.risco-medio{border-left-color:#b89a4a}
+    .lp-risco-row.risco-aten{border-left-color:#7aa898}
     .lp-risco-cli{font-weight:600;color:#2a2520}
     .lp-risco-motivo{font-size:11px;color:#6b6156;margin-top:3px}
-    .lp-risco-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:#f6eaea;color:#9a3a3a;flex-shrink:0;white-space:nowrap}
+    .lp-risco-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:3px;flex-shrink:0;white-space:nowrap;cursor:help}
+    .lp-risco-tag.tag-crit{background:#f6eaea;color:#9a3a3a}
+    .lp-risco-tag.tag-alto{background:#fbeede;color:#a86b30}
+    .lp-risco-tag.tag-medio{background:#f4ecd8;color:#806a3a}
+    .lp-risco-tag.tag-aten{background:#eaf0e8;color:#4a6a4a}
 
     /* Consultores ranking */
     .lp-cons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
     .lp-cons{background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:14px 16px;border-top:3px solid #b8a080}
     .lp-cons.sem{border-top-color:#c45a5a}
-    .lp-cons-nome{font-size:13px;font-weight:600;color:#2a2520;margin-bottom:4px}
+    .lp-cons-nome{font-size:14px;font-weight:500;color:#2a2520;margin-bottom:4px;letter-spacing:.005em}
+    .lp-cons-nome small{font-weight:400;color:#a89e92;font-size:11px;display:block;margin-top:1px;font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
     .lp-cons-stats{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;margin-bottom:8px}
     .lp-cons-urg{display:flex;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
     .lp-cons-urg span{padding:2px 8px;border-radius:3px;color:#fff}
@@ -591,6 +607,37 @@
     .lp-padrao-implicacao{font-size:11.5px;color:#6b6156;line-height:1.5;font-style:italic}
     .lp-padrao-obras{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
     .lp-padrao-obra-pill{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:3px;background:#f0ebe3;color:#3a3530;border:1px solid #e0d8cc}
+
+    /* Drawer · mini resumo discreto ao clicar num KPI */
+    .lp-drawer{position:fixed;top:0;right:0;height:100vh;width:420px;max-width:92vw;background:#fdfaf4;border-left:1px solid #d8c8a8;box-shadow:-14px 0 40px rgba(42,37,32,.22);z-index:103;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);font-family:'Plus Jakarta Sans',sans-serif}
+    .lp-drawer.aberto{transform:translateX(0)}
+    .lp-drawer-head{padding:22px 26px 16px;border-bottom:1px solid #e0d8cc;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:#fff}
+    .lp-drawer-tit{font-size:15px;font-weight:600;color:#2a2520;line-height:1.3;margin-bottom:5px}
+    .lp-drawer-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+    .lp-drawer-x{background:none;border:none;font-size:22px;color:#8a7e72;cursor:pointer;padding:0 6px;line-height:1;border-radius:6px;transition:all .15s;flex-shrink:0}
+    .lp-drawer-x:hover{background:#f0ebe3;color:#2a2520}
+    .lp-drawer-body{flex:1;overflow-y:auto;padding:14px 18px;background:#fdfaf4}
+    .lp-drawer-body::-webkit-scrollbar{width:6px}
+    .lp-drawer-body::-webkit-scrollbar-thumb{background:#d8c8a8;border-radius:3px}
+    .lp-drawer-vazio{padding:40px 20px;text-align:center;color:#8a7e72;font-size:12px;font-style:italic}
+    .lp-drawer-obra{display:block;width:100%;text-align:left;background:#fff;border:1px solid #e0d8cc;border-left:3px solid #b8a080;border-radius:6px;padding:11px 14px;margin-bottom:8px;cursor:pointer;font-family:inherit;transition:all .15s}
+    .lp-drawer-obra:hover{border-color:#b8a080;border-left-color:#a89070;background:#fcfaf4;transform:translateX(-3px);box-shadow:-2px 2px 8px rgba(42,37,32,.06)}
+    .lp-drawer-obra-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:5px}
+    .lp-drawer-obra-cli{font-size:13px;font-weight:600;color:#2a2520;line-height:1.3;flex:1;min-width:0}
+    .lp-drawer-obra-cli small{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:400;color:#a89e92;letter-spacing:.04em;display:block;margin-top:2px}
+    .lp-drawer-urg{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0;color:#fff;line-height:1.4}
+    .lp-drawer-urg.urg-alta{background:#c45a5a}
+    .lp-drawer-urg.urg-media{background:#d4943a}
+    .lp-drawer-urg.urg-baixa{background:#7aa898}
+    .lp-drawer-obra-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#6b6156;line-height:1.5;display:flex;gap:6px;flex-wrap:wrap;align-items:baseline}
+    .lp-drawer-obra-meta .dot{opacity:.4;color:#b8a080}
+    .lp-drawer-obra-meta .destaque{color:#3a3530;font-weight:600}
+    .lp-drawer-foot{padding:14px 22px 18px;border-top:1px solid #e0d8cc;background:#fff;display:flex;flex-direction:column;gap:6px}
+    .lp-drawer-cta{width:100%;background:#b8a080;color:#fff;border:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:11px;border-radius:6px;cursor:pointer;transition:background .15s}
+    .lp-drawer-cta:hover{background:#a89070}
+    .lp-drawer-dica{font-family:'JetBrains Mono',monospace;font-size:8px;color:#a89e92;letter-spacing:.06em;text-align:center;line-height:1.4;font-style:italic}
+    /* Quando drawer aberto, modal recua um pouco · sensação de profundidade */
+    .lampada-overlay.com-drawer .lampada-modal{transform:translateX(-180px) scale(.98);opacity:.55;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none}
 
     @media print{
       .lampada-overlay{position:static;background:#fff;padding:0}
@@ -795,6 +842,22 @@
   <div class="lampada-overlay" id="lampada-overlay">
     <button class="lampada-fechar" id="lampada-fechar" title="Fechar (ESC)">×</button>
     <div class="lampada-modal" id="lampada-modal"></div>
+
+    <!-- Drawer · mini resumo dos KPIs -->
+    <aside class="lp-drawer" id="lp-drawer" aria-hidden="true">
+      <div class="lp-drawer-head">
+        <div>
+          <div class="lp-drawer-tit" id="lp-drawer-tit">—</div>
+          <div class="lp-drawer-sub" id="lp-drawer-sub">—</div>
+        </div>
+        <button class="lp-drawer-x" id="lp-drawer-x" aria-label="Fechar mini resumo">×</button>
+      </div>
+      <div class="lp-drawer-body" id="lp-drawer-body"></div>
+      <div class="lp-drawer-foot">
+        <button class="lp-drawer-cta" id="lp-drawer-cta">ver na lista completa →</button>
+        <div class="lp-drawer-dica">clique numa obra pra abrir direto</div>
+      </div>
+    </aside>
   </div>
 
   <footer>
@@ -806,6 +869,30 @@
 
 <script>
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// Capitaliza nome próprio: "LUANA SILVA" → "Luana Silva" · respeita partículas
+function capitalizarNome(s){
+  if (!s) return '';
+  const particulas = new Set(['de','da','do','das','dos','e','di','du']);
+  return String(s).toLowerCase().split(/(\s+|-)/).map((w,i) => {
+    if (!w.trim()) return w;
+    if (i > 0 && particulas.has(w.toLowerCase())) return w.toLowerCase();
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join('');
+}
+// Abrevia nome completo: "CAUÃ MATHEUS BEZERRA DA SILVA" → "Cauã Silva"
+function nomeAbreviado(nome){
+  if (!nome) return '';
+  const t = String(nome).trim();
+  if (!t || t === 'SEM CONSULTOR' || /^M[ÚU]LTIPLOS/i.test(t)) return t;
+  const particulas = new Set(['de','da','do','das','dos','e']);
+  const partes = t.split(/\s+/).filter(p => p && !particulas.has(p.toLowerCase()));
+  let out;
+  if (partes.length <= 1) out = t;
+  else if (partes.length === 2) out = partes.join(' ');
+  else out = partes[0] + ' ' + partes[partes.length-1];
+  return capitalizarNome(out);
+}
 
 // Traduções pra português leigo · usado em badges, tags e flags
 const RENAMES = {
@@ -1112,6 +1199,8 @@ function renderFiltros(){
     {id:'detrator', label:'Cliente em conflito', count:obras.filter(o=>o.veredicto==='detrator').length},
     {id:'aplicador-indef', label:'Aplicador a definir', count:obras.filter(o=>(o.flags||[]).includes('aplicador_indefinido')).length},
     {id:'sem-consultor', label:'Sem consultor', count:obras.filter(o=>!o.consultor || o.consultor==='[]' || o.consultor==='').length},
+    {id:'consultor-divergente', label:'Consultor não atua', count:obras.filter(o=>(o.flags||[]).includes('consultor_divergente')).length},
+    {id:'clima-tenso', label:'Clima tenso (KIRA)', count:obras.filter(o=>{const c=(o.kira_whatsapp&&o.kira_whatsapp.whatsapp&&o.kira_whatsapp.whatsapp.clima_geral||'').toLowerCase();return c.includes('crit')||c.includes('tens');}).length},
     {id:'coerente', label:'Coerentes', count:obras.filter(o=>o.veredicto==='coerente').length},
   ];
   document.getElementById('filtros').innerHTML = filtros.map((f,i)=>
@@ -1134,6 +1223,8 @@ function renderLista(filtro){
   else if (filtro === 'urg-alta') lista = obras.filter(o=>o.urgencia==='alta');
   else if (filtro === 'sem-consultor') lista = obras.filter(o=>!o.consultor || o.consultor==='[]' || o.consultor==='');
   else if (filtro === 'aplicador-indef') lista = obras.filter(o=>(o.flags||[]).includes('aplicador_indefinido'));
+  else if (filtro === 'consultor-divergente') lista = obras.filter(o=>(o.flags||[]).includes('consultor_divergente'));
+  else if (filtro === 'clima-tenso') lista = obras.filter(o=>{const c=(o.kira_whatsapp&&o.kira_whatsapp.whatsapp&&o.kira_whatsapp.whatsapp.clima_geral||'').toLowerCase();return c.includes('crit')||c.includes('tens');});
   else if (filtro === 'data-alterada') lista = obras.filter(o=>o.regua && o.regua.data_inicio_alterada);
 
   if (lista.length === 0) {
@@ -1566,8 +1657,9 @@ function renderConsultores(){
 
   document.getElementById('consultor-grid').innerHTML = cs.map(c => {
     const semCons = c.nome === 'SEM CONSULTOR';
-    return `<div class="consultor-card ${semCons?'sem':''}">
-      <div class="consultor-nome">${esc(c.nome)}</div>
+    const nomeC = semCons || /^M[ÚU]LTIPLOS/i.test(c.nome) ? c.nome : capitalizarNome(c.nome);
+    return `<div class="consultor-card ${semCons?'sem':''}" title="${esc(c.nome)}">
+      <div class="consultor-nome">${esc(nomeC)}</div>
       <div class="consultor-stats">${c.obras_analisadas} obra${c.obras_analisadas>1?'s':''} · ${c.obras_com_acao} c/ ação</div>
       <div class="consultor-acoes">
         ${(c.acoes_priorizadas||[]).map(a => {
@@ -2018,19 +2110,26 @@ function renderLampada(){
   }).length;
 
   const kpis = [
-    {num: total, label: 'Obras no piloto', cls: ''},
-    {num: v.status_desatualizado || 0, label: 'Painel de Obras desatualizado', cls: 'crit'},
-    {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit'},
-    {num: detratorLat ? detratorLat.ocorrencias : 0, label: 'Cliente em risco', cls: 'warn'},
-    {num: aplicIndef ? aplicIndef.ocorrencias : 0, label: 'Aplicador a definir', cls: 'warn'},
-    {num: consDiv ? consDiv.ocorrencias : 0, label: 'Consultor não atua', cls: 'crit'},
-    {num: climaCritico, label: 'Clima tenso · KIRA WhatsApp', cls: 'warn'},
-    {num: obrasUrgAlta, label: 'Urgência alta', cls: 'crit'},
+    {num: total, label: 'Obras no piloto', cls: '', filtro: 'todos', cta: 'ver todas →'},
+    {num: v.status_desatualizado || 0, label: 'Painel de Obras desatualizado', cls: 'crit', filtro: 'status_desatualizado'},
+    {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit', filtro: 'data-alterada'},
+    {num: detratorLat ? detratorLat.ocorrencias : 0, label: 'Cliente em risco', cls: 'warn', filtro: 'detrator_latente'},
+    {num: aplicIndef ? aplicIndef.ocorrencias : 0, label: 'Aplicador a definir', cls: 'warn', filtro: 'aplicador-indef'},
+    {num: consDiv ? consDiv.ocorrencias : 0, label: 'Consultor não atua', cls: 'crit', filtro: 'consultor-divergente'},
+    {num: climaCritico, label: 'Clima tenso · KIRA WhatsApp', cls: 'warn', filtro: 'clima-tenso'},
+    {num: obrasUrgAlta, label: 'Urgência alta', cls: 'crit', filtro: 'urg-alta'},
   ];
 
-  const kpisHtml = kpis.map(k =>
-    `<div class="lp-kpi ${k.cls}"><div class="lp-kpi-num ${k.cls}">${k.num}</div><div class="lp-kpi-label">${esc(k.label)}</div></div>`
-  ).join('');
+  const kpisHtml = kpis.map(k => {
+    const desabilita = k.num === 0;
+    const cta = k.cta || 'ver lista →';
+    const tip = desabilita ? 'sem ocorrências' : `clicar pra filtrar a lista — ${k.num} obra${k.num>1?'s':''}`;
+    return `<button class="lp-kpi ${k.cls}" data-filtro="${k.filtro}" ${desabilita?'disabled':''} title="${esc(tip)}">
+      <div class="lp-kpi-num ${k.cls}">${k.num}</div>
+      <div class="lp-kpi-label">${esc(k.label)}</div>
+      <div class="lp-kpi-cta">${cta}</div>
+    </button>`;
+  }).join('');
 
   // Buckets temporais
   const bucketCounts = {};
@@ -2068,46 +2167,50 @@ function renderLampada(){
     </div>`;
   }).join('');
 
-  // Top riscos · obras com mais sinais críticos combinados
-  const obrasComScore = obras.map(o => {
-    let score = 0;
+  // Top riscos · combina sinais críticos · cada componente tem peso explícito
+  function calcularRisco(o){
+    const componentes = [];
     const flags = o.flags || [];
-    if (flags.includes('detrator_latente')) score += 3;
-    if (flags.includes('detrator')) score += 5;
-    if (flags.includes('risco_tecnico')) score += 3;
-    if (flags.includes('aplicador_indefinido') && o.regua && o.regua.dias_ate_inicio != null && o.regua.dias_ate_inicio <= 14) score += 3;
-    if (o.veredicto === 'status_desatualizado') score += 2;
-    if (o.regua && o.regua.data_inicio_alterada && o.regua.data_inicio_historico && o.regua.data_inicio_historico.length >= 3) score += 2;
-    if (o.urgencia === 'alta') score += 2;
+    if (flags.includes('detrator')) componentes.push({label:'cliente em conflito', peso:5});
+    if (flags.includes('detrator_latente')) componentes.push({label:'cliente em risco', peso:3});
     const clima = (o.kira_whatsapp && o.kira_whatsapp.whatsapp && o.kira_whatsapp.whatsapp.clima_geral || '').toLowerCase();
-    if (clima.includes('crit')) score += 4;
-    else if (clima.includes('tens')) score += 2;
-    return {obra: o, score};
-  }).filter(x => x.score > 0).sort((a,b) => b.score - a.score).slice(0, 6);
+    if (clima.includes('crit')) componentes.push({label:'clima crítico (KIRA)', peso:4});
+    else if (clima.includes('tens')) componentes.push({label:'clima tenso (KIRA)', peso:2});
+    if (flags.includes('risco_tecnico')) componentes.push({label:'risco técnico', peso:3});
+    if (flags.includes('aplicador_indefinido') && o.regua && o.regua.dias_ate_inicio != null && o.regua.dias_ate_inicio <= 14) componentes.push({label:'aplicador indefinido a ≤14d do início', peso:3});
+    if (o.veredicto === 'status_desatualizado') componentes.push({label:'painel desatualizado', peso:2});
+    if (o.regua && o.regua.data_inicio_alterada && o.regua.data_inicio_historico && o.regua.data_inicio_historico.length >= 3) componentes.push({label:'3+ remarcações de data', peso:2});
+    if (o.urgencia === 'alta') componentes.push({label:'urgência alta', peso:2});
+    const score = componentes.reduce((s,c) => s + c.peso, 0);
+    return {score, componentes};
+  }
+  function nivelRisco(score){
+    if (score >= 10) return {nome:'crítico', cls:'crit'};
+    if (score >= 6)  return {nome:'alto',    cls:'alto'};
+    if (score >= 3)  return {nome:'médio',   cls:'medio'};
+    return {nome:'atenção', cls:'aten'};
+  }
 
-  const riscosHtml = obrasComScore.map(({obra, score}) => {
-    const flags = obra.flags || [];
-    const motivos = [];
-    if (flags.includes('detrator_latente')) motivos.push('detrator latente');
-    if (flags.includes('risco_tecnico')) motivos.push('risco técnico');
-    if (flags.includes('aplicador_indefinido')) motivos.push('aplicador indefinido');
-    if (obra.regua && obra.regua.data_inicio_alterada) {
-      const n = (obra.regua.data_inicio_historico || []).length;
-      if (n >= 3) motivos.push(`${n} remarcações`);
-    }
-    if (obra.veredicto === 'status_desatualizado') motivos.push('status desatualizado');
-    const clima = (obra.kira_whatsapp && obra.kira_whatsapp.whatsapp && obra.kira_whatsapp.whatsapp.clima_geral || '');
-    if (clima && clima.toLowerCase().match(/crit|tens/)) motivos.push(`clima ${clima.toLowerCase()}`);
-    return `<div class="lp-risco-row">
+  const obrasComScore = obras.map(o => ({obra: o, ...calcularRisco(o)}))
+    .filter(x => x.score > 0)
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 6);
+
+  const riscosHtml = obrasComScore.map(({obra, score, componentes}) => {
+    const nivel = nivelRisco(score);
+    const motivos = componentes.map(c => c.label).slice(0, 4);
+    const tooltip = `Risco ${nivel.nome} · ${score} pontos\n` +
+      componentes.map(c => `+ ${c.label} (${c.peso})`).join('\n');
+    return `<div class="lp-risco-row risco-${nivel.cls}">
       <div>
         <div class="lp-risco-cli">${esc(obra.cliente)}</div>
-        <div class="lp-risco-motivo">${motivos.slice(0,4).join(' · ')}</div>
+        <div class="lp-risco-motivo">${esc(motivos.join(' · '))}</div>
       </div>
-      <span class="lp-risco-tag">score ${score}</span>
+      <span class="lp-risco-tag tag-${nivel.cls}" title="${esc(tooltip)}">${nivel.nome}</span>
     </div>`;
   }).join('');
 
-  // Consultores
+  // Consultores · nome abreviado, completo no tooltip
   const cs = (ag.consultores || []).slice(0, 8);
   const consHtml = cs.map(c => {
     const sem = c.nome === 'SEM CONSULTOR';
@@ -2115,8 +2218,9 @@ function renderLampada(){
     const altas = acoes.filter(a => / · alta · /.test(a)).length;
     const medias = acoes.filter(a => / · media · /.test(a)).length;
     const baixas = acoes.filter(a => / · baixa · /.test(a)).length;
-    return `<div class="lp-cons ${sem?'sem':''}">
-      <div class="lp-cons-nome">${esc(c.nome)}</div>
+    const nomeC = sem ? c.nome : nomeAbreviado(c.nome);
+    return `<div class="lp-cons ${sem?'sem':''}" title="${esc(c.nome)}">
+      <div class="lp-cons-nome">${esc(nomeC)}</div>
       <div class="lp-cons-stats">${c.obras_analisadas} obra${c.obras_analisadas>1?'s':''} · ${c.obras_com_acao} c/ ação</div>
       <div class="lp-cons-urg">
         ${altas>0?`<span class="alta">${altas} alta</span>`:''}
@@ -2142,8 +2246,9 @@ function renderLampada(){
   }).join('');
 
   const cabec = `<div class="lp-header">
-    <h1 class="lp-titulo">Orion · <span class="accent">estado da operação</span></h1>
-    <div class="lp-sub">${total} obras no piloto · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)} · destila Painel de Obras × Comunicação Telegram × KIRA WhatsApp × equipe em campo em sinais visuais</div>
+    <div class="lp-marca">orion <span class="accent">· modo apresentação</span></div>
+    <h1 class="lp-titulo">Estado da operação</h1>
+    <div class="lp-sub">${total} obras no piloto · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)}<br>destila <strong>Painel de Obras × Comunicação Telegram × KIRA WhatsApp × equipe em campo</strong> em sinais visuais</div>
   </div>`;
 
   document.getElementById('lampada-modal').innerHTML = `${cabec}
@@ -2160,6 +2265,7 @@ function renderLampada(){
       </div>
       <div>
         <div class="lp-section-title" style="margin-top:0">Top obras de risco</div>
+        <div class="lp-risco-info">Combina sinais de cliente, clima KIRA, risco técnico, datas remarcadas e urgência. <strong>Passe o mouse na tag</strong> pra ver o cálculo.</div>
         ${riscosHtml || '<div style="color:#8a7e72;font-style:italic">Sem riscos críticos detectados</div>'}
       </div>
     </div>
@@ -2202,7 +2308,7 @@ const senOverlay = document.getElementById('sentinela-overlay');
 document.getElementById('sentinela-fechar').addEventListener('click', () => senOverlay.classList.remove('aberta'));
 senOverlay.addEventListener('click', (e) => { if (e.target === senOverlay) senOverlay.classList.remove('aberta'); });
 
-// Lâmpada mágica
+// Lâmpada · modo apresentação
 const lampOverlay = document.getElementById('lampada-overlay');
 document.getElementById('lampada-btn').addEventListener('click', () => {
   renderLampada();
@@ -2214,8 +2320,187 @@ function fecharLampada(){
   document.body.style.overflow = '';
 }
 document.getElementById('lampada-fechar').addEventListener('click', fecharLampada);
-lampOverlay.addEventListener('click', (e) => { if (e.target === lampOverlay) fecharLampada(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lampOverlay.classList.contains('aberta')) fecharLampada(); });
+lampOverlay.addEventListener('click', (e) => {
+  // Click fora do modal/drawer · se drawer aberto, só fecha o drawer (volta pra lâmpada)
+  if (e.target !== lampOverlay) return;
+  if (drawerEl.classList.contains('aberto')) {
+    fecharDrawer();
+  } else {
+    fecharLampada();
+  }
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lampOverlay.classList.contains('aberta') && !drawerEl.classList.contains('aberto')) fecharLampada(); });
+
+// Filtros do drawer · espelha renderFiltros mas indexado por id
+const FILTROS_KPI = {
+  'todos':                 {label: 'Obras no piloto',                fn: o => true},
+  'status_desatualizado':  {label: 'Painel de Obras desatualizado',  fn: o => o.veredicto === 'status_desatualizado'},
+  'data-alterada':         {label: 'Datas remarcadas',               fn: o => o.regua && o.regua.data_inicio_alterada},
+  'detrator_latente':      {label: 'Cliente em risco',               fn: o => (o.flags||[]).includes('detrator_latente')},
+  'aplicador-indef':       {label: 'Aplicador a definir',            fn: o => (o.flags||[]).includes('aplicador_indefinido')},
+  'consultor-divergente':  {label: 'Consultor não atua',             fn: o => (o.flags||[]).includes('consultor_divergente')},
+  'clima-tenso':           {label: 'Clima tenso · KIRA WhatsApp',    fn: o => {const c=(o.kira_whatsapp&&o.kira_whatsapp.whatsapp&&o.kira_whatsapp.whatsapp.clima_geral||'').toLowerCase();return c.includes('crit')||c.includes('tens');}},
+  'urg-alta':              {label: 'Urgência alta',                  fn: o => o.urgencia === 'alta'},
+};
+
+const drawerEl = document.getElementById('lp-drawer');
+
+function abrirDrawerLampada(filtroId){
+  const cfg = FILTROS_KPI[filtroId];
+  if (!cfg || !DADOS) return;
+  const obras = (DADOS.obras || []).filter(obraDeMim).filter(cfg.fn);
+  document.getElementById('lp-drawer-tit').textContent = cfg.label;
+  document.getElementById('lp-drawer-sub').textContent = obras.length === 1 ? '1 obra' : `${obras.length} obras`;
+  const body = document.getElementById('lp-drawer-body');
+  if (obras.length === 0){
+    body.innerHTML = '<div class="lp-drawer-vazio">Nenhuma obra nesse recorte.</div>';
+  } else {
+    body.innerHTML = obras.map(o => renderDrawerItem(o, filtroId)).join('');
+  }
+  drawerEl.dataset.filtro = filtroId;
+  drawerEl.classList.add('aberto');
+  drawerEl.setAttribute('aria-hidden', 'false');
+  lampOverlay.classList.add('com-drawer');
+  body.scrollTop = 0;
+}
+
+function fecharDrawer(){
+  drawerEl.classList.remove('aberto');
+  drawerEl.setAttribute('aria-hidden', 'true');
+  lampOverlay.classList.remove('com-drawer');
+}
+
+function renderDrawerItem(o, filtroId){
+  const cli = o.cliente || '—';
+  const idCurto = (o.obra_id || '').slice(0, 8);
+  const fase = (o.painel && (o.painel.fase_atual || o.painel.status_atual)) || '—';
+  const urg = (o.urgencia || 'baixa').toLowerCase();
+
+  // Detalhe contextual · mais relevante por filtro
+  let detalhe = '';
+  if (filtroId === 'data-alterada' && o.regua){
+    const n = (o.regua.data_inicio_historico || []).length;
+    const dataAtual = o.regua.data_inicio || o.regua.data_x;
+    detalhe = `<span class="destaque">${n} remarcação${n>1?'ões':''}</span>${dataAtual ? ` · prevista ${fmtBR(dataAtual)}` : ''}`;
+  } else if (filtroId === 'clima-tenso' && o.kira_whatsapp && o.kira_whatsapp.whatsapp){
+    const c = (o.kira_whatsapp.whatsapp.clima_geral || '').toLowerCase();
+    detalhe = `<span class="destaque">clima ${c}</span>`;
+  } else if (filtroId === 'consultor-divergente' && o.consultor_inferido){
+    const sug = nomeAbreviado(o.consultor_inferido.nome || '');
+    detalhe = `sugerido: <span class="destaque">${esc(sug)}</span>`;
+  } else if (filtroId === 'aplicador-indef' && o.regua){
+    if (o.regua.dias_ate_inicio != null && o.regua.dias_ate_inicio >= 0){
+      detalhe = `<span class="destaque">inicia em ${o.regua.dias_ate_inicio}d</span>`;
+    } else if (o.regua.dias_ate_inicio != null){
+      detalhe = `<span class="destaque">já era pra ter iniciado</span>`;
+    }
+  } else if (filtroId === 'detrator_latente'){
+    detalhe = 'sinais de descontentamento';
+  } else if (filtroId === 'status_desatualizado'){
+    const dataAtual = o.regua && (o.regua.data_inicio || o.regua.data_x);
+    detalhe = dataAtual ? `prevista ${fmtBR(dataAtual)}` : '';
+  } else if (filtroId === 'urg-alta'){
+    const dataAtual = o.regua && (o.regua.data_inicio || o.regua.data_x);
+    detalhe = dataAtual ? `prevista ${fmtBR(dataAtual)}` : '';
+  } else if (filtroId === 'todos'){
+    const v = traduz(o.veredicto || '');
+    detalhe = v ? `<span class="destaque">${esc(v)}</span>` : '';
+  }
+
+  return `<button class="lp-drawer-obra" data-obra-id="${esc(o.obra_id)}">
+    <div class="lp-drawer-obra-head">
+      <div class="lp-drawer-obra-cli">${esc(cli)}<small>${esc(idCurto)}</small></div>
+      <span class="lp-drawer-urg urg-${esc(urg)}">${esc(urg)}</span>
+    </div>
+    <div class="lp-drawer-obra-meta">
+      <span>${esc(fase)}</span>
+      ${detalhe ? `<span class="dot">·</span><span>${detalhe}</span>` : ''}
+    </div>
+  </button>`;
+}
+
+// Aplica filtro completo na página principal · usado pelo CTA "ver lista completa"
+function aplicarFiltroDaLampada(filtroId){
+  fecharDrawer();
+  fecharLampada();
+  if (typeof FILTRO_BUCKET !== 'undefined'){
+    FILTRO_BUCKET = 'todos';
+    if (typeof renderBucketBar === 'function') renderBucketBar();
+  }
+  document.querySelectorAll('.filtro-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filtro === filtroId);
+  });
+  renderLista(filtroId);
+  setTimeout(() => {
+    const alvo = document.getElementById('lista');
+    if (alvo){
+      const y = alvo.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({top: y, behavior: 'smooth'});
+    }
+  }, 120);
+}
+
+// Foca obra específica · fecha drawer + lâmpada, expande o card e scrolla
+function focarObra(obraId, filtroId){
+  fecharDrawer();
+  fecharLampada();
+  if (typeof FILTRO_BUCKET !== 'undefined'){
+    FILTRO_BUCKET = 'todos';
+    if (typeof renderBucketBar === 'function') renderBucketBar();
+  }
+  document.querySelectorAll('.filtro-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filtro === filtroId);
+  });
+  renderLista(filtroId);
+  setTimeout(() => {
+    const card = document.querySelector(`.obra[data-obra-id="${obraId}"]`);
+    if (card){
+      card.classList.add('expanded');
+      const y = card.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({top: y, behavior: 'smooth'});
+      card.style.transition = 'box-shadow .4s';
+      card.style.boxShadow = '0 0 0 3px rgba(184,160,128,.45)';
+      setTimeout(() => { card.style.boxShadow = ''; }, 1600);
+    } else {
+      const alvo = document.getElementById('lista');
+      if (alvo){
+        const y = alvo.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({top: y, behavior: 'smooth'});
+      }
+    }
+  }, 150);
+}
+
+// Click num KPI da lâmpada → abre drawer (não fecha mais a lâmpada direto)
+document.getElementById('lampada-modal').addEventListener('click', (e) => {
+  const btn = e.target.closest('.lp-kpi[data-filtro]');
+  if (!btn || btn.disabled) return;
+  abrirDrawerLampada(btn.dataset.filtro);
+});
+
+// Click numa obra do drawer → foca a obra na página
+document.getElementById('lp-drawer-body').addEventListener('click', (e) => {
+  const btn = e.target.closest('.lp-drawer-obra');
+  if (!btn) return;
+  focarObra(btn.dataset.obraId, drawerEl.dataset.filtro || 'todos');
+});
+
+// CTA "ver lista completa" do drawer
+document.getElementById('lp-drawer-cta').addEventListener('click', () => {
+  aplicarFiltroDaLampada(drawerEl.dataset.filtro || 'todos');
+});
+
+// X do drawer
+document.getElementById('lp-drawer-x').addEventListener('click', fecharDrawer);
+
+// ESC no drawer · fecha drawer primeiro, depois (próximo ESC) fecha lâmpada
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (drawerEl.classList.contains('aberto')){
+    fecharDrawer();
+    e.stopImmediatePropagation();
+  }
+}, true);
 
 // Disparador clipboard · delegação porque botões são dinâmicos
 document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
