@@ -115,13 +115,18 @@
   .est-rodape code{font-family:'JetBrains Mono',monospace;font-size:10px;background:#ede6dc;padding:1px 4px;border-radius:2px}
 
   /* VEREDITO LOTE 4 — Mapa de autoridades por seção (PRINCIPIO.md I2) */
-  /* .section-fontes: escondido por padrão (info de admin/audit). Visível só no modo admin (html.admin-mode). */
-  .section-fontes{display:none}
-  html.admin-mode .section-fontes{margin-top:14px;padding:8px 12px;background:#fdfaf4;border-left:2px solid #d8c8a8;border-radius:0 4px 4px 0;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.04em;line-height:1.7;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-  .section-fontes .sf-label{color:#b8a080;font-weight:600;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
-  .section-fontes .sf-item{display:inline-flex;align-items:center;gap:5px}
+  /* .section-fontes: chip discreto "ⓘ Fontes" no canto. Tooltip flutuante on hover. */
+  .section-fontes{position:relative;margin-top:14px;display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.06em;cursor:help;padding:3px 9px;border:1px dashed transparent;border-radius:3px;transition:all .15s;outline:none}
+  .section-fontes:hover,.section-fontes:focus-within{border-color:#d4c8b4;background:#fdfaf4;color:#6b6156}
+  .section-fontes::before{content:'\24D8';margin-right:4px;font-family:inherit;font-size:11px}
+  .section-fontes .sf-label{font-weight:600;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0}
+  /* Filhos viram tooltip flutuante — escondido por padrão, aparece no hover */
+  .section-fontes .sf-item,.section-fontes .sf-tag{display:none}
+  .section-fontes:hover .sf-item,.section-fontes:focus-within .sf-item{display:inline-flex}
+  .section-fontes:hover,.section-fontes:focus-within{padding:8px 12px;background:#fff;border:1px solid #d4c8b4;border-radius:4px;box-shadow:0 4px 14px rgba(42,37,32,0.08);position:relative;flex-wrap:wrap;gap:12px;line-height:1.7;z-index:30}
+  .section-fontes .sf-item{align-items:center;gap:5px}
   .section-fontes .sf-item b{color:#3a3530;font-weight:600;text-transform:none;letter-spacing:0}
-  .section-fontes .sf-tag{font-size:8px;padding:2px 6px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+  .section-fontes:hover .sf-tag,.section-fontes:focus-within .sf-tag{display:inline-block;font-size:8px;padding:2px 6px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
   .section-fontes .sf-tag.painel-amigo{background:#e8f2ec;color:#2d5a3a}
   .section-fontes .sf-tag.pipefy{background:#f4f0e6;color:#5a4a2a}
   .section-fontes .sf-tag.kira{background:#eaf0f6;color:#2a4a6a}
