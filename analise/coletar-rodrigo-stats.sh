@@ -807,6 +807,52 @@ obras_atencao = sorted(
     key=gravidade_atencao
 )
 
+canon["q4_datas_fresh"] = {}  # populado abaixo do loop dos details
+# Re-iterar pra extrair Q4_DATAS dos details já lidos. Custo zero — details já carregados.
+for fn in (os.listdir(det_dir) if os.path.isdir(det_dir) else []):
+    if not fn.endswith(".json"): continue
+    try:
+        d = json.load(open(f"{det_dir}/{fn}", encoding="utf-8-sig"))
+    except Exception:
+        continue
+    pid = d.get("id")
+    if not pid: continue
+    af = (d.get("acessoDetalhes") or {}).get("allFields") or {}
+    canon["q4_datas_fresh"][pid] = {
+        "dataVisita": (af.get("data_e_hora_da_visita") or "").strip(),
+        "dataEntrada": (af.get("data_de_entrada") or "").strip(),
+        "dataExec": (d.get("dataExecucaoPrevista") or "").strip(),
+    }
+
+# EXT consolidado fresh — recalcula zumbi_ids e orfas_ids a partir de /api/projects.
+# Esses são alimentadores de várias seções (Q2 cluster, ranking, etc).
+# Usar id curto (8 chars) — compatível com EXT existente do PESADO.
+SKIP_EXT = {"finalizado", "concluido", "cancelado"}
+zumbi_ids_fresh = []
+orfas_ids_fresh = []
+for p in projects:
+    if not isinstance(p, dict): continue
+    if p.get("status") in SKIP_EXT: continue
+    pid = p.get("id") or ""
+    if not pid: continue
+    pid_curto = pid[:8]
+    fase = (p.get("faseAtual") or "").strip().upper()
+    # Zumbi: fase CLIENTE FINALIZADO em status ativo (excl reparo, que é retrabalho)
+    if fase == "CLIENTE FINALIZADO" and p.get("status") not in ("reparo", "marcas_rolo_cera"):
+        zumbi_ids_fresh.append(pid_curto)
+    # Órfã: sem consultor
+    cons = (p.get("consultorNome") or "").strip()
+    if not cons or cons == "[]":
+        orfas_ids_fresh.append(pid_curto)
+
+canon["ext_fresh"] = {
+    "zumbi_ids": sorted(set(zumbi_ids_fresh)),
+    "zumbi_n": len(set(zumbi_ids_fresh)),
+    "orfas_ids": sorted(set(orfas_ids_fresh)),
+    "orfas_n": len(set(orfas_ids_fresh)),
+    "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor",
+}
+
 canon["operacional_kira"] = {
     "kira_atualizado_em": op_kira_mais_recente.isoformat() if op_kira_mais_recente else None,
     "total_fluxo": n_total,

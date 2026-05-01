@@ -1,23 +1,28 @@
 """
-Seleciona 10 obras-piloto pra Fase B
-=====================================
+Seleciona obras pra varredura do Lab Orion
+==========================================
 
-Cruza painel-snapshot.json (227 obras ativas com status/fase/consultor)
-com grupos.json do Telethon (572 obras técnicas).
+Cruza painel-snapshot.json (obras ativas com status/fase/consultor)
+com grupos.json do Telethon (obras técnicas).
 
 Pareamento: fuzzy match por nome do cliente.
    painel.clienteNome  ≈  primeiro nome dentro do título do grupo após "MMAA - UF -"
    ex: painel "TAÍSA MENDONÇA DE OLIVEIRA"  ↔  grupo "0625 - SP - TAÍSA MENDONÇA / Wesley"
 
-Critério das 10 piloto:
-- match alto (>= 70% similaridade)
-- ativo no painel (ativa=true)
-- atividade recente no Telegram (dias_inativo <= 30)
-- diversidade de status (pega 1-2 de cada bucket relevante)
+Critérios sempre aplicados:
+- ativa no painel (ativa=true) · ignora inativas/finalizadas
+- match alto (>= 70% similaridade) · sem grupo pareado, não dá pra cruzar
+- Telegram ativo (dias_inativo <= 30) · grupo morto não tem sinal pra extrair
 
-Saída: piloto.json com 10 obras estruturadas (id_painel, id_grupo, dados ambos lados)
+Modos:
+  default · 10 obras-piloto com diversidade de status (legado / Fase B)
+  --todas · todas as obras ativas pareadas (Fase A · escala completa)
+  --n N   · top N obras (sem diversidade forçada · ranqueadas por similaridade)
+
+Saída: piloto.json (mesmo schema · monitorar.py consome igual)
 """
 
+import argparse
 import json
 import re
 import sys
@@ -74,6 +79,12 @@ def similarity(a: str, b: str) -> float:
 
 
 def main():
+    ap = argparse.ArgumentParser(description="Seleciona obras pra varredura do Lab Orion")
+    grp = ap.add_mutually_exclusive_group()
+    grp.add_argument("--todas", action="store_true", help="Todas obras ativas pareadas (Fase A · escala completa)")
+    grp.add_argument("--n", type=int, default=10, help="Top N obras (default: 10 com diversidade de status)")
+    args = ap.parse_args()
+
     if not PAINEL.exists():
         print(f"ERRO: {PAINEL} não encontrado")
         sys.exit(1)
@@ -87,6 +98,8 @@ def main():
 
     obras_painel = [o for o in painel if o.get("ativa")]
     grupos_obra = [g for g in grupos if g["tipo_canal"] == "obra"]
+    modo = "TODAS" if args.todas else f"top {args.n}"
+    print(f"Modo: {modo}")
     print(f"Painel ativas: {len(obras_painel)}")
     print(f"Grupos Telegram (obra técnica): {len(grupos_obra)}")
     print()
@@ -127,7 +140,7 @@ def main():
     print(f"Candidatos com sim>=0.70 e Telegram ativo ≤30d: {len(candidatos)}")
     print()
 
-    # Distribui por status pra ter diversidade nas 10 piloto
+    # Distribui por status pra dar diagnóstico (e diversidade no modo legado)
     by_status = {}
     for c in candidatos:
         st = c["obra"].get("status") or "?"
@@ -138,26 +151,33 @@ def main():
         print(f"  {st:25s} {len(lst):3d}")
     print()
 
-    # Pega round-robin por status até 10
-    piloto = []
-    visto = set()
-    while len(piloto) < 10:
-        progresso = False
-        for st in sorted(by_status.keys()):
-            if len(piloto) >= 10:
+    # Seleciona conforme modo
+    if args.todas:
+        piloto = candidatos[:]
+    elif args.n != 10:
+        piloto = candidatos[:args.n]
+    else:
+        # Modo legado · round-robin por status até 10 pra diversidade
+        piloto = []
+        visto = set()
+        while len(piloto) < 10:
+            progresso = False
+            for st in sorted(by_status.keys()):
+                if len(piloto) >= 10:
+                    break
+                for c in by_status[st]:
+                    key = c["obra"]["id"]
+                    if key in visto:
+                        continue
+                    piloto.append(c)
+                    visto.add(key)
+                    progresso = True
+                    break
+            if not progresso:
                 break
-            for c in by_status[st]:
-                key = c["obra"]["id"]
-                if key in visto:
-                    continue
-                piloto.append(c)
-                visto.add(key)
-                progresso = True
-                break
-        if not progresso:
-            break
 
-    print(f"=== 10 OBRAS-PILOTO ===\n")
+    titulo = f"{len(piloto)} OBRAS" + (" · TODAS PAREADAS" if args.todas else " · TOP " + str(args.n) if args.n != 10 else " · PILOTO LEGADO")
+    print(f"=== {titulo} ===\n")
     print(f"{'#':<3}{'sim':<6}{'status':<22}{'fase':<22}{'consultor':<22}{'idade_p':<8}{'tg_d':<5}{'cliente'}")
     for i, c in enumerate(piloto, 1):
         o = c["obra"]
@@ -170,9 +190,10 @@ def main():
               f"{(g.get('dias_inativo') or '?'):<5}"
               f"{(o.get('clienteNome') or '')[:40]}")
 
-    # Salva piloto.json
+    # Salva piloto.json (mesmo schema · monitorar.py consome igual)
     out = {
         "gerado_em": grupos_data.get("gerado_em"),
+        "modo": "todas" if args.todas else f"top-{args.n}",
         "total_piloto": len(piloto),
         "piloto": [
             {

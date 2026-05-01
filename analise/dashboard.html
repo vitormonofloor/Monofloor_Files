@@ -2828,6 +2828,32 @@ function applyRodrigoCanon() {
           }
         }
 
+        // Q4_DATAS fresh — sobrescreve as datas do PESADO (1×/dia) com leitura
+        // direta dos details (refresh 30min). Agenda passa a refletir mudanças
+        // do Painel em até 30min em vez de 24h.
+        if (R.q4_datas_fresh && typeof Q4_DATAS !== 'undefined') {
+          Object.keys(R.q4_datas_fresh).forEach(function(pid){
+            Q4_DATAS[pid] = R.q4_datas_fresh[pid];
+          });
+          // Re-render que dependem de Q4_DATAS
+          try { if (typeof agRender === 'function') agRender(); } catch(e){}
+        }
+
+        // EXT consolidado fresh — atualiza zumbi_ids/orfas_ids vindos do /api/projects atual.
+        // Outras seções (Q2 cluster, baldes etc) leem desses arrays.
+        if (R.ext_fresh && typeof EXT !== 'undefined') {
+          if (Array.isArray(R.ext_fresh.zumbi_ids)) {
+            EXT.zumbi_ids = R.ext_fresh.zumbi_ids;
+            EXT.zumbi_n = R.ext_fresh.zumbi_n;
+          }
+          if (Array.isArray(R.ext_fresh.orfas_ids)) {
+            EXT.orfas_ids = R.ext_fresh.orfas_ids;
+            EXT.orfas_n = R.ext_fresh.orfas_n;
+          }
+          // Re-renders que dependem de EXT
+          try { if (typeof renderClusterDynamic === 'function') renderClusterDynamic(); } catch(e){}
+        }
+
         // Total Ativas — usa "ativas saudáveis" (231, sem canceladas).
         // Canceladas + finalizadas aparecem em linha de Balanço separada (histórico).
         var ativas = ativasMov;
