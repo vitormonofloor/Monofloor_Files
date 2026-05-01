@@ -520,7 +520,6 @@ function renderRecomendacao(feridas, atenaInsights, atenaOportunidades, headline
       '<div class="ra-acao"><strong>Recomendação</strong>Revisar <a href="dashboard.html#problemas">Banner de Achados</a> no Dashboard e priorizar obras com 3+ diagnósticos críticos. Verificar fontes de dados (cruz-obras-feridas, atena/insights) — possível falha no pipeline.</div>' +
       '<div class="ra-cta">' +
         '<a href="dashboard.html#problemas">Banner de achados</a>' +
-        '<a href="obras-mapa.html">Mapa drill-down</a>' +
       '</div>';
     return;
   }
@@ -593,8 +592,6 @@ function renderRecomendacao(feridas, atenaInsights, atenaOportunidades, headline
 
   // CTAs
   html += '<div class="ra-cta">';
-  html += '<a href="dashboard.html#problemas">Banner de achados</a>';
-  html += '<a href="obras-mapa.html">Mapa drill-down</a>';
   if (caso1 && caso1.id) html += '<a href="labs.html?tab=jornada&obraId=' + encodeURIComponent(caso1.id) + '">Jornada do caso</a>';
   html += '</div>';
 

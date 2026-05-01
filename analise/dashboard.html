@@ -2110,7 +2110,6 @@
   <details class="footer-tech">
     <summary>Área técnica</summary>
     <div class="footer-tech-links">
-      <a href="obras-mapa.html">Mapa de obras (filtros avançados)</a>
       <a href="modelagem.html">Modelagem de dados (campos · APIs)</a>
       <a href="plano.html">Plano de trabalho (etapas · cruzamentos)</a>
       <a href="auditoria.html">Auditoria v6 (versão anterior)</a>
@@ -2386,7 +2385,7 @@ function q2ShowDiag(id, cliente){
     el.innerHTML = '<div class="q2-diag-card">'
       + '<h4>' + q2EscHtml(cliente) + '</h4>'
       + '<div class="meta">' + q2EscHtml(obra.cidade||'') + ' · ' + q2EscHtml(obra.fase||'') + ' · ' + (obra.idade != null ? (obra.idade + 'd') : '?d') + '</div>'
-      + '<div class="text q2-diag-empty">Sem diagnóstico de risco para esta obra. Veja flags em <a href="obras-mapa.html" style="color:#b8a080">Mapa de obras</a>.</div>'
+      + '<div class="text q2-diag-empty">Sem diagnóstico de risco para esta obra.</div>'
       + '</div>';
   } else {
     el.innerHTML = '<div class="q2-diag-card">'

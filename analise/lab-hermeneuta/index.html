@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab Orion · Painel × Telegram</title>
+  <title>Lab Orion · Painel de Obras × Telegram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -11,33 +11,130 @@
     body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0ebe3;color:#3a3530;margin:0;padding:0;line-height:1.5}
     .wrap{max-width:1280px;margin:0 auto;padding:0 24px 60px}
 
-    /* Header · estilo Dashboard Monofloor */
-    header.top{background:#fff;border-bottom:1px solid #d8d0c4;padding:18px 28px;position:sticky;top:0;z-index:30;margin:0 -24px 0}
+    /* Header · estilo Dashboard Monofloor (full-width, fora do .wrap) */
+    header.top{background:#fff;border-bottom:1px solid #d8d0c4;padding:18px 28px;position:sticky;top:0;z-index:30}
     .top-row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:1280px;margin:0 auto}
     .top-logo{display:flex;align-items:center}
-    .logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#2a2520;line-height:1}
-    .logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:#a89e92;margin-top:5px}
+    .logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#2a2520;line-height:1;display:flex;align-items:center;gap:10px}
+    .logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:#a89e92;margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .top-right{display:flex;align-items:center;gap:14px}
     .top-stamp{font-size:11px;color:#8a7e72;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
     .top-stamp .destaque{color:#2a2520;font-weight:500}
 
-    /* Sub-header · h1 + frase guia */
-    .sub-header{padding:24px 0 18px;border-bottom:1px solid #d8d0c4;margin-bottom:24px}
-    .sub-header h1{font-size:22px;font-weight:300;color:#2a2520;letter-spacing:.04em;margin:0 0 8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .sub-header h1 .accent{color:#b8a080;font-weight:400}
-    .sub-header .frase{font-size:13px;color:#6b6156;line-height:1.6;max-width:820px}
-    .sub-header .frase strong{color:#3a3530;font-weight:500}
+    /* Badge PILOTO · pílula discreta no header */
+    .piloto-pill{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#b8884a;background:#fdf5e3;border:1px solid #e6d4a8;padding:3px 8px;border-radius:99px;line-height:1}
+    .piloto-pill::before{content:"";width:5px;height:5px;border-radius:50%;background:#d4a548;box-shadow:0 0 6px rgba(212,165,72,.6);animation:pilotoPulse 2.4s ease-in-out infinite}
+    @keyframes pilotoPulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+    .piloto-info{font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.12em;text-transform:uppercase}
+    .piloto-info strong{color:#b8884a;font-weight:600}
 
-    /* Tagline acima do h1 · estilo letterspaced */
-    .tagline{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#a89e92;margin:0 0 12px;padding-bottom:10px;border-bottom:1px dashed #e8e0d4;display:inline-block}
+    /* Botão de onboarding · ícone "?" estilo hub */
+    .help-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e0d8cc;color:#8a7e72;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+    .help-btn:hover{background:#f8f3ea;border-color:#b8a080;color:#3a3530;transform:scale(1.08)}
 
-    /* Cinturão de Orion · 3 estrelas pulsando */
-    .cinturao{display:inline-flex;align-items:center;gap:0;height:24px;margin:0 4px}
-    .cinturao .estrela{width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,#d4a548 0%,#b8a080 60%,transparent 100%);box-shadow:0 0 6px rgba(212,165,72,.4);animation:estrelaPulse 4s ease-in-out infinite;position:relative;z-index:2}
-    .cinturao .estrela:nth-child(2){animation-delay:.5s}
-    .cinturao .estrela:nth-child(3){animation-delay:1s}
-    .cinturao .linha{width:14px;height:1px;background:linear-gradient(90deg,rgba(184,160,128,.2),rgba(184,160,128,.6),rgba(184,160,128,.2));margin:0 -2px;animation:linhaPulse 4s ease-in-out infinite}
-    @keyframes estrelaPulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15);box-shadow:0 0 10px rgba(212,165,72,.7)}}
-    @keyframes linhaPulse{0%,100%{opacity:.4}50%{opacity:.85}}
+    /* HERO ORION · constelação cinematográfica (full-width, fora do .wrap) */
+    .hero-orion{position:relative;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:#f0ebe3;border-bottom:1px solid #d8d0c4}
+    .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+    .particle{position:absolute;width:2px;height:2px;background:#c4b5a0;border-radius:50%;opacity:0;animation:pFloat linear infinite}
+    @keyframes pFloat{0%{transform:translateY(120%) translateX(0);opacity:0}10%{opacity:.18}90%{opacity:.1}100%{transform:translateY(-30%) translateX(var(--drift));opacity:0}}
+    .ceu{position:absolute;top:50%;left:0;width:100%;height:280px;transform:translateY(-50%);z-index:2;pointer-events:none}
+    .ceu svg{width:100%;height:100%;overflow:visible;animation:driftHorizontal 90s ease-in-out infinite}
+    @keyframes driftHorizontal{0%,100%{transform:translateX(-2%)}50%{transform:translateX(2%)}}
+    .spot{filter:blur(20px);animation:spotBreathe 7s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .spot:nth-of-type(2){animation-delay:1.2s}
+    .spot:nth-of-type(3){animation-delay:2.4s}
+    @keyframes spotBreathe{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.95;transform:scale(1.15)}}
+    .flare-diag{animation:flarePulse 6s ease-in-out infinite;mix-blend-mode:screen;transform-origin:center;transform-box:fill-box;filter:blur(1.2px)}
+    .flare-diag:nth-of-type(2){animation-delay:2s}
+    .flare-diag:nth-of-type(3){animation-delay:4s}
+    @keyframes flarePulse{0%,100%{opacity:.3;transform:scale(.95)}50%{opacity:.7;transform:scale(1.05)}}
+    .spot-core{filter:blur(2.5px);animation:coreBreathe 6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    .spot-core:nth-of-type(2){animation-delay:2s}
+    .spot-core:nth-of-type(3){animation-delay:4s}
+    @keyframes coreBreathe{0%,100%{opacity:.75}50%{opacity:1}}
+    .linha-conec{stroke:#b8a080;stroke-width:.4;stroke-dasharray:2 8;animation:shimmerLine 12s linear infinite;opacity:.1;filter:blur(.4px)}
+    @keyframes shimmerLine{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-20}}
+    .twinkle{filter:blur(.8px);animation:twinklePulse 4s ease-in-out infinite}
+    @keyframes twinklePulse{0%,100%{opacity:.4}50%{opacity:.85}}
+    .espada-linha{stroke:#b8a080;stroke-width:.4;stroke-dasharray:2 10;animation:shimmerLine 14s linear infinite;opacity:.08;filter:blur(.4px)}
+    .ancora-spot{filter:blur(14px);animation:ancoraPulse 9s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+    @keyframes ancoraPulse{0%,100%{opacity:.4}50%{opacity:.7}}
+    .tagline-hero{position:relative;z-index:3;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:#a89e92;margin-bottom:18px;animation:fadeInHero 1s ease 0.4s backwards}
+    .orion-titulo{position:relative;z-index:3;text-align:center;font-size:64px;font-weight:200;letter-spacing:20px;text-transform:uppercase;color:#2a2520;line-height:1;margin:0;padding:0;text-indent:20px}
+    .subtitulo-hero{position:relative;z-index:3;font-size:11px;font-weight:400;letter-spacing:.32em;text-transform:uppercase;color:#a89e92;margin-top:18px;animation:fadeInHero 1s ease 1.2s backwards;text-align:center}
+    .subtitulo-hero .accent{color:#b8a080;font-weight:500}
+    .subtitulo-hero .sep{margin:0 14px;opacity:.5;color:#b8a080}
+    @keyframes fadeInHero{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Frase explicativa abaixo do hero */
+    .frase-explicativa{font-size:13px;color:#6b6156;line-height:1.6;max-width:820px;margin:0 0 18px}
+    .frase-explicativa strong{color:#3a3530;font-weight:600}
+
+    /* Modal de onboarding */
+    .onb-overlay{position:fixed;inset:0;background:rgba(42,37,32,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;animation:onbFade .25s ease}
+    .onb-overlay.aberto{display:flex}
+    @keyframes onbFade{from{opacity:0}to{opacity:1}}
+    .onb-modal{background:#fdfaf4;border:1px solid #d8c8a8;border-radius:12px;max-width:760px;width:100%;max-height:90vh;overflow-y:auto;padding:32px;box-shadow:0 24px 60px rgba(42,37,32,.25);animation:onbSlide .3s ease}
+    @keyframes onbSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .onb-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:8px}
+    .onb-titulo{font-size:18px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#2a2520;line-height:1}
+    .onb-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-top:6px}
+    .onb-fechar{background:transparent;border:none;font-size:22px;color:#8a7e72;cursor:pointer;line-height:1;padding:4px 8px;border-radius:6px;transition:all .15s}
+    .onb-fechar:hover{background:#f0ebe3;color:#2a2520}
+    .onb-intro{font-size:13px;color:#6b6156;line-height:1.6;margin:14px 0 22px;padding-bottom:18px;border-bottom:1px dashed #d8c8a8}
+    .onb-intro strong{color:#3a3530}
+    .onb-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+    .onb-card{background:#fff;border:1px solid #e0d8cc;border-left:3px solid #b8a080;border-radius:8px;padding:16px 18px}
+    .onb-card-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+    .onb-card-titulo{font-size:14px;font-weight:600;color:#2a2520;margin-bottom:6px}
+    .onb-card-desc{font-size:12px;color:#6b6156;line-height:1.55}
+    .onb-card-desc strong{color:#3a3530;font-weight:600}
+    .onb-rodape{margin-top:22px;padding-top:18px;border-top:1px dashed #d8c8a8;font-family:'JetBrains Mono',monospace;font-size:10px;color:#a89e92;letter-spacing:.06em;text-align:center}
+    .onb-rodape strong{color:#b8884a}
+
+    /* Menu help · 2 opções (tour ou referência) */
+    .help-menu{position:absolute;top:60px;right:14px;background:#fff;border:1px solid #d8c8a8;border-radius:8px;padding:6px;box-shadow:0 8px 24px rgba(42,37,32,.18);display:none;z-index:60;min-width:200px}
+    .help-menu.aberto{display:block;animation:onbFade .18s ease}
+    .help-item{display:block;width:100%;background:none;border:none;text-align:left;padding:10px 12px;border-radius:5px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:500;color:#3a3530;cursor:pointer;transition:background .15s;line-height:1.3}
+    .help-item:hover{background:#f8f3ea}
+    .help-item small{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.1em;text-transform:uppercase;margin-top:2px;font-weight:600}
+
+    /* Tour guiado · spotlight + balão */
+    .tour-spot{position:absolute;border-radius:8px;box-shadow:0 0 0 9999px rgba(42,37,32,.62);pointer-events:none;transition:top .35s cubic-bezier(.4,0,.2,1),left .35s cubic-bezier(.4,0,.2,1),width .35s cubic-bezier(.4,0,.2,1),height .35s cubic-bezier(.4,0,.2,1);z-index:9998;border:1px solid rgba(212,165,72,.45)}
+    .tour-balao{position:absolute;background:#fdfaf4;border:1px solid #d8c8a8;border-radius:10px;max-width:380px;padding:18px 22px;box-shadow:0 14px 40px rgba(42,37,32,.32);z-index:9999;animation:tourFade .25s ease;font-family:'Plus Jakarta Sans',sans-serif}
+    @keyframes tourFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .tour-balao::before{content:"";position:absolute;width:14px;height:14px;background:#fdfaf4;border-left:1px solid #d8c8a8;border-top:1px solid #d8c8a8}
+    .tour-balao.lado-baixo::before{top:-8px;left:50%;margin-left:-7px;transform:rotate(45deg)}
+    .tour-balao.lado-cima::before{bottom:-8px;left:50%;margin-left:-7px;transform:rotate(225deg)}
+    .tour-balao.lado-direita::before{left:-8px;top:50%;margin-top:-7px;transform:rotate(-45deg)}
+    .tour-balao.lado-esquerda::before{right:-8px;top:50%;margin-top:-7px;transform:rotate(135deg)}
+    .tour-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+    .tour-num .progresso{color:#a89e92;font-weight:500}
+    .tour-tit{font-size:15px;font-weight:600;color:#2a2520;margin-bottom:6px;line-height:1.3}
+    .tour-desc{font-size:13px;color:#5a5048;line-height:1.55;margin-bottom:14px}
+    .tour-desc strong{color:#3a3530;font-weight:600}
+    .tour-acoes{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .tour-pular{background:none;border:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:#a89e92;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:6px 0;transition:color .15s}
+    .tour-pular:hover{color:#3a3530}
+    .tour-nav{display:flex;gap:8px}
+    .tour-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:8px 14px;border-radius:6px;cursor:pointer;border:1px solid #d8c8a8;background:#fff;color:#3a3530;transition:all .15s}
+    .tour-btn:hover:not(:disabled){background:#f8f3ea;border-color:#b8a080}
+    .tour-btn.primario{background:#b8a080;color:#fff;border-color:#b8a080}
+    .tour-btn.primario:hover{background:#a89070;border-color:#a89070}
+    .tour-btn:disabled{opacity:.35;cursor:not-allowed}
+    .tour-progresso-barra{height:2px;background:#e8dcc4;border-radius:99px;overflow:hidden;margin:0 0 12px;display:flex}
+    .tour-progresso-fill{background:#b8a080;height:100%;transition:width .35s}
+
+    /* Teaser primeira visita */
+    .tour-teaser{position:fixed;bottom:90px;right:24px;background:#fdfaf4;border:1px solid #d8c8a8;border-radius:99px;padding:10px 14px 10px 16px;display:none;align-items:center;gap:12px;box-shadow:0 8px 22px rgba(42,37,32,.2);z-index:48;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:transform .18s}
+    .tour-teaser.aberto{display:inline-flex;animation:teaserSlide .4s ease}
+    .tour-teaser:hover{transform:translateY(-2px)}
+    @keyframes teaserSlide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .tour-teaser-pulse{width:8px;height:8px;border-radius:50%;background:#d4a548;box-shadow:0 0 8px rgba(212,165,72,.7);animation:pilotoPulse 2s ease-in-out infinite;flex-shrink:0}
+    .tour-teaser-txt{font-size:12px;color:#3a3530;font-weight:500;line-height:1.2}
+    .tour-teaser-txt small{display:block;font-size:8px;color:#a89e92;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-top:2px}
+    .tour-teaser-x{background:none;border:none;color:#a89e92;font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
+    .tour-teaser-x:hover{color:#3a3530}
 
     /* Compatibilidade legada */
     .lab-tag{display:none}
@@ -504,36 +601,118 @@
   </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header class="top">
-    <div class="top-row">
-      <div class="top-logo">
-        <div>
-          <div class="logo-text">monofloor</div>
-          <div class="logo-sub">Lab Orion · Inteligência Operacional</div>
+<header class="top">
+  <div class="top-row">
+    <div class="top-logo">
+      <div>
+        <div class="logo-text">
+          monofloor
+          <span class="piloto-pill">piloto</span>
         </div>
+        <div class="logo-sub">Lab Orion · Inteligência Operacional · <span class="piloto-info"><strong>10</strong> de 227 ativas</span></div>
       </div>
+    </div>
+    <div class="top-right">
       <div class="top-stamp">
         <span class="destaque" id="header-stamp">—</span> · varredura automática 12h e 18h
       </div>
+      <button class="help-btn" id="help-btn" title="Como funciona o Lab Orion" aria-label="Como funciona">?</button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <div class="sub-header">
-    <span class="tagline">divergência antes do problema</span>
-    <h1>
-      <span>Orion</span>
-      <span class="cinturao">
-        <span class="estrela"></span>
-        <span class="linha"></span>
-        <span class="estrela"></span>
-        <span class="linha"></span>
-        <span class="estrela"></span>
-      </span>
-      <span>· <span class="accent">Painel × Telegram</span></span>
-    </h1>
-    <p class="frase"><strong>Mostra onde o painel oficial da obra diverge do que a equipe conversa no Telegram.</strong> Acompanhe ações pendentes, datas alteradas e clima do cliente.</p>
+<!-- HERO ORION · constelação cinematográfica -->
+<section class="hero-orion">
+  <div class="particles" id="particles"></div>
+
+  <div class="ceu">
+    <svg viewBox="0 0 1280 280" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <radialGradient id="spot-dourado" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fbe5b3" stop-opacity="0.92"/>
+          <stop offset="40%" stop-color="#d4a548" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#b8a080" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="spot-core-grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff5d6" stop-opacity="0.95"/>
+          <stop offset="50%" stop-color="#f4d390" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#d4a548" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="spot-pequeno" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f4d390" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#d4a548" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- 18 twinkles dispersos -->
+      <circle class="twinkle" cx="100" cy="55" r="1.5" fill="url(#spot-pequeno)" style="animation-delay:0s"/>
+      <circle class="twinkle" cx="180" cy="115" r="1" fill="url(#spot-pequeno)" style="animation-delay:0.3s"/>
+      <circle class="twinkle" cx="260" cy="40" r="1.3" fill="url(#spot-pequeno)" style="animation-delay:0.7s"/>
+      <circle class="twinkle" cx="320" cy="160" r="1" fill="url(#spot-pequeno)" style="animation-delay:1s"/>
+      <circle class="twinkle" cx="380" cy="70" r="1.7" fill="url(#spot-pequeno)" style="animation-delay:1.3s"/>
+      <circle class="twinkle" cx="450" cy="205" r="1.2" fill="url(#spot-pequeno)" style="animation-delay:1.6s"/>
+      <circle class="twinkle" cx="540" cy="35" r="1.4" fill="url(#spot-pequeno)" style="animation-delay:1.9s"/>
+      <circle class="twinkle" cx="580" cy="200" r="1" fill="url(#spot-pequeno)" style="animation-delay:2.2s"/>
+      <circle class="twinkle" cx="700" cy="215" r="1.3" fill="url(#spot-pequeno)" style="animation-delay:2.5s"/>
+      <circle class="twinkle" cx="730" cy="42" r="1" fill="url(#spot-pequeno)" style="animation-delay:0.4s"/>
+      <circle class="twinkle" cx="820" cy="180" r="1.5" fill="url(#spot-pequeno)" style="animation-delay:0.8s"/>
+      <circle class="twinkle" cx="900" cy="55" r="1" fill="url(#spot-pequeno)" style="animation-delay:1.1s"/>
+      <circle class="twinkle" cx="970" cy="135" r="1.3" fill="url(#spot-pequeno)" style="animation-delay:1.4s"/>
+      <circle class="twinkle" cx="1040" cy="42" r="1.7" fill="url(#spot-pequeno)" style="animation-delay:1.7s"/>
+      <circle class="twinkle" cx="1100" cy="207" r="1.2" fill="url(#spot-pequeno)" style="animation-delay:2s"/>
+      <circle class="twinkle" cx="1170" cy="85" r="1.3" fill="url(#spot-pequeno)" style="animation-delay:2.3s"/>
+      <circle class="twinkle" cx="60" cy="180" r="1" fill="url(#spot-pequeno)" style="animation-delay:2.6s"/>
+      <circle class="twinkle" cx="490" cy="135" r="1" fill="url(#spot-pequeno)" style="animation-delay:2.9s"/>
+
+      <!-- Âncoras · Betelgeuse / Bellatrix / Rigel / Saiph · dourado -->
+      <circle class="ancora-spot" cx="280" cy="55" r="20" fill="url(#spot-pequeno)" style="animation-delay:0.5s"/>
+      <circle class="ancora-spot" cx="990" cy="55" r="16" fill="url(#spot-pequeno)" style="animation-delay:1.5s"/>
+      <circle class="ancora-spot" cx="270" cy="235" r="20" fill="url(#spot-pequeno)" style="animation-delay:2.5s"/>
+      <circle class="ancora-spot" cx="1000" cy="235" r="18" fill="url(#spot-pequeno)" style="animation-delay:3.5s"/>
+
+      <!-- Linhas conectivas (sussurros) -->
+      <line class="espada-linha" x1="280" y1="60" x2="455" y2="140"/>
+      <line class="espada-linha" x1="990" y1="60" x2="825" y2="140"/>
+      <line class="espada-linha" x1="270" y1="230" x2="455" y2="150"/>
+      <line class="espada-linha" x1="1000" y1="230" x2="825" y2="150"/>
+
+      <!-- CINTURÃO · 3 estrelas principais -->
+      <line class="linha-conec" x1="475" y1="145" x2="620" y2="145"/>
+      <line class="linha-conec" x1="660" y1="145" x2="805" y2="145"/>
+      <circle class="spot" cx="455" cy="145" r="38" fill="url(#spot-dourado)"/>
+      <circle class="spot" cx="640" cy="145" r="46" fill="url(#spot-dourado)"/>
+      <circle class="spot" cx="825" cy="145" r="38" fill="url(#spot-dourado)"/>
+
+      <!-- Diffraction X · sutil -->
+      <line class="flare-diag" x1="425" y1="115" x2="485" y2="175" stroke="#f4d390" stroke-width="1"/>
+      <line class="flare-diag" x1="425" y1="175" x2="485" y2="115" stroke="#f4d390" stroke-width="1"/>
+      <line class="flare-diag" x1="600" y1="105" x2="680" y2="185" stroke="#f4d390" stroke-width="1.4"/>
+      <line class="flare-diag" x1="600" y1="185" x2="680" y2="105" stroke="#f4d390" stroke-width="1.4"/>
+      <line class="flare-diag" x1="795" y1="115" x2="855" y2="175" stroke="#f4d390" stroke-width="1"/>
+      <line class="flare-diag" x1="795" y1="175" x2="855" y2="115" stroke="#f4d390" stroke-width="1"/>
+
+      <!-- Cores -->
+      <circle class="spot-core" cx="455" cy="145" r="9" fill="url(#spot-core-grad)"/>
+      <circle class="spot-core" cx="640" cy="145" r="12" fill="url(#spot-core-grad)"/>
+      <circle class="spot-core" cx="825" cy="145" r="9" fill="url(#spot-core-grad)"/>
+
+      <!-- ESPADA · 3 spots verticais -->
+      <line class="espada-linha" x1="640" y1="158" x2="640" y2="215"/>
+      <circle class="spot" cx="640" cy="178" r="11" fill="url(#spot-pequeno)" style="animation-delay:4s"/>
+      <circle class="spot" cx="640" cy="198" r="11" fill="url(#spot-pequeno)" style="animation-delay:4.5s"/>
+      <circle class="spot" cx="640" cy="218" r="11" fill="url(#spot-pequeno)" style="animation-delay:5s"/>
+    </svg>
+  </div>
+
+  <div class="tagline-hero">divergência antes do problema</div>
+  <h1 class="orion-titulo">ORION</h1>
+  <div class="subtitulo-hero">painel de obras <span class="sep">×</span> comunicação telegram</div>
+</section>
+
+<div class="wrap">
+
+  <p class="frase-explicativa" style="margin-top:24px"><strong>Mostra onde o painel oficial da obra diverge do que a equipe conversa no Telegram.</strong> Acompanhe ações pendentes, datas alteradas e clima do cliente.</p>
 
     <div class="status-bar" style="margin-top:18px">
       <div class="st-item"><span class="st-label">Obras</span><span class="st-val" id="st-total">—</span></div>
@@ -543,7 +722,6 @@
       <div class="st-item"><span class="st-label">Datas remarcadas</span><span class="st-val crit" id="st-data-alt">—</span></div>
       <div class="st-item"><span class="st-label">Atualizado em</span><span class="st-val tiny" id="st-data">—</span></div>
     </div>
-  </div>
 
   <!-- Resumo executivo visual -->
   <div class="resumo" id="resumo-box" style="display:none">
@@ -1003,7 +1181,7 @@ function renderCard(o){
   // Tag de urgência
   const urgTag = o.urgencia ? `<span class="tag urg-${o.urgencia}">${o.urgencia}</span>` : '';
 
-  // Painel × Telegram block
+  // Painel de Obras × Comunicação Telegram block
   const painelStr = `<strong>${esc(o.painel?.status_atual || '—')}</strong>` +
     (o.painel?.fase_atual ? ` <small>· ${esc(o.painel.fase_atual)}</small>` : '') +
     (o.painel?.idade_dias != null ? ` <small>· ${o.painel.idade_dias}d</small>` : '');
@@ -2067,6 +2245,260 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
     document.body.removeChild(ta);
   }
 });
+</script>
+
+<!-- Modal de onboarding -->
+<div class="onb-overlay" id="onb-overlay" role="dialog" aria-modal="true" aria-labelledby="onb-titulo">
+  <div class="onb-modal">
+    <div class="onb-head">
+      <div>
+        <div class="onb-titulo" id="onb-titulo">orion</div>
+        <div class="onb-sub">como funciona · 5 conceitos</div>
+      </div>
+      <button class="onb-fechar" id="onb-fechar" aria-label="Fechar">×</button>
+    </div>
+
+    <p class="onb-intro">O Lab Orion compara o <strong>Painel de Obras</strong> (oficial) com a <strong>Comunicação no Telegram</strong> (real) para mostrar divergências invisíveis ao KIRA — ações pendentes, datas alteradas, clima do cliente.</p>
+
+    <div class="onb-cards">
+      <div class="onb-card">
+        <div class="onb-card-num">01 · varredura</div>
+        <div class="onb-card-titulo">Coleta automática 12h e 18h</div>
+        <div class="onb-card-desc">Lê o painel oficial e os grupos do Telegram, compara mensagens novas, extrai datas, equipe, cores e clima do cliente. Atualiza dois snapshots por dia.</div>
+      </div>
+
+      <div class="onb-card">
+        <div class="onb-card-num">02 · sentinela</div>
+        <div class="onb-card-titulo">Equipe de prevenção e risco</div>
+        <div class="onb-card-desc">9 checks de saúde rodam após cada varredura: schema, sessão, frescor, KIRA, lock, backups, drift de obras. Pisca <strong>verde / âmbar / vermelho</strong> no canto.</div>
+      </div>
+
+      <div class="onb-card">
+        <div class="onb-card-num">03 · lâmpada</div>
+        <div class="onb-card-titulo">Sinal âmbar quando diverge</div>
+        <div class="onb-card-desc">Cada obra ganha uma lâmpada quando o painel oficial e o Telegram não conversam — data remarcada que não foi atualizada, ação acordada e não registrada, cliente reclamando.</div>
+      </div>
+
+      <div class="onb-card">
+        <div class="onb-card-num">04 · refresh seletivo</div>
+        <div class="onb-card-titulo">Atualizar IA só quando precisar</div>
+        <div class="onb-card-desc">A análise pesada (IA) não roda automática — você dispara apenas para as obras que mudaram. Economiza tokens, mantém o foco no que importa.</div>
+      </div>
+
+      <div class="onb-card">
+        <div class="onb-card-num">05 · status bar</div>
+        <div class="onb-card-titulo">Resumo executivo no topo</div>
+        <div class="onb-card-desc">Total de obras no piloto, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. Tudo o que importa em uma linha.</div>
+      </div>
+    </div>
+
+    <div class="onb-rodape">piloto · <strong>10 de 227 ativas</strong> · escalando após validação</div>
+  </div>
+</div>
+
+<script>
+// Particles do hero
+(function(){
+  var c = document.getElementById('particles');
+  if (!c) return;
+  for (var i = 0; i < 22; i++) {
+    var p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.animationDuration = (12 + Math.random() * 18) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.setProperty('--drift', (Math.random() * 50 - 25) + 'px');
+    p.style.width = p.style.height = (1 + Math.random() * 1.5) + 'px';
+    c.appendChild(p);
+  }
+})();
+
+// Modal de onboarding · só fechamento (abertura via menu help)
+(function(){
+  var overlay = document.getElementById('onb-overlay');
+  var btnFechar = document.getElementById('onb-fechar');
+  if (!overlay) return;
+  function fechar(){ overlay.classList.remove('aberto'); document.body.style.overflow = ''; }
+  if (btnFechar) btnFechar.addEventListener('click', fechar);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) fechar(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && overlay.classList.contains('aberto')) fechar(); });
+  window.OrionModal = { abrir: function(){ overlay.classList.add('aberto'); document.body.style.overflow = 'hidden'; } };
+})();
+
+// Tour guiado · 5 paradas com spotlight + balão
+(function(){
+  const PARADAS = [
+    {sel:'.status-bar', tit:'Resumo executivo do piloto', txt:'Os números numa linha: <strong>total de obras</strong>, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. <strong>O que importa em uma olhada.</strong>', lado:'baixo'},
+    {sel:'.disparador', tit:'Refresh seletivo · IA sob demanda', txt:'A análise pesada (IA) <strong>não roda automática</strong>. Você dispara só pras obras que mudaram — economiza tokens e mantém o foco no que precisa de atenção real.', lado:'baixo'},
+    {sel:'#lista .regua', tit:'Régua temporal da obra', txt:'Linha do tempo de cada obra: marcos do <strong>painel oficial</strong> ao lado de eventos detectados na <strong>comunicação Telegram</strong>. <strong>Onde os dois lados divergem é o coração do Lab.</strong>', lado:'cima'},
+    {sel:'#lampada-btn', tit:'Lâmpada · modo apresentação', txt:'Destila tudo em indicadores visuais. Bom pra <strong>reunião com cliente ou diretoria</strong> — comunica o estado da operação sem precisar ler texto.', lado:'esquerda'},
+    {sel:'#sentinela-btn', tit:'Sentinela · prevenção e risco', txt:'Equipe de prevenção. <strong>9 checks de saúde</strong> rodam após cada varredura: schema, sessão, frescor, KIRA, lock, backups, drift de obras. <strong>Verde / âmbar / vermelho</strong> diz se você pode confiar nos dados agora.', lado:'direita'},
+  ];
+
+  let indice = 0;
+  let spot, balao;
+
+  function criar(){
+    document.body.style.overflow = 'hidden';
+    spot = document.createElement('div');
+    spot.className = 'tour-spot';
+    spot.id = 'tour-spot';
+    document.body.appendChild(spot);
+    balao = document.createElement('div');
+    balao.className = 'tour-balao';
+    balao.id = 'tour-balao';
+    document.body.appendChild(balao);
+  }
+  function destruir(){
+    if (spot) spot.remove();
+    if (balao) balao.remove();
+    spot = balao = null;
+    document.body.style.overflow = '';
+  }
+  function ehFixed(el){
+    while (el && el !== document.body){
+      const p = window.getComputedStyle(el).position;
+      if (p === 'fixed') return true;
+      el = el.parentElement;
+    }
+    return false;
+  }
+  function posicionar(parada){
+    const target = document.querySelector(parada.sel);
+    if (!target){ proximo(true); return; }
+    const fixo = ehFixed(target);
+    if (!fixo) target.scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(() => {
+      const r = target.getBoundingClientRect();
+      const top = fixo ? (r.top - 8) : (r.top + window.scrollY - 8);
+      const left = fixo ? (r.left - 8) : (r.left + window.scrollX - 8);
+      const w = r.width + 16;
+      const h = r.height + 16;
+      spot.style.position = fixo ? 'fixed' : 'absolute';
+      balao.style.position = fixo ? 'fixed' : 'absolute';
+      spot.style.top = top + 'px';
+      spot.style.left = left + 'px';
+      spot.style.width = w + 'px';
+      spot.style.height = h + 'px';
+
+      const total = PARADAS.length;
+      const pct = ((indice+1)/total)*100;
+      balao.innerHTML =
+        '<div class="tour-num"><span>parada ' + String(indice+1).padStart(2,'0') + '</span><span class="progresso">' + (indice+1) + ' de ' + total + '</span></div>' +
+        '<div class="tour-progresso-barra"><div class="tour-progresso-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="tour-tit">' + parada.tit + '</div>' +
+        '<div class="tour-desc">' + parada.txt + '</div>' +
+        '<div class="tour-acoes">' +
+          '<button class="tour-pular" id="tour-pular">' + (indice===total-1?'fechar':'pular tour') + '</button>' +
+          '<div class="tour-nav">' +
+            '<button class="tour-btn" id="tour-voltar"' + (indice===0?' disabled':'') + '>← voltar</button>' +
+            '<button class="tour-btn primario" id="tour-prox">' + (indice===total-1?'concluir':'próximo →') + '</button>' +
+          '</div>' +
+        '</div>';
+
+      balao.className = 'tour-balao lado-' + parada.lado;
+      const bw = 380;
+      const bh = balao.offsetHeight || 220;
+      let bt, bl;
+      if (parada.lado === 'baixo'){ bt = top + h + 16; bl = left + w/2 - bw/2; }
+      else if (parada.lado === 'cima'){ bt = top - bh - 16; bl = left + w/2 - bw/2; }
+      else if (parada.lado === 'direita'){ bt = top + h/2 - bh/2; bl = left + w + 16; }
+      else { bt = top + h/2 - bh/2; bl = left - bw - 16; }
+      const margem = 16;
+      bl = Math.max(margem, Math.min(bl, window.innerWidth - bw - margem));
+      const minTop = fixo ? margem : (window.scrollY + margem);
+      const maxTop = fixo ? (window.innerHeight - bh - margem) : (window.scrollY + window.innerHeight - bh - margem);
+      bt = Math.max(minTop, Math.min(bt, maxTop));
+      balao.style.top = bt + 'px';
+      balao.style.left = bl + 'px';
+      balao.style.width = bw + 'px';
+
+      document.getElementById('tour-pular').onclick = encerrar;
+      document.getElementById('tour-prox').onclick = function(){ proximo(false); };
+      document.getElementById('tour-voltar').onclick = voltar;
+    }, 320);
+  }
+  function proximo(silencioso){
+    indice++;
+    if (indice >= PARADAS.length){ encerrar(); return; }
+    posicionar(PARADAS[indice]);
+  }
+  function voltar(){
+    indice = Math.max(0, indice - 1);
+    posicionar(PARADAS[indice]);
+  }
+  function encerrar(){
+    destruir();
+    try { localStorage.setItem('orion_tour_visto', '1'); } catch(_){}
+    const teaser = document.getElementById('tour-teaser');
+    if (teaser) teaser.classList.remove('aberto');
+  }
+  function iniciar(){
+    indice = 0;
+    if (!spot) criar();
+    posicionar(PARADAS[indice]);
+    const teaser = document.getElementById('tour-teaser');
+    if (teaser) teaser.classList.remove('aberto');
+  }
+  document.addEventListener('keydown', (e) => {
+    if (!balao) return;
+    if (e.key === 'Escape') encerrar();
+    else if (e.key === 'ArrowRight') proximo(false);
+    else if (e.key === 'ArrowLeft') voltar();
+  });
+  window.OrionTour = { iniciar };
+})();
+
+// Menu help · 2 opções (tour ou referência)
+(function(){
+  const btn = document.getElementById('help-btn');
+  if (!btn) return;
+  const menu = document.createElement('div');
+  menu.className = 'help-menu';
+  menu.id = 'help-menu';
+  menu.innerHTML =
+    '<button class="help-item" id="hm-tour">Fazer tour guiado<small>5 paradas · contextual</small></button>' +
+    '<button class="help-item" id="hm-modal">Referência rápida<small>5 conceitos em 1 tela</small></button>';
+  document.querySelector('header.top').appendChild(menu);
+
+  btn.onclick = function(e){ e.stopPropagation(); menu.classList.toggle('aberto'); };
+  document.addEventListener('click', function(e){
+    if (!menu.contains(e.target) && e.target !== btn) menu.classList.remove('aberto');
+  });
+  document.getElementById('hm-tour').onclick = function(){
+    menu.classList.remove('aberto');
+    if (window.OrionTour) window.OrionTour.iniciar();
+  };
+  document.getElementById('hm-modal').onclick = function(){
+    menu.classList.remove('aberto');
+    if (window.OrionModal) window.OrionModal.abrir();
+  };
+})();
+
+// Teaser primeira visita
+(function(){
+  let visto = false;
+  try { visto = localStorage.getItem('orion_tour_visto') === '1'; } catch(_){}
+  if (visto) return;
+  const div = document.createElement('div');
+  div.className = 'tour-teaser';
+  div.id = 'tour-teaser';
+  div.innerHTML =
+    '<span class="tour-teaser-pulse"></span>' +
+    '<div class="tour-teaser-txt">primeira vez aqui?<small>tour rápido · 90s</small></div>' +
+    '<button class="tour-teaser-x" aria-label="dispensar">×</button>';
+  document.body.appendChild(div);
+  setTimeout(function(){ div.classList.add('aberto'); }, 1400);
+  div.querySelector('.tour-teaser-x').onclick = function(e){
+    e.stopPropagation();
+    div.classList.remove('aberto');
+    try { localStorage.setItem('orion_tour_visto', '1'); } catch(_){}
+  };
+  div.onclick = function(){
+    div.classList.remove('aberto');
+    if (window.OrionTour) window.OrionTour.iniciar();
+  };
+})();
 </script>
 
 </body>
