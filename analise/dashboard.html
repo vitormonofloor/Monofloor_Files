@@ -1389,7 +1389,6 @@
   <a href="#q4" class="side-dot" data-label="VOLUME"><svg viewBox="0 0 16 16"><rect x="2" y="9" width="3" height="5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="6.5" y="5" width="3" height="9" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="11" y="2" width="3" height="12" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
   <a href="#agenda" class="side-dot" data-label="AGENDA"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></a>
   <a href="#operacional" class="side-dot" data-label="OPERACIONAL"><svg viewBox="0 0 16 16"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="13" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
-  <a href="#carteira" class="side-dot" data-label="CARTEIRA"><svg viewBox="0 0 16 16"><path d="M3 3h10v10H3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 7h10M8 7v6" stroke="currentColor" stroke-width="1" opacity="0.5"/></svg></a>
 </nav>
 
 <header class="top">
@@ -2101,39 +2100,6 @@
   </section>
 
 
-  <!-- ============== CARTEIRA DETALHADA — BALDES ============== -->
-  <section id="carteira">
-    <div class="section-head">
-      <div class="section-kicker">Carteira detalhada</div>
-      <div class="section-title"><span class="section-pill pill-carteira">CARTEIRA</span> Baldes de Classificação</div>
-      <div class="section-sub" id="baldes-sub">Todas as obras ativas classificadas por tipo de problema. Uma obra pode aparecer em mais de um balde. Clique para abrir.</div>
-    </div>
-    <!-- FASE 5.5 — colapsa carteira em headline + grid escondida por padrão -->
-    <details class="baldes-collapse" id="baldes-collapse">
-      <summary class="baldes-summary">
-        <div class="baldes-summary-info">
-          <span class="baldes-summary-num" id="baldes-summary-total">—</span>
-          <span class="baldes-summary-lbl">pendências classificadas · <span id="baldes-summary-crit">—</span> críticas</span>
-        </div>
-        <span class="baldes-summary-cta">abrir carteira <span style="font-size:13px">▸</span></span>
-      </summary>
-      <div class="baldes-grid" id="baldes-grid">
-        <!-- gerado por JS -->
-      </div>
-    </details>
-    <div class="section-fontes">
-      <span class="sf-label">Fontes</span>
-      <span class="sf-item"><span class="sf-tag painel-amigo">Painel de Obras</span>universo de obras ativas</span>
-      <span class="sf-item"><span class="sf-tag kira">KIRA</span>flags por obra (silenciosa, atRisk, risco_adiamento)</span>
-      <span class="sf-item"><span class="sf-tag pipefy">Painel de Obras</span>fase · status</span>
-      <span class="sf-item"><span class="sf-tag calculado">Calc.</span>cruzamentos consolidados</span>
-    </div>
-
-    <div class="baldes-footer">
-      <a href="obras-mapa.html" class="baldes-cta">Ver todas as ativas com filtros avançados →</a>
-    </div>
-  </section>
-
 </div>
 
 <footer>
@@ -2208,7 +2174,6 @@ function initDashboard() {
   renderQ3();
   renderQ4();
   renderClusterDynamic();
-  renderBaldes();
   renderOperacional();
   renderEstrategicos();
   loadQ1Classificacoes();  // carrega overrides manuais de classificação (faseada/retrabalho_extra/continuacao_pausada)
