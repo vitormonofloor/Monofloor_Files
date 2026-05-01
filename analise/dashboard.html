@@ -1027,20 +1027,46 @@
   .op-stat .kpi-cta{display:inline-block;margin-top:8px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
   .op-stat.atencao .kpi-cta{color:#c45a5a}
   .op-stat.sem-kira .kpi-cta{color:#b89a4a}
-  /* Lista de obras em atenção (inline, sem modal pra ver as principais) */
+  /* Lista de obras em atenção — cards expansíveis */
   .op-feridas{margin-top:6px}
   .op-feridas-head h4{font-size:12px;color:#6b6156;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin:0 0 12px}
   .op-feridas-head h4 span{font-size:10px;color:#a89e92;font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px;font-style:italic}
-  #op-feridas-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:8px}
-  #op-feridas-list li{background:#fff;border:1px solid #e0d8cc;border-left:3px solid #c45a5a;border-radius:5px;padding:10px 14px;display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;font-size:12px}
-  #op-feridas-list li.critico{border-left-color:#9a3030;background:linear-gradient(135deg,#fff,#fae5e5)}
-  #op-feridas-list .op-li-cli{color:#2a2520;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  #op-feridas-list .op-li-meta{font-size:10px;color:#8a7e72;font-family:'JetBrains Mono',monospace;margin-top:2px}
-  #op-feridas-list .op-clima-chip{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap}
-  #op-feridas-list .op-clima-chip.tenso{background:#faf0e0;color:#a07a30;border:1px solid #d4b886}
-  #op-feridas-list .op-clima-chip.critico{background:#fae5e5;color:#9a3030;border:1px solid #e8c0c0}
-  #op-feridas-list .op-li-link{font-size:10px;color:#b8a080;text-decoration:none;margin-left:6px}
-  #op-feridas-list .op-li-link:hover{color:#8a6a20;text-decoration:underline}
+  #op-feridas-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .op-fcard{background:#fff;border:1px solid #e0d8cc;border-left:3px solid #c45a5a;border-radius:5px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+  .op-fcard.critico{border-left-color:#9a3030}
+  .op-fcard.aberto{border-color:#b8a080;box-shadow:0 4px 14px rgba(196,90,90,0.1)}
+  .op-fcard-head{padding:10px 14px;display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;cursor:pointer;font-size:12px;background:transparent;border:none;width:100%;text-align:left;font-family:inherit}
+  .op-fcard.critico .op-fcard-head{background:linear-gradient(135deg,transparent,rgba(196,90,90,0.05))}
+  .op-fcard-head:hover{background:#f9f5ed}
+  .op-fcard-cli{color:#2a2520;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .op-fcard-cli small{color:#8a7e72;font-weight:400;font-size:10px;font-family:'JetBrains Mono',monospace;display:block;margin-top:2px}
+  .op-fcard-alertas{font-family:'JetBrains Mono',monospace;font-size:10px;color:#c45a5a;font-weight:600;white-space:nowrap}
+  .op-fcard.critico .op-fcard-alertas{color:#9a3030}
+  .op-clima-chip{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap}
+  .op-clima-chip.tenso{background:#faf0e0;color:#a07a30;border:1px solid #d4b886}
+  .op-clima-chip.critico{background:#fae5e5;color:#9a3030;border:1px solid #e8c0c0}
+  .op-fcard-arrow{color:#b8a080;font-size:10px;transition:transform .2s}
+  .op-fcard.aberto .op-fcard-arrow{transform:rotate(90deg);color:#8a6a20}
+  .op-fcard-body{display:none;padding:14px 18px;border-top:1px solid #ede6dc;background:#fafaf5}
+  .op-fcard.aberto .op-fcard-body{display:block}
+  .op-bd-section{margin-bottom:14px}
+  .op-bd-section:last-child{margin-bottom:0}
+  .op-bd-titulo{font-size:10px;font-weight:700;color:#6b6156;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .op-bd-titulo .op-bd-icon{font-size:12px}
+  .op-bd-resumo{font-size:12px;color:#3a3328;line-height:1.5;background:#fff;border:1px solid #ede6dc;border-radius:4px;padding:10px 12px;font-style:italic}
+  .op-bd-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+  .op-bd-list li{font-size:12px;color:#3a3328;line-height:1.4;padding:8px 10px 8px 24px;background:#fff;border:1px solid #ede6dc;border-radius:4px;position:relative}
+  .op-bd-list.alertas li::before{content:'⚠';position:absolute;left:8px;top:8px;color:#c45a5a;font-weight:700;font-size:11px}
+  .op-bd-list.alertas li{border-left:2px solid #c45a5a}
+  .op-bd-list.pendencias li::before{content:'›';position:absolute;left:10px;top:7px;color:#b89a4a;font-weight:700;font-size:13px}
+  .op-bd-list.pendencias li{border-left:2px solid #b89a4a}
+  .op-bd-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:#8a7e72;font-family:'JetBrains Mono',monospace;margin-top:8px}
+  .op-bd-meta strong{color:#5a4a30;font-weight:700}
+  .op-bd-actions{margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:flex-end}
+  .op-bd-link{font-size:11px;color:#b8a080;text-decoration:none;border:1px solid #d4c8b4;padding:5px 12px;border-radius:4px;font-weight:500;transition:all .15s}
+  .op-bd-link:hover{background:#b8a080;color:#fff;border-color:#b8a080}
+  .op-fcard-vermais{padding:10px;text-align:center;color:#a89e92;font-size:11px;font-style:italic;cursor:pointer;background:#f5f0e8;border:1px solid #e0d8cc;border-radius:5px;transition:all .15s}
+  .op-fcard-vermais:hover{background:#ede6dc;color:#5a4a30}
   .op-drill{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
   @media(max-width:720px){.op-drill{grid-template-columns:1fr}}
   .op-drill-card{background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:14px 16px}
@@ -5485,6 +5511,45 @@ function renderEstrategicos() {
 // Cache das obras "sem KIRA" pra modal — populado de Q2_OBRAS quando rodrigo-stats carrega
 var _opObrasSemKira = [];
 
+// Render de um card expansível na lista de "em atenção"
+function _opRenderFcard(o, idx) {
+  var climaCls = o.clima === 'Crítico' ? 'critico' : 'tenso';
+  var cardCls = o.clima === 'Crítico' ? 'op-fcard critico' : 'op-fcard';
+  var alertasTxt = o.n_alertas ? o.n_alertas + ' alerta' + (o.n_alertas === 1 ? '' : 's') : '';
+  var url = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
+  var alertasHtml = (o.alertas || []).slice(0, 4).map(function(a){
+    return '<li>' + escHtml(a) + '</li>';
+  }).join('');
+  var pendenciasHtml = (o.pendencias || []).slice(0, 4).map(function(p){
+    return '<li>' + escHtml(p) + '</li>';
+  }).join('');
+  var resumoHtml = o.resumo_exec ? '<div class="op-bd-resumo">' + escHtml(o.resumo_exec) + '</div>' : '';
+  var metaParts = [];
+  if (o.periodo) metaParts.push('Período: <strong>' + escHtml(o.periodo) + '</strong>');
+  if (o.total_msgs) metaParts.push('<strong>' + o.total_msgs + '</strong> mensagens analisadas');
+  if (o.tempo_resp) metaParts.push('Resposta: <strong>' + escHtml(o.tempo_resp) + '</strong>');
+  if (o.consultor) metaParts.push('Consultor: <strong>' + escHtml(o.consultor) + '</strong>');
+  if (o.cidade) metaParts.push(escHtml(o.cidade));
+
+  return '<li class="' + cardCls + '" data-idx="' + idx + '">'+
+    '<button type="button" class="op-fcard-head">'+
+      '<div>'+
+        '<div class="op-fcard-cli">' + escHtml(o.cliente) + '<small>' + escHtml(o.fase || '—') + '</small></div>'+
+      '</div>'+
+      '<span class="op-fcard-alertas">' + alertasTxt + '</span>'+
+      '<span class="op-clima-chip ' + climaCls + '">' + escHtml(o.clima) + '</span>'+
+      '<span class="op-fcard-arrow">▶</span>'+
+    '</button>'+
+    '<div class="op-fcard-body">'+
+      (alertasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">⚠</span>Alertas detectados pelo KIRA</div><ul class="op-bd-list alertas">' + alertasHtml + '</ul></div>' : '')+
+      (pendenciasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">›</span>Pendências em aberto</div><ul class="op-bd-list pendencias">' + pendenciasHtml + '</ul></div>' : '')+
+      (resumoHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">📋</span>Resumo do caso</div>' + resumoHtml + '</div>' : '')+
+      (metaParts.length ? '<div class="op-bd-meta">' + metaParts.join(' · ') + '</div>' : '')+
+      '<div class="op-bd-actions"><a class="op-bd-link" href="' + url + '" target="_blank" rel="noopener">Abrir no painel ↗</a></div>'+
+    '</div>'+
+  '</li>';
+}
+
 function renderOperacional() {
   // Fonte canônica fresh: rodrigo-stats.json (refresh 30min, lê pendenciaManual.whatsappSummary)
   fetch('dados/rodrigo-stats.json?t=' + Date.now())
@@ -5518,34 +5583,30 @@ function renderOperacional() {
         $$('op-sub').textContent = 'KIRA lê grupos WhatsApp das obras e classifica clima da conversa cliente×Monofloor. ' + fresh + '.';
       }
 
-      // Lista inline das obras em atenção (mostra top 8, com chip de clima)
+      // Lista inline expansível — mostra resumo KIRA inline (alertas + pendências + resumoExecutivo)
       var feridas = op.obras_atencao || [];
       var fSub = $$('op-feridas-sub');
-      if (fSub) fSub.textContent = '— ' + feridas.length + ' obra' + (feridas.length === 1 ? '' : 's') + ' · clima Tenso ou Crítico · precisam acompanhamento';
+      if (fSub) fSub.textContent = '— ' + feridas.length + ' obra' + (feridas.length === 1 ? '' : 's') + ' · KIRA detectou conversa Tenso/Crítico · clique no card pra ver o que está rolando';
       var fList = $$('op-feridas-list');
       if (fList) {
         if (!feridas.length) {
-          fList.innerHTML = '<li style="border-left-color:#3d8a5a;background:#f5fbf5;color:#3d7a4a;font-style:italic;font-weight:500">✓ Nenhuma obra em atenção no KIRA agora.</li>';
+          fList.innerHTML = '<li class="op-fcard" style="border-left-color:#3d8a5a;background:#f5fbf5"><div style="padding:14px;color:#3d7a4a;font-style:italic;font-weight:500">✓ Nenhuma obra em atenção no KIRA agora.</div></li>';
         } else {
-          fList.innerHTML = feridas.slice(0, 8).map(function(o){
-            var climaCls = o.clima === 'Crítico' ? 'critico' : 'tenso';
-            var cls = o.clima === 'Crítico' ? 'critico' : '';
-            var url = 'https://cliente.monofloor.cloud/app/projetos/' + o.id;
-            var alertasTxt = o.n_alertas ? ' · ' + o.n_alertas + ' alerta' + (o.n_alertas === 1 ? '' : 's') : '';
-            return '<li class="' + cls + '">'+
-              '<div>'+
-                '<div class="op-li-cli">'+escHtml(o.cliente)+'</div>'+
-                '<div class="op-li-meta">'+escHtml(o.consultor)+' · '+escHtml(o.cidade || '—')+alertasTxt+'</div>'+
-              '</div>'+
-              '<div style="display:flex;align-items:center;gap:6px">'+
-                '<span class="op-clima-chip '+climaCls+'">'+escHtml(o.clima)+'</span>'+
-                '<a class="op-li-link" href="'+url+'" target="_blank">↗</a>'+
-              '</div>'+
-            '</li>';
-          }).join('');
+          var topN = feridas.slice(0, 8);
+          fList.innerHTML = topN.map(function(o, idx){ return _opRenderFcard(o, idx); }).join('');
           if (feridas.length > 8) {
-            fList.innerHTML += '<li style="border-left-color:transparent;background:transparent;color:#a89e92;font-style:italic;text-align:center;justify-content:center;cursor:pointer" onclick="openOpAtencao()">+ ' + (feridas.length - 8) + ' mais — ver todas</li>';
+            fList.innerHTML += '<li class="op-fcard-vermais" onclick="openOpAtencao()">+ ' + (feridas.length - 8) + ' mais — ver todas em tabela</li>';
           }
+          // Bind click pra expandir
+          fList.querySelectorAll('.op-fcard-head').forEach(function(btn){
+            btn.addEventListener('click', function(){
+              var card = btn.closest('.op-fcard');
+              if (!card) return;
+              var aberto = card.classList.contains('aberto');
+              fList.querySelectorAll('.op-fcard.aberto').forEach(function(c){ c.classList.remove('aberto'); });
+              if (!aberto) card.classList.add('aberto');
+            });
+          });
         }
       }
 

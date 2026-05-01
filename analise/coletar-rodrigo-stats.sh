@@ -625,6 +625,15 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
     is_atencao = clima in ("Tenso", "Crítico")
     is_sem_kira = (clima == "?")  # climaGeral vazio
 
+    # Texto KIRA pra mostrar inline na lista (resumo do que está crítico)
+    alertas_lista = alertas if isinstance(alertas, list) else []
+    pendencias = ws.get("pendencias") or []
+    pendencias_lista = pendencias if isinstance(pendencias, list) else []
+    resumo_exec = (ws.get("resumoExecutivo") or "").strip()
+    clima_desc = (ws.get("climaDescricao") or "").strip()
+    periodo = (ws.get("periodo") or "").strip()
+    tempo_resp = (ws.get("tempoResposta") or "").strip()
+
     op_obras.append({
         "id": pid,
         "cliente": (d.get("clienteNome") or "").strip(),
@@ -643,6 +652,12 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
         "is_atencao": is_atencao,
         "is_saudavel": is_saudavel,
         "is_sem_kira": is_sem_kira,
+        "alertas": alertas_lista[:5],
+        "pendencias": pendencias_lista[:5],
+        "resumo_exec": resumo_exec[:600],
+        "clima_desc": clima_desc[:300],
+        "periodo": periodo,
+        "tempo_resp": tempo_resp,
     })
 
 # Agregação (excluindo retrabalho — segue regra Q1/Q4)
@@ -680,11 +695,20 @@ canon["operacional_kira"] = {
             "id": o["id"],
             "cliente": o["cliente"],
             "consultor": (o["consultor"].split(" ")[0] if o["consultor"] else "—"),
+            "consultor_full": o["consultor"],
             "cidade": o["cidade"],
             "fase": o["fase"],
+            "status": o["status"],
             "clima": o["clima"],
             "n_alertas": o["n_alertas"],
             "dias_sem_evento": o["dias_sem_evento"],
+            "alertas": o["alertas"],
+            "pendencias": o["pendencias"],
+            "resumo_exec": o["resumo_exec"],
+            "clima_desc": o["clima_desc"],
+            "periodo": o["periodo"],
+            "tempo_resp": o["tempo_resp"],
+            "total_msgs": o["total_msgs"],
         } for o in obras_atencao
     ],
     "obras_sem_kira": [
