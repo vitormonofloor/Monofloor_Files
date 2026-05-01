@@ -601,6 +601,10 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
     if tag_dt and (op_kira_mais_recente is None or tag_dt > op_kira_mais_recente):
         op_kira_mais_recente = tag_dt
 
+    # geradoEm do whatsappSummary: quando o KIRA leu/analisou a conversa pela última vez
+    summary_dt = parse_iso_kira(ws.get("geradoEm"))
+    dias_desde_resumo = (now_utc - summary_dt).days if summary_dt else None
+
     # Eventos: lista de eventos no whatsappSummary (cada um tem 'data')
     eventos = ws.get("eventos") or []
     ultima_data = None
@@ -615,15 +619,16 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
     n_alertas = len(alertas) if isinstance(alertas, list) else 0
     has_grupo = bool(d.get("whatsappGroupId"))
 
-    # Classificação operacional — usa CLIMA do KIRA como sinal principal:
-    #   atencao   = climaGeral Tenso ou Crítico (precisa olhar)
-    #   saudavel  = climaGeral Positivo ou Neutro (referência)
-    #   sem_kira  = climaGeral vazio (KIRA não tem dado — sem grupo OU sem msgs)
+    # Classificação operacional — usa CLIMA do KIRA + idade da leitura:
+    #   atencao   = climaGeral Tenso/Crítico E leitura recente (≤60d)
+    #   saudavel  = climaGeral Positivo/Neutro
+    #   sem_kira  = climaGeral vazio OU leitura antiga (>60d) — KIRA não tá mais acompanhando
     #   retrabalho = status reparo/marcas (pós-entrega, fora do fluxo)
     eh_retrabalho = d.get("status") in RETRAB_K
     is_saudavel = clima in ("Positivo", "Neutro")
-    is_atencao = clima in ("Tenso", "Crítico")
-    is_sem_kira = (clima == "?")  # climaGeral vazio
+    leitura_velha = (dias_desde_resumo is not None and dias_desde_resumo > 60)
+    is_atencao = clima in ("Tenso", "Crítico") and not leitura_velha
+    is_sem_kira = (clima == "?") or (clima in ("Tenso", "Crítico") and leitura_velha)
 
     # Texto KIRA pra mostrar inline na lista (resumo do que está crítico)
     alertas_lista = alertas if isinstance(alertas, list) else []
@@ -646,6 +651,7 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
         "total_msgs": total_msgs,
         "n_alertas": n_alertas,
         "tag_kira_dias": (now_utc - tag_dt).days if tag_dt else None,
+        "dias_desde_resumo": dias_desde_resumo,
         "dias_sem_evento": dias_sem_evento,
         "tem_grupo": has_grupo,
         "is_retrabalho": eh_retrabalho,
@@ -670,11 +676,20 @@ n_sem_kira = sum(1 for o in op_fluxo if o["is_sem_kira"])
 n_com_kira = n_saudavel + n_atencao
 pct_saudavel = round(n_saudavel / max(1, n_com_kira) * 100, 1)
 
-# Lista das obras em ATENÇÃO ordenadas por gravidade (Crítico antes de Tenso)
+# Lista das obras em ATENÇÃO ordenadas por gravidade (clima × frescor):
+# Crítico recente (≤7d) → Tenso recente → Crítico médio → Tenso médio → ...
 def gravidade_atencao(o):
-    s = 100 if o["clima"] == "Crítico" else 50
-    s += (o.get("n_alertas") or 0) * 5
-    s += (o.get("dias_sem_evento") or 0) // 7
+    s = 1000 if o["clima"] == "Crítico" else 500
+    dr = o.get("dias_desde_resumo")
+    if dr is None:
+        s -= 200
+    elif dr <= 7:
+        s += 100  # leitura recente: prioridade alta
+    elif dr <= 30:
+        s += 30   # leitura média
+    else:
+        s -= 50   # leitura > 30d: empurra pra baixo
+    s += (o.get("n_alertas") or 0) * 3
     return -s
 obras_atencao = sorted(
     [o for o in op_fluxo if o["is_atencao"]],
@@ -702,6 +717,7 @@ canon["operacional_kira"] = {
             "clima": o["clima"],
             "n_alertas": o["n_alertas"],
             "dias_sem_evento": o["dias_sem_evento"],
+            "dias_desde_resumo": o["dias_desde_resumo"],
             "alertas": o["alertas"],
             "pendencias": o["pendencias"],
             "resumo_exec": o["resumo_exec"],

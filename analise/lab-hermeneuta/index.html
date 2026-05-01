@@ -3,20 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab HERMENEUTA · v3 · Painel × Telegram</title>
+  <title>Lab Orion · Painel × Telegram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box}
     body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0ebe3;color:#3a3530;margin:0;padding:0;line-height:1.5}
-    .wrap{max-width:1280px;margin:0 auto;padding:32px 24px 60px}
+    .wrap{max-width:1280px;margin:0 auto;padding:0 24px 60px}
 
-    /* Header */
-    header{padding-bottom:20px;margin-bottom:24px;border-bottom:1px solid #d8d0c4}
-    .lab-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;padding:4px 10px;border:1px solid #d8c8a8;border-radius:3px;margin-bottom:14px}
-    .lab-tag.v3{background:#b8a080;color:#fff;border-color:#b8a080}
-    h1{font-size:26px;font-weight:600;margin:0 0 8px;letter-spacing:-0.01em}
-    h1 .accent{color:#b8a080}
+    /* Header · estilo Dashboard Monofloor */
+    header.top{background:#fff;border-bottom:1px solid #d8d0c4;padding:18px 28px;position:sticky;top:0;z-index:30;margin:0 -24px 0}
+    .top-row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:1280px;margin:0 auto}
+    .top-logo{display:flex;align-items:center}
+    .logo-text{font-size:15px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#2a2520;line-height:1}
+    .logo-sub{font-size:9px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:#a89e92;margin-top:5px}
+    .top-stamp{font-size:11px;color:#8a7e72;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+    .top-stamp .destaque{color:#2a2520;font-weight:500}
+
+    /* Sub-header · h1 + frase guia */
+    .sub-header{padding:24px 0 18px;border-bottom:1px solid #d8d0c4;margin-bottom:24px}
+    .sub-header h1{font-size:22px;font-weight:300;color:#2a2520;letter-spacing:.04em;margin:0 0 8px}
+    .sub-header h1 .accent{color:#b8a080;font-weight:400}
+    .sub-header .frase{font-size:13px;color:#6b6156;line-height:1.6;max-width:820px}
+    .sub-header .frase strong{color:#3a3530;font-weight:500}
+
+    /* Compatibilidade legada */
+    .lab-tag{display:none}
+    h1.legacy{font-size:26px;font-weight:600;margin:0 0 8px;letter-spacing:-0.01em}
+    h1.legacy .accent{color:#b8a080}
     .sub{font-size:13px;color:#8a7e72;line-height:1.6;max-width:780px}
 
     /* Status bar */
@@ -480,12 +494,25 @@
 <body>
 <div class="wrap">
 
-  <header>
-    <span class="lab-tag v3">LAB · monitoramento ativo das obras</span>
-    <h1>Hermeneuta · <span class="accent">Painel × Telegram</span></h1>
-    <p class="sub"><strong>Mostra onde o painel oficial da obra diverge do que a equipe conversa no Telegram.</strong> Acompanhe ações pendentes, datas alteradas e clima do cliente · atualizado automaticamente 12h e 18h.</p>
+  <header class="top">
+    <div class="top-row">
+      <div class="top-logo">
+        <div>
+          <div class="logo-text">monofloor</div>
+          <div class="logo-sub">Lab Orion · Inteligência Operacional</div>
+        </div>
+      </div>
+      <div class="top-stamp">
+        <span class="destaque" id="header-stamp">—</span> · varredura automática 12h e 18h
+      </div>
+    </div>
+  </header>
 
-    <div class="status-bar">
+  <div class="sub-header">
+    <h1>Orion · <span class="accent">Painel × Telegram</span></h1>
+    <p class="frase"><strong>Mostra onde o painel oficial da obra diverge do que a equipe conversa no Telegram.</strong> Acompanhe ações pendentes, datas alteradas e clima do cliente.</p>
+
+    <div class="status-bar" style="margin-top:18px">
       <div class="st-item"><span class="st-label">Obras</span><span class="st-val" id="st-total">—</span></div>
       <div class="st-item"><span class="st-label">Precisam atenção</span><span class="st-val crit" id="st-atencao">—</span></div>
       <div class="st-item"><span class="st-label">Urgência alta</span><span class="st-val crit" id="st-urg-alta">—</span></div>
@@ -493,7 +520,7 @@
       <div class="st-item"><span class="st-label">Datas remarcadas</span><span class="st-val crit" id="st-data-alt">—</span></div>
       <div class="st-item"><span class="st-label">Atualizado em</span><span class="st-val tiny" id="st-data">—</span></div>
     </div>
-  </header>
+  </div>
 
   <!-- Resumo executivo visual -->
   <div class="resumo" id="resumo-box" style="display:none">
@@ -570,8 +597,8 @@
   </div>
 
   <footer>
-    Lab HERMENEUTA v3 · sandbox isolada · sem cron · roda sob demanda<br>
-    Dados de: <span id="footer-snapshot">—</span> · <a href="README.md">README</a> · <a href="agente/hermeneuta-prompt.md">prompt v3</a> · <a href="agente/secretario-prompt.md">prompt secretário</a>
+    Lab Orion · monitoramento ativo das obras · varredura automática 12h e 18h<br>
+    Dados de: <span id="footer-snapshot">—</span>
   </footer>
 
 </div>
@@ -702,6 +729,8 @@ async function load(){
   // Atualizado em · usa última varredura (mais recente que o veredicto IA)
   document.getElementById('st-data').textContent = fmtData(DADOS.ultima_varredura || DADOS.gerado_em);
   document.getElementById('footer-snapshot').textContent = fmtBR(DADOS.ultima_varredura || DADOS.gerado_em);
+  const stampEl = document.getElementById('header-stamp');
+  if (stampEl) stampEl.textContent = fmtData(DADOS.ultima_varredura || DADOS.gerado_em);
 
   const obrasStale = obras.filter(o => o.refresh_status && o.refresh_status.stale);
   renderDisparador(obrasStale);
@@ -1374,7 +1403,7 @@ function renderDisparador(obrasStale){
   if (obrasStale.length > 0) {
     const ids = obrasStale.map(o => o.obra_id).join(',');
     const nomes = obrasStale.map(o => `${(o.cliente || '').split(' ').slice(0,2).join(' ')} (${o.refresh_status.msgs_novas_desde_veredicto})`).join(', ');
-    const cmdSelet = `rodar hermeneuta refresh seletivo nas ${obrasStale.length} obras stale: ${ids}`;
+    const cmdSelet = `rodar orion refresh seletivo nas ${obrasStale.length} obras stale: ${ids}`;
     html += `<button class="disp-btn primary" data-cmd="${esc(cmdSelet)}">
       <span><strong>⟳ Atualizar análise · ${obrasStale.length} obra${obrasStale.length>1?'s':''}</strong>
       <small style="display:block;font-size:9px;opacity:.85;margin-top:2px">${esc(nomes)}</small></span>
@@ -1386,7 +1415,7 @@ function renderDisparador(obrasStale){
   }
 
   // Análise completa (sempre disponível, secundário)
-  html += `<button class="disp-btn" data-cmd="rodar pipeline hermeneuta v3 completo nas 10 obras-piloto">
+  html += `<button class="disp-btn" data-cmd="rodar pipeline orion v3 completo nas 10 obras-piloto">
     <span>análise completa · 10 obras</span>
   </button>`;
 
@@ -1702,11 +1731,11 @@ function renderResumoVisual(){
       `<div class="resumo-acoes-titulo" style="color:#3d8a5a">✓ sem ações de urgência alta no momento</div>`;
   }
 
-  // Texto completo do HERMENEUTA · esconde por padrão
+  // Texto completo do ORION · esconde por padrão
   if (DADOS.resumo_executivo) {
     document.getElementById('resumo-completo').textContent = DADOS.resumo_executivo;
   } else {
-    document.getElementById('resumo-completo').textContent = '(sem texto longo do HERMENEUTA disponível)';
+    document.getElementById('resumo-completo').textContent = '(sem texto longo do ORION disponível)';
   }
 }
 
@@ -1912,7 +1941,7 @@ function renderLampada(){
   }).join('');
 
   const cabec = `<div class="lp-header">
-    <h1 class="lp-titulo">Hermeneuta · <span class="accent">estado da operação</span></h1>
+    <h1 class="lp-titulo">Orion · <span class="accent">estado da operação</span></h1>
     <div class="lp-sub">${total} obras-piloto · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)} · destila Telegram + Painel + KIRA + Equipes em sinais visuais</div>
   </div>`;
 
