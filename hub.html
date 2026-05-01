@@ -60,49 +60,54 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .scan-dot circle{animation:scanPulse 1.5s ease-in-out infinite}
 @keyframes scanPulse{0%,100%{opacity:0.5;r:3}50%{opacity:1;r:4.5}}
 
-/* ═══ ORION (estética minimalista — inspirada no login do Lab) ═══ */
-/* Halo radial dourado de fundo */
-.orion-halo{opacity:0;animation:orionHaloFade 1.4s ease 0.3s forwards}
-@keyframes orionHaloFade{to{opacity:1}}
+/* ═══ ORION (constelação cinematográfica · cópia fiel do Lab Orion) ═══ */
+/* Drift horizontal sutil do céu inteiro · respiração */
+.card-orion .anim-box svg,
+.trans-orion svg{animation:orionDrift 90s ease-in-out infinite}
+@keyframes orionDrift{0%,100%{transform:translateX(-1.2%)}50%{transform:translateX(1.2%)}}
 
-/* Spot central pulsante — único ponto de luz */
-.orion-spot{opacity:0;transform-origin:center;transform-box:fill-box}
-.card-orion .orion-spot{animation:orionSpotPop 0.9s cubic-bezier(0.22,0.61,0.36,1) 0.6s forwards, orionSpotPulse 3.4s ease-in-out 1.4s infinite}
-@keyframes orionSpotPop{from{opacity:0;transform:scale(0.3)}60%{opacity:1;transform:scale(1.15)}to{opacity:1;transform:scale(1)}}
-@keyframes orionSpotPulse{0%,100%{filter:drop-shadow(0 0 6px rgba(212,165,72,0.45));opacity:1}50%{filter:drop-shadow(0 0 14px rgba(255,245,214,0.75));opacity:0.92}}
+/* Spots dourados grandes do cinturão · respiração lenta */
+.orion-spot-big{filter:blur(4px);animation:orionSpotBreathe 7s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+.orion-spot-big.s2{animation-delay:1.2s}
+.orion-spot-big.s3{animation-delay:2.4s}
+@keyframes orionSpotBreathe{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.95;transform:scale(1.15)}}
 
-/* Núcleo brilhante interior */
-.orion-core{opacity:0}
-.card-orion .orion-core{animation:orionCoreFade 0.6s ease 1.2s forwards, orionCoreShimmer 2.8s ease-in-out 2s infinite}
-@keyframes orionCoreFade{to{opacity:1}}
-@keyframes orionCoreShimmer{0%,100%{opacity:1}50%{opacity:0.78}}
+/* Spots da espada inferior · mesma respiração com delays maiores */
+.orion-spada-spot{filter:blur(2.5px);animation:orionSpotBreathe 7s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+.orion-spada-spot.e1{animation-delay:4s}
+.orion-spada-spot.e2{animation-delay:4.5s}
+.orion-spada-spot.e3{animation-delay:5s}
 
-/* Diffraction X — 4 linhas em cruz sutis sobre o spot */
-.orion-flare line{opacity:0}
-.card-orion .orion-flare line{animation:orionFlareFade 0.8s ease 1.5s forwards, orionFlarePulse 3.5s ease-in-out 2.5s infinite}
-@keyframes orionFlareFade{to{opacity:0.5}}
-@keyframes orionFlarePulse{0%,100%{opacity:0.5}50%{opacity:0.18}}
+/* Diffraction X · mix-blend-mode screen + pulse */
+.orion-flare-diag{animation:orionFlarePulse 6s ease-in-out infinite;mix-blend-mode:screen;transform-origin:center;transform-box:fill-box;filter:blur(0.4px)}
+.orion-flare-diag.f2{animation-delay:2s}
+.orion-flare-diag.f3{animation-delay:4s}
+@keyframes orionFlarePulse{0%,100%{opacity:.3;transform:scale(.95)}50%{opacity:.7;transform:scale(1.05)}}
 
-/* Particles flutuantes — sobem como o login Orion */
-.orion-particle{opacity:0;animation:orionParticleRise linear infinite}
-.card-orion .op1{animation-duration:5.0s;animation-delay:0.4s}
-.card-orion .op2{animation-duration:6.0s;animation-delay:1.2s}
-.card-orion .op3{animation-duration:5.5s;animation-delay:0.8s}
-.card-orion .op4{animation-duration:6.5s;animation-delay:1.6s}
-.card-orion .op5{animation-duration:5.8s;animation-delay:2.0s}
-.card-orion .op6{animation-duration:6.2s;animation-delay:0.2s}
-.card-orion .op7{animation-duration:5.4s;animation-delay:2.4s}
-.card-orion .op8{animation-duration:6.8s;animation-delay:1.0s}
-@keyframes orionParticleRise{
-  0%  {transform:translateY(20px);opacity:0}
-  15% {opacity:0.18}
-  85% {opacity:0.10}
-  100%{transform:translateY(-20px);opacity:0}
-}
+/* Núcleos brilhantes · breathe */
+.orion-spot-core{filter:blur(0.6px);animation:orionCoreBreathe 6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+.orion-spot-core.c2{animation-delay:2s}
+.orion-spot-core.c3{animation-delay:4s}
+@keyframes orionCoreBreathe{0%,100%{opacity:.75}50%{opacity:1}}
 
-/* Hover: intensifica glow */
-.card-orion:hover .orion-spot{filter:drop-shadow(0 0 10px rgba(244,211,144,0.6))}
-.card-orion:hover .orion-core{filter:brightness(1.15)}
+/* Linhas conectivas internas (sussurros) */
+.orion-linha-conec{stroke:#b8a080;stroke-width:.4;stroke-dasharray:2 8;animation:orionShimmer 12s linear infinite;opacity:.1;filter:blur(.4px)}
+@keyframes orionShimmer{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-20}}
+
+/* Twinkles ambientes · piscar suave */
+.orion-twinkle-amb{filter:blur(.4px);animation:orionTwinklePulse 4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes orionTwinklePulse{0%,100%{opacity:.4}50%{opacity:.85}}
+
+/* Linhas-espada · sussurro entre âncoras e cinturão */
+.orion-espada-linha{stroke:#b8a080;stroke-width:.4;stroke-dasharray:2 10;animation:orionShimmer 14s linear infinite;opacity:.08;filter:blur(.4px)}
+
+/* Âncoras · spots externos com pulse próprio */
+.orion-ancora-spot{filter:blur(3px);animation:orionAncoraPulse 9s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes orionAncoraPulse{0%,100%{opacity:.4}50%{opacity:.7}}
+
+/* Hover: intensifica núcleos do cinturão */
+.card-orion:hover .orion-spot-core{filter:blur(0.4px) brightness(1.18)}
+.card-orion:hover .orion-spot-big{animation-duration:5s}
 
 /* ═══ DASHBOARD (Panel) ═══ */
 .dash-screen{fill:none;stroke:#9a8a6a;stroke-width:1;opacity:0;animation:screenIn 0.6s ease 1.8s forwards}
@@ -150,51 +155,17 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .transition-sub{font-size:11px;font-weight:300;color:#c4b5a0;letter-spacing:1.5px;margin-top:8px;opacity:0;transition:opacity 0.6s ease 1.2s;font-style:italic}
 .transition-overlay.active .transition-sub{opacity:1}
 
-/* ═══ TRANS · ORION (estética minimalista — espelha o login Lab) ═══ */
-.transition-icon.trans-orion{width:480px;height:360px;max-width:90vw;max-height:55vh}
+/* ═══ TRANS · ORION (constelação cinematográfica fiel — escala overlay) ═══ */
+/* Escala cinematográfica: faixa horizontal 4.57:1 (proporção do Orion real) */
+.transition-icon.trans-orion{width:90vw;max-width:1200px;height:auto;aspect-ratio:1280/280}
 
-/* Halo radial dourado amplo */
-.trans-orion .orion-halo{opacity:0;animation:toHaloFade 1.6s ease 0.3s forwards}
-@keyframes toHaloFade{to{opacity:1}}
-
-/* Spot grande central — único ponto de luz */
-.trans-orion .orion-spot{animation:toSpotPop 1.1s cubic-bezier(0.22,0.61,0.36,1) 0.5s forwards, toSpotPulse 3.6s ease-in-out 1.7s infinite}
-@keyframes toSpotPop{from{opacity:0;transform:scale(0.25)}60%{opacity:1;transform:scale(1.18)}to{opacity:1;transform:scale(1)}}
-@keyframes toSpotPulse{0%,100%{filter:drop-shadow(0 0 18px rgba(212,165,72,0.5));opacity:1}50%{filter:drop-shadow(0 0 36px rgba(255,245,214,0.85));opacity:0.92}}
-
-/* Núcleo brilhante interior */
-.trans-orion .orion-core{animation:toCoreFade 0.7s ease 1.3s forwards, toCoreShimmer 3.0s ease-in-out 2.2s infinite}
-@keyframes toCoreFade{to{opacity:1}}
-@keyframes toCoreShimmer{0%,100%{opacity:1}50%{opacity:0.78}}
-
-/* Diffraction X — 4 linhas em cruz proeminente */
-.trans-orion .orion-flare line{animation:toFlareFade 1.0s ease 1.5s forwards, toFlarePulse 3.6s ease-in-out 2.6s infinite}
-@keyframes toFlareFade{to{opacity:0.55}}
-@keyframes toFlarePulse{0%,100%{opacity:0.55}50%{opacity:0.22}}
-
-/* Particles — sobem flutuando como no login Lab */
-.trans-orion .orion-particle{animation:toParticleRise linear infinite}
-.trans-orion .tp1 {animation-duration:7.0s; animation-delay:0.2s}
-.trans-orion .tp2 {animation-duration:8.0s; animation-delay:0.8s}
-.trans-orion .tp3 {animation-duration:6.5s; animation-delay:1.4s}
-.trans-orion .tp4 {animation-duration:7.5s; animation-delay:0.5s}
-.trans-orion .tp5 {animation-duration:8.5s; animation-delay:2.0s}
-.trans-orion .tp6 {animation-duration:7.2s; animation-delay:1.1s}
-.trans-orion .tp7 {animation-duration:6.8s; animation-delay:2.6s}
-.trans-orion .tp8 {animation-duration:8.2s; animation-delay:0.3s}
-.trans-orion .tp9 {animation-duration:7.4s; animation-delay:1.7s}
-.trans-orion .tp10{animation-duration:8.4s; animation-delay:2.3s}
-.trans-orion .tp11{animation-duration:6.6s; animation-delay:0.9s}
-.trans-orion .tp12{animation-duration:7.8s; animation-delay:1.5s}
-.trans-orion .tp13{animation-duration:8.6s; animation-delay:0.6s}
-.trans-orion .tp14{animation-duration:7.1s; animation-delay:2.1s}
-.trans-orion .tp15{animation-duration:8.1s; animation-delay:1.3s}
-@keyframes toParticleRise{
-  0%  {transform:translateY(60px);opacity:0}
-  12% {opacity:0.16}
-  88% {opacity:0.10}
-  100%{transform:translateY(-60px);opacity:0}
-}
+/* Blurs em escala maior · valores idênticos ao Lab Orion */
+.trans-orion .orion-spot-big{filter:blur(20px)}
+.trans-orion .orion-spada-spot{filter:blur(2.5px)}
+.trans-orion .orion-flare-diag{filter:blur(1.2px)}
+.trans-orion .orion-spot-core{filter:blur(2.5px)}
+.trans-orion .orion-twinkle-amb{filter:blur(.8px)}
+.trans-orion .orion-ancora-spot{filter:blur(14px)}
 
 /* Pulse transition */
 .trans-pulse{animation:scrollLeft 3.5s linear infinite}
@@ -316,54 +287,84 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
       <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </a>
 
-    <!-- ═══ ORION ═══ -->
+    <!-- ═══ ORION · constelação cinematográfica fiel ao Lab (viewBox 1280×280) ═══ -->
     <a href="https://orion-pub.vitor-monofloor.workers.dev/" target="_blank" rel="noopener" class="card card-orion" onclick="event.preventDefault();goTo('orion','https://orion-pub.vitor-monofloor.workers.dev/',{newTab:true})">
       <div class="anim-box">
-        <svg viewBox="0 0 300 72" style="width:100%;height:100%;overflow:visible">
+        <svg viewBox="0 0 1280 280" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;overflow:visible">
           <defs>
-            <radialGradient id="oc-halo" cx="50%" cy="50%" r="55%">
-              <stop offset="0%"   stop-color="#d4b886" stop-opacity="0.30"/>
-              <stop offset="60%"  stop-color="#b8976a" stop-opacity="0.07"/>
-              <stop offset="100%" stop-color="#b8976a" stop-opacity="0"/>
-            </radialGradient>
-            <radialGradient id="oc-spot" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"   stop-color="#fbe5b3" stop-opacity="0.95"/>
+            <radialGradient id="oc-spot-dourado" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#fbe5b3" stop-opacity="0.92"/>
               <stop offset="40%"  stop-color="#d4a548" stop-opacity="0.55"/>
               <stop offset="100%" stop-color="#b8a080" stop-opacity="0"/>
             </radialGradient>
-            <radialGradient id="oc-core" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"   stop-color="#fff5d6" stop-opacity="0.98"/>
-              <stop offset="55%"  stop-color="#f4d390" stop-opacity="0.6"/>
+            <radialGradient id="oc-spot-core" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#fff5d6" stop-opacity="0.95"/>
+              <stop offset="50%"  stop-color="#f4d390" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#d4a548" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="oc-spot-pequeno" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#f4d390" stop-opacity="0.85"/>
               <stop offset="100%" stop-color="#d4a548" stop-opacity="0"/>
             </radialGradient>
           </defs>
 
-          <!-- Halo radial dourado de fundo -->
-          <ellipse cx="150" cy="36" rx="120" ry="32" fill="url(#oc-halo)" class="orion-halo"/>
+          <!-- 18 twinkles dispersos -->
+          <circle class="orion-twinkle-amb" cx="100"  cy="55"  r="1.5" fill="url(#oc-spot-pequeno)" style="animation-delay:0s"/>
+          <circle class="orion-twinkle-amb" cx="180"  cy="115" r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:0.3s"/>
+          <circle class="orion-twinkle-amb" cx="260"  cy="40"  r="1.3" fill="url(#oc-spot-pequeno)" style="animation-delay:0.7s"/>
+          <circle class="orion-twinkle-amb" cx="320"  cy="160" r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:1s"/>
+          <circle class="orion-twinkle-amb" cx="380"  cy="70"  r="1.7" fill="url(#oc-spot-pequeno)" style="animation-delay:1.3s"/>
+          <circle class="orion-twinkle-amb" cx="450"  cy="205" r="1.2" fill="url(#oc-spot-pequeno)" style="animation-delay:1.6s"/>
+          <circle class="orion-twinkle-amb" cx="540"  cy="35"  r="1.4" fill="url(#oc-spot-pequeno)" style="animation-delay:1.9s"/>
+          <circle class="orion-twinkle-amb" cx="580"  cy="200" r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:2.2s"/>
+          <circle class="orion-twinkle-amb" cx="700"  cy="215" r="1.3" fill="url(#oc-spot-pequeno)" style="animation-delay:2.5s"/>
+          <circle class="orion-twinkle-amb" cx="730"  cy="42"  r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:0.4s"/>
+          <circle class="orion-twinkle-amb" cx="820"  cy="180" r="1.5" fill="url(#oc-spot-pequeno)" style="animation-delay:0.8s"/>
+          <circle class="orion-twinkle-amb" cx="900"  cy="55"  r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:1.1s"/>
+          <circle class="orion-twinkle-amb" cx="970"  cy="135" r="1.3" fill="url(#oc-spot-pequeno)" style="animation-delay:1.4s"/>
+          <circle class="orion-twinkle-amb" cx="1040" cy="42"  r="1.7" fill="url(#oc-spot-pequeno)" style="animation-delay:1.7s"/>
+          <circle class="orion-twinkle-amb" cx="1100" cy="207" r="1.2" fill="url(#oc-spot-pequeno)" style="animation-delay:2s"/>
+          <circle class="orion-twinkle-amb" cx="1170" cy="85"  r="1.3" fill="url(#oc-spot-pequeno)" style="animation-delay:2.3s"/>
+          <circle class="orion-twinkle-amb" cx="60"   cy="180" r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:2.6s"/>
+          <circle class="orion-twinkle-amb" cx="490"  cy="135" r="1"   fill="url(#oc-spot-pequeno)" style="animation-delay:2.9s"/>
 
-          <!-- Particles flutuando (sobem como no login Orion) -->
-          <circle class="orion-particle op1" cx="50"  cy="40" r="1"   fill="#c4b5a0"/>
-          <circle class="orion-particle op2" cx="85"  cy="46" r="0.9" fill="#c4b5a0"/>
-          <circle class="orion-particle op3" cx="220" cy="42" r="1"   fill="#c4b5a0"/>
-          <circle class="orion-particle op4" cx="255" cy="48" r="0.9" fill="#c4b5a0"/>
-          <circle class="orion-particle op5" cx="35"  cy="38" r="0.8" fill="#c4b5a0"/>
-          <circle class="orion-particle op6" cx="270" cy="36" r="0.8" fill="#c4b5a0"/>
-          <circle class="orion-particle op7" cx="105" cy="48" r="0.8" fill="#c4b5a0"/>
-          <circle class="orion-particle op8" cx="200" cy="44" r="0.8" fill="#c4b5a0"/>
+          <!-- Âncoras · Betelgeuse / Bellatrix / Rigel / Saiph -->
+          <circle class="orion-ancora-spot" cx="280"  cy="55"  r="20" fill="url(#oc-spot-pequeno)" style="animation-delay:0.5s"/>
+          <circle class="orion-ancora-spot" cx="990"  cy="55"  r="16" fill="url(#oc-spot-pequeno)" style="animation-delay:1.5s"/>
+          <circle class="orion-ancora-spot" cx="270"  cy="235" r="20" fill="url(#oc-spot-pequeno)" style="animation-delay:2.5s"/>
+          <circle class="orion-ancora-spot" cx="1000" cy="235" r="18" fill="url(#oc-spot-pequeno)" style="animation-delay:3.5s"/>
 
-          <!-- Diffraction X — 4 linhas em cruz sobre o spot -->
-          <g class="orion-flare">
-            <line x1="125" y1="22" x2="175" y2="50" stroke="#f4d390" stroke-width="0.6"/>
-            <line x1="125" y1="50" x2="175" y2="22" stroke="#f4d390" stroke-width="0.6"/>
-            <line x1="150" y1="14" x2="150" y2="58" stroke="#fff5d6" stroke-width="0.5"/>
-            <line x1="122" y1="36" x2="178" y2="36" stroke="#fff5d6" stroke-width="0.5"/>
-          </g>
+          <!-- Linhas-espada (sussurros âncoras → cinturão) -->
+          <line class="orion-espada-linha" x1="280"  y1="60"  x2="455" y2="140"/>
+          <line class="orion-espada-linha" x1="990"  y1="60"  x2="825" y2="140"/>
+          <line class="orion-espada-linha" x1="270"  y1="230" x2="455" y2="150"/>
+          <line class="orion-espada-linha" x1="1000" y1="230" x2="825" y2="150"/>
 
-          <!-- Spot central pulsante — único ponto de luz -->
-          <circle class="orion-spot" cx="150" cy="36" r="20" fill="url(#oc-spot)"/>
+          <!-- CINTURÃO · Mintaka / Alnilam / Alnitak -->
+          <line class="orion-linha-conec" x1="475" y1="145" x2="620" y2="145"/>
+          <line class="orion-linha-conec" x1="660" y1="145" x2="805" y2="145"/>
+          <circle class="orion-spot-big s1" cx="455" cy="145" r="38" fill="url(#oc-spot-dourado)"/>
+          <circle class="orion-spot-big s2" cx="640" cy="145" r="46" fill="url(#oc-spot-dourado)"/>
+          <circle class="orion-spot-big s3" cx="825" cy="145" r="38" fill="url(#oc-spot-dourado)"/>
 
-          <!-- Núcleo brilhante interior -->
-          <circle class="orion-core" cx="150" cy="36" r="5" fill="url(#oc-core)"/>
+          <!-- Diffraction X · 6 linhas -->
+          <line class="orion-flare-diag f1" x1="425" y1="115" x2="485" y2="175" stroke="#f4d390" stroke-width="1"/>
+          <line class="orion-flare-diag f1" x1="425" y1="175" x2="485" y2="115" stroke="#f4d390" stroke-width="1"/>
+          <line class="orion-flare-diag f2" x1="600" y1="105" x2="680" y2="185" stroke="#f4d390" stroke-width="1.4"/>
+          <line class="orion-flare-diag f2" x1="600" y1="185" x2="680" y2="105" stroke="#f4d390" stroke-width="1.4"/>
+          <line class="orion-flare-diag f3" x1="795" y1="115" x2="855" y2="175" stroke="#f4d390" stroke-width="1"/>
+          <line class="orion-flare-diag f3" x1="795" y1="175" x2="855" y2="115" stroke="#f4d390" stroke-width="1"/>
+
+          <!-- Núcleos brilhantes -->
+          <circle class="orion-spot-core c1" cx="455" cy="145" r="9"  fill="url(#oc-spot-core)"/>
+          <circle class="orion-spot-core c2" cx="640" cy="145" r="12" fill="url(#oc-spot-core)"/>
+          <circle class="orion-spot-core c3" cx="825" cy="145" r="9"  fill="url(#oc-spot-core)"/>
+
+          <!-- ESPADA · 3 spots verticais (M42) -->
+          <line class="orion-espada-linha" x1="640" y1="158" x2="640" y2="215"/>
+          <circle class="orion-spada-spot e1" cx="640" cy="178" r="11" fill="url(#oc-spot-pequeno)"/>
+          <circle class="orion-spada-spot e2" cx="640" cy="198" r="11" fill="url(#oc-spot-pequeno)"/>
+          <circle class="orion-spada-spot e3" cx="640" cy="218" r="11" fill="url(#oc-spot-pequeno)"/>
         </svg>
       </div>
       <div class="card-name">orion · lab</div>
@@ -402,61 +403,84 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
   <div class="transition-sub">carregando análise da carteira…</div>
 </div>
 
-<!-- ═══ ORION — overlay de transição (estética minimalista · espelha o login Lab) ═══ -->
+<!-- ═══ ORION — overlay de transição (constelação cinematográfica fiel ao Lab) ═══ -->
 <div class="transition-overlay" id="trans-orion">
   <div class="transition-icon trans-orion">
-    <svg viewBox="0 0 480 360" style="width:100%;height:100%;overflow:visible">
+    <svg viewBox="0 0 1280 280" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;overflow:visible">
       <defs>
-        <radialGradient id="ot-halo" cx="50%" cy="50%" r="55%">
-          <stop offset="0%"   stop-color="#d4b886" stop-opacity="0.38"/>
-          <stop offset="60%"  stop-color="#b8976a" stop-opacity="0.09"/>
-          <stop offset="100%" stop-color="#b8976a" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="ot-spot" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stop-color="#fbe5b3" stop-opacity="0.95"/>
+        <radialGradient id="ot-spot-dourado" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#fbe5b3" stop-opacity="0.92"/>
           <stop offset="40%"  stop-color="#d4a548" stop-opacity="0.55"/>
           <stop offset="100%" stop-color="#b8a080" stop-opacity="0"/>
         </radialGradient>
-        <radialGradient id="ot-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stop-color="#fff5d6" stop-opacity="0.98"/>
-          <stop offset="55%"  stop-color="#f4d390" stop-opacity="0.65"/>
+        <radialGradient id="ot-spot-core" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#fff5d6" stop-opacity="0.95"/>
+          <stop offset="50%"  stop-color="#f4d390" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#d4a548" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="ot-spot-pequeno" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#f4d390" stop-opacity="0.85"/>
           <stop offset="100%" stop-color="#d4a548" stop-opacity="0"/>
         </radialGradient>
       </defs>
 
-      <!-- Halo radial amplo -->
-      <ellipse cx="240" cy="180" rx="230" ry="170" fill="url(#ot-halo)" class="orion-halo"/>
+      <!-- 18 twinkles dispersos -->
+      <circle class="orion-twinkle-amb" cx="100"  cy="55"  r="1.5" fill="url(#ot-spot-pequeno)" style="animation-delay:0s"/>
+      <circle class="orion-twinkle-amb" cx="180"  cy="115" r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:0.3s"/>
+      <circle class="orion-twinkle-amb" cx="260"  cy="40"  r="1.3" fill="url(#ot-spot-pequeno)" style="animation-delay:0.7s"/>
+      <circle class="orion-twinkle-amb" cx="320"  cy="160" r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:1s"/>
+      <circle class="orion-twinkle-amb" cx="380"  cy="70"  r="1.7" fill="url(#ot-spot-pequeno)" style="animation-delay:1.3s"/>
+      <circle class="orion-twinkle-amb" cx="450"  cy="205" r="1.2" fill="url(#ot-spot-pequeno)" style="animation-delay:1.6s"/>
+      <circle class="orion-twinkle-amb" cx="540"  cy="35"  r="1.4" fill="url(#ot-spot-pequeno)" style="animation-delay:1.9s"/>
+      <circle class="orion-twinkle-amb" cx="580"  cy="200" r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:2.2s"/>
+      <circle class="orion-twinkle-amb" cx="700"  cy="215" r="1.3" fill="url(#ot-spot-pequeno)" style="animation-delay:2.5s"/>
+      <circle class="orion-twinkle-amb" cx="730"  cy="42"  r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:0.4s"/>
+      <circle class="orion-twinkle-amb" cx="820"  cy="180" r="1.5" fill="url(#ot-spot-pequeno)" style="animation-delay:0.8s"/>
+      <circle class="orion-twinkle-amb" cx="900"  cy="55"  r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:1.1s"/>
+      <circle class="orion-twinkle-amb" cx="970"  cy="135" r="1.3" fill="url(#ot-spot-pequeno)" style="animation-delay:1.4s"/>
+      <circle class="orion-twinkle-amb" cx="1040" cy="42"  r="1.7" fill="url(#ot-spot-pequeno)" style="animation-delay:1.7s"/>
+      <circle class="orion-twinkle-amb" cx="1100" cy="207" r="1.2" fill="url(#ot-spot-pequeno)" style="animation-delay:2s"/>
+      <circle class="orion-twinkle-amb" cx="1170" cy="85"  r="1.3" fill="url(#ot-spot-pequeno)" style="animation-delay:2.3s"/>
+      <circle class="orion-twinkle-amb" cx="60"   cy="180" r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:2.6s"/>
+      <circle class="orion-twinkle-amb" cx="490"  cy="135" r="1"   fill="url(#ot-spot-pequeno)" style="animation-delay:2.9s"/>
 
-      <!-- Particles flutuantes — sobem como no login Orion -->
-      <circle class="orion-particle tp1"  cx="60"  cy="280" r="1.4" fill="#c4b5a0"/>
-      <circle class="orion-particle tp2"  cx="120" cy="320" r="1.2" fill="#c4b5a0"/>
-      <circle class="orion-particle tp3"  cx="200" cy="300" r="1.3" fill="#c4b5a0"/>
-      <circle class="orion-particle tp4"  cx="280" cy="330" r="1.2" fill="#c4b5a0"/>
-      <circle class="orion-particle tp5"  cx="360" cy="290" r="1.4" fill="#c4b5a0"/>
-      <circle class="orion-particle tp6"  cx="420" cy="310" r="1.2" fill="#c4b5a0"/>
-      <circle class="orion-particle tp7"  cx="40"  cy="220" r="1.1" fill="#c4b5a0"/>
-      <circle class="orion-particle tp8"  cx="450" cy="240" r="1.1" fill="#c4b5a0"/>
-      <circle class="orion-particle tp9"  cx="90"  cy="100" r="1"   fill="#c4b5a0"/>
-      <circle class="orion-particle tp10" cx="380" cy="80"  r="1"   fill="#c4b5a0"/>
-      <circle class="orion-particle tp11" cx="160" cy="50"  r="0.9" fill="#c4b5a0"/>
-      <circle class="orion-particle tp12" cx="320" cy="60"  r="0.9" fill="#c4b5a0"/>
-      <circle class="orion-particle tp13" cx="20"  cy="140" r="0.9" fill="#c4b5a0"/>
-      <circle class="orion-particle tp14" cx="460" cy="160" r="0.9" fill="#c4b5a0"/>
-      <circle class="orion-particle tp15" cx="240" cy="40"  r="1"   fill="#c4b5a0"/>
+      <!-- Âncoras · Betelgeuse / Bellatrix / Rigel / Saiph -->
+      <circle class="orion-ancora-spot" cx="280"  cy="55"  r="20" fill="url(#ot-spot-pequeno)" style="animation-delay:0.5s"/>
+      <circle class="orion-ancora-spot" cx="990"  cy="55"  r="16" fill="url(#ot-spot-pequeno)" style="animation-delay:1.5s"/>
+      <circle class="orion-ancora-spot" cx="270"  cy="235" r="20" fill="url(#ot-spot-pequeno)" style="animation-delay:2.5s"/>
+      <circle class="orion-ancora-spot" cx="1000" cy="235" r="18" fill="url(#ot-spot-pequeno)" style="animation-delay:3.5s"/>
 
-      <!-- Diffraction X — 4 linhas em cruz proeminente sobre o spot -->
-      <g class="orion-flare">
-        <line x1="160" y1="100" x2="320" y2="260" stroke="#f4d390" stroke-width="1.1" opacity="0"/>
-        <line x1="160" y1="260" x2="320" y2="100" stroke="#f4d390" stroke-width="1.1" opacity="0"/>
-        <line x1="240" y1="60"  x2="240" y2="300" stroke="#fff5d6" stroke-width="0.9" opacity="0"/>
-        <line x1="120" y1="180" x2="360" y2="180" stroke="#fff5d6" stroke-width="0.9" opacity="0"/>
-      </g>
+      <!-- Linhas-espada (sussurros âncoras → cinturão) -->
+      <line class="orion-espada-linha" x1="280"  y1="60"  x2="455" y2="140"/>
+      <line class="orion-espada-linha" x1="990"  y1="60"  x2="825" y2="140"/>
+      <line class="orion-espada-linha" x1="270"  y1="230" x2="455" y2="150"/>
+      <line class="orion-espada-linha" x1="1000" y1="230" x2="825" y2="150"/>
 
-      <!-- Spot grande central — único ponto de luz -->
-      <circle class="orion-spot" cx="240" cy="180" r="78" fill="url(#ot-spot)"/>
+      <!-- CINTURÃO · Mintaka / Alnilam / Alnitak -->
+      <line class="orion-linha-conec" x1="475" y1="145" x2="620" y2="145"/>
+      <line class="orion-linha-conec" x1="660" y1="145" x2="805" y2="145"/>
+      <circle class="orion-spot-big s1" cx="455" cy="145" r="38" fill="url(#ot-spot-dourado)"/>
+      <circle class="orion-spot-big s2" cx="640" cy="145" r="46" fill="url(#ot-spot-dourado)"/>
+      <circle class="orion-spot-big s3" cx="825" cy="145" r="38" fill="url(#ot-spot-dourado)"/>
 
-      <!-- Núcleo brilhante interior -->
-      <circle class="orion-core" cx="240" cy="180" r="20" fill="url(#ot-core)" opacity="0"/>
+      <!-- Diffraction X · 6 linhas -->
+      <line class="orion-flare-diag f1" x1="425" y1="115" x2="485" y2="175" stroke="#f4d390" stroke-width="1"/>
+      <line class="orion-flare-diag f1" x1="425" y1="175" x2="485" y2="115" stroke="#f4d390" stroke-width="1"/>
+      <line class="orion-flare-diag f2" x1="600" y1="105" x2="680" y2="185" stroke="#f4d390" stroke-width="1.4"/>
+      <line class="orion-flare-diag f2" x1="600" y1="185" x2="680" y2="105" stroke="#f4d390" stroke-width="1.4"/>
+      <line class="orion-flare-diag f3" x1="795" y1="115" x2="855" y2="175" stroke="#f4d390" stroke-width="1"/>
+      <line class="orion-flare-diag f3" x1="795" y1="175" x2="855" y2="115" stroke="#f4d390" stroke-width="1"/>
+
+      <!-- Núcleos brilhantes -->
+      <circle class="orion-spot-core c1" cx="455" cy="145" r="9"  fill="url(#ot-spot-core)"/>
+      <circle class="orion-spot-core c2" cx="640" cy="145" r="12" fill="url(#ot-spot-core)"/>
+      <circle class="orion-spot-core c3" cx="825" cy="145" r="9"  fill="url(#ot-spot-core)"/>
+
+      <!-- ESPADA · 3 spots verticais (M42) -->
+      <line class="orion-espada-linha" x1="640" y1="158" x2="640" y2="215"/>
+      <circle class="orion-spada-spot e1" cx="640" cy="178" r="11" fill="url(#ot-spot-pequeno)"/>
+      <circle class="orion-spada-spot e2" cx="640" cy="198" r="11" fill="url(#ot-spot-pequeno)"/>
+      <circle class="orion-spada-spot e3" cx="640" cy="218" r="11" fill="url(#ot-spot-pequeno)"/>
     </svg>
   </div>
   <div class="transition-label">orion · lab</div>
