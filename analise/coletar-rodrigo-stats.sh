@@ -184,7 +184,9 @@ def parse_data_entrada(s):
         return None
 
 # Vamos ler data_de_entrada dos details (que já baixamos pro KIRA).
-# Esse é o campo Pipefy de DATA FIRMADA da entrada do aplicador na obra.
+# Esse é o campo do Painel de Obras de DATA FIRMADA da entrada do aplicador na obra.
+# (No JSON está em acessoDetalhes.allFields.data_de_entrada — nome legado, dado é
+# do Painel de Obras hoje, não do Pipefy descontinuado.)
 # Diferente de dataExecucaoPrevista (chute do sistema, distante).
 det_dir_proxy = f"{TMP}/details"
 data_entrada_por_id = {}  # id -> date
@@ -247,7 +249,7 @@ canon = {
         "funil_total": len(funil_total),
         "com_data_firmada": len(funil_com_data),
         "sem_data_firmada": funil_sem_data,
-        "fonte": "acessoDetalhes.allFields.data_de_entrada (Pipefy) — só obras com data firmada",
+        "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada",
     },
     "operacao_viva": {
         "active_journeys": orch.get("activeJourneys", 0),
