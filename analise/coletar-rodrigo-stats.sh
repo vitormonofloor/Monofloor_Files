@@ -639,6 +639,67 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
     periodo = (ws.get("periodo") or "").strip()
     tempo_resp = (ws.get("tempoResposta") or "").strip()
 
+    # Timeline: classifica cada evento como bom/neutro/critico por palavras-chave
+    # (heurística — KIRA não dá score; texto é livre. ~5-10% erro tolerado)
+    KW_CRITICO = ["atras", "atraso", "descumpr", "crítico", "crítica", "critico", "critica",
+                  "falha", "lesado", "reclama", "cobr", "recus", "rejeit",
+                  "sem resposta", "pendente", "urgent", "extrapola", "risco",
+                  "errad", "errou", "problema", "queixa", "ameaç", "ruptura",
+                  "rupture", "veemen", "intercorr", "agrava", "insatisf",
+                  "frustr", "discord", "contesta", "questiona", "questionou",
+                  "não cumpri", "nao cumpri", "não foi", "nao foi", "ausente",
+                  "falt", "cancela", "cancelou", "remarc", "adiar", "adiou",
+                  "atrasou", "perdeu", "perda", "danific", "danific", "vazam",
+                  "infiltra", "trinc", "manch", "defeit", "tom errado",
+                  "cor errada", "diverge", "diverg"]
+    KW_BOM = ["conclu", "aprovou", "confirmou", "finaliz", "entregue", "resolv",
+              "satisfeito", "concord", "agendou com sucesso", "executou"]
+
+    def classificar_evento(txt):
+        t = txt.lower()
+        # Bom só se NÃO tiver palavra-chave ruim no contexto
+        tem_ruim = any(k in t for k in KW_CRITICO)
+        tem_bom = any(k in t for k in KW_BOM)
+        if tem_ruim:
+            return "critico"
+        if tem_bom:
+            return "bom"
+        return "neutro"
+
+    def extrair_iso(data_str, ref_dt):
+        # "DD/MM" → "YYYY-MM-DD" (ano = ano do geradoEm; fallback hoje)
+        if not data_str: return None
+        import re
+        m = re.match(r"^(\d{1,2})/(\d{1,2})", data_str.strip())
+        if not m: return None
+        dia, mes = m.group(1), m.group(2)
+        ano = ref_dt.year if ref_dt else now_utc.year
+        try:
+            return f"{ano}-{int(mes):02d}-{int(dia):02d}"
+        except Exception:
+            return None
+
+    eventos_estruturados = []
+    import re as _re
+    DATA_PATTERN = _re.compile(r"^\s*(\d{1,2}/\d{1,2})\s*[\(\s\-:]+(.+)$")
+    for ev in (eventos or []):
+        if not isinstance(ev, str): continue
+        s = ev.strip()
+        # KIRA varia: "DD/MM - txt", "DD/MM: txt", "DD/MM (qualquer): txt", "DD/MM txt"
+        m = DATA_PATTERN.match(s)
+        if m:
+            data_str = m.group(1)
+            texto = m.group(2).strip().lstrip(":-) ").strip()
+        else:
+            data_str, texto = "", s
+        iso_ev = extrair_iso(data_str, summary_dt)
+        eventos_estruturados.append({
+            "data": data_str,
+            "iso": iso_ev,
+            "texto": texto[:280],
+            "classe": classificar_evento(s),  # classifica string inteira (mais robusto)
+        })
+
     op_obras.append({
         "id": pid,
         "cliente": (d.get("clienteNome") or "").strip(),
@@ -664,6 +725,7 @@ for fn in os.listdir(det_dir) if os.path.isdir(det_dir) else []:
         "clima_desc": clima_desc[:300],
         "periodo": periodo,
         "tempo_resp": tempo_resp,
+        "eventos": eventos_estruturados,
     })
 
 # Agregação (excluindo retrabalho — segue regra Q1/Q4)
@@ -725,6 +787,7 @@ canon["operacional_kira"] = {
             "periodo": o["periodo"],
             "tempo_resp": o["tempo_resp"],
             "total_msgs": o["total_msgs"],
+            "eventos": o["eventos"],
         } for o in obras_atencao
     ],
     "obras_sem_kira": [

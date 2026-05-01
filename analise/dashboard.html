@@ -1072,6 +1072,30 @@
   .op-bd-list.alertas li::before{content:'⚠';position:absolute;left:9px;top:8px;color:#c45a5a;font-weight:700;font-size:11px}
   .op-bd-list.pendencias li{border-left:3px solid #b89a4a}
   .op-bd-list.pendencias li::before{content:'›';position:absolute;left:11px;top:6px;color:#b89a4a;font-weight:700;font-size:14px}
+
+  /* Timeline KIRA — picos visuais por evento */
+  .op-tl{position:relative;background:#fff;border:1px solid #ede6dc;border-radius:5px;padding:14px 12px 8px;margin-bottom:14px}
+  .op-tl-svg{width:100%;height:80px;display:block;cursor:default}
+  .op-tl-axis{stroke:#d8d0c4;stroke-width:1}
+  .op-tl-tick{stroke:#ede6dc;stroke-width:1}
+  .op-tl-label{font-family:'JetBrains Mono',monospace;font-size:9px;fill:#a89e92}
+  .op-tl-pt{cursor:pointer;transition:r .12s}
+  .op-tl-pt:hover{r:7}
+  .op-tl-pt.critico{fill:#c45a5a;stroke:#9a3030;stroke-width:1.2}
+  .op-tl-pt.bom{fill:#3d8a5a;stroke:#2d6a3d;stroke-width:1.2}
+  .op-tl-pt.neutro{fill:#c8bfa8;stroke:#a89e92;stroke-width:1}
+  .op-tl-pt.selected{stroke:#2a2520;stroke-width:2.5}
+  .op-tl-legend{display:flex;gap:14px;font-size:10px;color:#8a7e72;margin-top:4px;flex-wrap:wrap;align-items:center}
+  .op-tl-legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  .op-tl-tooltip{position:absolute;background:#2a2520;color:#fff;padding:8px 10px;border-radius:4px;font-size:11px;line-height:1.4;max-width:340px;pointer-events:none;display:none;z-index:10;box-shadow:0 4px 14px rgba(0,0,0,0.2)}
+  .op-tl-tooltip.show{display:block}
+  .op-tl-tooltip strong{color:#f5c97a;font-family:'JetBrains Mono',monospace;font-size:10px;display:block;margin-bottom:3px}
+  .op-tl-detail{margin-top:8px;padding:10px 12px;background:#fafaf5;border:1px solid #ede6dc;border-left:3px solid #c45a5a;border-radius:4px;font-size:12px;line-height:1.5;display:none}
+  .op-tl-detail.show{display:block}
+  .op-tl-detail.bom{border-left-color:#3d8a5a}
+  .op-tl-detail.neutro{border-left-color:#a89e92}
+  .op-tl-detail-data{font-family:'JetBrains Mono',monospace;font-size:10px;color:#b8a080;margin-bottom:4px;font-weight:600}
+  .op-tl-empty{font-size:11px;color:#a89e92;font-style:italic;padding:18px;text-align:center}
   .op-bd-li-titulo{font-weight:700;color:#2a2520;margin-right:4px}
   .op-bd-li-desc{color:#5a4a30}
   /* Footer da expansão */
@@ -5530,6 +5554,131 @@ function renderEstrategicos() {
 // Cache das obras "sem KIRA" pra modal — populado de Q2_OBRAS quando rodrigo-stats carrega
 var _opObrasSemKira = [];
 
+// Bind hover/click nos pontos das timelines de todos os cards
+function _opBindTimelinePoints(container, feridas) {
+  container.querySelectorAll('.op-tl').forEach(function(tl){
+    var card = tl.closest('.op-fcard');
+    if (!card) return;
+    var idx = parseInt((card.dataset.idx || '0'), 10);
+    var obra = feridas[idx];
+    if (!obra) return;
+    var eventos = (obra.eventos || []).filter(function(e){ return e.iso; });
+    eventos.sort(function(a,b){ return a.iso < b.iso ? -1 : 1; });
+    var tooltip = tl.querySelector('.op-tl-tooltip');
+    var detail = tl.querySelector('.op-tl-detail');
+    var svg = tl.querySelector('.op-tl-svg');
+    if (!svg) return;
+
+    svg.querySelectorAll('.op-tl-pt').forEach(function(pt, i){
+      var ev = eventos[i];
+      if (!ev) return;
+      pt.addEventListener('mouseenter', function(e){
+        if (!tooltip) return;
+        var tlRect = tl.getBoundingClientRect();
+        var ptRect = pt.getBoundingClientRect();
+        var x = ptRect.left - tlRect.left + ptRect.width / 2;
+        var y = ptRect.top - tlRect.top - 8;
+        tooltip.innerHTML = '<strong>' + escHtml(_opFmtData(ev.iso)) + '</strong>' + escHtml(ev.texto.slice(0, 200));
+        tooltip.style.left = Math.max(0, Math.min(x - 170, tl.offsetWidth - 340)) + 'px';
+        tooltip.style.top = (y - 70) + 'px';
+        tooltip.classList.add('show');
+      });
+      pt.addEventListener('mouseleave', function(){
+        if (tooltip) tooltip.classList.remove('show');
+      });
+      pt.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (!detail) return;
+        // Toggle: se já está com este evento, fecha
+        var jaAberto = detail.classList.contains('show') && detail.dataset.evIdx === String(i);
+        // Limpa selected
+        svg.querySelectorAll('.op-tl-pt.selected').forEach(function(p){ p.classList.remove('selected'); });
+        if (jaAberto) {
+          detail.classList.remove('show');
+          detail.dataset.evIdx = '';
+          return;
+        }
+        pt.classList.add('selected');
+        detail.dataset.evIdx = String(i);
+        detail.className = 'op-tl-detail show ' + ev.classe;
+        detail.innerHTML = '<div class="op-tl-detail-data">' + escHtml(_opFmtData(ev.iso)) + ' · ' + escHtml(ev.classe) + '</div>' + escHtml(ev.texto);
+      });
+    });
+  });
+}
+
+// Formata ISO YYYY-MM-DD pra DD/MM/YYYY
+function _opFmtData(iso) {
+  if (!iso) return '';
+  var m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[3] + '/' + m[2] + '/' + m[1] : iso;
+}
+
+// Renderiza timeline KIRA — picos visuais por evento
+function _opRenderTimeline(o, idx) {
+  var eventos = (o.eventos || []).filter(function(e){ return e.iso; });
+  if (!eventos.length) {
+    return '<div class="op-tl op-tl-empty">Sem eventos com data identificável neste período do KIRA.</div>';
+  }
+  // Ordena por data (asc)
+  eventos.sort(function(a,b){ return a.iso < b.iso ? -1 : 1; });
+  var firstISO = eventos[0].iso;
+  var lastISO = eventos[eventos.length - 1].iso;
+  var first = new Date(firstISO + 'T12:00:00').getTime();
+  var last = new Date(lastISO + 'T12:00:00').getTime();
+  var range = Math.max(86400000, last - first); // pelo menos 1 dia
+  var W = 1000, H = 80, padX = 30, padY = 15;
+  var innerW = W - padX * 2;
+
+  // Eixo + ticks por mês
+  var ticks = '';
+  var labels = '';
+  var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var d0 = new Date(first);
+  var dEnd = new Date(last);
+  var cur = new Date(d0.getFullYear(), d0.getMonth(), 1);
+  while (cur <= dEnd) {
+    var x = padX + ((cur.getTime() - first) / range) * innerW;
+    if (x >= padX && x <= W - padX) {
+      ticks += '<line class="op-tl-tick" x1="'+x+'" y1="'+(H-padY-5)+'" x2="'+x+'" y2="'+(H-padY+5)+'"/>';
+      labels += '<text class="op-tl-label" x="'+(x+3)+'" y="'+(H-2)+'">'+meses[cur.getMonth()]+'</text>';
+    }
+    cur.setMonth(cur.getMonth() + 1);
+  }
+  // Linha de hoje (se está dentro do range)
+  var hojeMs = Date.now();
+  var hojeLine = '';
+  if (hojeMs >= first && hojeMs <= last) {
+    var hx = padX + ((hojeMs - first) / range) * innerW;
+    hojeLine = '<line stroke="#b8a080" stroke-width="1" stroke-dasharray="2,2" x1="'+hx+'" y1="'+padY+'" x2="'+hx+'" y2="'+(H-padY)+'"/>'+
+               '<text class="op-tl-label" x="'+(hx+3)+'" y="'+(padY-3)+'" fill="#8a6a20" style="font-weight:600">hoje</text>';
+  }
+  // Eixo base
+  var axis = '<line class="op-tl-axis" x1="'+padX+'" y1="'+(H-padY)+'" x2="'+(W-padX)+'" y2="'+(H-padY)+'"/>';
+  // Pontos: cada evento. Y varia por classe pra ficar visualmente impactante
+  // critico = topo (Y=20), neutro = meio (Y=40), bom = baixo (Y=58)
+  var pts = eventos.map(function(e, i){
+    var ex = padX + ((new Date(e.iso + 'T12:00:00').getTime() - first) / range) * innerW;
+    var ey = e.classe === 'critico' ? 20 : (e.classe === 'bom' ? 58 : 40);
+    var r = e.classe === 'critico' ? 5 : 4;
+    return '<circle class="op-tl-pt '+e.classe+'" cx="'+ex+'" cy="'+ey+'" r="'+r+'" data-idx="'+idx+'-'+i+'"/>';
+  }).join('');
+  // Container
+  return '<div class="op-tl">'+
+    '<div class="op-bd-titulo" style="margin-bottom:6px"><span class="op-bd-icon">📈</span>Timeline da conversa <span style="font-weight:400;color:#a89e92;font-size:9px;text-transform:none;letter-spacing:0;margin-left:6px">' + eventos.length + ' eventos · clique nos pontos pra ver</span></div>'+
+    '<svg class="op-tl-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">'+
+      ticks + axis + hojeLine + labels + pts +
+    '</svg>'+
+    '<div class="op-tl-legend">'+
+      '<span><span class="op-tl-legend-dot" style="background:#c45a5a"></span>crítico (' + eventos.filter(function(e){return e.classe==='critico';}).length + ')</span>'+
+      '<span><span class="op-tl-legend-dot" style="background:#c8bfa8"></span>rotina (' + eventos.filter(function(e){return e.classe==='neutro';}).length + ')</span>'+
+      '<span><span class="op-tl-legend-dot" style="background:#3d8a5a"></span>positivo (' + eventos.filter(function(e){return e.classe==='bom';}).length + ')</span>'+
+    '</div>'+
+    '<div class="op-tl-tooltip" data-tlt="'+idx+'"></div>'+
+    '<div class="op-tl-detail" data-tld="'+idx+'"></div>'+
+  '</div>';
+}
+
 // Splita texto KIRA em "TÍTULO: descrição" — destaca título no item
 function _opSplitItem(txt) {
   if (!txt) return { titulo: '', desc: '' };
@@ -5569,8 +5718,8 @@ function _opRenderFcard(o, idx) {
     frescorHtml = '<span class="op-frescor-chip ' + fcls + '" title="Última leitura KIRA">lido há ' + dr + 'd</span>';
   }
 
-  // Top 3 alertas e pendências (era 4) — sintetiza
-  var alertasHtml = (o.alertas || []).slice(0, 3).map(_opRenderItem).join('');
+  // Timeline KIRA — picos visuais (substitui bloco "Pontos críticos" textual)
+  var timelineHtml = _opRenderTimeline(o, idx);
   var pendenciasHtml = (o.pendencias || []).slice(0, 3).map(_opRenderItem).join('');
 
   // Headline: climaDescricao (1 frase) — substitui o "Resumo do caso" (que era redundante com alertas)
@@ -5605,7 +5754,7 @@ function _opRenderFcard(o, idx) {
     '</button>'+
     '<div class="op-fcard-body">'+
       headlineHtml +
-      (alertasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">⚠</span>Pontos críticos</div><ul class="op-bd-list alertas">' + alertasHtml + '</ul></div>' : '')+
+      timelineHtml +
       (pendenciasHtml ? '<div class="op-bd-section"><div class="op-bd-titulo"><span class="op-bd-icon">›</span>Pendências em aberto</div><ul class="op-bd-list pendencias">' + pendenciasHtml + '</ul></div>' : '')+
       '<div class="op-bd-footer">'+
         '<div class="op-bd-footer-meta">' + footerMeta.join(' · ') + '</div>'+
@@ -5672,6 +5821,8 @@ function renderOperacional() {
               if (!aberto) card.classList.add('aberto');
             });
           });
+          // Bind hover/click nos pontos da timeline
+          _opBindTimelinePoints(fList, feridas);
         }
       }
 
