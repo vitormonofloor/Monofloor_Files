@@ -19,7 +19,8 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .brand-tagline{font-size:9px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:#a89e92}
 
 /* ═══ CARDS — NO BACKGROUND ═══ */
-.cards{display:grid;grid-template-columns:1fr;gap:12px;max-width:420px;width:100%;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:720px;width:100%;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
+@media(max-width:680px){.cards{grid-template-columns:1fr;max-width:380px}}
 
 .card{padding:24px 20px;cursor:pointer;transition:all 0.4s cubic-bezier(0.22,0.61,0.36,1);position:relative;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;text-align:center;background:transparent;border:1px solid rgba(196,181,160,0.25);border-radius:16px}
 .card:hover{transform:translateY(-3px);border-color:rgba(184,151,106,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.04)}
@@ -58,6 +59,41 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 @keyframes dotFade{to{opacity:1}}
 .scan-dot circle{animation:scanPulse 1.5s ease-in-out infinite}
 @keyframes scanPulse{0%,100%{opacity:0.5;r:3}50%{opacity:1;r:4.5}}
+
+/* ═══ ORION (Constelação) ═══ */
+.orion-halo{opacity:0;animation:orionHaloFade 1.6s ease 1.4s forwards}
+@keyframes orionHaloFade{to{opacity:1}}
+
+/* Estrelas principais — aparecem em sequência (constelação se desenha) */
+.orion-star{opacity:0;transform-origin:center;transform-box:fill-box}
+.orion-star.cint-1{animation:starAppear 0.5s ease 1.5s forwards, starTwinkle 3.2s ease-in-out 2.5s infinite}
+.orion-star.cint-2{animation:starAppear 0.5s ease 1.7s forwards, starTwinkle 2.8s ease-in-out 2.7s infinite}
+.orion-star.cint-3{animation:starAppear 0.5s ease 1.9s forwards, starTwinkle 3.4s ease-in-out 2.9s infinite}
+.orion-star.ombro-e{animation:starAppear 0.5s ease 2.1s forwards, starTwinkle 4.0s ease-in-out 3.2s infinite}
+.orion-star.ombro-d{animation:starAppear 0.5s ease 2.2s forwards, starTwinkle 3.7s ease-in-out 3.4s infinite}
+.orion-star.pe-e{animation:starAppear 0.5s ease 2.3s forwards, starTwinkle 4.2s ease-in-out 3.0s infinite}
+.orion-star.pe-d{animation:starAppear 0.5s ease 2.4s forwards, starTwinkle 3.5s ease-in-out 3.6s infinite}
+@keyframes starAppear{from{opacity:0;transform:scale(0.3)}to{opacity:1;transform:scale(1)}}
+@keyframes starTwinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.85)}}
+
+/* Linhas conectando — aparecem depois das estrelas */
+.orion-lines line{animation:lineFade 0.6s ease 2.8s forwards}
+@keyframes lineFade{to{opacity:0.35}}
+
+/* Estrelas de fundo (twinkle ambiente, mais lentas) */
+.orion-twinkle{opacity:0;animation:ambientTwinkle ease-in-out infinite}
+.orion-twinkle.t1{animation-duration:5s;animation-delay:1.8s}
+.orion-twinkle.t2{animation-duration:6s;animation-delay:2.2s}
+.orion-twinkle.t3{animation-duration:4.5s;animation-delay:2.6s}
+.orion-twinkle.t4{animation-duration:5.5s;animation-delay:1.6s}
+.orion-twinkle.t5{animation-duration:4.2s;animation-delay:2.4s}
+.orion-twinkle.t6{animation-duration:5.8s;animation-delay:2.0s}
+@keyframes ambientTwinkle{0%,100%{opacity:0}50%{opacity:0.6}}
+
+/* Hover: intensifica brilho da constelação */
+.card-orion:hover .orion-star{filter:drop-shadow(0 0 4px rgba(232,199,154,0.6))}
+.card-orion:hover .orion-halo{opacity:1.4}
+.card-orion:hover .orion-lines line{stroke:#d4b886;opacity:0.7}
 
 /* ═══ DASHBOARD (Panel) ═══ */
 .dash-screen{fill:none;stroke:#9a8a6a;stroke-width:1;opacity:0;animation:screenIn 0.6s ease 1.8s forwards}
@@ -223,6 +259,60 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
       <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </a>
 
+    <!-- ═══ ORION ═══ -->
+    <a href="https://orion-pub.vitor-monofloor.workers.dev/" target="_blank" rel="noopener" class="card card-orion">
+      <div class="anim-box">
+        <svg viewBox="0 0 300 72" style="width:100%;height:100%;overflow:visible">
+          <!-- Halo de fundo -->
+          <radialGradient id="orion-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#b8976a" stop-opacity="0.18"/>
+            <stop offset="60%" stop-color="#b8976a" stop-opacity="0"/>
+          </radialGradient>
+          <ellipse cx="150" cy="36" rx="100" ry="32" fill="url(#orion-halo)" class="orion-halo"/>
+
+          <!-- Linhas de conexão da constelação (Caçador de Orion estilizado) -->
+          <g class="orion-lines">
+            <line x1="120" y1="14" x2="135" y2="36" stroke="#b8976a" stroke-width="0.5" opacity="0"/>
+            <line x1="180" y1="14" x2="165" y2="36" stroke="#b8976a" stroke-width="0.5" opacity="0"/>
+            <line x1="135" y1="36" x2="150" y2="36" stroke="#b8976a" stroke-width="0.5" opacity="0"/>
+            <line x1="150" y1="36" x2="165" y2="36" stroke="#b8976a" stroke-width="0.5" opacity="0"/>
+            <line x1="135" y1="36" x2="120" y2="58" stroke="#b8976a" stroke-width="0.5" opacity="0"/>
+            <line x1="165" y1="36" x2="180" y2="58" stroke="#b8976a" stroke-width="0.5" opacity="0"/>
+          </g>
+
+          <!-- Estrelas da constelação -->
+          <!-- Ombros -->
+          <circle class="orion-star ombro-e" cx="120" cy="14" r="1.8" fill="#d4b886"/>
+          <circle class="orion-star ombro-d" cx="180" cy="14" r="1.8" fill="#d4b886"/>
+          <!-- Cinturão (3 estrelas centrais) -->
+          <circle class="orion-star cint-1" cx="135" cy="36" r="2.2" fill="#e8c79a"/>
+          <circle class="orion-star cint-2" cx="150" cy="36" r="2.6" fill="#f0d5a8"/>
+          <circle class="orion-star cint-3" cx="165" cy="36" r="2.2" fill="#e8c79a"/>
+          <!-- Pés -->
+          <circle class="orion-star pe-e" cx="120" cy="58" r="1.8" fill="#d4b886"/>
+          <circle class="orion-star pe-d" cx="180" cy="58" r="1.8" fill="#d4b886"/>
+
+          <!-- Estrelas extras de fundo (twinkle ambient) -->
+          <circle class="orion-twinkle t1" cx="80" cy="20" r="0.8" fill="#b8976a"/>
+          <circle class="orion-twinkle t2" cx="220" cy="22" r="0.8" fill="#b8976a"/>
+          <circle class="orion-twinkle t3" cx="60" cy="48" r="0.8" fill="#b8976a"/>
+          <circle class="orion-twinkle t4" cx="240" cy="52" r="0.8" fill="#b8976a"/>
+          <circle class="orion-twinkle t5" cx="100" cy="56" r="0.8" fill="#b8976a"/>
+          <circle class="orion-twinkle t6" cx="200" cy="46" r="0.8" fill="#b8976a"/>
+
+          <!-- Texto Ω (símbolo do Orion na operação) -->
+          <text x="150" y="40" text-anchor="middle" font-family="serif" font-size="14" fill="#b8976a" class="orion-omega" opacity="0">&#937;</text>
+        </svg>
+      </div>
+      <div class="card-name">orion · lab</div>
+      <div class="card-line"></div>
+      <div class="card-desc">Inteligência cruzada — Painel × Telegram. Onde os dois lados divergem é onde nasce o problema.</div>
+      <div class="card-pills">
+        <span class="pill">Piloto · 10 obras</span>
+        <span class="pill">Varredura · 12h e 18h</span>
+      </div>
+      <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </a>
 
   </div>
 </div>
