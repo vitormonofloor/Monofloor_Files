@@ -172,17 +172,56 @@ def parse_date(s):
         try: return datetime.strptime(str(s)[:10], "%Y-%m-%d").date()
         except Exception: return None
 
+def parse_data_entrada(s):
+    """data_de_entrada vem como 'DD/MM/YYYY HH:MM' ou 'DD/MM/YYYY'."""
+    if not s: return None
+    import re as _re
+    m = _re.match(r"^(\d{2})/(\d{2})/(\d{4})", str(s))
+    if not m: return None
+    try:
+        return datetime(int(m.group(3)), int(m.group(2)), int(m.group(1))).date()
+    except Exception:
+        return None
+
+# Vamos ler data_de_entrada dos details (que já baixamos pro KIRA).
+# Esse é o campo Pipefy de DATA FIRMADA da entrada do aplicador na obra.
+# Diferente de dataExecucaoPrevista (chute do sistema, distante).
+det_dir_proxy = f"{TMP}/details"
+data_entrada_por_id = {}  # id -> date
+if os.path.isdir(det_dir_proxy):
+    for fn in os.listdir(det_dir_proxy):
+        if not fn.endswith(".json"): continue
+        try:
+            d = json.load(open(f"{det_dir_proxy}/{fn}", encoding="utf-8-sig"))
+        except Exception:
+            continue
+        pid = d.get("id")
+        if not pid: continue
+        de = ((d.get("acessoDetalhes") or {}).get("allFields") or {}).get("data_de_entrada")
+        dt = parse_data_entrada(de)
+        if dt:
+            data_entrada_por_id[pid] = dt
+
 def proximos(dias):
+    """Próximas a iniciar — usa data_de_entrada (firmada) como fonte primária.
+    Se obra está no funil mas ainda não tem data firmada, fica fora dessa contagem
+    (vai pro 'sem_data_firmada')."""
     limite = hoje + timedelta(days=dias)
-    obras = []
+    obras_firmadas = []
     for p in projects:
         if not isinstance(p, dict): continue
         if p.get("status") not in PROX_STATUSES: continue
-        d = parse_date(p.get("dataExecucaoPrevista"))
+        pid = p.get("id")
+        d = data_entrada_por_id.get(pid)
         if d and hoje <= d <= limite:
-            obras.append(p)
-    m2 = sum(m2_of(p) for p in obras)
-    return {"obras": len(obras), "m2": round(m2)}
+            obras_firmadas.append(p)
+    m2 = sum(m2_of(p) for p in obras_firmadas)
+    return {"obras": len(obras_firmadas), "m2": round(m2)}
+
+# Total no funil (independente de data) e quantas têm/não têm data firmada
+funil_total = [p for p in projects if isinstance(p, dict) and p.get("status") in PROX_STATUSES]
+funil_com_data = [p for p in funil_total if data_entrada_por_id.get(p.get("id"))]
+funil_sem_data = len(funil_total) - len(funil_com_data)
 
 current_load = cap.get("currentLoad", {}) or {}
 capacity_obj = cap.get("capacity", {}) or {}
@@ -205,6 +244,10 @@ canon = {
         "15d": proximos(15),
         "30d": proximos(30),
         "60d": proximos(60),
+        "funil_total": len(funil_total),
+        "com_data_firmada": len(funil_com_data),
+        "sem_data_firmada": funil_sem_data,
+        "fonte": "acessoDetalhes.allFields.data_de_entrada (Pipefy) — só obras com data firmada",
     },
     "operacao_viva": {
         "active_journeys": orch.get("activeJourneys", 0),

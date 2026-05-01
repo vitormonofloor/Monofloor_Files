@@ -477,12 +477,17 @@
     footer a{color:#b8a080;text-decoration:none}
 
     /* Sentinela · indicador discreto de saúde do sistema */
-    .sentinela-btn{position:fixed;bottom:24px;left:24px;width:14px;height:14px;border-radius:50%;border:2px solid #fff;cursor:pointer;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15);transition:all .2s}
-    .sentinela-btn.ok{background:#3d8a5a}
-    .sentinela-btn.warn{background:#d4943a;animation:sentinela-pulse 2.5s ease-in-out infinite}
-    .sentinela-btn.crit{background:#c45a5a;animation:sentinela-pulse 1.4s ease-in-out infinite}
-    .sentinela-btn:hover{transform:scale(1.4)}
-    @keyframes sentinela-pulse{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.15)}50%{box-shadow:0 2px 16px currentColor}}
+    /* Sentinela · balde Monofloor (referência ao produto) · cor da massa = saúde */
+    .sentinela-btn{position:fixed;bottom:22px;left:22px;width:26px;height:26px;background:transparent;border:none;cursor:pointer;z-index:50;padding:0;transition:transform .2s,filter .3s;color:#3d8a5a;line-height:0}
+    .sentinela-btn svg{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.22))}
+    .sentinela-btn:hover{transform:scale(1.35)}
+    .sentinela-btn .balde-massa{fill:currentColor;transition:fill .3s}
+    .sentinela-btn.ok{color:#3d8a5a}
+    .sentinela-btn.warn{color:#d4943a;filter:drop-shadow(0 0 7px rgba(212,148,58,.55))}
+    .sentinela-btn.crit{color:#c45a5a;filter:drop-shadow(0 0 7px rgba(196,90,90,.65))}
+    .sentinela-btn.warn .balde-massa{animation:balde-pulse 2.5s ease-in-out infinite}
+    .sentinela-btn.crit .balde-massa{animation:balde-pulse 1.4s ease-in-out infinite}
+    @keyframes balde-pulse{0%,100%{opacity:.82}50%{opacity:1}}
 
     .sentinela-overlay{display:none;position:fixed;inset:0;background:rgba(58,53,48,.7);z-index:101;align-items:center;justify-content:center;padding:30px}
     .sentinela-overlay.aberta{display:flex}
@@ -822,8 +827,23 @@
   <div class="section-title">Padrões compartilhados entre obras</div>
   <div class="padroes" id="padroes"></div>
 
-  <!-- Sentinela · indicador discreto de saúde -->
-  <div class="sentinela-btn ok" id="sentinela-btn" title="Carregando status..."></div>
+  <!-- Sentinela · balde Monofloor (massa preenche de baixo pra cima · cor = saúde) -->
+  <button class="sentinela-btn ok" id="sentinela-btn" title="Carregando status..." aria-label="Sentinela · saúde do sistema">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- alça do balde -->
+      <path d="M 7 5 Q 12 1.5 17 5" fill="none" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round"/>
+      <!-- corpo trapezoidal preto -->
+      <path d="M 3.5 6.8 L 20.5 6.8 L 19 22 L 5 22 Z" fill="#1a1a1a"/>
+      <!-- abertura escura no topo (interior visto de cima · balde aberto) -->
+      <ellipse cx="12" cy="6.8" rx="8.5" ry="1.5" fill="#080808"/>
+      <!-- massa preenchendo de baixo pra cima (~65% do balde · acompanha o trapézio interno) -->
+      <path class="balde-massa" d="M 4.55 12 L 19.45 12 L 18.55 21.2 L 5.45 21.2 Z"/>
+      <!-- superfície da massa · elipse no topo pra dar profundidade 3D -->
+      <ellipse class="balde-massa" cx="12" cy="12" rx="7.45" ry="0.6"/>
+      <!-- reflexo sutil na superfície -->
+      <path d="M 7 11.7 Q 12 12.2 17 11.7" stroke="rgba(255,255,255,.35)" stroke-width="0.35" fill="none" stroke-linecap="round"/>
+    </svg>
+  </button>
   <div class="sentinela-overlay" id="sentinela-overlay">
     <div class="sentinela-modal" style="position:relative">
       <button class="sentinela-fechar" id="sentinela-fechar">×</button>

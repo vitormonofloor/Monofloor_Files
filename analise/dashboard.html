@@ -109,6 +109,8 @@
   .est-card:nth-child(3) .est-meter-fill{background:#b89a4a}
   .est-meter-mark{position:absolute;top:-2px;width:2px;height:9px;background:#3a3530;border-radius:1px;left:50%}
   .est-detalhe{font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.04em;margin-top:4px}
+  .est-funil{font-size:10px;color:#7a6a52;background:#faf5ed;border:1px solid #e4d8b8;border-radius:4px;padding:6px 9px;margin-top:8px;line-height:1.5}
+  .est-funil strong{color:#5a4a30;font-weight:700}
   .est-fonte{font-family:'JetBrains Mono',monospace;font-size:8px;color:#b8b0a4;border-top:1px dashed #e0d8cc;padding-top:8px;margin-top:8px;letter-spacing:.04em}
   .est-rodape{font-size:11px;color:#8a7e72;margin-top:10px;padding:10px 14px;background:#fdfaf4;border-left:2px solid #c4b5a0;border-radius:0 4px 4px 0;line-height:1.6}
   .est-rodape strong{color:#3a3530;font-weight:600}
@@ -1602,19 +1604,20 @@
 
       <div class="est-card">
         <div class="est-titulo">A INICIAR</div>
-        <div class="est-pergunta">O que vem na frente da operação?</div>
+        <div class="est-pergunta">Quantas obras com data firmada?</div>
         <div class="est-chips" id="est-prox-chips" role="tablist" aria-label="Janela de tempo">
           <button type="button" class="est-chip" data-prox="15" role="tab">15d</button>
           <button type="button" class="est-chip active" data-prox="30" role="tab" aria-selected="true">30d</button>
           <button type="button" class="est-chip" data-prox="60" role="tab">60d</button>
         </div>
         <div class="est-corpo">
-          <div class="est-num"><span id="est-prox-num">—</span><span class="est-unit">obras</span></div>
+          <div class="est-num"><span id="est-prox-num">—</span><span class="est-unit">firmadas</span></div>
           <div class="est-rotulo"><span id="est-prox-m2">—</span> m² · janela <span id="est-prox-label">30d</span></div>
           <div class="est-meter"><div class="est-meter-fill" id="est-prox-fill"></div></div>
           <div class="est-detalhe" id="est-prox-detalhe">—</div>
+          <div class="est-funil" id="est-prox-funil">—</div>
         </div>
-        <div class="est-fonte">Painel de Obras · dataExecucaoPrevista + status</div>
+        <div class="est-fonte">Painel de Obras · data_de_entrada (Pipefy) + status</div>
       </div>
     </div>
 
@@ -2894,7 +2897,13 @@ function applyRodrigoCanon() {
             }
             if ($('est-prox-detalhe')) {
               var meta = janela === '15' ? 'curto prazo' : (janela === '30' ? 'mês corrente' : 'horizonte 2 meses');
-              $('est-prox-detalhe').textContent = meta + ' · obras agendadas pra começar (não conta as já em execução)';
+              $('est-prox-detalhe').textContent = meta + ' · obras com data de entrada confirmada no Pipefy';
+            }
+            // Contexto do funil total — mostra quantas estão sem data firmada
+            if ($('est-prox-funil') && R.proximos.funil_total != null) {
+              var semData = R.proximos.sem_data_firmada || 0;
+              var comData = R.proximos.com_data_firmada || 0;
+              $('est-prox-funil').innerHTML = 'no funil total: <strong>' + R.proximos.funil_total + '</strong> obras · ' + comData + ' com data firmada · ' + (semData > 0 ? '<span style="color:#b89a4a">' + semData + ' aguardando agendamento</span>' : 'todas agendadas');
             }
             document.querySelectorAll('#est-prox-chips .est-chip').forEach(function(c){
               var a = c.getAttribute('data-prox') === janela;
