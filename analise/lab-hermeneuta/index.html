@@ -220,11 +220,31 @@
     @keyframes pulseDot{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(61,138,90,0.4)}50%{transform:scale(1.4);box-shadow:0 0 0 8px rgba(61,138,90,0)}}
     .disp-instr{font-size:12px;color:#6b6156;line-height:1.6;margin-bottom:12px}
     .disp-instr code{font-family:'JetBrains Mono',monospace;font-size:11px;background:#ede6dc;padding:2px 6px;border-radius:3px;color:#3a3530}
-    .disp-botoes{display:flex;gap:8px;flex-wrap:wrap}
+    .disp-botoes{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+    .disp-linha-1{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
     .disp-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;padding:8px 14px;border-radius:6px;border:1px solid #c4b5a0;background:#fff;color:#3a3530;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
     .disp-btn:hover{background:#b8a080;color:#fff;border-color:#b8a080;transform:translateY(-1px)}
-    .disp-btn.primary{background:#b8a080;color:#fff;border-color:#b8a080}
+    .disp-btn.primary{background:#b8a080;color:#fff;border-color:#b8a080;flex:1;min-width:280px;justify-content:center;padding:12px 18px}
     .disp-btn.primary:hover{background:#9a8060}
+    /* Separador "ou dispare por recorte" */
+    .disp-recortes-sep{display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin:4px 0 -4px}
+    .disp-recortes-sep::before,.disp-recortes-sep::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,#d8c8a8,transparent)}
+    /* Recortes · grid sempre visível */
+    .disp-recortes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+    .disp-recortes-info{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.06em;line-height:1.5;margin-bottom:2px;font-style:italic;text-align:center}
+    .disp-recortes-info strong{color:#3a3530;font-weight:600;font-style:normal}
+    .disp-recorte{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border:1px solid #e0d8cc;border-left:3px solid #b8a080;border-radius:6px;cursor:pointer;font-family:inherit;text-align:left;transition:all .15s;width:100%}
+    .disp-recorte:hover:not(:disabled){border-color:#b8a080;border-left-color:#a89070;background:#fcfaf4;transform:translateX(2px);box-shadow:2px 2px 8px rgba(42,37,32,.06)}
+    .disp-recorte:disabled{opacity:.4;cursor:not-allowed}
+    .disp-recorte-ico{font-size:16px;flex-shrink:0;line-height:1}
+    .disp-recorte-corpo{flex:1;min-width:0}
+    .disp-recorte-nome{font-size:12px;font-weight:600;color:#2a2520;line-height:1.25}
+    .disp-recorte-desc{font-family:'JetBrains Mono',monospace;font-size:9px;color:#8a7e72;letter-spacing:.04em;margin-top:2px}
+    .disp-recorte-qtd{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#b8a080;flex-shrink:0;min-width:24px;text-align:right}
+    .disp-recorte:hover:not(:disabled) .disp-recorte-qtd{color:#9a8060}
+    .disp-recorte.todas{border-left-color:#d4943a;grid-column:1/-1;background:linear-gradient(135deg,#fdfaf4 0%,#fbeede 100%)}
+    .disp-recorte.todas .disp-recorte-qtd{color:#a86b30}
+    .disp-rodape{display:flex;justify-content:flex-end;margin-top:2px}
 
     /* Section title */
     .section-title{font-size:11px;font-family:'JetBrains Mono',monospace;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid #d8d0c4}
@@ -1709,10 +1729,32 @@ function renderFlagsStats(){
     </div>`).join('');
 }
 
+// Recortes operacionais · cada um define um critério + ícone + descrição
+const RECORTES_DISP = [
+  {id:'inicia-7d',  ico:'🔥', nome:'Iniciam em ≤7 dias',     desc:'urgência iminente',
+    fn:o => o.regua && o.regua.dias_ate_inicio != null && o.regua.dias_ate_inicio >= 0 && o.regua.dias_ate_inicio <= 7},
+  {id:'inicia-30d', ico:'📅', nome:'Iniciam em ≤30 dias',    desc:'planejamento próximo',
+    fn:o => o.regua && o.regua.dias_ate_inicio != null && o.regua.dias_ate_inicio >= 0 && o.regua.dias_ate_inicio <= 30},
+  {id:'execucao',   ico:'🚦', nome:'Em execução',            desc:'obra rodando agora',
+    fn:o => (o.painel && o.painel.status_atual === 'em_execucao') || (o.regua && o.regua.bucket && o.regua.bucket.id === 'em_execucao')},
+  {id:'atrasadas',  ico:'⏰', nome:'Atrasadas',              desc:'passou da data prevista',
+    fn:o => o.regua && o.regua.bucket && o.regua.bucket.id === 'atrasada'},
+  {id:'reparo',     ico:'🔧', nome:'Reparo / pós-entrega',   desc:'reparo + marcas rolo/cera',
+    fn:o => o.painel && (o.painel.status_atual === 'reparo' || o.painel.status_atual === 'marcas_rolo_cera')},
+  {id:'risco-cli',  ico:'⚠',  nome:'Cliente em risco',       desc:'sinais de descontentamento',
+    fn:o => (o.flags||[]).includes('detrator_latente') || (o.flags||[]).includes('detrator')},
+  {id:'pausadas',   ico:'⏸',  nome:'Pausadas',                desc:'obra parada · investigar',
+    fn:o => o.painel && o.painel.status_atual === 'pausado'},
+];
+
 function renderDisparador(obrasStale){
   const cont = document.getElementById('disp-botoes');
+  const obras = (DADOS && DADOS.obras) ? DADOS.obras.filter(obraDeMim) : [];
+  const totalAtivas = obras.length;
   let html = '';
 
+  // ─── LINHA 1 · botão primary (refresh seletivo) ───
+  html += '<div class="disp-linha-1">';
   if (obrasStale.length > 0) {
     const ids = obrasStale.map(o => o.obra_id).join(',');
     const nomes = obrasStale.map(o => `${(o.cliente || '').split(' ').slice(0,2).join(' ')} (${o.refresh_status.msgs_novas_desde_veredicto})`).join(', ');
@@ -1722,20 +1764,53 @@ function renderDisparador(obrasStale){
       <small style="display:block;font-size:9px;opacity:.85;margin-top:2px">${esc(nomes)}</small></span>
     </button>`;
   } else {
-    html += `<button class="disp-btn" disabled style="opacity:.5;cursor:default">
+    html += `<button class="disp-btn primary" disabled style="opacity:.55;cursor:default">
       <span>✓ Tudo coerente com a última análise · sem obras pendentes</span>
     </button>`;
   }
+  html += '</div>';
 
-  // Análise completa (sempre disponível, secundário)
-  html += `<button class="disp-btn" data-cmd="rodar pipeline orion v3 completo nas 10 obras-piloto">
-    <span>análise completa · 10 obras</span>
+  // ─── SEPARADOR ───
+  html += '<div class="disp-recortes-sep">ou dispare por recorte específico</div>';
+
+  // ─── LINHA 2 · grid de recortes (sempre visível) ───
+  const recortesHtml = RECORTES_DISP.map(r => {
+    const filtradas = obras.filter(r.fn);
+    const qtd = filtradas.length;
+    const ids = filtradas.map(o => o.obra_id).join(',');
+    const cmd = qtd > 0 ? `rodar orion v3 no recorte "${r.nome}" · ${qtd} obras: ${ids}` : '';
+    return `<button class="disp-recorte" ${qtd === 0 ? 'disabled' : `data-cmd="${esc(cmd)}"`} title="${esc(r.desc)}${qtd>0?` · ${qtd} obra${qtd>1?'s':''}`:''}">
+      <span class="disp-recorte-ico">${r.ico}</span>
+      <span class="disp-recorte-corpo">
+        <span class="disp-recorte-nome">${esc(r.nome)}</span>
+        <span class="disp-recorte-desc">${esc(r.desc)}</span>
+      </span>
+      <span class="disp-recorte-qtd">${qtd}</span>
+    </button>`;
+  }).join('');
+
+  const idsTodas = obras.map(o => o.obra_id).join(',');
+  const cmdTodas = totalAtivas > 0 ? `rodar pipeline orion v3 completo nas ${totalAtivas} obras: ${idsTodas}` : '';
+  const recorteTodas = `<button class="disp-recorte todas" ${totalAtivas === 0 ? 'disabled' : `data-cmd="${esc(cmdTodas)}"`} title="análise completa · gasta mais tokens">
+    <span class="disp-recorte-ico">📋</span>
+    <span class="disp-recorte-corpo">
+      <span class="disp-recorte-nome">Análise completa · todas as obras</span>
+      <span class="disp-recorte-desc">⚠ gasta mais tokens · use com critério</span>
+    </span>
+    <span class="disp-recorte-qtd">${totalAtivas}</span>
   </button>`;
 
-  // Recarregar
-  html += `<button class="disp-btn" data-cmd="recarregar discordancias-v3" style="margin-left:auto">
-    <span>↻ recarregar tela</span>
-  </button>`;
+  html += `<div class="disp-recortes">
+    ${recortesHtml}
+    ${recorteTodas}
+  </div>`;
+
+  // ─── LINHA 3 · rodapé com recarregar ───
+  html += `<div class="disp-rodape">
+    <button class="disp-btn" data-cmd="recarregar discordancias-v3">
+      <span>↻ recarregar tela</span>
+    </button>
+  </div>`;
 
   cont.innerHTML = html;
 }
@@ -2524,7 +2599,7 @@ document.addEventListener('keydown', (e) => {
 
 // Disparador clipboard · delegação porque botões são dinâmicos
 document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
-  const b = ev.target.closest('.disp-btn');
+  const b = ev.target.closest('.disp-btn, .disp-recorte');
   if (!b || b.disabled) return;
   const cmd = b.dataset.cmd;
   if (!cmd) return;

@@ -6568,8 +6568,9 @@ async function loadAchadosBanner() {
 }
 
 // Disparar após dashboard carregar (não interfere com initDashboard)
-if (document.readyState === 'complete') { loadKiraInsights(); loadCaixaPreta(); loadAchadosBanner(); }
-else { window.addEventListener('load', function(){ loadKiraInsights(); loadCaixaPreta(); loadAchadosBanner(); }); }
+// loadKiraInsights/loadCaixaPreta/loadAchadosBanner removidos junto com a seção
+// Problemas em 2026-05-01. Cruz-* (silenciosas, ocorrencias, obras-feridas) deletados
+// junto com Atena em 2026-05-01.
 </script>
 
 <div class="atena-portal" id="atenaPortal">

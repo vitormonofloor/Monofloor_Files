@@ -19,7 +19,7 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 .brand-tagline{font-size:9px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:#a89e92}
 
 /* ═══ CARDS — NO BACKGROUND ═══ */
-.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-width:960px;width:100%;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
+.cards{display:grid;grid-template-columns:1fr;gap:12px;max-width:420px;width:100%;opacity:0;animation:fadeUp 0.8s ease 0.6s forwards}
 
 .card{padding:24px 20px;cursor:pointer;transition:all 0.4s cubic-bezier(0.22,0.61,0.36,1);position:relative;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;text-align:center;background:transparent;border:1px solid rgba(196,181,160,0.25);border-radius:16px}
 .card:hover{transform:translateY(-3px);border-color:rgba(184,151,106,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.04)}
@@ -196,29 +196,6 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
 
   <div class="cards">
 
-    <!-- ═══ INDICADORES ═══ -->
-    <a href="analise/dashboard.html#operacional" class="card" onclick="event.preventDefault();goTo('indicadores','analise/dashboard.html#operacional')">
-      <div class="anim-box">
-        <div class="pulse-monitor">
-          <svg viewBox="0 0 600 60" style="width:200%;height:100%;overflow:visible" class="pulse-scroll">
-            <path class="monitor-glow" d="M0,35 L60,35 L76,35 L84,32 L92,35 L112,35 L124,38 L134,45 L144,8 L156,48 L168,28 L180,35 L216,35 L228,30 L240,35 L300,35 L360,35 L376,35 L384,32 L392,35 L412,35 L424,38 L434,45 L444,8 L456,48 L468,28 L480,35 L516,35 L528,30 L540,35 L600,35"/>
-            <path class="monitor-line" d="M0,35 L60,35 L76,35 L84,32 L92,35 L112,35 L124,38 L134,45 L144,8 L156,48 L168,28 L180,35 L216,35 L228,30 L240,35 L300,35 L360,35 L376,35 L384,32 L392,35 L412,35 L424,38 L434,45 L444,8 L456,48 L468,28 L480,35 L516,35 L528,30 L540,35 L600,35"/>
-          </svg>
-          <svg class="scan-dot" viewBox="0 0 300 60" style="width:100%;height:100%;position:absolute;top:0;left:0">
-            <circle cx="295" cy="35" r="3" fill="#b8976a"/>
-          </svg>
-        </div>
-      </div>
-      <div class="card-name">indicadores</div>
-      <div class="card-line"></div>
-      <div class="card-desc">Pulso operacional em tempo real — atualizado 4× ao dia via análise automática.</div>
-      <div class="card-pills">
-        <span class="pill">KIRA</span>
-        <span class="pill">Argos · 4×/dia</span>
-      </div>
-      <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-    </a>
-
     <!-- ═══ DASHBOARD ═══ -->
     <a href="analise/dashboard.html" class="card" onclick="event.preventDefault();goTo('dashboard','analise/dashboard.html')">
       <div class="anim-box">
@@ -248,34 +225,6 @@ body{background:#f0ebe3;font-family:'Plus Jakarta Sans',sans-serif;display:flex;
       <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </a>
 
-    <!-- ═══ ATENA ═══ -->
-    <a href="analise/atena.html" class="card" onclick="event.preventDefault();goTo('atena','analise/atena.html')">
-      <div class="anim-box">
-        <svg viewBox="0 0 300 60" style="width:100%;height:100%">
-          <g transform="translate(150,30)">
-            <circle r="24" fill="none" stroke="#b8976a" stroke-width="1.5" opacity="0">
-              <animate attributeName="opacity" from="0" to="0.4" dur="0.6s" begin="2.6s" fill="freeze"/>
-            </circle>
-            <circle r="18" fill="none" stroke="#b8976a" stroke-width="0.8" stroke-dasharray="5 3" opacity="0">
-              <animate attributeName="opacity" from="0" to="0.3" dur="0.5s" begin="2.9s" fill="freeze"/>
-              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" begin="2.9s" repeatCount="indefinite"/>
-            </circle>
-            <text y="5" text-anchor="middle" font-family="serif" font-size="20" fill="#b8976a" opacity="0">
-              <animate attributeName="opacity" from="0" to="0.5" dur="0.5s" begin="3.2s" fill="freeze"/>
-              Ω
-            </text>
-          </g>
-        </svg>
-      </div>
-      <div class="card-name">atena</div>
-      <div class="card-line"></div>
-      <div class="card-desc">Briefing executivo + narrativa por IA — o que mudou e os insights da semana.</div>
-      <div class="card-pills">
-        <span class="pill">ATENA · 5 olhos</span>
-        <span class="pill">Hermes · 8h</span>
-      </div>
-      <div class="card-go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-    </a>
 
   </div>
 </div>
