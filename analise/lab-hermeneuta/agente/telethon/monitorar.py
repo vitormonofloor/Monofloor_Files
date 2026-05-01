@@ -19,7 +19,7 @@ import asyncio
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 try:
@@ -81,8 +81,8 @@ def serialize_message(msg, sender_cache: dict) -> dict:
     }
 
 
-async def coletar_grupo(client: TelegramClient, grupo_id: int, limit: int, max_retries: int = 2) -> dict:
-    """Pega últimas `limit` mensagens do grupo · ordem cronológica (antiga→nova). Retry em erro de rede."""
+async def coletar_grupo(client: TelegramClient, grupo_id: int, limit: int, cutoff_date=None, max_retries: int = 2) -> dict:
+    """Pega mensagens do grupo até `cutoff_date` (cronológico antiga→nova) · cap em `limit` mensagens · retry em erro de rede."""
     entity = None
     last_err = None
     for tentativa in range(max_retries + 1):
@@ -99,7 +99,10 @@ async def coletar_grupo(client: TelegramClient, grupo_id: int, limit: int, max_r
     messages = []
     sender_cache = {}
 
+    # iter_messages itera da mais NOVA pra mais antiga · break quando passar do cutoff
     async for msg in client.iter_messages(entity, limit=limit):
+        if cutoff_date and msg.date and msg.date < cutoff_date:
+            break
         # Resolve autor uma vez por sender_id
         sid = getattr(msg, "sender_id", None) or 0
         if sid and sid not in sender_cache:
@@ -149,14 +152,15 @@ async def coletar_grupo(client: TelegramClient, grupo_id: int, limit: int, max_r
     }
 
 
-async def main(limit: int):
+async def main(limit: int, dias: int):
     if not PILOTO.exists():
         print(f"ERRO: {PILOTO} não encontrado · rode selecionar_piloto.py primeiro")
         sys.exit(1)
 
     piloto_data = json.loads(PILOTO.read_text(encoding="utf-8"))
     piloto = piloto_data["piloto"]
-    print(f"Piloto: {len(piloto)} obras · puxando últimas {limit} msgs por grupo\n")
+    cutoff_date = datetime.now(timezone.utc) - timedelta(days=dias)
+    print(f"Piloto: {len(piloto)} obras · janela últimos {dias}d (cap {limit} msgs) · cutoff {cutoff_date.strftime('%Y-%m-%d %H:%M UTC')}\n")
 
     print(f"Conectando como {PHONE}...")
     client = TelegramClient(str(SESSION), int(API_ID), API_HASH)
@@ -171,6 +175,8 @@ async def main(limit: int):
     out = {
         "gerado_em": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "limit_msgs_por_grupo": limit,
+        "janela_dias": dias,
+        "cutoff_date": cutoff_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "obras": [],
     }
 
@@ -182,7 +188,7 @@ async def main(limit: int):
             print(f"  [{i}/{len(piloto)}] {cliente[:40]:<40}  ", end="", flush=True)
 
             try:
-                coletado = await coletar_grupo(client, grupo_id, limit)
+                coletado = await coletar_grupo(client, grupo_id, limit, cutoff_date=cutoff_date)
                 stats = coletado["stats"]
                 print(f"{stats['total']:3d} msgs · {stats['autores_distintos']} autores · {stats['com_midia']} c/mídia")
             except Exception as e:
@@ -224,8 +230,10 @@ async def main(limit: int):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--limit", type=int, default=50,
-                        help="Quantas msgs por grupo (default: 50)")
+    parser = argparse.ArgumentParser(description="Coleta mensagens dos grupos Telegram pareados")
+    parser.add_argument("--dias", type=int, default=15,
+                        help="Janela de N dias (default: 15)")
+    parser.add_argument("--limit", type=int, default=80,
+                        help="Cap máximo de msgs por grupo · proteção contra grupos super ativos (default: 80)")
     args = parser.parse_args()
-    asyncio.run(main(args.limit))
+    asyncio.run(main(args.limit, args.dias))
