@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8
+from _util import write_discord, setup_utf8
 
 setup_utf8()
 
@@ -158,7 +158,7 @@ def main():
         data["resumo_executivo"] = resumo + nota
 
     # Salva
-    write_json_atomic(JSON_PATH, data)
+    write_discord(JSON_PATH, data)
     print(f"[OK] {JSON_PATH} atualizado")
     print()
     print("Realocações:")

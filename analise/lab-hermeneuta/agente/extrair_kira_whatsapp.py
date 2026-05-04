@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8
+from _util import write_discord, setup_utf8, marcar_step_falho
 
 setup_utf8()
 
@@ -38,6 +38,9 @@ def parse_iso(s: str):
         return None
 
 
+_SCHEMA_DIVERGENTES = []  # acumulador pro relatório final
+
+
 def extrair_obra(detail_path: Path) -> dict:
     """Extrai whatsappSummary + tagKira + situacaoAtual do detail."""
     if not detail_path.exists():
@@ -48,8 +51,29 @@ def extrair_obra(detail_path: Path) -> dict:
     except Exception as e:
         return {"erro": f"falha ao parsear: {e}"}
 
-    pm = d.get("pendenciaManual") or {}
-    ws = pm.get("whatsappSummary") or {}
+    # Schema check explícito · era fonte de bug silencioso (Vitor 2026-05-04)
+    pm = d.get("pendenciaManual")
+    if pm is not None and not isinstance(pm, dict):
+        _SCHEMA_DIVERGENTES.append({
+            "obra_id": detail_path.stem,
+            "campo": "pendenciaManual",
+            "tipo_real": type(pm).__name__,
+            "tipo_esperado": "dict|null",
+        })
+        pm = {}
+    elif not isinstance(pm, dict):
+        pm = {}
+    ws = pm.get("whatsappSummary")
+    if ws is not None and not isinstance(ws, dict):
+        _SCHEMA_DIVERGENTES.append({
+            "obra_id": detail_path.stem,
+            "campo": "pendenciaManual.whatsappSummary",
+            "tipo_real": type(ws).__name__,
+            "tipo_esperado": "dict|null",
+        })
+        ws = {}
+    elif not isinstance(ws, dict):
+        ws = {}
 
     gerado = parse_iso(ws.get("geradoEm"))
     dias_desde_resumo = (HOJE - gerado).days if gerado else None
@@ -113,8 +137,20 @@ def main():
         dr_str = f"{dr}d" if dr is not None else "—"
         print(f"{cliente:<42} {tag:<35} {clima:<10} {dt_str:<14} {dr_str}")
 
-    write_json_atomic(DISCORD_PATH, discord)
+    write_discord(DISCORD_PATH, discord)
     print(f"\n[OK] {DISCORD_PATH}")
+
+    # Reporta schema divergente · vira flag visível na sentinela
+    if _SCHEMA_DIVERGENTES:
+        print(f"\n[WARN] {len(_SCHEMA_DIVERGENTES)} obras com schema KIRA divergente:")
+        for d in _SCHEMA_DIVERGENTES[:5]:
+            print(f"  · {d['obra_id'][:8]} · {d['campo']} é {d['tipo_real']} (esperado {d['tipo_esperado']})")
+        if len(_SCHEMA_DIVERGENTES) > 5:
+            print(f"  · (+{len(_SCHEMA_DIVERGENTES)-5} mais)")
+        marcar_step_falho(
+            "extrair_kira_whatsapp/schema_divergente",
+            f"{len(_SCHEMA_DIVERGENTES)} obras com tipos inesperados em pendenciaManual ou whatsappSummary",
+        )
 
 
 if __name__ == "__main__":

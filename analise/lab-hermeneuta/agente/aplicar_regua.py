@@ -24,7 +24,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic_validado, setup_utf8, validar_discord
+from _util import write_discord, setup_utf8
 
 setup_utf8()
 
@@ -271,21 +271,48 @@ def main():
     print(f"{'Cliente':<42} {'Status':<22} {'Início (X)':<12} {'Dias':<6} Bucket")
     print("-" * 110)
 
+    # Carrega painel-snapshot pra obras SEM dossiê (fallback de dataExecucaoPrevista)
+    painel_snapshot = []
+    painel_path = ROOT / "dados" / "painel-snapshot.json"
+    if painel_path.exists():
+        try:
+            painel_snapshot = json.loads(painel_path.read_text(encoding="utf-8-sig"))
+        except Exception:
+            painel_snapshot = []
+    painel_by_id = {o.get("id"): o for o in (painel_snapshot or []) if isinstance(o, dict)}
+
     bucket_count = {}
     for obra in discord.get("obras", []):
         oid = obra.get("obra_id")
         dossie_path = DOSSIES_DIR / f"{oid}.json"
-        if not dossie_path.exists():
-            obra["regua"] = {"erro": "dossiê não encontrado"}
-            continue
+        dossie_existe = dossie_path.exists()
 
-        dossie = json.loads(dossie_path.read_text(encoding="utf-8"))
+        if dossie_existe:
+            dossie = json.loads(dossie_path.read_text(encoding="utf-8"))
+        else:
+            # Sem dossiê (obra adicionada via expansão · sem análise IA ainda)
+            # Usa fallback do painel-snapshot pra ter bucket + dias_ate_inicio
+            dossie = {}
+
         status = (obra.get("painel") or {}).get("status_atual") or "?"
         flags = obra.get("flags") or []
         snapshot_obra = snapshot_by_id.get(oid)
 
-        info_x = extrair_data_inicio(dossie, snapshot_obra)
-        data_x = info_x["data_x"]
+        if dossie_existe:
+            info_x = extrair_data_inicio(dossie, snapshot_obra)
+            data_x = info_x["data_x"]
+        else:
+            # Fallback: pega dataExecucaoPrevista do painel-snapshot
+            p = painel_by_id.get(oid, {})
+            data_x = p.get("dataExecucaoPrevista")
+            info_x = {
+                "data_x": data_x,
+                "fonte": "painel-snapshot (fallback · sem dossiê)",
+                "data_anterior": None,
+                "alterada": False,
+                "historico": [],
+            }
+
         x = parse_iso(data_x) if data_x else None
         dias_ate_x = (x - HOJE).days if x else None
 
@@ -313,7 +340,7 @@ def main():
 
     # bucket_count usado só pra log local · não persiste no JSON
 
-    write_json_atomic_validado(DISCORD_PATH, discord, validator=validar_discord)
+    write_discord(DISCORD_PATH, discord)
     print()
     print("Distribuição por bucket:")
     for b, n in sorted(bucket_count.items(), key=lambda x: -x[1]):

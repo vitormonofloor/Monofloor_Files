@@ -1,21 +1,32 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última sessão:** 2026-04-30 · noite
+> **Última sessão:** 2026-05-01 · noite (4h+ · Lab Orion fechado como produto)
 > Se você é um agente IA chegando agora · LEIA este arquivo primeiro. Em ~30s você terá contexto suficiente pra trabalhar sem confundir nada.
 
----
+## ⚠ ANTES DE TUDO — ler na ordem
+
+1. `personality_qualidade_monofloor.md` (na pasta de memória) — DNA da dupla com 19 princípios + aprendizados consolidados em 2026-05-01 noite
+2. `project_sessao_2026_05_01_orion_noite.md` — narrativa completa da sessão noturna
+3. `project_orion_cores_oficiais.md` — **3 tarefas pendentes pra próxima sessão** (cores oficiais · cor na barra · fundo rotativo)
+4. Este arquivo (estado técnico)
 
 ## O que é este lab em 1 frase
 
-Sandbox que cruza grupos Telegram (via Telethon · userbot do Vitor) com PAINEL DE OBRAS oficial pra detectar divergências invisíveis ao KIRA. **10 obras-piloto** rodando · varredura automática **12h e 18h** via Task Scheduler.
+Sandbox que cruza grupos Telegram (via Telethon · userbot do Vitor) com PAINEL DE OBRAS oficial pra detectar divergências invisíveis. **82 obras pareadas** (modo `--todas`) das 227 ativas · varredura automática **12h e 18h** via Task Scheduler · janela 15 dias / cap 80 msgs.
 
-## Decisão de naming pendente
+## Naming
 
-**Nome novo decidido: ORION** (substitui "Hermeneuta"). Ainda **NÃO aplicado no código** (intencional). Aplicar quando Vitor presente.
+**ORION** (rebranding HERMENEUTA → ORION APLICADO em 2026-05-01). Caçador de visão aguçada · 3 estrelas do cinturão = painel × telegram × KIRA · termina em ON igual STELION/TERON.
+
+## URL ativa
+
+`https://orion-pub.vitor-monofloor.workers.dev` · senha trocada pelo Vitor (não está mais `monofloor2026`).
+
+**Custom domain `lab.monofloor.cloud` adiado** — `monofloor.cloud` não está na conta CF · workers.dev funciona pro piloto.
 
 ## Audiência
 
-Hoje: Vitor + Rodrigo (diretoria). Site privado em `lab.monofloor.cloud` (a 1h de cliques de subir).
+Hoje: Vitor + (em breve) Rodrigo + diretoria. Acesso pelo Hub Monofloor via card-orion na home (constelação cinematográfica). **ATENA foi extinto** (era cópia pobre do Orion).
 
 ---
 

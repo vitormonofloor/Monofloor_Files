@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, read_json_safe, setup_utf8
+from _util import write_discord, read_json_safe, setup_utf8
 
 setup_utf8()
 
@@ -215,7 +215,7 @@ def main():
         }
         total_eventos += len(eventos)
 
-    write_json_atomic(DISCORD_PATH, discord)
+    write_discord(DISCORD_PATH, discord)
     print(f"[OK] {DISCORD_PATH}")
     print(f"     {total_eventos} eventos injetados em {len(discord.get('obras', []))} obras")
     print(f"     janela: {LIMITE.strftime('%Y-%m-%d')} → {HOJE.strftime('%Y-%m-%d')} ({JANELA_DIAS}d)")

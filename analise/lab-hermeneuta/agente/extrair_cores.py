@@ -26,7 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8
+from _util import write_discord, setup_utf8
 
 setup_utf8()
 
@@ -36,14 +36,23 @@ SNAPSHOT_PATH = ROOT / "agente" / "telethon" / "telegram-snapshot.json"
 
 HOJE = datetime.now(timezone.utc)
 
-# Padrão "COR: ALGO" até quebra de linha ou pontuação forte
-RE_COR = re.compile(r"COR\s*:\s*([^\n\r]{2,80})", re.IGNORECASE | re.MULTILINE)
+# Padrão "COR: ALGO" SÓ na mesma linha · evita capturar linha de baixo
+# (briefings tem "COR: \n EXPEDIENTE: ..." · \s* engolia o newline e capturava errado)
+RE_COR = re.compile(r"COR[ \t]*:[ \t]*([^\n\r]{2,80})", re.IGNORECASE | re.MULTILINE)
 
 # Termos que indicam pendência (não são cores reais)
 RE_PENDENCIA = re.compile(r"\ba\s*definir\b|\bdefinir\b|\bpersonalizadas?\b\s*\(a\s*definir\)|^\s*-\s*$", re.IGNORECASE)
 
 # Linhas de produto pra remover do nome da cor
 LINHAS = ["stelion", "lilit", "stelion - lilit", "lilit - stelion"]
+
+# Palavras-chave que indicam que NÃO é cor (capturas falsas de briefings/templates)
+KEYWORDS_NAO_COR = {
+    "expediente", "horário", "horario", "aplicador", "supervisão", "supervisao",
+    "início", "inicio", "endereço", "endereco", "cliente", "cep", "cidade",
+    "responsável", "responsavel", "consultor", "atendimento", "obra nova",
+    "retorno", "reparo",
+}
 
 
 def parse_iso(s: str):
@@ -71,6 +80,13 @@ def normalizar_cor(raw: str) -> tuple[str | None, bool]:
     # Se sobrou só "a definir" ou similar, não é cor
     if not s or RE_PENDENCIA.fullmatch(s):
         return None, eh_pend
+
+    # Filtra capturas falsas (briefings com "COR:" vazio + outras keys depois)
+    # Ex: "EXPEDIENTE: 8h-17h" não é cor
+    s_lower = s.lower()
+    for kw in KEYWORDS_NAO_COR:
+        if kw in s_lower:
+            return None, False
 
     # Pode haver múltiplas cores separadas por " e " ou ","
     # Mas pra MVP pegamos a string completa como uma "cor composta" se tiver várias
@@ -198,7 +214,7 @@ def main():
         "obras_pendentes_decisao": pendentes,
     }
 
-    write_json_atomic(DISCORD_PATH, discord)
+    write_discord(DISCORD_PATH, discord)
 
     print()
     print("=== Top 10 cores · obras ATIVAS (cor atual definida) ===")

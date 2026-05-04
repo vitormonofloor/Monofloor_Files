@@ -33,6 +33,31 @@
     .help-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e0d8cc;color:#8a7e72;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
     .help-btn:hover{background:#f8f3ea;border-color:#b8a080;color:#3a3530;transform:scale(1.08)}
 
+    /* Badge de freshness dos dados · cor varia por idade */
+    .dados-age{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid;line-height:1.4;margin-left:8px;transition:all .25s}
+    .dados-age::before{content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .dados-age.fresh{color:#3d8a5a;border-color:#cce0d2;background:#f0f7f2}
+    .dados-age.fresh::before{background:#3d8a5a}
+    .dados-age.morno{color:#a86b30;border-color:#e6d4a8;background:#fdf5e3}
+    .dados-age.morno::before{background:#d4943a;animation:agePulse 2.5s ease-in-out infinite}
+    .dados-age.velho{color:#9a3a3a;border-color:#e8b8b8;background:#fbeaea}
+    .dados-age.velho::before{background:#c45a5a;animation:agePulse 1.4s ease-in-out infinite}
+    @keyframes agePulse{0%,100%{opacity:.55}50%{opacity:1}}
+
+    /* Botão refresh · atualizar dados do painel */
+    .refresh-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e0d8cc;color:#8a7e72;font-size:14px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+    .refresh-btn:hover{background:#f8f3ea;border-color:#b8a080;color:#3a3530;transform:rotate(90deg)}
+    .refresh-btn.copiado{background:#3d8a5a;border-color:#3d8a5a;color:#fff}
+    .refresh-btn.copiado:hover{transform:none}
+
+    /* Toast do refresh · feedback de copiado */
+    .refresh-toast{position:fixed;top:20px;right:20px;background:#fdfaf4;border:1px solid #d8c8a8;border-left:4px solid #3d8a5a;border-radius:8px;padding:14px 18px;box-shadow:0 8px 24px rgba(42,37,32,.18);z-index:200;max-width:380px;display:none;font-family:'Plus Jakarta Sans',sans-serif;animation:toastSlide .3s ease}
+    .refresh-toast.aberto{display:block}
+    @keyframes toastSlide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+    .refresh-toast-tit{font-size:12px;font-weight:600;color:#3d8a5a;margin-bottom:4px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase}
+    .refresh-toast-txt{font-size:12px;color:#3a3530;line-height:1.45}
+    .refresh-toast-txt code{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:#f0ebe3;padding:1px 5px;border-radius:3px;color:#5a5048}
+
     /* HERO ORION · constelação cinematográfica (full-width, fora do .wrap) */
     .hero-orion{position:relative;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:#f0ebe3;border-bottom:1px solid #d8d0c4}
     .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
@@ -581,8 +606,11 @@
     @media(max-width:780px){.lp-2col{grid-template-columns:1fr}}
 
     /* Top cores donut/list */
-    .lp-cor-row{display:grid;grid-template-columns:24px 1fr 60px 36px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed #f0ebe3}
+    .lp-cor-row{display:grid;grid-template-columns:24px 1fr 60px 50px;gap:10px;align-items:center;padding:8px 10px;border-bottom:1px dashed #f0ebe3;border-left:3px solid transparent;border-radius:5px;cursor:pointer;transition:all .15s;font-family:inherit;background:none;border-top:none;border-right:none;width:100%;text-align:left;margin:0 -10px}
+    .lp-cor-row:hover{border-left-color:#b8a080;background:#fcfaf4;transform:translateX(2px);box-shadow:2px 2px 8px rgba(42,37,32,.06)}
     .lp-cor-row:last-child{border-bottom:none}
+    .lp-cor-metragem{font-family:'JetBrains Mono',monospace;font-size:9px;color:#a89e92;letter-spacing:.04em;text-align:right;line-height:1.2}
+    .lp-cor-metragem strong{display:block;color:#3a3530;font-size:10px;font-weight:700}
     .lp-cor-swatch{width:18px;height:18px;border-radius:50%;border:2px solid rgba(0,0,0,.06)}
     .lp-cor-nome{font-size:14px;color:#2a2520;font-weight:500}
     .lp-cor-bar{background:#f0ebe3;border-radius:99px;height:6px;overflow:hidden}
@@ -662,8 +690,8 @@
     .lp-drawer-cta{width:100%;background:#b8a080;color:#fff;border:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:11px;border-radius:6px;cursor:pointer;transition:background .15s}
     .lp-drawer-cta:hover{background:#a89070}
     .lp-drawer-dica{font-family:'JetBrains Mono',monospace;font-size:8px;color:#a89e92;letter-spacing:.06em;text-align:center;line-height:1.4;font-style:italic}
-    /* Quando drawer aberto, modal recua um pouco · sensação de profundidade */
-    .lampada-overlay.com-drawer .lampada-modal{transform:translateX(-180px) scale(.98);opacity:.55;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none}
+    /* Quando drawer aberto, modal só esmaece (sem mover · evita perder posição de scroll) */
+    .lampada-overlay.com-drawer .lampada-modal{opacity:.4;transition:opacity .35s cubic-bezier(.4,0,.2,1);pointer-events:none}
 
     @media print{
       .lampada-overlay{position:static;background:#fff;padding:0}
@@ -716,7 +744,9 @@
     <div class="top-right">
       <div class="top-stamp">
         <span class="destaque" id="header-stamp">—</span> · varredura automática 12h e 18h
+        <span class="dados-age fresh" id="dados-age" title="Idade dos dados · verde &lt;30min · amarelo 30-120min · vermelho &gt;120min">— min</span>
       </div>
+      <button class="refresh-btn" id="refresh-btn" title="Atualizar dados do painel · refetch + pipeline" aria-label="Atualizar dados">↻</button>
       <button class="help-btn" id="help-btn" title="Como funciona o Lab Orion" aria-label="Como funciona">?</button>
     </div>
   </div>
@@ -906,27 +936,27 @@
     💡
   </button>
 
-  <!-- Overlay -->
+  <!-- Overlay (drawer movido pra fora · backdrop-filter cria containing block que quebra position:fixed) -->
   <div class="lampada-overlay" id="lampada-overlay">
     <button class="lampada-fechar" id="lampada-fechar" title="Fechar (ESC)">×</button>
     <div class="lampada-modal" id="lampada-modal"></div>
-
-    <!-- Drawer · mini resumo dos KPIs -->
-    <aside class="lp-drawer" id="lp-drawer" aria-hidden="true">
-      <div class="lp-drawer-head">
-        <div>
-          <div class="lp-drawer-tit" id="lp-drawer-tit">—</div>
-          <div class="lp-drawer-sub" id="lp-drawer-sub">—</div>
-        </div>
-        <button class="lp-drawer-x" id="lp-drawer-x" aria-label="Fechar mini resumo">×</button>
-      </div>
-      <div class="lp-drawer-body" id="lp-drawer-body"></div>
-      <div class="lp-drawer-foot">
-        <button class="lp-drawer-cta" id="lp-drawer-cta">ver na lista completa →</button>
-        <div class="lp-drawer-dica">clique numa obra pra abrir direto</div>
-      </div>
-    </aside>
   </div>
+
+  <!-- Drawer · IRMÃO do overlay (não filho) · garante position:fixed real no viewport -->
+  <aside class="lp-drawer" id="lp-drawer" aria-hidden="true">
+    <div class="lp-drawer-head">
+      <div>
+        <div class="lp-drawer-tit" id="lp-drawer-tit">—</div>
+        <div class="lp-drawer-sub" id="lp-drawer-sub">—</div>
+      </div>
+      <button class="lp-drawer-x" id="lp-drawer-x" aria-label="Fechar mini resumo">×</button>
+    </div>
+    <div class="lp-drawer-body" id="lp-drawer-body"></div>
+    <div class="lp-drawer-foot">
+      <button class="lp-drawer-cta" id="lp-drawer-cta">ver na lista completa →</button>
+      <div class="lp-drawer-dica">clique numa obra pra abrir direto</div>
+    </div>
+  </aside>
 
   <footer>
     Lab Orion · piloto com 10 de 227 obras ativas · varredura automática 12h e 18h<br>
@@ -1032,6 +1062,32 @@ function fmtData(s){
   return fmtBR(str);
 }
 
+// Badge de idade dos dados · cores: verde <30min · âmbar 30-120min · vermelho >120min
+function atualizarBadgeAge(){
+  const el = document.getElementById('dados-age');
+  if (!el || !DADOS) return;
+  const ts = DADOS.ultima_varredura || DADOS.gerado_em;
+  if (!ts){
+    el.className = 'dados-age velho';
+    el.textContent = 'sem timestamp';
+    return;
+  }
+  let dt;
+  try { dt = new Date(ts); } catch(_){ return; }
+  if (isNaN(dt.getTime())) return;
+  const diffMin = Math.floor((Date.now() - dt.getTime()) / 60000);
+  let cls, texto;
+  if (diffMin < 0){ cls = 'fresh'; texto = 'agora'; }
+  else if (diffMin < 60) { cls = diffMin < 30 ? 'fresh' : 'morno'; texto = `${diffMin} min atrás`; }
+  else if (diffMin < 120) { cls = 'morno'; texto = `${Math.floor(diffMin/60)}h${diffMin%60 ? ' '+(diffMin%60)+'m' : ''} atrás`; }
+  else if (diffMin < 1440) { cls = 'velho'; texto = `${Math.floor(diffMin/60)}h atrás`; }
+  else { cls = 'velho'; texto = `${Math.floor(diffMin/1440)}d atrás`; }
+  el.className = 'dados-age ' + cls;
+  el.textContent = texto;
+}
+// Atualiza o badge a cada 60s automaticamente (sem refetch · só recalcula idade)
+setInterval(() => atualizarBadgeAge(), 60000);
+
 let DADOS = null;
 let HISTORICO = null;  // { kpis: [...] }
 let STATUS = null;  // sentinela: { geral, checks: [...] }
@@ -1087,6 +1143,9 @@ async function load(){
   document.getElementById('footer-snapshot').textContent = fmtBR(DADOS.ultima_varredura || DADOS.gerado_em);
   const stampEl = document.getElementById('header-stamp');
   if (stampEl) stampEl.textContent = fmtData(DADOS.ultima_varredura || DADOS.gerado_em);
+
+  // Badge de idade dos dados · visível pra todos saberem se dado é fresh
+  atualizarBadgeAge();
 
   const obrasStale = obras.filter(o => o.refresh_status && o.refresh_status.stale);
   renderDisparador(obrasStale);
@@ -1806,8 +1865,11 @@ function renderDisparador(obrasStale){
     const filtradas = obras.filter(r.fn);
     const qtd = filtradas.length;
     const ids = filtradas.map(o => o.obra_id).join(',');
-    const cmd = qtd > 0 ? `rodar orion v3 no recorte "${r.nome}" · ${qtd} obras: ${ids}` : '';
-    return `<button class="disp-recorte" ${qtd === 0 ? 'disabled' : `data-cmd="${esc(cmd)}"`} title="${esc(r.desc)}${qtd>0?` · ${qtd} obra${qtd>1?'s':''}`:''}">
+    // Click dispara análise IA via Worker (GitHub Models · gratuito) · roda em ~2min · zero token
+    const dataAttrs = qtd > 0
+      ? `data-recorte-action="ai" data-obra-ids="${esc(ids)}" data-recorte-nome="${esc(r.nome)}"`
+      : '';
+    return `<button class="disp-recorte" ${qtd === 0 ? 'disabled' : dataAttrs} title="${esc(r.desc)}${qtd>0?` · clique pra rodar análise IA nessas ${qtd} obra${qtd>1?'s':''} (custo zero · GitHub Models)`:''}">
       <span class="disp-recorte-ico">${r.ico}</span>
       <span class="disp-recorte-corpo">
         <span class="disp-recorte-nome">${esc(r.nome)}</span>
@@ -2277,17 +2339,43 @@ function renderLampada(){
       </div>`;
     }).join('');
 
-  // Top cores
+  // Top cores · clicável (abre drawer com obras + metragem total)
   const topCores = (DADOS.cores_agregado && DADOS.cores_agregado.top_atual) || [];
   const maxCor = topCores.length > 0 ? topCores[0][1] : 1;
+  // Helper · aceita number OU string ("489.89") como metragem
+  const parseM = (v) => {
+    if (typeof v === 'number' && !isNaN(v)) return v;
+    if (typeof v === 'string'){
+      const n = parseFloat(v.replace(',', '.'));
+      return isNaN(n) ? 0 : n;
+    }
+    return 0;
+  };
+  // Pré-calcula metragem total por cor a partir de DADOS.obras
+  // Itera TODAS as cores em atual (não só [0]) · obra com 2 cores conta pra ambas
+  const metragemPorCor = {};
+  const obrasPorCor = {};  // count de obras por cor
+  for (const o of (DADOS.obras || [])){
+    const cores = ((o.cores || {}).atual || []);
+    if (!cores.length) continue;
+    const m = parseM(o.painel && o.painel.metragem);
+    for (const cor of cores){
+      metragemPorCor[cor] = (metragemPorCor[cor] || 0) + m;
+      obrasPorCor[cor] = (obrasPorCor[cor] || 0) + 1;
+    }
+  }
   const coresHtml = topCores.slice(0, 8).map(([nome, qtd]) => {
     const pct = (qtd / maxCor) * 100;
-    return `<div class="lp-cor-row">
-      <div class="lp-cor-swatch" style="background:${corHash(nome)}"></div>
-      <div class="lp-cor-nome">${esc(nome)}</div>
-      <div class="lp-cor-bar"><div class="fill" style="width:${pct}%"></div></div>
-      <div class="lp-cor-qtd">${qtd}</div>
-    </div>`;
+    const m = metragemPorCor[nome];
+    const metragemStr = (typeof m === 'number' && m > 0)
+      ? `<strong>${Math.round(m)} m²</strong>${qtd>1?'<span>total</span>':''}`
+      : `—`;
+    return `<button class="lp-cor-row" data-cor="${esc(nome)}" title="Clique pra ver as ${qtd} obra${qtd>1?'s':''} com cor ${esc(nome)}">
+      <span class="lp-cor-swatch" style="background:${corHash(nome)}"></span>
+      <span class="lp-cor-nome">${esc(nome)}</span>
+      <span class="lp-cor-bar"><span class="fill" style="width:${pct}%;display:block;height:100%;background:#b8a080;border-radius:99px"></span></span>
+      <span class="lp-cor-metragem">${metragemStr}</span>
+    </button>`;
   }).join('');
 
   // Top riscos · combina sinais críticos · cada componente tem peso explícito
@@ -2493,6 +2581,63 @@ function fecharDrawer(){
   lampOverlay.classList.remove('com-drawer');
 }
 
+// Helper aceita number OU string como metragem
+function _parseM(v){
+  if (typeof v === 'number' && !isNaN(v)) return v;
+  if (typeof v === 'string'){
+    const n = parseFloat(v.replace(',', '.'));
+    return isNaN(n) ? 0 : n;
+  }
+  return 0;
+}
+
+// Abre drawer filtrando por COR · usado no click do top cores da lâmpada
+function abrirDrawerCor(corNome){
+  if (!corNome || !DADOS) return;
+  const obras = (DADOS.obras || []).filter(obraDeMim).filter(o => {
+    const cores = ((o.cores || {}).atual || []);
+    return cores.includes(corNome);
+  });
+  // Calcula metragem total · obras com 2 cores são contadas inteiras
+  const totalM = obras.reduce((s, o) => s + _parseM(o.painel && o.painel.metragem), 0);
+  document.getElementById('lp-drawer-tit').textContent = `Cor · ${corNome}`;
+  const subParts = [obras.length === 1 ? '1 obra' : `${obras.length} obras`];
+  if (totalM > 0) subParts.push(`${Math.round(totalM)} m² total`);
+  document.getElementById('lp-drawer-sub').textContent = subParts.join(' · ');
+  const body = document.getElementById('lp-drawer-body');
+  if (obras.length === 0){
+    body.innerHTML = '<div class="lp-drawer-vazio">Nenhuma obra encontrada com essa cor.</div>';
+  } else {
+    body.innerHTML = obras.map(o => renderDrawerItemCor(o)).join('');
+  }
+  drawerEl.dataset.filtro = 'cor:' + corNome;
+  drawerEl.classList.add('aberto');
+  drawerEl.setAttribute('aria-hidden', 'false');
+  lampOverlay.classList.add('com-drawer');
+  body.scrollTop = 0;
+}
+
+// Item especial pro drawer de cor · destaca metragem
+function renderDrawerItemCor(o){
+  const cli = o.cliente || '—';
+  const idCurto = (o.obra_id || '').slice(0, 8);
+  const fase = (o.painel && (o.painel.fase_atual || o.painel.status_atual)) || '—';
+  const urg = (o.urgencia || 'baixa').toLowerCase();
+  const m = _parseM(o.painel && o.painel.metragem);
+  const metragemStr = m > 0 ? `${Math.round(m*100)/100} m²` : 'sem metragem';
+  return `<button class="lp-drawer-obra" data-obra-id="${esc(o.obra_id)}">
+    <div class="lp-drawer-obra-head">
+      <div class="lp-drawer-obra-cli">${esc(cli)}<small>${esc(idCurto)}</small></div>
+      <span class="lp-drawer-urg urg-${esc(urg)}">${esc(urg)}</span>
+    </div>
+    <div class="lp-drawer-obra-meta">
+      <span>${esc(fase)}</span>
+      <span class="dot">·</span>
+      <span class="destaque">${metragemStr}</span>
+    </div>
+  </button>`;
+}
+
 function renderDrawerItem(o, filtroId){
   const cli = o.cliente || '—';
   const idCurto = (o.obra_id || '').slice(0, 8);
@@ -2596,9 +2741,18 @@ function focarObra(obraId, filtroId){
 
 // Click num KPI da lâmpada → abre drawer (não fecha mais a lâmpada direto)
 document.getElementById('lampada-modal').addEventListener('click', (e) => {
-  const btn = e.target.closest('.lp-kpi[data-filtro]');
-  if (!btn || btn.disabled) return;
-  abrirDrawerLampada(btn.dataset.filtro);
+  // KPI clicável (filtra por critério)
+  const kpi = e.target.closest('.lp-kpi[data-filtro]');
+  if (kpi && !kpi.disabled){
+    abrirDrawerLampada(kpi.dataset.filtro);
+    return;
+  }
+  // Top cores clicável (filtra por cor)
+  const corBtn = e.target.closest('.lp-cor-row[data-cor]');
+  if (corBtn){
+    abrirDrawerCor(corBtn.dataset.cor);
+    return;
+  }
 });
 
 // Click numa obra do drawer → foca a obra na página
@@ -2625,17 +2779,72 @@ document.addEventListener('keydown', (e) => {
   }
 }, true);
 
-// Disparador clipboard · delegação porque botões são dinâmicos
+// URL do Worker que dispara análise IA (GitHub Models · gratuito)
+const ORION_ANALISE_WORKER = 'https://orion-analise.vitor-monofloor.workers.dev';
+
+async function dispararAnaliseIA(obraIds, recorte, btnEl){
+  const status = document.getElementById('disp-status');
+  const statusText = document.getElementById('disp-status-text');
+  const nObras = obraIds.split(',').filter(Boolean).length;
+
+  if (btnEl) {
+    btnEl.disabled = true;
+    btnEl.dataset.labelOriginal = btnEl.querySelector('.disp-recorte-nome')?.textContent || '';
+    const lblEl = btnEl.querySelector('.disp-recorte-nome');
+    if (lblEl) lblEl.textContent = '⟳ rodando análise...';
+  }
+  if (status) status.classList.add('copiado');
+  if (statusText) statusText.innerHTML = `<strong>disparando análise IA</strong> · ${nObras} obra${nObras>1?'s':''} · "${recorte}"...`;
+
+  try {
+    const resp = await fetch(ORION_ANALISE_WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ obra_ids: obraIds, recorte: recorte }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+    const eta = data.eta_seconds || 120;
+    if (statusText) statusText.innerHTML = `<strong>✓ análise rodando · ${nObras} obras</strong> · página recarrega em ~${Math.ceil(eta/60)}min · zero gasto (GitHub Models)`;
+    setTimeout(() => {
+      if (statusText) statusText.innerHTML = `<strong>recarregando agora...</strong>`;
+      setTimeout(() => location.reload(), 1500);
+    }, (eta + 30) * 1000);
+  } catch(e) {
+    if (statusText) statusText.innerHTML = `<strong style="color:#9a3a3a">✗ erro:</strong> ${String(e.message || e).slice(0,150)}`;
+    if (btnEl) {
+      btnEl.disabled = false;
+      const lblEl = btnEl.querySelector('.disp-recorte-nome');
+      if (lblEl && btnEl.dataset.labelOriginal) lblEl.textContent = btnEl.dataset.labelOriginal;
+    }
+    setTimeout(() => {
+      if (status) status.classList.remove('copiado');
+      if (statusText) statusText.textContent = 'aguardando · clique num recorte pra disparar análise';
+    }, 10000);
+  }
+}
+
+// Disparador · delegação porque botões são dinâmicos
 document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
   const b = ev.target.closest('.disp-btn, .disp-recorte');
   if (!b || b.disabled) return;
+
+  // Recorte com action ai · POST direto pro Worker (custo zero)
+  if (b.dataset.recorteAction === 'ai') {
+    const ids = b.dataset.obraIds || '';
+    const recorte = b.dataset.recorteNome || 'manual';
+    if (!ids) return;
+    await dispararAnaliseIA(ids, recorte, b);
+    return;
+  }
+
+  // Comando legado (botão "atualizar análise stale", "todas obras", "recarregar")
   const cmd = b.dataset.cmd;
   if (!cmd) return;
   if (cmd === 'recarregar discordancias-v3') { location.reload(); return; }
 
   const status = document.getElementById('disp-status');
   const statusText = document.getElementById('disp-status-text');
-
   try {
     await navigator.clipboard.writeText(cmd);
     status.classList.add('copiado');
@@ -2906,6 +3115,44 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
     div.classList.remove('aberto');
     if (window.OrionTour) window.OrionTour.iniciar();
   };
+})();
+
+// Botão "Atualizar dados" · copia comando pro clipboard
+(function(){
+  const btn = document.getElementById('refresh-btn');
+  if (!btn) return;
+
+  // Toast no DOM
+  const toast = document.createElement('div');
+  toast.className = 'refresh-toast';
+  toast.id = 'refresh-toast';
+  toast.innerHTML = ''
+    + '<div class="refresh-toast-tit">✓ comando copiado</div>'
+    + '<div class="refresh-toast-txt">Cole no Claude Code: <code>atualizar dados orion</code><br><small style="color:#8a7e72;display:block;margin-top:4px">refetch painel + msgs + pipeline + publicar · ~2min</small></div>';
+  document.body.appendChild(toast);
+
+  const COMANDO = 'atualizar dados orion · refetch painel + msgs + pipeline + publicar';
+
+  async function copiar(){
+    try {
+      await navigator.clipboard.writeText(COMANDO);
+    } catch(_){
+      const ta = document.createElement('textarea');
+      ta.value = COMANDO; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch(__){}
+      document.body.removeChild(ta);
+    }
+    btn.classList.add('copiado');
+    btn.textContent = '✓';
+    toast.classList.add('aberto');
+    setTimeout(() => {
+      btn.classList.remove('copiado');
+      btn.textContent = '↻';
+      toast.classList.remove('aberto');
+    }, 6000);
+  }
+  btn.addEventListener('click', copiar);
 })();
 </script>
 

@@ -18,7 +18,7 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import setup_utf8
+from _util import setup_utf8, marcar_step_falho
 
 setup_utf8()
 
@@ -63,7 +63,14 @@ def main():
     print(f"Copiados: {n_copiados} · sem mudança: {n_iguais}")
 
     if n_copiados == 0:
-        print("Nada novo pra publicar")
+        print("Nada novo pra publicar via git · forçando wrangler deploy mesmo assim (garantia de sync)")
+        deploy_ok = _wrangler_deploy()
+        if not deploy_ok:
+            marcar_step_falho(
+                "publicar/wrangler_deploy",
+                "wrangler deploy falhou (sem mudanças git, mas tentamos sync)"
+            )
+            return 1
         return 0
 
     # Git add + commit + push
@@ -84,17 +91,34 @@ def main():
             encoding="utf-8",
         )
         if r_commit.returncode != 0:
-            if "nothing to commit" in (r_commit.stdout + r_commit.stderr).lower():
-                print("Sem mudanças staged · nada a commitar")
+            saida = (r_commit.stdout + r_commit.stderr).lower()
+            if "nothing to commit" in saida or "nothing added to commit" in saida:
+                # Nada novo no git, mas ainda assim pode ter mudança no public/ que
+                # o CF não pegou. Continua pra wrangler deploy garantir sync.
+                print("Sem mudanças staged · pulando push, indo direto pro deploy")
+                deploy_ok = _wrangler_deploy()
+                if not deploy_ok:
+                    marcar_step_falho(
+                        "publicar/wrangler_deploy",
+                        "wrangler deploy falhou após git no-op",
+                    )
+                    return 1
                 return 0
-            print(f"AVISO: git commit falhou: {r_commit.stderr.strip()[:200]}")
-            return 0
+            err = r_commit.stderr.strip()[:200]
+            print(f"AVISO: git commit falhou: {err}")
+            marcar_step_falho("publicar/commit", f"commit falhou: {err}")
+            return 1
 
         # Pull --rebase pra evitar conflito se outro commit chegou
-        subprocess.run(
+        r_pull = subprocess.run(
             ["git", "pull", "--rebase", "--autostash"],
             cwd=str(PUB_REPO), capture_output=True, text=True, encoding="utf-8",
         )
+        if r_pull.returncode != 0:
+            err = r_pull.stderr.strip()[:200]
+            print(f"AVISO: git pull --rebase falhou: {err}")
+            marcar_step_falho("publicar/pull", f"pull --rebase falhou: {err}")
+            # Não aborta · push pode ainda funcionar dependendo do erro
 
         # Push
         r_push = subprocess.run(
@@ -106,18 +130,114 @@ def main():
             timeout=60,
         )
         if r_push.returncode != 0:
-            print(f"AVISO: git push falhou: {r_push.stderr.strip()[:200]}")
-            return 0
+            err = r_push.stderr.strip()[:200]
+            print(f"AVISO: git push falhou: {err}")
+            marcar_step_falho("publicar/push", f"push falhou · CF NÃO atualizado: {err}")
+            return 1
 
-        print(f"[OK] Publicado · {msg}")
+        # Validação extra: confere que HEAD local == origin/main
+        r_status = subprocess.run(
+            ["git", "status", "-sb"],
+            cwd=str(PUB_REPO), capture_output=True, text=True, encoding="utf-8",
+        )
+        if r_status.returncode == 0 and ("ahead" in r_status.stdout or "behind" in r_status.stdout):
+            print(f"AVISO: após push, HEAD ainda divergente: {r_status.stdout.strip()[:200]}")
+            marcar_step_falho("publicar/sync_check", f"divergência após push: {r_status.stdout.strip()[:200]}")
+
+        print(f"[OK] Git push concluído · {msg}")
     except subprocess.TimeoutExpired:
         print("AVISO: git push timeout (60s) · rede lenta? · próxima rodada tenta de novo")
-        return 0
+        marcar_step_falho("publicar/timeout", "git push estourou timeout 60s")
+        return 1
     except Exception as e:
         print(f"AVISO: erro inesperado na publicação: {e}")
-        return 0
+        marcar_step_falho("publicar/exception", str(e)[:200])
+        return 1
 
+    # ============================================================
+    # CRÍTICO · DESCOBERTO 2026-05-04: o auto-deploy CF Workers via
+    # GitHub NÃO sincroniza assets de public/. Sem `wrangler deploy`
+    # explícito, o Worker continua servindo HTML/JSON antigos.
+    # ============================================================
+    deploy_ok = _wrangler_deploy()
+    if not deploy_ok:
+        marcar_step_falho(
+            "publicar/wrangler_deploy",
+            "wrangler deploy falhou · CF NÃO atualizado mesmo com git push OK"
+        )
+        return 1
+
+    print(f"[OK] Publicado + deployado · {msg}")
     return 0
+
+
+def _wrangler_deploy() -> bool:
+    """
+    Roda `wrangler deploy` no PUB_REPO. Retorna True se OK.
+
+    Wrangler precisa estar instalado e autenticado (`wrangler login` 1x).
+    No Windows, busca npx.cmd em locais conhecidos.
+    """
+    import os
+    # Garante que C:\Program Files\nodejs está no PATH do subprocess
+    # (caso Python tenha sido iniciado antes da instalação do Node)
+    nodejs_paths = [r"C:\Program Files\nodejs", r"C:\Program Files (x86)\nodejs"]
+    env = os.environ.copy()
+    path_atual = env.get("PATH", "")
+    for p in nodejs_paths:
+        if Path(p).exists() and p not in path_atual:
+            env["PATH"] = p + os.pathsep + path_atual
+            path_atual = env["PATH"]
+
+    # Acha wrangler · prioridade: PATH > C:\Program Files\nodejs\npx.cmd
+    cmds_a_testar = [
+        ["wrangler", "deploy"],
+        [r"C:\Program Files\nodejs\npx.cmd", "wrangler", "deploy"],
+        [r"C:\Program Files\nodejs\npm.cmd", "exec", "wrangler", "deploy"],
+        ["npx", "wrangler", "deploy"],
+    ]
+
+    for cmd in cmds_a_testar:
+        try:
+            print(f"Rodando {' '.join(cmd[:2])} ...")
+            r = subprocess.run(
+                cmd,
+                cwd=str(PUB_REPO),
+                env=env,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=180,
+            )
+            if r.returncode == 0:
+                # Sucesso · extrai info útil do output
+                out = (r.stdout or "") + (r.stderr or "")
+                # Procura linha "Uploaded N of N assets" ou "Deployed orion-pub"
+                for linha in out.splitlines():
+                    s = linha.strip()
+                    if "Success" in s or "Uploaded" in s or "Deployed" in s or "Version ID" in s:
+                        print(f"  {s[:150]}")
+                return True
+            else:
+                err_short = (r.stderr or r.stdout or "")[:300]
+                # Se for "command not found" tipo erro, tenta próximo
+                if "command not found" in err_short.lower() or "não é reconhecido" in err_short.lower():
+                    continue
+                # Erro real do wrangler · não tenta outros
+                print(f"AVISO: wrangler deploy falhou (rc={r.returncode}): {err_short}")
+                return False
+        except FileNotFoundError:
+            continue  # tenta próximo path
+        except subprocess.TimeoutExpired:
+            print("AVISO: wrangler deploy timeout (180s)")
+            return False
+        except Exception as e:
+            print(f"AVISO: erro inesperado em wrangler deploy: {e}")
+            return False
+
+    print("AVISO: wrangler não encontrado · rode `npm install -g wrangler` + `wrangler login`")
+    return False
 
 
 if __name__ == "__main__":

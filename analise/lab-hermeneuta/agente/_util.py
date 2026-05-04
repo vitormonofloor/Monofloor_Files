@@ -127,6 +127,82 @@ def write_json_atomic_validado(path: Path, data, validator=None, indent: int = 2
     write_json_atomic(path, data, indent=indent)
 
 
+def tocar_timestamps_discord(data: dict) -> dict:
+    """
+    Atualiza ultima_varredura e gerado_em no dict pra agora UTC.
+
+    DEVE ser chamada antes de QUALQUER write em discordancias-v3.json
+    pra evitar timestamp congelado (bug crônico em refresh manual).
+
+    Retorna o dict (encadeável). Mutação in-place.
+    """
+    if not isinstance(data, dict):
+        return data
+    agora = now_utc().strftime("%Y-%m-%dT%H:%M:%SZ")
+    data["ultima_varredura"] = agora
+    data["gerado_em"] = agora
+    return data
+
+
+def write_discord(path: Path, data: dict, indent: int = 2):
+    """
+    Helper canônico pra escrever discordancias-v3.json:
+      1. tocar timestamps (ultima_varredura, gerado_em)
+      2. validar schema
+      3. write atomic
+
+    SEMPRE use isso em vez de write_json_atomic puro pra discordancias-v3.json.
+    """
+    tocar_timestamps_discord(data)
+    write_json_atomic_validado(path, data, validator=validar_discord, indent=indent)
+
+
+# ============================================================
+# Pipeline error tracking · falhas silenciosas viram visíveis
+# ============================================================
+
+def marcar_step_falho(step: str, erro: str = "", pasta_dados: Path = None):
+    """
+    Registra que um step do pipeline falhou em dados/pipeline-errors.json.
+    Sentinela lê esse arquivo e reporta como warn/crit na tela.
+    Permite "continue silencioso" virar visibilidade ativa.
+    """
+    if pasta_dados is None:
+        # default: agente/../dados/
+        pasta_dados = Path(__file__).parent.parent / "dados"
+    pasta_dados.mkdir(parents=True, exist_ok=True)
+    path = pasta_dados / "pipeline-errors.json"
+
+    existing = read_json_safe(path, default={})
+    if not isinstance(existing, dict):
+        existing = {}
+    erros = existing.setdefault("erros", [])
+    erros.append({
+        "step": step,
+        "erro": str(erro)[:500],
+        "timestamp": now_utc().strftime("%Y-%m-%dT%H:%M:%SZ"),
+    })
+    # Mantém últimos 50 (rolling)
+    existing["erros"] = erros[-50:]
+    existing["ultima_atualizacao"] = now_utc().strftime("%Y-%m-%dT%H:%M:%SZ")
+    write_json_atomic(path, existing)
+
+
+def limpar_erros_pipeline(pasta_dados: Path = None):
+    """
+    Reseta o pipeline-errors.json no início de cada varredura.
+    Garante que erros antigos não persistam após varredura limpa.
+    """
+    if pasta_dados is None:
+        pasta_dados = Path(__file__).parent.parent / "dados"
+    path = pasta_dados / "pipeline-errors.json"
+    if path.exists():
+        write_json_atomic(path, {
+            "erros": [],
+            "ultima_atualizacao": now_utc().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        })
+
+
 # ============================================================
 # Backup automático · rolling window
 # ============================================================

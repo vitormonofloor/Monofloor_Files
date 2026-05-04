@@ -167,32 +167,73 @@ def check_backups():
 
 
 def check_drift_obras(data):
-    """Detecta variação abrupta no número de obras (sinal de regressão)."""
+    """
+    Detecta REGRESSÃO no número de obras (perda silenciosa = sinal de pipeline quebrado).
+
+    Lógica: usa máximo recente como baseline (expansão consciente é absorvida em 1 varredura).
+    Só alerta quando a contagem CAI vs o pico recente.
+    Crescimento NUNCA é crit (geralmente é piloto expandindo).
+    """
     nome = "Drift de quantidade de obras"
     obras = data.get("obras", []) or []
+    atual = len(obras)
     if not HISTORICO_KPI.exists():
-        return {"nome": nome, "status": "ok", "detalhe": "sem histórico ainda · primeira varredura"}
+        return {"nome": nome, "status": "ok", "detalhe": f"{atual} obras · sem histórico ainda"}
     try:
         h = json.loads(HISTORICO_KPI.read_text(encoding="utf-8"))
         pontos = h.get("kpis", []) or []
     except Exception:
         return {"nome": nome, "status": "warn", "detalhe": "histórico-kpis ilegível"}
     if len(pontos) < 2:
-        return {"nome": nome, "status": "ok", "detalhe": "histórico curto · sem comparação"}
-    # Compara qtd atual com média dos últimos 5 pontos
-    recentes = pontos[-6:-1]  # 5 últimos antes do atual
+        return {"nome": nome, "status": "ok", "detalhe": f"{atual} obras · histórico curto"}
+
+    # Baseline = MÁXIMO dos últimos 6 pontos (absorve expansão imediatamente)
+    recentes = pontos[-6:]
     if not recentes:
         return {"nome": nome, "status": "ok", "detalhe": "sem amostras suficientes"}
-    media = sum(p.get("obras", 0) for p in recentes) / len(recentes)
-    atual = len(obras)
-    if media == 0:
+    baseline = max(p.get("obras", 0) for p in recentes)
+    if baseline == 0:
         return {"nome": nome, "status": "ok"}
-    delta_pct = abs(atual - media) / media
-    if delta_pct < 0.20:
-        return {"nome": nome, "status": "ok", "detalhe": f"{atual} obras · estável (média {round(media, 1)})"}
-    if delta_pct < 0.50:
-        return {"nome": nome, "status": "warn", "detalhe": f"{atual} obras · variação de {round(delta_pct*100)}% vs média recente", "sugestao": "Confirmar se mudança é esperada"}
-    return {"nome": nome, "status": "crit", "detalhe": f"{atual} obras · variação de {round(delta_pct*100)}% (anterior ~{round(media, 1)})", "sugestao": "Possível regressão · investigar"}
+
+    # Crescimento ou estável · sempre OK (expansão = sinal positivo)
+    if atual >= baseline:
+        if atual > baseline:
+            return {"nome": nome, "status": "ok", "detalhe": f"{atual} obras · expansão (+{atual-baseline} vs pico recente {baseline})"}
+        return {"nome": nome, "status": "ok", "detalhe": f"{atual} obras · estável vs pico recente"}
+
+    # Regressão (atual < baseline) · alerta proporcional à perda
+    perda = baseline - atual
+    perda_pct = perda / baseline
+    if perda_pct < 0.10:
+        return {"nome": nome, "status": "ok", "detalhe": f"{atual} obras · variação dentro do normal (-{perda} de {baseline})"}
+    if perda_pct < 0.30:
+        return {"nome": nome, "status": "warn", "detalhe": f"{atual} obras · perda de {perda} ({round(perda_pct*100)}%) vs pico {baseline}", "sugestao": "Investigar obras que sumiram"}
+    return {"nome": nome, "status": "crit", "detalhe": f"{atual} obras · REGRESSÃO grave -{perda} ({round(perda_pct*100)}%) vs pico {baseline}", "sugestao": "Pipeline pode estar quebrado · investigar URGENTE"}
+
+
+def check_pipeline_errors_flag():
+    """Lê dados/pipeline-errors.json (gerado por varredura.py se algum step falha)."""
+    nome = "Erros de pipeline (flag)"
+    erros_path = ROOT / "dados" / "pipeline-errors.json"
+    if not erros_path.exists():
+        return {"nome": nome, "status": "ok", "detalhe": "nenhuma falha registrada"}
+    try:
+        data = json.loads(erros_path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return {"nome": nome, "status": "warn", "detalhe": "arquivo de erros corrompido"}
+    erros = data.get("erros") or []
+    if not erros:
+        return {"nome": nome, "status": "ok", "detalhe": "varredura limpa"}
+    # Pega só os erros da última varredura (mesmo timestamp)
+    steps = [e.get("step") for e in erros]
+    nivel = "crit" if "publicar" in steps or "sanitizar_json" in steps else "warn"
+    detalhe = f"{len(erros)} step(s) falharam: {', '.join(set(steps))}"
+    return {
+        "nome": nome,
+        "status": nivel,
+        "detalhe": detalhe,
+        "sugestao": "Ver dados/pipeline-errors.json · re-rodar steps falhos manualmente",
+    }
 
 
 def check_passos_pipeline_ok():
@@ -238,6 +279,7 @@ def main():
         check_lock_orfao(),
         check_backups(),
         check_drift_obras(discord or {}),
+        check_pipeline_errors_flag(),
         check_passos_pipeline_ok(),
     ]
 

@@ -81,25 +81,80 @@ def similarity(a: str, b: str) -> float:
 def main():
     ap = argparse.ArgumentParser(description="Seleciona obras pra varredura do Lab Orion")
     grp = ap.add_mutually_exclusive_group()
-    grp.add_argument("--todas", action="store_true", help="Todas obras ativas pareadas (Fase A · escala completa)")
-    grp.add_argument("--n", type=int, default=10, help="Top N obras (default: 10 com diversidade de status)")
+    grp.add_argument("--todas-ativas", action="store_true",
+                     help="TODAS obras ativas do painel (sem exigir Telegram pareado · usa painel API pra coletar msgs)")
+    grp.add_argument("--todas", action="store_true",
+                     help="[LEGADO] Todas obras ativas pareadas com Telegram (similaridade ≥0.70 + Telegram ≤30d)")
+    grp.add_argument("--n", type=int, default=10,
+                     help="[LEGADO] Top N obras pareadas (default: 10 com diversidade de status)")
     args = ap.parse_args()
 
     if not PAINEL.exists():
         print(f"ERRO: {PAINEL} não encontrado")
         sys.exit(1)
+
+    painel = json.loads(PAINEL.read_text(encoding="utf-8"))
+    obras_painel = [o for o in painel if o.get("ativa")]
+
+    # MODO --todas-ativas: simples · pega todas ativas direto · sem pareamento Telegram
+    # (coletor_painel.py busca msgs por obra_id no painel API, não precisa de grupo_id)
+    if args.todas_ativas:
+        print(f"Modo: TODAS ATIVAS (sem pareamento Telegram · cobertura completa)")
+        print(f"Painel ativas: {len(obras_painel)}")
+        out = {
+            "gerado_em": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if False else None,
+            "modo": "todas-ativas",
+            "total_piloto": len(obras_painel),
+            "piloto": [
+                {
+                    "obra_id": o["id"],
+                    "cliente": o.get("clienteNome") or "?",
+                    "consultor": o.get("consultorNome"),
+                    "status": o.get("status"),
+                    "fase": o.get("faseAtual"),
+                    "metragem": o.get("projetoMetragem"),
+                    "idade_dias_painel": o.get("idade_dias"),
+                    "cidade": o.get("projetoCidade"),
+                    "telegram": {
+                        "grupo_id": None,  # não pareamos · coletor_painel usa obra_id
+                        "grupo_nome": None,
+                        "ultima_msg": None,
+                        "dias_inativo": None,
+                        "membros": None,
+                    },
+                    "match_similaridade": None,
+                    "painel_completo": o,
+                }
+                for o in obras_painel
+                if o.get("clienteNome")
+            ],
+        }
+        # Importa lazy
+        from datetime import datetime, timezone
+        out["gerado_em"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        out_path = ROOT / "piloto.json"
+        out_path.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"\n[OK] {out_path}")
+        print(f"     {out['total_piloto']} obras · 0 pareadas (não-relevante · coleta via painel API)")
+        # Distribuição por status
+        from collections import Counter
+        ct = Counter(o.get("status") or "?" for o in obras_painel)
+        print(f"\nDistribuição por status:")
+        for s, n in sorted(ct.items(), key=lambda x: -x[1]):
+            print(f"  {s:25} {n}")
+        return
+
+    # ===== MODOS LEGADOS (mantidos pra retrocompatibilidade) =====
     if not GRUPOS.exists():
         print(f"ERRO: {GRUPOS} não encontrado · rode listar_grupos.py primeiro")
         sys.exit(1)
 
-    painel = json.loads(PAINEL.read_text(encoding="utf-8"))
     grupos_data = json.loads(GRUPOS.read_text(encoding="utf-8"))
     grupos = grupos_data["grupos"]
 
-    obras_painel = [o for o in painel if o.get("ativa")]
     grupos_obra = [g for g in grupos if g["tipo_canal"] == "obra"]
-    modo = "TODAS" if args.todas else f"top {args.n}"
-    print(f"Modo: {modo}")
+    modo = "TODAS pareadas" if args.todas else f"top {args.n}"
+    print(f"Modo: {modo} (LEGADO · considere --todas-ativas)")
     print(f"Painel ativas: {len(obras_painel)}")
     print(f"Grupos Telegram (obra técnica): {len(grupos_obra)}")
     print()

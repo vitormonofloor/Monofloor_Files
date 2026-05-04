@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8
+from _util import write_discord, setup_utf8
 
 setup_utf8()
 
@@ -218,7 +218,7 @@ def main():
         n_externos = len([n for n in nao_mapeados if not n["eh_monofloor_interno"]])
         print(f"{cliente:<42} {lider_str:<25} {n_aplic:<8} {n_externos}")
 
-    write_json_atomic(DISCORD_PATH, discord)
+    write_discord(DISCORD_PATH, discord)
     print(f"\n[OK] {DISCORD_PATH}")
 
 

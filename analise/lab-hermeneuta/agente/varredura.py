@@ -24,7 +24,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8, fazer_backup
+from _util import write_json_atomic, setup_utf8, fazer_backup, marcar_step_falho, limpar_erros_pipeline
 
 setup_utf8()
 
@@ -188,6 +188,8 @@ def _executar_pipeline():
     bkp = fazer_backup(DISCORD_PATH, pasta_backups=DADOS / "backups", manter=14)
     if bkp:
         log(f"Backup salvo · {bkp.name}")
+    # Reseta erros do pipeline (varredura limpa começa sem erros antigos)
+    limpar_erros_pipeline()
 
     # 1. Backup snapshot Telegram pra calcular diff
     if SNAPSHOT_PATH.exists():
@@ -236,23 +238,27 @@ def _executar_pipeline():
     # 8. Espelha KIRA WhatsApp summary do detail
     log("Rodando extrair_kira_whatsapp.py...")
     if not run([PYTHON, "extrair_kira_whatsapp.py"], AGENTE):
-        log("FALHOU em extrair_kira_whatsapp.py (continua)")
+        log("FALHOU em extrair_kira_whatsapp.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("extrair_kira_whatsapp", "exit não-zero")
 
     # 9. Aplica overrides de consultor inferido (Repullo, Paula, Maria Heydi, Mayara)
     # Crítico: sem isso os campos consultor_formal/consultor_inferido somem após IA regerar
     log("Rodando inferir_consultor.py...")
     if not run([PYTHON, "inferir_consultor.py"], AGENTE):
-        log("FALHOU em inferir_consultor.py (continua)")
+        log("FALHOU em inferir_consultor.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("inferir_consultor", "exit não-zero")
 
     # 10. Sanitiza JSON · remove flag cliente_ausente + campos mortos detectados pela auditoria
     log("Rodando sanitizar_json.py...")
     if not run([PYTHON, "sanitizar_json.py"], AGENTE):
-        log("FALHOU em sanitizar_json.py (continua)")
+        log("FALHOU em sanitizar_json.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("sanitizar_json", "exit não-zero")
 
     # 11. Registra KPIs no histórico (pra sparkline / delta semanal)
     log("Rodando registrar_kpis.py...")
     if not run([PYTHON, "registrar_kpis.py"], AGENTE):
-        log("FALHOU em registrar_kpis.py (continua)")
+        log("FALHOU em registrar_kpis.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("registrar_kpis", "exit não-zero")
 
     # 12. Marca refresh_status nas obras
     marcar_refresh_status(diff)
@@ -261,12 +267,14 @@ def _executar_pipeline():
     # 13. Sentinela · valida saúde do pipeline e gera dados/status.json
     log("Rodando sentinela.py...")
     if not run([PYTHON, "sentinela.py"], AGENTE):
-        log("FALHOU em sentinela.py (continua)")
+        log("FALHOU em sentinela.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("sentinela", "exit não-zero")
 
     # 14. Publica no repo lab-hermeneuta-pub (Cloudflare Pages · lab.monofloor.cloud)
     log("Rodando publicar.py...")
     if not run([PYTHON, "publicar.py"], AGENTE):
-        log("FALHOU em publicar.py (continua · publicação é best-effort)")
+        log("FALHOU em publicar.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("publicar", "exit não-zero · deploy NÃO chegou ao CF")
 
     log("VARREDURA OK")
     log("=" * 60)

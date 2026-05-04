@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from _util import write_json_atomic, setup_utf8
+from _util import write_discord, setup_utf8
 
 setup_utf8()
 
@@ -83,7 +83,7 @@ def main():
         if isinstance(rs, dict) and rs.pop("veredicto_em_no_calculo", None) is not None:
             n_rs += 1
 
-    write_json_atomic(DISCORD_PATH, data)
+    write_discord(DISCORD_PATH, data)
 
     print(f"[OK] {DISCORD_PATH}")
     print(f"     Flag 'cliente_ausente' removida de {n_removidas} obra(s)")
