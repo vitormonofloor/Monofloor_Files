@@ -2,7 +2,7 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Coordenador**
-**Gerado em:** 04/05/2026 12:28
+**Gerado em:** 04/05/2026 14:31
 
 ---
 
@@ -263,25 +263,126 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 ## 10 · Conclusões e Recomendações
 
-1. **Comunicação** é a categoria de problema com maior volume — 77 obras (20 críticas)
-   *Causa provável:* padrão recorrente em comunicação pode indicar gargalo sistêmico
-   *→ Ação sugerida:* investigar fluxo específico de **Comunicação** com a equipe operacional · validar se há ação preventiva possível
+> Análise propositiva: cada problema crítico detectado vem com diagnóstico, caminhos viáveis (Como · Custo · Impacto · Risco) e recomendação combinada. Números marcados [REVISAR] são chutes que dependem do conhecimento operacional do Vitor pra calibrar.
 
-2. Capacidade utilizada em apenas 35%
-   *Causa provável:* demanda atual abaixo da capacidade instalada
-   *→ Ação sugerida:* alinhar com Comercial pra acelerar fechamentos · ou reavaliar dimensionamento
+### Score Saúde abaixo da zona saudável
 
-3. **72 obras sem KIRA** (sem grupo de WhatsApp acompanhado)
-   *Causa provável:* cegueira da Qualidade · obras invisíveis pra detecção de problemas via grupo
-   *→ Ação sugerida:* padronizar criação de grupo desde o início da obra · meta: zerar cegueira
+**Diagnóstico**
+Score em 48/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
+- Ciclo total mediano em 215d (meta 150d) — 43% acima da meta
+- 18.8% de obras zumbi (CLIENTE FINALIZADO sem encerrar)
+- 14.0% órfãs (sem consultor responsável)
+- 21 obras na cauda longa AGEND.VT-AFERIÇÃO (>270d)
 
-4. 21 obras em estado crítico (53 no total atrasadas)
-   *Causa provável:* concentração de problemas que demanda atenção imediata
-   *→ Ação sugerida:* priorizar contato direto com as **top 5 mais antigas** (ver Seção 4) · validar se demandam intervenção da Coordenação
+**Para melhorar:** Reduzir o ciclo total e fechar zumbis acumuladas.
 
+**Caminhos viáveis:**
 
-**Para a próxima quinzena:**
-- [REVISAR · 3 prioridades baseadas nos pontos acima]
+**Caminho A · Mutirão de zumbis**
+- **Como:** Força-tarefa de 2 semanas pra encerrar as obras presas em CLIENTE FINALIZADO há mais de 90 dias.
+- **Custo do tempo:** ~10h/semana da consultoria por 2 semanas
+- **Impacto esperado:** zumbi_pct cai de 18.8% para ~5% · Score sobe ~3-4 pontos [REVISAR número]
+- **Risco:** Algumas zumbis podem ter pendência real não-mapeada (descobrir não é problema, mas ajusta a expectativa)
+
+**Caminho B · Atacar gargalo AGEND.VT-AFERIÇÃO**
+- **Como:** Revisar SLA de Visita Técnica + reorganizar alocação Luana/Wesley pra desbloquear a cauda longa.
+- **Custo do tempo:** Organizacional · alinhamento de agenda da consultoria
+- **Impacto esperado:** Ciclo mediano cai 215d → ~190d · Score sobe ~5 pontos [REVISAR número]
+- **Risco:** Pressão por velocidade pode comprometer qualidade da VT — não pode ser corrida
+
+**Caminho C · Padronização preventiva (encerramento)**
+- **Como:** Gatilho automático D+15 após CLIENTE FINALIZADO pra forçar encerramento (ou pedir justificativa).
+- **Custo do tempo:** ~1 sprint de dev no Painel de Obras
+- **Impacto esperado:** Previne futuras zumbis · não resolve estoque atual [REVISAR]
+- **Risco:** Baixo — se errar, basta desativar a automação
+
+**Recomendação automática:** **Mutirão + Padronização preventiva** combinados — mutirão zera estoque agora, padronização previne. Gargalo VT fica pra próxima quinzena se mutirão der certo.
+
+### Comunicação é a categoria dominante de problema
+
+**Diagnóstico**
+77 obras com problema de Comunicação reportado no Painel (20 críticas). É a maior categoria depois de "Outros". Padrões típicos: técnico não responde no grupo, alinhamento direto técnico↔cliente sem passar pela operação, falta de diário de obra.
+
+**Para melhorar:** Aumentar disciplina de registro nos grupos e cortar rotas paralelas técnico↔cliente.
+
+**Caminhos viáveis:**
+
+**Caminho A · Reforço de processo · Diário de Obra obrigatório**
+- **Como:** Padronizar postagem diária no grupo Telegram + alerta automático quando passar 24h sem registro.
+- **Custo do tempo:** 1-2 reuniões com supervisores + ajuste no bot do Telegram
+- **Impacto esperado:** Reduzir Comunicação como categoria em ~30-40% [REVISAR número]
+- **Risco:** Resistência cultural · técnicos podem postar 'tudo ok' só pra cumprir
+
+**Caminho B · Auditoria amostral semanal**
+- **Como:** Toda sexta, sortear 10 obras ativas e checar registro completo no grupo (consultora + supervisor).
+- **Custo do tempo:** ~2h/semana da consultoria
+- **Impacto esperado:** Pressão sustentada · expõe técnicos faltosos [REVISAR efeito real]
+- **Risco:** Vira micro-gestão se não for acompanhado de feedback construtivo
+
+**Caminho C · Bloquear comunicação direta técnico↔cliente**
+- **Como:** Política explícita: qualquer alinhamento de prazo/escopo passa pela consultoria. Técnico que descumpre é notificado.
+- **Custo do tempo:** Comunicação interna formal + apoio da Diretoria
+- **Impacto esperado:** Resolve a raiz de ~50% dos casos críticos [REVISAR]
+- **Risco:** Pode atrasar decisões pequenas que técnico resolveria sozinho
+
+**Recomendação automática:** **Diário obrigatório + Auditoria amostral** dão tração rápida. Bloqueio cultural só vale se já houver casos crônicos comprovados.
+
+### Infiltração com volume alto e proporção crítica
+
+**Diagnóstico**
+48 obras com problema de Infiltração reportado (23 críticas — 47% das de infiltração são críticas, taxa muito acima da média de outras categorias).
+
+**Para melhorar:** Reforçar fase de preparação do substrato + critério de aceite da VT.
+
+**Caminhos viáveis:**
+
+**Caminho A · Auditoria técnica das infiltrações críticas**
+- **Como:** Cruzar as 23 críticas: período de aplicação, equipe, substrato, condição climática · identificar padrão.
+- **Custo do tempo:** ~8h da Qualidade + apoio técnico
+- **Impacto esperado:** Identifica raiz · permite ação direcionada (ex: treinamento de equipe específica) [REVISAR]
+- **Risco:** Análise pode revelar fragilidade de produto ou processo que demanda investimento
+
+**Caminho B · Critério reforçado de aceite na VT**
+- **Como:** Adicionar checklist obrigatório de umidade/contrapiso/ralo na Visita Técnica de Aferição · obra não inicia sem aprovação.
+- **Custo do tempo:** Atualização do POP de VT + treinamento Nathan/Braiam
+- **Impacto esperado:** Reduz infiltrações em obras NOVAS · efeito visível em 60-90d [REVISAR]
+- **Risco:** VT fica mais longa · pode atrasar início de obras
+
+**Recomendação automática:** **Auditoria** primeiro pra entender raiz. **Critério reforçado** vem como ação derivada do que a auditoria descobrir.
+
+### Capacidade da operação subutilizada
+
+**Diagnóstico**
+Operação a 35% da capacidade mensal · 4.507 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.689 m²/mês não aproveitada.
+
+**Para melhorar:** Acelerar conversão comercial OU revisar dimensionamento da equipe.
+
+**Caminhos viáveis:**
+
+**Caminho A · Sinalizar pro Comercial · pipeline de fechamento**
+- **Como:** Compartilhar capacidade real (35%) com time de vendas + projeção 13 semanas. Vendas prioriza fechamentos de Mai-Jun.
+- **Custo do tempo:** 1 reunião + relatório semanal compartilhado
+- **Impacto esperado:** Conversão acelerada de propostas pendentes · capacidade vai pra 60-70% em 2 meses [REVISAR]
+- **Risco:** Pipe pode estar vazio · sinalizar não cria demanda do nada
+
+**Caminho B · Reduzir prazo de aceitação de novos contratos**
+- **Como:** Atualmente aceita-se com prazo X dias · reduzir pra X-15d, comunicando capacidade folgada.
+- **Custo do tempo:** Alinhamento Comercial + ajuste no funil de proposta
+- **Impacto esperado:** Atrai clientes com pressa · ganha 3-5 obras/mês [REVISAR]
+- **Risco:** Concorrência pode usar prazo menor como atrativo · não vira diferencial sustentável
+
+**Caminho C · Reavaliar dimensionamento da equipe**
+- **Como:** Se ociosidade for estrutural (não pico), avaliar redução de aplicadores ou redistribuição regional.
+- **Custo do tempo:** Decisão de RH · estratégica
+- **Impacto esperado:** Reduz custo fixo · perde flexibilidade pra picos de demanda [REVISAR]
+- **Risco:** Difícil reverter · perda de aplicadores treinados é cara
+
+**Recomendação automática:** **Sinalizar pro Comercial + monitorar 4 semanas** antes de decidir reduzir prazo ou redimensionar.
+
+---
+
+**Para a próxima quinzena · 3 prioridades sugeridas:**
+- [REVISAR · escolher 3 dos caminhos acima como prioridade do período]
 
 ---
 

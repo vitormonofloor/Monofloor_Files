@@ -1,0 +1,177 @@
+{
+  "_doc": "Catálogo de receitas/caminhos pra cada tipo de problema do relatório quinzenal. Cada receita tem 2-3 caminhos viáveis com Como/Custo/Impacto/Risco. Vitor ajusta números/conhecimento operacional nos [REVISAR].",
+  "_versao": "0.1",
+  "_atualizado": "2026-05-04",
+
+  "score_baixo": {
+    "trigger": "score < 50",
+    "titulo": "Score Saúde abaixo da zona saudável",
+    "diagnostico": "Score em {valor}/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:\n- Ciclo total mediano em {ciclo}d (meta 150d) — {pct_meta}% acima da meta\n- {zumbi_pct}% de obras zumbi (CLIENTE FINALIZADO sem encerrar)\n- {orfas_pct}% órfãs (sem consultor responsável)\n- {cauda_vt} obras na cauda longa AGEND.VT-AFERIÇÃO (>270d)",
+    "para_melhorar": "Reduzir o ciclo total e fechar zumbis acumuladas.",
+    "caminhos": [
+      {
+        "nome": "Mutirão de zumbis",
+        "como": "Força-tarefa de 2 semanas pra encerrar as obras presas em CLIENTE FINALIZADO há mais de 90 dias.",
+        "custo": "~10h/semana da consultoria por 2 semanas",
+        "impacto_template": "zumbi_pct cai de {zumbi_pct}% para ~5% · Score sobe ~3-4 pontos [REVISAR número]",
+        "risco": "Algumas zumbis podem ter pendência real não-mapeada (descobrir não é problema, mas ajusta a expectativa)"
+      },
+      {
+        "nome": "Atacar gargalo AGEND.VT-AFERIÇÃO",
+        "como": "Revisar SLA de Visita Técnica + reorganizar alocação Luana/Wesley pra desbloquear a cauda longa.",
+        "custo": "Organizacional · alinhamento de agenda da consultoria",
+        "impacto_template": "Ciclo mediano cai {ciclo}d → ~190d · Score sobe ~5 pontos [REVISAR número]",
+        "risco": "Pressão por velocidade pode comprometer qualidade da VT — não pode ser corrida"
+      },
+      {
+        "nome": "Padronização preventiva (encerramento)",
+        "como": "Gatilho automático D+15 após CLIENTE FINALIZADO pra forçar encerramento (ou pedir justificativa).",
+        "custo": "~1 sprint de dev no Painel de Obras",
+        "impacto_template": "Previne futuras zumbis · não resolve estoque atual [REVISAR]",
+        "risco": "Baixo — se errar, basta desativar a automação"
+      }
+    ],
+    "recomendacao_combinada": "**Mutirão + Padronização preventiva** combinados — mutirão zera estoque agora, padronização previne. Gargalo VT fica pra próxima quinzena se mutirão der certo."
+  },
+
+  "categoria_comunicacao": {
+    "trigger": "categoria 'Comunicação' com >50 obras",
+    "titulo": "Comunicação é a categoria dominante de problema",
+    "diagnostico": "{count} obras com problema de Comunicação reportado no Painel ({criticos} críticas). É a maior categoria depois de \"Outros\". Padrões típicos: técnico não responde no grupo, alinhamento direto técnico↔cliente sem passar pela operação, falta de diário de obra.",
+    "para_melhorar": "Aumentar disciplina de registro nos grupos e cortar rotas paralelas técnico↔cliente.",
+    "caminhos": [
+      {
+        "nome": "Reforço de processo · Diário de Obra obrigatório",
+        "como": "Padronizar postagem diária no grupo Telegram + alerta automático quando passar 24h sem registro.",
+        "custo": "1-2 reuniões com supervisores + ajuste no bot do Telegram",
+        "impacto_template": "Reduzir Comunicação como categoria em ~30-40% [REVISAR número]",
+        "risco": "Resistência cultural · técnicos podem postar 'tudo ok' só pra cumprir"
+      },
+      {
+        "nome": "Auditoria amostral semanal",
+        "como": "Toda sexta, sortear 10 obras ativas e checar registro completo no grupo (consultora + supervisor).",
+        "custo": "~2h/semana da consultoria",
+        "impacto_template": "Pressão sustentada · expõe técnicos faltosos [REVISAR efeito real]",
+        "risco": "Vira micro-gestão se não for acompanhado de feedback construtivo"
+      },
+      {
+        "nome": "Bloquear comunicação direta técnico↔cliente",
+        "como": "Política explícita: qualquer alinhamento de prazo/escopo passa pela consultoria. Técnico que descumpre é notificado.",
+        "custo": "Comunicação interna formal + apoio da Diretoria",
+        "impacto_template": "Resolve a raiz de ~50% dos casos críticos [REVISAR]",
+        "risco": "Pode atrasar decisões pequenas que técnico resolveria sozinho"
+      }
+    ],
+    "recomendacao_combinada": "**Diário obrigatório + Auditoria amostral** dão tração rápida. Bloqueio cultural só vale se já houver casos crônicos comprovados."
+  },
+
+  "capacidade_ociosa": {
+    "trigger": "utilization_percent < 50",
+    "titulo": "Capacidade da operação subutilizada",
+    "diagnostico": "Operação a {pct}% da capacidade mensal · {m2_curso} m² em curso vs {cap_mensal} m²/mês de capacidade produtiva. Sobra de aproximadamente {sobra} m²/mês não aproveitada.",
+    "para_melhorar": "Acelerar conversão comercial OU revisar dimensionamento da equipe.",
+    "caminhos": [
+      {
+        "nome": "Sinalizar pro Comercial · pipeline de fechamento",
+        "como": "Compartilhar capacidade real ({pct}%) com time de vendas + projeção 13 semanas. Vendas prioriza fechamentos de Mai-Jun.",
+        "custo": "1 reunião + relatório semanal compartilhado",
+        "impacto_template": "Conversão acelerada de propostas pendentes · capacidade vai pra 60-70% em 2 meses [REVISAR]",
+        "risco": "Pipe pode estar vazio · sinalizar não cria demanda do nada"
+      },
+      {
+        "nome": "Reduzir prazo de aceitação de novos contratos",
+        "como": "Atualmente aceita-se com prazo X dias · reduzir pra X-15d, comunicando capacidade folgada.",
+        "custo": "Alinhamento Comercial + ajuste no funil de proposta",
+        "impacto_template": "Atrai clientes com pressa · ganha 3-5 obras/mês [REVISAR]",
+        "risco": "Concorrência pode usar prazo menor como atrativo · não vira diferencial sustentável"
+      },
+      {
+        "nome": "Reavaliar dimensionamento da equipe",
+        "como": "Se ociosidade for estrutural (não pico), avaliar redução de aplicadores ou redistribuição regional.",
+        "custo": "Decisão de RH · estratégica",
+        "impacto_template": "Reduz custo fixo · perde flexibilidade pra picos de demanda [REVISAR]",
+        "risco": "Difícil reverter · perda de aplicadores treinados é cara"
+      }
+    ],
+    "recomendacao_combinada": "**Sinalizar pro Comercial + monitorar 4 semanas** antes de decidir reduzir prazo ou redimensionar."
+  },
+
+  "cegueira_kira": {
+    "trigger": "operacional_kira.sem_kira > 50",
+    "titulo": "Cegueira KIRA · obras invisíveis pra Qualidade",
+    "diagnostico": "{count} obras ativas sem grupo de WhatsApp acompanhado. Pra Qualidade, são silêncio: nenhum sinal de alerta detectável via grupo · cliente pode estar com problema sem ninguém saber.",
+    "para_melhorar": "Padronizar criação de grupo desde o início da obra · meta: zerar a cegueira em 60 dias.",
+    "caminhos": [
+      {
+        "nome": "Criação obrigatória de grupo · checklist de início",
+        "como": "Adicionar item no checklist do Painel: 'Grupo de alinhamento criado e cliente adicionado' · obra não passa de fase sem o item.",
+        "custo": "Configuração no Painel + comunicação interna",
+        "impacto_template": "Zera cegueira pra obras NOVAS em ~30 dias [REVISAR]",
+        "risco": "Não resolve as {count} já existentes sem grupo"
+      },
+      {
+        "nome": "Mutirão de criação retroativa",
+        "como": "Identificar as {count} obras sem grupo, priorizar por idade/estado, criar grupos retroativamente.",
+        "custo": "~5h/semana por 4 semanas da consultoria + Pedro",
+        "impacto_template": "Zera cegueira em ~30-45 dias [REVISAR]",
+        "risco": "Cliente pode estranhar 'grupo criado tarde' · script pra justificar"
+      },
+      {
+        "nome": "Aceitar cegueira parcial · monitorar via Painel apenas",
+        "como": "Algumas obras (clientes que rejeitam grupo) ficam de fora · documentar consentimento e monitorar via outras fontes.",
+        "custo": "Documentação + processo de exceção",
+        "impacto_template": "Reduz cegueira em ~70% · aceita 20-30% como exceção monitorada [REVISAR]",
+        "risco": "Exceção vira regra se não houver auditoria"
+      }
+    ],
+    "recomendacao_combinada": "**Criação obrigatória + Mutirão retroativo** combinados zeram em 60 dias. Aceitar cegueira parcial só pra casos onde cliente recusa explicitamente."
+  },
+
+  "alto_atraso_critico": {
+    "trigger": "summary.critical > 15",
+    "titulo": "Alto volume de obras em estado crítico",
+    "diagnostico": "{count} obras em estado crítico (de {atrasados} no total atrasadas). Concentração que demanda atenção imediata da Coordenação.",
+    "para_melhorar": "Triagem e desbloqueio focado nos casos mais antigos.",
+    "caminhos": [
+      {
+        "nome": "Triagem semanal das críticas",
+        "como": "Toda segunda, ranking das críticas por dias de atraso · top 5 vão pra reunião de Coordenação · 1 ação acordada por obra.",
+        "custo": "~30min/semana da consultoria + reunião curta",
+        "impacto_template": "Reduz críticas em ~30-40% em 2 meses [REVISAR]",
+        "risco": "Vira ritual sem ação real se não houver acompanhamento"
+      },
+      {
+        "nome": "Escalação automática · 60 dias",
+        "como": "Obras que passam 60d em fase crítica recebem alerta automático pro Coordenador + cliente recebe contato proativo.",
+        "custo": "Configuração no Painel + alinhamento com Comercial pra contato cliente",
+        "impacto_template": "Pressão sistêmica · força resolução ou pausa formal [REVISAR]",
+        "risco": "Cliente pode interpretar como falha — script de comunicação importa"
+      }
+    ],
+    "recomendacao_combinada": "**Triagem semanal** prioritária · escalação automática vira projeto da Fase 2 (próximo trimestre)."
+  },
+
+  "categoria_infiltracao": {
+    "trigger": "categoria 'Infiltração' com >40 obras OU criticos > 20",
+    "titulo": "Infiltração com volume alto e proporção crítica",
+    "diagnostico": "{count} obras com problema de Infiltração reportado ({criticos} críticas — {pct_critico}% das de infiltração são críticas, taxa muito acima da média de outras categorias).",
+    "para_melhorar": "Reforçar fase de preparação do substrato + critério de aceite da VT.",
+    "caminhos": [
+      {
+        "nome": "Auditoria técnica das infiltrações críticas",
+        "como": "Cruzar as {criticos} críticas: período de aplicação, equipe, substrato, condição climática · identificar padrão.",
+        "custo": "~8h da Qualidade + apoio técnico",
+        "impacto_template": "Identifica raiz · permite ação direcionada (ex: treinamento de equipe específica) [REVISAR]",
+        "risco": "Análise pode revelar fragilidade de produto ou processo que demanda investimento"
+      },
+      {
+        "nome": "Critério reforçado de aceite na VT",
+        "como": "Adicionar checklist obrigatório de umidade/contrapiso/ralo na Visita Técnica de Aferição · obra não inicia sem aprovação.",
+        "custo": "Atualização do POP de VT + treinamento Nathan/Braiam",
+        "impacto_template": "Reduz infiltrações em obras NOVAS · efeito visível em 60-90d [REVISAR]",
+        "risco": "VT fica mais longa · pode atrasar início de obras"
+      }
+    ],
+    "recomendacao_combinada": "**Auditoria** primeiro pra entender raiz. **Critério reforçado** vem como ação derivada do que a auditoria descobrir."
+  }
+}

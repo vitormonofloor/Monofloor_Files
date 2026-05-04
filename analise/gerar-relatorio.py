@@ -660,73 +660,171 @@ def secao_orion(disc):
 """
 
 
-def secao_conclusoes(rs, extras):
-    """10 · Conclusões automáticas baseadas em padrões."""
-    analise = (extras or {}).get("analise", {})
+def detectar_problemas(rs, headline, extras, receitas):
+    """Detecta problemas críticos no período e retorna lista ordenada."""
+    problemas = []
+
+    headline = headline or {}
+    rs = rs or {}
+    extras = extras or {}
+    analise = extras.get("analise", {}) if isinstance(extras, dict) else {}
     summary = analise.get("summary", {}) if isinstance(analise, dict) else {}
-    cats = analise.get("problemCategories", []) if isinstance(analise, dict) else []
-    cap = (rs or {}).get("capacidade", {})
+    cats = analise.get("problemCategories", []) if isinstance(analise, dict) else {}
+    cap = rs.get("capacidade", {})
+    op_kira = rs.get("operacional_kira", {})
+    score_comp = headline.get("score_componentes", {})
 
-    conclusoes = []
-
-    # Conclusão 1: top categoria de problema (ignorando "Outros")
-    cats_filtradas = [c for c in cats if c.get("categoria") != "Outros"]
-    if cats_filtradas:
-        top_cat = max(cats_filtradas, key=lambda c: c.get("count", 0))
-        conclusoes.append({
-            "obs": f"**{top_cat.get('categoria')}** é a categoria de problema com maior volume — {top_cat.get('count')} obras ({top_cat.get('criticos', 0)} críticas)",
-            "causa": f"padrão recorrente em {top_cat.get('categoria').lower()} pode indicar gargalo sistêmico",
-            "acao": f"investigar fluxo específico de **{top_cat.get('categoria')}** com a equipe operacional · validar se há ação preventiva possível"
+    # 1. Score baixo
+    score = headline.get("score", 100)
+    if score < 50 and "score_baixo" in receitas:
+        problemas.append({
+            "chave": "score_baixo",
+            "prioridade": 1,
+            "valores": {
+                "valor": score,
+                "ciclo": score_comp.get("ciclo_mediano", "—"),
+                "pct_meta": int((score_comp.get("ciclo_mediano", 150) / 150 - 1) * 100),
+                "zumbi_pct": score_comp.get("zumbi_pct", "—"),
+                "orfas_pct": score_comp.get("orfas_pct", "—"),
+                "cauda_vt": score_comp.get("lote_vt_270d", "—"),
+            }
         })
 
-    # Conclusão 2: capacidade
-    pct = cap.get("utilization_percent", 0)
-    if pct < 50:
-        conclusoes.append({
-            "obs": f"Capacidade utilizada em apenas {pct}%",
-            "causa": "demanda atual abaixo da capacidade instalada",
-            "acao": "alinhar com Comercial pra acelerar fechamentos · ou reavaliar dimensionamento"
-        })
-    elif pct >= 80:
-        conclusoes.append({
-            "obs": f"Capacidade utilizada em {pct}% · próximo ou acima do limite saudável",
-            "causa": "demanda alta + capacidade instalada limitada",
-            "acao": "revisar prazo de aceitação das próximas obras · avaliar contratações"
+    # 2. Categoria dominante de problema (Comunicação)
+    cats_filt = [c for c in cats if c.get("categoria") != "Outros"]
+    if cats_filt:
+        top_cat = max(cats_filt, key=lambda c: c.get("count", 0))
+        if top_cat.get("categoria") == "Comunicação" and top_cat.get("count", 0) > 50:
+            if "categoria_comunicacao" in receitas:
+                problemas.append({
+                    "chave": "categoria_comunicacao",
+                    "prioridade": 2,
+                    "valores": {
+                        "count": top_cat.get("count"),
+                        "criticos": top_cat.get("criticos", 0),
+                    }
+                })
+
+    # 3. Infiltração com proporção crítica
+    inf = next((c for c in cats if c.get("categoria") == "Infiltração"), None)
+    if inf and (inf.get("count", 0) > 40 or inf.get("criticos", 0) > 20):
+        if "categoria_infiltracao" in receitas:
+            critic = inf.get("criticos", 0)
+            cnt = inf.get("count", 1)
+            problemas.append({
+                "chave": "categoria_infiltracao",
+                "prioridade": 3,
+                "valores": {
+                    "count": cnt,
+                    "criticos": critic,
+                    "pct_critico": int(critic / cnt * 100) if cnt else 0,
+                }
+            })
+
+    # 4. Capacidade ociosa
+    pct = cap.get("utilization_percent", 100)
+    if pct < 50 and "capacidade_ociosa" in receitas:
+        cap_mensal = cap.get("capacidade_mensal_produtiva", 0)
+        m2_curso = rs.get("totais", {}).get("m2_em_execucao", 0)
+        problemas.append({
+            "chave": "capacidade_ociosa",
+            "prioridade": 4,
+            "valores": {
+                "pct": pct,
+                "m2_curso": fmt_num(m2_curso),
+                "cap_mensal": fmt_num(cap_mensal),
+                "sobra": fmt_num(cap_mensal - m2_curso),
+            }
         })
 
-    # Conclusão 3: cobertura KIRA
-    op_kira = (rs or {}).get("operacional_kira", {})
+    # 5. Cegueira KIRA
     sem_kira = op_kira.get("sem_kira", 0)
-    if sem_kira > 50:
-        conclusoes.append({
-            "obs": f"**{sem_kira} obras sem KIRA** (sem grupo de WhatsApp acompanhado)",
-            "causa": "cegueira da Qualidade · obras invisíveis pra detecção de problemas via grupo",
-            "acao": "padronizar criação de grupo desde o início da obra · meta: zerar cegueira"
+    if sem_kira > 50 and "cegueira_kira" in receitas:
+        problemas.append({
+            "chave": "cegueira_kira",
+            "prioridade": 5,
+            "valores": {"count": sem_kira}
         })
 
-    # Conclusão 4: atrasados
-    atrasados = summary.get("atrasados", 0)
+    # 6. Alto atraso crítico
     criticos = summary.get("critical", 0)
-    if criticos > 10:
-        conclusoes.append({
-            "obs": f"{criticos} obras em estado crítico ({atrasados} no total atrasadas)",
-            "causa": "concentração de problemas que demanda atenção imediata",
-            "acao": "priorizar contato direto com as **top 5 mais antigas** (ver Seção 4) · validar se demandam intervenção da Coordenação"
+    if criticos > 15 and "alto_atraso_critico" in receitas:
+        problemas.append({
+            "chave": "alto_atraso_critico",
+            "prioridade": 6,
+            "valores": {
+                "count": criticos,
+                "atrasados": summary.get("atrasados", 0),
+            }
         })
 
-    while len(conclusoes) < 3:
-        conclusoes.append({"obs": "[REVISAR]", "causa": "[REVISAR]", "acao": "[REVISAR]"})
+    problemas.sort(key=lambda p: p["prioridade"])
+    return problemas[:4]  # máx 4 problemas detalhados
 
-    md = ""
-    for i, c in enumerate(conclusoes[:5], 1):
-        # obs já pode conter ** internos (negrito), então não embrulhar de novo
-        md += f"\n{i}. {c['obs']}\n   *Causa provável:* {c['causa']}\n   *→ Ação sugerida:* {c['acao']}\n"
+
+def _subst(texto, valores):
+    """Substitui {chave} por valor em string."""
+    if not texto:
+        return ""
+    for k, v in valores.items():
+        texto = texto.replace("{" + k + "}", str(v))
+    return texto
+
+
+def renderizar_receita(prob, receita):
+    """Renderiza 1 receita preenchida com valores reais (substitui placeholders em TODOS os campos textuais)."""
+    valores = prob["valores"]
+
+    diag = _subst(receita.get("diagnostico", ""), valores)
+    melhorar = _subst(receita.get("para_melhorar", "—"), valores)
+    rec = _subst(receita.get("recomendacao_combinada", ""), valores)
+
+    md = f"### {receita.get('titulo', '?')}\n\n"
+    md += f"**Diagnóstico**\n{diag}\n\n"
+    md += f"**Para melhorar:** {melhorar}\n\n"
+    md += "**Caminhos viáveis:**\n\n"
+
+    for i, cam in enumerate(receita.get("caminhos", []), 1):
+        nome = _subst(cam.get("nome", "?"), valores)
+        como = _subst(cam.get("como", "—"), valores)
+        custo = _subst(cam.get("custo", "—"), valores)
+        impacto = _subst(cam.get("impacto_template", ""), valores)
+        risco = _subst(cam.get("risco", "—"), valores)
+
+        md += f"**Caminho {chr(64+i)} · {nome}**\n"
+        md += f"- **Como:** {como}\n"
+        md += f"- **Custo do tempo:** {custo}\n"
+        md += f"- **Impacto esperado:** {impacto}\n"
+        md += f"- **Risco:** {risco}\n\n"
+
+    if rec:
+        md += f"**Recomendação automática:** {rec}\n"
+
+    return md
+
+
+def secao_conclusoes(rs, extras, headline, receitas):
+    """10 · Conclusões e Recomendações com receitas propositivas."""
+    problemas = detectar_problemas(rs, headline, extras, receitas)
+
+    if not problemas:
+        return "## 10 · Conclusões e Recomendações\n\n_Nenhum problema crítico detectado no período._\n\n---\n"
+
+    blocos = []
+    for prob in problemas:
+        receita = receitas.get(prob["chave"])
+        if receita:
+            blocos.append(renderizar_receita(prob, receita))
 
     return f"""## 10 · Conclusões e Recomendações
-{md}
 
-**Para a próxima quinzena:**
-- [REVISAR · 3 prioridades baseadas nos pontos acima]
+> Análise propositiva: cada problema crítico detectado vem com diagnóstico, caminhos viáveis (Como · Custo · Impacto · Risco) e recomendação combinada. Números marcados [REVISAR] são chutes que dependem do conhecimento operacional do Vitor pra calibrar.
+
+{chr(10).join(blocos)}
+---
+
+**Para a próxima quinzena · 3 prioridades sugeridas:**
+- [REVISAR · escolher 3 dos caminhos acima como prioridade do período]
 
 ---
 """
@@ -801,6 +899,7 @@ def main():
     score_hist = load_json(DADOS / "score-historico.json") or []
     extras = load_json(DADOS / "relatorio-extras.json")
     disc = load_json(ORION_DADOS / "discordancias-v3.json")
+    receitas = load_json(ROOT / "receitas-qualidade.json") or {}
 
     if not headline or not rs:
         print("ERRO: headline.json ou rodrigo-stats.json nao encontrados", file=sys.stderr)
@@ -821,7 +920,7 @@ def main():
         secao_capacidade(rs, extras),
         secao_equipe(rs, extras),
         secao_orion(disc),
-        secao_conclusoes(rs, extras),
+        secao_conclusoes(rs, extras, headline, receitas),
         secao_anexo(rs),
         secao_fontes(headline, rs, disc, extras),
     ]
