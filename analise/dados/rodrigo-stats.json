@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-03T23:53:55Z",
+  "atualizado_em": "2026-05-04T03:41:27Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1037,
@@ -24,8 +24,8 @@
   },
   "proximos": {
     "15d": {
-      "obras": 19,
-      "m2": 3379
+      "obras": 20,
+      "m2": 3489
     },
     "30d": {
       "obras": 23,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2042,
+    "pending_tasks": 2045,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 1,
+        "daysUntilEntry": 0,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "CEP 13092",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 1 dias do início",
-        "daysUntilEntry": 1,
+        "message": "Projeto sem equipe definida a 0 dias do início",
+        "daysUntilEntry": 0,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"PROJETOS  - 1ª REVISÃO\"",
-        "daysUntilEntry": 1,
+        "daysUntilEntry": 0,
         "currentStage": "PROJETOS  - 1ª REVISÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -112,8 +112,8 @@
         "cidade": "CEP 04531",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 1 dias do início",
-        "daysUntilEntry": 1,
+        "message": "Projeto sem equipe definida a 0 dias do início",
+        "daysUntilEntry": 0,
         "currentStage": "PROJETOS  - 1ª REVISÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -124,7 +124,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"CONFIRMAÇÕES OP 1\"",
-        "daysUntilEntry": 8,
+        "daysUntilEntry": 7,
         "currentStage": "CONFIRMAÇÕES OP 1",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -135,7 +135,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 22,
+        "daysUntilEntry": 21,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -146,7 +146,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 29,
+        "daysUntilEntry": 28,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -156,8 +156,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 22 dias do início",
-        "daysUntilEntry": 22,
+        "message": "Projeto sem equipe definida a 21 dias do início",
+        "daysUntilEntry": 21,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -167,8 +167,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 29 dias do início",
-        "daysUntilEntry": 29,
+        "message": "Projeto sem equipe definida a 28 dias do início",
+        "daysUntilEntry": 28,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -177,179 +177,6 @@
   "weekly_forecast": [
     {
       "weekNumber": 1,
-      "startDate": "2026-04-27",
-      "endDate": "2026-05-04",
-      "starting": {
-        "count": 1,
-        "totalM2": 198.06,
-        "totalLinear": 0,
-        "projects": [
-          {
-            "id": "pf-mklv83tl-308135",
-            "clienteNome": "ALEXANDRE BARCELLOS RAMOS",
-            "cidade": "CEP 91340",
-            "metragemM2": 198.06,
-            "linearTotal": null,
-            "dataEntrada": "30/04/2026 03:00",
-            "prazo": 18,
-            "pipefyFase": "PROJETOS  - 1ª REVISÃO",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "25/05/2026"
-          }
-        ]
-      },
-      "inExecution": {
-        "count": 8,
-        "totalM2": 2668.48,
-        "totalLinear": 4.686,
-        "projects": [
-          {
-            "id": "pf-mklv83sg-266944",
-            "clienteNome": "Pedro Henning",
-            "cidade": "Jaguariaíva",
-            "metragemM2": 150,
-            "linearTotal": null,
-            "dataEntrada": "01/04/2026 09:00",
-            "prazo": 30,
-            "pipefyFase": "INDÚSTRIA - EM PRODUÇÃO",
-            "equipe": null,
-            "reserva": true,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "12/05/2026"
-          },
-          {
-            "id": "pf-mklv83v1-307964",
-            "clienteNome": "NATHALIA ROBERTA MACARIO",
-            "cidade": "CEP 13.414",
-            "metragemM2": 673.73,
-            "linearTotal": null,
-            "dataEntrada": "06/04/2026 03:00",
-            "prazo": 20,
-            "pipefyFase": "REVISÃO FINAL OP",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "01/05/2026"
-          },
-          {
-            "id": "pf-mklv83ss-108191",
-            "clienteNome": "FERNANDO TEMBRA RODRIGUEZ",
-            "cidade": "CEP 22430",
-            "metragemM2": 140.04,
-            "linearTotal": null,
-            "dataEntrada": "06/04/2026 10:00",
-            "prazo": 30,
-            "pipefyFase": "INDÚSTRIA - EM PRODUÇÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "15/05/2026"
-          },
-          {
-            "id": "pf-mklv83t7-371692",
-            "clienteNome": "MAYARA ULIANA CASAGRANDE",
-            "cidade": "CEP 22290",
-            "metragemM2": 327.21,
-            "linearTotal": null,
-            "dataEntrada": "06/04/2026 13:00",
-            "prazo": 18,
-            "pipefyFase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "29/04/2026"
-          },
-          {
-            "id": "pf-mklv83tq-815103",
-            "clienteNome": "RAFAEL DE OLIVEIRA BOTELHO CORREA",
-            "cidade": "CEP 22621",
-            "metragemM2": 560.75,
-            "linearTotal": null,
-            "dataEntrada": "24/04/2026 12:00",
-            "prazo": 25,
-            "pipefyFase": "INDÚSTRIA - EM PRODUÇÃO",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "28/05/2026"
-          },
-          {
-            "id": "pf-mklv83s5-513315",
-            "clienteNome": "Andrea Almeida",
-            "cidade": "Belo Horizonte",
-            "metragemM2": 450,
-            "linearTotal": 0,
-            "dataEntrada": "25/03/2026 09:00",
-            "prazo": 30,
-            "pipefyFase": "ENTRADA",
-            "equipe": null,
-            "reserva": true,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "05/05/2026"
-          },
-          {
-            "id": "pf-mklv83vy-116954",
-            "clienteNome": "MARCELO WAJSKOP ABRAMOWICZ",
-            "cidade": "CEP 04531",
-            "metragemM2": 168.69,
-            "linearTotal": 4.686,
-            "dataEntrada": "30/03/2026 03:00",
-            "prazo": 30,
-            "pipefyFase": "REVISÃO FINAL OP",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "08/05/2026"
-          },
-          {
-            "id": "pf-mklv83tl-308135",
-            "clienteNome": "ALEXANDRE BARCELLOS RAMOS",
-            "cidade": "CEP 91340",
-            "metragemM2": 198.06,
-            "linearTotal": null,
-            "dataEntrada": "30/04/2026 03:00",
-            "prazo": 18,
-            "pipefyFase": "PROJETOS  - 1ª REVISÃO",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "25/05/2026"
-          }
-        ]
-      },
-      "noturnas": {
-        "count": 0,
-        "totalM2": 0,
-        "projects": []
-      },
-      "capacity": {
-        "applicatorsNeeded": 24,
-        "applicatorsPerProject": 11.9,
-        "utilizationPercent": 25
-      }
-    },
-    {
-      "weekNumber": 2,
       "startDate": "2026-05-04",
       "endDate": "2026-05-11",
       "starting": {
@@ -538,7 +365,7 @@
       }
     },
     {
-      "weekNumber": 3,
+      "weekNumber": 2,
       "startDate": "2026-05-11",
       "endDate": "2026-05-18",
       "starting": {
@@ -695,7 +522,7 @@
       }
     },
     {
-      "weekNumber": 4,
+      "weekNumber": 3,
       "startDate": "2026-05-18",
       "endDate": "2026-05-25",
       "starting": {
@@ -803,7 +630,7 @@
       }
     },
     {
-      "weekNumber": 5,
+      "weekNumber": 4,
       "startDate": "2026-05-25",
       "endDate": "2026-06-01",
       "starting": {
@@ -928,7 +755,7 @@
       }
     },
     {
-      "weekNumber": 6,
+      "weekNumber": 5,
       "startDate": "2026-06-01",
       "endDate": "2026-06-08",
       "starting": {
@@ -1037,7 +864,7 @@
       }
     },
     {
-      "weekNumber": 7,
+      "weekNumber": 6,
       "startDate": "2026-06-08",
       "endDate": "2026-06-15",
       "starting": {
@@ -1113,7 +940,7 @@
       }
     },
     {
-      "weekNumber": 8,
+      "weekNumber": 7,
       "startDate": "2026-06-15",
       "endDate": "2026-06-22",
       "starting": {
@@ -1173,7 +1000,7 @@
       }
     },
     {
-      "weekNumber": 9,
+      "weekNumber": 8,
       "startDate": "2026-06-22",
       "endDate": "2026-06-29",
       "starting": {
@@ -1266,7 +1093,7 @@
       }
     },
     {
-      "weekNumber": 10,
+      "weekNumber": 9,
       "startDate": "2026-06-29",
       "endDate": "2026-07-06",
       "starting": {
@@ -1342,7 +1169,7 @@
       }
     },
     {
-      "weekNumber": 11,
+      "weekNumber": 10,
       "startDate": "2026-07-06",
       "endDate": "2026-07-13",
       "starting": {
@@ -1402,7 +1229,7 @@
       }
     },
     {
-      "weekNumber": 12,
+      "weekNumber": 11,
       "startDate": "2026-07-13",
       "endDate": "2026-07-20",
       "starting": {
@@ -1479,9 +1306,53 @@
       }
     },
     {
-      "weekNumber": 13,
+      "weekNumber": 12,
       "startDate": "2026-07-20",
       "endDate": "2026-07-27",
+      "starting": {
+        "count": 0,
+        "totalM2": 0,
+        "totalLinear": 0,
+        "projects": []
+      },
+      "inExecution": {
+        "count": 1,
+        "totalM2": 124.28,
+        "totalLinear": 0,
+        "projects": [
+          {
+            "id": "pf-mklv83tt-813435",
+            "clienteNome": "FERNANDO VALDEMAR BALDIN",
+            "cidade": "CEP 815404",
+            "metragemM2": 124.28,
+            "linearTotal": null,
+            "dataEntrada": "13/07/2026 12:00",
+            "prazo": 15,
+            "pipefyFase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+            "equipe": "MUTIRÃO",
+            "reserva": false,
+            "obraNoturna": false,
+            "trabalhaSabado": false,
+            "trabalhaDomingo": false,
+            "dataTerminoCalculada": "31/07/2026"
+          }
+        ]
+      },
+      "noturnas": {
+        "count": 0,
+        "totalM2": 0,
+        "projects": []
+      },
+      "capacity": {
+        "applicatorsNeeded": 3,
+        "applicatorsPerProject": 95,
+        "utilizationPercent": 3
+      }
+    },
+    {
+      "weekNumber": 13,
+      "startDate": "2026-07-27",
+      "endDate": "2026-08-03",
       "starting": {
         "count": 0,
         "totalM2": 0,
@@ -4356,7 +4227,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 20,
+        "dias_desde_resumo": 21,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -4522,7 +4393,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 20,
+        "dias_desde_resumo": 21,
         "alertas": [
           "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
           "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
@@ -10321,15 +10192,15 @@
     "fonte": "/api/projects/{id} pendenciaManual.whatsappSummary (cada detail fresh, ~3min coleta)"
   },
   "historico_aplicadores": {
-    "dias_acumulados": 4,
-    "janela_dias": 4,
+    "dias_acumulados": 5,
+    "janela_dias": 5,
     "top_carga_7d": [
       {
         "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
         "nome": "Wiguens Louis",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 10
       },
       {
@@ -10337,7 +10208,7 @@
         "nome": "Egberto Sullivan Tavares de Oliveira",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 7
       },
       {
@@ -10345,7 +10216,7 @@
         "nome": "Michael Marinho de Lima",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 5
       },
       {
@@ -10353,7 +10224,7 @@
         "nome": "Gilmar Gomes Rafael",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 4
       },
       {
@@ -10361,7 +10232,7 @@
         "nome": "Júlio Miranda",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 4
       },
       {
@@ -10369,7 +10240,7 @@
         "nome": "João Carlos",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 4
       },
       {
@@ -10377,7 +10248,7 @@
         "nome": "Kaike Luiz Gonzaga",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 3
       },
       {
@@ -10385,7 +10256,7 @@
         "nome": "Donald Rodriguês",
         "cargo": "Aplicador 2",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 3
       },
       {
@@ -10393,7 +10264,7 @@
         "nome": "Marcelo Siqueira Boer",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10401,7 +10272,7 @@
         "nome": "Kauan de Lima Humberto",
         "cargo": "Ajudante",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       }
     ],
@@ -10411,7 +10282,7 @@
         "nome": "Marcelo Siqueira Boer",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10419,7 +10290,7 @@
         "nome": "Kauan de Lima Humberto",
         "cargo": "Ajudante",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10427,7 +10298,7 @@
         "nome": "Kleber Luiz da Silva",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10435,7 +10306,7 @@
         "nome": "Ronaldo Adriano Rocha",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10443,7 +10314,7 @@
         "nome": "Cosme Eduardo Soares Ragno",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10451,7 +10322,7 @@
         "nome": "Gilmar Gomes Rafael",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 4
       },
       {
@@ -10459,7 +10330,7 @@
         "nome": "Alexandre Henrique Dourado Domiense",
         "cargo": "Preparador",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10467,7 +10338,7 @@
         "nome": "Alexander Vieira Rangel",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10475,7 +10346,7 @@
         "nome": "Filipe da Silva Lucena",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       },
       {
@@ -10483,7 +10354,7 @@
         "nome": "Ariosvaldo Silva Reis Júnior",
         "cargo": "Ajudante",
         "dias_escalado": 2,
-        "dias_ocioso": 1,
+        "dias_ocioso": 2,
         "total_obras": 2
       }
     ],
@@ -10493,7 +10364,7 @@
         "nome": "Ademir de Jesus Silva",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10501,7 +10372,7 @@
         "nome": "Anderson da Silva Santos",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10509,7 +10380,7 @@
         "nome": "André Lopes",
         "cargo": "Aplicador 2",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10517,7 +10388,7 @@
         "nome": "Bruno Batista Miranda",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10525,7 +10396,7 @@
         "nome": "Charles Henrique da Silva",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10533,7 +10404,7 @@
         "nome": "Cléber Cardoso",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10541,7 +10412,7 @@
         "nome": "Daniel Rodrigues de Oliveira",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10549,7 +10420,7 @@
         "nome": "Daniel Rodrigues dos Santos",
         "cargo": "Aplicador 2",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10557,7 +10428,7 @@
         "nome": "Danilo Soares Andrade",
         "cargo": "Preparador",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       },
       {
@@ -10565,7 +10436,7 @@
         "nome": "David Faria de Lara",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 0
       }
     ],
@@ -10574,7 +10445,7 @@
   "lw": {
     "luana": {
       "n": 93,
-      "mediana": 235,
+      "mediana": 236,
       "n180": 59,
       "n270": 34,
       "zumbi": 7,
@@ -10583,7 +10454,7 @@
     },
     "wesley": {
       "n": 89,
-      "mediana": 195,
+      "mediana": 196,
       "n180": 49,
       "n270": 17,
       "zumbi": 22,
