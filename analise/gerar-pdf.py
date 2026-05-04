@@ -32,7 +32,7 @@ def remover_revisar(md):
     """
     Remove marcadores de bastidor [REVISAR ...] que vazariam pro leitor final.
     Regras:
-    1. Linha que é APENAS '> [REVISAR ...]' (blockquote sem outro conteúdo) → remove linha inteira
+    1. Linha que é APENAS '> [REVISAR ...]' OU '- [REVISAR ...]' (sem outro conteúdo) → remove linha
     2. '[REVISAR · rascunho auto] ' no início de blockquote → remove só o tag, mantém texto
     3. '[REVISAR número]' ou '[REVISAR]' inline no meio do texto → remove o tag
     4. '[REVISAR · TODO ...]' → remove linha inteira (placeholder de tarefa)
@@ -40,15 +40,17 @@ def remover_revisar(md):
     out = []
     for line in md.split("\n"):
         stripped = line.strip()
-        # Caso 1: linha-só-revisar (blockquote ou parágrafo) — remove
-        # Padrão: "> [REVISAR ...]" ou "[REVISAR · TODO ...]" ou "[REVISAR · escolher ...]"
-        if re.match(r"^>?\s*\[REVISAR(\s+[·•]\s+(TODO|escolher|Fase)|\s+[a-záéíóúçãõâêô])", stripped, flags=re.IGNORECASE):
+        # Caso 1a: linha-só-revisar como blockquote (>) — remove
+        # Caso 1b: linha-só-revisar como bullet (-) — remove
+        # Padrão: "> [REVISAR ...]", "- [REVISAR ...]", "[REVISAR · TODO ...]"
+        if re.match(r"^[>\-]?\s*\[REVISAR(\s+[·•]\s+(TODO|escolher|Fase)|\s+[a-záéíóúçãõâêô])", stripped, flags=re.IGNORECASE):
             # Se tem texto APÓS o ] que não seja só comentário, manter
-            m = re.match(r"^>?\s*\[REVISAR[^\]]*\]\s*(.*)$", stripped, flags=re.IGNORECASE)
-            if m and m.group(1).strip():
+            m = re.match(r"^([>\-]?)\s*\[REVISAR[^\]]*\]\s*(.*)$", stripped, flags=re.IGNORECASE)
+            if m and m.group(2).strip():
                 # Tem texto depois do tag — preserva o texto, remove o tag
-                resto = m.group(1).strip()
-                prefix = "> " if stripped.startswith(">") else ""
+                resto = m.group(2).strip()
+                prefix_char = m.group(1)
+                prefix = f"{prefix_char} " if prefix_char else ""
                 out.append(prefix + resto)
             # Senão: linha pura de revisão, descartar
             continue

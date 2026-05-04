@@ -2,7 +2,7 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Gerente da Qualidade**
-**Gerado em:** 04/05/2026 16:38
+**Gerado em:** 04/05/2026 18:22
 
 ---
 
@@ -12,18 +12,18 @@
 
 ### Manchete
 
-🔴 **Operação em zona vermelha** · Score 48/100 (▼ -1 ⚠ vs quinzena anterior). 260 obras ativas · 53 atrasadas (21 críticas) · 27 em retorno · capacidade utilizada em 35% (folga produtiva).
+🔴 **Operação em zona vermelha** · Score 48/100 (▼ -1 ⚠ vs snapshot de 2 dias atrás). 260 obras ativas · 53 atrasadas (21 críticas) · 26 em retorno · capacidade utilizada em 35% (folga produtiva).
 
 ### Painel de Saúde · 6 KPIs
 
 | | Indicador | Valor | Status |
 |---|---|---|---|
 | 🔴 | Score Saúde | **48/100** (▼ -1 ⚠) | abaixo da zona saudável (≥70) |
-| 🔵 | Obras ativas em fluxo | **260** (35 em execução) | volume da carteira |
+| 🔵 | Obras ativas em fluxo | **260** (34 em execução) | volume da carteira |
 | 🟡 | Atrasadas | **53** (21 críticas) | 20% das ativas |
-| 🟡 | Em retorno (reparo/marcas) | **27** | 10% da carteira em pós-entrega |
+| 🟡 | Em retorno (reparo/marcas) | **26** | 10% da carteira em pós-entrega |
 | 🟡 | Capacidade utilizada | **35%** | folga produtiva |
-| 🟡 | Cobertura KIRA | **65%** | 65% da carteira monitorada · 70 sem grupo |
+| 🟡 | Cobertura KIRA | **64%** | 64% da carteira monitorada · 71 sem grupo |
 
 
 > Sinaleira: 🟢 saudável · 🟡 atenção · 🔴 crítico · 🔵 informativo
@@ -38,7 +38,7 @@
 
 ### Implicação sintética
 
-> Operação respira (capacidade 35%), mas com **21 obras críticas** e **70 sem KIRA** — o gargalo é qualitativo, não de volume.
+> Operação respira (capacidade 35%), mas com **21 obras críticas** e **71 sem KIRA** — o gargalo é qualitativo, não de volume.
 
 ---
 
@@ -46,23 +46,23 @@
 
 > Visão panorâmica do período. Brief Executivo no topo (Seção 0) tem leitura mais condensada · análise técnica nas Seções 2-9.
 
-> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 260 obras ativas em fluxo, 35 em execução agora, 53 atrasadas e 27 em pós-entrega (reparo + marcas).
+> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ (vs 2d) vs quinzena anterior. 260 obras ativas em fluxo, 34 em execução agora, 53 atrasadas e 26 em pós-entrega (reparo + marcas).
 
-**Score Saúde Operacional:** 48/100 (▼ -1 ⚠)
+**Score Saúde Operacional:** 48/100 (▼ -1 ⚠ (vs 2d))
 
 | KPI | Atual | Anterior | Δ |
 |---|---|---|---|
-| 🔴 Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ |
+| 🔴 Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ (vs 2d) |
 | 🔵 Total ativas em fluxo | 260 | — | — |
-| 🔵 Em execução agora | 35 | — | — |
+| 🔵 Em execução agora | 34 | — | — |
 | 🟡 Atrasadas (Painel) | 53 (20% das ativas) | — | — |
-| 🟡 Em retorno (reparo + marcas) | 27 (10% das ativas) | — | — |
+| 🟡 Em retorno (reparo + marcas) | 26 (10% das ativas) | — | — |
 | 🟡 Capacidade utilizada | 35% | — | — |
 
 
 **3 destaques do período:**
 1. Operação a 35% da capacidade · espaço produtivo considerável (4.793 m²/mês livres)
-2. Cobertura KIRA em 65% (130 de 200 obras) · melhor visibilidade de comunicação com cliente
+2. Cobertura KIRA em 64.7% (130 de 201 obras) · melhor visibilidade de comunicação com cliente
 3. 81 obras com clima saudável (62.3% das monitoradas pelo KIRA)
 
 **3 alertas críticos:**
@@ -77,18 +77,18 @@
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
 | Total ativas em fluxo | 260 | — | — | Painel de Obras |
-| Em execução agora | 35 | — | — | Painel de Obras |
+| Em execução agora | 34 | — | — | Painel de Obras |
 | Atrasadas | 53 | — | — | Análise do Painel |
 | → Críticas | 21 | — | — | Análise do Painel |
 | → Alto risco | 27 | — | — | Análise do Painel |
-| Obras em retorno (reparo + marcas) | 27 | — | — | Painel de Obras |
+| Obras em retorno (reparo + marcas) | 26 | — | — | Painel de Obras |
 | Cluster paralisado | 5 | — | — | Painel de Obras |
-| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ | Snapshot diário |
+| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ (vs 2d) | Snapshot diário |
 | TEMPO médio de ciclo | 172d | — | — | Painel de Obras |
 | VOLUME m² em curso | 4.403 | — | — | Painel de Obras |
 | Capacidade utilizada | 35% | — | — | Painel de Obras |
 | A iniciar firmadas (30d) | 23 obras · 3.738 m² | — | — | Painel de Obras |
-| Cobertura KIRA | 65% | — | — | KIRA WhatsApp |
+| Cobertura KIRA | 64.7% | — | — | KIRA WhatsApp |
 | Ocorrências abertas | 950 (0.9 por obra · acumulado) | — | — | Painel · ocorrências |
 
 > Deltas vs quinzena anterior em construção · histórico de Score acumulando desde 2026-05-01.
@@ -144,15 +144,15 @@
 <figure class="viz">
 <svg viewBox="0 0 600 105" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
   <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Distribuição da carteira ativa por KIRA</text>
-  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">200 obras</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">201 obras</text>
 
-  <rect x="0" y="30" width="218.70000000000002" height="28" fill="#6b8e3d" rx="2 0 0 2"/>
-  <rect x="218.70000000000002" y="30" width="132.3" height="28" fill="#b89a4a"/>
-  <rect x="351.0" y="30" width="189.0" height="28" fill="#a89e92" rx="0 2 2 0"/>
+  <rect x="0" y="30" width="217.61194029850745" height="28" fill="#6b8e3d" rx="2 0 0 2"/>
+  <rect x="217.61194029850745" y="30" width="131.6417910447761" height="28" fill="#b89a4a"/>
+  <rect x="349.25373134328356" y="30" width="190.7462686567164" height="28" fill="#a89e92" rx="0 2 2 0"/>
 
-  <text x="109.35000000000001" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">81</text>
-  <text x="284.85" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">49</text>
-  <text x="445.5" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">70</text>
+  <text x="108.80597014925372" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">81</text>
+  <text x="283.4328358208955" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">49</text>
+  <text x="444.6268656716418" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">71</text>
 
   <circle cx="6" cy="78" r="4" fill="#6b8e3d"/>
   <text x="16" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Saudável (40%)</text>
@@ -164,10 +164,10 @@
 </figure>
 
 
-- **Cobertura:** 130 de 200 obras ativas têm grupo de WhatsApp acompanhado (65%)
+- **Cobertura:** 130 de 201 obras ativas têm grupo de WhatsApp acompanhado (64.7%)
 - **Saudável:** 81 (62.3% das monitoradas)
 - **Em atenção:** 49
-- **Sem KIRA:** 70 *(cegueira — obras que pra Qualidade são silêncio)*
+- **Sem KIRA:** 71 *(cegueira — obras que pra Qualidade são silêncio)*
 
 > [REVISAR] Comentário narrativo de 1-2 frases sobre o que esses números contam juntos.
 
@@ -177,7 +177,7 @@
 
 ## 4 · Análise de Atrasos · caso a caso
 
-> Top 5 obras mais atrasadas no momento. Diagnóstico textual extraído direto do Painel (`/api/analise`).
+> Top 5 obras com maior atraso e diagnóstico textual disponível. **Estado atual** (dias de atraso · fase) é fresco, mas o **diagnóstico narrativo** abaixo é a última análise registrada no Painel — pode ter datas anteriores ao período do relatório se a análise não foi atualizada. Cabe à Gerência da Qualidade verificar se o quadro descrito ainda é válido.
 
 ### ADRIANA FERNANDES PERES · SÃO PAULO · 40 dias de atraso
 **Fase atual:** INDÚSTRIA - EM PRODUÇÃO
@@ -247,10 +247,10 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|
-| Obras em retorno (total) | 27 | — | — |
-| → em reparo | 23 | — | — |
+| Obras em retorno (total) | 26 | — | — |
+| → em reparo | 22 | — | — |
 | → em marcas / rolo / cera | 4 | — | — |
-| % da carteira ativa | 10.4% | — | — |
+| % da carteira ativa | 10% | — | — |
 
 ### Categorias de problema relacionadas a retrabalho
 
@@ -320,7 +320,7 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 | Capacidade mensal produtiva | 9.196 m²/mês | — | — |
 | VOLUME m² em curso | 4.403 m² | — | — |
 | Capacidade utilizada | 35% | — | — |
-| A INICIAR firmadas (30d) | 0 obras | — | — |
+| A INICIAR firmadas (30d) | 23 obras · 3.738 m² | — | — |
 
 **Diagnóstico atual:** Operação a 35% da capacidade mensal · sobra produtiva considerável. **→ Comercial pode acelerar fechamentos** · cabe sinalizar pro time de vendas.
 
@@ -546,15 +546,15 @@ A leitura honesta deste relatório é que a folga de capacidade convive com frag
 
 | Status | Quantidade |
 |---|---|
-| Em execução | 35 |
+| Em execução | 34 |
 | Aguardando execução | 48 |
 | Planejamento | 102 |
 | Pausado | 5 |
 | Aguardando clima | 3 |
-| Em reparo | 23 |
+| Em reparo | 22 |
 | Em marcas / rolo / cera | 4 |
 | Concluído | 235 |
-| Finalizado | 543 |
+| Finalizado | 545 |
 | Cancelado | 33 |
 
 > [REVISAR · Fase 1.1c] Listagem nominal de cada bucket (nomes dos clientes) — virá numa próxima iteração consultando o details/.
@@ -591,6 +591,9 @@ A leitura honesta deste relatório é que a folga de capacidade convive com frag
 - **Retrabalho · pós-entrega** · obras em status `reparo` ou `marcas_rolo_cera`. **Cronograma original já cumprido** — tratadas separadamente do atraso. Influências externas (cliente solicita reparo, exigência climática etc) podem disparar retrabalho sem indicar falha de execução.
 - **Cluster paralisado** · obras em status `pausado` por motivo externo (cliente, clima, suprimento).
 - **Detrator latente** (Orion) · obra com flag de risco jurídico/comercial baseado em histórico de quase-distrato ou reclamação técnica recente.
+- **Equipe "fantasma"** (Seção 8) · equipe cadastrada com líder e obras sob liderança, mas com **zero aplicadores ativos** registrados. Geralmente significa que a equipe é gerenciada por encarregado oculto (sem cadastro formal) ou que o cadastro está defasado.
+- **"Apenas CEP"** (Seção 6) · obras cujo cadastro de endereço no Painel tem só o CEP, sem cidade preenchida. Não é um lugar — é uma indicação de cadastro incompleto.
+- **Concluído vs Finalizado** (Anexo A) · ambos são fases pós-execução, mas refletem etapas distintas do processo Painel: **Concluído** = obra terminou execução · **Finalizado** = obra encerrada formalmente após todas as pendências (incluindo cobrança, pós-venda). Por isso aparecem separadas.
 
 ### Fases típicas (Painel de Obras)
 
@@ -618,13 +621,13 @@ Pós-entrega: **REPARO**, **MARCAS / ROLO / CERA**.
 ## Fontes e Disclaimer
 
 **Fontes consultadas:**
-- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T17:45:12Z`
+- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T19:52:08Z`
 - **`/api/analise`** · diagnósticos textuais + categorização de problemas + teamPerformance · snapshot `2026-05-04T12:20:07.727981`
 - **`/api/analytics/alerts`** · alertas estruturados (stage_delay + sem_equipe)
 - **`/api/analytics/weekly-forecast`** · projeção de 13 semanas (starting + inExecution + capacity)
 - **`/api/dashboard`** · ocorrências abertas + SLA + readiness
 - **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-04T18:07:38Z`
-- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T17:45:24Z`
+- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T19:52:19Z`
 - **Score Histórico** · `score-historico.json` (acumula 1 entry/dia desde 2026-05-01)
 
 **Disclaimer:**

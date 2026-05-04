@@ -4,6 +4,11 @@
 > Criado em 2026-05-04 após auditoria do relatório como leitor externo.
 > Marcar `[x]` conforme implementar. Adicionar item novo no fim da prioridade correspondente.
 
+## Histórico de leituras frias
+
+- **2026-05-04 · 1ª leitura externa** → 9 P0 + 5 P1 originais. P0 toda fechada · P1 4/5.
+- **2026-05-04 · 2ª leitura externa** → 14 itens novos identificados. **P0 nova fechada** (5 itens críticos): bug A INICIAR Seção 7, REVISAR-bullet vazando, Score "anterior 49" enganoso (declarado "snapshot N dias atrás"), Seção 4 com diagnósticos antigos (declarado), Glossário ganhou fantasma/Apenas CEP/Concluído vs Finalizado. Pendentes ainda P1 nova (cortar Seção 1 redundante, conectar 3 alertas mesmo padrão, cortar 3 destaques) + P2 nova (impactos chutados marcados, gírias renomeadas).
+
 ## Convenções
 
 - **P0** · gatilho crítico (quebra credibilidade pra diretoria) · resolver agora

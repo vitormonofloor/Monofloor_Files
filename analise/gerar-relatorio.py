@@ -57,18 +57,25 @@ def fmt_num(n, casas=0):
     return f"{n:,.{casas}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def fmt_delta(atual, anterior, suffix="", invert=False):
-    """Formata delta com seta direcional. invert=True quando MENOS é melhor."""
+def fmt_delta(atual, anterior, suffix="", invert=False, dias_atras=None):
+    """
+    Formata delta com seta direcional. invert=True quando MENOS é melhor.
+    Se dias_atras for passado, anota como 'vs N dias atrás' (mais honesto que assumir 'quinzena anterior').
+    """
     if anterior is None or atual is None:
         return "—"
     diff = atual - anterior
     if diff == 0:
-        return "◆ 0"
-    melhorou = (diff > 0 and not invert) or (diff < 0 and invert)
-    seta = "▲" if diff > 0 else "▼"
-    sinal = "+" if diff > 0 else ""
-    icone = "" if melhorou else " ⚠"
-    return f"{seta} {sinal}{fmt_num(diff)}{suffix}{icone}".replace("+-", "-")
+        s = "◆ 0"
+    else:
+        melhorou = (diff > 0 and not invert) or (diff < 0 and invert)
+        seta = "▲" if diff > 0 else "▼"
+        sinal = "+" if diff > 0 else ""
+        icone = "" if melhorou else " ⚠"
+        s = f"{seta} {sinal}{fmt_num(diff)}{suffix}{icone}".replace("+-", "-")
+    if dias_atras is not None:
+        s += f" (vs {dias_atras}d)"
+    return s
 
 
 def fmt_pct(v):
@@ -245,11 +252,27 @@ def nome_arquivo_auto(inicio, fim):
 
 # ═══ Seções do relatório ═══
 
+def _dias_atras(score_ant):
+    """Calcula dias entre o snapshot anterior e hoje. Retorna None se não souber."""
+    if not score_ant:
+        return None
+    d = score_ant.get("date")
+    if not d:
+        return None
+    try:
+        from datetime import date as _date
+        d_ant = _date.fromisoformat(d)
+        return (_date.today() - d_ant).days
+    except Exception:
+        return None
+
+
 def secao_brief_executivo(headline, rs, score_ant, extras, receitas):
     """0 · Brief Executivo · leitura de 60s pra Diretoria."""
     score = headline.get("score", 0) if headline else 0
     score_ant_val = score_ant.get("score") if score_ant else None
-    score_delta = fmt_delta(score, score_ant_val)
+    dias_ant = _dias_atras(score_ant)
+    score_delta = fmt_delta(score, score_ant_val)  # delta limpo · contexto temporal vai na frase abaixo
 
     totais = rs.get("totais", {}) if rs else {}
     ativas = totais.get("ativas", 0)
@@ -276,8 +299,9 @@ def secao_brief_executivo(headline, rs, score_ant, extras, receitas):
         zona = "vermelha"
         zona_emoji = "🔴"
 
+    ref_temporal = f"vs snapshot de {dias_ant} dia{'s' if dias_ant != 1 else ''} atrás" if dias_ant else "vs snapshot anterior"
     manchete = (
-        f"{zona_emoji} **Operação em zona {zona}** · Score {score}/100 ({score_delta} vs quinzena anterior). "
+        f"{zona_emoji} **Operação em zona {zona}** · Score {score}/100 ({score_delta} {ref_temporal}). "
         f"{ativas} obras ativas · {atrasadas} atrasadas ({criticos} críticas) · {em_retorno} em retorno · "
         f"capacidade utilizada em {cap_pct}% (folga produtiva)."
     )
@@ -437,6 +461,9 @@ def secao_glossario():
 - **Retrabalho · pós-entrega** · obras em status `reparo` ou `marcas_rolo_cera`. **Cronograma original já cumprido** — tratadas separadamente do atraso. Influências externas (cliente solicita reparo, exigência climática etc) podem disparar retrabalho sem indicar falha de execução.
 - **Cluster paralisado** · obras em status `pausado` por motivo externo (cliente, clima, suprimento).
 - **Detrator latente** (Orion) · obra com flag de risco jurídico/comercial baseado em histórico de quase-distrato ou reclamação técnica recente.
+- **Equipe "fantasma"** (Seção 8) · equipe cadastrada com líder e obras sob liderança, mas com **zero aplicadores ativos** registrados. Geralmente significa que a equipe é gerenciada por encarregado oculto (sem cadastro formal) ou que o cadastro está defasado.
+- **"Apenas CEP"** (Seção 6) · obras cujo cadastro de endereço no Painel tem só o CEP, sem cidade preenchida. Não é um lugar — é uma indicação de cadastro incompleto.
+- **Concluído vs Finalizado** (Anexo A) · ambos são fases pós-execução, mas refletem etapas distintas do processo Painel: **Concluído** = obra terminou execução · **Finalizado** = obra encerrada formalmente após todas as pendências (incluindo cobrança, pós-venda). Por isso aparecem separadas.
 
 ### Fases típicas (Painel de Obras)
 
@@ -563,7 +590,8 @@ def gerar_destaques_executivos(rs, extras, score_atual, score_ant):
 def secao_resumo_executivo(headline, rs, score_ant, extras):
     score = headline.get("score", 0) if headline else 0
     score_ant_val = score_ant.get("score") if score_ant else None
-    score_delta = fmt_delta(score, score_ant_val)
+    dias_ant = _dias_atras(score_ant)
+    score_delta = fmt_delta(score, score_ant_val, dias_atras=dias_ant)
 
     totais = rs.get("totais", {}) if rs else {}
     ativas = totais.get("ativas", 0)
@@ -642,6 +670,7 @@ def secao_resumo_executivo(headline, rs, score_ant, extras):
 def secao_indicadores(headline, rs, score_ant, extras):
     score = headline.get("score", 0) if headline else 0
     score_ant_val = score_ant.get("score") if score_ant else None
+    dias_ant_indic = _dias_atras(score_ant)
 
     totais = rs.get("totais", {}) if rs else {}
     por_status = rs.get("por_status", {}) if rs else {}
@@ -684,7 +713,7 @@ def secao_indicadores(headline, rs, score_ant, extras):
 | → Alto risco | {high} | — | — | Análise do Painel |
 | Obras em retorno (reparo + marcas) | {em_retorno} | — | — | Painel de Obras |
 | Cluster paralisado | {totais.get('pausados', '—')} | — | — | Painel de Obras |
-| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {fmt_delta(score, score_ant_val)} | Snapshot diário |
+| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {fmt_delta(score, score_ant_val, dias_atras=dias_ant_indic)} | Snapshot diário |
 | TEMPO médio de ciclo | {tempo.get('ciclo_total_mediana', '—')}d | — | — | Painel de Obras |
 | VOLUME m² em curso | {fmt_num(totais.get('m2_em_execucao', 0))} | — | — | Painel de Obras |
 | Capacidade utilizada | {cap.get('utilization_percent', '—')}% | — | — | Painel de Obras |
@@ -808,7 +837,7 @@ def secao_atrasos(extras):
 
     return f"""## 4 · Análise de Atrasos · caso a caso
 
-> Top 5 obras mais atrasadas no momento. Diagnóstico textual extraído direto do Painel (`/api/analise`).
+> Top 5 obras com maior atraso e diagnóstico textual disponível. **Estado atual** (dias de atraso · fase) é fresco, mas o **diagnóstico narrativo** abaixo é a última análise registrada no Painel — pode ter datas anteriores ao período do relatório se a análise não foi atualizada. Cabe à Gerência da Qualidade verificar se o quadro descrito ainda é válido.
 
 {chr(10).join(blocos)}
 > [REVISAR] Padrões observados nos casos acima (1-2 frases) · *qual o tema dominante?*
@@ -942,7 +971,9 @@ def secao_capacidade(rs, extras):
     cap_mensal = cap.get("capacidade_mensal_produtiva", 0)
     m2_curso = totais.get("m2_em_execucao", 0)
     cap_pct = cap.get("utilization_percent", 0)
-    iniciar_30d = proximos.get("firmadas_30d", proximos.get("c_data_30d", 0))
+    prox_30d_cap = proximos.get("30d", {}) if isinstance(proximos.get("30d"), dict) else {}
+    iniciar_30d = prox_30d_cap.get("obras", 0)
+    iniciar_30d_m2 = prox_30d_cap.get("m2", 0)
 
     # Forecast próxima semana
     forecast = (extras or {}).get("forecast", []) or []
@@ -999,7 +1030,7 @@ def secao_capacidade(rs, extras):
 | Capacidade mensal produtiva | {fmt_num(cap_mensal)} m²/mês | — | — |
 | VOLUME m² em curso | {fmt_num(m2_curso)} m² | — | — |
 | Capacidade utilizada | {cap_pct}% | — | — |
-| A INICIAR firmadas (30d) | {iniciar_30d} obras | — | — |
+| A INICIAR firmadas (30d) | {iniciar_30d} obras · {fmt_num(iniciar_30d_m2)} m² | — | — |
 
 **Diagnóstico atual:** {diag}
 {forecast_md}
