@@ -1,21 +1,21 @@
 {
-  "atualizado_em": "2026-05-04T19:47:07Z",
+  "atualizado_em": "2026-05-04T19:52:19Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1039,
-    "ativas": 259,
+    "total": 1040,
+    "ativas": 260,
     "finalizados": 780,
     "em_execucao": 34,
     "pausados": 5,
     "m2_em_execucao": 4403
   },
   "por_status": {
-    "planejamento": 102,
     "aguardando_execucao": 48,
-    "em_execucao": 34,
+    "planejamento": 102,
+    "contrato": 9,
     "reparo": 22,
+    "em_execucao": 34,
     "finalizado": 545,
-    "contrato": 8,
     "pausado": 5,
     "cancelado": 33,
     "aguardando_clima": 3,
@@ -2547,6 +2547,11 @@
       "dataEntrada": "",
       "dataExec": "2026-05-11"
     },
+    "a3b4316d-7e2b-4f88-bb39-27a7057e256f": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2026-07-01"
+    },
     "cecc85af-d8bc-4874-969a-e4866c98611d": {
       "dataVisita": "23/06/2025 17:30",
       "dataEntrada": "10/12/2025 13:00",
@@ -3626,6 +3631,7 @@
       "88ec8531",
       "93d0efc3",
       "98fac762",
+      "a3b4316d",
       "a681cf05",
       "a79f00f0",
       "a869c12c",
@@ -3638,23 +3644,23 @@
       "e79c60c1",
       "fb8b0ed7"
     ],
-    "orfas_n": 33,
+    "orfas_n": 34,
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-03T23:00:30.244000+00:00",
-    "total_fluxo": 200,
+    "total_fluxo": 201,
     "com_kira": 130,
     "saudavel": 81,
     "saudavel_pct_no_monitorado": 62.3,
     "atencao": 49,
-    "sem_kira": 70,
+    "sem_kira": 71,
     "clima_dist": {
       "Positivo": 26,
       "Neutro": 56,
       "Tenso": 54,
       "Crítico": 5,
-      "?": 84
+      "?": 85
     },
     "obras_atencao": [
       {
@@ -9671,6 +9677,14 @@
         "tem_grupo": false
       },
       {
+        "id": "a3b4316d-7e2b-4f88-bb39-27a7057e256f",
+        "cliente": "MARCELO N. G. FANGANIELLO",
+        "consultor": "—",
+        "cidade": "São Paulo",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
         "id": "02e37e72-46fc-445d-ad95-b50dc5ed2c49",
         "cliente": "SILAS AUGUSTO FARIA MARTINS",
         "consultor": "LUANA",
@@ -10439,9 +10453,9 @@
       "reparo": 9,
       "pausadas": 2
     },
-    "total_ativas": 226,
+    "total_ativas": 227,
     "n_180_total": 124,
-    "concentracao_pct": 78.8,
+    "concentracao_pct": 78.4,
     "concentracao_180_pct": 85.5,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
