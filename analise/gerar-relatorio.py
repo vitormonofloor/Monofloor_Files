@@ -979,8 +979,25 @@ def main():
         else SAIDA / f"{nome_arquivo_auto(inicio, fim)}.md"
     )
     saida_path.write_text(relatorio, encoding="utf-8")
-    print(f"[OK] Relatorio salvo em: {saida_path}")
-    print(f"     Tamanho: {len(relatorio)} caracteres - {relatorio.count(chr(10))} linhas")
+    print(f"[OK] Relatorio MD: {saida_path.name}")
+    print(f"     {len(relatorio)} caracteres - {relatorio.count(chr(10))} linhas")
+
+    # Gera HTML estilizado automaticamente
+    try:
+        import subprocess
+        subprocess.run(
+            [sys.executable, str(ROOT / "gerar-pdf.py"), saida_path.name],
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        html_path = saida_path.with_suffix(".html")
+        print(f"[OK] HTML estilizado: {html_path.name}")
+        print(f"     Pra exportar PDF: abrir o .html no browser e Ctrl+P -> 'Salvar como PDF'")
+    except Exception as e:
+        print(f"[AVISO] geracao HTML falhou: {e} (rode 'python gerar-pdf.py' manualmente)")
 
 
 if __name__ == "__main__":

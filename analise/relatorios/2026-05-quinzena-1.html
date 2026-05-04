@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório Quinzenal de Qualidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+
+@page {
+  size: A4;
+  margin: 25mm 20mm 20mm 20mm;
+  @top-right {
+    content: "Relatório Quinzenal de Qualidade · Monofloor";
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 9px;
+    color: #a89e92;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  @bottom-center {
+    content: "página " counter(page) " de " counter(pages);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #a89e92;
+  }
+  @bottom-right {
+    content: "monofloor.com.br";
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #c8bfb4;
+  }
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #fefcf8;
+  color: #2a2520;
+  line-height: 1.65;
+  font-size: 11pt;
+  margin: 0;
+  padding: 0;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 32px 60px;
+}
+
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #b8a080;
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+}
+.brand-bar .logo {
+  font-size: 18px;
+  font-weight: 200;
+  letter-spacing: 8px;
+  text-transform: lowercase;
+  color: #2a2520;
+}
+.brand-bar .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a7e72;
+}
+
+h1 {
+  font-size: 28pt;
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  color: #2a2520;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 17pt;
+  font-weight: 600;
+  color: #2a2520;
+  margin: 32px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid #e8e0d4;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h2:first-of-type { border-top: none; padding-top: 0; }
+
+h3 {
+  font-size: 13pt;
+  font-weight: 600;
+  color: #3a3530;
+  margin: 22px 0 10px;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+h4 {
+  font-size: 11pt;
+  font-weight: 600;
+  color: #5a5048;
+  margin: 16px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+p { margin: 8px 0 12px; }
+
+strong { color: #2a2520; font-weight: 600; }
+em { color: #5a5048; font-style: italic; }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5pt;
+  background: #f4f0e8;
+  border: 1px solid #e8e0d4;
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: #5a4a2a;
+}
+
+ul {
+  margin: 6px 0 14px;
+  padding-left: 22px;
+}
+li { margin: 4px 0; }
+li strong:first-child { color: #b8884a; }
+
+blockquote {
+  border-left: 3px solid #b8a080;
+  background: #faf6ed;
+  margin: 12px 0;
+  padding: 10px 16px;
+  color: #5a5048;
+  font-size: 10.5pt;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  border-radius: 0 4px 4px 0;
+}
+blockquote em { color: #6b6156; }
+blockquote strong { color: #5a4a2a; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 18px;
+  font-size: 10pt;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+thead th {
+  background: #f0e9da;
+  border-bottom: 2px solid #b8a080;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #2a2520;
+  font-size: 9.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+tbody td {
+  border-bottom: 1px solid #ede6dc;
+  padding: 7px 10px;
+  vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) { background: #faf7f2; }
+
+hr {
+  border: none;
+  border-top: 1px dashed #d8c8a8;
+  margin: 24px 0;
+}
+
+a { color: #6b8e3d; text-decoration: none; border-bottom: 1px dotted #6b8e3d; }
+
+/* Bloco de receita / caminho na seção 10 */
+h3 + p strong:first-child,
+p strong:first-child { color: #5a4a2a; }
+
+/* Quebra de página entre seções principais */
+h2 { page-break-before: auto; }
+
+/* Não quebrar páginas dentro de blocos-chave */
+table, blockquote, h2 + p, h3 + p { page-break-inside: avoid; break-inside: avoid; }
+
+/* Botão flutuante de ajuda na visualização */
+.help-banner {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  background: #fdf5e3;
+  border: 1px solid #e6d4a8;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 11px;
+  color: #5a4a2a;
+  box-shadow: 0 4px 12px rgba(42,37,32,0.1);
+  z-index: 1000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  max-width: 280px;
+  line-height: 1.5;
+}
+.help-banner strong { color: #b8884a; }
+@media print { .help-banner { display: none; } }
+</style>
+</head>
+<body>
+<div class="help-banner">
+  <strong>📄 Pra exportar PDF</strong><br>
+  Pressione <strong>Ctrl+P</strong> · destino <strong>"Salvar como PDF"</strong> · papel A4 · margens padrão. Esse aviso some na impressão.
+</div>
+
+<div class="wrap">
+  <div class="brand-bar">
+    <span class="logo">monofloor</span>
+    <span class="meta">Setor de Qualidade · 2026-05-quinzena-1</span>
+  </div>
+
+<h1>Relatório Quinzenal de Qualidade</h1>
+<p><strong>Período:</strong> 20/04 a 04/05/2026 · Quinzena 1 de Maio</p>
+<p><strong>Setor de Qualidade Monofloor · Vitor Gomes, Coordenador</strong></p>
+<p><strong>Gerado em:</strong> 04/05/2026 14:53</p>
+<hr/>
+<h2>1 · Resumo Executivo</h2>
+<blockquote>[REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 260 obras ativas em fluxo, 36 em execução agora, 53 atrasadas e 27 em pós-entrega (reparo + marcas).</blockquote>
+<p><strong>Score Saúde Operacional:</strong> 48/100 (▼ -1 ⚠)</p>
+<table>
+<thead><tr><th>KPI</th><th>Atual</th><th>Anterior</th><th>Δ</th></tr></thead>
+<tbody>
+<tr><td>Total ativas em fluxo</td><td>260</td><td>—</td><td>—</td></tr>
+<tr><td>Em execução agora</td><td>36</td><td>—</td><td>—</td></tr>
+<tr><td>Atrasadas (Painel)</td><td>53</td><td>—</td><td>—</td></tr>
+<tr><td>Obras em retorno (reparo + marcas)</td><td>27</td><td>—</td><td>—</td></tr>
+<tr><td>Capacidade utilizada</td><td>35%</td><td>—</td><td>—</td></tr>
+<tr><td>Score Saúde Operacional</td><td>48/100</td><td>49</td><td>▼ -1 ⚠</td></tr>
+</tbody></table>
+<p><strong>3 destaques do período:</strong></p>
+<ul>
+<li>Operação a 35% da capacidade · espaço produtivo considerável (4.791 m²/mês livres)</li>
+<li>Cobertura KIRA em 64.5% (129 de 200 obras) · melhor visibilidade de comunicação com cliente</li>
+<li>81 obras com clima saudável (62.8% das monitoradas pelo KIRA)</li>
+</ul>
+<p><strong>3 alertas críticos:</strong></p>
+<ul>
+<li><strong>JONATHAS DE ALMEIDA NUNES LUKAS</strong> — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO" · <strong>Causa:</strong> fase atual atrás da prevista pelo cronograma · <strong>→ Ação:</strong> acelerar transição pra fase <strong>INFORMAÇÕES LOGÍSTICAS</strong></li>
+<li><strong>JONATHAS DE ALMEIDA NUNES LUKAS</strong> — Projeto sem equipe definida a 0 dias do início · <strong>Causa:</strong> equipe ainda não alocada · <strong>→ Ação:</strong> alocar equipe pro projeto <strong>JONATHAS DE ALMEIDA NUNES LUKAS</strong></li>
+<li><strong>NINA RODRIGUES FIALDINI</strong> — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "PROJETOS  - 1ª REVISÃO" · <strong>Causa:</strong> fase atual atrás da prevista pelo cronograma · <strong>→ Ação:</strong> acelerar transição pra fase <strong>INFORMAÇÕES LOGÍSTICAS</strong></li>
+</ul>
+<hr/>
+<h2>2 · Indicadores do Período</h2>
+<table>
+<thead><tr><th>Indicador</th><th>Atual</th><th>Anterior</th><th>Δ</th><th>Fonte</th></tr></thead>
+<tbody>
+<tr><td>Total ativas em fluxo</td><td>260</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Em execução agora</td><td>36</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Atrasadas (Painel)</td><td>53</td><td>—</td><td>—</td><td>analise</td></tr>
+<tr><td>→ Críticas</td><td>21</td><td>—</td><td>—</td><td>analise</td></tr>
+<tr><td>→ Alto risco</td><td>27</td><td>—</td><td>—</td><td>analise</td></tr>
+<tr><td>Obras em retorno (reparo + marcas)</td><td>27</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Cluster paralisado (Q2)</td><td>5</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Score Saúde Operacional</td><td>48/100</td><td>49</td><td>▼ -1 ⚠</td><td>headline</td></tr>
+<tr><td>TEMPO médio de ciclo</td><td>172d</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>VOLUME m² em curso</td><td>4.405</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Capacidade utilizada</td><td>35%</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>A INICIAR firmadas (30d)</td><td>0</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Cobertura KIRA</td><td>64.5%</td><td>—</td><td>—</td><td>rodrigo-stats</td></tr>
+<tr><td>Ocorrências abertas</td><td>950</td><td>—</td><td>—</td><td>dashboard</td></tr>
+</tbody></table>
+<blockquote>Deltas vs quinzena anterior em construção · score-historico ainda acumulando (iniciado 2026-05-01).</blockquote>
+<hr/>
+<h2>3 · Diagnóstico Operacional</h2>
+<h3>Saúde geral da carteira</h3>
+<ul>
+<li><strong>184</strong> obras ativas analisadas</li>
+<li><strong>107</strong> sem problemas relevantes</li>
+<li><strong>21</strong> críticas + <strong>27</strong> em alto risco</li>
+<li><strong>53</strong> com atraso identificado pelo Painel</li>
+</ul>
+<h3>Top 3 categorias de problema (excluindo "Outros")</h3>
+<ul>
+<li><strong>Comunicação</strong> — 77 obras (20 críticas)</li>
+<li><strong>Material</strong> — 64 obras (8 críticas)</li>
+<li><strong>Infiltração</strong> — 48 obras (23 críticas)</li>
+</ul>
+<blockquote>Categorização vem do <code>/api/analise</code> do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.</blockquote>
+<h3>Pulso KIRA · comunicação com cliente</h3>
+<ul>
+<li><strong>Cobertura:</strong> 129 de 200 obras ativas têm grupo de WhatsApp acompanhado (64.5%)</li>
+<li><strong>Saudável:</strong> 81 (62.8% das monitoradas)</li>
+<li><strong>Em atenção:</strong> 48</li>
+<li><strong>Sem KIRA:</strong> 71 <em>(cegueira — obras que pra Qualidade são silêncio)</em></li>
+</ul>
+<blockquote>[REVISAR] Comentário narrativo de 1-2 frases sobre o que esses números contam juntos.</blockquote>
+<blockquote>💡 <strong>Caminhos pra reduzir cegueira KIRA →</strong> ver <strong>Seção 10 · Conclusões</strong> (receita "cegueira_kira" com 3 caminhos detalhados).</blockquote>
+<hr/>
+<h2>4 · Análise de Atrasos · caso a caso</h2>
+<blockquote>Top 5 obras mais atrasadas no momento. Diagnóstico textual extraído direto do Painel (<code>/api/analise</code>).</blockquote>
+<h3>ADRIANA FERNANDES PERES · SÃO PAULO · 40 dias de atraso</h3>
+<p><strong>Fase atual:</strong> INDÚSTRIA - EM PRODUÇÃO</p>
+<p>DIAGNÓSTICO 15/03/2026 — Execução prevista 25/03 (8 dias).</p>
+<p>🔴 BLOQUEIO 1: EQUIPE NÃO DEFINIDA — 166m² piso+parede em SP sem equipe alocada a 8 dias da execução.</p>
+<p>🔴 BLOQUEIO 2: Ainda em INDÚSTRIA (EM PRODUÇÃO) — material pode não estar pronto a tempo. Produção + logística SP exige mínimo 7-10 dias.</p>
+<p>🟡 ALERTA: Data de execução NÃO CONFIRMADA (apenas prevista).</p>
+<p>🟡 ALERTA: Cor PERSONALIZADA — verificar se amostra foi aprovada e produção iniciada.</p>
+<h3>MISCI BRASIL COMERCIO DE MODA LTDA  · RIO DE JANEIRO · 40 dias de atraso</h3>
+<p><strong>Fase atual:</strong> AGEND. VT - ENTRADA</p>
+<p>DIAGNÓSTICO 15/03/2026 — Execução prevista 25/03 (8 dias).</p>
+<p>🔴 BLOQUEIO: Ainda em AGEND. VT ENTRADA — VT sequer realizada. Sem VT não há como aprovar substrato, definir escopo final e iniciar produção.</p>
+<p>🟡 RISCO: OBRA EXTERNA em RJ (Ipanema) — dependência climática.</p>
+<p>🟡 RISCO: Autonivelante Quartzolit utilizado (RISCO CRÍTICO de patologias — conforme situação registrada).</p>
+<p>🟢 POSITIVO: Equipe MICHAEL definida. Metragem pequena (8m²).</p>
+<h3>PALLOMA BIANCA RAMIREZ URIZZI · SÃO PAULO · 34 dias de atraso</h3>
+<p><strong>Fase atual:</strong> LOGÍSTICA - EM ENTREGA</p>
+<p>DIAGNÓSTICO OPERACIONAL — PALLOMA BIANCA RAMIREZ</p>
+<p>=================================================</p>
+<p>ESTADO REAL DA OBRA:</p>
+<p>Obra com longo histórico de preparação. Múltiplas VTs realizadas (03/12/25, 06/01/26, 19/02/26) com extensas listas de pendências do contrapiso. Cliente ameaçou ação judicial e devolução do valor em 26/02. Diretor Geral visitou obra para mediar. Situação parcialmente estabilizada — equipe operacional designada com início 16/03.</p>
+<h3>SILVANA PANDOLFI JANETE · BERTIOGA · 14 dias de atraso</h3>
+<p><strong>Fase atual:</strong> REVISÃO FINAL OP</p>
+<p>PROJETO: SILVANA PANDOLFI JANETE | SP - Bertioga (Riviera de São Lourenço) | Fase: REVISÃO FINAL OP</p>
+<p>RESUMO: 45 mensagens (38 WA + 7 TG). Obra em fase de definição de cor. Cliente/arquiteta solicitam amostras Everest (não veio na caixa Stelion). Data alterada para 20/04. Monofloor migrou canal de comunicação (grupo será encerrado) e pediu ponto focal único.</p>
+<p>PONTOS DE ATENÇÃO: (1) Cor indefinida - produção requer 12 dias úteis. (2) Migração de canal pode gerar falha de comunicação. (3) Responsável por alinhamento não definido no novo canal.</p>
+<h3>MONTRELUX SOLUÇÕES EM VIDRO LTDA · CURITIBA · 10 dias de atraso</h3>
+<p><strong>Fase atual:</strong> INDÚSTRIA - EM PRODUÇÃO</p>
+<p>DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).</p>
+<p>🔴 BLOQUEIO: EQUIPE NÃO DEFINIDA — 665m² piso+parede em CURITIBA. É a MAIOR obra confirmada do período.</p>
+<p>🟡 ATENÇÃO: Em INDÚSTRIA EM PRODUÇÃO — material em fabricação. 29 dias é prazo adequado para produção.</p>
+<p>🟡 RISCO: 665m² requer equipe GRANDE + planejamento logístico extenso.</p>
+<blockquote>[REVISAR] Padrões observados nos casos acima (1-2 frases) · <em>qual o tema dominante?</em></blockquote>
+<h3>Caminhos a explorar · pra reduzir atrasos críticos</h3>
+<ul>
+<li>🎯 <strong>Triagem semanal das críticas</strong> — toda segunda, ranking por dias parados → top 5 vão pra reunião de Coordenação</li>
+<li>🚨 <strong>Escalação automática D+30</strong> — obra que passa 30d na mesma fase notifica Coordenador + cliente recebe contato</li>
+<li>📋 <strong>Checklist proativo de pré-execução</strong> — confirmar equipe + cor + VT <em>antes</em> da data prevista, não no dia</li>
+<li>💬 <strong>Comunicação proativa com cliente</strong> — quando atraso for inevitável, antecipar (em vez de cliente cobrar)</li>
+</ul>
+<blockquote>[REVISAR] Quais desses caminhos fazem sentido pro período atual? Marcar 1-2 e a gente promove pra Seção 10 com Como/Custo/Impacto/Risco completos.</blockquote>
+<hr/>
+<h2>5 · Retrabalho & Pós-entrega</h2>
+<blockquote>Obras em <strong>reparo</strong> e <strong>marcas<em>rolo</em>cera</strong> são pós-entrega — cronograma original já cumprido. Mostradas separadamente do atraso.</blockquote>
+<table>
+<thead><tr><th>Indicador</th><th>Atual</th><th>Anterior</th><th>Δ</th></tr></thead>
+<tbody>
+<tr><td>Obras em retorno (total)</td><td>27</td><td>—</td><td>—</td></tr>
+<tr><td>→ em reparo</td><td>23</td><td>—</td><td>—</td></tr>
+<tr><td>→ em marcas / rolo / cera</td><td>4</td><td>—</td><td>—</td></tr>
+<tr><td>% da carteira ativa</td><td>10.4%</td><td>—</td><td>—</td></tr>
+</tbody></table>
+<h3>Categorias de problema relacionadas a retrabalho</h3>
+<ul>
+<li><strong>Material</strong>: 64 obras (sendo 8 críticas)</li>
+<li><strong>Infiltração</strong>: 48 obras (sendo 23 críticas)</li>
+<li><strong>Manchas/Defeitos</strong>: 41 obras (sendo 8 críticas)</li>
+<li><strong>Substrato</strong>: 27 obras (sendo 2 críticas)</li>
+</ul>
+<blockquote>Fonte: <code>/api/analise</code>. Cada categoria conta obras com problema reportado no Painel — ajuda a identificar <strong>padrões de causa-raiz</strong> sem coleta manual.</blockquote>
+<h3>Caminhos a explorar · pra reduzir retrabalho</h3>
+<ul>
+<li>🔍 <strong>Auditoria técnica das críticas</strong> — cruzar 23 infiltrações críticas: período / equipe / substrato / clima → identificar padrão recorrente</li>
+<li>📐 <strong>Critério reforçado na VT</strong> — checklist obrigatório de umidade/contrapiso/ralo · obra não inicia sem aprovação</li>
+<li>🎓 <strong>Treinamento focado</strong> — equipes com maior taxa de retorno recebem reciclagem técnica</li>
+<li>⚖ <strong>Mediação preventiva</strong> — obras com flag detrator_latente recebem visita do Coordenador antes de virar caso jurídico</li>
+</ul>
+<blockquote>[REVISAR] Categoria Infiltração tem 47% críticas (taxa MUITO acima da média) — recomendo priorizar Auditoria técnica. Ver Seção 10 pra caminhos detalhados (Como/Custo/Impacto/Risco).</blockquote>
+<hr/>
+<h2>6 · Geografia</h2>
+<blockquote>Distribuição das <strong>obras em risco</strong> (atrasadas / com problema) por cidade. Total na amostra: <strong>50</strong> obras.</blockquote>
+<table>
+<thead><tr><th>Cidade</th><th>Obras em risco</th></tr></thead>
+<tbody>
+<tr><td>São Paulo</td><td>26</td></tr>
+<tr><td>Rio De Janeiro</td><td>5</td></tr>
+<tr><td>Apenas CEP</td><td>4</td></tr>
+<tr><td>Campinas</td><td>2</td></tr>
+<tr><td>Curitiba</td><td>2</td></tr>
+<tr><td>Cascavel</td><td>1</td></tr>
+<tr><td>Florianópolis</td><td>1</td></tr>
+<tr><td>Porto Alegre</td><td>1</td></tr>
+</tbody></table>
+<blockquote>[REVISAR] Padrão regional observado — alguma cidade puxa atraso desproporcional?</blockquote>
+<h3>Caminhos a explorar · pra concentração geográfica</h3>
+<ul>
+<li>🗺 <strong>Análise de raiz regional</strong> — concentração de 52% em <strong>São Paulo</strong> sugere investigar se gargalo é da equipe local ou do volume</li>
+<li>🚐 <strong>VT em lote</strong> — pra obras próximas geograficamente, agendar visitas técnicas em sequência (ganho logístico)</li>
+<li>👥 <strong>Distribuir Luana × Wesley por região</strong> — avaliar se proximidade física à equipe melhora acompanhamento</li>
+<li>📍 <strong>Reforço local</strong> — se gargalo persistir em uma região, considerar contratação de aplicador regional</li>
+</ul>
+<blockquote>[REVISAR] Esses caminhos fazem sentido com o conhecimento da operação? Cortar/promover.</blockquote>
+<hr/>
+<h2>7 · Capacidade × Demanda</h2>
+<blockquote>Pergunta direta: <em>aceitamos mais obras ou estamos no limite?</em></blockquote>
+<table>
+<thead><tr><th>Indicador</th><th>Atual</th><th>Anterior</th><th>Δ</th></tr></thead>
+<tbody>
+<tr><td>Capacidade mensal produtiva</td><td>9.196 m²/mês</td><td>—</td><td>—</td></tr>
+<tr><td>VOLUME m² em curso</td><td>4.405 m²</td><td>—</td><td>—</td></tr>
+<tr><td>Capacidade utilizada</td><td>35%</td><td>—</td><td>—</td></tr>
+<tr><td>A INICIAR firmadas (30d)</td><td>0 obras</td><td>—</td><td>—</td></tr>
+</tbody></table>
+<p><strong>Diagnóstico atual:</strong> Operação a 35% da capacidade mensal · sobra produtiva considerável. <strong>→ Comercial pode acelerar fechamentos</strong> · cabe sinalizar pro time de vendas.</p>
+<h3>Projeção pra próxima semana (2026-05-04 a 2026-05-11)</h3>
+<table>
+<thead><tr><th>Indicador</th><th>Próxima semana</th></tr></thead>
+<tbody>
+<tr><td>Obras iniciando</td><td>2 (984 m²)</td></tr>
+<tr><td>Em execução</td><td>8 (2.651 m²)</td></tr>
+<tr><td>Capacidade prevista</td><td>25%</td></tr>
+</tbody></table>
+<blockquote>Fonte: <code>/api/analytics/weekly-forecast</code> · projeção baseada em data<em>de</em>entrada firmada.</blockquote>
+<blockquote>💡 <strong>Caminhos pra equilibrar capacidade vs demanda →</strong> ver <strong>Seção 10 · Conclusões</strong> (receita "capacidade_ociosa" com 3 caminhos detalhados).</blockquote>
+<hr/>
+<h2>8 · Análise por Equipe</h2>
+<h3>Consultores · responsáveis pela conta</h3>
+<table>
+<thead><tr><th>Consultor</th><th>Ativos</th><th>Com problema</th><th>Atrasados</th><th>% com problema</th></tr></thead>
+<tbody>
+<tr><td>Luana Patricia De Andrade Lima</td><td>84</td><td>34</td><td>17</td><td>40.5%</td></tr>
+<tr><td>Wesley Matheus De Carvalho</td><td>61</td><td>26</td><td>9</td><td>42.6%</td></tr>
+<tr><td>Pedro Alexandre Santana</td><td>7</td><td>1</td><td>0</td><td>14.3%</td></tr>
+<tr><td>Thaísa De Lara Barbosa</td><td>1</td><td>1</td><td>1</td><td>100%</td></tr>
+<tr><td>Pedro Marçal</td><td>1</td><td>0</td><td>0</td><td>0%</td></tr>
+<tr><td>Renata Garcia Penna</td><td>1</td><td>0</td><td>0</td><td>0%</td></tr>
+</tbody></table>
+<blockquote>Fonte: <code>/api/analise.teamPerformance</code>. <strong>% com problema</strong> = projetos com qualquer problema reportado / projetos ativos.</blockquote>
+<h3>Supervisão de equipe (linha de frente)</h3>
+<table>
+<thead><tr><th>Supervisor / Equipe</th><th>Obras ativas</th></tr></thead>
+<tbody>
+<tr><td>Equipe Wiguens</td><td>—</td></tr>
+<tr><td>Equipe João</td><td>—</td></tr>
+<tr><td>Equipe Gilmar</td><td>—</td></tr>
+<tr><td>Equipe Júlio</td><td>—</td></tr>
+<tr><td>Equipe Egberto</td><td>—</td></tr>
+<tr><td>Equipe Michael</td><td>—</td></tr>
+</tbody></table>
+<blockquote>[REVISAR] Comentário curto sobre destaques (positivos e alertas).</blockquote>
+<h3>Caminhos a explorar · pra balanço de carga e qualidade</h3>
+<ul>
+<li>⚖ <strong>Análise de perfil de carteira</strong> — comparar Luana × Wesley considerando complexidade média, valor médio, dispersão geográfica (não só quantidade)</li>
+<li>🤝 <strong>1:1 quinzenal de carteira</strong> — Coordenação revisa as obras de risco com cada consultora (formato fixo, 30min)</li>
+<li>📊 <strong>Meta de obras em paralelo</strong> — estabelecer máx por consultora (ex: 60 ativas) · acima disso, desacelerar entrada de novas</li>
+<li>🎓 <strong>Capacitação cruzada</strong> — Luana e Wesley trocam casos pra aprender com diferenças de abordagem</li>
+</ul>
+<blockquote>[REVISAR] Distribuição atual: Luana 84 ativas / Wesley 61. Vale checar se essa diferença é histórica ou recente.</blockquote>
+<hr/>
+<h2>9 · Sinais Painel × Telegram (Lab Orion)</h2>
+<p><strong>Total de obras analisadas pelo Orion:</strong> 10 (piloto)</p>
+<p><strong>Resumo do Orion:</strong> Das 10 obras analisadas, 6 têm status do painel coerente com a narrativa Telegram e 4 estão desatualizadas — nenhuma em abandono e nenhum detrator manifesto. Cinco obras estão em ciclo de retorno técnico (patologia, retrabalho de acabamento ou reparo de dano), três em planejamento pré-execução com aplicador 'a definir', uma em fim de execução prestes a virar concluída (Luis Fernando) e uma em transição de pausa para execução (Amendoeiras). Quatro obras carregam o flag detrator_latente por histór...</p>
+<h3>Top 5 obras com flags ou divergências</h3>
+<table>
+<thead><tr><th>Obra</th><th>Painel diz</th><th>Tom Telegram</th><th>Veredicto</th></tr></thead>
+<tbody>
+<tr><td>GETULIO TURATTI OST</td><td>marcas<em>rolo</em>cera</td><td>tom: tenso</td><td>coerente</td></tr>
+<tr><td>REPULLO ASSESSORIA EM INFORMATICA LTDA</td><td>planejamento</td><td>tom: ativo</td><td>coerente</td></tr>
+<tr><td>DANIEL BECKER</td><td>aguardando_execucao</td><td>tom: ativo</td><td>status_desatualizado</td></tr>
+<tr><td>MICHELLE CRISTINA FREITAS GARDENAL</td><td>planejamento</td><td>tom: ativo</td><td>coerente</td></tr>
+<tr><td>AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA</td><td>pausado</td><td>tom: ativo</td><td>status_desatualizado</td></tr>
+</tbody></table>
+<blockquote>[REVISAR] Padrão observado · se houver divergência sistemática, declarar hipótese + ação.</blockquote>
+<h3>Caminhos a explorar · pra reduzir divergências e expandir o Orion</h3>
+<ul>
+<li>🔄 <strong>Padronizar quem atualiza o Painel</strong> — definir formalmente: técnico atualiza fase, consultora atualiza status. Hoje há sobreposição</li>
+<li>⚠ <strong>Auditoria semanal de detrator_latente</strong> — toda semana, Coordenação revisa as obras com flag · age antes de virar caso</li>
+<li>📈 <strong>Expandir piloto Orion</strong> — 10 → 50 obras em 3 meses · ganha massa crítica pra detectar padrões sistêmicos</li>
+<li>🧪 <strong>A/B de qualidade Painel × WhatsApp</strong> — quando divergir, qual fonte está certa? Auditoria mensal da amostra</li>
+</ul>
+<blockquote>[REVISAR] Lab Orion ainda em piloto (10 obras) · vale acelerar expansão pra ganhar tração nos sinais?</blockquote>
+<hr/>
+<h2>10 · Conclusões e Recomendações</h2>
+<blockquote>Análise propositiva: cada problema crítico detectado vem com diagnóstico, caminhos viáveis (Como · Custo · Impacto · Risco) e recomendação combinada. Números marcados [REVISAR] são chutes que dependem do conhecimento operacional do Vitor pra calibrar.</blockquote>
+<h3>Score Saúde abaixo da zona saudável</h3>
+<p><strong>Diagnóstico</strong></p>
+<p>Score em 48/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:</p>
+<ul>
+<li>Ciclo total mediano em 215d (meta 150d) — 43% acima da meta</li>
+<li>18.8% de obras zumbi (CLIENTE FINALIZADO sem encerrar)</li>
+<li>14.0% órfãs (sem consultor responsável)</li>
+<li>21 obras na cauda longa AGEND.VT-AFERIÇÃO (>270d)</li>
+</ul>
+<p><strong>Para melhorar:</strong> Reduzir o ciclo total e fechar zumbis acumuladas.</p>
+<p><strong>Caminhos viáveis:</strong></p>
+<p><strong>Caminho A · Mutirão de zumbis</strong></p>
+<ul>
+<li><strong>Como:</strong> Força-tarefa de 2 semanas pra encerrar as obras presas em CLIENTE FINALIZADO há mais de 90 dias.</li>
+<li><strong>Custo do tempo:</strong> ~10h/semana da consultoria por 2 semanas</li>
+<li><strong>Impacto esperado:</strong> zumbi_pct cai de 18.8% para ~5% · Score sobe ~3-4 pontos [REVISAR número]</li>
+<li><strong>Risco:</strong> Algumas zumbis podem ter pendência real não-mapeada (descobrir não é problema, mas ajusta a expectativa)</li>
+</ul>
+<p><strong>Caminho B · Atacar gargalo AGEND.VT-AFERIÇÃO</strong></p>
+<ul>
+<li><strong>Como:</strong> Revisar SLA de Visita Técnica + reorganizar alocação Luana/Wesley pra desbloquear a cauda longa.</li>
+<li><strong>Custo do tempo:</strong> Organizacional · alinhamento de agenda da consultoria</li>
+<li><strong>Impacto esperado:</strong> Ciclo mediano cai 215d → ~190d · Score sobe ~5 pontos [REVISAR número]</li>
+<li><strong>Risco:</strong> Pressão por velocidade pode comprometer qualidade da VT — não pode ser corrida</li>
+</ul>
+<p><strong>Caminho C · Padronização preventiva (encerramento)</strong></p>
+<ul>
+<li><strong>Como:</strong> Gatilho automático D+15 após CLIENTE FINALIZADO pra forçar encerramento (ou pedir justificativa).</li>
+<li><strong>Custo do tempo:</strong> ~1 sprint de dev no Painel de Obras</li>
+<li><strong>Impacto esperado:</strong> Previne futuras zumbis · não resolve estoque atual [REVISAR]</li>
+<li><strong>Risco:</strong> Baixo — se errar, basta desativar a automação</li>
+</ul>
+<p><strong>Recomendação automática:</strong> <strong>Mutirão + Padronização preventiva</strong> combinados — mutirão zera estoque agora, padronização previne. Gargalo VT fica pra próxima quinzena se mutirão der certo.</p>
+<h3>Comunicação é a categoria dominante de problema</h3>
+<p><strong>Diagnóstico</strong></p>
+<p>77 obras com problema de Comunicação reportado no Painel (20 críticas). É a maior categoria depois de "Outros". Padrões típicos: técnico não responde no grupo, alinhamento direto técnico↔cliente sem passar pela operação, falta de diário de obra.</p>
+<p><strong>Para melhorar:</strong> Aumentar disciplina de registro nos grupos e cortar rotas paralelas técnico↔cliente.</p>
+<p><strong>Caminhos viáveis:</strong></p>
+<p><strong>Caminho A · Reforço de processo · Diário de Obra obrigatório</strong></p>
+<ul>
+<li><strong>Como:</strong> Padronizar postagem diária no grupo Telegram + alerta automático quando passar 24h sem registro.</li>
+<li><strong>Custo do tempo:</strong> 1-2 reuniões com supervisores + ajuste no bot do Telegram</li>
+<li><strong>Impacto esperado:</strong> Reduzir Comunicação como categoria em ~30-40% [REVISAR número]</li>
+<li><strong>Risco:</strong> Resistência cultural · técnicos podem postar 'tudo ok' só pra cumprir</li>
+</ul>
+<p><strong>Caminho B · Auditoria amostral semanal</strong></p>
+<ul>
+<li><strong>Como:</strong> Toda sexta, sortear 10 obras ativas e checar registro completo no grupo (consultora + supervisor).</li>
+<li><strong>Custo do tempo:</strong> ~2h/semana da consultoria</li>
+<li><strong>Impacto esperado:</strong> Pressão sustentada · expõe técnicos faltosos [REVISAR efeito real]</li>
+<li><strong>Risco:</strong> Vira micro-gestão se não for acompanhado de feedback construtivo</li>
+</ul>
+<p><strong>Caminho C · Bloquear comunicação direta técnico↔cliente</strong></p>
+<ul>
+<li><strong>Como:</strong> Política explícita: qualquer alinhamento de prazo/escopo passa pela consultoria. Técnico que descumpre é notificado.</li>
+<li><strong>Custo do tempo:</strong> Comunicação interna formal + apoio da Diretoria</li>
+<li><strong>Impacto esperado:</strong> Resolve a raiz de ~50% dos casos críticos [REVISAR]</li>
+<li><strong>Risco:</strong> Pode atrasar decisões pequenas que técnico resolveria sozinho</li>
+</ul>
+<p><strong>Recomendação automática:</strong> <strong>Diário obrigatório + Auditoria amostral</strong> dão tração rápida. Bloqueio cultural só vale se já houver casos crônicos comprovados.</p>
+<h3>Infiltração com volume alto e proporção crítica</h3>
+<p><strong>Diagnóstico</strong></p>
+<p>48 obras com problema de Infiltração reportado (23 críticas — 47% das de infiltração são críticas, taxa muito acima da média de outras categorias).</p>
+<p><strong>Para melhorar:</strong> Reforçar fase de preparação do substrato + critério de aceite da VT.</p>
+<p><strong>Caminhos viáveis:</strong></p>
+<p><strong>Caminho A · Auditoria técnica das infiltrações críticas</strong></p>
+<ul>
+<li><strong>Como:</strong> Cruzar as 23 críticas: período de aplicação, equipe, substrato, condição climática · identificar padrão.</li>
+<li><strong>Custo do tempo:</strong> ~8h da Qualidade + apoio técnico</li>
+<li><strong>Impacto esperado:</strong> Identifica raiz · permite ação direcionada (ex: treinamento de equipe específica) [REVISAR]</li>
+<li><strong>Risco:</strong> Análise pode revelar fragilidade de produto ou processo que demanda investimento</li>
+</ul>
+<p><strong>Caminho B · Critério reforçado de aceite na VT</strong></p>
+<ul>
+<li><strong>Como:</strong> Adicionar checklist obrigatório de umidade/contrapiso/ralo na Visita Técnica de Aferição · obra não inicia sem aprovação.</li>
+<li><strong>Custo do tempo:</strong> Atualização do POP de VT + treinamento Nathan/Braiam</li>
+<li><strong>Impacto esperado:</strong> Reduz infiltrações em obras NOVAS · efeito visível em 60-90d [REVISAR]</li>
+<li><strong>Risco:</strong> VT fica mais longa · pode atrasar início de obras</li>
+</ul>
+<p><strong>Recomendação automática:</strong> <strong>Auditoria</strong> primeiro pra entender raiz. <strong>Critério reforçado</strong> vem como ação derivada do que a auditoria descobrir.</p>
+<h3>Capacidade da operação subutilizada</h3>
+<p><strong>Diagnóstico</strong></p>
+<p>Operação a 35% da capacidade mensal · 4.405 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.791 m²/mês não aproveitada.</p>
+<p><strong>Para melhorar:</strong> Acelerar conversão comercial OU revisar dimensionamento da equipe.</p>
+<p><strong>Caminhos viáveis:</strong></p>
+<p><strong>Caminho A · Sinalizar pro Comercial · pipeline de fechamento</strong></p>
+<ul>
+<li><strong>Como:</strong> Compartilhar capacidade real (35%) com time de vendas + projeção 13 semanas. Vendas prioriza fechamentos de Mai-Jun.</li>
+<li><strong>Custo do tempo:</strong> 1 reunião + relatório semanal compartilhado</li>
+<li><strong>Impacto esperado:</strong> Conversão acelerada de propostas pendentes · capacidade vai pra 60-70% em 2 meses [REVISAR]</li>
+<li><strong>Risco:</strong> Pipe pode estar vazio · sinalizar não cria demanda do nada</li>
+</ul>
+<p><strong>Caminho B · Reduzir prazo de aceitação de novos contratos</strong></p>
+<ul>
+<li><strong>Como:</strong> Atualmente aceita-se com prazo X dias · reduzir pra X-15d, comunicando capacidade folgada.</li>
+<li><strong>Custo do tempo:</strong> Alinhamento Comercial + ajuste no funil de proposta</li>
+<li><strong>Impacto esperado:</strong> Atrai clientes com pressa · ganha 3-5 obras/mês [REVISAR]</li>
+<li><strong>Risco:</strong> Concorrência pode usar prazo menor como atrativo · não vira diferencial sustentável</li>
+</ul>
+<p><strong>Caminho C · Reavaliar dimensionamento da equipe</strong></p>
+<ul>
+<li><strong>Como:</strong> Se ociosidade for estrutural (não pico), avaliar redução de aplicadores ou redistribuição regional.</li>
+<li><strong>Custo do tempo:</strong> Decisão de RH · estratégica</li>
+<li><strong>Impacto esperado:</strong> Reduz custo fixo · perde flexibilidade pra picos de demanda [REVISAR]</li>
+<li><strong>Risco:</strong> Difícil reverter · perda de aplicadores treinados é cara</li>
+</ul>
+<p><strong>Recomendação automática:</strong> <strong>Sinalizar pro Comercial + monitorar 4 semanas</strong> antes de decidir reduzir prazo ou redimensionar.</p>
+<hr/>
+<p><strong>Para a próxima quinzena · 3 prioridades sugeridas:</strong></p>
+<ul>
+<li>[REVISAR · escolher 3 dos caminhos acima como prioridade do período]</li>
+</ul>
+<hr/>
+<h2>Anexo A · Obras do período</h2>
+<blockquote>Distribuição da carteira por status no fechamento da quinzena.</blockquote>
+<table>
+<thead><tr><th>Status</th><th>Quantidade</th></tr></thead>
+<tbody>
+<tr><td>Em execução</td><td>36</td></tr>
+<tr><td>Aguardando execução</td><td>47</td></tr>
+<tr><td>Planejamento</td><td>102</td></tr>
+<tr><td>Pausado</td><td>5</td></tr>
+<tr><td>Aguardando clima</td><td>3</td></tr>
+<tr><td>Em reparo</td><td>23</td></tr>
+<tr><td>Em marcas / rolo / cera</td><td>4</td></tr>
+<tr><td>Concluído</td><td>235</td></tr>
+<tr><td>Finalizado</td><td>543</td></tr>
+<tr><td>Cancelado</td><td>33</td></tr>
+</tbody></table>
+<blockquote>[REVISAR · Fase 1.1c] Listagem nominal de cada bucket (nomes dos clientes) — virá numa próxima iteração consultando o details/.</blockquote>
+<hr/>
+<h2>Fontes e Disclaimer</h2>
+<p><strong>Fontes consultadas:</strong></p>
+<ul>
+<li><strong>Painel de Obras</strong> (<code>cliente.monofloor.cloud</code>) · refresh automático 30min · snapshot <code>2026-05-04T15:31:20Z</code></li>
+<li><strong><code>/api/analise</code></strong> · diagnósticos textuais + categorização de problemas + teamPerformance · snapshot <code>2026-05-04T12:20:07.727981</code></li>
+<li><strong><code>/api/analytics/alerts</code></strong> · alertas estruturados (stage<em>delay + sem</em>equipe)</li>
+<li><strong><code>/api/analytics/weekly-forecast</code></strong> · projeção de 13 semanas (starting + inExecution + capacity)</li>
+<li><strong><code>/api/dashboard</code></strong> · ocorrências abertas + SLA + readiness</li>
+<li><strong>Lab Orion</strong> (<code>orion-pub.workers.dev</code>) · varredura 12h e 18h · snapshot <code>2026-05-04T17:36:10Z</code></li>
+<li><strong>KIRA WhatsApp</strong> · agregado em <code>rodrigo-stats.json</code> · snapshot <code>2026-05-04T15:31:31Z</code></li>
+<li><strong>Score Histórico</strong> · <code>score-historico.json</code> (acumula 1 entry/dia desde 2026-05-01)</li>
+</ul>
+<p><strong>Disclaimer:</strong></p>
+<p>Análise concluída com base nos registros sistêmicos disponíveis ao Setor de Qualidade. Foco exclusivo nos dados, sem inferências sobre o cumprimento dos processos padrões estabelecidos pela operação. Casos de retrabalho e pós-entrega estão sujeitos a influências externas e são gerenciados dentro da margem de tolerância do processo. Heurísticas declaradas em cada seção quando aplicáveis.</p>
+<hr/>
+<p><em>Relatório gerado pelo Sistema de Qualidade Monofloor · v0.2</em></p>
+
+</div>
+</body>
+</html>
