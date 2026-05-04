@@ -1,26 +1,26 @@
 {
   "geral": "warn",
-  "checked_at": "2026-05-01T21:00:08Z",
+  "checked_at": "2026-05-04T17:59:41Z",
   "contagem": {
-    "ok": 6,
-    "warn": 3,
+    "ok": 8,
+    "warn": 2,
     "crit": 0
   },
   "checks": [
     {
       "nome": "Schema do JSON principal",
       "status": "ok",
-      "detalhe": "10 obras válidas"
+      "detalhe": "230 obras válidas"
     },
     {
       "nome": "Completude das obras",
       "status": "ok",
-      "detalhe": "10 obras com todos campos"
+      "detalhe": "230 obras com todos campos"
     },
     {
       "nome": "Sessão Telegram",
       "status": "ok",
-      "detalhe": "10 obras coletadas"
+      "detalhe": "227 obras coletadas"
     },
     {
       "nome": "Frescor da varredura",
@@ -30,30 +30,34 @@
     {
       "nome": "KIRA WhatsApp",
       "status": "warn",
-      "detalhe": "tag KIRA mais recente há 16d (>1 semana)",
+      "detalhe": "tag KIRA mais recente há 19d (>1 semana)",
       "sugestao": "Verificar se KIRA está rodando no dashboard principal"
     },
     {
       "nome": "Lock de execução",
-      "status": "warn",
-      "detalhe": "lock fantasma · PID 2156 morto",
-      "sugestao": "Próxima varredura limpa automaticamente"
+      "status": "ok",
+      "detalhe": "sem lock pendente"
     },
     {
       "nome": "Backups disponíveis",
       "status": "ok",
-      "detalhe": "3 backups · mais recente 3.9h"
+      "detalhe": "12 backups · mais recente 0.2h"
     },
     {
       "nome": "Drift de quantidade de obras",
       "status": "ok",
-      "detalhe": "10 obras · estável (média 10.0)"
+      "detalhe": "230 obras · estável vs pico recente"
+    },
+    {
+      "nome": "Erros de pipeline (flag)",
+      "status": "warn",
+      "detalhe": "1 step(s) falharam: extrair_kira_whatsapp/schema_divergente",
+      "sugestao": "Ver dados/pipeline-errors.json · re-rodar steps falhos manualmente"
     },
     {
       "nome": "Saúde do pipeline",
-      "status": "warn",
-      "detalhe": "2 falha(s) no log recente",
-      "sugestao": "Conferir varredura.log"
+      "status": "ok",
+      "detalhe": "sem falhas nas últimas runs"
     }
   ]
 }
