@@ -191,6 +191,20 @@ def md_to_html(md):
             i += 1
             continue
 
+        # Bloco HTML inline (SVG, div) — preserva sem empacotar em <p>
+        if stripped.startswith("<svg") or stripped.startswith("<div") or stripped.startswith("<figure"):
+            # Lê até fechar a tag de abertura
+            tag_match = re.match(r"<(\w+)", stripped)
+            if tag_match:
+                tag = tag_match.group(1)
+                buffer = [line]
+                i += 1
+                while i < len(lines) and f"</{tag}>" not in "\n".join(buffer):
+                    buffer.append(lines[i])
+                    i += 1
+                out.append("\n".join(buffer))
+                continue
+
         # Parágrafo
         out.append(f"<p>{inline_md(stripped)}</p>")
         i += 1
@@ -415,6 +429,18 @@ h2 {{ page-break-before: auto; }}
 
 /* Não quebrar páginas dentro de blocos-chave */
 table, blockquote, h2 + p, h3 + p {{ page-break-inside: avoid; break-inside: avoid; }}
+
+/* Visualizações SVG inline */
+figure.viz {{
+  margin: 14px 0 18px;
+  padding: 12px 14px;
+  background: #fdfaf4;
+  border: 1px solid #ede6dc;
+  border-radius: 6px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}}
+figure.viz svg {{ display: block; }}
 
 /* Botão flutuante de ajuda na visualização */
 .help-banner {{

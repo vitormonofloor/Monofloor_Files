@@ -2,7 +2,7 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Coordenador**
-**Gerado em:** 04/05/2026 15:19
+**Gerado em:** 04/05/2026 15:54
 
 ---
 
@@ -14,12 +14,12 @@
 
 | KPI | Atual | Anterior | Δ |
 |---|---|---|---|
-| Total ativas em fluxo | 260 | — | — |
-| Em execução agora | 35 | — | — |
-| Atrasadas (Painel) | 53 | — | — |
-| Obras em retorno (reparo + marcas) | 27 | — | — |
-| Capacidade utilizada | 35% | — | — |
-| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ |
+| 🔴 Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ |
+| 🔵 Total ativas em fluxo | 260 | — | — |
+| 🔵 Em execução agora | 35 | — | — |
+| 🟡 Atrasadas (Painel) | 53 (20% das ativas) | — | — |
+| 🟡 Em retorno (reparo + marcas) | 27 (10% das ativas) | — | — |
+| 🟡 Capacidade utilizada | 35% | — | — |
 
 
 **3 destaques do período:**
@@ -73,9 +73,59 @@
 - **Material** — 64 obras (8 críticas)
 - **Infiltração** — 48 obras (23 críticas)
 
-> Categorização vem do `/api/analise` do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.
+<figure class="viz">
+<svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Top 5 categorias de problema · cor por proporção crítica</text>
+  <text x="0" y="54" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#3a3530" font-weight="500">Comunicação</text>
+  <rect x="120" y="40" width="380.0" height="22" fill="#d97a4a" rx="2"/>
+  <text x="505.0" y="54" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#3a3530">77</text>
+  <text x="529.0" y="54" font-family="JetBrains Mono, monospace" font-size="9" fill="#a89e92">(20 críticas)</text>
+  <text x="0" y="84" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#3a3530" font-weight="500">Material</text>
+  <rect x="120" y="70" width="315.84415584415586" height="22" fill="#b89a4a" rx="2"/>
+  <text x="440.84415584415586" y="84" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#3a3530">64</text>
+  <text x="464.84415584415586" y="84" font-family="JetBrains Mono, monospace" font-size="9" fill="#a89e92">(8 críticas)</text>
+  <text x="0" y="114" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#3a3530" font-weight="500">Infiltração</text>
+  <rect x="120" y="100" width="236.88311688311688" height="22" fill="#c45a5a" rx="2"/>
+  <text x="361.8831168831169" y="114" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#3a3530">48</text>
+  <text x="385.8831168831169" y="114" font-family="JetBrains Mono, monospace" font-size="9" fill="#a89e92">(23 críticas)</text>
+  <text x="0" y="144" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#3a3530" font-weight="500">Manchas/Defeitos</text>
+  <rect x="120" y="130" width="202.33766233766232" height="22" fill="#b89a4a" rx="2"/>
+  <text x="327.3376623376623" y="144" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#3a3530">41</text>
+  <text x="351.3376623376623" y="144" font-family="JetBrains Mono, monospace" font-size="9" fill="#a89e92">(8 críticas)</text>
+  <text x="0" y="174" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#3a3530" font-weight="500">Substrato</text>
+  <rect x="120" y="160" width="133.24675324675326" height="22" fill="#b89a4a" rx="2"/>
+  <text x="258.24675324675326" y="174" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#3a3530">27</text>
+  <text x="282.24675324675326" y="174" font-family="JetBrains Mono, monospace" font-size="9" fill="#a89e92">(2 críticas)</text>
+</svg>
+</figure>
+
+> Categorização vem da Análise do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.
 
 ### Pulso KIRA · comunicação com cliente
+
+<figure class="viz">
+<svg viewBox="0 0 600 105" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Distribuição da carteira ativa por KIRA</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">200 obras</text>
+
+  <rect x="0" y="30" width="218.70000000000002" height="28" fill="#6b8e3d" rx="2 0 0 2"/>
+  <rect x="218.70000000000002" y="30" width="132.3" height="28" fill="#b89a4a"/>
+  <rect x="351.0" y="30" width="189.0" height="28" fill="#a89e92" rx="0 2 2 0"/>
+
+  <text x="109.35000000000001" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">81</text>
+  <text x="284.85" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">49</text>
+  <text x="445.5" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">70</text>
+
+  <circle cx="6" cy="78" r="4" fill="#6b8e3d"/>
+  <text x="16" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Saudável (40%)</text>
+  <circle cx="170" cy="78" r="4" fill="#b89a4a"/>
+  <text x="180" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Atenção (24%)</text>
+  <circle cx="320" cy="78" r="4" fill="#a89e92"/>
+  <text x="330" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Sem KIRA (35% · cegueira)</text>
+</svg>
+</figure>
+
+
 - **Cobertura:** 130 de 200 obras ativas têm grupo de WhatsApp acompanhado (65%)
 - **Saudável:** 81 (62.3% das monitoradas)
 - **Em atenção:** 49
@@ -214,6 +264,18 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 ## 7 · Capacidade × Demanda
 
 > Pergunta direta: *aceitamos mais obras ou estamos no limite?*
+
+<figure class="viz">
+<svg viewBox="0 0 600 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Capacidade utilizada</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600" fill="#2a2520" text-anchor="end">35%</text>
+  <rect x="0" y="30" width="540" height="22" fill="#f0ebe3" stroke="#d8c8a8" stroke-width="0.5" rx="3"/>
+  <rect x="0" y="30" width="189.0" height="22" fill="#6b8e3d" rx="3"/>
+  <text x="600" y="46" font-family="JetBrains Mono, monospace" font-size="10" fill="#8a7e72" text-anchor="end">4.403 / 9.196 m²/mês</text>
+  <text x="0" y="78" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b8e3d" font-style="italic">▸ folga produtiva · sobra de 4.793 m²/mês</text>
+</svg>
+</figure>
+
 
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|

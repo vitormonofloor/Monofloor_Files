@@ -77,6 +77,137 @@ def fmt_pct(v):
     return f"{v:.0f}%" if v == int(v) else f"{v:.1f}%"
 
 
+# ═══ Visualizações SVG inline ═══
+
+def svg_barra_capacidade(pct, m2_curso, cap_mensal):
+    """Barra horizontal mostrando capacidade utilizada vs disponível."""
+    pct_int = max(0, min(100, int(pct)))
+    if pct_int < 50:
+        cor = "#6b8e3d"  # verde saudável
+        zona = "folga produtiva"
+    elif pct_int < 80:
+        cor = "#b89a4a"  # amarelo
+        zona = "operação saudável"
+    elif pct_int < 100:
+        cor = "#d97a4a"  # laranja
+        zona = "próximo do limite"
+    else:
+        cor = "#c45a5a"  # vermelho
+        zona = "acima do limite"
+
+    sobra = cap_mensal - m2_curso
+    largura_pct = (pct_int / 100) * 540
+
+    return f"""<figure class="viz">
+<svg viewBox="0 0 600 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Capacidade utilizada</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600" fill="#2a2520" text-anchor="end">{pct_int}%</text>
+  <rect x="0" y="30" width="540" height="22" fill="#f0ebe3" stroke="#d8c8a8" stroke-width="0.5" rx="3"/>
+  <rect x="0" y="30" width="{largura_pct}" height="22" fill="{cor}" rx="3"/>
+  <text x="600" y="46" font-family="JetBrains Mono, monospace" font-size="10" fill="#8a7e72" text-anchor="end">{fmt_num(m2_curso)} / {fmt_num(cap_mensal)} m²/mês</text>
+  <text x="0" y="78" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="{cor}" font-style="italic">▸ {zona} · sobra de {fmt_num(sobra)} m²/mês</text>
+</svg>
+</figure>
+"""
+
+
+def svg_distribuicao_kira(saudavel, atencao, sem_kira, total_fluxo):
+    """Barras empilhadas de distribuição KIRA."""
+    if total_fluxo <= 0:
+        return ""
+
+    largura_total = 540
+    s_w = (saudavel / total_fluxo) * largura_total
+    a_w = (atencao / total_fluxo) * largura_total
+    n_w = (sem_kira / total_fluxo) * largura_total
+
+    s_pct = saudavel / total_fluxo * 100
+    a_pct = atencao / total_fluxo * 100
+    n_pct = sem_kira / total_fluxo * 100
+
+    return f"""<figure class="viz">
+<svg viewBox="0 0 600 105" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Distribuição da carteira ativa por KIRA</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">{total_fluxo} obras</text>
+
+  <rect x="0" y="30" width="{s_w}" height="28" fill="#6b8e3d" rx="2 0 0 2"/>
+  <rect x="{s_w}" y="30" width="{a_w}" height="28" fill="#b89a4a"/>
+  <rect x="{s_w + a_w}" y="30" width="{n_w}" height="28" fill="#a89e92" rx="0 2 2 0"/>
+
+  <text x="{s_w/2}" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">{saudavel}</text>
+  <text x="{s_w + a_w/2}" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">{atencao}</text>
+  <text x="{s_w + a_w + n_w/2}" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">{sem_kira}</text>
+
+  <circle cx="6" cy="78" r="4" fill="#6b8e3d"/>
+  <text x="16" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Saudável ({s_pct:.0f}%)</text>
+  <circle cx="170" cy="78" r="4" fill="#b89a4a"/>
+  <text x="180" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Atenção ({a_pct:.0f}%)</text>
+  <circle cx="320" cy="78" r="4" fill="#a89e92"/>
+  <text x="330" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Sem KIRA ({n_pct:.0f}% · cegueira)</text>
+</svg>
+</figure>
+"""
+
+
+def svg_top_categorias(categorias, top_n=5):
+    """Barras horizontais das top categorias de problema."""
+    if not categorias:
+        return ""
+
+    cats_filt = [c for c in categorias if c.get("categoria") != "Outros"]
+    cats_filt.sort(key=lambda c: c.get("count", 0), reverse=True)
+    top = cats_filt[:top_n]
+    if not top:
+        return ""
+
+    max_count = max(c.get("count", 0) for c in top)
+    largura_max = 380
+    altura_barra = 22
+    espaco = 30
+    h_total = espaco * len(top) + 50
+
+    barras = []
+    for i, c in enumerate(top):
+        nome = c.get("categoria", "?")
+        count = c.get("count", 0)
+        criticos = c.get("criticos", 0)
+        y = 40 + i * espaco
+        w = (count / max_count) * largura_max if max_count else 0
+        # Cor: mais críticas → mais vermelho
+        pct_crit = criticos / count if count else 0
+        if pct_crit > 0.4:
+            cor = "#c45a5a"
+        elif pct_crit > 0.2:
+            cor = "#d97a4a"
+        else:
+            cor = "#b89a4a"
+
+        barras.append(f"""  <text x="0" y="{y + 14}" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#3a3530" font-weight="500">{nome}</text>
+  <rect x="120" y="{y}" width="{w}" height="{altura_barra}" fill="{cor}" rx="2"/>
+  <text x="{125 + w}" y="{y + 14}" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#3a3530">{count}</text>
+  <text x="{135 + w + len(str(count)) * 7}" y="{y + 14}" font-family="JetBrains Mono, monospace" font-size="9" fill="#a89e92">({criticos} críticas)</text>""")
+
+    return f"""<figure class="viz">
+<svg viewBox="0 0 600 {h_total}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Top {len(top)} categorias de problema · cor por proporção crítica</text>
+{chr(10).join(barras)}
+</svg>
+</figure>
+"""
+
+
+def sinaleira(valor, faixas):
+    """
+    Retorna emoji 🟢/🟡/🔴 conforme faixas.
+    faixas: lista de tuplas (limite, cor) ordenadas crescente.
+    Ex: [(50, '🔴'), (70, '🟡'), (101, '🟢')]
+    """
+    for limite, cor in faixas:
+        if valor < limite:
+            return cor
+    return faixas[-1][1]
+
+
 def buscar_no_historico(historico, data_alvo, campo="score"):
     if not historico or not isinstance(historico, list):
         return None
@@ -242,15 +373,24 @@ def secao_resumo_executivo(headline, rs, score_ant, extras):
         f"{atrasadas} atrasadas e {em_retorno} em pós-entrega (reparo + marcas)."
     )
 
+    # Sinaleiras automáticas por faixa
+    sin_score = sinaleira(score, [(50, "🔴"), (70, "🟡"), (101, "🟢")])
+    pct_atrasadas = (atrasadas / ativas * 100) if ativas else 0
+    sin_atrasadas = sinaleira(pct_atrasadas, [(15, "🟢"), (25, "🟡"), (101, "🔴")])
+    pct_retorno = (em_retorno / ativas * 100) if ativas else 0
+    sin_retorno = sinaleira(pct_retorno, [(8, "🟢"), (12, "🟡"), (101, "🔴")])
+    sin_cap = sinaleira(cap_pct, [(40, "🟡"), (80, "🟢"), (101, "🟡")])
+    # Capacidade <40% = subutilizada (amarelo) · 40-80% = saudável (verde) · >80% = limite (amarelo)
+
     kpis_md = (
         "| KPI | Atual | Anterior | Δ |\n"
         "|---|---|---|---|\n"
-        f"| Total ativas em fluxo | {ativas} | — | — |\n"
-        f"| Em execução agora | {em_exec} | — | — |\n"
-        f"| Atrasadas (Painel) | {atrasadas} | — | — |\n"
-        f"| Obras em retorno (reparo + marcas) | {em_retorno} | — | — |\n"
-        f"| Capacidade utilizada | {cap_pct}% | — | — |\n"
-        f"| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {score_delta} |\n"
+        f"| {sin_score} Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {score_delta} |\n"
+        f"| 🔵 Total ativas em fluxo | {ativas} | — | — |\n"
+        f"| 🔵 Em execução agora | {em_exec} | — | — |\n"
+        f"| {sin_atrasadas} Atrasadas (Painel) | {atrasadas} ({pct_atrasadas:.0f}% das ativas) | — | — |\n"
+        f"| {sin_retorno} Em retorno (reparo + marcas) | {em_retorno} ({pct_retorno:.0f}% das ativas) | — | — |\n"
+        f"| {sin_cap} Capacidade utilizada | {cap_pct}% | — | — |\n"
     )
 
     destaques = gerar_destaques_executivos(rs, extras, score, score_ant_val)
@@ -372,6 +512,15 @@ def secao_diagnostico(rs, extras):
         diff = total_painel - total_diag
         nota_universos = f"\n> *Universos: **{total_painel}** ativas no Painel · **{total_diag}** com diagnóstico de risco no /api/analise (a diferença de {diff} são obras em pós-entrega ou pausadas que não entram nessa análise específica).*\n"
 
+    # SVGs visuais
+    svg_cats = svg_top_categorias((extras or {}).get("analise", {}).get("problemCategories", []) if isinstance((extras or {}).get("analise", {}), dict) else [])
+    svg_kira = svg_distribuicao_kira(
+        op_kira.get("saudavel", 0),
+        op_kira.get("atencao", 0),
+        op_kira.get("sem_kira", 0),
+        op_kira.get("total_fluxo", 0),
+    )
+
     return f"""## 3 · Diagnóstico Operacional
 
 ### Saúde geral da carteira
@@ -384,9 +533,13 @@ def secao_diagnostico(rs, extras):
 ### Top 3 categorias de problema (excluindo "Outros")
 {cats_md}
 
-> Categorização vem do `/api/analise` do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.
+{svg_cats}
+> Categorização vem da Análise do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.
 
 ### Pulso KIRA · comunicação com cliente
+
+{svg_kira}
+
 - **Cobertura:** {op_kira.get('com_kira', '—')} de {op_kira.get('total_fluxo', '—')} obras ativas têm grupo de WhatsApp acompanhado ({fmt_pct(cob)})
 - **Saudável:** {op_kira.get('saudavel', '—')} ({op_kira.get('saudavel_pct_no_monitorado', '—')}% das monitoradas)
 - **Em atenção:** {op_kira.get('atencao', '—')}
@@ -613,9 +766,13 @@ def secao_capacidade(rs, extras):
 > Fonte: `/api/analytics/weekly-forecast` · projeção baseada em data_de_entrada firmada.
 """
 
+    svg_cap = svg_barra_capacidade(cap_pct, m2_curso, cap_mensal)
+
     return f"""## 7 · Capacidade × Demanda
 
 > Pergunta direta: *aceitamos mais obras ou estamos no limite?*
+
+{svg_cap}
 
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|
