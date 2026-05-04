@@ -403,6 +403,7 @@ def secao_conclusao_executiva(headline, rs, extras):
     ok = summary.get("ok", 0) or 0
     cats = summary.get("totalActive", 0)
     cap = (rs or {}).get("capacidade", {}).get("utilization_percent", 0)
+    total_painel = (rs or {}).get("totais", {}).get("ativas", 0)
 
     if score < 50:
         tom = "demandando ação corretiva"
@@ -419,7 +420,7 @@ def secao_conclusao_executiva(headline, rs, extras):
 
     return f"""## Conclusão Executiva
 
-A operação fechou a quinzena {tom}, com Score {score}/100 e capacidade utilizada em {cap}%. Dos {cats} casos em análise, {ok} sem problemas relevantes e {criticos} em estado crítico — concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo {top_cat_str}, sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
+A operação fechou a quinzena {tom}, com Score {score}/100 e capacidade utilizada em {cap}%. Da carteira de **{total_painel}** obras ativas no Painel, **{cats}** foram diagnosticadas pela Análise do Painel (a diferença são obras em pós-entrega ou pausadas, fora desse recorte) — dessas, **{ok}** sem problemas relevantes e **{criticos}** em estado crítico, concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo {top_cat_str}, sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
 
 A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 10 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
 
@@ -591,7 +592,7 @@ def secao_resumo_executivo(headline, rs, score_ant, extras):
     score = headline.get("score", 0) if headline else 0
     score_ant_val = score_ant.get("score") if score_ant else None
     dias_ant = _dias_atras(score_ant)
-    score_delta = fmt_delta(score, score_ant_val, dias_atras=dias_ant)
+    score_delta = fmt_delta(score, score_ant_val)  # delta limpo (contexto temporal já está no Brief)
 
     totais = rs.get("totais", {}) if rs else {}
     ativas = totais.get("ativas", 0)
@@ -612,9 +613,10 @@ def secao_resumo_executivo(headline, rs, score_ant, extras):
         zona = "amarela"
     else:
         zona = "vermelha"
+    ref_temp = f"vs snapshot de {dias_ant}d atrás" if dias_ant else "vs snapshot anterior"
     manchete = (
         f"Operação fechou a quinzena com Score {score}/100 (zona {zona}), "
-        f"{score_delta} vs quinzena anterior. "
+        f"{score_delta} {ref_temp}. "
         f"{ativas} obras ativas em fluxo, {em_exec} em execução agora, "
         f"{atrasadas} atrasadas e {em_retorno} em pós-entrega (reparo + marcas)."
     )
@@ -713,7 +715,7 @@ def secao_indicadores(headline, rs, score_ant, extras):
 | → Alto risco | {high} | — | — | Análise do Painel |
 | Obras em retorno (reparo + marcas) | {em_retorno} | — | — | Painel de Obras |
 | Cluster paralisado | {totais.get('pausados', '—')} | — | — | Painel de Obras |
-| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {fmt_delta(score, score_ant_val, dias_atras=dias_ant_indic)} | Snapshot diário |
+| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {fmt_delta(score, score_ant_val)} | Snapshot diário |
 | TEMPO médio de ciclo | {tempo.get('ciclo_total_mediana', '—')}d | — | — | Painel de Obras |
 | VOLUME m² em curso | {fmt_num(totais.get('m2_em_execucao', 0))} | — | — | Painel de Obras |
 | Capacidade utilizada | {cap.get('utilization_percent', '—')}% | — | — | Painel de Obras |
@@ -1078,15 +1080,15 @@ def secao_equipe(rs, extras):
         ativos = eq.get("ativos", 0)
         obras_lid = len(eq.get("obras_lideradas", []))
         estado = eq.get("estado", "—")
-        # Sinaleira de estado
-        if estado == "saudavel":
-            estado_label = "🟢 saudável"
-        elif estado == "fantasma":
-            estado_label = "⚪ fantasma"
-        elif estado == "atencao":
-            estado_label = "🟡 atenção"
-        else:
-            estado_label = estado
+        # Sinaleira de estado (mapeamento explícito · evita travessões soltos)
+        ESTADO_LABEL = {
+            "saudavel": "🟢 saudável",
+            "fantasma": "⚪ fantasma",
+            "atencao": "🟡 atenção",
+            "parcial": "🟡 parcial",
+            "critico": "🔴 crítico",
+        }
+        estado_label = ESTADO_LABEL.get(estado, f"⚫ {estado}")
         eq_md += f"| {nome} | {lider} | {ativos} | {obras_lid} | {estado_label} |\n"
 
     return f"""## 8 · Análise por Equipe

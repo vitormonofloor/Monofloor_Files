@@ -2,7 +2,7 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Gerente da Qualidade**
-**Gerado em:** 04/05/2026 18:22
+**Gerado em:** 04/05/2026 19:53
 
 ---
 
@@ -19,7 +19,7 @@
 | | Indicador | Valor | Status |
 |---|---|---|---|
 | 🔴 | Score Saúde | **48/100** (▼ -1 ⚠) | abaixo da zona saudável (≥70) |
-| 🔵 | Obras ativas em fluxo | **260** (34 em execução) | volume da carteira |
+| 🔵 | Obras ativas em fluxo | **260** (36 em execução) | volume da carteira |
 | 🟡 | Atrasadas | **53** (21 críticas) | 20% das ativas |
 | 🟡 | Em retorno (reparo/marcas) | **26** | 10% da carteira em pós-entrega |
 | 🟡 | Capacidade utilizada | **35%** | folga produtiva |
@@ -46,15 +46,15 @@
 
 > Visão panorâmica do período. Brief Executivo no topo (Seção 0) tem leitura mais condensada · análise técnica nas Seções 2-9.
 
-> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ (vs 2d) vs quinzena anterior. 260 obras ativas em fluxo, 34 em execução agora, 53 atrasadas e 26 em pós-entrega (reparo + marcas).
+> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs snapshot de 2d atrás. 260 obras ativas em fluxo, 36 em execução agora, 53 atrasadas e 26 em pós-entrega (reparo + marcas).
 
-**Score Saúde Operacional:** 48/100 (▼ -1 ⚠ (vs 2d))
+**Score Saúde Operacional:** 48/100 (▼ -1 ⚠)
 
 | KPI | Atual | Anterior | Δ |
 |---|---|---|---|
-| 🔴 Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ (vs 2d) |
+| 🔴 Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ |
 | 🔵 Total ativas em fluxo | 260 | — | — |
-| 🔵 Em execução agora | 34 | — | — |
+| 🔵 Em execução agora | 36 | — | — |
 | 🟡 Atrasadas (Painel) | 53 (20% das ativas) | — | — |
 | 🟡 Em retorno (reparo + marcas) | 26 (10% das ativas) | — | — |
 | 🟡 Capacidade utilizada | 35% | — | — |
@@ -77,13 +77,13 @@
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
 | Total ativas em fluxo | 260 | — | — | Painel de Obras |
-| Em execução agora | 34 | — | — | Painel de Obras |
+| Em execução agora | 36 | — | — | Painel de Obras |
 | Atrasadas | 53 | — | — | Análise do Painel |
 | → Críticas | 21 | — | — | Análise do Painel |
 | → Alto risco | 27 | — | — | Análise do Painel |
 | Obras em retorno (reparo + marcas) | 26 | — | — | Painel de Obras |
 | Cluster paralisado | 5 | — | — | Painel de Obras |
-| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ (vs 2d) | Snapshot diário |
+| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ | Snapshot diário |
 | TEMPO médio de ciclo | 172d | — | — | Painel de Obras |
 | VOLUME m² em curso | 4.403 | — | — | Painel de Obras |
 | Capacidade utilizada | 35% | — | — | Painel de Obras |
@@ -358,7 +358,7 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 |---|---|---|---|---|
 | Equipe Wiguens | Wiguens Louis | 13 | 4 | 🟢 saudável |
 | Equipe João | João Carlos | 0 | 3 | ⚪ fantasma |
-| Equipe Gilmar | Gilmar Gomes Rafael | 1 | 3 | parcial |
+| Equipe Gilmar | Gilmar Gomes Rafael | 1 | 3 | 🟡 parcial |
 | Equipe Egberto | Egberto Sullivan Tavares de Oliveira | 0 | 3 | ⚪ fantasma |
 | Equipe Júlio | Júlio Miranda | 8 | 2 | 🟢 saudável |
 | Equipe Michael | Cosme Eduardo Soares Ragno | 9 | 0 | 🟢 saudável |
@@ -532,7 +532,7 @@ Operação a 35% da capacidade mensal · 4.403 m² em curso vs 9.196 m²/mês de
 
 ## Conclusão Executiva
 
-A operação fechou a quinzena demandando ação corretiva, com Score 48/100 e capacidade utilizada em 35%. Dos 184 casos em análise, 107 sem problemas relevantes e 21 em estado crítico — concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo **Comunicação** (77 obras), sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
+A operação fechou a quinzena demandando ação corretiva, com Score 48/100 e capacidade utilizada em 35%. Da carteira de **260** obras ativas no Painel, **184** foram diagnosticadas pela Análise do Painel (a diferença são obras em pós-entrega ou pausadas, fora desse recorte) — dessas, **107** sem problemas relevantes e **21** em estado crítico, concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo **Comunicação** (77 obras), sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
 
 A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 10 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
 
@@ -546,9 +546,9 @@ A leitura honesta deste relatório é que a folga de capacidade convive com frag
 
 | Status | Quantidade |
 |---|---|
-| Em execução | 34 |
-| Aguardando execução | 48 |
-| Planejamento | 102 |
+| Em execução | 36 |
+| Aguardando execução | 47 |
+| Planejamento | 101 |
 | Pausado | 5 |
 | Aguardando clima | 3 |
 | Em reparo | 22 |
@@ -621,13 +621,13 @@ Pós-entrega: **REPARO**, **MARCAS / ROLO / CERA**.
 ## Fontes e Disclaimer
 
 **Fontes consultadas:**
-- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T19:52:08Z`
+- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T21:12:40Z`
 - **`/api/analise`** · diagnósticos textuais + categorização de problemas + teamPerformance · snapshot `2026-05-04T12:20:07.727981`
 - **`/api/analytics/alerts`** · alertas estruturados (stage_delay + sem_equipe)
 - **`/api/analytics/weekly-forecast`** · projeção de 13 semanas (starting + inExecution + capacity)
 - **`/api/dashboard`** · ocorrências abertas + SLA + readiness
 - **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-04T18:07:38Z`
-- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T19:52:19Z`
+- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T21:12:52Z`
 - **Score Histórico** · `score-historico.json` (acumula 1 entry/dia desde 2026-05-01)
 
 **Disclaimer:**
