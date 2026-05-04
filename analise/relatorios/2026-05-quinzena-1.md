@@ -2,30 +2,30 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Coordenador**
-**Gerado em:** 04/05/2026 14:31
+**Gerado em:** 04/05/2026 14:41
 
 ---
 
 ## 1 · Resumo Executivo
 
-> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 262 obras ativas em fluxo, 37 em execução agora, 53 atrasadas e 25 em pós-entrega (reparo + marcas).
+> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 260 obras ativas em fluxo, 36 em execução agora, 53 atrasadas e 27 em pós-entrega (reparo + marcas).
 
 **Score Saúde Operacional:** 48/100 (▼ -1 ⚠)
 
 | KPI | Atual | Anterior | Δ |
 |---|---|---|---|
-| Total ativas em fluxo | 262 | — | — |
-| Em execução agora | 37 | — | — |
+| Total ativas em fluxo | 260 | — | — |
+| Em execução agora | 36 | — | — |
 | Atrasadas (Painel) | 53 | — | — |
-| Obras em retorno (reparo + marcas) | 25 | — | — |
+| Obras em retorno (reparo + marcas) | 27 | — | — |
 | Capacidade utilizada | 35% | — | — |
 | Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ |
 
 
 **3 destaques do período:**
-1. Operação a 35% da capacidade · espaço produtivo considerável (4.689 m²/mês livres)
-2. Cobertura KIRA em 64.7% (132 de 204 obras) · melhor visibilidade de comunicação com cliente
-3. 82 obras com clima saudável (62.1% das monitoradas pelo KIRA)
+1. Operação a 35% da capacidade · espaço produtivo considerável (4.791 m²/mês livres)
+2. Cobertura KIRA em 64.5% (129 de 200 obras) · melhor visibilidade de comunicação com cliente
+3. 81 obras com clima saudável (62.8% das monitoradas pelo KIRA)
 
 **3 alertas críticos:**
 1. **JONATHAS DE ALMEIDA NUNES LUKAS** — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO" · **Causa:** fase atual atrás da prevista pelo cronograma · **→ Ação:** acelerar transição pra fase **INFORMAÇÕES LOGÍSTICAS**
@@ -38,19 +38,19 @@
 
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
-| Total ativas em fluxo | 262 | — | — | rodrigo-stats |
-| Em execução agora | 37 | — | — | rodrigo-stats |
+| Total ativas em fluxo | 260 | — | — | rodrigo-stats |
+| Em execução agora | 36 | — | — | rodrigo-stats |
 | Atrasadas (Painel) | 53 | — | — | analise |
 | → Críticas | 21 | — | — | analise |
 | → Alto risco | 27 | — | — | analise |
-| Obras em retorno (reparo + marcas) | 25 | — | — | rodrigo-stats |
+| Obras em retorno (reparo + marcas) | 27 | — | — | rodrigo-stats |
 | Cluster paralisado (Q2) | 5 | — | — | rodrigo-stats |
 | Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ | headline |
 | TEMPO médio de ciclo | 172d | — | — | rodrigo-stats |
-| VOLUME m² em curso | 4.507 | — | — | rodrigo-stats |
+| VOLUME m² em curso | 4.405 | — | — | rodrigo-stats |
 | Capacidade utilizada | 35% | — | — | rodrigo-stats |
 | A INICIAR firmadas (30d) | 0 | — | — | rodrigo-stats |
-| Cobertura KIRA | 64.7% | — | — | rodrigo-stats |
+| Cobertura KIRA | 64.5% | — | — | rodrigo-stats |
 | Ocorrências abertas | 950 | — | — | dashboard |
 
 > Deltas vs quinzena anterior em construção · score-historico ainda acumulando (iniciado 2026-05-01).
@@ -73,12 +73,14 @@
 > Categorização vem do `/api/analise` do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.
 
 ### Pulso KIRA · comunicação com cliente
-- **Cobertura:** 132 de 204 obras ativas têm grupo de WhatsApp acompanhado (64.7%)
-- **Saudável:** 82 (62.1% das monitoradas)
-- **Em atenção:** 50
-- **Sem KIRA:** 72 *(cegueira — obras que pra Qualidade são silêncio)*
+- **Cobertura:** 129 de 200 obras ativas têm grupo de WhatsApp acompanhado (64.5%)
+- **Saudável:** 81 (62.8% das monitoradas)
+- **Em atenção:** 48
+- **Sem KIRA:** 71 *(cegueira — obras que pra Qualidade são silêncio)*
 
 > [REVISAR] Comentário narrativo de 1-2 frases sobre o que esses números contam juntos.
+
+> 💡 **Caminhos pra reduzir cegueira KIRA →** ver **Seção 10 · Conclusões** (receita "cegueira_kira" com 3 caminhos detalhados).
 
 ---
 
@@ -138,6 +140,14 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 > [REVISAR] Padrões observados nos casos acima (1-2 frases) · *qual o tema dominante?*
 
+### Caminhos a explorar · pra reduzir atrasos críticos
+- 🎯 **Triagem semanal das críticas** — toda segunda, ranking por dias parados → top 5 vão pra reunião de Coordenação
+- 🚨 **Escalação automática D+30** — obra que passa 30d na mesma fase notifica Coordenador + cliente recebe contato
+- 📋 **Checklist proativo de pré-execução** — confirmar equipe + cor + VT *antes* da data prevista, não no dia
+- 💬 **Comunicação proativa com cliente** — quando atraso for inevitável, antecipar (em vez de cliente cobrar)
+
+> [REVISAR] Quais desses caminhos fazem sentido pro período atual? Marcar 1-2 e a gente promove pra Seção 10 com Como/Custo/Impacto/Risco completos.
+
 ---
 
 ## 5 · Retrabalho & Pós-entrega
@@ -146,10 +156,10 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|
-| Obras em retorno (total) | 25 | — | — |
-| → em reparo | 21 | — | — |
+| Obras em retorno (total) | 27 | — | — |
+| → em reparo | 23 | — | — |
 | → em marcas / rolo / cera | 4 | — | — |
-| % da carteira ativa | 9.5% | — | — |
+| % da carteira ativa | 10.4% | — | — |
 
 ### Categorias de problema relacionadas a retrabalho
 
@@ -160,7 +170,13 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 > Fonte: `/api/analise`. Cada categoria conta obras com problema reportado no Painel — ajuda a identificar **padrões de causa-raiz** sem coleta manual.
 
-> [REVISAR] Hipótese sobre a categoria dominante · qual ação pra reduzir?
+### Caminhos a explorar · pra reduzir retrabalho
+- 🔍 **Auditoria técnica das críticas** — cruzar 23 infiltrações críticas: período / equipe / substrato / clima → identificar padrão recorrente
+- 📐 **Critério reforçado na VT** — checklist obrigatório de umidade/contrapiso/ralo · obra não inicia sem aprovação
+- 🎓 **Treinamento focado** — equipes com maior taxa de retorno recebem reciclagem técnica
+- ⚖ **Mediação preventiva** — obras com flag detrator_latente recebem visita do Coordenador antes de virar caso jurídico
+
+> [REVISAR] Categoria Infiltração tem 47% críticas (taxa MUITO acima da média) — recomendo priorizar Auditoria técnica. Ver Seção 10 pra caminhos detalhados (Como/Custo/Impacto/Risco).
 
 ---
 
@@ -182,6 +198,14 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 > [REVISAR] Padrão regional observado — alguma cidade puxa atraso desproporcional?
 
+### Caminhos a explorar · pra concentração geográfica
+- 🗺 **Análise de raiz regional** — concentração de 52% em **São Paulo** sugere investigar se gargalo é da equipe local ou do volume
+- 🚐 **VT em lote** — pra obras próximas geograficamente, agendar visitas técnicas em sequência (ganho logístico)
+- 👥 **Distribuir Luana × Wesley por região** — avaliar se proximidade física à equipe melhora acompanhamento
+- 📍 **Reforço local** — se gargalo persistir em uma região, considerar contratação de aplicador regional
+
+> [REVISAR] Esses caminhos fazem sentido com o conhecimento da operação? Cortar/promover.
+
 ---
 
 ## 7 · Capacidade × Demanda
@@ -191,7 +215,7 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|
 | Capacidade mensal produtiva | 9.196 m²/mês | — | — |
-| VOLUME m² em curso | 4.507 m² | — | — |
+| VOLUME m² em curso | 4.405 m² | — | — |
 | Capacidade utilizada | 35% | — | — |
 | A INICIAR firmadas (30d) | 0 obras | — | — |
 
@@ -206,6 +230,8 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 | Capacidade prevista | 25% |
 
 > Fonte: `/api/analytics/weekly-forecast` · projeção baseada em data_de_entrada firmada.
+
+> 💡 **Caminhos pra equilibrar capacidade vs demanda →** ver **Seção 10 · Conclusões** (receita "capacidade_ociosa" com 3 caminhos detalhados).
 
 ---
 
@@ -238,6 +264,14 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 > [REVISAR] Comentário curto sobre destaques (positivos e alertas).
 
+### Caminhos a explorar · pra balanço de carga e qualidade
+- ⚖ **Análise de perfil de carteira** — comparar Luana × Wesley considerando complexidade média, valor médio, dispersão geográfica (não só quantidade)
+- 🤝 **1:1 quinzenal de carteira** — Coordenação revisa as obras de risco com cada consultora (formato fixo, 30min)
+- 📊 **Meta de obras em paralelo** — estabelecer máx por consultora (ex: 60 ativas) · acima disso, desacelerar entrada de novas
+- 🎓 **Capacitação cruzada** — Luana e Wesley trocam casos pra aprender com diferenças de abordagem
+
+> [REVISAR] Distribuição atual: Luana 84 ativas / Wesley 61. Vale checar se essa diferença é histórica ou recente.
+
 ---
 
 ## 9 · Sinais Painel × Telegram (Lab Orion)
@@ -258,6 +292,14 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 
 > [REVISAR] Padrão observado · se houver divergência sistemática, declarar hipótese + ação.
+
+### Caminhos a explorar · pra reduzir divergências e expandir o Orion
+- 🔄 **Padronizar quem atualiza o Painel** — definir formalmente: técnico atualiza fase, consultora atualiza status. Hoje há sobreposição
+- ⚠ **Auditoria semanal de detrator_latente** — toda semana, Coordenação revisa as obras com flag · age antes de virar caso
+- 📈 **Expandir piloto Orion** — 10 → 50 obras em 3 meses · ganha massa crítica pra detectar padrões sistêmicos
+- 🧪 **A/B de qualidade Painel × WhatsApp** — quando divergir, qual fonte está certa? Auditoria mensal da amostra
+
+> [REVISAR] Lab Orion ainda em piloto (10 obras) · vale acelerar expansão pra ganhar tração nos sinais?
 
 ---
 
@@ -353,7 +395,7 @@ Score em 48/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
 ### Capacidade da operação subutilizada
 
 **Diagnóstico**
-Operação a 35% da capacidade mensal · 4.507 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.689 m²/mês não aproveitada.
+Operação a 35% da capacidade mensal · 4.405 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.791 m²/mês não aproveitada.
 
 **Para melhorar:** Acelerar conversão comercial OU revisar dimensionamento da equipe.
 
@@ -392,15 +434,15 @@ Operação a 35% da capacidade mensal · 4.507 m² em curso vs 9.196 m²/mês de
 
 | Status | Quantidade |
 |---|---|
-| Em execução | 37 |
+| Em execução | 36 |
 | Aguardando execução | 47 |
-| Planejamento | 105 |
+| Planejamento | 102 |
 | Pausado | 5 |
 | Aguardando clima | 3 |
-| Em reparo | 21 |
+| Em reparo | 23 |
 | Em marcas / rolo / cera | 4 |
 | Concluído | 235 |
-| Finalizado | 541 |
+| Finalizado | 543 |
 | Cancelado | 33 |
 
 > [REVISAR · Fase 1.1c] Listagem nominal de cada bucket (nomes dos clientes) — virá numa próxima iteração consultando o details/.
@@ -410,13 +452,13 @@ Operação a 35% da capacidade mensal · 4.507 m² em curso vs 9.196 m²/mês de
 ## Fontes e Disclaimer
 
 **Fontes consultadas:**
-- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T13:09:20Z`
+- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T15:31:20Z`
 - **`/api/analise`** · diagnósticos textuais + categorização de problemas + teamPerformance · snapshot `2026-05-04T12:20:07.727981`
 - **`/api/analytics/alerts`** · alertas estruturados (stage_delay + sem_equipe)
 - **`/api/analytics/weekly-forecast`** · projeção de 13 semanas (starting + inExecution + capacity)
 - **`/api/dashboard`** · ocorrências abertas + SLA + readiness
-- **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-04T15:00:44Z`
-- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T13:09:31Z`
+- **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-04T17:36:10Z`
+- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T15:31:31Z`
 - **Score Histórico** · `score-historico.json` (acumula 1 entry/dia desde 2026-05-01)
 
 **Disclaimer:**
