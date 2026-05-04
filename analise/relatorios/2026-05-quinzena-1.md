@@ -2,20 +2,20 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Coordenador**
-**Gerado em:** 04/05/2026 14:53
+**Gerado em:** 04/05/2026 15:19
 
 ---
 
 ## 1 · Resumo Executivo
 
-> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 260 obras ativas em fluxo, 36 em execução agora, 53 atrasadas e 27 em pós-entrega (reparo + marcas).
+> [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 260 obras ativas em fluxo, 35 em execução agora, 53 atrasadas e 27 em pós-entrega (reparo + marcas).
 
 **Score Saúde Operacional:** 48/100 (▼ -1 ⚠)
 
 | KPI | Atual | Anterior | Δ |
 |---|---|---|---|
 | Total ativas em fluxo | 260 | — | — |
-| Em execução agora | 36 | — | — |
+| Em execução agora | 35 | — | — |
 | Atrasadas (Painel) | 53 | — | — |
 | Obras em retorno (reparo + marcas) | 27 | — | — |
 | Capacidade utilizada | 35% | — | — |
@@ -23,14 +23,14 @@
 
 
 **3 destaques do período:**
-1. Operação a 35% da capacidade · espaço produtivo considerável (4.791 m²/mês livres)
-2. Cobertura KIRA em 64.5% (129 de 200 obras) · melhor visibilidade de comunicação com cliente
-3. 81 obras com clima saudável (62.8% das monitoradas pelo KIRA)
+1. Operação a 35% da capacidade · espaço produtivo considerável (4.793 m²/mês livres)
+2. Cobertura KIRA em 65% (130 de 200 obras) · melhor visibilidade de comunicação com cliente
+3. 81 obras com clima saudável (62.3% das monitoradas pelo KIRA)
 
 **3 alertas críticos:**
 1. **JONATHAS DE ALMEIDA NUNES LUKAS** — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO" · **Causa:** fase atual atrás da prevista pelo cronograma · **→ Ação:** acelerar transição pra fase **INFORMAÇÕES LOGÍSTICAS**
-2. **JONATHAS DE ALMEIDA NUNES LUKAS** — Projeto sem equipe definida a 0 dias do início · **Causa:** equipe ainda não alocada · **→ Ação:** alocar equipe pro projeto **JONATHAS DE ALMEIDA NUNES LUKAS**
-3. **NINA RODRIGUES FIALDINI** — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "PROJETOS  - 1ª REVISÃO" · **Causa:** fase atual atrás da prevista pelo cronograma · **→ Ação:** acelerar transição pra fase **INFORMAÇÕES LOGÍSTICAS**
+2. **NINA RODRIGUES FIALDINI** — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "PROJETOS  - 1ª REVISÃO" · **Causa:** fase atual atrás da prevista pelo cronograma · **→ Ação:** acelerar transição pra fase **INFORMAÇÕES LOGÍSTICAS**
+3. **ELLIOTT ROBERT MICHEL FRES** — Projeto deveria estar em "INFORMAÇÕES LOGÍSTICAS" mas está em "CONFIRMAÇÕES OP 1" · **Causa:** fase atual atrás da prevista pelo cronograma · **→ Ação:** acelerar transição pra fase **INFORMAÇÕES LOGÍSTICAS**
 
 ---
 
@@ -38,22 +38,22 @@
 
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
-| Total ativas em fluxo | 260 | — | — | rodrigo-stats |
-| Em execução agora | 36 | — | — | rodrigo-stats |
-| Atrasadas (Painel) | 53 | — | — | analise |
-| → Críticas | 21 | — | — | analise |
-| → Alto risco | 27 | — | — | analise |
-| Obras em retorno (reparo + marcas) | 27 | — | — | rodrigo-stats |
-| Cluster paralisado (Q2) | 5 | — | — | rodrigo-stats |
-| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ | headline |
-| TEMPO médio de ciclo | 172d | — | — | rodrigo-stats |
-| VOLUME m² em curso | 4.405 | — | — | rodrigo-stats |
-| Capacidade utilizada | 35% | — | — | rodrigo-stats |
-| A INICIAR firmadas (30d) | 0 | — | — | rodrigo-stats |
-| Cobertura KIRA | 64.5% | — | — | rodrigo-stats |
-| Ocorrências abertas | 950 | — | — | dashboard |
+| Total ativas em fluxo | 260 | — | — | Painel de Obras |
+| Em execução agora | 35 | — | — | Painel de Obras |
+| Atrasadas | 53 | — | — | Análise do Painel |
+| → Críticas | 21 | — | — | Análise do Painel |
+| → Alto risco | 27 | — | — | Análise do Painel |
+| Obras em retorno (reparo + marcas) | 27 | — | — | Painel de Obras |
+| Cluster paralisado | 5 | — | — | Painel de Obras |
+| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ | Snapshot diário |
+| TEMPO médio de ciclo | 172d | — | — | Painel de Obras |
+| VOLUME m² em curso | 4.403 | — | — | Painel de Obras |
+| Capacidade utilizada | 35% | — | — | Painel de Obras |
+| A iniciar firmadas (30d) | 23 obras · 3.738 m² | — | — | Painel de Obras |
+| Cobertura KIRA | 65% | — | — | KIRA WhatsApp |
+| Ocorrências abertas | 950 (0.9 por obra · acumulado) | — | — | Painel · ocorrências |
 
-> Deltas vs quinzena anterior em construção · score-historico ainda acumulando (iniciado 2026-05-01).
+> Deltas vs quinzena anterior em construção · histórico de Score acumulando desde 2026-05-01.
 
 ---
 
@@ -65,6 +65,9 @@
 - **21** críticas + **27** em alto risco
 - **53** com atraso identificado pelo Painel
 
+> *Universos: **260** ativas no Painel · **184** com diagnóstico de risco no /api/analise (a diferença de 76 são obras em pós-entrega ou pausadas que não entram nessa análise específica).*
+
+
 ### Top 3 categorias de problema (excluindo "Outros")
 - **Comunicação** — 77 obras (20 críticas)
 - **Material** — 64 obras (8 críticas)
@@ -73,10 +76,10 @@
 > Categorização vem do `/api/analise` do Painel — agrupamento automático que substitui o trabalho manual de catalogar causa-raiz.
 
 ### Pulso KIRA · comunicação com cliente
-- **Cobertura:** 129 de 200 obras ativas têm grupo de WhatsApp acompanhado (64.5%)
-- **Saudável:** 81 (62.8% das monitoradas)
-- **Em atenção:** 48
-- **Sem KIRA:** 71 *(cegueira — obras que pra Qualidade são silêncio)*
+- **Cobertura:** 130 de 200 obras ativas têm grupo de WhatsApp acompanhado (65%)
+- **Saudável:** 81 (62.3% das monitoradas)
+- **Em atenção:** 49
+- **Sem KIRA:** 70 *(cegueira — obras que pra Qualidade são silêncio)*
 
 > [REVISAR] Comentário narrativo de 1-2 frases sobre o que esses números contam juntos.
 
@@ -215,7 +218,7 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|
 | Capacidade mensal produtiva | 9.196 m²/mês | — | — |
-| VOLUME m² em curso | 4.405 m² | — | — |
+| VOLUME m² em curso | 4.403 m² | — | — |
 | Capacidade utilizada | 35% | — | — |
 | A INICIAR firmadas (30d) | 0 obras | — | — |
 
@@ -244,22 +247,21 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 | Luana Patricia De Andrade Lima | 84 | 34 | 17 | 40.5% |
 | Wesley Matheus De Carvalho | 61 | 26 | 9 | 42.6% |
 | Pedro Alexandre Santana | 7 | 1 | 0 | 14.3% |
-| Thaísa De Lara Barbosa | 1 | 1 | 1 | 100% |
-| Pedro Marçal | 1 | 0 | 0 | 0% |
-| Renata Garcia Penna | 1 | 0 | 0 | 0% |
+
+> *Amostra pequena (1-4 obras), fora do ranking: Thaísa De Lara Barbosa, Pedro Marçal, Renata Garcia Penna.*
 
 > Fonte: `/api/analise.teamPerformance`. **% com problema** = projetos com qualquer problema reportado / projetos ativos.
 
 ### Supervisão de equipe (linha de frente)
 
-| Supervisor / Equipe | Obras ativas |
-|---|---|
-| Equipe Wiguens | — |
-| Equipe João | — |
-| Equipe Gilmar | — |
-| Equipe Júlio | — |
-| Equipe Egberto | — |
-| Equipe Michael | — |
+| Equipe | Líder | Aplicadores ativos | Obras lideradas | Estado |
+|---|---|---|---|---|
+| Equipe Wiguens | Wiguens Louis | 13 | 4 | 🟢 saudável |
+| Equipe João | João Carlos | 0 | 3 | ⚪ fantasma |
+| Equipe Gilmar | Gilmar Gomes Rafael | 1 | 3 | parcial |
+| Equipe Egberto | Egberto Sullivan Tavares de Oliveira | 0 | 3 | ⚪ fantasma |
+| Equipe Júlio | Júlio Miranda | 8 | 2 | 🟢 saudável |
+| Equipe Michael | Cosme Eduardo Soares Ragno | 9 | 0 | 🟢 saudável |
 
 
 > [REVISAR] Comentário curto sobre destaques (positivos e alertas).
@@ -278,7 +280,7 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 **Total de obras analisadas pelo Orion:** 10 (piloto)
 
-**Resumo do Orion:** Das 10 obras analisadas, 6 têm status do painel coerente com a narrativa Telegram e 4 estão desatualizadas — nenhuma em abandono e nenhum detrator manifesto. Cinco obras estão em ciclo de retorno técnico (patologia, retrabalho de acabamento ou reparo de dano), três em planejamento pré-execução com aplicador 'a definir', uma em fim de execução prestes a virar concluída (Luis Fernando) e uma em transição de pausa para execução (Amendoeiras). Quatro obras carregam o flag detrator_latente por histór...
+**Resumo do Orion:** Das 10 obras analisadas, 6 têm status do painel coerente com a narrativa Telegram e 4 estão desatualizadas — nenhuma em abandono e nenhum detrator manifesto. Cinco obras estão em ciclo de retorno técnico (patologia, retrabalho de acabamento ou reparo de dano), três em planejamento pré-execução com aplicador 'a definir', uma em fim de execução prestes a virar concluída (Luis Fernando) e uma em transição de pausa para execução (Amendoeiras). Quatro obras carregam o flag detrator_latente por histórico de quase-distrato ou reclamação técnica recente (Paula Correa, Michelle, Getulio, Vanessa). O padrão crítico transversal: cliente final ausente do grupo Telegram em 9 das 10 obras, com interlocução mediada por arquitetos ou pela própria Monofloor — risco sistêmico de pendência invisível.
 
 ### Top 5 obras com flags ou divergências
 
@@ -395,7 +397,7 @@ Score em 48/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
 ### Capacidade da operação subutilizada
 
 **Diagnóstico**
-Operação a 35% da capacidade mensal · 4.405 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.791 m²/mês não aproveitada.
+Operação a 35% da capacidade mensal · 4.403 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.793 m²/mês não aproveitada.
 
 **Para melhorar:** Acelerar conversão comercial OU revisar dimensionamento da equipe.
 
@@ -434,8 +436,8 @@ Operação a 35% da capacidade mensal · 4.405 m² em curso vs 9.196 m²/mês de
 
 | Status | Quantidade |
 |---|---|
-| Em execução | 36 |
-| Aguardando execução | 47 |
+| Em execução | 35 |
+| Aguardando execução | 48 |
 | Planejamento | 102 |
 | Pausado | 5 |
 | Aguardando clima | 3 |
@@ -452,13 +454,13 @@ Operação a 35% da capacidade mensal · 4.405 m² em curso vs 9.196 m²/mês de
 ## Fontes e Disclaimer
 
 **Fontes consultadas:**
-- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T15:31:20Z`
+- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-04T17:45:12Z`
 - **`/api/analise`** · diagnósticos textuais + categorização de problemas + teamPerformance · snapshot `2026-05-04T12:20:07.727981`
 - **`/api/analytics/alerts`** · alertas estruturados (stage_delay + sem_equipe)
 - **`/api/analytics/weekly-forecast`** · projeção de 13 semanas (starting + inExecution + capacity)
 - **`/api/dashboard`** · ocorrências abertas + SLA + readiness
-- **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-04T17:36:10Z`
-- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T15:31:31Z`
+- **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-04T18:07:38Z`
+- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-04T17:45:24Z`
 - **Score Histórico** · `score-historico.json` (acumula 1 entry/dia desde 2026-05-01)
 
 **Disclaimer:**

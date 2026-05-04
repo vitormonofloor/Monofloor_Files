@@ -26,6 +26,38 @@ ROOT = Path(__file__).parent
 SAIDA = ROOT / "relatorios"
 
 
+# ═══ Pré-processamento do Markdown ═══
+
+def remover_revisar(md):
+    """
+    Remove marcadores de bastidor [REVISAR ...] que vazariam pro leitor final.
+    Regras:
+    1. Linha que é APENAS '> [REVISAR ...]' (blockquote sem outro conteúdo) → remove linha inteira
+    2. '[REVISAR · rascunho auto] ' no início de blockquote → remove só o tag, mantém texto
+    3. '[REVISAR número]' ou '[REVISAR]' inline no meio do texto → remove o tag
+    4. '[REVISAR · TODO ...]' → remove linha inteira (placeholder de tarefa)
+    """
+    out = []
+    for line in md.split("\n"):
+        stripped = line.strip()
+        # Caso 1: linha-só-revisar (blockquote ou parágrafo) — remove
+        # Padrão: "> [REVISAR ...]" ou "[REVISAR · TODO ...]" ou "[REVISAR · escolher ...]"
+        if re.match(r"^>?\s*\[REVISAR(\s+[·•]\s+(TODO|escolher|Fase)|\s+[a-záéíóúçãõâêô])", stripped, flags=re.IGNORECASE):
+            # Se tem texto APÓS o ] que não seja só comentário, manter
+            m = re.match(r"^>?\s*\[REVISAR[^\]]*\]\s*(.*)$", stripped, flags=re.IGNORECASE)
+            if m and m.group(1).strip():
+                # Tem texto depois do tag — preserva o texto, remove o tag
+                resto = m.group(1).strip()
+                prefix = "> " if stripped.startswith(">") else ""
+                out.append(prefix + resto)
+            # Senão: linha pura de revisão, descartar
+            continue
+        # Caso 3: tag inline no meio do texto — remove o tag
+        line = re.sub(r"\[REVISAR[^\]]*\]\s*", "", line)
+        out.append(line)
+    return "\n".join(out)
+
+
 # ═══ Conversor Markdown → HTML (subset que cobre o relatório) ═══
 
 def md_to_html(md):
@@ -450,7 +482,9 @@ def main():
     print(f"Lendo: {md_path.name}")
     md = md_path.read_text(encoding="utf-8")
 
-    conteudo = md_to_html(md)
+    # Pré-processa: remove marcadores de bastidor [REVISAR ...] do output final
+    md_limpo = remover_revisar(md)
+    conteudo = md_to_html(md_limpo)
 
     # Extrai título do H1 pra usar no <title>
     m = re.search(r"<h1>([^<]+)</h1>", conteudo)

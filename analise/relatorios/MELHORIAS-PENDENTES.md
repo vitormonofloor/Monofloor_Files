@@ -20,32 +20,23 @@ Cada item: `[status] · [referência] · descrição curta · why`
 
 > Esses items são bugs visíveis ao leitor final que destroem credibilidade.
 
-- [ ] **`[REVISAR]` vazado pro output final** — marcadores de bastidor aparecem no relatório que iria pra diretoria. Filtrar/esconder no gerador final.
-  *Why:* Vitor não conseguiu revisar antes de gerar, e o relatório foi entregue cru.
+- [x] **`[REVISAR]` vazado pro output final** — `gerar-pdf.py` agora pré-processa o MD antes de virar HTML: remove linhas-só-de-revisar, mantém rascunhos automáticos sem o tag.
 
-- [ ] **Tabela equipes de linha de frente vazia** (Seção 8) — todas com `—`. Ou preencher com dados reais (cruzar com `equipes`/`details`) ou remover a tabela.
-  *Why:* Tabela só com travessões parece bug.
+- [x] **Tabela equipes de linha de frente vazia** (Seção 8) — preenchida com dados reais (Líder + Aplicadores ativos + Obras lideradas + Estado com sinaleira 🟢/⚪/🟡).
 
-- [ ] **Alertas duplicados pra mesma obra** (Seção 1) — JONATHAS aparece 2× nos 3 alertas. Agrupar por obra ou de-duplicar.
-  *Why:* Falta de curadoria. Diretoria pensa "sistema burro".
+- [x] **Alertas duplicados pra mesma obra** (Seção 1) — `gerar_alertas_executivos` agora deduplica por `clienteNome` antes de selecionar top 3.
 
-- [ ] **Resumo Orion truncado** (Seção 9) — corta no meio com `...` no caractere 500. Aumentar pra 800-1000 ou cortar em fim de frase.
-  *Why:* Parece bug de truncamento.
+- [x] **Resumo Orion truncado** (Seção 9) — agora corta em fim de frase mais próximo de 800 chars (com fallback pra ... só se não achar ponto).
 
-- [ ] **Jargão técnico em colunas "Fonte"** (Seção 2) — `rodrigo-stats`, `/api/analise`, `headline` visíveis. Trocar por nomes amigáveis ("Painel", "Análise do Painel", "Snapshot diário") OU remover coluna inteira.
-  *Why:* Diretoria não quer ver `*.json`.
+- [x] **Jargão técnico em colunas "Fonte"** (Seção 2) — substituído por nomes amigáveis: rodrigo-stats → "Painel de Obras", headline → "Snapshot diário", analise → "Análise do Painel", operacional_kira → "KIRA WhatsApp", dashboard → "Painel · ocorrências".
 
-- [ ] **Filtro `< 5 obras` no ranking de Consultores** (Seção 8) — Thaísa 100% problema (1 obra) e Pedro Marçal/Renata (1 obra cada) distorcem. Excluir do ranking quem tem < 5 obras OU marcar com asterisco.
-  *Why:* Estatística de cauda longa engana leitor.
+- [x] **Filtro `< 5 obras` no ranking de Consultores** (Seção 8) — separa amostra pequena em nota: *"Amostra pequena (1-4 obras), fora do ranking: Thaísa, Marçal, Renata."*
 
-- [ ] **Reconciliar 184 vs 260 obras** (Seções 1 e 3) — números diferentes na mesma análise sem explicação. Declarar a diferença ("260 ativas no Painel · 184 com diagnóstico no /api/analise") OU usar o mesmo universo nas duas seções.
-  *Why:* Auditor externo vê inconsistência.
+- [x] **Reconciliar 184 vs 260 obras** (Seções 1 e 3) — adicionada nota: *"Universos: 260 ativas no Painel · 184 com diagnóstico de risco no /api/analise (a diferença de 76 são obras em pós-entrega ou pausadas)."*
 
-- [ ] **`A INICIAR firmadas (30d) = 0`** — investigar se é bug ou fato real. Se zero é real, declarar contexto ("nenhuma obra com data_de_entrada confirmada nos próximos 30d"). Se é bug, corrigir consulta ao Painel.
-  *Why:* Zero solto parece bug ou crise.
+- [x] **`A INICIAR firmadas (30d) = 0`** — bug do gerador: estrutura real era `proximos["30d"]["obras"]`, não `firmadas_30d`. Agora mostra **23 obras · 3.738 m²**.
 
-- [ ] **`Ocorrências abertas: 950`** sem contexto (Seção 2) — adicionar denominador ou janela ("950 abertas em 1.038 obras totais" ou "950 acumuladas desde início do Painel").
-  *Why:* Número solto assusta sem ancoragem.
+- [x] **`Ocorrências abertas: 950`** sem contexto (Seção 2) — adicionado denominador: **950 (0.9 por obra · acumulado)**.
 
 ---
 
@@ -145,3 +136,4 @@ Cada item: `[status] · [referência] · descrição curta · why`
 ## Histórico de revisões deste documento
 
 - **2026-05-04** · v1 · criado após auditoria de leitor externo. 9 P0 + 5 P1 + 5 P2 + 5 P3 + 6 P4 = **30 itens** travados.
+- **2026-05-04** · v2 · **P0 fechada** (9 itens marcados [x]). Próximo alvo: P1 (Brief Executivo + Glossário).

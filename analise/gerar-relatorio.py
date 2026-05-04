@@ -130,14 +130,23 @@ def secao_header(inicio, fim):
 
 
 def gerar_alertas_executivos(extras):
-    """3 alertas mais críticos do Resumo, vindos de /api/analytics/alerts."""
+    """3 alertas mais críticos do Resumo, deduplicados por cliente (1 alerta por obra)."""
     alerts = (extras or {}).get("alerts", {}) or {}
     lista = alerts.get("alerts", []) if isinstance(alerts, dict) else []
     high = [a for a in lista if a.get("severity") == "HIGH"]
-    if len(high) < 3:
-        high += [a for a in lista if a.get("severity") == "MEDIUM" and a not in high]
-    selecionados = high[:3]
+    medium = [a for a in lista if a.get("severity") == "MEDIUM"]
+    candidatos = high + medium
 
+    # De-duplicar por clienteNome (1 alerta por obra)
+    seen = set()
+    unicos = []
+    for a in candidatos:
+        cliente = a.get("clienteNome", "")
+        if cliente and cliente not in seen:
+            unicos.append(a)
+            seen.add(cliente)
+
+    selecionados = unicos[:3]
     if not selecionados:
         return None
 
@@ -287,7 +296,10 @@ def secao_indicadores(headline, rs, score_ant, extras):
         if op_kira.get("total_fluxo", 0) > 0 else 0
     )
 
-    iniciar_30d = proximos.get("firmadas_30d", proximos.get("c_data_30d", 0))
+    # Bug fix: estrutura real é proximos["30d"]["obras"], não firmadas_30d
+    prox_30d = proximos.get("30d", {}) if isinstance(proximos.get("30d"), dict) else {}
+    iniciar_30d = prox_30d.get("obras", 0)
+    iniciar_30d_m2 = prox_30d.get("m2", 0)
 
     summary = (extras or {}).get("analise", {})
     summary = summary.get("summary", {}) if isinstance(summary, dict) else {}
@@ -298,27 +310,29 @@ def secao_indicadores(headline, rs, score_ant, extras):
     dashboard = (extras or {}).get("dashboard", {})
     ocorr = dashboard.get("ocorrencias", {}).get("byStatus", []) if isinstance(dashboard, dict) else []
     ocorr_abertas = sum(o.get("count", 0) for o in ocorr if o.get("status") == "aberta")
+    total_obras_painel = totais.get("total", 1) or 1
+    ocorr_por_obra = ocorr_abertas / total_obras_painel
 
     return f"""## 2 · Indicadores do Período
 
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
-| Total ativas em fluxo | {totais.get('ativas', '—')} | — | — | rodrigo-stats |
-| Em execução agora | {totais.get('em_execucao', '—')} | — | — | rodrigo-stats |
-| Atrasadas (Painel) | {atrasadas} | — | — | analise |
-| → Críticas | {criticos} | — | — | analise |
-| → Alto risco | {high} | — | — | analise |
-| Obras em retorno (reparo + marcas) | {em_retorno} | — | — | rodrigo-stats |
-| Cluster paralisado (Q2) | {totais.get('pausados', '—')} | — | — | rodrigo-stats |
-| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {fmt_delta(score, score_ant_val)} | headline |
-| TEMPO médio de ciclo | {tempo.get('ciclo_total_mediana', '—')}d | — | — | rodrigo-stats |
-| VOLUME m² em curso | {fmt_num(totais.get('m2_em_execucao', 0))} | — | — | rodrigo-stats |
-| Capacidade utilizada | {cap.get('utilization_percent', '—')}% | — | — | rodrigo-stats |
-| A INICIAR firmadas (30d) | {iniciar_30d} | — | — | rodrigo-stats |
-| Cobertura KIRA | {fmt_pct(cobertura_kira_pct)} | — | — | rodrigo-stats |
-| Ocorrências abertas | {fmt_num(ocorr_abertas)} | — | — | dashboard |
+| Total ativas em fluxo | {totais.get('ativas', '—')} | — | — | Painel de Obras |
+| Em execução agora | {totais.get('em_execucao', '—')} | — | — | Painel de Obras |
+| Atrasadas | {atrasadas} | — | — | Análise do Painel |
+| → Críticas | {criticos} | — | — | Análise do Painel |
+| → Alto risco | {high} | — | — | Análise do Painel |
+| Obras em retorno (reparo + marcas) | {em_retorno} | — | — | Painel de Obras |
+| Cluster paralisado | {totais.get('pausados', '—')} | — | — | Painel de Obras |
+| Score Saúde Operacional | {score}/100 | {score_ant_val or '—'} | {fmt_delta(score, score_ant_val)} | Snapshot diário |
+| TEMPO médio de ciclo | {tempo.get('ciclo_total_mediana', '—')}d | — | — | Painel de Obras |
+| VOLUME m² em curso | {fmt_num(totais.get('m2_em_execucao', 0))} | — | — | Painel de Obras |
+| Capacidade utilizada | {cap.get('utilization_percent', '—')}% | — | — | Painel de Obras |
+| A iniciar firmadas (30d) | {iniciar_30d} obras · {fmt_num(iniciar_30d_m2)} m² | — | — | Painel de Obras |
+| Cobertura KIRA | {fmt_pct(cobertura_kira_pct)} | — | — | KIRA WhatsApp |
+| Ocorrências abertas | {fmt_num(ocorr_abertas)} ({ocorr_por_obra:.1f} por obra · acumulado) | — | — | Painel · ocorrências |
 
-> Deltas vs quinzena anterior em construção · score-historico ainda acumulando (iniciado 2026-05-01).
+> Deltas vs quinzena anterior em construção · histórico de Score acumulando desde 2026-05-01.
 
 ---
 """
@@ -351,6 +365,13 @@ def secao_diagnostico(rs, extras):
         if op_kira.get("total_fluxo", 0) > 0 else 0
     )
 
+    total_painel = (rs or {}).get("totais", {}).get("ativas", 0)
+    total_diag = summary_sum.get("totalActive", 0)
+    nota_universos = ""
+    if total_painel and total_diag and total_painel != total_diag:
+        diff = total_painel - total_diag
+        nota_universos = f"\n> *Universos: **{total_painel}** ativas no Painel · **{total_diag}** com diagnóstico de risco no /api/analise (a diferença de {diff} são obras em pós-entrega ou pausadas que não entram nessa análise específica).*\n"
+
     return f"""## 3 · Diagnóstico Operacional
 
 ### Saúde geral da carteira
@@ -358,6 +379,7 @@ def secao_diagnostico(rs, extras):
 - **{summary_sum.get('ok', '—')}** sem problemas relevantes
 - **{summary_sum.get('critical', '—')}** críticas + **{summary_sum.get('high', '—')}** em alto risco
 - **{summary_sum.get('atrasados', '—')}** com atraso identificado pelo Painel
+{nota_universos}
 
 ### Top 3 categorias de problema (excluindo "Outros")
 {cats_md}
@@ -619,8 +641,12 @@ def secao_equipe(rs, extras):
     consultores = [t for t in team if t.get("role") == "Consultor"]
     consultores.sort(key=lambda t: t.get("projetosAtivos", 0), reverse=True)
 
+    # Filtro <5: separa amostra pequena pra não distorcer ranking (ex: Thaísa 100% com 1 obra)
+    principais = [t for t in consultores if t.get("projetosAtivos", 0) >= 5]
+    amostra_pequena = [t for t in consultores if 0 < t.get("projetosAtivos", 0) < 5]
+
     consultor_md = "| Consultor | Ativos | Com problema | Atrasados | % com problema |\n|---|---|---|---|---|\n"
-    for t in consultores:
+    for t in principais:
         ativos = t.get("projetosAtivos", 0)
         problema = t.get("projetosComProblema", 0)
         atrasados = t.get("projetosAtrasados", 0)
@@ -628,13 +654,32 @@ def secao_equipe(rs, extras):
         nome = t.get("nome", "?").title()
         consultor_md += f"| {nome} | {ativos} | {problema} | {atrasados} | {fmt_pct(pct)} |\n"
 
-    # Equipes do rodrigo-stats
+    if amostra_pequena:
+        nomes_ap = ", ".join(t.get("nome", "?").title() for t in amostra_pequena)
+        consultor_md += f"\n> *Amostra pequena (1-4 obras), fora do ranking: {nomes_ap}.*\n"
+
+    # Equipes do rodrigo-stats — usa campos reais (ativos, obras_hoje, obras_lideradas)
     equipes = rs.get("equipes", []) if rs else []
-    eq_md = "| Supervisor / Equipe | Obras ativas |\n|---|---|\n"
-    for eq in equipes[:8]:
+    # Ordenar por obras lideradas (mais relevantes primeiro)
+    equipes_sorted = sorted(equipes, key=lambda e: len(e.get("obras_lideradas", [])), reverse=True)
+
+    eq_md = "| Equipe | Líder | Aplicadores ativos | Obras lideradas | Estado |\n|---|---|---|---|---|\n"
+    for eq in equipes_sorted[:8]:
         nome = eq.get("nome", "—")
-        obras = eq.get("obras_ativas", eq.get("obras", "—"))
-        eq_md += f"| {nome} | {obras} |\n"
+        lider = eq.get("lider", "—")
+        ativos = eq.get("ativos", 0)
+        obras_lid = len(eq.get("obras_lideradas", []))
+        estado = eq.get("estado", "—")
+        # Sinaleira de estado
+        if estado == "saudavel":
+            estado_label = "🟢 saudável"
+        elif estado == "fantasma":
+            estado_label = "⚪ fantasma"
+        elif estado == "atencao":
+            estado_label = "🟡 atenção"
+        else:
+            estado_label = estado
+        eq_md += f"| {nome} | {lider} | {ativos} | {obras_lid} | {estado_label} |\n"
 
     return f"""## 8 · Análise por Equipe
 
@@ -680,13 +725,23 @@ def secao_orion(disc):
     else:
         linhas = "_Nenhuma divergência crítica detectada no período._\n"
 
-    resumo = (disc.get("resumo_executivo") or "")[:500]
+    resumo_full = disc.get("resumo_executivo") or ""
+    if len(resumo_full) <= 800:
+        resumo = resumo_full
+    else:
+        # Corta em fim de frase mais próximo do limite
+        cortado = resumo_full[:800]
+        last_period = cortado.rfind(". ")
+        if last_period > 500:
+            resumo = cortado[:last_period + 1]
+        else:
+            resumo = cortado.rstrip() + "..."
 
     return f"""## 9 · Sinais Painel × Telegram (Lab Orion)
 
 **Total de obras analisadas pelo Orion:** {total} (piloto)
 
-**Resumo do Orion:** {resumo}{'...' if len(disc.get('resumo_executivo', '')) > 500 else ''}
+**Resumo do Orion:** {resumo}
 
 ### Top 5 obras com flags ou divergências
 
