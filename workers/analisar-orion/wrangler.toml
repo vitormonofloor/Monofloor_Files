@@ -1,0 +1,8 @@
+name = "orion-analise"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# GH_TOKEN é setado via `wrangler secret put GH_TOKEN` ou pelo painel Cloudflare
+# (Settings → Variables and Secrets → Add → Encrypted).
+# Escopo necessário do PAT: `repo` (precisa repo · não só workflow · porque
+# vamos usar repository_dispatch que requer leitura/escrita do repo).

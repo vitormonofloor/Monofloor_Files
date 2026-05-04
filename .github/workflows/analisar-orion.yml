@@ -1,0 +1,137 @@
+name: Analisar Orion · IA por recorte
+
+# Dispara análise IA (GitHub Models · gratuito) em obras específicas do Lab Orion.
+# Atualiza discordancias-v3.json + publica via wrangler deploy no Cloudflare Worker.
+#
+# Trigger:
+#   - workflow_dispatch (botão GitHub UI · com inputs)
+#   - repository_dispatch type=analisar-orion (chamada de Worker proxy)
+#
+# Secrets necessários:
+#   - GITHUB_TOKEN (auto · usado pra GitHub Models)
+#   - PAT_LAB_PUB · PAT com escopo `repo` pra clonar/push em vitormonofloor/orion-pub
+#   - CLOUDFLARE_API_TOKEN · token CF com escopo Workers Edit
+#   - CLOUDFLARE_ACCOUNT_ID · account ID do CF
+
+on:
+  workflow_dispatch:
+    inputs:
+      obra_ids:
+        description: 'IDs das obras separados por vírgula'
+        required: true
+        type: string
+      recorte:
+        description: 'Nome do recorte (apenas log)'
+        required: false
+        default: 'manual'
+        type: string
+  repository_dispatch:
+    types: [analisar-orion]
+
+permissions:
+  contents: write
+
+jobs:
+  analisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Monofloor_Files
+        uses: actions/checkout@v4
+
+      - name: Checkout repo público (orion-pub)
+        uses: actions/checkout@v4
+        with:
+          repository: vitormonofloor/orion-pub
+          token: ${{ secrets.PAT_LAB_PUB }}
+          path: lab-hermeneuta-pub
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Node (pra wrangler)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install wrangler
+        run: npm install -g wrangler@latest
+
+      - name: Determinar inputs (workflow_dispatch ou repository_dispatch)
+        id: params
+        run: |
+          if [ -n "${{ github.event.inputs.obra_ids }}" ]; then
+            IDS="${{ github.event.inputs.obra_ids }}"
+            REC="${{ github.event.inputs.recorte }}"
+          else
+            IDS="${{ github.event.client_payload.obra_ids }}"
+            REC="${{ github.event.client_payload.recorte }}"
+          fi
+          if [ -z "$IDS" ]; then
+            echo "::error::Nenhum obra_ids informado · abortando"
+            exit 1
+          fi
+          echo "ids=$IDS" >> $GITHUB_OUTPUT
+          echo "recorte=${REC:-manual}" >> $GITHUB_OUTPUT
+          echo "n_obras=$(echo $IDS | tr ',' '\n' | wc -l)" >> $GITHUB_OUTPUT
+
+      - name: Resumo da execução
+        run: |
+          echo "## 🔮 Análise Orion · ${{ steps.params.outputs.recorte }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Obras**: ${{ steps.params.outputs.n_obras }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Modelo**: gpt-4o-mini (GitHub Models · gratuito)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Rodar análise IA (GitHub Models)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd analise/lab-hermeneuta
+          python agente/analisar_recorte.py \
+            --obra-ids "${{ steps.params.outputs.ids }}" \
+            --recorte "${{ steps.params.outputs.recorte }}"
+
+      - name: Copiar JSON atualizado pro repo público
+        run: |
+          cp analise/lab-hermeneuta/dados/discordancias-v3.json \
+             lab-hermeneuta-pub/public/dados/discordancias-v3.json
+
+      - name: Commit + push no repo público
+        run: |
+          cd lab-hermeneuta-pub
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/dados/discordancias-v3.json
+          if git diff --staged --quiet; then
+            echo "Nada pra commitar (JSON não mudou)"
+            exit 0
+          fi
+          git commit -m "analise IA · recorte ${{ steps.params.outputs.recorte }} · ${{ steps.params.outputs.n_obras }} obras"
+          git push
+
+      - name: Deploy via wrangler
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          cd lab-hermeneuta-pub
+          wrangler deploy
+
+      - name: Commit + push no Monofloor_Files (histórico)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add analise/lab-hermeneuta/dados/discordancias-v3.json
+          if git diff --staged --quiet; then exit 0; fi
+          git commit -m "analise IA · ${{ steps.params.outputs.recorte }} · ${{ steps.params.outputs.n_obras }} obras"
+          git pull --rebase --autostash
+          git push
+
+      - name: Resumo final
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Análise concluída · Lab atualizado em https://orion-pub.vitor-monofloor.workers.dev" >> $GITHUB_STEP_SUMMARY
