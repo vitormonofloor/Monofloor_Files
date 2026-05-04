@@ -22,7 +22,7 @@ Marcações usadas:
 # Relatório Quinzenal de Qualidade
 
 **Período:** [AUTO: dd/mm a dd/mm/aaaa] · Quinzena [AUTO: N de Mês]
-**Setor de Qualidade Monofloor · Vitor Gomes, Coordenador**
+**Setor de Qualidade Monofloor · Vitor Gomes, Gerente da Qualidade**
 **Gerado em:** [AUTO: timestamp]
 
 ---

@@ -253,7 +253,7 @@ def secao_header(inicio, fim):
     return f"""# Relatório Quinzenal de Qualidade
 
 **Período:** {periodo} · Quinzena {quinzena} de {meses[fim.month]}
-**Setor de Qualidade Monofloor · Vitor Gomes, Coordenador**
+**Setor de Qualidade Monofloor · Vitor Gomes, Gerente da Qualidade**
 **Gerado em:** {datetime.now().strftime('%d/%m/%Y %H:%M')}
 
 ---
@@ -594,8 +594,8 @@ def secao_atrasos(extras):
 > [REVISAR] Padrões observados nos casos acima (1-2 frases) · *qual o tema dominante?*
 
 ### Caminhos a explorar · pra reduzir atrasos críticos
-- 🎯 **Triagem semanal das críticas** — toda segunda, ranking por dias parados → top 5 vão pra reunião de Coordenação
-- 🚨 **Escalação automática D+30** — obra que passa 30d na mesma fase notifica Coordenador + cliente recebe contato
+- 🎯 **Triagem semanal das críticas** — toda segunda, ranking por dias parados → top 5 vão pra reunião da Gerência da Qualidade
+- 🚨 **Escalação automática D+30** — obra que passa 30d na mesma fase notifica a Gerência da Qualidade + cliente recebe contato
 - 📋 **Checklist proativo de pré-execução** — confirmar equipe + cor + VT *antes* da data prevista, não no dia
 - 💬 **Comunicação proativa com cliente** — quando atraso for inevitável, antecipar (em vez de cliente cobrar)
 
@@ -645,7 +645,7 @@ def secao_retrabalho(rs, extras):
 - 🔍 **Auditoria técnica das críticas** — cruzar 23 infiltrações críticas: período / equipe / substrato / clima → identificar padrão recorrente
 - 📐 **Critério reforçado na VT** — checklist obrigatório de umidade/contrapiso/ralo · obra não inicia sem aprovação
 - 🎓 **Treinamento focado** — equipes com maior taxa de retorno recebem reciclagem técnica
-- ⚖ **Mediação preventiva** — obras com flag detrator_latente recebem visita do Coordenador antes de virar caso jurídico
+- ⚖ **Mediação preventiva** — obras com flag detrator_latente recebem visita da Gerência da Qualidade antes de virar caso jurídico
 
 > [REVISAR] Categoria Infiltração tem 47% críticas (taxa MUITO acima da média) — recomendo priorizar Auditoria técnica. Ver Seção 10 pra caminhos detalhados (Como/Custo/Impacto/Risco).
 
@@ -853,7 +853,7 @@ def secao_equipe(rs, extras):
 
 ### Caminhos a explorar · pra balanço de carga e qualidade
 - ⚖ **Análise de perfil de carteira** — comparar Luana × Wesley considerando complexidade média, valor médio, dispersão geográfica (não só quantidade)
-- 🤝 **1:1 quinzenal de carteira** — Coordenação revisa as obras de risco com cada consultora (formato fixo, 30min)
+- 🤝 **1:1 quinzenal de carteira** — Gerência da Qualidade revisa as obras de risco com cada consultora (formato fixo, 30min)
 - 📊 **Meta de obras em paralelo** — estabelecer máx por consultora (ex: 60 ativas) · acima disso, desacelerar entrada de novas
 - 🎓 **Capacitação cruzada** — Luana e Wesley trocam casos pra aprender com diferenças de abordagem
 
@@ -908,7 +908,7 @@ def secao_orion(disc):
 
 ### Caminhos a explorar · pra reduzir divergências e expandir o Orion
 - 🔄 **Padronizar quem atualiza o Painel** — definir formalmente: técnico atualiza fase, consultora atualiza status. Hoje há sobreposição
-- ⚠ **Auditoria semanal de detrator_latente** — toda semana, Coordenação revisa as obras com flag · age antes de virar caso
+- ⚠ **Auditoria semanal de detrator_latente** — toda semana, Gerência da Qualidade revisa as obras com flag · age antes de virar caso
 - 📈 **Expandir piloto Orion** — 10 → 50 obras em 3 meses · ganha massa crítica pra detectar padrões sistêmicos
 - 🧪 **A/B de qualidade Painel × WhatsApp** — quando divergir, qual fonte está certa? Auditoria mensal da amostra
 

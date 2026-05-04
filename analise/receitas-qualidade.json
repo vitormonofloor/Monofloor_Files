@@ -130,19 +130,19 @@
   "alto_atraso_critico": {
     "trigger": "summary.critical > 15",
     "titulo": "Alto volume de obras em estado crítico",
-    "diagnostico": "{count} obras em estado crítico (de {atrasados} no total atrasadas). Concentração que demanda atenção imediata da Coordenação.",
+    "diagnostico": "{count} obras em estado crítico (de {atrasados} no total atrasadas). Concentração que demanda atenção imediata da Gerência da Qualidade.",
     "para_melhorar": "Triagem e desbloqueio focado nos casos mais antigos.",
     "caminhos": [
       {
         "nome": "Triagem semanal das críticas",
-        "como": "Toda segunda, ranking das críticas por dias de atraso · top 5 vão pra reunião de Coordenação · 1 ação acordada por obra.",
+        "como": "Toda segunda, ranking das críticas por dias de atraso · top 5 vão pra reunião da Gerência da Qualidade · 1 ação acordada por obra.",
         "custo": "~30min/semana da consultoria + reunião curta",
         "impacto_template": "Reduz críticas em ~30-40% em 2 meses [REVISAR]",
         "risco": "Vira ritual sem ação real se não houver acompanhamento"
       },
       {
         "nome": "Escalação automática · 60 dias",
-        "como": "Obras que passam 60d em fase crítica recebem alerta automático pro Coordenador + cliente recebe contato proativo.",
+        "como": "Obras que passam 60d em fase crítica recebem alerta automático pra Gerência da Qualidade + cliente recebe contato proativo.",
         "custo": "Configuração no Painel + alinhamento com Comercial pra contato cliente",
         "impacto_template": "Pressão sistêmica · força resolução ou pausa formal [REVISAR]",
         "risco": "Cliente pode interpretar como falha — script de comunicação importa"
