@@ -245,6 +245,224 @@ def nome_arquivo_auto(inicio, fim):
 
 # ═══ Seções do relatório ═══
 
+def secao_brief_executivo(headline, rs, score_ant, extras, receitas):
+    """0 · Brief Executivo · leitura de 60s pra Diretoria."""
+    score = headline.get("score", 0) if headline else 0
+    score_ant_val = score_ant.get("score") if score_ant else None
+    score_delta = fmt_delta(score, score_ant_val)
+
+    totais = rs.get("totais", {}) if rs else {}
+    ativas = totais.get("ativas", 0)
+    em_exec = totais.get("em_execucao", 0)
+    por_status = rs.get("por_status", {}) if rs else {}
+    em_retorno = por_status.get("reparo", 0) + por_status.get("marcas_rolo_cera", 0)
+    cap = rs.get("capacidade", {}) if rs else {}
+    cap_pct = cap.get("utilization_percent", 0)
+
+    summary = (extras or {}).get("analise", {}) or {}
+    summary = summary.get("summary", {}) if isinstance(summary, dict) else {}
+    atrasadas = summary.get("atrasados", 0) or 0
+    criticos = summary.get("critical", 0) or 0
+    ok = summary.get("ok", 0) or 0
+
+    # Manchete narrativa
+    if score >= 70:
+        zona = "verde"
+        zona_emoji = "🟢"
+    elif score >= 50:
+        zona = "amarela"
+        zona_emoji = "🟡"
+    else:
+        zona = "vermelha"
+        zona_emoji = "🔴"
+
+    manchete = (
+        f"{zona_emoji} **Operação em zona {zona}** · Score {score}/100 ({score_delta} vs quinzena anterior). "
+        f"{ativas} obras ativas · {atrasadas} atrasadas ({criticos} críticas) · {em_retorno} em retorno · "
+        f"capacidade utilizada em {cap_pct}% (folga produtiva)."
+    )
+
+    # Painel de saúde · 6 KPIs com sinaleira + interpretação
+    sin_score = sinaleira(score, [(50, "🔴"), (70, "🟡"), (101, "🟢")])
+    pct_atrasadas = (atrasadas / ativas * 100) if ativas else 0
+    sin_atrasadas = sinaleira(pct_atrasadas, [(15, "🟢"), (25, "🟡"), (101, "🔴")])
+    pct_retorno = (em_retorno / ativas * 100) if ativas else 0
+    sin_retorno = sinaleira(pct_retorno, [(8, "🟢"), (12, "🟡"), (101, "🔴")])
+    sin_cap = sinaleira(cap_pct, [(40, "🟡"), (80, "🟢"), (101, "🟡")])
+
+    op_kira = rs.get("operacional_kira", {}) if rs else {}
+    sem_kira = op_kira.get("sem_kira", 0)
+    cob_kira = (op_kira.get("com_kira", 0) / op_kira.get("total_fluxo", 1) * 100) if op_kira.get("total_fluxo", 0) > 0 else 0
+    sin_kira = sinaleira(cob_kira, [(50, "🔴"), (70, "🟡"), (101, "🟢")])
+
+    # Interpretação curta por KPI
+    interp_score = "abaixo da zona saudável (≥70)" if score < 70 else "operando saudável"
+    interp_atras = f"{pct_atrasadas:.0f}% das ativas" if pct_atrasadas else "—"
+    interp_retorno = f"{pct_retorno:.0f}% da carteira em pós-entrega"
+    interp_cap = "folga produtiva" if cap_pct < 50 else "operação saudável" if cap_pct < 80 else "próximo do limite"
+    interp_kira = f"{int(cob_kira)}% da carteira monitorada · {sem_kira} sem grupo"
+
+    kpis_md = (
+        "| | Indicador | Valor | Status |\n"
+        "|---|---|---|---|\n"
+        f"| {sin_score} | Score Saúde | **{score}/100** ({score_delta}) | {interp_score} |\n"
+        f"| 🔵 | Obras ativas em fluxo | **{ativas}** ({em_exec} em execução) | volume da carteira |\n"
+        f"| {sin_atrasadas} | Atrasadas | **{atrasadas}** ({criticos} críticas) | {interp_atras} |\n"
+        f"| {sin_retorno} | Em retorno (reparo/marcas) | **{em_retorno}** | {interp_retorno} |\n"
+        f"| {sin_cap} | Capacidade utilizada | **{cap_pct}%** | {interp_cap} |\n"
+        f"| {sin_kira} | Cobertura KIRA | **{int(cob_kira)}%** | {interp_kira} |\n"
+    )
+
+    # Top 3 recomendações (extrai dos problemas detectados, pega o caminho A/recomendação_combinada)
+    problemas = detectar_problemas(rs, headline, extras, receitas) if receitas else []
+    top3_recs = []
+    for prob in problemas[:3]:
+        receita = receitas.get(prob["chave"], {}) if receitas else {}
+        nome_receita = receita.get("titulo", "?")
+        rec_texto = _subst(receita.get("recomendacao_combinada", ""), prob["valores"])
+        # Limpa formatação dupla
+        rec_texto = rec_texto.replace("**", "")
+        top3_recs.append(f"**{nome_receita}** — {rec_texto}")
+
+    if top3_recs:
+        recs_md = "\n".join(f"{i+1}. {r}" for i, r in enumerate(top3_recs))
+    else:
+        recs_md = "_Nenhum problema crítico detectado no período._"
+
+    # Implicação sintética
+    if criticos > 15 and cap_pct < 50:
+        implicacao = (
+            f"Operação respira (capacidade {cap_pct}%), mas com **{criticos} obras críticas** e **{sem_kira} sem KIRA** "
+            f"— o gargalo é qualitativo, não de volume."
+        )
+    elif criticos > 15:
+        implicacao = f"**{criticos} obras críticas** demandam atenção imediata. Capacidade ({cap_pct}%) suporta absorção."
+    elif cap_pct < 50:
+        implicacao = f"Capacidade ociosa em {100-cap_pct}% · oportunidade pra Comercial acelerar fechamentos."
+    else:
+        implicacao = f"Operação dentro do padrão. Monitorar evolução nas próximas quinzenas."
+
+    return f"""## 0 · Brief Executivo
+
+> **Leitura de 60 segundos pra Diretoria.** Detalhes panorâmicos na Seção 1, análise técnica nas Seções 2-9, recomendações detalhadas na Seção 10.
+
+### Manchete
+
+{manchete}
+
+### Painel de Saúde · 6 KPIs
+
+{kpis_md}
+
+> Sinaleira: 🟢 saudável · 🟡 atenção · 🔴 crítico · 🔵 informativo
+
+### 3 recomendações priorizadas do mês
+
+{recs_md}
+
+> Cada recomendação acima é a **combinação automática** da receita correspondente na Seção 10. Para Como/Custo/Impacto/Risco completos, consultar a seção.
+
+### Implicação sintética
+
+> {implicacao}
+
+---
+"""
+
+
+def secao_conclusao_executiva(headline, rs, extras):
+    """Conclusão executiva final · 1 parágrafo amarrando o relatório."""
+    score = headline.get("score", 0) if headline else 0
+    summary = (extras or {}).get("analise", {}) or {}
+    summary = summary.get("summary", {}) if isinstance(summary, dict) else {}
+    criticos = summary.get("critical", 0) or 0
+    ok = summary.get("ok", 0) or 0
+    cats = summary.get("totalActive", 0)
+    cap = (rs or {}).get("capacidade", {}).get("utilization_percent", 0)
+
+    if score < 50:
+        tom = "demandando ação corretiva"
+    elif score < 70:
+        tom = "em zona de atenção"
+    else:
+        tom = "saudável"
+
+    # Pega top categoria de problema pra contextualizar
+    problemcat = (extras or {}).get("analise", {}).get("problemCategories", []) if isinstance((extras or {}).get("analise", {}), dict) else []
+    cats_filt = [c for c in problemcat if c.get("categoria") != "Outros"]
+    top_cat = max(cats_filt, key=lambda c: c.get("count", 0)) if cats_filt else None
+    top_cat_str = f"**{top_cat.get('categoria')}** ({top_cat.get('count')} obras)" if top_cat else "—"
+
+    return f"""## Conclusão Executiva
+
+A operação fechou a quinzena {tom}, com Score {score}/100 e capacidade utilizada em {cap}%. Dos {cats} casos em análise, {ok} sem problemas relevantes e {criticos} em estado crítico — concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo {top_cat_str}, sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
+
+A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 10 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
+
+> **Próximo ciclo de medição:** quinzena seguinte. As recomendações priorizadas no Brief Executivo deveriam mostrar tração mensurável neste mesmo relatório no próximo período.
+
+---
+"""
+
+
+def secao_glossario():
+    """Anexo B · Glossário pra leitor externo."""
+    return """## Anexo B · Glossário
+
+> Termos e sistemas mencionados neste relatório, pra leitor externo ou consultor que recebe o documento.
+
+### Sistemas
+
+- **Painel de Obras** (`cliente.monofloor.cloud`) · plataforma operacional canônica da Monofloor. Registro de cada obra com fases, equipe, datas, escopo, ocorrências. Refresh automático no relatório a cada 30 min.
+- **Lab Orion** (`orion-pub.workers.dev`) · sistema piloto de Qualidade que cruza o que o **Painel** registra com o que os **grupos de WhatsApp/Telegram** das obras contam. Detecta divergências (status do Painel ≠ realidade narrada). Hoje em piloto com 10 obras.
+- **KIRA WhatsApp** · resumo automático dos grupos de obra. Classifica clima (saudável/atenção/sem KIRA/retrabalho) e detecta alertas/pendências. Cobertura ≠ 100% — obras sem grupo monitorado são "cegueira" pra Qualidade.
+
+### Métricas
+
+- **Score Saúde Operacional** · indicador 0-100 calculado a partir de 4 componentes:
+  1. **% obras zumbi** (CLIENTE FINALIZADO sem encerrar há mais de 90d)
+  2. **% obras órfãs** (sem consultor responsável)
+  3. **% obras com ciclo > 180d**
+  4. **Lote AGEND.VT-AFERIÇÃO > 270d** (cauda longa)
+
+  Faixas: **0-49 vermelho** (ação corretiva) · **50-69 amarelo** (atenção) · **70-100 verde** (saudável).
+
+- **Capacidade utilizada** · razão entre m² em curso e capacidade mensal produtiva (m² aplicáveis com a equipe atual). Faixas: <40% subutilizada · 40-80% saudável · >80% próximo do limite.
+
+- **Ciclo total mediano** · dias entre início e fim de obra (mediana). Meta 150d.
+
+### Termos operacionais
+
+- **Fluxo normal** · obras em execução conforme cronograma, sem retrabalho ativo.
+- **Retrabalho · pós-entrega** · obras em status `reparo` ou `marcas_rolo_cera`. **Cronograma original já cumprido** — tratadas separadamente do atraso. Influências externas (cliente solicita reparo, exigência climática etc) podem disparar retrabalho sem indicar falha de execução.
+- **Cluster paralisado** · obras em status `pausado` por motivo externo (cliente, clima, suprimento).
+- **Detrator latente** (Orion) · obra com flag de risco jurídico/comercial baseado em histórico de quase-distrato ou reclamação técnica recente.
+
+### Fases típicas (Painel de Obras)
+
+Sequência típica de uma obra nova até execução:
+1. **AGEND. VT - AFERIÇÃO/ORIENTAÇÃO** — agendamento da Visita Técnica de Aferição
+2. **PROJETOS · 1ª REVISÃO** — alinhamento de escopo
+3. **CONFIRMAÇÕES OP 1** — confirmação operacional
+4. **INFORMAÇÕES LOGÍSTICAS** — preparação de logística
+5. **INDÚSTRIA · EM PRODUÇÃO** — fabricação do material
+6. **LOGÍSTICA · EM ENTREGA** — transporte
+7. **EM EXECUÇÃO** — aplicação na obra
+8. **REVISÃO FINAL OP** — aferição final
+9. **CLIENTE FINALIZADO** — entrega oficial
+
+Pós-entrega: **REPARO**, **MARCAS / ROLO / CERA**.
+
+### Pessoas-chave
+
+- **Vitor Gomes** · Gerente da Qualidade · autor deste relatório.
+- **Luana** e **Wesley** · consultoras (responsáveis pela conta da obra junto ao cliente).
+- **Equipes de aplicação** · liderança operacional (Wiguens, João, Júlio, Gilmar, Egberto, Michael e líderes ocultos detectados pelo cruzamento Painel × escalação).
+
+---
+"""
+
+
 def secao_header(inicio, fim):
     quinzena = 1 if fim.day <= 15 else 2
     meses = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -401,7 +619,9 @@ def secao_resumo_executivo(headline, rs, score_ant, extras):
     destaques_md = "\n".join(f"{i+1}. {d}" for i, d in enumerate(destaques))
     alertas_md = "\n".join(f"{i+1}. {a}" for i, a in enumerate(alertas))
 
-    return f"""## 1 · Resumo Executivo
+    return f"""## 1 · Resumo do Período
+
+> Visão panorâmica do período. Brief Executivo no topo (Seção 0) tem leitura mais condensada · análise técnica nas Seções 2-9.
 
 > [REVISAR · rascunho auto] {manchete}
 
@@ -1169,6 +1389,7 @@ def main():
 
     partes = [
         secao_header(inicio, fim),
+        secao_brief_executivo(headline, rs, score_ant, extras, receitas),
         secao_resumo_executivo(headline, rs, score_ant, extras),
         secao_indicadores(headline, rs, score_ant, extras),
         secao_diagnostico(rs, extras),
@@ -1179,7 +1400,9 @@ def main():
         secao_equipe(rs, extras),
         secao_orion(disc),
         secao_conclusoes(rs, extras, headline, receitas),
+        secao_conclusao_executiva(headline, rs, extras),
         secao_anexo(rs),
+        secao_glossario(),
         secao_fontes(headline, rs, disc, extras),
     ]
     relatorio = "\n".join(partes)

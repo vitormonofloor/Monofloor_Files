@@ -44,21 +44,13 @@ Cada item: `[status] · [referência] · descrição curta · why`
 
 > Reorganização que separa "leitura de diretoria" (curta) de "leitura técnica" (atual).
 
-- [ ] **Camada 1 · Brief Executivo (2 páginas, antes do Resumo atual)**
-  - Manchete única em 1-2 frases de impacto
-  - 6 KPIs com sinaleira verde/amarelo/vermelho + interpretação curta
-  - 3 alertas-chave pra Diretoria deliberar
-  - Top 3 recomendações do mês (consolidadas, não 4 receitas espalhadas)
-  - Implicação sintética em 1 frase
+- [x] **Camada 1 · Brief Executivo (Seção 0 antes do Resumo)** — manchete impactante com sinaleira de zona, 6 KPIs com sinaleira + interpretação curta, Top 3 recomendações consolidadas (puxa das receitas), implicação sintética em 1 frase. Resumo de 60s pra Diretoria.
 
-- [ ] **Glossário (Anexo B, fim do documento)** — 1 box explicando:
-  - KIRA · Painel de Obras · Lab Orion · Score Saúde
-  - Fases típicas (AGEND.VT-AFERIÇÃO, INFORMAÇÕES LOGÍSTICAS, etc)
-  - Termos: zumbi, órfã, pós-entrega, fluxo normal, retrabalho
+- [x] **Glossário (Anexo B, fim do documento)** — 4 sub-seções: Sistemas (Painel/Orion/KIRA), Métricas (Score com fórmula, Capacidade, Ciclo), Termos operacionais (fluxo normal, retrabalho, cluster, detrator), Fases típicas (sequência das 9 fases), Pessoas-chave.
 
-- [ ] **Conclusão executiva única no fim** (após Seção 10) — 1 parágrafo de fechamento amarrando o que diretoria deve sair pensando. Diferente do "Para próxima quinzena · 3 prioridades [REVISAR]".
+- [x] **Conclusão executiva única no fim** — 2 parágrafos amarrando: tom da operação + leitura honesta + ponteiro pra próxima medição.
 
-- [ ] **Score Saúde com fórmula declarada** (Seção 1 ou Glossário) — explicar que é calculado a partir de zumbi_pct, orfas_pct, ciclo_180_pct, lote_vt_270d. Faixas: 0-49 vermelho, 50-69 amarelo, 70-100 verde.
+- [x] **Score Saúde com fórmula declarada** — incluído no Glossário (Anexo B) com 4 componentes (zumbi/órfã/ciclo180/cauda270) + faixas explícitas (0-49 vermelho · 50-69 amarelo · 70-100 verde).
 
 - [ ] **Coluna "Anterior" da Seção 2** — quando score-historico tiver dados (mais 7-10 dias), preencher com valores reais. Hoje todos `—`.
 
@@ -137,3 +129,4 @@ Cada item: `[status] · [referência] · descrição curta · why`
 
 - **2026-05-04** · v1 · criado após auditoria de leitor externo. 9 P0 + 5 P1 + 5 P2 + 5 P3 + 6 P4 = **30 itens** travados.
 - **2026-05-04** · v2 · **P0 fechada** (9 itens marcados [x]). Próximo alvo: P1 (Brief Executivo + Glossário).
+- **2026-05-04** · v3 · **P1 quase fechada** (4 de 5 [x]). Brief Executivo + Glossário + Conclusão Executiva + Score com fórmula. Único item P1 pendente: coluna "Anterior" da Seção 2 (depende de histórico acumular). Visuais SVG inline também adicionados (Top categorias, KIRA, Capacidade) + sinaleira nos 6 KPIs. Cargo Vitor corrigido pra "Gerente da Qualidade".

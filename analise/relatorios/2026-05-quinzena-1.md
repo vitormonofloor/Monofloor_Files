@@ -2,11 +2,49 @@
 
 **Período:** 20/04 a 04/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Gerente da Qualidade**
-**Gerado em:** 04/05/2026 16:02
+**Gerado em:** 04/05/2026 16:38
 
 ---
 
-## 1 · Resumo Executivo
+## 0 · Brief Executivo
+
+> **Leitura de 60 segundos pra Diretoria.** Detalhes panorâmicos na Seção 1, análise técnica nas Seções 2-9, recomendações detalhadas na Seção 10.
+
+### Manchete
+
+🔴 **Operação em zona vermelha** · Score 48/100 (▼ -1 ⚠ vs quinzena anterior). 260 obras ativas · 53 atrasadas (21 críticas) · 27 em retorno · capacidade utilizada em 35% (folga produtiva).
+
+### Painel de Saúde · 6 KPIs
+
+| | Indicador | Valor | Status |
+|---|---|---|---|
+| 🔴 | Score Saúde | **48/100** (▼ -1 ⚠) | abaixo da zona saudável (≥70) |
+| 🔵 | Obras ativas em fluxo | **260** (35 em execução) | volume da carteira |
+| 🟡 | Atrasadas | **53** (21 críticas) | 20% das ativas |
+| 🟡 | Em retorno (reparo/marcas) | **27** | 10% da carteira em pós-entrega |
+| 🟡 | Capacidade utilizada | **35%** | folga produtiva |
+| 🟡 | Cobertura KIRA | **65%** | 65% da carteira monitorada · 70 sem grupo |
+
+
+> Sinaleira: 🟢 saudável · 🟡 atenção · 🔴 crítico · 🔵 informativo
+
+### 3 recomendações priorizadas do mês
+
+1. **Score Saúde abaixo da zona saudável** — Mutirão + Padronização preventiva combinados — mutirão zera estoque agora, padronização previne. Gargalo VT fica pra próxima quinzena se mutirão der certo.
+2. **Comunicação é a categoria dominante de problema** — Diário obrigatório + Auditoria amostral dão tração rápida. Bloqueio cultural só vale se já houver casos crônicos comprovados.
+3. **Infiltração com volume alto e proporção crítica** — Auditoria primeiro pra entender raiz. Critério reforçado vem como ação derivada do que a auditoria descobrir.
+
+> Cada recomendação acima é a **combinação automática** da receita correspondente na Seção 10. Para Como/Custo/Impacto/Risco completos, consultar a seção.
+
+### Implicação sintética
+
+> Operação respira (capacidade 35%), mas com **21 obras críticas** e **70 sem KIRA** — o gargalo é qualitativo, não de volume.
+
+---
+
+## 1 · Resumo do Período
+
+> Visão panorâmica do período. Brief Executivo no topo (Seção 0) tem leitura mais condensada · análise técnica nas Seções 2-9.
 
 > [REVISAR · rascunho auto] Operação fechou a quinzena com Score 48/100 (zona vermelha), ▼ -1 ⚠ vs quinzena anterior. 260 obras ativas em fluxo, 35 em execução agora, 53 atrasadas e 27 em pós-entrega (reparo + marcas).
 
@@ -492,6 +530,16 @@ Operação a 35% da capacidade mensal · 4.403 m² em curso vs 9.196 m²/mês de
 
 ---
 
+## Conclusão Executiva
+
+A operação fechou a quinzena demandando ação corretiva, com Score 48/100 e capacidade utilizada em 35%. Dos 184 casos em análise, 107 sem problemas relevantes e 21 em estado crítico — concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo **Comunicação** (77 obras), sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
+
+A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 10 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
+
+> **Próximo ciclo de medição:** quinzena seguinte. As recomendações priorizadas no Brief Executivo deveriam mostrar tração mensurável neste mesmo relatório no próximo período.
+
+---
+
 ## Anexo A · Obras do período
 
 > Distribuição da carteira por status no fechamento da quinzena.
@@ -510,6 +558,60 @@ Operação a 35% da capacidade mensal · 4.403 m² em curso vs 9.196 m²/mês de
 | Cancelado | 33 |
 
 > [REVISAR · Fase 1.1c] Listagem nominal de cada bucket (nomes dos clientes) — virá numa próxima iteração consultando o details/.
+
+---
+
+## Anexo B · Glossário
+
+> Termos e sistemas mencionados neste relatório, pra leitor externo ou consultor que recebe o documento.
+
+### Sistemas
+
+- **Painel de Obras** (`cliente.monofloor.cloud`) · plataforma operacional canônica da Monofloor. Registro de cada obra com fases, equipe, datas, escopo, ocorrências. Refresh automático no relatório a cada 30 min.
+- **Lab Orion** (`orion-pub.workers.dev`) · sistema piloto de Qualidade que cruza o que o **Painel** registra com o que os **grupos de WhatsApp/Telegram** das obras contam. Detecta divergências (status do Painel ≠ realidade narrada). Hoje em piloto com 10 obras.
+- **KIRA WhatsApp** · resumo automático dos grupos de obra. Classifica clima (saudável/atenção/sem KIRA/retrabalho) e detecta alertas/pendências. Cobertura ≠ 100% — obras sem grupo monitorado são "cegueira" pra Qualidade.
+
+### Métricas
+
+- **Score Saúde Operacional** · indicador 0-100 calculado a partir de 4 componentes:
+  1. **% obras zumbi** (CLIENTE FINALIZADO sem encerrar há mais de 90d)
+  2. **% obras órfãs** (sem consultor responsável)
+  3. **% obras com ciclo > 180d**
+  4. **Lote AGEND.VT-AFERIÇÃO > 270d** (cauda longa)
+
+  Faixas: **0-49 vermelho** (ação corretiva) · **50-69 amarelo** (atenção) · **70-100 verde** (saudável).
+
+- **Capacidade utilizada** · razão entre m² em curso e capacidade mensal produtiva (m² aplicáveis com a equipe atual). Faixas: <40% subutilizada · 40-80% saudável · >80% próximo do limite.
+
+- **Ciclo total mediano** · dias entre início e fim de obra (mediana). Meta 150d.
+
+### Termos operacionais
+
+- **Fluxo normal** · obras em execução conforme cronograma, sem retrabalho ativo.
+- **Retrabalho · pós-entrega** · obras em status `reparo` ou `marcas_rolo_cera`. **Cronograma original já cumprido** — tratadas separadamente do atraso. Influências externas (cliente solicita reparo, exigência climática etc) podem disparar retrabalho sem indicar falha de execução.
+- **Cluster paralisado** · obras em status `pausado` por motivo externo (cliente, clima, suprimento).
+- **Detrator latente** (Orion) · obra com flag de risco jurídico/comercial baseado em histórico de quase-distrato ou reclamação técnica recente.
+
+### Fases típicas (Painel de Obras)
+
+Sequência típica de uma obra nova até execução:
+1. **AGEND. VT - AFERIÇÃO/ORIENTAÇÃO** — agendamento da Visita Técnica de Aferição
+2. **PROJETOS · 1ª REVISÃO** — alinhamento de escopo
+3. **CONFIRMAÇÕES OP 1** — confirmação operacional
+4. **INFORMAÇÕES LOGÍSTICAS** — preparação de logística
+5. **INDÚSTRIA · EM PRODUÇÃO** — fabricação do material
+6. **LOGÍSTICA · EM ENTREGA** — transporte
+7. **EM EXECUÇÃO** — aplicação na obra
+8. **REVISÃO FINAL OP** — aferição final
+9. **CLIENTE FINALIZADO** — entrega oficial
+
+Pós-entrega: **REPARO**, **MARCAS / ROLO / CERA**.
+
+### Pessoas-chave
+
+- **Vitor Gomes** · Gerente da Qualidade · autor deste relatório.
+- **Luana** e **Wesley** · consultoras (responsáveis pela conta da obra junto ao cliente).
+- **Equipes de aplicação** · liderança operacional (Wiguens, João, Júlio, Gilmar, Egberto, Michael e líderes ocultos detectados pelo cruzamento Painel × escalação).
 
 ---
 
