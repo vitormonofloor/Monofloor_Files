@@ -920,7 +920,7 @@
   .q1-cumprimento-card{display:flex;flex-direction:column;gap:14px}
   .q1-cumpr-headline{font-size:14px;color:#3a3530;line-height:1.5;padding:10px 14px;background:#f6eaea;border:1px solid #e8c8c8;border-radius:6px;border-left:3px solid #c45a5a}
   .q1-cumpr-headline strong{color:#2a2520}
-  .q1-cumpr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .q1-cumpr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
   .q1-cumpr-stat{padding:10px 8px;background:#faf7f2;border:1px solid #e8e0d4;border-radius:6px;text-align:center}
   .q1-cs-num{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:#3a3530;line-height:1}
   .q1-cs-unit{display:inline-block;font-size:10px;color:#a89e92;margin-left:2px}
@@ -1674,12 +1674,12 @@
             <div class="q1-cs-unit">d</div>
             <div class="q1-cs-lbl">Mediana</div>
           </div>
-          <div class="q1-cumpr-stat">
+          <div class="q1-cumpr-stat" id="q1-cs-p75-wrap">
             <div class="q1-cs-num" id="q1-cs-p75">—</div>
             <div class="q1-cs-unit">d</div>
             <div class="q1-cs-lbl">p75</div>
           </div>
-          <div class="q1-cumpr-stat">
+          <div class="q1-cumpr-stat" id="q1-cs-p90-wrap">
             <div class="q1-cs-num" id="q1-cs-p90">—</div>
             <div class="q1-cs-unit">d</div>
             <div class="q1-cs-lbl">p90</div>
@@ -3301,6 +3301,10 @@ function renderQ1() {
     if ($('q1-cs-p75')) $('q1-cs-p75').textContent = p75;
     if ($('q1-cs-p90')) $('q1-cs-p90').textContent = p90;
     if ($('q1-cs-max')) $('q1-cs-max').textContent = max;
+    // Amostra fraca (≤10 obras): percentis P75/P90 não comunicam — esconde, mostra só Mediana + Máximo
+    var amostraFraca = positivos.length <= 10;
+    if ($('q1-cs-p75-wrap')) $('q1-cs-p75-wrap').style.display = amostraFraca ? 'none' : '';
+    if ($('q1-cs-p90-wrap')) $('q1-cs-p90-wrap').style.display = amostraFraca ? 'none' : '';
 
     // Comparativo com meta
     var ciclo = (window._rodrigoStats && window._rodrigoStats.tempo && window._rodrigoStats.tempo.ciclo_total_mediana) || 172;
