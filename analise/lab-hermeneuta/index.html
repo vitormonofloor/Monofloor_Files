@@ -368,6 +368,8 @@
     .timeline-empty{font-size:11px;color:#8a7e72;font-style:italic;padding:6px 0}
     .badge-stale{display:inline-flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:3px;background:#fef0d4;color:#7a5a18;border:1px solid #f0d8a0}
     .badge-stale strong{font-size:10px}
+    .badge-kira{display:inline-flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:3px;background:#eef3f1;color:#3a635a;border:1px solid #c8d8d2;cursor:help}
+    .badge-kira strong{font-size:10px;color:#1f4a3f}
 
     /* Bucket temporal */
     .bucket-bar{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 8px}
@@ -736,7 +738,7 @@
       <div>
         <div class="logo-text">
           <img src="https://static.wixstatic.com/media/2bc4fe_d7fd788ceb094e96b86315e020950bda~mv2.png/v1/fill/w_506,h_156,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Artboard%201.png" alt="monofloor" class="logo-img">
-          <span class="piloto-pill">piloto</span>
+          <span class="piloto-pill">ativo</span>
         </div>
         <div class="logo-sub">Lab Orion · Inteligência Operacional · <span class="piloto-info"><strong id="hdr-ativas">—</strong> obras ativas</span></div>
       </div>
@@ -894,7 +896,7 @@
   <div class="consultor-grid" id="consultor-grid"></div>
 
   <!-- Tendência de cores -->
-  <div class="section-title">Tendência de cores · obras no piloto</div>
+  <div class="section-title">Tendência de cores · obras ativas</div>
   <div class="cores-panel" id="cores-panel"></div>
 
   <!-- Flags recorrentes -->
@@ -1752,6 +1754,12 @@ function renderCard(o){
     ? `<span class="badge-stale" title="Veredicto IA gerado há ${o.refresh_status.horas_desde_veredicto}h · ${o.refresh_status.msgs_novas_desde_veredicto} msgs novas desde então">⟳ <strong>${o.refresh_status.msgs_novas_desde_veredicto}</strong></span>`
     : '';
 
+  // Badge Kira (trilha auditável do cruzar_kira · regras determinísticas que dispararam)
+  const trilha = o.analise_kira_trilha || [];
+  const kiraBadge = trilha.length > 0
+    ? `<span class="badge-kira" title="Trilha auditável (regras Kira que dispararam):&#10;&#10;• ${esc(trilha.join('\n• '))}">Kira <strong>${trilha.length}</strong></span>`
+    : '';
+
   // Flags-chave no resumo (só os mais críticos · resto fica nos detalhes)
   const flagsCriticos = ['detrator', 'detrator_latente', 'abandono', 'risco_tecnico', 'consultor_divergente'];
   const flagsMini = (o.flags || [])
@@ -1782,6 +1790,7 @@ function renderCard(o){
         ${urgTag}
         ${flagsMini}
         ${staleBadge}
+        ${kiraBadge}
         <span class="obra-toggle">▾</span>
       </div>
     </div>
@@ -1944,7 +1953,7 @@ function renderCores(){
       <div class="swatch-grande" style="background:${corHash(nome)}"></div>
       <div class="info">
         <div class="nome">${esc(nome)}</div>
-        <div class="meta">${qtd} obra${qtd>1?'s':''} · ${pct}% do piloto</div>
+        <div class="meta">${qtd} obra${qtd>1?'s':''} · ${pct}% do total</div>
       </div>
       <div class="qtd">${qtd}</div>
     </div>`;
@@ -2314,7 +2323,7 @@ function renderLampada(){
   }).length;
 
   const kpis = [
-    {num: total, label: 'Obras no piloto', cls: '', filtro: 'todos', cta: 'ver todas →'},
+    {num: total, label: 'Total de obras', cls: '', filtro: 'todos', cta: 'ver todas →'},
     {num: v.status_desatualizado || 0, label: 'Painel de Obras desatualizado', cls: 'crit', filtro: 'status_desatualizado'},
     {num: obrasDataAlt, label: 'Datas remarcadas', cls: 'crit', filtro: 'data-alterada'},
     {num: detratorLat ? detratorLat.ocorrencias : 0, label: 'Cliente em risco', cls: 'warn', filtro: 'detrator_latente'},
@@ -2478,7 +2487,7 @@ function renderLampada(){
   const cabec = `<div class="lp-header">
     <div class="lp-marca">orion <span class="accent">· modo apresentação</span></div>
     <h1 class="lp-titulo">Estado da operação</h1>
-    <div class="lp-sub">${total} obras no piloto · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)}<br>destila <strong>Painel de Obras × Comunicação Telegram × KIRA WhatsApp × equipe em campo</strong> em sinais visuais</div>
+    <div class="lp-sub">${total} obras monitoradas · gerado ${fmtData(DADOS.gerado_em)} · varredura ${fmtData(DADOS.ultima_varredura)}<br>destila <strong>Painel de Obras × Comunicação Telegram × KIRA WhatsApp × equipe em campo</strong> em sinais visuais</div>
   </div>`;
 
   document.getElementById('lampada-modal').innerHTML = `${cabec}
@@ -2563,7 +2572,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lampOver
 
 // Filtros do drawer · espelha renderFiltros mas indexado por id
 const FILTROS_KPI = {
-  'todos':                 {label: 'Obras no piloto',                fn: o => true},
+  'todos':                 {label: 'Total de obras',                 fn: o => true},
   'status_desatualizado':  {label: 'Painel de Obras desatualizado',  fn: o => o.veredicto === 'status_desatualizado'},
   'data-alterada':         {label: 'Datas remarcadas',               fn: o => o.regua && o.regua.data_inicio_alterada},
   'detrator_latente':      {label: 'Cliente em risco',               fn: o => (o.flags||[]).includes('detrator_latente')},
@@ -2924,7 +2933,7 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
       <div class="onb-card">
         <div class="onb-card-num">05 · status bar</div>
         <div class="onb-card-titulo">Resumo executivo no topo</div>
-        <div class="onb-card-desc">Total de obras no piloto, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. <strong>Tudo o que importa numa linha.</strong></div>
+        <div class="onb-card-desc">Total de obras, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. <strong>Tudo o que importa numa linha.</strong></div>
       </div>
     </div>
 
@@ -2964,8 +2973,8 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
 // Tour guiado · 5 paradas com spotlight + balão
 (function(){
   const PARADAS = [
-    {sel:'.status-bar', tit:'Resumo executivo do piloto', txt:'Os números numa linha: <strong>total de obras</strong>, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. <strong>O que importa em uma olhada.</strong>', lado:'baixo'},
-    {sel:'.disparador', tit:'Refresh seletivo · IA sob demanda', txt:'A análise pesada (IA) <strong>não roda automática</strong>. Você dispara só pras obras que mudaram — economiza tokens e mantém o foco no que precisa de atenção real.', lado:'baixo'},
+    {sel:'.status-bar', tit:'Resumo executivo', txt:'Os números numa linha: <strong>total de obras</strong>, quantas precisam atenção, urgência alta, cliente em risco e datas remarcadas. <strong>O que importa em uma olhada.</strong>', lado:'baixo'},
+    {sel:'.disparador', tit:'Refresh seletivo · análise sob demanda', txt:'A varredura determinística (cruzar_kira · 4 regras) <strong>já roda automática 12h e 18h</strong>. Aqui você dispara análise IA pontual quando precisar de leitura semântica fina pras obras que mudaram.', lado:'baixo'},
     {sel:'#lista .regua', tit:'Régua temporal da obra', txt:'Linha do tempo de cada obra: marcos do <strong>painel oficial</strong> ao lado de eventos detectados na <strong>comunicação Telegram</strong>. <strong>Onde os dois lados divergem é o coração do Lab.</strong>', lado:'cima'},
     {sel:'#lampada-btn', tit:'Lâmpada · modo apresentação', txt:'Destila tudo em indicadores visuais. Bom pra <strong>reunião com cliente ou diretoria</strong> — comunica o estado da operação sem precisar ler texto.', lado:'esquerda'},
     {sel:'#sentinela-btn', tit:'Sentinela · prevenção e risco', txt:'Equipe de prevenção. <strong>9 checks de saúde</strong> rodam após cada varredura: schema, sessão, frescor, KIRA, lock, backups, drift de obras. <strong>Verde / âmbar / vermelho</strong> diz se você pode confiar nos dados agora.', lado:'direita'},

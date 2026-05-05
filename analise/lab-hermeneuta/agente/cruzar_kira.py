@@ -152,11 +152,22 @@ def aplicar_regras(obra_v3: dict, detail: dict, ocorrencias: list) -> dict:
     else:
         acao = None
 
+    # Tipo demanda · só casos óbvios · senão None (UI esconde graciosamente)
+    if veredicto == "abandono":
+        tipo_demanda = "pausa"
+    elif status_sugerido == "concluido":
+        tipo_demanda = "finalizacao"
+    elif "risco_tecnico" in flags:
+        tipo_demanda = "patologia"
+    else:
+        tipo_demanda = None
+
     return {
         "veredicto": veredicto,
         "urgencia": urgencia,
         "flags": sorted(flags),
         "status_sugerido": status_sugerido,
+        "tipo_demanda": tipo_demanda,
         "acao_consultor": acao,
         "analise_kira_trilha": trilha,
         "analise_kira_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
