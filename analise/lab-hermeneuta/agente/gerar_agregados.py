@@ -84,9 +84,12 @@ def main():
         consultor = o.get("consultor") or o.get("consultor_inferido") or o.get("consultor_formal")
         if consultor and isinstance(consultor, str):
             nome_limpo = consultor.strip().strip("[]").strip("'").strip('"').strip("—").strip("?").strip()
-            # Só agrupa se for dono operacional (Luana/Wesley · ver DONOS_OPERACIONAIS no topo)
-            if any(token in nome_limpo.lower() for token in DONOS_OPERACIONAIS):
-                by_consultor[nome_limpo].append(o)
+            # Agrupa pelo PRIMEIRO NOME canônico (evita duplicar "Wesley" vs "Wesley Matheus de...")
+            primeiro = nome_limpo.split()[0].lower() if nome_limpo else ""
+            if primeiro in DONOS_OPERACIONAIS:
+                # Usa o primeiro nome capitalizado como chave canônica
+                chave = primeiro.capitalize()
+                by_consultor[chave].append(o)
 
     # ============ FLAGS RECORRENTES ============
     flags_recorrentes = []
