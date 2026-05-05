@@ -38,6 +38,12 @@ DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
 
 STATUS_FINALIZADO = ("concluido", "finalizado")
 
+# Donos operacionais durante execução · matching parcial case-insensitive.
+# Pedro/Mayara/Kettlyn etc são atendimento PRÉ-obra (explicação inicial) · NÃO entram.
+# Renata/Thaísa/Juliana Santos · desconsiderar (Juliana demitida em 2026-05-05).
+# Atualizar essa lista quando entrar/sair gente do time de operação.
+DONOS_OPERACIONAIS = ("luana", "wesley")
+
 
 def main():
     if not DISCORD_PATH.exists():
@@ -78,7 +84,8 @@ def main():
         consultor = o.get("consultor") or o.get("consultor_inferido") or o.get("consultor_formal")
         if consultor and isinstance(consultor, str):
             nome_limpo = consultor.strip().strip("[]").strip("'").strip('"').strip("—").strip("?").strip()
-            if nome_limpo and len(nome_limpo) >= 3:
+            # Só agrupa se for dono operacional (Luana/Wesley · ver DONOS_OPERACIONAIS no topo)
+            if any(token in nome_limpo.lower() for token in DONOS_OPERACIONAIS):
                 by_consultor[nome_limpo].append(o)
 
     # ============ FLAGS RECORRENTES ============
