@@ -1213,8 +1213,12 @@ function nomeCurto(nomeCompleto){
   return capitalize(palavras[0]) + ' ' + capitalize(palavras[palavras.length - 1]);
 }
 
+// Donos operacionais durante execução · espelha agente/gerar_agregados.py
+// Pedro/Mayara/Kettlyn = atendimento PRÉ-obra (não entram). Renata/Thaísa/Juliana Santos = desconsiderar.
+const DONOS_OPERACIONAIS = ["luana", "wesley"];
+
 function consultoresDisponiveis(){
-  // Agrupa por primeiro nome · 1 entrada por pessoa
+  // Agrupa por primeiro nome · 1 entrada por pessoa · só donos operacionais
   const map = {};
   for (const o of (DADOS && DADOS.obras) || []) {
     const formal = o.consultor_formal !== undefined ? o.consultor_formal : o.consultor;
@@ -1225,6 +1229,7 @@ function consultoresDisponiveis(){
     for (const nome of candidatos) {
       const primeiro = nome.split(/[\s|]/)[0].toLowerCase();
       if (!primeiro || primeiro.length < 2) continue;
+      if (!DONOS_OPERACIONAIS.includes(primeiro)) continue;
       if (!map[primeiro]) map[primeiro] = nomeCurto(nome);
     }
   }
