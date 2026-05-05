@@ -77,6 +77,7 @@ extrair_timeline      aplicar_regua    extrair_equipe/cores/kira
 12. sanitizar_json.py          · remove flags + campos mortos
 13. registrar_kpis.py          · série temporal pra sparkline
 14. marcar_refresh_status      · função interna · flag stale por obra
+14b. cruzar_kira.py            · 4 regras determinísticas Kira × Operação · veredicto + urgência + flags + trilha
 15. sentinela.py               · 9 checks · gera status.json
 16. publicar.py                · atomic + git push + wrangler deploy
 17. liberar_lock               · finally
@@ -115,12 +116,17 @@ extrair_timeline      aplicar_regua    extrair_equipe/cores/kira
 | `sentinela.py` | 9 checks · drift directional · pipeline-errors flag · gera `status.json` |
 | `publicar.py` | Atomic write · git push pub repo · wrangler deploy CF (PATH injection pra Windows Node) |
 
-### IA on-demand (manual · não no pipeline)
+### Veredicto principal · determinístico (no pipeline · 14b)
 | Script | Função |
 |---|---|
-| `analisar_recorte.py` | Recebe `--obra-ids` + `--recorte` · GitHub Models gpt-4o-mini · injeta veredicto IA |
-| `secretario-prompt.md` | Briefing do subagente "secretário" |
-| `hermeneuta-prompt.md` | Briefing v3 do agente HERMENEUTA |
+| `cruzar_kira.py` | 4 regras determinísticas (R1-R4) · usa fontes Kira (tagKira/situacaoAtual/ocorrencias) + telegram block · gera veredicto + urgência + flags + trilha auditável |
+
+### IA externa · FALLBACK opcional (não no pipeline)
+| Script | Função |
+|---|---|
+| `analisar_recorte.py` | Recebe `--obra-ids` ou `--todas-ativas` · GitHub Models gpt-4o-mini · injeta veredicto IA · útil pra recortes manuais · LIMITE 150 req/dia descoberto em 2026-05-05 |
+| `secretario-prompt.md` | Briefing do subagente "secretário" (legado IA manual) |
+| `hermeneuta-prompt.md` | Briefing v3 do agente HERMENEUTA (legado IA manual) |
 
 ### Legados (corte programado no Caminho B · frente B3)
 | Script | Status |

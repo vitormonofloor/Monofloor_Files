@@ -29,16 +29,28 @@ Pipeline:
 8. Sentinela
 9. Publicar (git push pub repo + wrangler deploy)
 
-## Rodar IA cirurgicamente em 1 obra (~2-3min · custo zero)
+## Rodar cruzar_kira manualmente (caminho principal · ~3.6 min · zero custo)
 
 ```powershell
-$env:GITHUB_TOKEN = "<PAT com escopo repo>"
+cd C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta
+python agente/cruzar_kira.py
+python agente/publicar.py
+```
+
+4 regras determinísticas · trilha auditável em cada obra (`analise_kira_trilha`).
+Já roda automático dentro do `varredura.py` (passo 12b).
+
+## Rodar IA externa (FALLBACK · 150 req/dia limite real GitHub Models)
+
+```powershell
+# .env precisa ter GITHUB_TOKEN setado
 cd C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta
 python agente/analisar_recorte.py --obra-ids "<obra_id>" --recorte "manual"
 python agente/publicar.py
 ```
 
-GitHub Models gpt-4o-mini · 8k req/dia gratuito · failover gracioso se sem token.
+Útil pra leitura semântica fina em 1 obra específica (storytelling, validação, etc).
+**Não usar pra varrer todas** · bate limite diário do GitHub Models (150 req/24h).
 
 Aceita múltiplos IDs separados por vírgula:
 ```powershell

@@ -2,6 +2,24 @@
 
 > Lições de batalha que valem mais que documentação genérica · padrões a seguir e armadilhas a evitar
 
+## 0 · Não reinvente o que a fonte já interpretou
+
+**Origem:** 2026-05-05 · pivô do Caminho B · Vitor cortou minha rota de IA externa
+
+**Padrão:** quando você precisa de leitura semântica e o sistema-fonte (aqui, o Kira/Painel) **já fez essa leitura** em campos como `tagKira`, `situacaoAtual`, `ocorrencias` (com severidade!), `pendenciaManual.whatsappSummary` · não chame IA externa pra refazer. Cruze com regras determinísticas.
+
+**Como aplicar:**
+1. Antes de propor IA, mapear o que o sistema-fonte já tem interpretado
+2. Se há campos semânticos prontos, usar como input · regras pra cruzar
+3. IA externa fica como fallback pra leituras finas (recorte manual, storytelling)
+4. Cada regra com nome/código → trilha auditável (oposto da caixa-preta IA)
+
+**Custo da lição (negativo):** quase varri 228 obras com gpt-4o-mini · descobri que limite real é 150 req/dia (não 8k) · perdi 138 obras processadas em interrupção · IA confundia `status` (macro) com `fase` (específica) gerando 100% falso positivo. Vitor parou: *"o Kira já fez · só pegar e cruzar"*.
+
+**Custo da lição (positivo):** `cruzar_kira.py` em 213 linhas · 4 regras · 3.6 min nas 228 · veredicto auditável · zero rate limit · zero custo · 20 abandonos detectados que ninguém via.
+
+**Sinal:** se você está pedindo IA pra interpretar texto que outra IA já interpretou, parar. A primeira IA tem mais contexto que a segunda terá.
+
 ## 1 · Antes de culpar coletor, verificar consumidor
 
 **Origem:** 2026-05-04 · Caminho A · KRYSTAL com `telegram.ultima_msg=null`

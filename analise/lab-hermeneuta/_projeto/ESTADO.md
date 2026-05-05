@@ -1,6 +1,6 @@
 # 2 · ESTADO ATUAL · O que está bom · o que tem problema
 
-> Snapshot do dia **2026-05-04 noite** · pós-Caminho A · commit `97a209a`
+> Snapshot do dia **2026-05-05 tarde** · pós-pivô Caminho B (Kira-driven) · commit `4cbd620`
 
 ## ✅ O QUE ESTÁ BOM
 
@@ -38,41 +38,59 @@
 
 Esse tipo de leitura **não existia antes** do Caminho A.
 
+### Veredicto determinístico (cruzar_kira · 2026-05-05)
+
+`cruzar_kira.py` aplica 4 regras nas 228 ativas em ~3.6 min:
+
+| Veredicto | Quantas | % |
+|---|---:|---:|
+| coerente | 204 | 89.9% |
+| abandono (≥30d silêncio + ativa) | 20 | 8.8% |
+| status_desatualizado (Kira diz concluído) | 3 | 1.3% |
+
+| Urgência | Quantas | % |
+|---|---:|---:|
+| alta (rastreável a ocorrência ou texto) | 47 | 20.7% |
+| baixa | 180 | 79.3% |
+
+Cada veredicto tem `analise_kira_trilha` · auditável.
+
 ---
 
 ## 🟡 O QUE TEM PROBLEMA (não-bloqueador)
 
-### 1. Veredito IA é heurística cega em 96% das obras
-- `status_sugerido` / `urgencia` / `acao_consultor` / `tipo_demanda` / `confianca` das 220 não-piloto são preenchidos copiando `fase_atual` do painel
-- "Sugestão" vira tautologia ("painel diz X · sugere X")
-- `confianca: 0.8` fabricada sem base
-- **Impacto:** vereditos parecem inteligentes mas não leram nada
-- **Resolve em:** Caminho B · frente B1
+### 1. ~Veredito IA heurística cega~ → RESOLVIDO em 2026-05-05 (pivô Kira-driven)
+- ~Hoje 96% das obras com `sem_analise`/`heurística`~
+- **Pós-cruzar_kira:** 227/228 obras com veredicto determinístico rastreável
+- 3 obras finalizadas com resíduo IA antiga · sem impacto operacional
 
-### 2. Cards "com IA" e "sem IA" indistinguíveis
-- Visual idêntico no frontend
-- Leitor não sabe se está vendo análise real ou cópia de campo
-- **Impacto:** quebra confiança quando descobre
-- **Resolve em:** Caminho B · frente B2
+### 2. ~Cards com/sem IA indistinguíveis~ → RESOLVIDO parcialmente
+- Hoje: cada card tem `analise_kira_em` (timestamp) e `analise_kira_trilha` (lista de regras)
+- **Pendente UI:** mostrar visualmente "veredicto · 3 regras disparadas" no card
 
-### 3. Tom por keyword é tapa-buraco
-- Pega "atraso" mesmo na frase "sem atraso"
-- Funciona pra triagem grossa · falha em nuance
-- **Impacto:** alguns falsos positivos no top 5 alertas
-- **Resolve em:** Caminho B · frente B5
+### 3. ~Tom por keyword é tapa-buraco~ → ainda existe mas em uso secundário
+- O tom_grupo continua heurístico (no `extrair_timeline.py`)
+- **Mas** veredicto principal NÃO depende mais do tom · usa fontes Kira oficiais
+- Tom keyword agora só serve pra display/cor do card · não pra alerta
 
-### 4. Detail-snapshot pode estar até 26d defasado
-- Foi o caso da KRYSTAL na investigação
-- `updatedAt: 2026-04-08` enquanto Painel atual é diferente
-- Cron de refresh do detail roda em outro lugar (cargo-assistente?)
-- **Impacto:** raro · refresh manual resolve quando notar
-- **Workaround:** rodar coletor de detail antes da varredura crítica
+### 4. Detail-snapshot pode estar defasado em alguns casos
+- `cruzar_kira.py` faz fetch FRESCO do detail por obra · contorna a defasagem do snapshot local
+- Mas painel-snapshot.json (lista das 1038 obras) ainda é da varredura agendada
+- **Impacto:** raro · só afeta filtro de status_atual
 
-### 5. Pipeline tem 13 etapas com acoplamento implícito
-- Etapa N+1 espera arquivo gravado pela etapa N
-- Drift silencioso possível se uma falhar
-- **Impacto:** debug fica caro
-- **Resolve em:** Caminho B · frente B3 (colapsa em 4 etapas)
+### 5. Pipeline 14 etapas (era 13 + cruzar_kira)
+- `cruzar_kira` integrado entre `marcar_refresh_status` e `sentinela`
+- Tempo total ~5 min agora (era 47s · adiciona 3.6 min de fetches do cruzar)
+- ~~Caminho B · frente B3 (colapsa em 4 etapas)~~ → DESPRIORIZADO · pipeline está estável e auditável
+
+### 6. Regras essenciais (4) · sem regra pra urgência média
+- 0 obras com urgencia=media (só alta/baixa)
+- Possível regra futura: ocorrência média recente OU silêncio 14-29d → media
+- **Não-bloqueador** · pode aguardar refinamento
+
+### 7. Limite GitHub Models (descoberto 2026-05-05): 150 req/dia, não 8k
+- IA externa via `analisar_recorte.py` mantida como fallback opcional
+- Não é mais o caminho principal · `cruzar_kira` substitui
 
 ---
 

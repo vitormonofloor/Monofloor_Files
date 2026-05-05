@@ -270,6 +270,12 @@ def _executar_pipeline():
     marcar_refresh_status(diff)
     log("refresh_status injetado em cada obra")
 
+    # 12b. Cruzamento Kira × Operação · 4 regras determinísticas · auditável
+    log("Rodando cruzar_kira.py...")
+    if not run([PYTHON, "cruzar_kira.py"], AGENTE):
+        log("FALHOU em cruzar_kira.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("cruzar_kira", "exit não-zero")
+
     # 13. Sentinela · valida saúde do pipeline e gera dados/status.json
     log("Rodando sentinela.py...")
     if not run([PYTHON, "sentinela.py"], AGENTE):

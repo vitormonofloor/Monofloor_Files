@@ -67,6 +67,38 @@ Versionado em `ROADMAP_CAMINHO_B.md` (commit `debcfb6`).
 
 Ideia: pegar 1 obra finalizada e mapear narrativa cronológica completa (tempo, solicitações, materiais, eventos). **Pode fazer hoje** · não depende de Caminho B (rodando IA cirurgicamente em 1 obra via `analisar_recorte.py`).
 
+Storytelling GURGEL DALFONSO entregue (commit `c71b8e3`) · 5 atos · 207 dias contrato → entrega · 4 dias execução real. Surge a lente analítica "tempo de retomada vs tempo morto" (próxima sessão dedicada).
+
+## 2026-05-05 · Pivô do Caminho B · IA externa → cruzar_kira (Kira-driven)
+
+Tentativa inicial: rodar IA externa (gpt-4o-mini via GitHub Models) nas 228 ativas.
+Problemas descobertos:
+- Limite real é **150 req/dia**, não 8k como eu tinha lido
+- IA confundia `status` (categoria macro) com `fase` (estágio específico) · sempre dava `status_desatualizado`
+- Em interrupção (TaskStop), o script perdeu 138 obras processadas (salvava só no fim)
+- Custo de prompt engineering iterativo · frágil
+
+**Pivô (sugestão do Vitor):** *"pegar o que já tem no Kira no Painel, compilar no Orion e cruzar pra verificar atualizações. Processo curto e detalhado."*
+
+Insight: o Kira **já interpretou semântica** em vários campos do Painel — `tagKira`, `situacaoAtual`, `ocorrencias` (com severidade!), `pendenciaManual.whatsappSummary`. Estávamos pedindo IA externa pra **reinterpretar o que já estava interpretado**.
+
+Solução simples: `cruzar_kira.py` · 213 linhas · 4 regras determinísticas:
+- R1 · tagKira indica concluído mas status ativo → status_desatualizado
+- R2 · ocorrência alta nos últimos 7d → urgência alta + flag
+- R3 · situacaoAtual com URGENTE/RISCO/atraso → flags
+- R4 · dias_silencio ≥30 + ativa → abandono
+
+**Resultados em 228 obras · 3.6 min:**
+- 204 coerentes (89.9%)
+- 20 abandonos detectados (8.8%) ← ninguém via
+- 3 status_desatualizado com sugestão clara
+- 47 com urgência alta · 100% rastreável a fonte (ocorrência ou texto-fonte)
+- Cada veredicto tem `analise_kira_trilha` · auditável
+
+Integrado no `varredura.py` como passo 12b (entre `marcar_refresh_status` e `sentinela`). Roda 12h+18h sem rate limit, sem custo, sem token.
+
+`analisar_recorte.py` (IA externa) mantido como fallback opcional · não é mais o caminho principal.
+
 ---
 
 ## Decisões arquiteturais que importam
@@ -79,10 +111,16 @@ Ideia: pegar 1 obra finalizada e mapear narrativa cronológica completa (tempo, 
 - **Insight Vitor:** "tudo já foi feito pelo Kira · nossa função é só extrair e analisar"
 
 ### Por que **GitHub Models** (não Anthropic API)
-- Gratuito (8k req/dia · cobre 230 obras × 30 rodadas/dia folgado)
+- Gratuito (~~8k~~ **150 req/dia** · descoberto em 2026-05-05 · suficiente pra rodadas pontuais, não pra todas 228)
 - gpt-4o-mini é bom o suficiente pra triagem
 - Anthropic API ficaria cara e seria bloqueador (token pendente)
-- Trade-off: menos qualidade que Claude, mas custo zero é decisivo
+- **Atualização 2026-05-05:** GitHub Models virou fallback · caminho principal é determinístico (`cruzar_kira.py` aproveitando interpretação do Kira)
+
+### Por que **Kira-driven** (não IA externa) [adicionado 2026-05-05]
+- O Painel já tem semântica do Kira em `tagKira`/`situacaoAtual`/`ocorrencias`
+- IA externa estava re-interpretando dados já interpretados · redundância
+- Determinístico = auditável (cada veredicto tem trilha)
+- Zero rate limit, zero custo, ~3.6 min nas 228
 
 ### Por que **CF Workers + Static Assets** (não CF Pages)
 - Worker permite Basic Auth + cookie 24h sem hassle

@@ -1,49 +1,45 @@
 # 4 · PENDÊNCIAS · Em ordem de prioridade
 
-## A · Caminho B · refactor estrutural
+## A · ~Caminho B IA-pesado~ → DESCARTADO em 2026-05-05 · substituído por cruzar_kira
 
-**Quando:** sessão dedicada · 4-6h em bloco contínuo · não fazer em pedaços
-**Pré-requisito:** ler `project_orion_caminho_a_2026_05_04.md` na memória
-**Fonte canônica:** `analise/lab-hermeneuta/ROADMAP_CAMINHO_B.md`
+**Status:** ✅ Resolvido por outra rota (Kira-driven · zero IA · zero rate limit)
 
-5 frentes em sequência (B1 destrava B2 · B3 finaliza limpeza):
+Proposta original era rodar IA externa nas 228. Descobertas que mataram:
+- GitHub Models tem 150 req/dia (não 8k)
+- IA confundia `status` (macro) com `fase` (específica) → 100% falso positivo
+- Em interrupção, perdia trabalho processado
 
-### B1 · IA em todas as 230 obras
-- Adaptar `analisar_recorte.py` pra varrer ativas (hoje só recortes manuais com max 50)
-- Decidir cadência: dentro do `varredura.py` automático ou script separado disparado manual
-- Custo: 230 × gpt-4o-mini · GitHub Models 8k req/dia gratuito · folgado
-- Schema unificado: `veredicto`, `status_sugerido`, `urgencia`, `acao_consultor`, `tipo_demanda`, `confianca`, `flags` TODOS da IA · não heurística
+Pivô (sugestão Vitor): *"o Kira já fez · só pegar e cruzar"*. Resultado: `cruzar_kira.py` em 213 linhas · determinístico · auditável · 3.6 min nas 228.
 
-### B2 · Honestidade visual
-- Adicionar campo `obra.fonte_veredicto` ("ia" · "heuristica" · "sem-corpus")
-- Frontend: badge ou degradê visível indicando fonte
-- Tooltip: "Heurística cega · status copiado do Painel" vs "Análise IA com X mensagens"
-- Critério: leitor casual vê em 1s se card foi lido ou só ecoado
+**Frentes do antigo Caminho B status:**
+- B1 IA em todas → ~~necessário~~ · cruzar_kira cobre
+- B2 Honestidade visual → parcialmente (cada veredicto tem trilha) · pendente UI
+- B3 Pipeline 13→4 etapas → DESPRIORIZADO · pipeline está estável
+- B4 Snapshot vira cache → DESPRIORIZADO
+- B5 Tom IA-driven → DESPRIORIZADO · tom keyword é display secundário
 
-### B3 · Pipeline 13 → 4 etapas
-- Etapa 1: fetch painel + mensagens (substitui selecionar_piloto + coletar_painel)
-- Etapa 2: IA em todas (substitui analisar_recorte + heurística)
-- Etapa 3: régua/equipe/cores (mantém · enriquecimento)
-- Etapa 4: publica
-- **Cortar arquivos:** `agente/telethon/grupos.json`, `listar_grupos.py`, `monitorar.py`, `telegram-snapshot-prev.json`
-- Avaliar: dossiês ainda agregam valor? Se não, cortar `extrair_eventos_dossie()`
+## A2 · Refinamentos do cruzar_kira (futuro · não-bloqueador)
 
-### B4 · Snapshot vira cache, não corredor
-- Documentar: snapshot é debug/cache · cada etapa consome painel direto via memória
-- Detectar staleness · alarme se snapshot >24h ainda for usado
-- Reduzir acoplamento entre etapas · etapa N não deve quebrar se N-1 não rodou
+### R5 · Regra pra urgência média
+Hoje 0 obras com `urgencia=media` (só alta/baixa). Possíveis disparos:
+- Ocorrência **média** recente (≤7d) → media
+- Silêncio 14-29 dias → media
+- situacaoAtual com sinais de atenção mas sem palavra crítica → media
 
-### B5 · Tom IA-driven
-- Substituir heurística keyword por leitura IA do tom
-- Reservar heurística atual como fallback quando IA falhar
-- Validar com 5 obras conhecidas · comparar tom heurístico vs IA
+### R6 · Cruzamento whatsappSummary × ocorrencias
+Detectar "dor não registrada":
+- `pendenciaManual.whatsappSummary` menciona problema X
+- `ocorrencias` não tem ocorrência relacionada a X
+- → flag `dor_nao_registrada`
 
-**Critério de pronto do Caminho B:**
-1. Lab Orion · todos 230 cards com veredito IA real, não cópia de campo
-2. Cards heurísticos (sem corpus) claramente sinalizados
-3. Pipeline com no máximo 5 scripts em `varredura.py` (hoje 13)
-4. Sem arquivos legados Telethon no repo
-5. Tempo varredura ≤ 3 min (hoje 47s sem IA · IA adiciona ~2-3 min)
+### R7 · Cruzamento materiais × mensagens
+- `materiais.usaTela == false` MAS msgs contém "tela total"
+- → flag `escopo_aumentando` (aditivo informal)
+
+### UI honestidade visual
+- Badge "X regras disparadas" no card
+- Tooltip mostra trilha completa
+- Diferenciar visualmente "coerente sem regra" de "coerente com 1 regra que não promove urgência"
 
 ---
 
