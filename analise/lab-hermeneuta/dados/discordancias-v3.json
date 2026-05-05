@@ -1,7 +1,7 @@
 {
-  "gerado_em": "2026-05-05T22:21:10Z",
-  "total_obras": 10,
-  "resumo_executivo": "Das 10 obras analisadas, 6 têm status do painel coerente com a narrativa Telegram e 4 estão desatualizadas — nenhuma em abandono e nenhum detrator manifesto. Cinco obras estão em ciclo de retorno técnico (patologia, retrabalho de acabamento ou reparo de dano), três em planejamento pré-execução com aplicador 'a definir', uma em fim de execução prestes a virar concluída (Luis Fernando) e uma em transição de pausa para execução (Amendoeiras). Quatro obras carregam o flag detrator_latente por histórico de quase-distrato ou reclamação técnica recente (Paula Correa, Michelle, Getulio, Vanessa). O padrão crítico transversal: cliente final ausente do grupo Telegram em 9 das 10 obras, com interlocução mediada por arquitetos ou pela própria Monofloor — risco sistêmico de pendência invisível. Ações mais urgentes: atribuir consultor formal a Repullo, Paula Correa e Maria Heydi (campo vazio); investigar fracionamento do verniz Hiper (Getulio); e atualizar painel das 4 obras com status desatualizado. Atualização 2026-04-29 pós-revisão: as 3 obras sem consultor formal foram realocadas — Luana conduz REPULLO e PAULA CORREA, Juliana conduz MARIA HEYDI · em MAYARA o consultor formal (Wesley) não atua no grupo, operação distribuída entre Pedro/Jonathan/Luana/Vinícius.",
+  "gerado_em": "2026-05-05T22:41:03Z",
+  "total_obras": 230,
+  "resumo_executivo": "Das 230 obras analisadas (228 ativas), 174 coerentes (76%), 35 com status desatualizado e 19 em silêncio prolongado (abandono detectado · ≥30d sem msg em obra ativa). 41 obras com urgência alta · ação imediata recomendada. Detecção via cruzar_kira · 4 regras determinísticas · trilha auditável em cada obra (campo `analise_kira_trilha`). 2 obras sem análise (resíduo · finalizadas ou erro de fetch).",
   "obras": [
     {
       "obra_id": "0e4e10b2-9fbe-49a4-9e42-08ae5624b39c",
@@ -52254,164 +52254,113 @@
   ],
   "agregados": {
     "veredictos": {
-      "coerente": 6,
-      "status_desatualizado": 4,
-      "abandono": 0,
-      "detrator": 0,
-      "inconclusivo": 0
+      "coerente": 174,
+      "status_desatualizado": 35,
+      "sem_analise": 2,
+      "abandono": 19
     },
     "tipo_demanda": {
+      "retrabalho_acabamento": 4,
       "patologia": 3,
-      "retrabalho_acabamento": 1,
-      "retorno_servico": 1,
-      "execucao_normal": 4,
-      "finalizacao": 1,
-      "dano_terceiro": 0,
-      "pausa": 0
+      "execucao_normal": 5,
+      "finalizacao": 2,
+      "retorno_servico": 4
     },
     "flags_recorrentes": [
       {
-        "flag": "aplicador_indefinido",
-        "ocorrencias": 6,
-        "obras": [
-          "DANIEL BECKER",
-          "MICHELLE",
-          "PAULA CORREA",
-          "MAYARA",
-          "VANESSA",
-          "MARIA HEYDI"
-        ]
-      },
-      {
-        "flag": "detrator_latente",
-        "ocorrencias": 4,
-        "obras": [
-          "GETULIO",
-          "MICHELLE",
-          "PAULA CORREA",
-          "VANESSA"
-        ]
-      },
-      {
-        "flag": "consultor_divergente",
-        "ocorrencias": 4,
-        "obras": [
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA",
-          "PAULA CORREA NOGUEIRA",
-          "MAYARA ULIANA CASAGRANDE",
-          "MARIA HEYDI MAEDA COMPANY"
-        ]
-      },
-      {
-        "flag": "escopo_aumentando",
-        "ocorrencias": 3,
-        "obras": [
-          "REPULLO",
-          "MICHELLE",
-          "VANESSA"
-        ]
-      },
-      {
         "flag": "risco_tecnico",
-        "ocorrencias": 3,
+        "ocorrencias": 13,
         "obras": [
-          "GETULIO",
-          "LUIS FERNANDO",
-          "VANESSA"
+          "LUIS FERNANDO DE LIMA CARVALHO",
+          "ANA CAROLINA RAWET FAGE",
+          "CAROLINA RODRIGUES GALINDO",
+          "RICARDO XAVIER DE OLIVEIRA NETO",
+          "MISCI BRASIL COMERCIO DE MODA LTDA",
+          "LUIS FERNANDO BECHTOLD",
+          "MARIA APARECIDA ALVES DE CERQUEIRA LUZ",
+          "AVVA HOUSE LTDA - MOZART RODRIGUES",
+          "JOSE ANTUNES SOBRINHO",
+          "CHANG YU CHENG"
+        ]
+      },
+      {
+        "flag": "atrasado",
+        "ocorrencias": 2,
+        "obras": [
+          "RICARDO XAVIER DE OLIVEIRA NETO",
+          "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"
         ]
       },
       {
         "flag": "silencio_anomalo",
-        "ocorrencias": 2,
+        "ocorrencias": 1,
         "obras": [
-          "PAULA CORREA",
-          "MAYARA"
+          "TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA"
         ]
       }
     ],
     "consultores": [
       {
         "nome": "LUANA PATRICIA DE ANDRADE LIMA",
-        "obras_analisadas": 38,
-        "obras_com_acao": 38,
+        "obras_analisadas": 93,
+        "obras_com_acao": 27,
         "acoes_priorizadas": [
-          "AMENDOEIRAS · alta · atualizar painel de 'pausado' para 'aguardando_execucao' (retorno 04/05 confirmado), garantir cronograma de prestadores e uso do crédito de hospedagem antes de ~25/05",
-          "VANESSA · alta · realizar VT de entrada em 05/05, detalhar áreas a remover, definir aplicador para 12/05 e gerenciar risco de fricção comercial em retorno cuja faseamento foi recusado pela cliente",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · alta · Atribuir consultor formal à obra (campo vazio) · Kettlyn finalizar escopo da parede 2,03 m² com primer · definir executor substituindo José Mário · validar com arquiteta Débora antes de novo retorno [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]",
-          "REPULLO ASSESSORIA EM INFORMATICA LTDA · media · Acompanhar execução do retorno agendado para 20/05 com aplicador Francisco · validar uso do primer · confirmar com arquiteta Débora antes do início · briefing oficial emitido por Luana em 30/04 [INFERIDO · sem atribuição formal no painel]",
-          "PAULA CORREA NOGUEIRA · alta · Atribuir consultor formal (campo vazio) · definir aplicador para reaplicação de 06/05 · confirmar viabilidade da data com cliente Paula (histórico de quase-distrato em 23/09/2025) [INFERIDO · sem atribuição formal no painel]"
-        ]
-      },
-      {
-        "nome": "Juliana Santos",
-        "obras_analisadas": 19,
-        "obras_com_acao": 19,
-        "acoes_priorizadas": [
-          "GETULIO · alta · confirmar logística do aplicador Gilmar/Taquinho para 07/05, validar resultado pós-reaplicação com arquiteta Ísis e investigar se outras obras do mesmo aplicador tiveram fracionamento incorreto do verniz Hiper",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]",
-          "MARIA HEYDI MAEDA COMPANY · media · Atualizar painel de 'contrato' para 'planejamento' (contrato assinado em 23/03, programação oficial publicada 25/04 com início 15/06) · atribuir consultor formal (campo vazio) · concluir verificação de aditivo aberta por Kettlyn em 17/04 · definir aplicador e cor antes de 15/06 [INFERIDO · sem atribuição formal no painel]"
+          "AMENDOEIRAS SOCIEDADE DE PROPOSITO  · alta · Revisar obra · urgência alta detectada",
+          "VINICIUS MACHADO ARIAS (LUIS GUILHE · alta · Verificar com cliente · obra silenciada há mais de 30 dias",
+          "ANA PAULA JACINTHO JUNQUEIRA APARTA · alta · Confirmar liberação com a equipe do estúdio",
+          "APTO LE JARDIM ANA PAULA JACINTHO J · alta · Atualizar status da obra no painel.",
+          "CAMILA BERRINI GONTIER · alta · Revisar obra · urgência alta detectada"
         ]
       },
       {
         "nome": "Wesley Matheus de Carvalho",
-        "obras_analisadas": 4,
-        "obras_com_acao": 4,
+        "obras_analisadas": 89,
+        "obras_com_acao": 34,
         "acoes_priorizadas": [
-          "MAYARA · alta · retomar contato direto (silêncio do cliente desde out/2025), agendar VT que nunca aconteceu em 245 dias, definir aplicador, validar data 29/06 e investigar se houve troca de consultor sem registro",
-          "MICHELLE · alta · confirmar aplicador para 06/05, destravar liberação financeira do primer RU e cobrar cliente sobre impermeabilização interna da floreira",
-          "DANIEL BECKER · media · atualizar fase do painel (VT de aferição já executada em 16/04 e aditivo aprovado em 27/04) e definir aplicador a 47 dias do início",
-          "LUIS FERNANDO · media · confirmar formalmente conclusão da obra, atualizar painel para 'concluido' e avaliar se 2ª demão de verniz sem antiderrapante exige retorno técnico"
-        ],
-        "nota": "Em MAYARA, Wesley é consultor formal mas não posta no grupo · operam Pedro/Jonathan/Luana/Vinícius"
+          "FILIPE AUGUSTO MARINI LOPES · alta · Revisar obra · urgência alta detectada",
+          "RICARDO GUIMARAES VIEIRA · alta · Revisar obra · urgência alta detectada",
+          "CASA VIK ADMINISTRADORA DE SALOES D · alta · Atualizar status no painel para refletir a fase atual da obra.",
+          "TRESPONTOZERO COMPRA E VENDA DE IMÓ · alta · Responder cliente em até 48h",
+          "MISCI BRASIL COMERCIO DE MODA LTDA  · alta · Validar técnico em campo · risco identificado"
+        ]
+      },
+      {
+        "nome": "Pedro Alexandre Santana",
+        "obras_analisadas": 7,
+        "obras_com_acao": 1,
+        "acoes_priorizadas": [
+          "TÂMARA NEWMAN LOBATO SOUZA · alta · Atualizar status da obra no painel."
+        ]
+      },
+      {
+        "nome": "Pedro Marçal",
+        "obras_analisadas": 4,
+        "obras_com_acao": 1,
+        "acoes_priorizadas": [
+          "BRUNO HENRIQUE LOPEZ LIMA  · alta · Verificar com cliente · obra silenciada há mais de 30 dias"
+        ]
+      },
+      {
+        "nome": "Juliana Santos",
+        "obras_analisadas": 2,
+        "obras_com_acao": 1,
+        "acoes_priorizadas": [
+          "MARINA PIRES DE AGUIAR · alta · Atualizar status da obra no painel."
+        ]
+      },
+      {
+        "nome": "Renata Garcia Penna",
+        "obras_analisadas": 1,
+        "obras_com_acao": 0,
+        "acoes_priorizadas": []
+      },
+      {
+        "nome": "Thaísa de Lara Barbosa",
+        "obras_analisadas": 1,
+        "obras_com_acao": 1,
+        "acoes_priorizadas": [
+          " LOVELY RITA DIAS MENEZES    SEGUND · alta · Atualizar status da obra no painel."
+        ]
       }
     ],
     "padroes_cross_obras": [
@@ -52421,7 +52370,7 @@
       "Três obras estão sem consultor formal atribuído no painel (Repullo '[]', Paula Correa '[]', Maria Heydi '') apesar de equipe Monofloor (Luana, Kettlyn, Pedro, Vinícius) estar tocando o operacional. Em duas obras de Wesley Matheus (Mayara e Maria Heydi) o consultor não posta no Telegram — todas as ações são feitas por Pedro/Jonathan/Vinícius/Luana. Padrão de descolamento entre consultor de painel e quem efetivamente conduz a obra."
     ]
   },
-  "ultima_varredura": "2026-05-05T22:21:10Z",
+  "ultima_varredura": "2026-05-05T22:41:03Z",
   "cores_agregado": {
     "calculado_em": "2026-05-05T00:56:09Z",
     "top_atual": [
@@ -52578,5 +52527,6 @@
         "dias_ate_inicio": 33
       }
     ]
-  }
+  },
+  "total_ativas": 228
 }

@@ -738,7 +738,7 @@
           <img src="https://static.wixstatic.com/media/2bc4fe_d7fd788ceb094e96b86315e020950bda~mv2.png/v1/fill/w_506,h_156,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Artboard%201.png" alt="monofloor" class="logo-img">
           <span class="piloto-pill">piloto</span>
         </div>
-        <div class="logo-sub">Lab Orion · Inteligência Operacional · <span class="piloto-info"><strong>10</strong> de 227 ativas</span></div>
+        <div class="logo-sub">Lab Orion · Inteligência Operacional · <span class="piloto-info"><strong id="hdr-ativas">—</strong> obras ativas</span></div>
       </div>
     </div>
     <div class="top-right">
@@ -959,7 +959,7 @@
   </aside>
 
   <footer>
-    Lab Orion · piloto com 10 de 227 obras ativas · varredura automática 12h e 18h<br>
+    Lab Orion · <span id="ftr-ativas">— obras ativas</span> · varredura automática 12h e 18h<br>
     Snapshot de: <span id="footer-snapshot">—</span>
   </footer>
 
@@ -1143,6 +1143,20 @@ async function load(){
   document.getElementById('footer-snapshot').textContent = fmtBR(DADOS.ultima_varredura || DADOS.gerado_em);
   const stampEl = document.getElementById('header-stamp');
   if (stampEl) stampEl.textContent = fmtData(DADOS.ultima_varredura || DADOS.gerado_em);
+
+  // Cobertura dinâmica · popula 3 lugares (header / footer / onboarding)
+  const nAtivas = DADOS.total_ativas != null
+    ? DADOS.total_ativas
+    : obras.filter(o => {
+        const s = (o.painel || {}).status_atual;
+        return s && s !== 'concluido' && s !== 'finalizado';
+      }).length;
+  const elHdr = document.getElementById('hdr-ativas');
+  if (elHdr) elHdr.textContent = nAtivas;
+  const elFtr = document.getElementById('ftr-ativas');
+  if (elFtr) elFtr.textContent = nAtivas + ' obras ativas';
+  const elOnb = document.getElementById('onb-ativas');
+  if (elOnb) elOnb.textContent = nAtivas + ' obras ativas';
 
   // Badge de idade dos dados · visível pra todos saberem se dado é fresh
   atualizarBadgeAge();
@@ -2909,7 +2923,7 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
       </div>
     </div>
 
-    <div class="onb-rodape">piloto · <strong>10 de 227 obras ativas</strong> · escalando após validação</div>
+    <div class="onb-rodape"><strong id="onb-ativas">— obras ativas</strong> · monitoradas 12h e 18h via cruzar_kira</div>
   </div>
 </div>
 

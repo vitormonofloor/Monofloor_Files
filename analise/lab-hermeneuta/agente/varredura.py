@@ -276,6 +276,13 @@ def _executar_pipeline():
         log("FALHOU em cruzar_kira.py (continua · marcado em pipeline-errors.json)")
         marcar_step_falho("cruzar_kira", "exit não-zero")
 
+    # 12c. Regenera campos top-level (total_obras, agregados.*, resumo_executivo)
+    # a partir das 230 obras reais · zera resíduo da rodada IA antiga de 10 obras
+    log("Rodando gerar_agregados.py...")
+    if not run([PYTHON, "gerar_agregados.py"], AGENTE):
+        log("FALHOU em gerar_agregados.py (continua · marcado em pipeline-errors.json)")
+        marcar_step_falho("gerar_agregados", "exit não-zero")
+
     # 13. Sentinela · valida saúde do pipeline e gera dados/status.json
     log("Rodando sentinela.py...")
     if not run([PYTHON, "sentinela.py"], AGENTE):
