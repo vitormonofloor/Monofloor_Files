@@ -224,6 +224,74 @@ Eventualmente contornada — cliente acabou aprovando ainda no dia, mas registra
 
 ---
 
+## 📦 Material · solicitado, enviado, consumido, sobrou
+
+### Escopo formal registrado no Painel
+
+| Campo | Valor |
+|---|---|
+| Produto | STELION |
+| Cor | Gengibre |
+| Metragem | 66,28 m² |
+| Ambiente | Escritório (1 ambiente único) |
+| Superfície | Piso · Contrapiso · Seco |
+| **`usaTela`** | **false** ⚠ |
+| `materialEmObra` | true |
+| `materialProduzido` | true |
+| `corConfirmada` | true |
+| `osPronta` | true |
+| `temEstoque` | true |
+| Status | escopo_aprovado |
+| Concluído (no painel) | false |
+
+### Solicitações de material durante a obra (extra-escopo)
+
+| Material | Quem pediu | Quando | Decisão | Resultado |
+|---|---|---|---|---|
+| **TELA TOTAL** no piso | Cliente (Marcela) → Wesley | 13/04 14h29 | ✅ **Aprovado** · cliente pagou orçamento extra | Michael saiu da obra pra comprar (escopo era *"trinca pontual"*) |
+| **MASSA HARD** pra reparos | Michael Marinho (líder) | 13/04 16h03 | ❌ **Negado pelo Rodrigo** | Substituído por TERON + tela |
+| **TERON** | Rodrigo (decisão técnica) | 13/04 16h03 | ✅ **Autorizado** (sob demanda) | Usado nos buracos de tomadas e ao redor das caixas |
+
+### Consumo real registrado nas mensagens
+
+| Material | Estimado | Consumido | Sobra |
+|---|---:|---:|---:|
+| **STELION 3G** (1ª camada) | 9 baldes (Rodrigo) | **7 kits** (Diário Michael 14/04) | **+3 baldes fechados** |
+| **TERON** | — (sob demanda) | usado em reparos | **3 unidades fechadas sobraram** |
+| **LUMINA** (verniz) | — | usado · obra finalizada com verniz aplicado | **1 kit sobrou** · ficou no CT Morumbi com Alberto |
+
+> **14/04 19h30 · Rodrigo:** *"Consumo estimado de 9 baldes — fez em 7"*
+> Economia de ~22% no consumo de Stelion 3G versus a estimativa.
+
+### Logística da retirada do material restante
+
+> **16/04 16h28 · Michael:** *"[Foto] Sobra de material · Precisa acessar a obra para retirar · Obs: tem um kit de Lumina comigo · Vou deixar no CT Morumbi com Alberto · Tivemos que aplicar o verniz saindo da obra e não tinha lugar para deixar."*
+
+Material excedente não voltou pelo canal padrão · ficou no CT Morumbi pra reaproveitamento.
+
+### Análise · "houve solicitação além do enviado?"
+
+**Sim — em duas frentes (1 paga pelo cliente, 1 absorvida operacionalmente):**
+
+1. **TELA TOTAL** · Cliente alterou escopo no dia da execução de "trinca pontual" pra "tela completa no piso". Comprada por fora pelo Michael, cliente aprovou orçamento extra. *Aditivo informal · não formalizado no painel.*
+
+2. **TERON** · Usado em reparos de tomadas e contornos · não estava no escopo formal. Aprovado em conversa pelo Rodrigo · *consumido por fora do registro de materiais.*
+
+**E uma solicitação NEGADA:** Massa Hard pedida pelo Michael às 16h03 do dia 13. Rodrigo respondeu **"não precisa, pode telar só o necessário"** + **"vai precisar rolar Stelion por cima para fixar"** · decisão técnica conservadora que evitou aditivo desnecessário.
+
+### Discrepâncias sistema vs realidade
+
+| Item | Painel (formal) | Obra (real) | Sinalização |
+|---|---|---|---|
+| Uso de tela | `usaTela: false` | Tela total aplicada | ⚠ Painel desatualizado · não captura aditivo |
+| TERON | Não consta | Consumido em reparos | ⚠ Não formalizado |
+| Sobras | Não rastreado | 3 baldes Stelion + 3 Teron + 1 Lumina | ⚠ Sem registro de devolução/realocação |
+| Concluído | `false` no item | Fisicamente entregue 16/04 | ⚠ Status pendente de fechamento |
+
+**Padrão recorrente:** material extra absorvido por decisão de campo · pintura formal não acompanha. **Lab Orion poderia detectar isso** cruzando msgs (palavra "comprar/pedir/sobrou") com endpoint `/materiais` (status / `usaTela`).
+
+---
+
 ## 📊 Métricas finais
 
 ### Timeline
