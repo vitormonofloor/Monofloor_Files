@@ -50,6 +50,25 @@ ROOT = Path(__file__).parent.parent
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
 TG_SNAPSHOT = ROOT / "agente" / "telethon" / "telegram-snapshot.json"
 PAINEL_SNAPSHOT = ROOT / "dados" / "painel-snapshot.json"
+ENV_LOCAL = ROOT / ".env"
+
+
+def _carregar_env_local():
+    """Carrega variáveis de `.env` local (não-versionado) sem sobrescrever shell."""
+    if not ENV_LOCAL.exists():
+        return
+    for raw in ENV_LOCAL.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        k = k.strip()
+        v = v.strip().strip('"').strip("'")
+        if k and v and not os.environ.get(k):
+            os.environ[k] = v
+
+
+_carregar_env_local()
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_MODEL = os.environ.get("GITHUB_MODEL", "gpt-4o-mini")
@@ -152,6 +171,11 @@ Sua função: cruzar PAINEL DE OBRAS (oficial) com COMUNICAÇÃO TELEGRAM (técn
 
 Princípio central: quando painel e telegram divergem, a verdade está no telegram. O painel é responsabilidade do consultor atualizar.
 
+DIMENSÕES DO PAINEL (importante · não confunda com contradição):
+- `status` = categoria macro do kanban (planejamento, em_execucao, aguardando_execucao, pausado, reparo, marcas_rolo_cera, aguardando_clima, contrato)
+- `fase` = estágio específico DENTRO do status (ex: "LOGÍSTICA - MATERIAL ENTREGUE", "CLIENTE FINALIZADO", "OBRA CONCLUÍDA", "RESULTADO VT - ENTRADA")
+- Status e fase coexistem · um valor pra cada · NÃO se anulam · um status pode hospedar várias fases
+
 Vocabulário (use exatamente):
 - VEREDICTOS: coerente · status_desatualizado · abandono · detrator · inconclusivo
 - FLAGS possíveis: detrator_latente · aplicador_indefinido · consultor_divergente · silencio_anomalo · retrabalho_de_retrabalho · escopo_aumentando · risco_tecnico · detrator
@@ -159,15 +183,18 @@ Vocabulário (use exatamente):
 - URGÊNCIA: alta · media · baixa
 
 REGRAS:
-1. status_desatualizado = telegram mostra fase diferente do painel
-2. abandono = obra ATIVA + silêncio 30+d + data prevista passada (mesmo se painel diz ativo)
-3. detrator = evidência textual de conflito agudo (advogado, Reclame Aqui)
-4. detrator_latente (flag) = histórico de quase-distrato, sem manifestação aguda
-5. acao_consultor = frase curta, concreta, com prazo e responsável quando possível
+1. **status_desatualizado** SÓ se aplica quando o Telegram mostra a obra em CATEGORIA MACRO diferente do `status` do painel (ex: telegram mostra equipe finalizando, painel diz "planejamento"). NÃO atribua só porque a `fase` parece "estranha" pro `status` · isso é hierarquia legítima do sistema.
+2. **`status_sugerido` JAMAIS pode ser igual ao `status` atual do painel.** Se sua leitura do telegram concorda com o `status` atual, retorne veredicto `coerente` e `status_sugerido: null`.
+3. **abandono** = obra ATIVA + silêncio 30+d + data prevista passada (mesmo se painel diz ativo)
+4. **detrator** = evidência textual de conflito agudo (advogado, Reclame Aqui)
+5. **detrator_latente** (flag) = histórico de quase-distrato, sem manifestação aguda
+6. **acao_consultor** = frase curta, concreta, com prazo e responsável quando possível
 
 Retorne APENAS JSON válido (sem markdown, sem texto antes/depois)."""
 
-PROMPT_USUARIO_TEMPLATE = """Analise esta obra e retorne JSON com este schema EXATO:
+PROMPT_USUARIO_TEMPLATE = """HOJE: {hoje}
+
+Analise esta obra e retorne JSON com este schema EXATO:
 
 {{
   "veredicto": "coerente|status_desatualizado|abandono|detrator|inconclusivo",
@@ -175,7 +202,7 @@ PROMPT_USUARIO_TEMPLATE = """Analise esta obra e retorne JSON com este schema EX
   "tipo_demanda": "patologia|dano_terceiro|retrabalho_acabamento|retorno_servico|execucao_normal|finalizacao|pausa|null",
   "flags": ["lista", "das", "flags"],
   "acao_consultor": "Frase curta com próxima ação concreta",
-  "prazo_acao": "YYYY-MM-DD ou null",
+  "prazo_acao": "YYYY-MM-DD ou null (sempre >= HOJE · não inventar prazo passado)",
   "urgencia": "alta|media|baixa",
   "confianca": 0.0-1.0
 }}
@@ -282,20 +309,37 @@ def main():
     ap = argparse.ArgumentParser(description="Análise IA por recorte usando GitHub Models")
     ap.add_argument("--obra-ids", help="IDs separados por vírgula")
     ap.add_argument("--obra-ids-arquivo", help="Arquivo com 1 ID por linha")
+    ap.add_argument("--todas-ativas", action="store_true", help="Varre TODAS obras ativas do discord-v3 (status != concluido/finalizado)")
     ap.add_argument("--recorte", default="manual", help="Nome do recorte (apenas pra log)")
-    ap.add_argument("--max-obras", type=int, default=50, help="Limite de obras por execução (default: 50)")
+    ap.add_argument("--max-obras", type=int, default=500, help="Limite de obras por execução (default: 500)")
     args = ap.parse_args()
+
+    # Carrega discord cedo · precisa pra modo --todas-ativas
+    if not DISCORD_PATH.exists():
+        log(f"ERRO: {DISCORD_PATH} não encontrado")
+        sys.exit(1)
+    discord = json.loads(DISCORD_PATH.read_text(encoding="utf-8"))
 
     # Coleta IDs
     ids: list[str] = []
+    if args.todas_ativas:
+        ids = [
+            o["obra_id"] for o in discord.get("obras", [])
+            if (o.get("painel") or {}).get("status_atual") not in ("concluido", "finalizado")
+            and o.get("obra_id")
+        ]
+        log(f"Modo --todas-ativas · {len(ids)} obras (filtradas das {len(discord.get('obras', []))} totais)")
     if args.obra_ids:
-        ids = [s.strip() for s in args.obra_ids.split(",") if s.strip()]
+        ids.extend([s.strip() for s in args.obra_ids.split(",") if s.strip()])
     if args.obra_ids_arquivo:
         path = Path(args.obra_ids_arquivo)
         if path.exists():
             ids.extend([l.strip() for l in path.read_text(encoding="utf-8").splitlines() if l.strip()])
+    # Dedup mantendo ordem
+    seen = set()
+    ids = [x for x in ids if not (x in seen or seen.add(x))]
     if not ids:
-        log("ERRO: nenhum ID informado · use --obra-ids ou --obra-ids-arquivo")
+        log("ERRO: nenhum ID informado · use --obra-ids, --obra-ids-arquivo ou --todas-ativas")
         sys.exit(1)
 
     if len(ids) > args.max_obras:
@@ -304,12 +348,6 @@ def main():
 
     log(f"Recorte: '{args.recorte}' · {len(ids)} obras · modelo {GITHUB_MODEL}")
     log(f"GITHUB_TOKEN: {'OK' if GITHUB_TOKEN else 'AUSENTE'}")
-
-    # Carrega dados
-    if not DISCORD_PATH.exists():
-        log(f"ERRO: {DISCORD_PATH} não encontrado")
-        sys.exit(1)
-    discord = json.loads(DISCORD_PATH.read_text(encoding="utf-8"))
 
     snapshot = {}
     if TG_SNAPSHOT.exists():
@@ -344,7 +382,8 @@ def main():
         log(f"  [{i}/{len(ids)}] {cliente_curto:<37} · analisando...")
 
         contexto = montar_contexto_obra(obra, snapshot.get(obra_id), painel_idx.get(obra_id))
-        prompt = PROMPT_USUARIO_TEMPLATE.format(contexto=contexto)
+        hoje = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        prompt = PROMPT_USUARIO_TEMPLATE.format(contexto=contexto, hoje=hoje)
 
         analise = chamar_github_models(prompt)
         if not analise:
