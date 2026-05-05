@@ -135,18 +135,21 @@ def coletar_obra(obra_id: str, cutoff_date: datetime, limit: int) -> dict:
                 out["telegram"].append(msg_painel_para_pipeline(m))
             if len(out["telegram"]) >= limit:
                 break
+        # Ordena cronologicamente (mais antigo → mais recente) pra última msg ficar no fim
+        out["telegram"].sort(key=lambda m: m.get("data") or "")
 
         if msgs_tg and not out["chat_title"]:
             out["chat_title"] = msgs_tg[0].get("chatTitle")
 
         # WhatsApp (bonus · pipeline pode ignorar por enquanto)
-        url_wa = f"{BASE}/{obra_id}/messages?source=whatsapp&limit=500"
+        url_wa = f"{BASE}/{obra_id}/messages?source=whatsapp&limit=2000"
         d_wa = fetch_json(url_wa)
         msgs_wa = d_wa.get("messages") or []
         for m in msgs_wa:
             data_iso = parse_data(m.get("timestamp") or "")
             if data_iso and data_iso >= cutoff_date.strftime("%Y-%m-%dT%H:%M:%S+00:00"):
                 out["whatsapp"].append(msg_painel_para_pipeline(m))
+        out["whatsapp"].sort(key=lambda m: m.get("data") or "")
 
     except Exception as e:
         out["erro"] = str(e)
@@ -246,7 +249,7 @@ def main(limit: int, dias: int):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Coleta mensagens via Painel de Obras (substitui Telethon)")
-    parser.add_argument("--dias", type=int, default=15, help="Janela de N dias (default: 15)")
-    parser.add_argument("--limit", type=int, default=80, help="Cap máx de msgs Telegram por obra (default: 80)")
+    parser.add_argument("--dias", type=int, default=90, help="Janela de N dias (default: 90 · cobre histórico operacional típico)")
+    parser.add_argument("--limit", type=int, default=2000, help="Cap máx de msgs Telegram por obra (default: 2000 · API aguenta)")
     args = parser.parse_args()
     main(args.limit, args.dias)

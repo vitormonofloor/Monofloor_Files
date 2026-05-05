@@ -2,14 +2,14 @@
 Extrai timeline_recente (últimas 4 semanas) de cada obra
 =========================================================
 
-Custo zero de API · só lê os dossiês + telegram-snapshot existentes.
+Custo zero de API · só lê o telegram-snapshot (dossiê é opcional, enriquece).
 
 Pra cada obra:
-1. Pega `evidencias_fortes[]` e `datas_mencionadas[]` do dossiê
-2. Filtra eventos >= JANELA_DIAS atrás
+1. Calcula bloco `telegram` (ultima_msg/dias_silencio/tom_grupo) do snapshot
+2. Pega `evidencias_fortes[]` e `datas_mencionadas[]` do dossiê SE existir
 3. Pega últimas N mensagens com texto significativo do telegram-snapshot
 4. Mescla, deduplica por (data+autor+trecho), ordena cronológico desc
-5. Injeta `timeline_recente` em cada obra do discordancias-v3.json
+5. Injeta `telegram` + `timeline_recente` em cada obra do discordancias-v3.json
 """
 
 import json
@@ -150,6 +150,65 @@ def extrair_ultimas_msgs_snapshot(obra_id: str, snapshot: dict, limite: int = 5)
     return eventos
 
 
+PALAVRAS_TENSAS = [
+    "urgente", "atras", "atraso", "problema", "problemat", "fissura", "infiltra",
+    "rachadura", "reclam", "insatisfe", "queixa", "demora", "preocup", "erro",
+    "falha", "sem retorno", "cobran", "exigi", "urge",
+]
+PALAVRAS_POSITIVAS = [
+    "obrigad", "agradec", "agradeço", "perfeito", "aprovad", "ótimo", "excelente",
+    "gostei", "ficou bom", "ficou ótimo", "parabens", "parabéns", "tudo ok", "tudo certo",
+]
+
+
+def calcular_bloco_telegram(obra_id: str, snapshot: dict) -> dict:
+    """Monta {ultima_msg, dias_silencio, tom_grupo, total_msgs} a partir do snapshot.
+
+    Determinístico · zero IA · custo zero. Heurística simples de tom por contagem
+    de keywords nas últimas 30 msgs com texto.
+    """
+    obra_snap = next((o for o in snapshot.get("obras", []) if o.get("obra_id") == obra_id), None)
+    if not obra_snap:
+        return {"ultima_msg": None, "dias_silencio": None, "tom_grupo": "?", "total_msgs": 0, "fonte": "sem-corpus"}
+
+    msgs = obra_snap.get("telegram", {}).get("mensagens", []) or []
+    if not msgs:
+        return {"ultima_msg": None, "dias_silencio": None, "tom_grupo": "?", "total_msgs": 0, "fonte": "corpus-vazio"}
+
+    # Última msg = max(data) entre todas (snapshot pode estar fora de ordem)
+    datas = [parse_data(m.get("data")) for m in msgs]
+    datas = [d for d in datas if d]
+    if not datas:
+        return {"ultima_msg": None, "dias_silencio": None, "tom_grupo": "?", "total_msgs": len(msgs), "fonte": "msgs-sem-data"}
+
+    ultima = max(datas)
+    dias_silencio = (HOJE - ultima).days
+
+    # Tom: heurística keyword nas últimas 30 msgs com texto
+    com_texto = [m for m in msgs if (m.get("texto") or "").strip()]
+    ult_30 = com_texto[-30:] if len(com_texto) > 30 else com_texto
+    blob = " ".join((m.get("texto") or "").lower() for m in ult_30)
+
+    n_tensas = sum(blob.count(p) for p in PALAVRAS_TENSAS)
+    n_pos = sum(blob.count(p) for p in PALAVRAS_POSITIVAS)
+
+    if n_tensas >= 3 and n_tensas > n_pos:
+        tom = "tenso"
+    elif n_pos >= 2 and n_pos > n_tensas:
+        tom = "positivo"
+    else:
+        tom = "neutro"
+
+    return {
+        "ultima_msg": ultima.strftime("%Y-%m-%d"),
+        "dias_silencio": dias_silencio,
+        "tom_grupo": tom,
+        "total_msgs": len(msgs),
+        "fonte": "snapshot-painel",
+        "sinais": {"tensos": n_tensas, "positivos": n_pos},
+    }
+
+
 def deduplicar(eventos: list) -> list:
     """Remove duplicatas por (data_curta+autor+início_normalizado_do_trecho)."""
     visto = set()
@@ -177,17 +236,32 @@ def main():
     snapshot = json.loads(SNAPSHOT_PATH.read_text(encoding="utf-8"))
 
     total_eventos = 0
+    obras_com_corpus = 0
+    obras_com_dossie = 0
     for obra in discord.get("obras", []):
         oid = obra.get("obra_id")
-        dossie_path = DOSSIES_DIR / f"{oid}.json"
-        if not dossie_path.exists():
-            obra["timeline_recente"] = {"eventos": [], "janela_dias": JANELA_DIAS}
-            continue
 
-        dossie = json.loads(dossie_path.read_text(encoding="utf-8"))
+        # Bloco telegram · sempre calculado do snapshot (independe de dossiê)
+        bloco_tg = calcular_bloco_telegram(oid, snapshot)
+        obra["telegram"] = bloco_tg
+        if bloco_tg.get("total_msgs", 0) > 0:
+            obras_com_corpus += 1
+
+        # Dossiê é opcional · enriquece se existir, não trava se faltar
+        dossie_path = DOSSIES_DIR / f"{oid}.json"
+        dossie = {}
+        if dossie_path.exists():
+            try:
+                dossie = json.loads(dossie_path.read_text(encoding="utf-8"))
+                obras_com_dossie += 1
+            except (json.JSONDecodeError, OSError):
+                dossie = {}
+
         eventos = []
-        eventos += extrair_eventos_dossie(dossie)
-        eventos += extrair_ultimas_msgs_snapshot(oid, snapshot, limite=8)
+        if dossie:
+            eventos += extrair_eventos_dossie(dossie)
+        # Sempre puxa msgs do snapshot (mesmo sem dossiê)
+        eventos += extrair_ultimas_msgs_snapshot(oid, snapshot, limite=10)
 
         eventos = deduplicar(eventos)
 
@@ -198,11 +272,9 @@ def main():
 
         eventos.sort(key=lambda e: e["data"], reverse=True)  # mais recente primeiro
 
-        # Última data REAL = última mensagem (não datas previstas no futuro)
-        tg = dossie.get("telegram", {})
-        ultima_msg = tg.get("ultima_msg_data")  # vem do snapshot · só msgs reais
-        ultima_dt = parse_data(ultima_msg) if ultima_msg else None
-        dias_atras = (HOJE - ultima_dt).days if ultima_dt else None
+        # Última data REAL = bloco telegram (snapshot · só msgs reais)
+        ultima_msg = bloco_tg.get("ultima_msg")
+        dias_atras = bloco_tg.get("dias_silencio")
 
         obra["timeline_recente"] = {
             "janela_dias": JANELA_DIAS,
@@ -212,12 +284,16 @@ def main():
             "dias_desde_ultima": dias_atras,
             "total_eventos": len(eventos),
             "eventos": eventos,
+            "fonte_eventos": "dossie+snapshot" if dossie else "snapshot",
         }
         total_eventos += len(eventos)
 
     write_discord(DISCORD_PATH, discord)
+    total_obras = len(discord.get('obras', []))
     print(f"[OK] {DISCORD_PATH}")
-    print(f"     {total_eventos} eventos injetados em {len(discord.get('obras', []))} obras")
+    print(f"     {total_eventos} eventos injetados em {total_obras} obras")
+    print(f"     {obras_com_corpus}/{total_obras} obras com corpus Telegram preenchido (bloco telegram)")
+    print(f"     {obras_com_dossie}/{total_obras} obras com dossiê (enriquecimento opcional)")
     print(f"     janela: {LIMITE.strftime('%Y-%m-%d')} → {HOJE.strftime('%Y-%m-%d')} ({JANELA_DIAS}d)")
     print()
     print("Por obra:")

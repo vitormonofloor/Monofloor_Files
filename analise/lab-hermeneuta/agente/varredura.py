@@ -196,10 +196,16 @@ def _executar_pipeline():
         shutil.copy2(SNAPSHOT_PATH, SNAPSHOT_PREV)
         log("Backup do snapshot anterior salvo")
 
-    # 2. Puxa msgs novas via Telethon
-    log("Rodando monitorar.py...")
-    if not run([PYTHON, "monitorar.py", "--limit", "50"], TELETHON):
-        log("FALHOU em monitorar.py · abortando varredura")
+    # 2a. Regera piloto cobrindo TODAS obras ativas do painel
+    log("Rodando selecionar_piloto.py --todas-ativas...")
+    if not run([PYTHON, "selecionar_piloto.py", "--todas-ativas"], TELETHON):
+        log("FALHOU em selecionar_piloto.py · abortando varredura")
+        sys.exit(1)
+
+    # 2b. Coleta msgs via Painel de Obras (Telegram + WhatsApp · sem Telethon)
+    log("Rodando coletar_painel.py...")
+    if not run([PYTHON, "coletar_painel.py"], TELETHON):
+        log("FALHOU em coletar_painel.py · abortando varredura")
         sys.exit(1)
 
     # 3. Calcula diff

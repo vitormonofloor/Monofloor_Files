@@ -1,9 +1,9 @@
 {
   "geral": "warn",
-  "checked_at": "2026-05-04T17:59:41Z",
+  "checked_at": "2026-05-05T00:17:02Z",
   "contagem": {
-    "ok": 8,
-    "warn": 2,
+    "ok": 7,
+    "warn": 3,
     "crit": 0
   },
   "checks": [
@@ -35,13 +35,14 @@
     },
     {
       "nome": "Lock de execução",
-      "status": "ok",
-      "detalhe": "sem lock pendente"
+      "status": "warn",
+      "detalhe": "varredura há 569s · PID 30716 ainda vivo",
+      "sugestao": "Aguardar ou matar processo"
     },
     {
       "nome": "Backups disponíveis",
       "status": "ok",
-      "detalhe": "12 backups · mais recente 0.2h"
+      "detalhe": "13 backups · mais recente 0.2h"
     },
     {
       "nome": "Drift de quantidade de obras",
