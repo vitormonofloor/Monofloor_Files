@@ -1,23 +1,23 @@
 {
-  "atualizado_em": "2026-05-05T19:57:44Z",
+  "atualizado_em": "2026-05-05T21:07:37Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1041,
     "ativas": 259,
     "finalizados": 782,
-    "em_execucao": 36,
+    "em_execucao": 38,
     "pausados": 5,
-    "m2_em_execucao": 4352
+    "m2_em_execucao": 4453
   },
   "por_status": {
-    "planejamento": 100,
+    "em_execucao": 38,
     "contrato": 10,
     "aguardando_execucao": 46,
-    "em_execucao": 36,
+    "planejamento": 99,
     "finalizado": 547,
     "aguardando_clima": 3,
     "marcas_rolo_cera": 4,
-    "reparo": 22,
+    "reparo": 21,
     "pausado": 5,
     "cancelado": 33,
     "concluido": 235
@@ -35,14 +35,14 @@
       "obras": 24,
       "m2": 3916
     },
-    "funil_total": 149,
+    "funil_total": 148,
     "com_data_firmada": 82,
-    "sem_data_firmada": 67,
+    "sem_data_firmada": 66,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2051,
+    "pending_tasks": 2054,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -3550,6 +3550,7 @@
       "6213aa79",
       "76b4d8a7",
       "7e12a05d",
+      "861a3d98",
       "920dcacc",
       "93d0efc3",
       "9ffabe58",
@@ -3574,7 +3575,7 @@
       "dec2480f",
       "e79c60c1"
     ],
-    "zumbi_n": 40,
+    "zumbi_n": 41,
     "orfas_ids": [
       "0b692354",
       "1231fb6a",
@@ -3617,18 +3618,18 @@
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-04T23:07:12.114000+00:00",
-    "total_fluxo": 200,
-    "com_kira": 128,
+    "total_fluxo": 201,
+    "com_kira": 131,
     "saudavel": 80,
-    "saudavel_pct_no_monitorado": 62.5,
-    "atencao": 48,
-    "sem_kira": 72,
+    "saudavel_pct_no_monitorado": 61.1,
+    "atencao": 51,
+    "sem_kira": 70,
     "clima_dist": {
       "Positivo": 25,
       "Neutro": 56,
-      "Tenso": 53,
+      "Tenso": 56,
       "Crítico": 5,
-      "?": 86
+      "?": 83
     },
     "obras_atencao": [
       {
@@ -4245,6 +4246,27 @@
         "eventos": []
       },
       {
+        "id": "7f45fa66-7d73-417e-ac22-1894e7bfc30d",
+        "cliente": "DANILO HAENNI ZIMERMAN",
+        "consultor": "—",
+        "consultor_full": "",
+        "cidade": "São Paulo",
+        "fase": "CONTRATO",
+        "status": "contrato",
+        "clima": "Tenso",
+        "n_alertas": 0,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 0,
+        "alertas": [],
+        "pendencias": [],
+        "resumo_exec": "## Resumo do Projeto Monofloor\n\n**Estado:** As informações disponíveis na conversa são **insuficientes** para gerar um resumo consistente — a mensagem está truncada e não há conteúdo substantivo além da apresentação inicial da equipe de contratos.\n\n---\n\n**Clima:** 🟡 **Neutro**\n*(apenas saudação formal registrada)*\n\n**Principais Pendências:** ❓ Não identificáveis com os dados fornecidos.\n\n---\n\n> ⚠️ **Recomendação:** Cole o conteúdo completo da conversa para que eu possa gerar uma análise precisa das pendências, prazos e riscos do projeto.",
+        "clima_desc": "",
+        "periodo": "",
+        "tempo_resp": "",
+        "total_msgs": 5,
+        "eventos": []
+      },
+      {
         "id": "72caa099-eb8a-487e-9bf1-602c5341f0ba",
         "cliente": "GUSTAVO GIORDANO COLOMBINI",
         "consultor": "Pedro",
@@ -4343,6 +4365,27 @@
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase de **agendamento e alinhamento inicial**, com execução prevista para iniciar em **15/05** (cor Arábia), visita de aferição confirmada para **15/04** e visita de entrada proposta para **05/05**. A comunicação entre equipe e cliente (Aline) está fluindo, porém com algumas lacunas de informação entre os envolvidos.\n\n---\n\n**🟡 Clima: Neutro**\n\n---\n\n### Principais Pendências:\n- ✅ ~~Confirmação da cor~~ (Arábia — definida)\n- ⏳ **Confirmação da visita de entrada** (05/05 às 14h45 — sem resposta definitiva)\n- ⏳ **Previsão de término** não comunicad",
+        "clima_desc": "",
+        "periodo": "",
+        "tempo_resp": "",
+        "total_msgs": 30,
+        "eventos": []
+      },
+      {
+        "id": "23586b42-a279-42f1-a98e-84ac1a89a20a",
+        "cliente": "MANUELA VILLAS BOAS SOUZA MARTIN",
+        "consultor": "—",
+        "consultor_full": "",
+        "cidade": "",
+        "fase": "REAPLICAÇÃO TOTAL",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 0,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 0,
+        "alertas": [],
+        "pendencias": [],
+        "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto apresenta recorrentes problemas de patologias no piso (incluindo sauna e outros ambientes), com histórico de vistorias, relatórios e negociações sobre garantia, onde apenas **1 dos 5 ambientes** foi aceito para cobertura, gerando insatisfação crescente da cliente.\n\n---\n\n**🌡️ Clima: TENSO**\n\n---\n\n**⚠️ Principais Pendências:**\n\n- Execução do reparo no ambiente aprovado em garantia *(com reagendamentos consecutivos)*\n- Questionamento da cliente sobre impermeabilização não executada corretamente\n- Novas patologias identificadas no piso da sauna aguardando ",
         "clima_desc": "",
         "periodo": "",
         "tempo_resp": "",
@@ -8345,7 +8388,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 17,
+        "dias_desde_resumo": 18,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor - Bela Cintra\n\nO projeto está em andamento com a execução do piso (hard) já realizada, porém enfrenta um imprevisto de vazamento que exigiu reparo e gerou a necessidade de correção no revestimento da parede. A equipe está avaliando o próximo passo considerando o material utilizado (Top Cem) e o tempo de secagem necessário.\n\n---\n\n**🟡 Clima: Neutro/Tenso**\n\n**Principais Pendências:**\n- ✅ ~~Dados e acesso do aplicador Josias~~ *(resolvido)*\n- 🔴 Correção do revestimento da parede afetada pelo vazamento\n- 🔴 Confirmação do prazo de secagem e agendamento do retorno\n- 🔴 ",
@@ -8374,6 +8417,27 @@
         "periodo": "",
         "tempo_resp": "",
         "total_msgs": 0,
+        "eventos": []
+      },
+      {
+        "id": "861a3d98-d181-4631-a943-c3dffb479af4",
+        "cliente": "ADIL CHENAF",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "SÃO PAULO",
+        "fase": "CLIENTE FINALIZADO",
+        "status": "em_execucao",
+        "clima": "Tenso",
+        "n_alertas": 0,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 18,
+        "alertas": [],
+        "pendencias": [],
+        "resumo_exec": "## Resumo do Projeto Monofloor\n\nO cliente reportou problemas de limpeza nas esquadrias com pintura eletrostática, enviando vídeos como evidência, e está aguardando uma solução por parte da equipe. A situação está em fase de agendamento de visita técnica com a prestadora Tais, porém sem data confirmada.\n\n---\n\n**🟡 Clima: Tenso**\n\n**📋 Principais Pendências:**\n- ⏳ Confirmação de data para visita da prestadora Tais\n- 🔍 Análise dos vídeos enviados pelo cliente Adil\n- 📅 Alinhamento de horário entre todas as partes para a visita técnica",
+        "clima_desc": "",
+        "periodo": "",
+        "tempo_resp": "",
+        "total_msgs": 28,
         "eventos": []
       },
       {
@@ -9558,7 +9622,7 @@
       },
       {
         "id": "2498f5be-7dc9-4ecf-be92-a752ac888715",
-        "cliente": "ANDRÉ TREVIZAN VACCARI",
+        "cliente": "VACCARI SERVIÇOS EM T.I. LTDA",
         "consultor": "—",
         "cidade": "Curitiba",
         "fase": "CONTRATO",
@@ -9594,14 +9658,6 @@
         "consultor": "Wesley",
         "cidade": "EXTERNA",
         "fase": "CLIENTE FINALIZADO",
-        "tem_grupo": false
-      },
-      {
-        "id": "7f45fa66-7d73-417e-ac22-1894e7bfc30d",
-        "cliente": "DANILO HAENNI ZIMERMAN",
-        "consultor": "—",
-        "cidade": "São Paulo",
-        "fase": "CONTRATO",
         "tem_grupo": false
       },
       {
@@ -10005,14 +10061,6 @@
         "tem_grupo": false
       },
       {
-        "id": "23586b42-a279-42f1-a98e-84ac1a89a20a",
-        "cliente": "MANUELA VILLAS BOAS SOUZA MARTIN",
-        "consultor": "—",
-        "cidade": "",
-        "fase": "REAPLICAÇÃO TOTAL",
-        "tem_grupo": true
-      },
-      {
         "id": "c302100b-e1b4-4ecc-9ac2-7d7f64467e72",
         "cliente": "ZHAOMING FENG (MUSTAFA)",
         "consultor": "Wesley",
@@ -10304,8 +10352,8 @@
       "mediana": 246,
       "n180": 58,
       "n270": 34,
-      "zumbi": 7,
-      "reparo": 8,
+      "zumbi": 8,
+      "reparo": 7,
       "pausadas": 2
     },
     "wesley": {
