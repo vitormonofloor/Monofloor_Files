@@ -3,6 +3,9 @@
 > **Última atualização:** 2026-05-04 · noite (Caminho A entregue · cobertura 10→190 cards reais)
 > Se você é um agente IA chegando agora · LEIA este arquivo primeiro. Em ~30s você terá contexto suficiente pra trabalhar sem confundir nada.
 
+> 📚 **Pasta-síntese completa:** `_projeto/README.md` (entrada · navega 1→7 pra entender em 5min)
+> Esse RETOMAR é overview rápido · `_projeto/` é a fonte canônica de história, estado, arquitetura, pendências, runbook, aprendizados e inventário.
+
 ## ⚠ ANTES DE TUDO — ler na ordem
 
 1. `personality_qualidade_monofloor.md` (na pasta de memória) — DNA da dupla com 19+ princípios + auto-crítica honesta antes de propor
