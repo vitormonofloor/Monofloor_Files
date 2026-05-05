@@ -377,6 +377,164 @@ Marcela (B®) postou vídeo de aprovação direto no grupo — comportamento inc
 
 ---
 
+## 🗺 Linha do tempo · do ponto de partida à entrega
+
+> Marcos da jornada com duração de cada fase · pra dar dimensão real do "tempo de casa"
+
+```
+═══════════════════════════════════════════════════════════════════
+  PONTO DE PARTIDA · 22/09/2025
+═══════════════════════════════════════════════════════════════════
+```
+
+**22/09/2025** · Contrato assinado · *"🚨 temos que entregar a obra concluída até dia 03/11"*
+→ Prazo original: **42 dias** (22/09 → 03/11)
+
+```
+┌──────────────────────────────────────────────────┐
+│  FASE 1 · PLANEJAMENTO INICIAL                   │
+│  duração: 64 dias                                │
+└──────────────────────────────────────────────────┘
+```
+
+| Δ | Data | Marco |
+|---:|---|---|
+| 0d | 22/09/2025 | Contrato assinado |
+| +3d | 25/09/2025 | VT aferição realizada (Nathan Janjão) |
+| +33d | 28/10/2025 | Re-cronograma · INÍCIO empurrado pra 10/12/2025 |
+| +65d | 26/11/2025 | Luana cobra Nathan as imagens da VT · Caroline desbloqueia |
+
+> *"obra segue nas mesmas condições observadas anteriormente, ainda com intervenções civis em andamento"* — Luana, 23/01/2026
+
+```
+┌──────────────────────────────────────────────────┐
+│  FASE 2 · HIBERNAÇÃO                             │
+│  duração: 98 dias  ← quase 3,5 meses parados     │
+└──────────────────────────────────────────────────┘
+```
+
+| Mês | Atividade |
+|---|---|
+| Dez/2025 | 3 msgs Telegram |
+| Jan/2026 | 6 msgs |
+| Fev/2026 | 4 msgs Telegram + 5 WhatsApp |
+
+Cliente em obra civil · Monofloor aguardando. Prazo original (03/11/2025) **vencido há mais de 3 meses**.
+
+```
+┌──────────────────────────────────────────────────┐
+│  FASE 3 · DESPERTAR E RE-PLANEJAMENTO            │
+│  duração: 39 dias                                │
+└──────────────────────────────────────────────────┘
+```
+
+| Δ desde contrato | Data | Marco |
+|---:|---|---|
+| +163d | 04/03/2026 | *"🚨 Aguardando o novo cronograma para alinharmos a nossa entrada"* — Luana |
+| +172d | 13/03/2026 | Novo cronograma · INÍCIO **30/03/2026** · ainda sem aplicador |
+| +172d | 13/03/2026 | KIRA registra: *"Uso de autonivelante desaconselhado · risco de patologias"* |
+| +178d | 19/03/2026 | VT entrada realizada (Nathan, 11h) |
+| +175d | 15/03/2026 | Sistema dispara: **[PLANEJAMENTO] RISCO ALTO** · 13d até execução, projetos não fechados |
+
+```
+┌──────────────────────────────────────────────────┐
+│  FASE 4 · PRÉ-EXECUÇÃO                           │
+│  duração: 24 dias                                │
+└──────────────────────────────────────────────────┘
+```
+
+| Δ desde contrato | Data | Marco |
+|---:|---|---|
+| +190d | 31/03/2026 | Áudio: *"Bom dia pessoal, estou aqui na sala, tem muito pó no piso..."* |
+| +192d | 02/04/2026 | Wesley: *"Entrada confirmada pelo cliente"* |
+| +202d | 12/04/2026 22h28 | Caroline posta no grupo · começo da mobilização |
+| +202d | 12/04/2026 22h52 | Rodrigo: *"quem vai fazer essa obra?"* |
+| +202d | 12/04/2026 22h57 | Michael: *"Paulo e Weligton"* · equipe **definida em 30 min** |
+
+```
+┌──────────────────────────────────────────────────┐
+│  FASE 5 · EXECUÇÃO REAL                          │
+│  duração: 4 dias                                 │
+└──────────────────────────────────────────────────┘
+```
+
+### Dia 1 · 13/04/2026 (segunda)
+
+| Hora | Marco |
+|---|---|
+| 11h20 | Wesley: *"Temos equipe em obra?"* |
+| 12h42 | Isabella entrega as chaves · *"Pessoal local da chave"* |
+| 12h44 | Paulo: *"Ok achamos"* |
+| 14h20 | Trinca/fissura detectada · cliente decide tela total |
+| 14h33 | Michael: *"só tenho tela para trinca pontual"* → vira ocorrência KIRA |
+| 16h03 | Michael pede massa hard · Rodrigo nega · sugere Teron |
+| 16h33 | Wesley: *"Cliente já aprovou o orçamento da tela"* |
+| 20h42 | Diário do dia · primer + filamento + tela aplicados |
+| 20h54 | Rodrigo (áudio): *"vai ser provavelmente o piso de Stelion mais rápido que a gente já fez"* |
+
+### Dia 2 · 14/04/2026 (terça)
+
+| Hora | Marco |
+|---|---|
+| 11h12 | Lixamento do Teron + aplicação da 1ª camada de Stelion |
+| 16h46 | Diário: **7 kits de Stelion 3G consumidos** |
+| 19h27 | Rodrigo: *"Ficou 100% o Teron?"* |
+| 19h30 | Rodrigo: *"Consumo estimado de 9 baldes — fez em 7"* (economia 22%) |
+| 19h41 | Michael: *"Sobrou 3 Teron fechado"* |
+| 23h03 | KIRA atualiza tag: *"Fotos enviadas reação positiva"* |
+
+### Dia 3 · 15/04/2026 (quarta)
+
+| Hora | Marco |
+|---|---|
+| 11h11 | Aplicação da 2ª camada de Stelion |
+
+### Dia 4 · 16/04/2026 (quinta) · ENTREGA
+
+| Hora | Marco |
+|---|---|
+| 10h55 | Foto da equipe na obra · Michael, Weligton, Paulo |
+| 11h57 | *"Programação aplicação verniz lumina"* |
+| 12h00 | Ocorrência: *"Cliente sem resposta para aprovação"* (severidade alta) |
+| 13h23 | Cliente Marcela (B®): *"vídeo de aprovação da obra"* |
+| 13h24 | Cliente: ***"Obra Aprovada"*** |
+| 15h27 | Michael: ***"Verniz finalizado · Obra finalizada"*** |
+| 16h28 | Michael: sobra de material · 1 kit Lumina ficou no CT Morumbi |
+| 23h03 | KIRA: ***"Piso aprovado finalizações andamento"*** |
+
+```
+═══════════════════════════════════════════════════════════════════
+  ENTREGA · 16/04/2026
+  ─────────────────────────────────────────────────────────────────
+  Tempo total contrato → entrega: 207 dias (~6 meses e 25 dias)
+  Tempo de execução real:           4 dias
+  Tempo "morto" entre contrato e execução: 203 dias (98%)
+═══════════════════════════════════════════════════════════════════
+```
+
+### Visão gráfica · onde foi gasto o tempo
+
+```
+PLANEJAMENTO    ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  64d (31%)
+HIBERNAÇÃO      ░░░░░░░░░░░░██████████████████░░░░░░░░░░░░░░░  98d (47%)
+DESPERTAR       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██████████░░░░░  39d (19%)
+PRÉ-EXECUÇÃO    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██░░░  24d ( 3%)
+EXECUÇÃO        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█░  4d (2%)
+                ─────────────────────────────────────────────
+                                                              207d
+```
+
+### Aprendizado da linha do tempo
+
+- **47%** do tempo foi **hibernação** · cliente em obra civil
+- **31%** em planejamento inicial (set-nov 2025) · prazo original (42 dias) era irrealista
+- **5%** entre despertar e mobilização (39d + 24d) · re-planejamento + alinhamento
+- **2%** em execução real (4 dias) · com mudança de escopo no dia + economia de 22% no consumo
+
+> Esse padrão "203 dias parado · 4 dias executando" é mais comum do que parece. Pra gestão, o KPI relevante não é só *tempo total*, mas **tempo de retomada** (despertar → execução = 39d) e **tempo de execução real** (4d). O resto é cliente.
+
+---
+
 ## 🎁 Próximos passos sugeridos
 
 1. **Validar fidelidade** com Vitor (Quem leu a obra de perto sabe se algo soou falso?)
