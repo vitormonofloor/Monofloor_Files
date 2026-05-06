@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Orion · Jornada do Projeto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f0ebe3;
+    --surface: #faf6ee;
+    --surface-2: #f5efe3;
+    --ink: #2a2520;
+    --ink-soft: #6b6156;
+    --ink-faint: #a89e92;
+    --line: #d6cdbd;
+    --gold: #b8884a;
+    --gold-soft: #d4a548;
+
+    /* Cores das fases */
+    --fase-planejamento: #b9d3d8;
+    --fase-hibernacao: #d6cdbd;
+    --fase-despertar: #f0c878;
+    --fase-pre-execucao: #e8a878;
+    --fase-execucao: #6ba87a;
+    --fase-pos: #8aa8c8;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.04em; }
+  .uppercase { text-transform: uppercase; letter-spacing: 0.08em; font-size: 10px; }
+
+  /* HEADER */
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .top-back {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .top-back:hover { background: var(--bg); color: var(--ink); }
+  .top-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .top-title small {
+    color: var(--ink-soft);
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  .top-stamp {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* CONTAINER */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* CARDS DE OBRAS (topo) */
+  .obras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .obra-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .obra-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  .obra-card.selected {
+    border-color: var(--gold);
+    background: var(--surface-2);
+    box-shadow: 0 4px 14px rgba(184,136,74,0.12);
+  }
+  .obra-card.selected::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 8px 8px 0 0;
+  }
+  .obra-cli {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .obra-end {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .obra-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 12px;
+  }
+  .obra-stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .obra-stat-label {
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .obra-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .obra-meta strong { color: var(--ink); font-weight: 600; }
+
+  /* DETALHES (embaixo · após click) */
+  #detalhes {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  #detalhes.visivel { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .detalhes-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .detalhes-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .detalhes-header .obra-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+
+  /* TIMELINE SVG */
+  .timeline-wrap {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 32px;
+    overflow-x: auto;
+  }
+  .timeline-svg {
+    display: block;
+    min-width: 1100px;
+  }
+  .timeline-tooltip {
+    position: fixed;
+    background: var(--ink);
+    color: var(--surface);
+    font-size: 11px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 200;
+    max-width: 280px;
+    line-height: 1.45;
+  }
+  .timeline-tooltip.visivel { opacity: 1; }
+
+  /* SEÇÕES DE DETALHE */
+  .secoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .secoes .full {
+    grid-column: 1 / -1;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px;
+  }
+
+  .tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .tabela th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 10px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabela td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--surface-2);
+    color: var(--ink);
+  }
+  .tabela tr:last-child td { border-bottom: none; }
+  .tabela td.num { font-family: 'JetBrains Mono', monospace; }
+
+  .lista-eventos {
+    list-style: none;
+  }
+  .lista-eventos li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--surface-2);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  .lista-eventos li:last-child { border-bottom: none; }
+  .lista-eventos .data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .lista-eventos .autor {
+    color: var(--ink-soft);
+    font-size: 11.5px;
+    font-style: italic;
+    margin-right: 6px;
+  }
+  .lista-eventos .trecho {
+    color: var(--ink);
+    display: block;
+    margin-top: 3px;
+    padding-left: 8px;
+    border-left: 2px solid var(--line);
+  }
+
+  .severidade {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .severidade.alta { background: #f0b9b9; color: #6b1a1a; }
+  .severidade.critica { background: #c45a5a; color: #fff; }
+  .severidade.media { background: #f0d6a8; color: #6b4a18; }
+  .severidade.baixa { background: var(--surface-2); color: var(--ink-soft); }
+
+  .padroes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .padrao-pill {
+    padding: 8px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ink);
+  }
+  .padrao-pill code {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  .vazio {
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 12px;
+    padding: 8px 0;
+  }
+
+  .tag-tela-total {
+    display: inline-block;
+    background: #c45a5a;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 6px;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+
+  footer {
+    margin-top: 60px;
+    padding: 24px 32px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: 11px;
+    text-align: center;
+  }
+
+  @media (max-width: 800px) {
+    main { padding: 20px; }
+    .secoes { grid-template-columns: 1fr; }
+    .obra-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .obra-stat-num { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="index.html" class="top-back">← Lab Orion</a>
+  <div class="top-title">Jornada do Projeto<small>análise retrospectiva</small></div>
+  <div class="top-stamp" id="stamp">—</div>
+</header>
+
+<main>
+  <div class="section-title">Obras finalizadas · selecione pra abrir a jornada</div>
+  <div class="obras-grid" id="obras-grid"></div>
+
+  <div id="detalhes">
+    <div class="detalhes-header">
+      <h2 id="det-cliente">—</h2>
+      <span class="obra-id" id="det-id">—</span>
+    </div>
+
+    <div class="section-title">Linha do tempo</div>
+    <div class="timeline-wrap">
+      <svg class="timeline-svg" id="timeline" viewBox="0 0 1100 220" preserveAspectRatio="xMinYMin meet"></svg>
+    </div>
+
+    <div class="secoes">
+      <div class="card">
+        <div class="section-title">Equipe Monofloor</div>
+        <table class="tabela" id="tab-monofloor"></table>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Equipe de campo</div>
+        <table class="tabela" id="tab-campo"></table>
+      </div>
+
+      <div class="card full">
+        <div class="section-title">Atores no Telegram (top 10 por volume)</div>
+        <table class="tabela" id="tab-senders"></table>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Marcos detectados nas mensagens</div>
+        <ul class="lista-eventos" id="lista-marcos"></ul>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Material</div>
+        <table class="tabela" id="tab-materiais"></table>
+        <div style="margin-top:14px"><strong style="font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.08em">Solicitações em obra</strong></div>
+        <ul class="lista-eventos" id="lista-solic"></ul>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Ocorrências formais</div>
+        <ul class="lista-eventos" id="lista-ocorr"></ul>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Sinais nas mensagens</div>
+        <ul class="lista-eventos" id="lista-sinais"></ul>
+      </div>
+
+      <div class="card full">
+        <div class="section-title">Padrões observados</div>
+        <div class="padroes-grid" id="padroes"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Lab Orion · Jornada do Projeto · análise retrospectiva determinística · TELEGRAM-only
+</footer>
+
+<div class="timeline-tooltip" id="tooltip"></div>
+
+<script>
+let DADOS = null;
+let OBRA_SEL = null;
+
+const COR_FASE = {
+  'Planejamento inicial': 'var(--fase-planejamento)',
+  'Planejamento + pré-execução': 'var(--fase-planejamento)',
+  'Hibernação': 'var(--fase-hibernacao)',
+  'Atividade retomada': 'var(--fase-despertar)',
+  'Despertar e pré-execução': 'var(--fase-pre-execucao)',
+  'Execução': 'var(--fase-execucao)',
+  'Pós-execução': 'var(--fase-pos)',
+};
+
+function corFase(nome){
+  // match parcial
+  for (const k of Object.keys(COR_FASE)){
+    if (nome.startsWith(k)) return COR_FASE[k];
+  }
+  return '#ccc';
+}
+
+function fmtData(s){
+  if (!s) return '—';
+  return s.slice(8,10) + '/' + s.slice(5,7) + '/' + s.slice(2,4);
+}
+
+function fmtDataLong(s){
+  if (!s) return '—';
+  const m = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  return parseInt(s.slice(8,10)) + ' ' + m[parseInt(s.slice(5,7))-1] + ' ' + s.slice(0,4);
+}
+
+function esc(s){ return String(s||'').replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function carregar(){
+  const r = await fetch('dados/jornadas.json?t=' + Date.now(), {cache:'no-store'});
+  DADOS = await r.json();
+  document.getElementById('stamp').textContent = 'gerado ' + fmtData(DADOS.gerado_em.slice(0,10)) + ' · ' + DADOS.gerado_em.slice(11,16);
+  renderObras();
+}
+
+function renderObras(){
+  const grid = document.getElementById('obras-grid');
+  grid.innerHTML = DADOS.obras.map((o, i) => `
+    <div class="obra-card" data-idx="${i}">
+      <div class="obra-cli">${esc(o.cliente)}</div>
+      <div class="obra-end">${esc((o.endereco||'').split('\n')[0])}</div>
+      <div class="obra-stats">
+        <div>
+          <div class="obra-stat-num">${o.tempo_total_dias ?? '—'}<span style="font-size:11px;color:var(--ink-faint);margin-left:3px">d</span></div>
+          <div class="obra-stat-label">Total</div>
+        </div>
+        <div>
+          <div class="obra-stat-num">${o.tempo_execucao_dias ?? '—'}<span style="font-size:11px;color:var(--ink-faint);margin-left:3px">d</span></div>
+          <div class="obra-stat-label">Execução</div>
+        </div>
+        <div>
+          <div class="obra-stat-num">${o.tempo_hibernacao_dias ?? 0}<span style="font-size:11px;color:var(--ink-faint);margin-left:3px">d</span></div>
+          <div class="obra-stat-label">Hibernação</div>
+        </div>
+      </div>
+      <div class="obra-meta">
+        <span><strong>${esc((o.produtos||[]).join(' + ') || '—')}</strong></span>
+        <span>· ${esc((o.cores||[]).join(', ') || '—')}</span>
+        <span>· <strong>${o.metragem ?? '—'}</strong> m²</span>
+        <span>· ${o.n_msgs_telegram_total} msgs Telegram</span>
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.obra-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.dataset.idx);
+      OBRA_SEL = DADOS.obras[idx];
+      grid.querySelectorAll('.obra-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      renderDetalhes();
+    });
+  });
+}
+
+function renderTimeline(j){
+  const svg = document.getElementById('timeline');
+  svg.innerHTML = '';
+
+  const fases = j.fases || [];
+  if (!fases.length) return;
+
+  const totalDias = fases.reduce((sum, f) => sum + Math.max(1, f.duracao_dias), 0);
+
+  const W = 1080;
+  const H = 220;
+  const Y_BARRA = 110;
+  const ALTURA_BARRA = 50;
+  const X0 = 10;
+  const X1 = W - 10;
+  const LARG = X1 - X0;
+
+  // Barras das fases (proporção pela duração)
+  let xCursor = X0;
+  fases.forEach((f, i) => {
+    const dias = Math.max(1, f.duracao_dias);
+    const w = (dias / totalDias) * LARG;
+    const cor = corFase(f.nome);
+
+    // Retângulo da fase
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', xCursor);
+    rect.setAttribute('y', Y_BARRA);
+    rect.setAttribute('width', w);
+    rect.setAttribute('height', ALTURA_BARRA);
+    rect.setAttribute('fill', cor);
+    rect.setAttribute('stroke', 'rgba(0,0,0,0.08)');
+    rect.setAttribute('stroke-width', '1');
+    rect.style.cursor = 'help';
+    rect.addEventListener('mouseenter', (e) => mostrarTooltip(e, `<strong>${f.nome}</strong><br>${fmtData(f.inicio)} → ${fmtData(f.fim)}<br>${dias} dias · ${f.n_msgs} msgs`));
+    rect.addEventListener('mouseleave', esconderTooltip);
+    rect.addEventListener('mousemove', moverTooltip);
+    svg.appendChild(rect);
+
+    // Label da fase (só se a barra for grande o suficiente)
+    if (w > 60) {
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', xCursor + w/2);
+      txt.setAttribute('y', Y_BARRA + ALTURA_BARRA/2 + 4);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('font-family', "'Plus Jakarta Sans', sans-serif");
+      txt.setAttribute('font-size', '11');
+      txt.setAttribute('font-weight', '600');
+      txt.setAttribute('fill', '#2a2520');
+      txt.textContent = f.nome.replace(' inicial', '').replace('Atividade retomada', 'Retomada');
+      svg.appendChild(txt);
+
+      // Duração abaixo
+      const txt2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt2.setAttribute('x', xCursor + w/2);
+      txt2.setAttribute('y', Y_BARRA + ALTURA_BARRA + 16);
+      txt2.setAttribute('text-anchor', 'middle');
+      txt2.setAttribute('font-family', "'JetBrains Mono', monospace");
+      txt2.setAttribute('font-size', '10');
+      txt2.setAttribute('fill', '#6b6156');
+      txt2.textContent = `${dias}d · ${f.n_msgs}m`;
+      svg.appendChild(txt2);
+    }
+
+    // Data início (acima da fase) · só pra primeira e quando tem mudança grande
+    if (i === 0 || w > 40) {
+      const dt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      dt.setAttribute('x', xCursor);
+      dt.setAttribute('y', Y_BARRA - 6);
+      dt.setAttribute('text-anchor', 'start');
+      dt.setAttribute('font-family', "'JetBrains Mono', monospace");
+      dt.setAttribute('font-size', '9.5');
+      dt.setAttribute('fill', '#a89e92');
+      dt.textContent = fmtData(f.inicio);
+      svg.appendChild(dt);
+    }
+
+    xCursor += w;
+  });
+
+  // Data final
+  const dtFim = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  dtFim.setAttribute('x', xCursor);
+  dtFim.setAttribute('y', Y_BARRA - 6);
+  dtFim.setAttribute('text-anchor', 'end');
+  dtFim.setAttribute('font-family', "'JetBrains Mono', monospace");
+  dtFim.setAttribute('font-size', '9.5');
+  dtFim.setAttribute('fill', '#a89e92');
+  dtFim.textContent = fmtData(fases[fases.length-1].fim);
+  svg.appendChild(dtFim);
+
+  // MARCOS pontuais como pinos verticais sobre a barra
+  const marcos = j.marcos || [];
+  if (marcos.length){
+    const dataInicial = new Date(fases[0].inicio);
+    const dataFinal = new Date(fases[fases.length-1].fim);
+    const totalMs = dataFinal - dataInicial;
+
+    marcos.forEach((m, idx) => {
+      const dataMarco = new Date(m.data);
+      if (isNaN(dataMarco)) return;
+      const fracao = (dataMarco - dataInicial) / totalMs;
+      const x = X0 + fracao * LARG;
+      const yPin = idx % 2 === 0 ? 50 : 70;
+
+      // Linha vertical
+      const linha = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      linha.setAttribute('x1', x);
+      linha.setAttribute('y1', yPin);
+      linha.setAttribute('x2', x);
+      linha.setAttribute('y2', Y_BARRA);
+      linha.setAttribute('stroke', '#b8884a');
+      linha.setAttribute('stroke-width', '1');
+      svg.appendChild(linha);
+
+      // Bolinha
+      const bola = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      bola.setAttribute('cx', x);
+      bola.setAttribute('cy', yPin);
+      bola.setAttribute('r', '4');
+      bola.setAttribute('fill', '#b8884a');
+      bola.style.cursor = 'help';
+      bola.addEventListener('mouseenter', (e) => mostrarTooltip(e, `<strong>${m.tipo}</strong><br>${fmtDataLong(m.data)}<br><em>${esc(m.autor)}</em><br>"${esc(m.trecho).slice(0,180)}"`));
+      bola.addEventListener('mouseleave', esconderTooltip);
+      bola.addEventListener('mousemove', moverTooltip);
+      svg.appendChild(bola);
+
+      // Label do marco
+      const labelMarco = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      labelMarco.setAttribute('x', x);
+      labelMarco.setAttribute('y', yPin - 8);
+      labelMarco.setAttribute('text-anchor', 'middle');
+      labelMarco.setAttribute('font-family', "'Plus Jakarta Sans', sans-serif");
+      labelMarco.setAttribute('font-size', '10');
+      labelMarco.setAttribute('font-weight', '600');
+      labelMarco.setAttribute('fill', '#2a2520');
+      labelMarco.textContent = m.tipo.replace(/_/g, ' ');
+      svg.appendChild(labelMarco);
+
+      // Data do marco
+      const dtMarco = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      dtMarco.setAttribute('x', x);
+      dtMarco.setAttribute('y', yPin - 21);
+      dtMarco.setAttribute('text-anchor', 'middle');
+      dtMarco.setAttribute('font-family', "'JetBrains Mono', monospace");
+      dtMarco.setAttribute('font-size', '9');
+      dtMarco.setAttribute('fill', '#6b6156');
+      dtMarco.textContent = fmtData(m.data);
+      svg.appendChild(dtMarco);
+    });
+  }
+
+  // Eixo (linha base sutil)
+  const eixo = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  eixo.setAttribute('x1', X0);
+  eixo.setAttribute('y1', Y_BARRA + ALTURA_BARRA);
+  eixo.setAttribute('x2', X1);
+  eixo.setAttribute('y2', Y_BARRA + ALTURA_BARRA);
+  eixo.setAttribute('stroke', '#d6cdbd');
+  eixo.setAttribute('stroke-width', '1');
+  svg.appendChild(eixo);
+}
+
+function renderDetalhes(){
+  const j = OBRA_SEL;
+  document.getElementById('det-cliente').textContent = j.cliente;
+  document.getElementById('det-id').textContent = j.obra_id.slice(0,8);
+  document.getElementById('detalhes').classList.add('visivel');
+
+  // Timeline
+  renderTimeline(j);
+
+  // Equipe Monofloor
+  const m = j.equipe.monofloor;
+  document.getElementById('tab-monofloor').innerHTML = `
+    <thead><tr><th>Função</th><th>Pessoa</th></tr></thead>
+    <tbody>
+      <tr><td>Vendedor(a)</td><td>${esc(m.vendedor || '—')}</td></tr>
+      <tr><td>Atendimento</td><td>${esc(m.atendimento || '—')}</td></tr>
+      <tr><td>Operações</td><td>${esc(m.operacoes || '—')}</td></tr>
+      <tr><td>Consultor formal</td><td>${esc(m.consultor || '—')}</td></tr>
+    </tbody>`;
+
+  // Equipe de campo
+  const prest = j.equipe.prestadores_oficiais || [];
+  document.getElementById('tab-campo').innerHTML = prest.length
+    ? `<thead><tr><th>Nome</th><th>Função</th></tr></thead>
+       <tbody>${prest.map(p => `<tr><td>${esc(p.nome)}</td><td><span class="mono uppercase">${esc(p.funcao)}</span></td></tr>`).join('')}</tbody>`
+    : '<tbody><tr><td colspan="2" class="vazio">Equipe não cadastrada formalmente</td></tr></tbody>';
+
+  // Senders Telegram
+  const senders = (j.equipe.senders_telegram || []).slice(0, 10);
+  document.getElementById('tab-senders').innerHTML = `
+    <thead><tr><th>Nome</th><th class="mono" style="text-align:right">Msgs</th><th>1ª aparição</th><th>Última</th></tr></thead>
+    <tbody>${senders.map(s => `
+      <tr>
+        <td>${esc(s.nome)}</td>
+        <td class="num" style="text-align:right">${s.n_msgs}</td>
+        <td class="num">${(s.primeira_msg||'').slice(0,10)}</td>
+        <td class="num">${(s.ultima_msg||'').slice(0,10)}</td>
+      </tr>
+    `).join('')}</tbody>`;
+
+  // Marcos
+  const marcos = j.marcos || [];
+  document.getElementById('lista-marcos').innerHTML = marcos.length
+    ? marcos.map(mk => `<li>
+        <span class="data">${fmtData(mk.data)}</span>
+        <strong>${esc(mk.tipo.replace(/_/g, ' '))}</strong>
+        <span class="autor">· ${esc(mk.autor)}</span>
+        <span class="trecho">"${esc(mk.trecho).slice(0,180)}"</span>
+      </li>`).join('')
+    : '<li class="vazio">(sem marcos textuais detectados)</li>';
+
+  // Materiais
+  const mat = j.materiais || {};
+  document.getElementById('tab-materiais').innerHTML = `
+    <tbody>
+      <tr><td>Total m²</td><td class="num">${mat.total_m2 ?? '—'}</td></tr>
+      <tr><td>STELION m²</td><td class="num">${mat.stelion_m2 ?? '—'}</td></tr>
+      <tr><td>LILIT m²</td><td class="num">${mat.lilit_m2 ?? '—'}</td></tr>
+      <tr><td>Ambientes</td><td class="num">${mat.ambientes ?? '—'}</td></tr>
+      <tr><td>Itens (linhas)</td><td class="num">${mat.n_items ?? '—'}</td></tr>
+      ${mat.n_reaplicacao ? `<tr><td>Itens em REAPLICAÇÃO</td><td class="num">${mat.n_reaplicacao}</td></tr>` : ''}
+      <tr><td>Produtos</td><td>${esc((mat.produtos||[]).join(', ') || '—')}</td></tr>
+      <tr><td>Cores</td><td>${esc((mat.cores||[]).join(', ') || '—')}</td></tr>
+    </tbody>`;
+
+  // Solicitações
+  const solic = j.solicitacoes_material || [];
+  document.getElementById('lista-solic').innerHTML = solic.length
+    ? solic.slice(0, 10).map(s => `<li>
+        <span class="data">${fmtData(s.data)}</span>
+        <span class="autor">${esc(s.autor)}</span>
+        ${s.tela_total ? '<span class="tag-tela-total">TELA TOTAL</span>' : ''}
+        <span class="trecho">"${esc(s.trecho).slice(0,160)}"</span>
+      </li>`).join('')
+    : '<li class="vazio">(nenhuma solicitação detectada)</li>';
+
+  // Ocorrências
+  const ocorr = (j.friccao||{}).ocorrencias_formais || [];
+  document.getElementById('lista-ocorr').innerHTML = ocorr.length
+    ? ocorr.map(o => `<li>
+        <span class="data">${fmtData(o.data)}</span>
+        <span class="severidade ${o.severidade}">${esc(o.severidade||'?')}</span>
+        <strong style="margin-left:6px">${esc(o.tipo||'')}</strong>
+        <span class="trecho">${esc(o.titulo||'')}</span>
+      </li>`).join('')
+    : '<li class="vazio">(sem ocorrências formais)</li>';
+
+  // Sinais
+  const sinais = (j.friccao||{}).sinais_msg_telegram || [];
+  document.getElementById('lista-sinais').innerHTML = sinais.length
+    ? sinais.slice(0, 8).map(s => `<li>
+        <span class="data">${fmtData(s.data)}</span>
+        <span class="autor">${esc(s.autor)}</span>
+        <span class="trecho">"${esc(s.trecho).slice(0,160)}"</span>
+      </li>`).join('')
+    : '<li class="vazio">(sem sinais textuais)</li>';
+
+  // Padrões
+  const pad = j.padroes || [];
+  document.getElementById('padroes').innerHTML = pad.length
+    ? pad.map(p => {
+        const partes = p.split(' · ');
+        return `<div class="padrao-pill"><code>${esc(partes[0])}</code>${partes.slice(1).join(' · ')}</div>`;
+      }).join('')
+    : '<div class="vazio">(nenhum padrão automático detectado)</div>';
+
+  // Scroll suave
+  document.getElementById('detalhes').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Tooltip global
+function mostrarTooltip(e, html){
+  const tt = document.getElementById('tooltip');
+  tt.innerHTML = html;
+  tt.classList.add('visivel');
+  moverTooltip(e);
+}
+function esconderTooltip(){
+  document.getElementById('tooltip').classList.remove('visivel');
+}
+function moverTooltip(e){
+  const tt = document.getElementById('tooltip');
+  let x = e.clientX + 14;
+  let y = e.clientY + 14;
+  const rect = tt.getBoundingClientRect();
+  if (x + rect.width > window.innerWidth) x = e.clientX - rect.width - 14;
+  if (y + rect.height > window.innerHeight) y = e.clientY - rect.height - 14;
+  tt.style.left = x + 'px';
+  tt.style.top = y + 'px';
+}
+
+carregar();
+</script>
+
+</body>
+</html>

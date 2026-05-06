@@ -47,6 +47,9 @@
     /* Botão refresh · atualizar dados do painel */
     .refresh-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e0d8cc;color:#8a7e72;font-size:14px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
     .refresh-btn:hover{background:#f8f3ea;border-color:#b8a080;color:#3a3530;transform:rotate(90deg)}
+    /* Botão Jornada · entrada pra análise retrospectiva */
+    .jornada-btn{display:inline-flex;align-items:center;height:32px;padding:0 14px;border-radius:16px;background:#fdfaf4;border:1px solid #d8c8a8;color:#7a5a18;font-size:11.5px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s;flex-shrink:0}
+    .jornada-btn:hover{background:#b8884a;border-color:#b8884a;color:#fff;transform:translateY(-1px)}
     .refresh-btn.copiado{background:#3d8a5a;border-color:#3d8a5a;color:#fff}
     .refresh-btn.copiado:hover{transform:none}
 
@@ -748,6 +751,7 @@
         <span class="destaque" id="header-stamp">—</span> · varredura automática 12h e 18h
         <span class="dados-age fresh" id="dados-age" title="Idade dos dados · verde &lt;30min · amarelo 30-120min · vermelho &gt;120min">— min</span>
       </div>
+      <a href="jornada.html" class="jornada-btn" title="Jornada do Projeto · análise retrospectiva das obras finalizadas" aria-label="Jornada do Projeto">Jornada</a>
       <button class="refresh-btn" id="refresh-btn" title="Atualizar dados do painel · refetch + pipeline" aria-label="Atualizar dados">↻</button>
       <button class="help-btn" id="help-btn" title="Como funciona o Lab Orion" aria-label="Como funciona">?</button>
     </div>

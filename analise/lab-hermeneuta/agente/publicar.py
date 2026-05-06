@@ -27,7 +27,9 @@ PUB_REPO = Path("C:/Users/vitor/lab-hermeneuta-pub")  # repo separado · privado
 
 ARQUIVOS = [
     ("index.html", "public/index.html"),
+    ("jornada.html", "public/jornada.html"),
     ("dados/discordancias-v3.json", "public/dados/discordancias-v3.json"),
+    ("dados/jornadas.json", "public/dados/jornadas.json"),
     ("dados/historico-kpis.json", "public/dados/historico-kpis.json"),
     ("dados/status.json", "public/dados/status.json"),
 ]
