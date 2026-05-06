@@ -128,12 +128,53 @@ def diff_dias(d1, d2):
 
 PAD_CONTRATO = re.compile(r"\b(contrato\s+assinado|contrato\s+ok)\b", re.IGNORECASE)
 PAD_VT_AGENDADA = re.compile(r"\bvt\s+(de\s+)?(aferi[çc][aã]o|entrada)\s+agendada\b", re.IGNORECASE)
+# vt_entrada_realizada · MAIS específica · prioridade na detecção
+PAD_VT_ENTRADA_REALIZADA = re.compile(
+    r"\b("
+    r"vt\s+(de\s+)?entrada\s+(realizada|feita|ok|conclu[ií]da)"
+    r"|visita\s+de\s+entrada\s+realizada"
+    r")\b",
+    re.IGNORECASE,
+)
+# vt_realizada genérica/aferição (qualidade/aferição/sem especificar)
 PAD_VT_REALIZADA = re.compile(
     r"\b("
-    r"vt\s+(de\s+)?(aferi[çc][aã]o|entrada)\s+(realizada|feita|ok|conclu[ií]da)"
+    r"vt\s+(de\s+)?aferi[çc][aã]o\s+(realizada|feita|ok|conclu[ií]da)"
     r"|vt\s+ok"
-    r"|visita\s+(de\s+(qualidade|aferi[çc][aã]o|entrada)\s+)?realizada"
+    r"|visita\s+(de\s+(qualidade|aferi[çc][aã]o)\s+)?realizada"
     r"|visita\s+t[eé]cnica\s+realizada"
+    r")\b",
+    re.IGNORECASE,
+)
+# Reprovação / retorno · linguagem REAL do time Monofloor (calibrada com KRYSTAL/GURGEL)
+PAD_REPROVACAO_RETORNO = re.compile(
+    r"\b("
+    r"cliente\s+(reprov\w+|n[ãa]o\s+aprov\w+|recus\w+)"
+    r"|reprov\w+\s+(da\s+)?obra|obra\s+reprov\w+"
+    r"|necessidade\s+de\s+(retorno|reparo|reaplica[çc][aã]o)"
+    r"|marcas?\s+(de\s+)?(rolo|cera)"
+    r"|marc(a|ou)\w*\s+(o\s+)?piso"
+    r"|piso\s+(marcad[ao]|com\s+marca)"
+    r"|seguir\s+com\s+(a\s+)?reaplica[çc][aã]o"
+    r"|reaplica[çc][aã]o\s+(necess[áa]ria|pendente|solicitada|das?\s+|dos?\s+)"
+    r"|reaplicar"
+    r"|reparo\s+(necess[áa]rio|solicitado|pendente)"
+    r"|in[íi]cio\s+de\s+reparo"
+    r"|reparos?\s+e\s+ajustes\s+(finalizad|conclu)"
+    r"|retorno\s+(em\s+obra|necess[áa]rio|para\s+reparo)"
+    r"|refazer\s+(a|o|essa|esse)\s+(parede|piso|paredão|área)"
+    r")\b",
+    re.IGNORECASE,
+)
+# Amostra solicitada · antecede cor_aprovada · gargalo de cor (CORES pipe)
+PAD_AMOSTRA_SOLICITADA = re.compile(
+    r"\b("
+    r"solicit\w+\s+(de\s+)?amostra"
+    r"|amostra\s+(solicitada|pendente|enviada|recebida|chegou)"
+    r"|(envia|manda|enviar|mandar)\s+(uma\s+|outra\s+|nova\s+)?amostra"
+    r"|preciso\s+de\s+amostra"
+    r"|aguardando\s+amostra"
+    r"|nova\s+amostra"
     r")\b",
     re.IGNORECASE,
 )
@@ -179,6 +220,7 @@ PAD_PROBLEMA = re.compile(r"\b(trinca|fissura|rachadura|infiltrac[aã]o|patolog|
 # Marcos técnicos de execução (dito por aplicadores no Telegram)
 # Ordem importa · padrões mais específicos primeiro pra evitar falso positivo
 MARCOS_EXECUCAO = [
+    ("visita_durante_obra", re.compile(r"\b(cliente\s+(em\s+obra|visitou|esteve\s+em\s+obra|chegou\s+em\s+obra)|visita\s+do\s+cliente|visita\s+(t[eé]cnica\s+)?durante\s+(a\s+)?obra|visita\s+de\s+qualidade|vt\s+de\s+qualidade|inspe[çc][aã]o\s+(em\s+obra|de\s+qualidade)|t[eé]cnico\s+em\s+obra\s+hoje|visita\s+agendada\s+com\s+(os\s+)?respons[áa]veis)\b", re.IGNORECASE)),
     ("verniz_finalizado",  re.compile(r"\b(verniz\s+finaliz|verniz\s+aplicad|finaliza[çc][aã]o\s+do\s+verniz)", re.IGNORECASE)),
     ("obra_finalizada",    re.compile(r"\b(obra\s+finaliz|piso\s+finaliz|piso\s+conclu)", re.IGNORECASE)),
     ("verniz_iniciado",    re.compile(r"\b(programa[çc][aã]o\s+aplica[çc][aã]o\s+verniz|aplica[çc][aã]o\s+(de\s+)?verniz|aplicando\s+verniz|verniz\s+lumina)", re.IGNORECASE)),
@@ -197,22 +239,23 @@ MARCOS_EXECUCAO = [
 ]
 
 LABELS_EXECUCAO = {
-    "inicio_dia":        "Início do dia",
-    "cobranca_status":   "Cobrança de status",
-    "preparacao":        "Preparação",
-    "aplicacao_primer":  "Primer aplicado",
-    "aplicacao_tela":    "Tela aplicada",
-    "aplicacao_teron":   "Teron aplicado",
-    "lixamento":         "Lixamento",
-    "camada_1":          "1ª camada Stelion",
-    "camada_2":          "2ª camada Stelion",
-    "camada_3":          "3ª camada Stelion",
-    "cura":              "Aguardando cura",
-    "verniz_iniciado":   "Aplicação verniz",
-    "verniz_finalizado": "Verniz finalizado",
-    "obra_finalizada":   "Obra finalizada",
-    "diario_obra":       "Diário de obra postado",
-    "fim_dia":           "Fim do dia",
+    "inicio_dia":          "Início do dia",
+    "cobranca_status":     "Cobrança de status",
+    "preparacao":          "Preparação",
+    "aplicacao_primer":    "Primer aplicado",
+    "aplicacao_tela":      "Tela aplicada",
+    "aplicacao_teron":     "Teron aplicado",
+    "lixamento":           "Lixamento",
+    "camada_1":            "1ª camada Stelion",
+    "camada_2":            "2ª camada Stelion",
+    "camada_3":            "3ª camada Stelion",
+    "cura":                "Aguardando cura",
+    "verniz_iniciado":     "Aplicação verniz",
+    "verniz_finalizado":   "Verniz finalizado",
+    "obra_finalizada":     "Obra finalizada",
+    "diario_obra":         "Diário de obra postado",
+    "fim_dia":             "Fim do dia",
+    "visita_durante_obra": "Visita externa em obra",
 }
 
 # Padrão de cobrança de status (msg de não-aplicador perguntando se tem equipe em obra)
@@ -377,21 +420,26 @@ def detectar_marcos(msgs_ordenadas):
     padroes = [
         ("contrato_assinado", PAD_CONTRATO),
         ("vt_agendada", PAD_VT_AGENDADA),
+        # vt_entrada_realizada vem ANTES de vt_realizada · regex mais específica vence
+        ("vt_entrada_realizada", PAD_VT_ENTRADA_REALIZADA),
         ("vt_realizada", PAD_VT_REALIZADA),
+        ("amostra_solicitada", PAD_AMOSTRA_SOLICITADA),
         ("cor_aprovada", PAD_COR_APROVADA),
         ("inicio_anunciado", PAD_INICIO_ANUNCIADO),
         ("material_produzido", PAD_MATERIAL_PRODUZIDO),
         ("aprovacao_cliente", PAD_APROVACAO_CLIENTE),
+        ("reprovacao_retorno", PAD_REPROVACAO_RETORNO),
         ("finalizacao", PAD_FINALIZACAO),
     ]
     # Pra cada tipo · mantém SÓ o PRIMEIRO match cronológico (a menos que sejam eventos repetíveis)
-    UNICOS = {"contrato_assinado", "cor_aprovada", "vt_agendada", "vt_realizada", "material_produzido"}
+    UNICOS = {"contrato_assinado", "cor_aprovada", "vt_agendada", "vt_realizada", "vt_entrada_realizada", "material_produzido"}
     primeiro_de_cada = {}
     todos = []
 
     for m in msgs_ordenadas:
-        # Filtra cards de bot
-        if is_card_bot(m.get("content") or ""):
+        # Filtra cards de bot E transcrições (ambíguas demais)
+        texto_msg = m.get("content") or ""
+        if is_card_bot(texto_msg) or "🎬" in texto_msg or "🎙️" in texto_msg:
             continue
         for tipo, pad in padroes:
             marco = detectar_marco_em_msg(m, tipo, pad)

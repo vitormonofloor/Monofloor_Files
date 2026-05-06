@@ -1040,13 +1040,16 @@ const ICONES_MARCO = {
 
 const LABEL_MARCO = {
   contrato_assinado: 'Contrato',
+  amostra_solicitada: 'Amostra solicitada',
   cor_aprovada: 'Cor aprovada',
   vt_agendada: 'VT agendada',
-  vt_realizada: 'VT realizada',
+  vt_realizada: 'VT aferição realizada',
+  vt_entrada_realizada: 'VT entrada realizada',
   inicio_anunciado: 'Início anunciado',
   material_produzido: 'Material em obra',
   finalizacao: 'Finalização',
   aprovacao_cliente: 'Aprovação cliente',
+  reprovacao_retorno: 'Reprovação / retorno',
 };
 
 async function carregar(){
@@ -1336,6 +1339,7 @@ const COR_MARCO = {
   verniz_finalizado: '#b8884a',
   obra_finalizada: '#2a5a18',
   diario_obra: '#a89e92',
+  visita_durante_obra: '#8b5cf6',  // roxo · evento externo de auditoria
 };
 
 function renderGantt(marcosExec){
@@ -1572,13 +1576,16 @@ function renderDetalhes(){
   // Cor por tipo de marco (alinha com o COR_MARCO_FASE)
   const COR_MARCO_FASE = {
     contrato_assinado: '#7ea0b7',
+    amostra_solicitada: '#bdb09b',
     cor_aprovada: '#d4a548',
     vt_agendada: '#c8d6e0',
     vt_realizada: '#5fa073',
+    vt_entrada_realizada: '#5fa073',
     inicio_anunciado: '#e8c078',
     material_produzido: '#b8884a',
     finalizacao: '#2a5a18',
     aprovacao_cliente: '#d4a548',
+    reprovacao_retorno: '#c45a5a',
   };
   const elMarcos = document.getElementById('lista-marcos');
   // Substitui o ul por div timeline

@@ -72,12 +72,19 @@ Aplica regex em todas as msgs · **filtra cards de bot** (msgs com `-{10,}` ou p
 |---|---|---|
 | `contrato_assinado` | `\b(contrato\s+assinado|contrato\s+ok)\b` | único · 1ª ocorrência |
 | `vt_agendada` | `\bvt\s+(de\s+)?(aferição|entrada)\s+agendada\b` | único |
-| `vt_realizada` | `vt.*realizada|visita.*realizada|visita técnica realizada` | único |
-| `cor_aprovada` | `amostra\s+(aprovada|escolhida|confirmada)\|cor\s+(escolhida|aprovada|definida|confirmada)\|escolheu cor\|cliente aprovou cor` | único · padrão FORTE (não casa "COR: X" do card) |
-| `inicio_anunciado` | `início\s+(da\s+obra|previsto|confirmado)\s*[:]\s*\d+/\d+` | repetível · dedup por dia |
+| `vt_entrada_realizada` | `vt\s+(de\s+)?entrada\s+realizada\|visita\s+de\s+entrada\s+realizada` | único · marco-divisor pré-execução → execução |
+| `vt_realizada` | `vt\s+aferição\s+realizada\|visita\s+(de\s+qualidade|de\s+aferição)\s+realizada` | único · 1ª VT (Nathan tipicamente) |
+| `amostra_solicitada` | `solicit.*amostra\|amostra\s+(solicit\|pendente\|enviada\|recebida\|chegou)\|envia.*amostra\|preciso\s+de\s+amostra\|nova\s+amostra` | repetível · detecta gargalo de cor |
+| `cor_aprovada` | `amostra\s+(aprovada\|escolhida\|confirmada)\|cor\s+(escolhida\|aprovada\|definida\|confirmada)\|escolheu cor\|cliente aprovou cor` | único · padrão FORTE (não casa "COR: X" do card) |
+| `inicio_anunciado` | `início\s+(da\s+obra\|previsto\|confirmado)\s*[:]\s*\d+/\d+` | repetível · dedup por dia |
 | `material_produzido` | `material\s+produzido\|os\s+produzida\|indústria\s+(finaliz\|conclu)\|material\s+(saiu\|em obra\|enviado)` | único |
 | `aprovacao_cliente` | `obra\s+aprovada\|cliente\s+aprov\|vídeo\s+de\s+aprovação` | repetível |
+| `reprovacao_retorno` | `cliente reprovou\|marcou\s+o\s+piso\|seguir\s+com\s+reaplicação\|reaplicar\|início\s+de\s+reparo\|reparos.*finalizados\|refazer\s+(parede\|piso)` | repetível · captura ciclo pós-entrega · `marcas_rolo_cera` no Painel |
 | `finalizacao` | `obra\s+(finaliz\|conclu)\|verniz\s+finaliz\|piso\s+(finaliz\|aprovad\|conclu)` | repetível |
+
+**Filtros prévios pra TODOS os marcos textuais:**
+- Pula cards de bot (`-{10,}` ou padrão `APLICADOR:.*SUPERVISOR:.*CLIENTE:`)
+- Pula transcrições (`🎬` ou `🎙️`) · ambíguas demais
 
 **Únicos:** mantém só a primeira ocorrência cronológica.
 **Repetíveis:** dedup por (data + tipo).
@@ -111,6 +118,7 @@ Detecta **dentro do cluster de execução** (com janela ±2d nos limites pra cap
 | `diario_obra` | `diário\s+de\s+obra` | cinza |
 | `inicio_dia` | `equipe\s+em\s+obra\|chegando\s+agora\|chegamos\|estamos\s+chegando` | verde (proativo) |
 | `fim_dia` | `saindo\s+(de\|da)\s+obra\|equipe\s+saindo\|acabamos\s+(agora\|hoje)` | cinza |
+| `visita_durante_obra` | `cliente\s+(em\s+obra\|visitou\|esteve)\|visita\s+do\s+cliente\|vt\s+de\s+qualidade\|visita\s+de\s+qualidade\|visita\s+agendada\s+com\s+responsáveis\|inspeção\s+(em\s+obra\|de\s+qualidade)` | roxo (#8b5cf6 · evento externo de auditoria) |
 
 **Dedup:** 1 marco por (data + tipo). Apenas a 1ª ocorrência do dia conta.
 
