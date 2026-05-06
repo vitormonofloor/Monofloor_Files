@@ -65,6 +65,24 @@ python agente/publicar.py
 
 Faz: atomic write · git push pub repo · wrangler deploy. Detecta sync fail e flag em `pipeline-errors.json`.
 
+## Sincronizar com vault Obsidian (`sync orion`)
+
+```powershell
+cd C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta
+python agente/sync_obsidian.py
+```
+
+Espelha em `Downloads/monofloor-vault/obsidian-vault/ORION/`:
+- Toda a pasta `_projeto/` (10 arquivos)
+- `RETOMAR.md` + `ROADMAP_CAMINHO_B.md`
+- `_storytelling/*.md` + `_jornadas/*.md`
+- Memórias relacionadas ao Orion (`project_orion_*`, `feedback_kira_*`, etc)
+- `INDEX.md` (navegação) + `_ULTIMO_SYNC.md` (timestamp)
+
+Adiciona frontmatter Obsidian em cada arquivo · backup `.bak` quando sobrescreve.
+
+**Ritual:** rodar manualmente ou pedir "sync orion" no chat. Agente lembra ao detectar fim de sessão.
+
 ## Subir tela local (debug)
 
 ```powershell
