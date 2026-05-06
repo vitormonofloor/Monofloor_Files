@@ -205,8 +205,8 @@ def svg_top_categorias(categorias, top_n=5):
 
 def svg_funil_carteira(por_status):
     """
-    Timeline horizontal das ativas: Contrato → Planejamento → Pronto → Execução → Pós-obra.
-    Bolas proporcionais ao volume. Pausadas + Canceladas anotadas como off-funil.
+    Timeline horizontal das ativas: Contrato → Planejamento → Pronto → Execução · pós-obra.
+    Bolas proporcionais ao volume (faixa controlada). Pausadas + Canceladas off-funil.
     """
     if not por_status:
         return ""
@@ -225,69 +225,74 @@ def svg_funil_carteira(por_status):
     if total_ativas == 0:
         return ""
 
-    # Bolas proporcionais · raio entre 12px (mín) e 32px (máx)
+    # Faixa de raio mais controlada (14-26) · evita disparidades absurdas
     counts = [contrato, planejamento, pronto, execucao, pos_obra]
     max_n = max(counts) if max(counts) > 0 else 1
+    min_n = min(c for c in counts if c > 0) if any(c > 0 for c in counts) else 1
 
     def raio(n):
         if n == 0:
-            return 8
-        # escala: max_n → 32 · 1 → 12
-        return 12 + int((n / max_n) * 20)
+            return 10
+        # escala: min_n→14 · max_n→26 · usa raiz quadrada pra suavizar
+        import math
+        if max_n == min_n:
+            return 18
+        ratio = (math.sqrt(n) - math.sqrt(min_n)) / (math.sqrt(max_n) - math.sqrt(min_n))
+        return int(14 + ratio * 12)
 
-    # 5 etapas · cores tonais progredindo (cinza → azul → verde-azulado)
-    etapas = [
-        ("contrato",      contrato,      "#a89e92", 100),  # cinza · pré
-        ("planejamento",  planejamento,  "#8a9ea8", 220),
-        ("pronto",        pronto,        "#5e8294", 340),
-        ("execução",      execucao,      "#4a7ab8", 460),  # azul · em ação
-        ("pós-obra",      pos_obra,      "#b89a4a", 600),  # dourado · retorno
+    # Layout em viewBox 720x180 · espaço pra todas as bolas + divisor + pós-obra
+    # Linha principal vai de x=70 a x=470 (4 bolas em sequência)
+    # Divisor pontilhado em x=510
+    # Pós-obra em x=580
+    etapas_pre = [
+        ("contrato",      contrato,      "#a89e92", 100),  # cinza
+        ("planejamento",  planejamento,  "#7d96a6", 220),  # azul-cinza
+        ("pronto",        pronto,        "#5b88a8", 340),  # azul médio
+        ("execução",      execucao,      "#3d6ea8", 460),  # azul intenso
     ]
+    etapa_pos = ("pós-obra", pos_obra, "#b89a4a", 600)  # dourado
 
-    # Y central da linha
-    y_linha = 70
-
-    # Linha de fundo
+    y_linha = 80
     bolas_svg = []
     labels_svg = []
-    bolas_svg.append(f'<line x1="60" y1="{y_linha}" x2="510" y2="{y_linha}" stroke="#d8c8a8" stroke-width="1.5"/>')
-    # Linha pontilhada antes de pós-obra
-    bolas_svg.append(f'<line x1="540" y1="{y_linha-22}" x2="540" y2="{y_linha+22}" stroke="#a89e92" stroke-width="1" stroke-dasharray="2 3"/>')
 
-    # Marcadores de início e fim
-    labels_svg.append(f'<text x="40" y="{y_linha+5}" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">início</text>')
-    labels_svg.append(f'<text x="525" y="{y_linha+5}" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">fim</text>')
+    # Linha de fundo (até antes do divisor)
+    bolas_svg.append(f'<line x1="80" y1="{y_linha}" x2="480" y2="{y_linha}" stroke="#d8c8a8" stroke-width="1.5"/>')
+    # Divisor pontilhado vertical
+    bolas_svg.append(f'<line x1="520" y1="{y_linha-32}" x2="520" y2="{y_linha+32}" stroke="#a89e92" stroke-width="1" stroke-dasharray="3 3"/>')
+    # Mini-linha do divisor pra pós-obra
+    bolas_svg.append(f'<line x1="540" y1="{y_linha}" x2="585" y2="{y_linha}" stroke="#d8c8a8" stroke-width="1.5"/>')
 
-    # Bolas + labels
-    for i, (nome, n, cor, x) in enumerate(etapas):
+    # Labels início e fim
+    labels_svg.append(f'<text x="50" y="{y_linha+4}" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">início</text>')
+    labels_svg.append(f'<text x="500" y="{y_linha+4}" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">fim</text>')
+
+    # 4 bolas pré + 1 pós
+    for nome, n, cor, x in etapas_pre + [etapa_pos]:
         r = raio(n)
         pct = int(n / total_ativas * 100) if total_ativas else 0
-        bolas_svg.append(f'<circle cx="{x}" cy="{y_linha}" r="{r}" fill="{cor}" opacity="0.85"/>')
-        # Número dentro da bola (se cabe)
-        if r >= 14:
-            bolas_svg.append(f'<text x="{x}" y="{y_linha+4}" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">{n}</text>')
-        else:
-            bolas_svg.append(f'<text x="{x}" y="{y_linha-r-6}" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#3a3530" text-anchor="middle">{n}</text>')
+        bolas_svg.append(f'<circle cx="{x}" cy="{y_linha}" r="{r}" fill="{cor}" opacity="0.9"/>')
+        # Número dentro da bola (sempre · raio mínimo 14 garante)
+        bolas_svg.append(f'<text x="{x}" y="{y_linha+4}" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">{n}</text>')
         # Labels embaixo (etapa + %)
-        labels_svg.append(f'<text x="{x}" y="{y_linha+r+18}" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">{nome}</text>')
-        labels_svg.append(f'<text x="{x}" y="{y_linha+r+30}" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">{pct}%</text>')
+        labels_svg.append(f'<text x="{x}" y="{y_linha+r+16}" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">{nome}</text>')
+        labels_svg.append(f'<text x="{x}" y="{y_linha+r+28}" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">{pct}%</text>')
 
-    # Off-funil (canto inferior)
-    off_y = 145
+    # Off-funil (canto inferior esquerdo)
     if pausado > 0 or cancelado > 0:
-        labels_svg.append(f'<text x="60" y="{off_y}" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#8a7e72" font-style="italic">Fora do fluxo: {pausado} pausadas · {cancelado} canceladas</text>')
+        labels_svg.append(f'<text x="80" y="160" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#8a7e72" font-style="italic">Fora do fluxo: {pausado} pausadas · {cancelado} canceladas</text>')
 
     return f"""<figure class="viz">
-<svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
-  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Funil da carteira ativa · etapas em sequência</text>
-  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">{total_ativas} ativas</text>
+<svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:720px">
+  <text x="0" y="20" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Funil da carteira ativa · etapas em sequência</text>
+  <text x="720" y="20" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">{total_ativas} ativas</text>
 
   {chr(10).join(bolas_svg)}
   {chr(10).join(labels_svg)}
 </svg>
 </figure>
 
-> **Amarração:** {total_ativas} ativas = {em_fluxo} em fluxo (contrato → pós-obra) + {pausado} pausadas + {cancelado} canceladas. Bolas proporcionais ao volume · maior bola é o estágio de maior concentração.
+> **Amarração:** {total_ativas} ativas = {em_fluxo} em fluxo (contrato → pós-obra) + {pausado} pausadas + {cancelado} canceladas. Bolas proporcionais ao volume (escala suavizada por √) · maior bola = estágio de maior concentração.
 """
 
 
