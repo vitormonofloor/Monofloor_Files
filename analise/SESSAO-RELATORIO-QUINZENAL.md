@@ -1,7 +1,9 @@
 # Sessão · Relatório Quinzenal de Qualidade
 
-> **Briefing pra retomar em qualquer terminal.** Última atualização: 2026-05-04.
+> **Briefing pra retomar em qualquer terminal.** Última atualização: 2026-05-06.
 > Lê isso antes de mexer no projeto do relatório quinzenal.
+
+> **Mudança relevante desde 2026-05-04:** Lab Orion expandiu de 10 → 190 obras (Caminho A · resolveu schema órfão "telegram") e ganhou `cruzar_kira.py` determinístico que detecta **20 abandonos** que ninguém via antes. **Regerar o relatório traz Seção 9 mais rica automaticamente** sem precisar mexer no código.
 
 ---
 

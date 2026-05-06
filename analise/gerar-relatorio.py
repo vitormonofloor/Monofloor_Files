@@ -353,6 +353,12 @@ def secao_brief_executivo(headline, rs, score_ant, extras, receitas):
     else:
         recs_md = "_Nenhum problema crítico detectado no período._"
 
+    # 3 alertas críticos (obras específicas pra deliberar essa semana)
+    alertas = gerar_alertas_executivos(extras) or [
+        "[REVISAR]", "[REVISAR]", "[REVISAR]"
+    ]
+    alertas_md = "\n".join(f"{i+1}. {a}" for i, a in enumerate(alertas))
+
     # Implicação sintética
     if criticos > 15 and cap_pct < 50:
         implicacao = (
@@ -368,7 +374,7 @@ def secao_brief_executivo(headline, rs, score_ant, extras, receitas):
 
     return f"""## 0 · Brief Executivo
 
-> **Leitura de 60 segundos pra Diretoria.** Detalhes panorâmicos na Seção 1, análise técnica nas Seções 2-9, recomendações detalhadas na Seção 10.
+> **Leitura de 60 segundos pra Diretoria.** Análise técnica nas Seções 1-8 · recomendações detalhadas na Seção 9.
 
 ### Manchete
 
@@ -384,7 +390,11 @@ def secao_brief_executivo(headline, rs, score_ant, extras, receitas):
 
 {recs_md}
 
-> Cada recomendação acima é a **combinação automática** da receita correspondente na Seção 10. Para Como/Custo/Impacto/Risco completos, consultar a seção.
+> Cada recomendação acima é a **combinação automática** da receita correspondente na Seção 9. Para Como/Custo/Impacto/Risco completos, consultar a seção.
+
+### 3 alertas críticos · obras pra deliberar essa semana
+
+{alertas_md}
 
 ### Implicação sintética
 
@@ -422,7 +432,7 @@ def secao_conclusao_executiva(headline, rs, extras):
 
 A operação fechou a quinzena {tom}, com Score {score}/100 e capacidade utilizada em {cap}%. Da carteira de **{total_painel}** obras ativas no Painel, **{cats}** foram diagnosticadas pela Análise do Painel (a diferença são obras em pós-entrega ou pausadas, fora desse recorte) — dessas, **{ok}** sem problemas relevantes e **{criticos}** em estado crítico, concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo {top_cat_str}, sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
 
-A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 10 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
+A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 9 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
 
 > **Próximo ciclo de medição:** quinzena seguinte. As recomendações priorizadas no Brief Executivo deveriam mostrar tração mensurável neste mesmo relatório no próximo período.
 
@@ -462,8 +472,8 @@ def secao_glossario():
 - **Retrabalho · pós-entrega** · obras em status `reparo` ou `marcas_rolo_cera`. **Cronograma original já cumprido** — tratadas separadamente do atraso. Influências externas (cliente solicita reparo, exigência climática etc) podem disparar retrabalho sem indicar falha de execução.
 - **Cluster paralisado** · obras em status `pausado` por motivo externo (cliente, clima, suprimento).
 - **Detrator latente** (Orion) · obra com flag de risco jurídico/comercial baseado em histórico de quase-distrato ou reclamação técnica recente.
-- **Equipe "fantasma"** (Seção 8) · equipe cadastrada com líder e obras sob liderança, mas com **zero aplicadores ativos** registrados. Geralmente significa que a equipe é gerenciada por encarregado oculto (sem cadastro formal) ou que o cadastro está defasado.
-- **"Apenas CEP"** (Seção 6) · obras cujo cadastro de endereço no Painel tem só o CEP, sem cidade preenchida. Não é um lugar — é uma indicação de cadastro incompleto.
+- **Equipe "fantasma"** (Seção 7) · equipe cadastrada com líder e obras sob liderança, mas com **zero aplicadores ativos** registrados. Geralmente significa que a equipe é gerenciada por encarregado oculto (sem cadastro formal) ou que o cadastro está defasado.
+- **"Apenas CEP"** (Seção 5) · obras cujo cadastro de endereço no Painel tem só o CEP, sem cidade preenchida. Não é um lugar — é uma indicação de cadastro incompleto.
 - **Concluído vs Finalizado** (Anexo A) · ambos são fases pós-execução, mas refletem etapas distintas do processo Painel: **Concluído** = obra terminou execução · **Finalizado** = obra encerrada formalmente após todas as pendências (incluindo cobrança, pós-venda). Por isso aparecem separadas.
 
 ### Fases típicas (Painel de Obras)
@@ -704,7 +714,7 @@ def secao_indicadores(headline, rs, score_ant, extras):
     total_obras_painel = totais.get("total", 1) or 1
     ocorr_por_obra = ocorr_abertas / total_obras_painel
 
-    return f"""## 2 · Indicadores do Período
+    return f"""## 1 · Indicadores do Período
 
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
@@ -772,7 +782,7 @@ def secao_diagnostico(rs, extras):
         op_kira.get("total_fluxo", 0),
     )
 
-    return f"""## 3 · Diagnóstico Operacional
+    return f"""## 2 · Diagnóstico Operacional
 
 ### Saúde geral da carteira
 - **{summary_sum.get('totalActive', '—')}** obras ativas analisadas
@@ -798,7 +808,7 @@ def secao_diagnostico(rs, extras):
 
 > [REVISAR] Comentário narrativo de 1-2 frases sobre o que esses números contam juntos.
 
-> 💡 **Caminhos pra reduzir cegueira KIRA →** ver **Seção 10 · Conclusões** (receita "cegueira_kira" com 3 caminhos detalhados).
+> 💡 **Caminhos pra reduzir cegueira KIRA →** ver **Seção 9 · Conclusões** (receita "cegueira_kira" com 3 caminhos detalhados).
 
 ---
 """
@@ -808,7 +818,7 @@ def secao_atrasos(extras):
     """4 · Análise de Atrasos · usa atRisk com diagnóstico textual já pronto."""
     analise = (extras or {}).get("analise", {})
     if not isinstance(analise, dict):
-        return "## 4 · Análise de Atrasos · caso a caso\n\n> Dados do `/api/analise` indisponíveis.\n\n---\n"
+        return "## 3 · Análise de Atrasos · caso a caso\n\n> Dados do `/api/analise` indisponíveis.\n\n---\n"
     atrisk = analise.get("atRisk", []) or []
 
     # Prioriza obras com DIAGNÓSTICO textual (mais informativas), depois mais atrasadas
@@ -818,7 +828,7 @@ def secao_atrasos(extras):
     sem_diag.sort(key=lambda o: o.get("diasAtraso", 0), reverse=True)
     top5 = (com_diag[:5] + sem_diag)[:5]
     if not top5:
-        return "## 4 · Análise de Atrasos · caso a caso\n\n_Nenhuma obra atrasada no período._\n\n---\n"
+        return "## 3 · Análise de Atrasos · caso a caso\n\n_Nenhuma obra atrasada no período._\n\n---\n"
 
     blocos = []
     for o in top5:
@@ -837,7 +847,7 @@ def secao_atrasos(extras):
 {diag_curto}
 """)
 
-    return f"""## 4 · Análise de Atrasos · caso a caso
+    return f"""## 3 · Análise de Atrasos · caso a caso
 
 > Top 5 obras com maior atraso e diagnóstico textual disponível. **Estado atual** (dias de atraso · fase) é fresco, mas o **diagnóstico narrativo** abaixo é a última análise registrada no Painel — pode ter datas anteriores ao período do relatório se a análise não foi atualizada. Cabe à Gerência da Qualidade verificar se o quadro descrito ainda é válido.
 
@@ -850,7 +860,7 @@ def secao_atrasos(extras):
 - 📋 **Checklist proativo de pré-execução** — confirmar equipe + cor + VT *antes* da data prevista, não no dia
 - 💬 **Comunicação proativa com cliente** — quando atraso for inevitável, antecipar (em vez de cliente cobrar)
 
-> [REVISAR] Quais desses caminhos fazem sentido pro período atual? Marcar 1-2 e a gente promove pra Seção 10 com Como/Custo/Impacto/Risco completos.
+> [REVISAR] Quais desses caminhos fazem sentido pro período atual? Marcar 1-2 e a gente promove pra Seção 9 com Como/Custo/Impacto/Risco completos.
 
 ---
 """
@@ -875,7 +885,7 @@ def secao_retrabalho(rs, extras):
         for c in rt_categorias
     ) or "_sem dados_"
 
-    return f"""## 5 · Retrabalho & Pós-entrega
+    return f"""## 4 · Retrabalho & Pós-entrega
 
 > Obras em **reparo** e **marcas_rolo_cera** são pós-entrega — cronograma original já cumprido. Mostradas separadamente do atraso.
 
@@ -898,7 +908,7 @@ def secao_retrabalho(rs, extras):
 - 🎓 **Treinamento focado** — equipes com maior taxa de retorno recebem reciclagem técnica
 - ⚖ **Mediação preventiva** — obras com flag detrator_latente recebem visita da Gerência da Qualidade antes de virar caso jurídico
 
-> [REVISAR] Categoria Infiltração tem 47% críticas (taxa MUITO acima da média) — recomendo priorizar Auditoria técnica. Ver Seção 10 pra caminhos detalhados (Como/Custo/Impacto/Risco).
+> [REVISAR] Categoria Infiltração tem 47% críticas (taxa MUITO acima da média) — recomendo priorizar Auditoria técnica. Ver Seção 9 pra caminhos detalhados (Como/Custo/Impacto/Risco).
 
 ---
 """
@@ -929,7 +939,7 @@ def secao_geografia(extras):
     analise = (extras or {}).get("analise", {})
     atrisk = analise.get("atRisk", []) if isinstance(analise, dict) else []
     if not atrisk:
-        return "## 6 · Geografia\n\n> Dados de geografia indisponíveis.\n\n---\n"
+        return "## 5 · Geografia\n\n> Dados de geografia indisponíveis.\n\n---\n"
 
     por_cidade = {}
     for o in atrisk:
@@ -945,7 +955,7 @@ def secao_geografia(extras):
     cid1, n1 = top_cidades[0] if top_cidades else (None, 0)
     pct_concentracao = int(n1 / len(atrisk) * 100) if atrisk else 0
 
-    return f"""## 6 · Geografia
+    return f"""## 5 · Geografia
 
 > Distribuição das **obras em risco** (atrasadas / com problema) por cidade. Total na amostra: **{len(atrisk)}** obras.
 
@@ -1021,7 +1031,7 @@ def secao_capacidade(rs, extras):
 
     svg_cap = svg_barra_capacidade(cap_pct, m2_curso, cap_mensal)
 
-    return f"""## 7 · Capacidade × Demanda
+    return f"""## 6 · Capacidade × Demanda
 
 > Pergunta direta: *aceitamos mais obras ou estamos no limite?*
 
@@ -1036,7 +1046,7 @@ def secao_capacidade(rs, extras):
 
 **Diagnóstico atual:** {diag}
 {forecast_md}
-> 💡 **Caminhos pra equilibrar capacidade vs demanda →** ver **Seção 10 · Conclusões** (receita "capacidade_ociosa" com 3 caminhos detalhados).
+> 💡 **Caminhos pra equilibrar capacidade vs demanda →** ver **Seção 9 · Conclusões** (receita "capacidade_ociosa" com 3 caminhos detalhados).
 
 ---
 """
@@ -1091,7 +1101,7 @@ def secao_equipe(rs, extras):
         estado_label = ESTADO_LABEL.get(estado, f"⚫ {estado}")
         eq_md += f"| {nome} | {lider} | {ativos} | {obras_lid} | {estado_label} |\n"
 
-    return f"""## 8 · Análise por Equipe
+    return f"""## 7 · Análise por Equipe
 
 ### Consultores · responsáveis pela conta
 
@@ -1118,7 +1128,7 @@ def secao_equipe(rs, extras):
 
 def secao_orion(disc):
     if not disc:
-        return "## 9 · Sinais Painel × Telegram (Lab Orion)\n\n> Lab Orion offline ou sem dados.\n\n---\n"
+        return "## 8 · Sinais Painel × Telegram (Lab Orion)\n\n> Lab Orion offline ou sem dados.\n\n---\n"
     total = disc.get("total_obras", 0)
     obras = disc.get("obras", [])
     com_flags = [o for o in obras if o.get("flags") or o.get("veredicto") != "coerente"]
@@ -1147,7 +1157,7 @@ def secao_orion(disc):
         else:
             resumo = cortado.rstrip() + "..."
 
-    return f"""## 9 · Sinais Painel × Telegram (Lab Orion)
+    return f"""## 8 · Sinais Painel × Telegram (Lab Orion)
 
 **Total de obras analisadas pelo Orion:** {total} (piloto)
 
@@ -1319,7 +1329,7 @@ def secao_conclusoes(rs, extras, headline, receitas):
     problemas = detectar_problemas(rs, headline, extras, receitas)
 
     if not problemas:
-        return "## 10 · Conclusões e Recomendações\n\n_Nenhum problema crítico detectado no período._\n\n---\n"
+        return "## 9 · Conclusões e Recomendações\n\n_Nenhum problema crítico detectado no período._\n\n---\n"
 
     blocos = []
     for prob in problemas:
@@ -1327,7 +1337,7 @@ def secao_conclusoes(rs, extras, headline, receitas):
         if receita:
             blocos.append(renderizar_receita(prob, receita))
 
-    return f"""## 10 · Conclusões e Recomendações
+    return f"""## 9 · Conclusões e Recomendações
 
 > Análise propositiva: cada problema crítico detectado vem com diagnóstico, caminhos viáveis (Como · Custo · Impacto · Risco) e recomendação combinada. Números marcados [REVISAR] são chutes que dependem do conhecimento operacional do Vitor pra calibrar.
 
@@ -1423,7 +1433,6 @@ def main():
     partes = [
         secao_header(inicio, fim),
         secao_brief_executivo(headline, rs, score_ant, extras, receitas),
-        secao_resumo_executivo(headline, rs, score_ant, extras),
         secao_indicadores(headline, rs, score_ant, extras),
         secao_diagnostico(rs, extras),
         secao_atrasos(extras),
