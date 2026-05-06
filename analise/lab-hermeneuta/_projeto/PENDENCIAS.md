@@ -108,6 +108,41 @@ Detectar "dor não registrada":
 
 ---
 
+## F · Refino de leitura fria · Jornada (SETADO · NÃO ATACAR AGORA)
+
+**Quando:** depois que a arquitetura do que-mostrar estiver fechada · ~2-3h total no conjunto
+**Origem:** leitura fria 2026-05-06 · simulação de leitor que nunca viu Lab Orion
+**Princípio:** *foco atual é arquitetura · refino visual é última milha · fechar antes de pintar*
+
+### Fricções priorizadas (impacto × custo)
+
+| # | Item | Sintoma | Ação | Custo |
+|---|---|---|---|---|
+| F1 | Página não se apresenta | Header só diz "Lab Orion · Jornada · TELEGRAM" sem explicar o que é | Sub-header de 1 frase abaixo do título · *"Reconstrução do caminho de cada obra finalizada, lida das mensagens do Telegram do grupo da obra"* | 10min |
+| F2 | Linha do tempo sem legenda visível | 6 fases coloridas, leitor depende do hover | Faixa de chips coloridos abaixo da timeline · sempre visível · 1 chip por fase com nome | 30min |
+| F3 | Glossário ausente | "Hibernação", "VT", "Reaplicação", "Marco", "Atores" são jargão interno | Tooltip `?` ao lado de cada termo · 1 linha de definição cada · sem modal | 30min |
+| F4 | Padrões com `snake_case` exposto | `hibernacao_longa · obra ficou 177d…` aparece como código vazado | Mapear nome técnico → label humano · "Hibernação longa" + ícone | 10min |
+| F5 | "Solicitações em obra" escondida | Está embutida no card "Material" · leitor frio não acha | Card próprio · mesmo peso de "Marcos detectados" | 20min |
+| F6 | Falta benchmark | "665d total · 7d execução" sem com-quê comparar · não sei se é normal ou anômalo | Linha sob as pills · *"Média Monofloor: X dias total · Y dias execução"* (provisória ok) | 30min |
+
+### Bugs vistos na leitura fria
+
+| # | Bug | Diagnóstico provável |
+|---|---|---|
+| B1 | KRYSTAL `marcos_execucao=1` mas `tempo_execucao_dias=7` | Janela de cluster ±7d pode estar perdendo dias com poucas msgs · Gantt sai vazio na obra-vitrine |
+| B2 | Endereço KRYSTAL com encoding quebrado ("C�sar") | UTF-8 vs CP1252 na origem ou no fetch · normalizar string antes de salvar no JSON |
+
+### O que NÃO mexer nesse refino
+
+- Arquitetura de seções · ordem dos cards · estrutura JSON · pipeline de detecção
+- Adicionar marco novo · subtipo novo · cor nova
+- Storytelling automatizada · IA · narrativa em prosa
+- Qualquer coisa que não esteja na tabela acima
+
+**Regra de fechamento:** quando arquitetura travar, ataca F1→F6 em sequência · ~2h30 + 30min bugs · então congela.
+
+---
+
 ## Snapshot da prioridade
 
 ```
@@ -116,5 +151,6 @@ prioridade  item                          custo    bloqueia        status
 1           Storytelling obra finalizada   ~1h      —               aguarda Vitor escolher obra
 2           Caminho B (5 frentes)          4-6h     B1→B2           ROADMAP versionado
 3           Cores oficiais                 ~30min   —               12 hex pendentes
-4           Opção B click→IA               5min     —               PAUSADA · só com novo usuário
+4           Refino leitura fria (F1-F6)    ~2h30    —               SETADO · pós-arquitetura
+5           Opção B click→IA               5min     —               PAUSADA · só com novo usuário
 ```

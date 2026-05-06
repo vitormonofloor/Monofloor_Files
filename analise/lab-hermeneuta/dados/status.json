@@ -1,9 +1,9 @@
 {
   "geral": "warn",
-  "checked_at": "2026-05-05T00:56:10Z",
+  "checked_at": "2026-05-06T15:20:51Z",
   "contagem": {
-    "ok": 7,
-    "warn": 3,
+    "ok": 9,
+    "warn": 1,
     "crit": 0
   },
   "checks": [
@@ -29,20 +29,19 @@
     },
     {
       "nome": "KIRA WhatsApp",
-      "status": "warn",
-      "detalhe": "tag KIRA mais recente há 19d (>1 semana)",
-      "sugestao": "Verificar se KIRA está rodando no dashboard principal"
+      "status": "ok",
+      "detalhe": "tag KIRA mais recente há 0d"
     },
     {
       "nome": "Lock de execução",
       "status": "warn",
-      "detalhe": "lock fantasma · PID 13592 morto",
+      "detalhe": "lock fantasma · PID 19300 morto",
       "sugestao": "Próxima varredura limpa automaticamente"
     },
     {
       "nome": "Backups disponíveis",
       "status": "ok",
-      "detalhe": "14 backups · mais recente 0.6h"
+      "detalhe": "14 backups · mais recente 0.7h"
     },
     {
       "nome": "Drift de quantidade de obras",
@@ -51,9 +50,8 @@
     },
     {
       "nome": "Erros de pipeline (flag)",
-      "status": "warn",
-      "detalhe": "1 step(s) falharam: extrair_kira_whatsapp/schema_divergente",
-      "sugestao": "Ver dados/pipeline-errors.json · re-rodar steps falhos manualmente"
+      "status": "ok",
+      "detalhe": "varredura limpa"
     },
     {
       "nome": "Saúde do pipeline",

@@ -186,6 +186,98 @@ PAD_REPROVACAO_RETORNO = re.compile(
     r")\b",
     re.IGNORECASE,
 )
+# Vocabulário pra extrair keyword (palavra-chave) de cada marco · entidades operacionais
+KEYWORD_TOKENS = {
+    "acao": [
+        "reaplicar", "reaplicação", "reaplicacao",
+        "refazer", "remover", "reparar", "reparo", "reparos",
+        "ajustar", "ajustes", "marcar", "marcou", "marca",
+        "trincar", "trinca", "fissura", "fissurar",
+        "descolamento", "rachadura",
+        "agendar", "agendada", "agenda",
+        "enviar", "fazer",
+    ],
+    "area": [
+        "piso", "parede", "paredes",
+        "box", "sala", "cozinha", "lavanderia", "banheiro", "banheiros",
+        "área", "areas", "faixa", "rodapé", "ralo",
+    ],
+    "material": [
+        "stelion", "lilit", "lumina", "primer",
+        "cera", "verniz", "hiper", "teron", "tela",
+    ],
+    "cor": [
+        "argento", "kalahari", "gengibre", "areia",
+        "personalizada",
+    ],
+    "qualificador": [
+        "completo", "completa", "total",
+        "parcial", "pontual", "novamente",
+        "antiderrapante",
+    ],
+}
+
+
+def extrair_keyword(texto, subtipo=None):
+    """Extrai palavra-chave curta sintetizando o que a msg trata.
+    Combina entidades detectadas em uma frase legível.
+    """
+    if not texto:
+        return None
+    txt = texto.lower()
+
+    # Casos específicos com padrão fixo · prioridade alta
+    # "fazer N resumos" / "X resumos"
+    m = re.search(r"fazer\s+(\d+)\s+resumos?", txt)
+    if m:
+        return f"fazer {m.group(1)} resumos"
+
+    # "início de reparo dia DD/MM" · "reaplicação dia DD/MM"
+    m = re.search(r"\b(reparo|reaplica\w+)\s+(\w+\s+){0,3}?(dia\s+)?(\d{1,2}/\d{1,2})", txt)
+    if m:
+        return f"{m.group(1)} dia {m.group(4)}"
+
+    # "balde marcou/marcando" + área
+    m = re.search(r"balde\s+(?:acabou\s+)?(?:marc\w+)\s+(?:o\s+)?(\w+)", txt)
+    if m:
+        return f"balde marcou {m.group(1)}"
+
+    # Detecta entidades genéricas (1 token por categoria · primeiro hit)
+    entidades = {}
+    for cat, tokens in KEYWORD_TOKENS.items():
+        for t in tokens:
+            if re.search(rf"\b{re.escape(t)}\b", txt):
+                entidades[cat] = t
+                break
+
+    # Compõe a keyword baseada nas entidades disponíveis
+    partes = []
+    if "acao" in entidades:
+        partes.append(entidades["acao"])
+    if "cor" in entidades and entidades.get("cor") != "personalizada":
+        partes.append(entidades["cor"])
+    if "area" in entidades:
+        partes.append(entidades["area"])
+    if "material" in entidades and "area" not in entidades:
+        partes.append(entidades["material"])
+    if "qualificador" in entidades and len(partes) < 3:
+        partes.append(entidades["qualificador"])
+
+    if not partes:
+        # Fallback · só pra subtipos especiais
+        if subtipo == "relatorio_qualidade":
+            return "VT qualidade · imagens"
+        if subtipo == "confirmacao_pendente":
+            return "confirmação pendente"
+        # Pega 4 primeiras palavras significativas
+        STOP = {"a","o","os","as","de","da","do","das","dos","em","no","na","e","ou","que","é","com","por","para","sem","sobre","ai","lá","aqui","já","não","sim","mas","só","tem","tudo","isso"}
+        palavras = re.findall(r"\b[a-zà-ú]+\b", txt)
+        sig = [p for p in palavras if p not in STOP and len(p) > 2][:4]
+        return " ".join(sig) if sig else None
+
+    return " ".join(partes[:3])
+
+
 # Subtipos de reprovacao_retorno · classifica cada ciclo de retrabalho pela natureza da mensagem
 # Ordem importa · mais específico primeiro · primeiro match vence
 SUBTIPOS_REPROVACAO = [
@@ -334,6 +426,9 @@ def detectar_marco_em_msg(msg, tipo_pad, padrao):
                 break
         out["subtipo"] = subtipo
         out["label_subtipo"] = LABELS_SUBTIPO.get(subtipo, subtipo)
+        out["keyword"] = extrair_keyword(texto, subtipo)
+    else:
+        out["keyword"] = extrair_keyword(texto, tipo_pad)
     return out
 
 

@@ -45,7 +45,8 @@ setup_utf8()
 
 ROOT = Path(__file__).parent.parent
 DISCORD_PATH = ROOT / "dados" / "discordancias-v3.json"
-DETAIL_SNAPSHOT_DIR = ROOT / "dados" / "details-snapshot"
+DETAIL_SNAPSHOT_DIR = ROOT / "dados" / "details-snapshot"  # local pro Lab Orion
+DETAIL_GLOBAL_DIR = ROOT.parent / "dados" / "details"  # global · usado por extrair_kira_whatsapp e outros (mantido também por refresh.sh externo)
 BASE_API = "https://cliente.monofloor.cloud/api/projects"
 HOJE = datetime.now(timezone.utc)
 HOJE_DATE = HOJE.date()
@@ -105,17 +106,21 @@ def parse_data_simples(s):
 
 
 def salvar_detail_snapshot(oid: str, detail: dict):
-    """Salva detail fresco no detail-snapshot LOCAL · cascata pros outros scripts
-    (extrair_kira_whatsapp, inferir_consultor) que leem de lá."""
-    if not DETAIL_SNAPSHOT_DIR.exists():
-        return
-    path = DETAIL_SNAPSHOT_DIR / f"{oid}.json"
-    try:
-        tmp = path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(detail, ensure_ascii=False, indent=2), encoding="utf-8")
-        tmp.replace(path)
-    except OSError:
-        pass
+    """Salva detail fresco em AMBOS os diretórios (cascata pros outros scripts):
+    - lab-hermeneuta/dados/details-snapshot/ (local · backup)
+    - analise/dados/details/ (global · onde extrair_kira_whatsapp e inferir_consultor leem)
+    """
+    payload = json.dumps(detail, ensure_ascii=False, indent=2)
+    for dir_path in (DETAIL_SNAPSHOT_DIR, DETAIL_GLOBAL_DIR):
+        if not dir_path.exists():
+            continue
+        path = dir_path / f"{oid}.json"
+        try:
+            tmp = path.with_suffix(".tmp")
+            tmp.write_text(payload, encoding="utf-8")
+            tmp.replace(path)
+        except OSError:
+            pass
 
 
 def aplicar_regras(obra_v3: dict, detail: dict, ocorrencias: list,

@@ -649,6 +649,77 @@
     font-style: italic;
   }
 
+  /* Lista cronológica de marcos abaixo da barra de fases · cards horizontais */
+  .ciclo-marcos-lista {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .marcos-lista-titulo {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+  .marco-card {
+    display: grid;
+    grid-template-columns: 22px 90px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 10px 14px 10px 6px;
+    border-radius: 8px;
+    cursor: help;
+    transition: background 0.15s, transform 0.15s;
+    margin-bottom: 4px;
+  }
+  .marco-card:hover {
+    background: var(--gold-bg);
+    transform: translateX(3px);
+  }
+  .marco-card-bola {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2.5px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--line), 0 1px 3px rgba(0,0,0,0.08);
+    transition: transform 0.15s;
+  }
+  .marco-card:hover .marco-card-bola {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 2px var(--gold), 0 2px 5px rgba(184,136,74,0.3);
+  }
+  .marco-card-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .marco-card-label {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 13.5px;
+    letter-spacing: -0.01em;
+  }
+  .marco-card-autor {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+  }
+
+  @media (max-width: 800px) {
+    .marco-card { grid-template-columns: 18px 70px 1fr; gap: 10px; }
+    .marco-card-autor { display: none; }
+  }
+
   /* Header de ciclo · separa visualmente jornadas multi-ciclo */
   .ciclo-header {
     display: flex;
@@ -1167,13 +1238,13 @@ function renderTimelineEm(svg, fases, marcos){
 
   const totalDias = fases.reduce((sum, f) => sum + Math.max(1, f.duracao_dias), 0);
 
-  // Layout
+  // Layout · barra de fases compacta (marcos foram pra lista vertical abaixo)
   const W = 1180;
-  const H = 320;
+  const H = 130;
   const X0 = 40;
   const X1 = W - 20;
   const LARG = X1 - X0;
-  const Y_BARRA = 200;
+  const Y_BARRA = 30;
   const ALTURA_BARRA = 56;
 
   // Min-width pra fases curtas continuarem legíveis
@@ -1257,9 +1328,9 @@ function renderTimelineEm(svg, fases, marcos){
   });
   svg.appendChild(dtFim);
 
-  // MARCOS · distribuição em até 4 linhas pra evitar amontoamento
+  // MARCOS · removidos do SVG · vão pra lista cronológica abaixo (renderCicloMarcosLista)
   marcos = (marcos || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
-  if (marcos.length){
+  if (false && marcos.length){  // desativado · marcos agora vão na lista vertical abaixo
     const dataInicial = new Date(dataIni);
     const dataFinal = new Date(dataFim);
     const totalMs = dataFinal - dataInicial;
@@ -1562,12 +1633,155 @@ function renderTimelineCiclos(j){
         <div class="ciclo-duracao">${c.duracao_dias}d</div>
       </div>
       <div class="timeline-wrap-ciclo">
-        <svg class="timeline-svg" id="${elId}" viewBox="0 0 1200 320" preserveAspectRatio="xMinYMin meet"></svg>
+        <svg class="timeline-svg" id="${elId}" viewBox="0 0 1200 130" preserveAspectRatio="xMinYMin meet" style="min-width:1100px;height:auto"></svg>
+        <div class="ciclo-marcos-lista" id="${elId}-marcos"></div>
       </div>
     `);
     renderTimelineEm(document.getElementById(elId), c.fases, c.marcos);
+    renderListaMarcos(document.getElementById(`${elId}-marcos`), c.marcos);
   });
 }
+
+function renderListaMarcos(container, marcos){
+  if (!marcos || !marcos.length){
+    container.innerHTML = '<div class="vazio" style="margin-top:14px">(sem marcos detectados nesse ciclo)</div>';
+    return;
+  }
+  // Renderiza Gantt por categoria (swimlanes horizontais)
+  renderGanttSwimlanes(container, marcos);
+}
+
+function renderGanttSwimlanes(container, marcos){
+  // Determina o range de datas
+  marcos = marcos.slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
+  const dataMin = new Date(marcos[0].data);
+  const dataMax = new Date(marcos[marcos.length-1].data);
+  // Padding de 5% nas pontas
+  const totalMs = dataMax - dataMin || (1000 * 60 * 60 * 24);  // evita div0
+  const padMs = totalMs * 0.04;
+  const dataIni = new Date(dataMin.getTime() - padMs);
+  const dataFim = new Date(dataMax.getTime() + padMs);
+  const rangeMs = dataFim - dataIni;
+
+  // Agrupa marcos por categoria (label final · com subtipo quando aplicável)
+  const labelCategoria = (mk) => (mk.tipo === 'reprovacao_retorno' && mk.label_subtipo) ? mk.label_subtipo : (LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '));
+  const tipoCategoria = (mk) => (mk.tipo === 'reprovacao_retorno' && mk.subtipo) ? `${mk.tipo}_${mk.subtipo}` : mk.tipo;
+
+  const categorias = new Map();  // tipo_chave → {label, marcos[], cor}
+  marcos.forEach(mk => {
+    const chave = tipoCategoria(mk);
+    if (!categorias.has(chave)){
+      const cor = COR_MARCO_FASE_LIST[mk.tipo] || 'var(--ink-faint)';
+      categorias.set(chave, { label: labelCategoria(mk), marcos: [], cor });
+    }
+    categorias.get(chave).marcos.push(mk);
+  });
+
+  // Layout
+  const W = 1180;
+  const LABEL_LARG = 200;
+  const LANE_ALTURA = 30;
+  const PADDING_TOP = 36;  // espaço pro eixo de meses
+  const PADDING_BOTTOM = 16;
+  const X0 = LABEL_LARG;
+  const X1 = W - 12;
+  const LARG = X1 - X0;
+  const numLanes = categorias.size;
+  const H = PADDING_TOP + numLanes * LANE_ALTURA + PADDING_BOTTOM;
+
+  function xFromData(dataStr){
+    const dt = new Date(dataStr);
+    return X0 + ((dt - dataIni) / rangeMs) * LARG;
+  }
+
+  // Eixo de meses
+  const mesesMarkers = [];
+  let cursor = new Date(dataIni.getFullYear(), dataIni.getMonth(), 1);
+  while (cursor <= dataFim){
+    if (cursor >= dataIni){
+      mesesMarkers.push(new Date(cursor));
+    }
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  // Limita pra não ficar denso (max ~12 marcadores)
+  const stepMes = Math.max(1, Math.ceil(mesesMarkers.length / 12));
+  const mesesShow = mesesMarkers.filter((_, i) => i % stepMes === 0);
+
+  const partes = [];
+  partes.push(`<div class="marcos-lista-titulo">Marcos cronológicos · Gantt por categoria</div>`);
+  partes.push(`<div style="overflow-x:auto;margin-top:8px"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:980px;display:block" xmlns="http://www.w3.org/2000/svg">`);
+
+  // Linhas horizontais (uma por categoria)
+  let i = 0;
+  for (const [chave, dados] of categorias){
+    const y = PADDING_TOP + i * LANE_ALTURA + LANE_ALTURA / 2;
+    // Label da categoria à esquerda
+    partes.push(`<text x="${LABEL_LARG - 12}" y="${y + 4}" text-anchor="end" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#3a3530">${esc(dados.label)}</text>`);
+    // Linha guia
+    partes.push(`<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="#e6dfd0" stroke-width="0.8" stroke-dasharray="2,3"/>`);
+    // Linha alternada (zebra)
+    if (i % 2 === 0){
+      partes.push(`<rect x="${X0}" y="${y - LANE_ALTURA/2 + 2}" width="${LARG}" height="${LANE_ALTURA - 4}" fill="rgba(0,0,0,0.015)" rx="3"/>`);
+    }
+    // Pontos dos marcos · com keyword ao lado
+    dados.marcos.forEach((mk, mIdx) => {
+      const x = xFromData(mk.data);
+      const tip = `${esc(dados.label)} · ${fmtDataLong(mk.data)}\n${esc(mk.autor)}\n"${esc((mk.trecho||'').slice(0,200))}"`;
+      partes.push(`<g class="gantt-marco-pt" data-tip="${tip}" style="cursor:help">
+        <circle cx="${x}" cy="${y}" r="6" fill="${dados.cor}" stroke="#fff" stroke-width="1.5" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.15))"/>
+      </g>`);
+      // Keyword ao lado da bolinha · alterna lado pra evitar sobreposição se 2 pontos próximos
+      if (mk.keyword){
+        const proximaX = mIdx + 1 < dados.marcos.length ? xFromData(dados.marcos[mIdx+1].data) : Infinity;
+        const dist = proximaX - x;
+        const lado = dist < 110 ? 'cima' : 'direita';
+        if (lado === 'direita'){
+          partes.push(`<text x="${x + 12}" y="${y + 4}" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" fill="#3a3530" font-weight="500">${esc(mk.keyword)}</text>`);
+        } else {
+          partes.push(`<text x="${x}" y="${y - 9}" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" fill="#6b6156" font-weight="600">${esc(mk.keyword)}</text>`);
+        }
+      }
+    });
+    i++;
+  }
+
+  // Eixo de meses (no topo)
+  const mesNomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  mesesShow.forEach(m => {
+    const x = xFromData(m.toISOString().slice(0,10));
+    partes.push(`<line x1="${x}" y1="${PADDING_TOP - 4}" x2="${x}" y2="${H - PADDING_BOTTOM}" stroke="#e6dfd0" stroke-width="0.6"/>`);
+    partes.push(`<text x="${x}" y="${PADDING_TOP - 12}" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#6b6156" font-weight="600">${mesNomes[m.getMonth()]}/${String(m.getFullYear()).slice(2)}</text>`);
+  });
+
+  partes.push('</svg></div>');
+  container.innerHTML = partes.join('');
+
+  // Tooltips
+  container.querySelectorAll('.gantt-marco-pt').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      const linhas = (el.dataset.tip || '').split('\n');
+      const html = `<strong>${linhas[0]||''}</strong>${linhas[1] ? '<br><em>' + linhas[1] + '</em>' : ''}${linhas[2] ? '<br>' + linhas[2] : ''}`;
+      mostrarTooltip(e, html);
+    });
+    el.addEventListener('mousemove', moverTooltip);
+    el.addEventListener('mouseleave', esconderTooltip);
+  });
+}
+
+// Cores acessíveis pra marcos na lista (lista usa subset que evita conflito com fases)
+const COR_MARCO_FASE_LIST = {
+  contrato_assinado: '#7ea0b7',
+  amostra_solicitada: '#bdb09b',
+  cor_aprovada: '#d4a548',
+  vt_agendada: '#c8d6e0',
+  vt_realizada: '#5fa073',
+  vt_entrada_realizada: '#5fa073',
+  inicio_anunciado: '#e8c078',
+  material_produzido: '#b8884a',
+  finalizacao: '#2a5a18',
+  aprovacao_cliente: '#d4a548',
+  reprovacao_retorno: '#c45a5a',
+};
 
 function renderTempoPills(j){
   const cont = document.getElementById('tempo-pills');
