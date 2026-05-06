@@ -24,6 +24,7 @@ OUTPUT:
 Uso: python agente/gerar_jornada.py
 """
 
+import io
 import json
 import re
 import sys
@@ -36,6 +37,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from _util import setup_utf8
+
+try:
+    import pdfplumber
+    PDF_OK = True
+except ImportError:
+    PDF_OK = False
 
 setup_utf8()
 
@@ -168,6 +175,51 @@ PAD_SOBROU = re.compile(r"\bsobr(ou|ar[ao])\s+(\d+)?\s*(\w+)?", re.IGNORECASE)
 
 # Problemas
 PAD_PROBLEMA = re.compile(r"\b(trinca|fissura|rachadura|infiltrac[aã]o|patolog|errad[ao]|atras[ao]u?|problema|defeito|reclamac[aã]o)\b", re.IGNORECASE)
+
+# Marcos técnicos de execução (dito por aplicadores no Telegram)
+# Ordem importa · padrões mais específicos primeiro pra evitar falso positivo
+MARCOS_EXECUCAO = [
+    ("verniz_finalizado",  re.compile(r"\b(verniz\s+finaliz|verniz\s+aplicad|finaliza[çc][aã]o\s+do\s+verniz)", re.IGNORECASE)),
+    ("obra_finalizada",    re.compile(r"\b(obra\s+finaliz|piso\s+finaliz|piso\s+conclu)", re.IGNORECASE)),
+    ("verniz_iniciado",    re.compile(r"\b(programa[çc][aã]o\s+aplica[çc][aã]o\s+verniz|aplica[çc][aã]o\s+(de\s+)?verniz|aplicando\s+verniz|verniz\s+lumina)", re.IGNORECASE)),
+    ("cura",               re.compile(r"\b(aguardando\s+cura|em\s+cura|cura\s+do\s+(piso|stelion|material)|cura\s+t[eé]cnica)", re.IGNORECASE)),
+    ("camada_3",           re.compile(r"\b(terceira\s+camada|3[ªao°]?\s*camada|3[ªa]\s+demão|terceira\s+demão)", re.IGNORECASE)),
+    ("camada_2",           re.compile(r"\b(segunda\s+camada|2[ªao°]?\s*camada|2[ªa]\s+demão|segunda\s+demão)", re.IGNORECASE)),
+    ("camada_1",           re.compile(r"\b(primeira\s+camada|1[ªao°]?\s*camada|1[ªa]\s+demão|primeira\s+demão)", re.IGNORECASE)),
+    ("lixamento",          re.compile(r"\b(lixamento|lixad[ao]|lixando|lixar)\b", re.IGNORECASE)),
+    ("aplicacao_tela",     re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?tela|tela\s+aplicad|telar)\b", re.IGNORECASE)),
+    ("aplicacao_teron",    re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?teron|teron\s+aplicad)\b", re.IGNORECASE)),
+    ("aplicacao_primer",   re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?primer|primer\s+aplicad)\b", re.IGNORECASE)),
+    ("preparacao",         re.compile(r"\b(limpeza|prote[çc][aã]o\s+(das\s+áreas|do\s+ambiente)|requadro|substitui[çc][aã]o\s+de\s+fitas|troca\s+(de\s+)?fitas)", re.IGNORECASE)),
+    ("diario_obra",        re.compile(r"\bdi[áa]rio\s+de\s+obra\b", re.IGNORECASE)),
+    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando)", re.IGNORECASE)),
+    ("fim_dia",            re.compile(r"\b(saindo\s+(de|da)\s+obra|equipe\s+saindo|acabamos\s+(agora|hoje)|encerrando\s+o\s+dia)", re.IGNORECASE)),
+]
+
+LABELS_EXECUCAO = {
+    "inicio_dia":        "Início do dia",
+    "cobranca_status":   "Cobrança de status",
+    "preparacao":        "Preparação",
+    "aplicacao_primer":  "Primer aplicado",
+    "aplicacao_tela":    "Tela aplicada",
+    "aplicacao_teron":   "Teron aplicado",
+    "lixamento":         "Lixamento",
+    "camada_1":          "1ª camada Stelion",
+    "camada_2":          "2ª camada Stelion",
+    "camada_3":          "3ª camada Stelion",
+    "cura":              "Aguardando cura",
+    "verniz_iniciado":   "Aplicação verniz",
+    "verniz_finalizado": "Verniz finalizado",
+    "obra_finalizada":   "Obra finalizada",
+    "diario_obra":       "Diário de obra postado",
+    "fim_dia":           "Fim do dia",
+}
+
+# Padrão de cobrança de status (msg de não-aplicador perguntando se tem equipe em obra)
+PAD_COBRANCA = re.compile(
+    r"\b(temos\s+equipe\s+em\s+obra|tem\s+equipe\s+em\s+obra|j[áa]\s+chegou|chegou\?|chegaram\??|alguém\s+em\s+obra|equipe\s+chegou|status\s+da\s+obra|status\??$)\b",
+    re.IGNORECASE,
+)
 
 
 def detectar_marco_em_msg(msg, tipo_pad, padrao):
@@ -402,6 +454,139 @@ def detectar_consumo(msgs_ordenadas):
                 "trecho": texto[:160].replace("\n", " ").strip(),
             })
     return consumos, sobras
+
+
+def get_aplicadores_set(equipe_endpoint):
+    """Set de primeiros nomes (lowercase) dos aplicadores oficiais (líder + aplicadores + preparadores)."""
+    nomes = set()
+    for p in (equipe_endpoint or {}).get("prestadores", []) or []:
+        nome = (p.get("nome") or "").strip()
+        funcao = (p.get("funcao") or "").upper()
+        if not nome:
+            continue
+        if "LIDER" in funcao or "APLICADOR" in funcao or "PREPARADOR" in funcao:
+            for token in re.split(r"\s+", nome):
+                t = token.lower().strip()
+                if len(t) >= 3:
+                    nomes.add(t)
+    return nomes
+
+
+def is_aplicador(sender, aplicadores_set):
+    """True se o sender Telegram é um aplicador oficial (matching de tokens)."""
+    if not sender or not aplicadores_set:
+        return False
+    s = sender.lower()
+    # Tokeniza ignorando pipes/espaços
+    for token in re.split(r"[\s|]+", s):
+        t = token.strip()
+        if t in aplicadores_set:
+            return True
+    return False
+
+
+def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplicadores_set):
+    """Detecta marcos técnicos da execução. Distingue:
+    - inicio_dia: SÓ vale se vem de aplicador
+    - cobranca_status: msg de NÃO-aplicador perguntando status, ANTES do início_dia daquele dia
+    - cobrança ganha tempo_resposta_min (delta até próxima msg de aplicador)
+    Demais marcos: regex normal · 1 por (data + tipo)."""
+    if not cluster_inicio or not cluster_fim:
+        return []
+    ini_iso = cluster_inicio.isoformat()
+    fim_iso = (cluster_fim + timedelta(days=2)).isoformat()
+
+    # Filtra msgs da janela e remove cards de bot
+    msgs_janela = []
+    for m in msgs_ordenadas:
+        data = (m.get("timestamp") or "")[:10]
+        if not (ini_iso <= data <= fim_iso):
+            continue
+        if is_card_bot(m.get("content") or ""):
+            continue
+        if not (m.get("content") or "").strip():
+            continue
+        msgs_janela.append(m)
+
+    marcos = []
+    visto = set()
+    inicio_dia_por_data = {}  # data → idx do marco no array (pra pesquisar depois)
+    cobrancas_pendentes = []  # cobranças aguardando próxima msg de aplicador pra calcular tempo
+
+    for idx_m, m in enumerate(msgs_janela):
+        ts = m.get("timestamp") or ""
+        data = ts[:10]
+        hora = ts[11:16]
+        sender = (m.get("sender") or "?")[:30]
+        texto = m.get("content") or ""
+        eh_aplicador = is_aplicador(sender, aplicadores_set)
+
+        # Resolve cobranças pendentes do dia: se essa msg é de aplicador, fecha cobrança
+        if eh_aplicador and cobrancas_pendentes:
+            for cob in list(cobrancas_pendentes):
+                if cob["data"] != data:
+                    cobrancas_pendentes.remove(cob)
+                    continue
+                # Calcula tempo de resposta
+                try:
+                    cob_ts = datetime.fromisoformat(cob["data_iso"].replace("Z", "+00:00"))
+                    msg_ts = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+                    delta_min = int((msg_ts - cob_ts).total_seconds() / 60)
+                    cob["tempo_resposta_min"] = delta_min
+                    cob["respondido_por"] = sender
+                    cob["respondido_em"] = hora
+                except Exception:
+                    pass
+                cobrancas_pendentes.remove(cob)
+
+        # Detecta marcos técnicos
+        marco_detectado = None
+        for tipo, pad in MARCOS_EXECUCAO:
+            if pad.search(texto):
+                # inicio_dia só vale pra aplicador
+                if tipo == "inicio_dia" and not eh_aplicador:
+                    continue
+                chave = (data, tipo)
+                if chave in visto:
+                    if tipo == "inicio_dia":
+                        break  # já tem inicio_dia desse dia · não detecta cobrança depois
+                    break
+                visto.add(chave)
+                marco_detectado = {
+                    "data": data,
+                    "hora": hora,
+                    "autor": sender,
+                    "tipo": tipo,
+                    "label": LABELS_EXECUCAO.get(tipo, tipo),
+                    "trecho": texto[:200].replace("\n", " ").strip(),
+                }
+                marcos.append(marco_detectado)
+                if tipo == "inicio_dia":
+                    inicio_dia_por_data[data] = len(marcos) - 1
+                break
+
+        # Se não detectou marco técnico E é não-aplicador E ainda não houve inicio_dia no dia → cobrança
+        if not marco_detectado and not eh_aplicador and data not in inicio_dia_por_data:
+            if PAD_COBRANCA.search(texto):
+                chave = (data, "cobranca_status")
+                if chave not in visto:
+                    visto.add(chave)
+                    cob = {
+                        "data": data,
+                        "data_iso": ts,
+                        "hora": hora,
+                        "autor": sender,
+                        "tipo": "cobranca_status",
+                        "label": LABELS_EXECUCAO["cobranca_status"],
+                        "trecho": texto[:200].replace("\n", " ").strip(),
+                        "tempo_resposta_min": None,
+                        "respondido_por": None,
+                        "respondido_em": None,
+                    }
+                    marcos.append(cob)
+                    cobrancas_pendentes.append(cob)
+
+    return marcos
 
 
 def detectar_problemas_msg(msgs_ordenadas):
@@ -640,13 +825,185 @@ def gerar_narrativa_md(j):
 # Construção da jornada por obra
 # ============================================================
 
+def baixar_pdf(url_local: str) -> bytes | None:
+    """Baixa PDF do storage local do Painel via /api/storage/..."""
+    if not url_local or not url_local.startswith("/storage/"):
+        return None
+    full_url = "https://cliente.monofloor.cloud/api" + url_local
+    try:
+        req = urllib.request.Request(full_url, headers={"User-Agent": "lab-orion/1.0"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return r.read()
+    except Exception:
+        return None
+
+
+def extrair_materiais_enviados(pdf_bytes: bytes) -> list:
+    """Extrai a tabela 'Descrição dos materiais enviados' de uma OS Indústria.
+    Schema esperado da tabela: Código | Quantidade | Material | Lote | Cor | Valor.
+    Retorna lista de dicts (1 por linha de material). Vazio se não achar."""
+    if not PDF_OK or not pdf_bytes:
+        return []
+    materiais = []
+    try:
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+            for page in pdf.pages:
+                tables = page.extract_tables() or []
+                for tab in tables:
+                    # Procura linha "Descrição dos materiais enviados"
+                    idx_header = None
+                    for i, row in enumerate(tab):
+                        joined = " ".join((c or "") for c in row).lower()
+                        if "descri" in joined and ("material" in joined or "enviad" in joined):
+                            idx_header = i
+                            break
+                    if idx_header is None:
+                        continue
+                    # A linha seguinte é o cabeçalho de colunas (Código | Quantidade | ...)
+                    # Dados começam 2 linhas depois
+                    for row in tab[idx_header + 2:]:
+                        # Limpa células
+                        cels = [(c or "").strip() for c in row]
+                        # Pula linha vazia ou linha de "Total"
+                        if not any(cels):
+                            continue
+                        joined = " ".join(cels).lower()
+                        if joined.startswith("total") or "observ" in joined or "assinatur" in joined:
+                            break
+                        # Tenta mapear por posição (estrutura típica: ['', codigo, qtd, material, lote, cor, valor, ...])
+                        # Mas pode ter colunas vazias no início/fim · vou usar heurística
+                        nao_vazias = [c for c in cels if c]
+                        # Material precisa estar presente · tipicamente palavra com letras
+                        # Quantidade precisa ser número
+                        material = None
+                        qtd = None
+                        codigo = None
+                        cor = None
+                        lote = None
+                        valor = None
+                        for c in cels:
+                            if not c:
+                                continue
+                            # Código · 3-6 dígitos sem decimal · vem PRIMEIRO no PDF
+                            if codigo is None and re.match(r"^\d{3,6}$", c):
+                                codigo = c
+                                continue
+                            # Quantidade · número com decimal (vírgula ou ponto)
+                            if qtd is None and re.match(r"^\d+[,\.]\d+$", c.replace(" ", "")):
+                                qtd = c
+                                continue
+                            # Quantidade fallback · número simples (caso sem decimal)
+                            if qtd is None and re.match(r"^\d{1,3}$", c):
+                                qtd = c
+                                continue
+                            # Material · texto significativo
+                            if material is None and len(c) > 3 and re.search(r"[A-Z]{3,}", c):
+                                if c.lower() not in ("personalizada", "padrão", "padrao") and not c.startswith("R$"):
+                                    material = c
+                                    continue
+                            # Cor (vem depois do material tipicamente)
+                            if material and cor is None and len(c) < 30 and re.search(r"[a-zà-ú]", c.lower()):
+                                cor = c
+                                continue
+                            # Valor (R$ X,XX)
+                            if valor is None and (c.startswith("R$") or re.match(r"^[\d.,]+$", c) and "," in c):
+                                valor = c
+                                continue
+                        # Só registra se tem material + quantidade
+                        if material and qtd:
+                            materiais.append({
+                                "codigo": codigo,
+                                "quantidade": qtd,
+                                "material": material,
+                                "lote": lote,
+                                "cor": cor,
+                                "valor": valor,
+                            })
+                    if materiais:
+                        return materiais
+    except Exception:
+        pass
+    return materiais
+
+
+def coletar_materiais_enviados(docs: list) -> list:
+    """Pra cada OS Indústria PDF, baixa e extrai a tabela. Retorna lista de envios."""
+    if not PDF_OK:
+        return []
+    envios = []
+    vistos = set()  # evita reprocessar PDFs duplicados (mesmo nome)
+    for d in docs or []:
+        nome = d.get("nome") or ""
+        nome_low = nome.lower()
+        # Filtra OS Indústria PDF
+        if d.get("mimeType") != "application/pdf":
+            continue
+        if not ("o.s." in nome_low or re.search(r"\bos\s*\d", nome_low) or "ind_stria" in nome_low or "industria" in nome_low or "indstria" in nome_low):
+            continue
+        # Dedup por nome base (ignora prefixos)
+        chave = re.sub(r"^(field_|card_principal_)", "", nome).strip().lower()
+        if chave in vistos:
+            continue
+        vistos.add(chave)
+        url_local = d.get("urlLocal")
+        pdf_bytes = baixar_pdf(url_local)
+        if not pdf_bytes:
+            continue
+        materiais = extrair_materiais_enviados(pdf_bytes)
+        if materiais:
+            envios.append({
+                "os_nome": nome,
+                "os_data": (d.get("createdAt") or "")[:10],
+                "materiais": materiais,
+            })
+    return envios
+
+
+def categorizar_documentos(docs):
+    """Agrupa documentos por categoria interpretada do nome/categoria · descarta duplicatas."""
+    categorias = {"os_industria": [], "escopos": [], "relatorios_visita": [], "contrato": [], "outros": []}
+    vistos = set()
+    for d in docs or []:
+        nome = (d.get("nome") or "").strip()
+        if not nome:
+            continue
+        cat_pipefy = (d.get("categoria") or "").lower()
+        nome_low = nome.lower()
+        # Dedup por nome base (ignora prefixos field_/card_principal_)
+        chave_base = re.sub(r"^(field_|card_principal_)", "", nome).strip()
+        if chave_base in vistos:
+            continue
+        vistos.add(chave_base)
+        item = {
+            "nome": nome,
+            "nome_limpo": chave_base,
+            "data": (d.get("createdAt") or "")[:10],
+            "tipo": d.get("tipo") or "-",
+            "mime": d.get("mimeType") or "-",
+            "url": d.get("urlOriginal") or d.get("urlLocal") or "",
+        }
+        # Classifica
+        if "o.s." in nome_low or re.search(r"\bos\s*\d", nome_low) or "industria" in nome_low or "indstria" in nome_low or "ind_stria" in nome_low:
+            categorias["os_industria"].append(item)
+        elif "contrato" in nome_low and "escopo" not in nome_low:
+            categorias["contrato"].append(item)
+        elif "relat" in nome_low and "visita" in nome_low:
+            categorias["relatorios_visita"].append(item)
+        elif cat_pipefy == "escopo" or "escopo" in nome_low:
+            categorias["escopos"].append(item)
+        else:
+            categorias["outros"].append(item)
+    return categorias
+
+
 def construir_jornada(obra_id):
-    print(f"  · {obra_id[:8]} · fetch detail + telegram + ocorrencias + materiais + equipe...")
+    print(f"  · {obra_id[:8]} · fetch detail + telegram + ocorrencias + materiais + equipe + documentos...")
     detail = fetch(f"{BASE_API}/{obra_id}")
     msgs_resp = fetch(f"{BASE_API}/{obra_id}/messages?source=telegram&limit=2000") or {}
     ocorrencias = fetch_safe(f"{BASE_API}/{obra_id}/ocorrencias") or []
     materiais = fetch_safe(f"{BASE_API}/{obra_id}/materiais") or {}
     equipe_ep = fetch_safe(f"{BASE_API}/{obra_id}/equipe") or {}
+    documentos = fetch_safe(f"{BASE_API}/{obra_id}/documentos") or []
 
     msgs_telegram = msgs_resp.get("messages", []) or []
     msgs_ordenadas = sorted(msgs_telegram, key=lambda m: m.get("timestamp") or "")
@@ -720,6 +1077,10 @@ def construir_jornada(obra_id):
     solicitacoes = detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim)
     consumos, sobras = detectar_consumo(msgs_ordenadas)
 
+    # Marcos técnicos de execução (msgs durante cluster · distingue aplicador × cobrança)
+    aplicadores_set = get_aplicadores_set(equipe_ep)
+    marcos_execucao = detectar_marcos_execucao(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim, aplicadores_set)
+
     # Problemas
     problemas_msg = detectar_problemas_msg(msgs_ordenadas)
     ocorrencias_fmt = []
@@ -734,6 +1095,17 @@ def construir_jornada(obra_id):
 
     # Equipe
     equipe = montar_equipe(detail, equipe_ep, msgs_ordenadas)
+
+    # Documentos categorizados (debug · não vai pra UI)
+    docs_cats = categorizar_documentos(documentos)
+    docs_total = sum(len(v) for v in docs_cats.values())
+
+    # Materiais enviados extraídos das OS Indústria PDFs
+    print(f"     · extraindo materiais enviados das OS Indústria...")
+    envios_materiais = coletar_materiais_enviados(documentos)
+    n_envios = len(envios_materiais)
+    n_itens_enviados = sum(len(e["materiais"]) for e in envios_materiais)
+    print(f"     · {n_envios} OS · {n_itens_enviados} itens enviados")
 
     # Endereço completo
     endereco = detail.get("projetoEndereco") or "—"
@@ -766,6 +1138,12 @@ def construir_jornada(obra_id):
             "ocorrencias_formais": ocorrencias_fmt,
             "sinais_msg_telegram": problemas_msg,
         },
+        "documentos": {
+            "total": docs_total,
+            **docs_cats,
+        },
+        "materiais_enviados": envios_materiais,
+        "marcos_execucao": marcos_execucao,
         "gerado_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     jornada["padroes"] = detectar_padroes(jornada)
