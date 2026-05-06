@@ -2,7 +2,7 @@
 
 **Período:** 22/04 a 06/05/2026 · Quinzena 1 de Maio
 **Setor de Qualidade Monofloor · Vitor Gomes, Gerente da Qualidade**
-**Gerado em:** 06/05/2026 10:27
+**Gerado em:** 06/05/2026 10:41
 
 ---
 
@@ -12,14 +12,14 @@
 
 ### Manchete
 
-🔴 **Operação em zona vermelha** · Score 47/100 (▼ -2 ⚠ vs snapshot de 4 dias atrás). 259 obras ativas · 53 atrasadas (21 críticas) · 25 em retorno · capacidade utilizada em 32% (folga produtiva).
+🔴 **Operação em zona vermelha** · Score 48/100 (▼ -1 ⚠ vs snapshot de 4 dias atrás). 259 obras ativas · 53 atrasadas (21 críticas) · 25 em retorno · capacidade utilizada em 32% (folga produtiva).
 
 ### Painel de Saúde · 6 KPIs
 
 | | Indicador | Valor | Status |
 |---|---|---|---|
-| 🔴 | Score Saúde | **47/100** (▼ -2 ⚠) | abaixo da zona saudável (≥70) |
-| 🔵 | Obras ativas em fluxo | **259** (38 em execução) | volume da carteira |
+| 🔴 | Score Saúde | **48/100** (▼ -1 ⚠) | abaixo da zona saudável (≥70) |
+| 🔵 | Obras ativas em fluxo | **259** (40 em execução) | volume da carteira |
 | 🟡 | Atrasadas | **53** (21 críticas) | 20% das ativas |
 | 🟡 | Em retorno (reparo/marcas) | **25** | 10% da carteira em pós-entrega |
 | 🟡 | Capacidade utilizada | **32%** | folga produtiva |
@@ -50,21 +50,57 @@
 
 ## 1 · Indicadores do Período
 
+<figure class="viz">
+<svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
+  <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Funil da carteira ativa · etapas em sequência</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">259 ativas</text>
+
+  <line x1="60" y1="70" x2="510" y2="70" stroke="#d8c8a8" stroke-width="1.5"/>
+<line x1="540" y1="48" x2="540" y2="92" stroke="#a89e92" stroke-width="1" stroke-dasharray="2 3"/>
+<circle cx="100" cy="70" r="14" fill="#a89e92" opacity="0.85"/>
+<text x="100" y="74" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">10</text>
+<circle cx="220" cy="70" r="32" fill="#8a9ea8" opacity="0.85"/>
+<text x="220" y="74" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">96</text>
+<circle cx="340" cy="70" r="22" fill="#5e8294" opacity="0.85"/>
+<text x="340" y="74" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">49</text>
+<circle cx="460" cy="70" r="20" fill="#4a7ab8" opacity="0.85"/>
+<text x="460" y="74" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">40</text>
+<circle cx="600" cy="70" r="17" fill="#b89a4a" opacity="0.85"/>
+<text x="600" y="74" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">25</text>
+  <text x="40" y="75" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">início</text>
+<text x="525" y="75" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">fim</text>
+<text x="100" y="102" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">contrato</text>
+<text x="100" y="114" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">3%</text>
+<text x="220" y="120" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">planejamento</text>
+<text x="220" y="132" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">37%</text>
+<text x="340" y="110" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">pronto</text>
+<text x="340" y="122" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">18%</text>
+<text x="460" y="108" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">execução</text>
+<text x="460" y="120" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">15%</text>
+<text x="600" y="105" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" fill="#3a3530" text-anchor="middle">pós-obra</text>
+<text x="600" y="117" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a7e72" text-anchor="middle">9%</text>
+<text x="60" y="145" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#8a7e72" font-style="italic">Fora do fluxo: 5 pausadas · 34 canceladas</text>
+</svg>
+</figure>
+
+> **Amarração:** 259 ativas = 220 em fluxo (contrato → pós-obra) + 5 pausadas + 34 canceladas. Bolas proporcionais ao volume · maior bola é o estágio de maior concentração.
+
+
 | Indicador | Atual | Anterior | Δ | Fonte |
 |---|---|---|---|---|
 | Total ativas em fluxo | 259 | — | — | Painel de Obras |
-| Em execução agora | 38 | — | — | Painel de Obras |
+| Em execução agora | 40 | — | — | Painel de Obras |
 | Atrasadas | 53 | — | — | Análise do Painel |
 | → Críticas | 21 | — | — | Análise do Painel |
 | → Alto risco | 27 | — | — | Análise do Painel |
 | Obras em retorno (reparo + marcas) | 25 | — | — | Painel de Obras |
 | Cluster paralisado | 5 | — | — | Painel de Obras |
-| Score Saúde Operacional | 47/100 | 49 | ▼ -2 ⚠ | Snapshot diário |
+| Score Saúde Operacional | 48/100 | 49 | ▼ -1 ⚠ | Snapshot diário |
 | TEMPO médio de ciclo | 172d | — | — | Painel de Obras |
-| VOLUME m² em curso | 4.453 | — | — | Painel de Obras |
+| VOLUME m² em curso | 4.803 | — | — | Painel de Obras |
 | Capacidade utilizada | 32% | — | — | Painel de Obras |
 | A iniciar firmadas (30d) | 18 obras · 1.824 m² | — | — | Painel de Obras |
-| Cobertura KIRA | 65.2% | — | — | KIRA WhatsApp |
+| Cobertura KIRA | 65% | — | — | KIRA WhatsApp |
 | Ocorrências abertas | 950 (0.9 por obra · acumulado) | — | — | Painel · ocorrências |
 
 > Deltas vs quinzena anterior em construção · histórico de Score acumulando desde 2026-05-01.
@@ -120,15 +156,15 @@
 <figure class="viz">
 <svg viewBox="0 0 600 105" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px">
   <text x="0" y="18" font-family="Plus Jakarta Sans, sans-serif" font-size="11" fill="#8a7e72" letter-spacing="0.5">Distribuição da carteira ativa por KIRA</text>
-  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">201 obras</text>
+  <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="11" fill="#8a7e72" text-anchor="end">200 obras</text>
 
-  <rect x="0" y="30" width="214.92537313432837" height="28" fill="#6b8e3d" rx="2 0 0 2"/>
-  <rect x="214.92537313432837" y="30" width="137.01492537313433" height="28" fill="#b89a4a"/>
-  <rect x="351.94029850746267" y="30" width="188.05970149253733" height="28" fill="#a89e92" rx="0 2 2 0"/>
+  <rect x="0" y="30" width="216.0" height="28" fill="#6b8e3d" rx="2 0 0 2"/>
+  <rect x="216.0" y="30" width="135.0" height="28" fill="#b89a4a"/>
+  <rect x="351.0" y="30" width="189.0" height="28" fill="#a89e92" rx="0 2 2 0"/>
 
-  <text x="107.46268656716418" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">80</text>
-  <text x="283.43283582089555" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">51</text>
-  <text x="445.97014925373134" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">70</text>
+  <text x="108.0" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">80</text>
+  <text x="283.5" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">50</text>
+  <text x="445.5" y="49" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">70</text>
 
   <circle cx="6" cy="78" r="4" fill="#6b8e3d"/>
   <text x="16" y="82" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#3a3530">Saudável (40%)</text>
@@ -140,9 +176,9 @@
 </figure>
 
 
-- **Cobertura:** 131 de 201 obras ativas têm grupo de WhatsApp acompanhado (65.2%)
-- **Saudável:** 80 (61.1% das monitoradas)
-- **Em atenção:** 51
+- **Cobertura:** 130 de 200 obras ativas têm grupo de WhatsApp acompanhado (65%)
+- **Saudável:** 80 (61.5% das monitoradas)
+- **Em atenção:** 50
 - **Sem KIRA:** 70 *(cegueira — obras que pra Qualidade são silêncio)*
 
 > [REVISAR] Comentário narrativo de 1-2 frases sobre o que esses números contam juntos.
@@ -285,8 +321,8 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
   <text x="600" y="18" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600" fill="#2a2520" text-anchor="end">32%</text>
   <rect x="0" y="30" width="540" height="22" fill="#f0ebe3" stroke="#d8c8a8" stroke-width="0.5" rx="3"/>
   <rect x="0" y="30" width="172.8" height="22" fill="#6b8e3d" rx="3"/>
-  <text x="600" y="46" font-family="JetBrains Mono, monospace" font-size="10" fill="#8a7e72" text-anchor="end">4.453 / 9.196 m²/mês</text>
-  <text x="0" y="78" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b8e3d" font-style="italic">▸ folga produtiva · sobra de 4.743 m²/mês</text>
+  <text x="600" y="46" font-family="JetBrains Mono, monospace" font-size="10" fill="#8a7e72" text-anchor="end">4.803 / 9.196 m²/mês</text>
+  <text x="0" y="78" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b8e3d" font-style="italic">▸ folga produtiva · sobra de 4.393 m²/mês</text>
 </svg>
 </figure>
 
@@ -294,7 +330,7 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 | Indicador | Atual | Anterior | Δ |
 |---|---|---|---|
 | Capacidade mensal produtiva | 9.196 m²/mês | — | — |
-| VOLUME m² em curso | 4.453 m² | — | — |
+| VOLUME m² em curso | 4.803 m² | — | — |
 | Capacidade utilizada | 32% | — | — |
 | A INICIAR firmadas (30d) | 18 obras · 1.824 m² | — | — |
 
@@ -332,11 +368,11 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 
 | Equipe | Líder | Aplicadores ativos | Obras lideradas | Estado |
 |---|---|---|---|---|
-| Equipe Wiguens | Wiguens Louis | 13 | 5 | 🟢 saudável |
-| Equipe João | João Carlos | 0 | 3 | ⚪ fantasma |
-| Equipe Gilmar | Gilmar Gomes Rafael | 1 | 3 | 🟡 parcial |
-| Equipe Egberto | Egberto Sullivan Tavares de Oliveira | 0 | 3 | ⚪ fantasma |
-| Equipe Júlio | Júlio Miranda | 8 | 2 | 🟢 saudável |
+| Equipe Wiguens | Wiguens Louis | 13 | 0 | 🟢 saudável |
+| Equipe João | João Carlos | 0 | 0 | ⚪ fantasma |
+| Equipe Gilmar | Gilmar Gomes Rafael | 1 | 0 | 🟡 parcial |
+| Equipe Júlio | Júlio Miranda | 8 | 0 | 🟢 saudável |
+| Equipe Egberto | Egberto Sullivan Tavares de Oliveira | 0 | 0 | ⚪ fantasma |
 | Equipe Michael | Cosme Eduardo Soares Ragno | 9 | 0 | 🟢 saudável |
 
 
@@ -388,10 +424,10 @@ DIAGNÓSTICO 15/03/2026 — Execução prevista 13/04 (29 dias).
 ### Score Saúde abaixo da zona saudável
 
 **Diagnóstico**
-Score em 47/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
-- Ciclo total mediano em 221d (meta 150d) — 47% acima da meta
-- 18.5% de obras zumbi (CLIENTE FINALIZADO sem encerrar)
-- 15.0% órfãs (sem consultor responsável)
+Score em 48/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
+- Ciclo total mediano em 217d (meta 150d) — 44% acima da meta
+- 18.6% de obras zumbi (CLIENTE FINALIZADO sem encerrar)
+- 15.5% órfãs (sem consultor responsável)
 - 20 obras na cauda longa AGEND.VT-AFERIÇÃO (>270d)
 
 **Para melhorar:** Reduzir o ciclo total e fechar zumbis acumuladas.
@@ -401,13 +437,13 @@ Score em 47/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
 **Caminho A · Mutirão de zumbis**
 - **Como:** Força-tarefa de 2 semanas pra encerrar as obras presas em CLIENTE FINALIZADO há mais de 90 dias.
 - **Custo do tempo:** ~10h/semana da consultoria por 2 semanas
-- **Impacto esperado:** zumbi_pct cai de 18.5% para ~5% · Score sobe ~3-4 pontos [REVISAR número]
+- **Impacto esperado:** zumbi_pct cai de 18.6% para ~5% · Score sobe ~3-4 pontos [REVISAR número]
 - **Risco:** Algumas zumbis podem ter pendência real não-mapeada (descobrir não é problema, mas ajusta a expectativa)
 
 **Caminho B · Atacar gargalo AGEND.VT-AFERIÇÃO**
 - **Como:** Revisar SLA de Visita Técnica + reorganizar alocação Luana/Wesley pra desbloquear a cauda longa.
 - **Custo do tempo:** Organizacional · alinhamento de agenda da consultoria
-- **Impacto esperado:** Ciclo mediano cai 221d → ~190d · Score sobe ~5 pontos [REVISAR número]
+- **Impacto esperado:** Ciclo mediano cai 217d → ~190d · Score sobe ~5 pontos [REVISAR número]
 - **Risco:** Pressão por velocidade pode comprometer qualidade da VT — não pode ser corrida
 
 **Caminho C · Padronização preventiva (encerramento)**
@@ -473,7 +509,7 @@ Score em 47/100 (zona vermelha · meta ≥70). Componentes que puxam pra baixo:
 ### Capacidade da operação subutilizada
 
 **Diagnóstico**
-Operação a 32% da capacidade mensal · 4.453 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.743 m²/mês não aproveitada.
+Operação a 32% da capacidade mensal · 4.803 m² em curso vs 9.196 m²/mês de capacidade produtiva. Sobra de aproximadamente 4.393 m²/mês não aproveitada.
 
 **Para melhorar:** Acelerar conversão comercial OU revisar dimensionamento da equipe.
 
@@ -508,7 +544,7 @@ Operação a 32% da capacidade mensal · 4.453 m² em curso vs 9.196 m²/mês de
 
 ## Conclusão Executiva
 
-A operação fechou a quinzena demandando ação corretiva, com Score 47/100 e capacidade utilizada em 32%. Da carteira de **259** obras ativas no Painel, **184** foram diagnosticadas pela Análise do Painel (a diferença são obras em pós-entrega ou pausadas, fora desse recorte) — dessas, **107** sem problemas relevantes e **21** em estado crítico, concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo **Comunicação** (77 obras), sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
+A operação fechou a quinzena demandando ação corretiva, com Score 48/100 e capacidade utilizada em 32%. Da carteira de **259** obras ativas no Painel, **184** foram diagnosticadas pela Análise do Painel (a diferença são obras em pós-entrega ou pausadas, fora desse recorte) — dessas, **107** sem problemas relevantes e **21** em estado crítico, concentração que não deve passar despercebida pela próxima quinzena. A categoria de problema dominante segue sendo **Comunicação** (77 obras), sinalizando onde a Gerência da Qualidade deve focar esforço analítico e de processo.
 
 A leitura honesta deste relatório é que a folga de capacidade convive com fragilidade qualitativa em frentes específicas (cobertura de comunicação, infiltrações, alinhamento técnico-cliente). Os caminhos viáveis estão detalhados na Seção 9 com Como/Custo/Impacto/Risco — cabe à Diretoria selecionar 1-3 prioridades pra implementação na próxima quinzena.
 
@@ -522,16 +558,16 @@ A leitura honesta deste relatório é que a folga de capacidade convive com frag
 
 | Status | Quantidade |
 |---|---|
-| Em execução | 38 |
+| Em execução | 40 |
 | Aguardando execução | 46 |
-| Planejamento | 99 |
+| Planejamento | 96 |
 | Pausado | 5 |
 | Aguardando clima | 3 |
 | Em reparo | 21 |
 | Em marcas / rolo / cera | 4 |
 | Concluído | 235 |
 | Finalizado | 547 |
-| Cancelado | 33 |
+| Cancelado | 34 |
 
 > [REVISAR · Fase 1.1c] Listagem nominal de cada bucket (nomes dos clientes) — virá numa próxima iteração consultando o details/.
 
@@ -597,13 +633,13 @@ Pós-entrega: **REPARO**, **MARCAS / ROLO / CERA**.
 ## Fontes e Disclaimer
 
 **Fontes consultadas:**
-- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-05T23:53:58Z`
+- **Painel de Obras** (`cliente.monofloor.cloud`) · refresh automático 30min · snapshot `2026-05-06T13:16:41Z`
 - **`/api/analise`** · diagnósticos textuais + categorização de problemas + teamPerformance · snapshot `2026-05-04T12:20:07.727981`
 - **`/api/analytics/alerts`** · alertas estruturados (stage_delay + sem_equipe)
 - **`/api/analytics/weekly-forecast`** · projeção de 13 semanas (starting + inExecution + capacity)
 - **`/api/dashboard`** · ocorrências abertas + SLA + readiness
 - **Lab Orion** (`orion-pub.workers.dev`) · varredura 12h e 18h · snapshot `2026-05-06T00:04:05Z`
-- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-05T23:54:11Z`
+- **KIRA WhatsApp** · agregado em `rodrigo-stats.json` · snapshot `2026-05-06T13:16:52Z`
 - **Score Histórico** · `score-historico.json` (acumula 1 entry/dia desde 2026-05-01)
 
 **Disclaimer:**
