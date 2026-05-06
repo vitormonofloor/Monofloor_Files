@@ -494,6 +494,161 @@
     text-align: center;
   }
 
+  /* Solicitações em obra · pedido + resolução numerada */
+  .solic-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .solic-item:last-child { border-bottom: none; }
+  .solic-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gold-bg);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .solic-corpo { flex: 1; min-width: 0; }
+  .solic-cabec {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .solic-data-hora {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .solic-autor {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .solic-pedido {
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    background: var(--bg);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 6px;
+  }
+  .solic-resposta {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .solic-resposta-arrow {
+    color: var(--ink-faint);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .solic-resposta-meta {
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+  .solic-resposta-vazio {
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 11.5px;
+    padding: 4px 12px 4px 24px;
+  }
+  .tag-tela-total-mini {
+    display: inline-block;
+    background: #c45a5a;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  /* Marcos · timeline vertical compacta */
+  .marcos-timeline {
+    position: relative;
+    padding: 8px 0 8px 28px;
+  }
+  .marcos-timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 12px;
+    bottom: 12px;
+    width: 1.5px;
+    background: linear-gradient(180deg, transparent 0%, var(--line) 8%, var(--line) 92%, transparent 100%);
+  }
+  .marco-item {
+    position: relative;
+    padding: 10px 14px 10px 4px;
+    margin-left: -22px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    cursor: help;
+    transition: background 0.18s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .marco-item:hover { background: var(--gold-bg); }
+  .marco-item:last-child { margin-bottom: 0; }
+  .marco-bola {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--line), 0 2px 4px rgba(0,0,0,0.06);
+    margin-top: 2px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .marco-item:hover .marco-bola {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 2px var(--gold), 0 3px 6px rgba(184,136,74,0.3);
+  }
+  .marco-info { flex: 1; min-width: 0; line-height: 1.4; }
+  .marco-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+  .marco-label {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 13.5px;
+    letter-spacing: -0.01em;
+    margin-bottom: 1px;
+  }
+  .marco-autor {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
   /* Gantt da execução · colunas = dias · Y = horas */
   .gantt-wrap {
     overflow-x: auto;
@@ -1414,14 +1569,48 @@ function renderDetalhes(){
     `).join('')}</tbody>`;
 
   const marcos = j.marcos || [];
-  document.getElementById('lista-marcos').innerHTML = marcos.length
-    ? marcos.map(mk => `<li>
-        <span class="data">${fmtData(mk.data)}</span>
-        <strong>${esc(LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '))}</strong>
-        <span class="autor">· ${esc(mk.autor)}</span>
-        <span class="trecho">"${esc(mk.trecho).slice(0,180)}"</span>
-      </li>`).join('')
-    : '<li class="vazio">(sem marcos textuais detectados)</li>';
+  // Cor por tipo de marco (alinha com o COR_MARCO_FASE)
+  const COR_MARCO_FASE = {
+    contrato_assinado: '#7ea0b7',
+    cor_aprovada: '#d4a548',
+    vt_agendada: '#c8d6e0',
+    vt_realizada: '#5fa073',
+    inicio_anunciado: '#e8c078',
+    material_produzido: '#b8884a',
+    finalizacao: '#2a5a18',
+    aprovacao_cliente: '#d4a548',
+  };
+  const elMarcos = document.getElementById('lista-marcos');
+  // Substitui o ul por div timeline
+  elMarcos.outerHTML = marcos.length
+    ? `<div class="marcos-timeline" id="lista-marcos">${
+        marcos.map(mk => {
+          const cor = COR_MARCO_FASE[mk.tipo] || 'var(--ink-faint)';
+          const tip = `${LABEL_MARCO[mk.tipo] || mk.tipo} · ${fmtDataLong(mk.data)}\n${mk.autor}\n"${(mk.trecho||'').slice(0,200)}"`;
+          return `
+            <div class="marco-item" data-tip="${esc(tip)}">
+              <div class="marco-bola" style="background:${cor}"></div>
+              <div class="marco-info">
+                <div class="marco-data">${fmtData(mk.data)}</div>
+                <div class="marco-label">${esc(LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '))}</div>
+                <div class="marco-autor">${esc(mk.autor)}</div>
+              </div>
+            </div>
+          `;
+        }).join('')
+      }</div>`
+    : '<div class="marcos-timeline" id="lista-marcos"><div class="vazio">(sem marcos textuais detectados)</div></div>';
+
+  // Tooltip rich nos marcos
+  document.querySelectorAll('#lista-marcos .marco-item').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      const linhas = (el.dataset.tip || '').split('\n');
+      const html = `<strong>${esc(linhas[0]||'')}</strong>${linhas[1] ? '<br><em>' + esc(linhas[1]) + '</em>' : ''}${linhas[2] ? '<br>' + esc(linhas[2]) : ''}`;
+      mostrarTooltip(e, html);
+    });
+    el.addEventListener('mousemove', moverTooltip);
+    el.addEventListener('mouseleave', esconderTooltip);
+  });
 
   const mat = j.materiais || {};
   document.getElementById('tab-materiais').innerHTML = `
@@ -1437,14 +1626,33 @@ function renderDetalhes(){
     </tbody>`;
 
   const solic = j.solicitacoes_material || [];
-  document.getElementById('lista-solic').innerHTML = solic.length
-    ? solic.slice(0, 10).map(s => `<li>
-        <span class="data">${fmtData(s.data)}</span>
-        <span class="autor">${esc(s.autor)}</span>
-        ${s.tela_total ? '<span class="tag-tela-total">TELA TOTAL</span>' : ''}
-        <span class="trecho">"${esc(s.trecho).slice(0,160)}"</span>
-      </li>`).join('')
-    : '<li class="vazio">(nenhuma solicitação detectada)</li>';
+  const elSolic = document.getElementById('lista-solic');
+  elSolic.outerHTML = solic.length
+    ? `<div id="lista-solic">${solic.map((s, i) => {
+        const r = s.resolucao;
+        const respHtml = r
+          ? `<div class="solic-resposta">
+              <span class="solic-resposta-arrow">↳</span>
+              <div>
+                <span class="solic-resposta-meta">+${r.delta_min}min · ${esc(r.autor)}</span>
+                "${esc(r.trecho).slice(0,160)}"
+              </div>
+            </div>`
+          : `<div class="solic-resposta-vazio">↳ sem resolução registrada no Telegram</div>`;
+        return `<div class="solic-item">
+          <div class="solic-num">${i+1}</div>
+          <div class="solic-corpo">
+            <div class="solic-cabec">
+              <span class="solic-data-hora">${fmtData(s.data)} · ${esc(s.hora||'')}</span>
+              <span class="solic-autor">${esc(s.autor)}</span>
+              ${s.tela_total ? '<span class="tag-tela-total-mini">TELA TOTAL</span>' : ''}
+            </div>
+            <div class="solic-pedido">"${esc(s.trecho).slice(0,200)}"</div>
+            ${respHtml}
+          </div>
+        </div>`;
+      }).join('')}</div>`
+    : '<div id="lista-solic" class="vazio">(nenhuma solicitação detectada)</div>';
 
   const ocorr = (j.friccao||{}).ocorrencias_formais || [];
   document.getElementById('lista-ocorr').innerHTML = ocorr.length

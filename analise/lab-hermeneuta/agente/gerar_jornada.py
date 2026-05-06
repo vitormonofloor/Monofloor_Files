@@ -409,25 +409,144 @@ def detectar_marcos(msgs_ordenadas):
     return sorted(marcos, key=lambda x: x["data_iso"] or "")
 
 
+PAD_RESOLUCAO = re.compile(
+    r"\b("
+    r"ok|blz|beleza|combinado|perfeito|positivo|certo"
+    r"|n[ãa]o\s+precisa|sem\s+necessidade"
+    r"|libera(do|d[ao])?|aprovado|autorizado"
+    r"|manda|envia|pode\s+(mandar|enviar)"
+    r"|fica\s+aguardando|aguarda|aguardando"
+    r"|fechado|fechou|fica\s+combinado"
+    r"|n[ãa]o\s+pode|n[ãa]o\s+vai\s+dar"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
 def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim):
-    """Detecta solicitações de material durante execução (regex em msgs)."""
+    """Detecta solicitações de material durante execução · cada uma com resolução pareada.
+    Filtra:
+      - transcrições de áudio/vídeo (🎬 / 🎙️)
+      - negações ('não precisa', 'sem necessidade')
+      - duplicatas: mesma palavra-chave + mesmo autor em <15min vira 1 só."""
     if not cluster_exec_inicio:
         return []
-    solicitacoes = []
-    janela_ini = (cluster_exec_inicio - timedelta(days=2)).isoformat()
-    janela_fim = (cluster_exec_fim + timedelta(days=2)).isoformat() if cluster_exec_fim else HOJE.isoformat()
+    janela_ini_iso = (cluster_exec_inicio - timedelta(days=2)).isoformat()
+    janela_fim_iso = (cluster_exec_fim + timedelta(days=2)).isoformat() if cluster_exec_fim else HOJE.isoformat()
+
+    # Coleta msgs da janela
+    msgs_janela = []
     for m in msgs_ordenadas:
-        ts = (m.get("timestamp") or "")[:10]
-        if not (janela_ini <= ts <= janela_fim):
+        ts = m.get("timestamp") or ""
+        if not (janela_ini_iso <= ts[:10] <= janela_fim_iso):
             continue
+        if is_card_bot(m.get("content") or ""):
+            continue
+        texto = (m.get("content") or "").strip()
+        if not texto:
+            continue
+        # Pula transcrições (não são solicitações)
+        if "🎬" in texto or "🎙️" in texto:
+            continue
+        msgs_janela.append(m)
+
+    PAD_NEGACAO = re.compile(r"\b(n[ãa]o\s+precisa|sem\s+necessidade|n[ãa]o\s+precisamos|n[ãa]o\s+precisar[áa]?)\b", re.IGNORECASE)
+    PAD_SOBRA_FOTO = re.compile(r"\bsobr[ao]u?\s+(de\s+)?material|sobra\s+de\s+material", re.IGNORECASE)
+    PAD_PRECISA_ACAO = re.compile(r"\bprecis[ao]\s+(acess?ar|buscar|retirar|ir|verificar)\b", re.IGNORECASE)
+
+    def palavras_chave(texto):
+        """Extrai palavras-chave do tópico (tela, massa, primer, etc) pra dedup."""
+        kws = set()
+        for pad, kw in [
+            (r"\btela\b", "tela"),
+            (r"\bmassa\s*hard\b", "massa"),
+            (r"\bprimer\b", "primer"),
+            (r"\blumina\b", "lumina"),
+            (r"\bteron\b", "teron"),
+            (r"\bstelion\b", "stelion"),
+            (r"\bverniz\b", "verniz"),
+            (r"\bcera\b", "cera"),
+            (r"\bbalde\b", "balde"),
+            (r"\bkit\b", "kit"),
+        ]:
+            if re.search(pad, texto, re.IGNORECASE):
+                kws.add(kw)
+        return kws
+
+    solicitacoes = []
+    JANELA_RESOLUCAO_MIN = 60
+    JANELA_DEDUP_TOPICO_MIN = 60  # mesmo tópico (palavra-chave) em 60min vira 1 solicitação
+
+    for idx, m in enumerate(msgs_janela):
         texto = m.get("content") or ""
-        if PAD_MAT_SOLIC.search(texto) or PAD_TELA_TOTAL.search(texto):
-            solicitacoes.append({
-                "data": ts,
-                "autor": (m.get("sender") or "?")[:30],
-                "trecho": texto[:200].replace("\n", " ").strip(),
-                "tela_total": bool(PAD_TELA_TOTAL.search(texto)),
-            })
+        # Filtros de exclusão
+        if PAD_NEGACAO.search(texto):
+            continue
+        if PAD_SOBRA_FOTO.search(texto):
+            continue  # informe de sobra · já capturado em sobras
+        if PAD_PRECISA_ACAO.search(texto):
+            continue  # "precisa acessar/buscar" · ação de fluxo, não material
+        if not (PAD_MAT_SOLIC.search(texto) or PAD_TELA_TOTAL.search(texto)):
+            continue
+        ts_iso = m.get("timestamp") or ""
+        ts_dt = parse_iso(ts_iso)
+        sender = (m.get("sender") or "?")[:30]
+        kws_atual = palavras_chave(texto)
+
+        # Dedup por TÓPICO: mesma palavra-chave em ≤60min vira 1 só (independente de autor)
+        duplicata = False
+        for s in solicitacoes:
+            s_dt = parse_iso(s.get("ts_iso"))
+            if not s_dt or not ts_dt:
+                continue
+            delta_min = (ts_dt - s_dt).total_seconds() / 60
+            if delta_min > JANELA_DEDUP_TOPICO_MIN:
+                continue
+            kws_s = s.get("_kws") or set()
+            if kws_atual & kws_s and kws_atual:  # mesma palavra-chave (set não vazio)
+                duplicata = True
+                break
+        if duplicata:
+            continue
+
+        # Busca resposta de OUTRO autor (até 60min) com palavra de fechamento
+        resolucao = None
+        for nxt in msgs_janela[idx + 1: idx + 50]:
+            n_sender = (nxt.get("sender") or "")[:30]
+            if n_sender == sender:
+                continue
+            n_ts = parse_iso(nxt.get("timestamp"))
+            if not n_ts or not ts_dt:
+                continue
+            delta_min = (n_ts - ts_dt).total_seconds() / 60
+            if delta_min > JANELA_RESOLUCAO_MIN:
+                break
+            n_texto = nxt.get("content") or ""
+            if PAD_RESOLUCAO.search(n_texto):
+                resolucao = {
+                    "data": (nxt.get("timestamp") or "")[:10],
+                    "hora": (nxt.get("timestamp") or "")[11:16],
+                    "autor": n_sender,
+                    "trecho": n_texto[:160].replace("\n", " ").strip(),
+                    "delta_min": int(delta_min),
+                }
+                break
+
+        solicitacoes.append({
+            "data": ts_iso[:10],
+            "hora": ts_iso[11:16],
+            "ts_iso": ts_iso,
+            "autor": sender,
+            "trecho": texto[:200].replace("\n", " ").strip(),
+            "tela_total": bool(PAD_TELA_TOTAL.search(texto)),
+            "resolucao": resolucao,
+            "_kws": kws_atual,
+        })
+
+    # Remove campos auxiliares antes de retornar
+    for s in solicitacoes:
+        s.pop("_kws", None)
+        s.pop("ts_iso", None)
     return solicitacoes
 
 

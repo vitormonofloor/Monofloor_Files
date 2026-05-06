@@ -15,6 +15,7 @@ Pasta-síntese do desenvolvimento do Lab Orion. Qualquer agente IA chegando agor
 | 5 | `RUNBOOK.md` | Como rodar varredura/IA cirúrgica/publicar/debugar |
 | 6 | `APRENDIZADOS.md` | Padrões consolidados (schema fantasma, honestidade visual, custo de tempo) |
 | 7 | `INVENTARIO.md` | Mapa físico: onde mora cada arquivo (repo, frontend pub, worker, memória) |
+| 8 | `JORNADA_LOGICA.md` | Como `gerar_jornada.py` lê msgs do Telegram e detecta fases/marcos/cobranças/solicitações |
 
 ## O que é o Orion em 1 frase
 
