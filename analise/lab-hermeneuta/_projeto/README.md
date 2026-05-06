@@ -16,6 +16,7 @@ Pasta-síntese do desenvolvimento do Lab Orion. Qualquer agente IA chegando agor
 | 6 | `APRENDIZADOS.md` | Padrões consolidados (schema fantasma, honestidade visual, custo de tempo) |
 | 7 | `INVENTARIO.md` | Mapa físico: onde mora cada arquivo (repo, frontend pub, worker, memória) |
 | 8 | `JORNADA_LOGICA.md` | Como `gerar_jornada.py` lê msgs do Telegram e detecta fases/marcos/cobranças/solicitações |
+| 9 | `PADRAO_LEITURA_TELEGRAM.md` | **Guia portável** pra outro terminal ler Telegram com seu próprio propósito · sem invadir Lab Orion |
 
 ## O que é o Orion em 1 frase
 

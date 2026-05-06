@@ -186,6 +186,31 @@ PAD_REPROVACAO_RETORNO = re.compile(
     r")\b",
     re.IGNORECASE,
 )
+# Subtipos de reprovacao_retorno · classifica cada ciclo de retrabalho pela natureza da mensagem
+# Ordem importa · mais específico primeiro · primeiro match vence
+SUBTIPOS_REPROVACAO = [
+    ("relatorio_qualidade",  re.compile(r"recebemos\s+(as\s+)?(imagens|informações).*visita\s+de\s+qualidade|durante\s+a\s+visita\s+(de\s+qualidade)?|visita\s+de\s+qualidade\s+realizada", re.IGNORECASE)),
+    ("agendamento_reparo",   re.compile(r"agenda\s+de\s+(visita|retorno)|in[íi]cio\s+de\s+reparo\s+dia|confirmad[ao]\s+para\s+o\s+dia|continuidade\s+(na|da)\s+reaplica|dar\s+continuidade", re.IGNORECASE)),
+    ("decisao_cliente",      re.compile(r"cliente\s+(optou|definiu|decidiu|escolheu)|(\w+)\s+(definiu|optou\s+pela)\s+(fazer\s+)?(uma\s+)?(faixa\s+de\s+|reaplica)", re.IGNORECASE)),
+    ("escopo_definido",      re.compile(r"escopo\s+(para|da|de)\s+reaplica|iremos\s+reaplicar|essas?\s+paredes?\s+para\s+reaplicar|reaplica[çc][aã]o\s+(do\s+piso\s+total|completa|da\s+área|da\s+sala|das?\s+parede)", re.IGNORECASE)),
+    ("defeito_relatado",     re.compile(r"marc(a|ou)\w*\s+(o\s+)?piso|piso\s+(marcad|com\s+marca)|trinca|fissura|rachadura|descolamento|cliente\s+(est[aá]\s+)?questionando|tendo\s+problema", re.IGNORECASE)),
+    ("proposta_tecnica",     re.compile(r"ideal\s+(é|eh|seria)\s+reaplicar|vai\s+(ter\s+que|precisar)\s+refazer|tem\s+que\s+refazer|acredito\s+que.*(ajuste|resolve)|alguns\s+ajustes\s+(j[áa]\s+)?resolve", re.IGNORECASE)),
+    ("solicitacao_admin",    re.compile(r"fazer\s+\d+\s+resumos?|poderia\s+fazer\s+(\d+\s+)?resumos?|preciso\s+(de\s+|do\s+)?resumo", re.IGNORECASE)),
+    ("confirmacao_pendente", re.compile(r"\b[ée]\s+a\s+reaplica[çc][aã]o\s+(do|da)\b|fica\s+combinad[ao]", re.IGNORECASE)),
+]
+
+LABELS_SUBTIPO = {
+    "relatorio_qualidade":  "Relatório VT qualidade",
+    "agendamento_reparo":   "Agendamento de reparo",
+    "decisao_cliente":      "Decisão do cliente",
+    "escopo_definido":      "Escopo de reaplicação",
+    "defeito_relatado":     "Defeito relatado",
+    "proposta_tecnica":     "Proposta técnica",
+    "solicitacao_admin":    "Solicitação admin",
+    "confirmacao_pendente": "Confirmação pendente",
+    "tratativa":            "Tratativa",
+}
+
 # Amostra solicitada · antecede cor_aprovada · gargalo de cor (CORES pipe)
 PAD_AMOSTRA_SOLICITADA = re.compile(
     r"\b("
@@ -291,7 +316,7 @@ def detectar_marco_em_msg(msg, tipo_pad, padrao):
     m = padrao.search(texto)
     if not m:
         return None
-    return {
+    out = {
         "tipo": tipo_pad,
         "data": (msg.get("timestamp") or "")[:10],
         "data_iso": msg.get("timestamp"),
@@ -300,6 +325,16 @@ def detectar_marco_em_msg(msg, tipo_pad, padrao):
         "msg_id": msg.get("id"),
         "match": m.group(0)[:50],
     }
+    # Detecta subtipo pra reprovacao_retorno · classificação por natureza da mensagem
+    if tipo_pad == "reprovacao_retorno":
+        subtipo = "tratativa"  # default
+        for st, pad_st in SUBTIPOS_REPROVACAO:
+            if pad_st.search(texto):
+                subtipo = st
+                break
+        out["subtipo"] = subtipo
+        out["label_subtipo"] = LABELS_SUBTIPO.get(subtipo, subtipo)
+    return out
 
 
 # ============================================================
@@ -846,6 +881,93 @@ def montar_equipe(detail, equipe_endpoint, msgs_ordenadas):
 # Padrões observados
 # ============================================================
 
+def detectar_ciclos(marcos, fases, data_1a_msg, data_ultima_msg):
+    """Divide a jornada em ciclos · separados por aprovacao_cliente seguida de reprovacao_retorno.
+    Cada ciclo tem início, fim, fases e marcos próprios. Obra sem reprovação = 1 ciclo único."""
+    if not marcos or not data_1a_msg or not data_ultima_msg:
+        return []
+
+    aprovacoes = [m for m in marcos if m.get("tipo") == "aprovacao_cliente"]
+    reprovacoes = [m for m in marcos if m.get("tipo") == "reprovacao_retorno"]
+
+    # Sem reprovação · 1 ciclo só · não devolve nada (UI usa fases/marcos atuais)
+    if not reprovacoes:
+        return []
+
+    ciclos = []
+    cursor_inicio = data_1a_msg
+
+    # Pra cada aprovação, fecha um ciclo · próxima reprovação abre o próximo
+    for i, aprov in enumerate(aprovacoes):
+        data_aprov = aprov["data"]
+        if data_aprov < cursor_inicio:
+            continue  # aprovação antes do cursor (já contada)
+        nome_ciclo = f"Ciclo {len(ciclos)+1} · entrega" if len(ciclos) == 0 else f"Ciclo {len(ciclos)+1} · retrabalho"
+        ciclos.append(_recortar_ciclo(nome_ciclo, cursor_inicio, data_aprov, fases, marcos))
+        # Próxima reprovação após essa aprovação inicia novo ciclo
+        proxima = next((r for r in reprovacoes if r["data"] > data_aprov), None)
+        if proxima:
+            cursor_inicio = proxima["data"]
+        else:
+            cursor_inicio = None
+            break
+
+    # Ciclo em aberto · há reprovação após última aprovação (ou obra nunca aprovou)
+    if cursor_inicio:
+        nome = f"Ciclo {len(ciclos)+1} · retrabalho em andamento"
+        ciclos.append(_recortar_ciclo(nome, cursor_inicio, data_ultima_msg, fases, marcos))
+    elif not aprovacoes:
+        # Obra com reprovações mas sem nenhuma aprovação ainda
+        ciclos.append(_recortar_ciclo("Ciclo 1 · em andamento", data_1a_msg, data_ultima_msg, fases, marcos))
+
+    return ciclos
+
+
+def _recortar_ciclo(nome, dt_ini, dt_fim, fases, marcos):
+    """Filtra fases e marcos que caem dentro do intervalo do ciclo."""
+    fases_ciclo = []
+    for f in fases or []:
+        f_ini, f_fim = f.get("inicio"), f.get("fim")
+        if not f_ini or not f_fim:
+            continue
+        # Inclui fase se TEM SOBREPOSIÇÃO com o intervalo do ciclo
+        if f_fim < dt_ini or f_ini > dt_fim:
+            continue
+        # Recorta fase pra caber no ciclo
+        f_recortada = dict(f)
+        if f_ini < dt_ini:
+            f_recortada["inicio"] = dt_ini
+        if f_fim > dt_fim:
+            f_recortada["fim"] = dt_fim
+        # Recalcula duração
+        try:
+            d_ini = datetime.fromisoformat(f_recortada["inicio"]).date()
+            d_fim = datetime.fromisoformat(f_recortada["fim"]).date()
+            f_recortada["duracao_dias"] = max(1, (d_fim - d_ini).days + 1)
+        except Exception:
+            pass
+        fases_ciclo.append(f_recortada)
+
+    marcos_ciclo = [m for m in marcos or [] if dt_ini <= m.get("data", "") <= dt_fim]
+
+    # Duração total do ciclo em dias
+    try:
+        d1 = datetime.fromisoformat(dt_ini).date()
+        d2 = datetime.fromisoformat(dt_fim).date()
+        duracao = (d2 - d1).days + 1
+    except Exception:
+        duracao = None
+
+    return {
+        "nome": nome,
+        "inicio": dt_ini,
+        "fim": dt_fim,
+        "duracao_dias": duracao,
+        "fases": fases_ciclo,
+        "marcos": marcos_ciclo,
+    }
+
+
 def detectar_padroes(jornada):
     padroes = []
     if jornada["tempo_hibernacao_dias"] and jornada["tempo_hibernacao_dias"] >= 60:
@@ -1332,6 +1454,12 @@ def construir_jornada(obra_id):
         },
         "materiais_enviados": envios_materiais,
         "marcos_execucao": marcos_execucao,
+        "ciclos": detectar_ciclos(
+            marcos,
+            fases,
+            primeira_msg.date().isoformat() if primeira_msg else None,
+            ultima_msg.date().isoformat() if ultima_msg else None,
+        ),
         "gerado_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     jornada["padroes"] = detectar_padroes(jornada)

@@ -649,6 +649,55 @@
     font-style: italic;
   }
 
+  /* Header de ciclo · separa visualmente jornadas multi-ciclo */
+  .ciclo-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #b8884a 0%, #d4a548 100%);
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+  }
+  .ciclo-header.retrabalho {
+    background: linear-gradient(135deg, #c45a5a 0%, #e07878 100%);
+  }
+  .ciclo-header.aberto {
+    background: linear-gradient(135deg, #c45a5a 0%, #e8a878 100%);
+  }
+  .ciclo-nome {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .ciclo-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    opacity: 0.92;
+    margin-left: auto;
+  }
+  .ciclo-duracao {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.18);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .timeline-wrap-ciclo {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 28px 28px 22px;
+    margin-bottom: 22px;
+    overflow-x: auto;
+    box-shadow: var(--shadow-sm);
+  }
+
   /* Gantt da execução · colunas = dias · Y = horas */
   .gantt-wrap {
     overflow-x: auto;
@@ -914,8 +963,8 @@
     </div>
 
     <div class="section-title">Linha do tempo</div>
-    <div class="timeline-wrap">
-      <svg class="timeline-svg" id="timeline" viewBox="0 0 1200 320" preserveAspectRatio="xMinYMin meet"></svg>
+    <div id="timeline-container"></div>
+    <div class="timeline-wrap" style="margin-top:18px">
       <div class="tempo-pills" id="tempo-pills"></div>
     </div>
 
@@ -1111,12 +1160,10 @@ function svgText(x, y, txt, attrs){
   return t;
 }
 
-function renderTimeline(j){
-  const svg = document.getElementById('timeline');
+function renderTimelineEm(svg, fases, marcos){
   svg.innerHTML = '';
 
-  const fases = j.fases || [];
-  if (!fases.length) return;
+  if (!fases || !fases.length) return;
 
   const totalDias = fases.reduce((sum, f) => sum + Math.max(1, f.duracao_dias), 0);
 
@@ -1211,7 +1258,7 @@ function renderTimeline(j){
   svg.appendChild(dtFim);
 
   // MARCOS · distribuição em até 4 linhas pra evitar amontoamento
-  const marcos = (j.marcos || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
+  marcos = (marcos || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
   if (marcos.length){
     const dataInicial = new Date(dataIni);
     const dataFinal = new Date(dataFim);
@@ -1278,8 +1325,9 @@ function renderTimeline(j){
         fill: cor, stroke: '#fff', 'stroke-width': '2',
         style: 'cursor:help; filter: drop-shadow(0 2px 4px rgba(184,136,74,0.4))'
       });
+      const labelTooltip = (m.tipo === 'reprovacao_retorno' && m.label_subtipo) ? m.label_subtipo : label;
       circ.addEventListener('mouseenter', (e) => mostrarTooltip(e,
-        `<strong>${esc(label)}</strong><br>${fmtDataLong(m.data)}<br><em>${esc(m.autor)}</em><br>"${esc(m.trecho).slice(0,200)}"`
+        `<strong>${esc(labelTooltip)}</strong><br>${fmtDataLong(m.data)}<br><em>${esc(m.autor)}</em><br>"${esc(m.trecho).slice(0,200)}"`
       ));
       circ.addEventListener('mouseleave', esconderTooltip);
       circ.addEventListener('mousemove', moverTooltip);
@@ -1292,7 +1340,9 @@ function renderTimeline(j){
       svg.appendChild(g);
 
       // Label do marco (acima do círculo)
-      const lbl = svgText(x, y - 22, label, {
+      // Pra reprovacao_retorno · usa label_subtipo (mais específico) em vez de "Reprovação/retorno" genérico
+      const labelDisplay = (m.tipo === 'reprovacao_retorno' && m.label_subtipo) ? m.label_subtipo : label;
+      const lbl = svgText(x, y - 22, labelDisplay, {
         'text-anchor': 'middle', 'font-family': "'Plus Jakarta Sans', sans-serif",
         'font-size': '11', 'font-weight': '700', 'fill': '#2a2520', 'letter-spacing': '-0.01em'
       });
@@ -1489,6 +1539,36 @@ function renderGantt(marcosExec){
   });
 }
 
+function renderTimelineCiclos(j){
+  const cont = document.getElementById('timeline-container');
+  cont.innerHTML = '';
+  const ciclos = j.ciclos || [];
+
+  if (!ciclos.length){
+    // Sem ciclos · timeline única (modo padrão · GURGEL e similares)
+    cont.innerHTML = `<div class="timeline-wrap"><svg class="timeline-svg" id="timeline-0" viewBox="0 0 1200 320" preserveAspectRatio="xMinYMin meet"></svg></div>`;
+    renderTimelineEm(document.getElementById('timeline-0'), j.fases || [], j.marcos || []);
+    return;
+  }
+
+  // Multi-ciclos (KRYSTAL com retrabalho · etc)
+  ciclos.forEach((c, idx) => {
+    const cls = c.nome.includes('andamento') ? 'aberto' : (idx === 0 ? '' : 'retrabalho');
+    const elId = `timeline-${idx}`;
+    cont.insertAdjacentHTML('beforeend', `
+      <div class="ciclo-header ${cls}">
+        <div class="ciclo-nome">${esc(c.nome)}</div>
+        <div class="ciclo-meta">${fmtData(c.inicio)} → ${fmtData(c.fim)} · ${c.fases.length} fase${c.fases.length===1?'':'s'} · ${c.marcos.length} marco${c.marcos.length===1?'':'s'}</div>
+        <div class="ciclo-duracao">${c.duracao_dias}d</div>
+      </div>
+      <div class="timeline-wrap-ciclo">
+        <svg class="timeline-svg" id="${elId}" viewBox="0 0 1200 320" preserveAspectRatio="xMinYMin meet"></svg>
+      </div>
+    `);
+    renderTimelineEm(document.getElementById(elId), c.fases, c.marcos);
+  });
+}
+
 function renderTempoPills(j){
   const cont = document.getElementById('tempo-pills');
   const ini = j.data_1a_msg;
@@ -1541,7 +1621,7 @@ function renderDetalhes(){
   document.getElementById('det-id').textContent = j.obra_id.slice(0,8);
   document.getElementById('detalhes').classList.add('visivel');
 
-  renderTimeline(j);
+  renderTimelineCiclos(j);
   renderTempoPills(j);
 
   const m = j.equipe.monofloor;
@@ -1593,13 +1673,14 @@ function renderDetalhes(){
     ? `<div class="marcos-timeline" id="lista-marcos">${
         marcos.map(mk => {
           const cor = COR_MARCO_FASE[mk.tipo] || 'var(--ink-faint)';
-          const tip = `${LABEL_MARCO[mk.tipo] || mk.tipo} · ${fmtDataLong(mk.data)}\n${mk.autor}\n"${(mk.trecho||'').slice(0,200)}"`;
+          const labelMostrar = (mk.tipo === 'reprovacao_retorno' && mk.label_subtipo) ? mk.label_subtipo : (LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '));
+          const tip = `${labelMostrar} · ${fmtDataLong(mk.data)}\n${mk.autor}\n"${(mk.trecho||'').slice(0,200)}"`;
           return `
             <div class="marco-item" data-tip="${esc(tip)}">
               <div class="marco-bola" style="background:${cor}"></div>
               <div class="marco-info">
                 <div class="marco-data">${fmtData(mk.data)}</div>
-                <div class="marco-label">${esc(LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '))}</div>
+                <div class="marco-label">${esc(labelMostrar)}</div>
                 <div class="marco-autor">${esc(mk.autor)}</div>
               </div>
             </div>
