@@ -309,7 +309,78 @@ Lista vai crescer com a maturidade.
 
 ---
 
-## 12 · Por que tudo isso é determinístico (sem IA externa)?
+## 12 · Protocolo pra propor um marco NOVO
+
+**Antes** de adicionar regex no código · siga essa ordem · obrigatório:
+
+### Passo 1 · NÃO comece pela regex
+
+A primeira tentativa "academic" geralmente zera. Linguagem do time Monofloor é específica · não bate com o termo formal/dicionário.
+
+### Passo 2 · Mapeie a linguagem REAL nas obras-piloto
+
+Antes de escrever regex · faça `grep` nas msgs do Telegram das 2 obras-piloto (KRYSTAL + GURGEL) com **termos AMPLOS** (palavra raiz):
+
+```python
+TERMOS = ['reaplica', 'reparo', 'marca', 'retorno', 'refazer', 'visita', 'amostra']
+# Pra cada termo, buscar nas msgs (filtrando cards de bot e transcrições)
+# Listar primeira e última ocorrência · quantas msgs · quem disse
+```
+
+Isso revela:
+- Se o marco existe textualmente
+- Como o time escreve (ex: "balde marcou o piso" · "seguir com reaplicação" · "início de reparo dia 26/03")
+- Se a regex acadêmica capturaria essa linguagem
+
+### Passo 3 · Construa regex a partir do que VIU
+
+Use os exatos termos detectados como base · ex:
+
+```
+ENCONTRADO: "balde acabou marcando o piso"
+REGEX: \bmarc(a|ou)\w*\s+(o\s+)?piso
+
+ENCONTRADO: "Reparos e ajustes finalizados 🙏🏻"  
+REGEX: \breparos?\s+e\s+ajustes\s+(finalizad|conclu)
+
+ENCONTRADO: "vai ter que refazer a parede"
+REGEX: \brefazer\s+(a|o|essa|esse)\s+(parede|piso|paredão|área)
+```
+
+NÃO ampliar pra termos que você NÃO viu · regex inventada gera falso positivo silencioso.
+
+### Passo 4 · Filtros negativos OBRIGATÓRIOS
+
+Pra qualquer marco novo · sempre filtrar:
+- **Cards de bot** · `is_card_bot(texto)` (`-{10,}` ou padrão APLICADOR/SUPERVISOR/CLIENTE)
+- **Transcrições** · `🎬` ou `🎙️` (linguagem ambígua · narração de áudio/vídeo)
+- **Negações específicas** se aplicável (ex: "não precisa", "sem necessidade")
+
+### Passo 5 · Decida tipo (único vs repetível)
+
+- **Único:** primeira ocorrência cronológica vence (contrato, cor aprovada, primeira VT)
+- **Repetível:** dedup por (data + tipo) · um por dia (reprovação, finalização, aprovação · podem ter ciclos)
+
+### Passo 6 · Rode nas 2 obras + valide qualitativamente
+
+```bash
+python agente/gerar_jornada.py
+```
+
+Pra cada match · pergunte:
+- Esse trecho REALMENTE indica o marco?
+- A data faz sentido na linha do tempo?
+- Tem falso positivo?
+
+KRYSTAL é REAPLICAÇÃO · deve disparar `reprovacao_retorno`. GURGEL é obra normal · não deve disparar (ou bem pouco). Use isso como sanity check.
+
+### Passo 7 · Atualize ESSE doc
+
+Adicione a linha do marco novo na tabela da Seção 4 ou Seção 5 com a regex final calibrada · não a regex acadêmica.
+
+---
+
+## 13 · Por que tudo isso é determinístico (sem IA externa)?
 
 - **Auditável:** abre o JSON · vê QUAL regex disparou ou qual regra de fase aplicou · sem caixa-preta
 - **Custo zero:** zero tokens, zero rate limit, zero risco de outage

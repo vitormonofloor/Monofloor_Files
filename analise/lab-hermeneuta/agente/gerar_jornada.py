@@ -60,6 +60,26 @@ OBRAS_PILOTO = [
 HOJE = datetime.now(timezone.utc)
 HOJE_DATE = HOJE.date()
 
+# Aliases de senders no Telegram · normaliza pessoas que aparecem com múltiplas grafias
+# Formato: token-detector (lowercase) → nome canônico
+# Atualizar quando descobrir nova pessoa com múltiplas grafias.
+SENDERS_ALIAS = {
+    "taquinho": "Gilmar Taquinho",  # KRYSTAL: Taquinho = aplicador | Gilmar Taquinho
+}
+
+
+def normalizar_sender(sender: str) -> str:
+    """Aplica aliases pra unificar pessoa que aparece com nomes diferentes.
+    Ex: 'Taquinho' E 'aplicador | Gilmar Taquinho' viram ambos 'Gilmar Taquinho'."""
+    if not sender:
+        return sender
+    s_low = sender.lower()
+    for token, canonico in SENDERS_ALIAS.items():
+        # match: token aparece como palavra inteira no sender
+        if re.search(rf"\b{re.escape(token)}\b", s_low):
+            return canonico
+    return sender
+
 # Janelas e thresholds
 HIBERNACAO_GAP_DIAS = 30  # gap mínimo entre msgs pra contar hibernação
 EXEC_CLUSTER_MSGS_DIA = 5  # ≥N msgs/dia = cluster denso (execução)
@@ -795,14 +815,15 @@ def montar_equipe(detail, equipe_endpoint, msgs_ordenadas):
             "funcao": p.get("funcao"),
         })
 
-    # Senders das msgs Telegram (top 15 por contagem)
+    # Senders das msgs Telegram (top 15 por contagem · com aliases unificados)
     sender_count = Counter()
     sender_primeira = {}
     sender_ultima = {}
     for m in msgs_ordenadas:
-        s = (m.get("sender") or "").strip()
-        if not s or s.lower() == "🎬 transcrição" or s.lower() == "🎙️ transcrição":
+        s_raw = (m.get("sender") or "").strip()
+        if not s_raw or s_raw.lower() == "🎬 transcrição" or s_raw.lower() == "🎙️ transcrição":
             continue
+        s = normalizar_sender(s_raw)
         sender_count[s] += 1
         ts = m.get("timestamp")
         if s not in sender_primeira:
