@@ -139,6 +139,23 @@ Detectar "dor não registrada":
 
 ---
 
+## G · Calibração da memória institucional (próxima sessão dedicada)
+
+**Quando:** próxima sessão · ~3h total
+**Origem:** Vitor pediu em 2026-05-06 *"calibrar ao máximo o aprendizado · não quero que perca nada"*. Items 1 (captura proativa) + 4 (lição estruturada no /sync_save) já foram atacados. Restam 3 frentes mais pesadas.
+
+| # | Item | O que faz | Custo | Estado |
+|---|---|---|---|---|
+| G1 | **ADRs · Architecture Decision Records** | Template `_projeto/ADR/` + capturar decisões grandes já tomadas: Kira-driven em vez de IA-pesada · Tratativas separado de Retrabalho · macro-etapas com 5 categorias · snapshots material só 2026+ · F1-F6 leitura fria · cruzamento Kira × ocorrências. Cada ADR = O QUE decidimos + ALTERNATIVAS descartadas + COMO saberemos se erramos. | 1h | Pendente |
+| G2 | **Vocabulário Operacional Monofloor consolidado** | 1 doc canônico unificando: produtos (OS × campo), pessoas (função/papel/cliente), termos de operação (VT, reaplicação, tratativas), apelidos. Hoje disperso em `reference_nomenclatura_produtos`, `reference_padrao_leitura_telegram`, `feedback_telegram_nomes_terceiros`. | 45min | Pendente |
+| G3 | **Mapa de pessoas · 1 doc** | Quem é quem · função atual + histórica (ex: Braiam aplicador→fiscal qualidade dez/2025) · estilo/tom · cliente atendido · risco/observações. Hoje fragmentado em 3 memórias diferentes. | 45min | Pendente |
+
+**Critério de aceite G1-G3:** após fechado, qualquer Claude futuro que abrir terminal Monofloor leia esses 3 docs (via CLAUDE.md global ou MEMORY.md) e saiba reproduzir o vocabulário/decisões/pessoas sem precisar perguntar ao Vitor.
+
+**Próximo passo:** começar pelo G1 (mais auditável · funciona como template pros próximos).
+
+---
+
 ## Snapshot da prioridade
 
 ```
