@@ -1,24 +1,24 @@
 {
-  "atualizado_em": "2026-05-06T17:45:42Z",
+  "atualizado_em": "2026-05-06T19:52:32Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1041,
-    "ativas": 259,
+    "total": 1042,
+    "ativas": 260,
     "finalizados": 782,
     "em_execucao": 39,
     "pausados": 6,
     "m2_em_execucao": 4703
   },
   "por_status": {
-    "reparo": 21,
+    "contrato": 9,
     "planejamento": 97,
+    "em_execucao": 39,
+    "aguardando_clima": 3,
+    "reparo": 21,
     "finalizado": 547,
     "cancelado": 35,
-    "aguardando_clima": 3,
-    "em_execucao": 39,
     "aguardando_execucao": 46,
     "pausado": 6,
-    "contrato": 8,
     "marcas_rolo_cera": 4,
     "concluido": 235
   },
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2055,
+    "pending_tasks": 2058,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1371,50 +1371,164 @@
       "Aplicador 2": 19,
       "Preparador": 12
     },
-    "obras_com_equipe_hoje": 0,
-    "pessoas_em_campo_hoje": 0,
-    "em_2_ou_mais_obras_hoje": 0,
-    "ociosos_hoje": 114,
-    "conflitos_detalhe": [],
+    "obras_com_equipe_hoje": 24,
+    "pessoas_em_campo_hoje": 72,
+    "em_2_ou_mais_obras_hoje": 7,
+    "ociosos_hoje": 42,
+    "conflitos_detalhe": [
+      {
+        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
+        "nome": "João Carlos",
+        "cargo": "Encarregado",
+        "qtd_obras": 5,
+        "obras": [
+          {
+            "id": "4f79b468-f013-4da9-9eed-594bf150f89a",
+            "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE "
+          },
+          {
+            "id": "bd0894c1-95cc-4d42-ab81-861d97dbcfa7",
+            "cliente": "PALLOMA BIANCA RAMIREZ URIZZI"
+          },
+          {
+            "id": "7e12a05d-a837-4599-b8a7-aa84318c39ac",
+            "cliente": "TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA"
+          },
+          {
+            "id": "b153f25e-ec17-4018-9111-c22412a7de74",
+            "cliente": "VINICIUS LULUSKI DE SOUZA"
+          },
+          {
+            "id": "23586b42-a279-42f1-a98e-84ac1a89a20a",
+            "cliente": "MANUELA VILLAS BOAS SOUZA MARTIN"
+          }
+        ]
+      },
+      {
+        "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
+        "nome": "Wiguens Louis",
+        "cargo": "Encarregado",
+        "qtd_obras": 5,
+        "obras": [
+          {
+            "id": "d569a799-4ddf-44b0-aa3a-1507cc75e799",
+            "cliente": "JEAN LUC SENAC"
+          },
+          {
+            "id": "e79c60c1-4169-4df5-b856-220fe82510db",
+            "cliente": "GABRIELA AZEVEDO FORLIN"
+          },
+          {
+            "id": "097ee21f-3e27-4904-9929-86aa8b1d6fba",
+            "cliente": "CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)"
+          },
+          {
+            "id": "7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2",
+            "cliente": "ADRIANO DE FIGUEIREDO MACORIN"
+          },
+          {
+            "id": "1624ef33-fd4c-4b13-a68d-ade47e8acd7d",
+            "cliente": "SILVANA PANDOLFI JANETE"
+          }
+        ]
+      },
+      {
+        "id": "8c9780dd-8585-460a-a3b2-9ba5571955e5",
+        "nome": "Egberto Sullivan Tavares de Oliveira",
+        "cargo": "Encarregado",
+        "qtd_obras": 3,
+        "obras": [
+          {
+            "id": "210669e6-c8a4-4e88-93d9-291011a7b51b",
+            "cliente": "JOYCE BAHIENSE GOMES "
+          },
+          {
+            "id": "2088ab88-2d39-41a1-95e8-33f5ebfbb9d2",
+            "cliente": "FERNANDO TEMBRA RODRIGUEZ"
+          },
+          {
+            "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
+            "cliente": "JULIANA KOMEL DE OLIVEIRA"
+          }
+        ]
+      },
+      {
+        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
+        "nome": "Júlio Miranda",
+        "cargo": "Encarregado",
+        "qtd_obras": 3,
+        "obras": [
+          {
+            "id": "4741be3f-c279-4894-83e4-44e30dfbbdb6",
+            "cliente": "GUSTAVO PARRILO DA NOBREGA"
+          },
+          {
+            "id": "9a409b5e-e4dd-43f6-a530-4b85d6a55b2b",
+            "cliente": "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"
+          },
+          {
+            "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
+            "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK"
+          }
+        ]
+      },
+      {
+        "id": "6b237d14-b591-483f-b945-fa570f4746cc",
+        "nome": "Michael Marinho de Lima",
+        "cargo": "Encarregado",
+        "qtd_obras": 3,
+        "obras": [
+          {
+            "id": "6dc04755-5c42-437a-a4a1-c0e81b900eeb",
+            "cliente": "BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"
+          },
+          {
+            "id": "d7b1c726-10f3-4de5-8a52-c569033990a6",
+            "cliente": "APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES"
+          },
+          {
+            "id": "8001bd7a-7121-4fca-ac8d-3641765382f1",
+            "cliente": "ANA PAULA JACINTHO JUNQUEIRA APARTAMENTO STUDIO"
+          }
+        ]
+      },
+      {
+        "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
+        "nome": "Gilmar Gomes Rafael",
+        "cargo": "Encarregado",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "dec2480f-fc69-4d44-9dbc-d3820badf218",
+            "cliente": "MARINA PIRES DE AGUIAR"
+          },
+          {
+            "id": "a79f00f0-19b1-43d4-b9d7-6ab8d219c205",
+            "cliente": "KRYSTAL LURI NUMA"
+          }
+        ]
+      },
+      {
+        "id": "3c66db13-cf7f-4412-8f45-20c543817112",
+        "nome": "Ronaldo Adriano Rocha",
+        "cargo": "Encarregado",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "fdbb659f-7073-4139-a3ee-8333a217f03c",
+            "cliente": "JOAO PEDRO SCANAGATTA DAMACENO"
+          },
+          {
+            "id": "0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0",
+            "cliente": "CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA "
+          }
+        ]
+      }
+    ],
     "ociosos_detalhe": [
-      {
-        "id": "9216dc24-3963-4aff-8265-06ca2910338a",
-        "nome": "Ariosvaldo Silva Reis Júnior",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "af8e1d9a-a4b0-4f73-a447-197c7624588c",
-        "nome": "Eryck Bryan de Barros Ramiro",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "5d7cadc5-ab7a-4b81-9796-94c52e171556",
-        "nome": "Gabriel dos Santos sena Ribeiro",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "56f44118-1ed5-43f9-9916-df8730b9a877",
-        "nome": "Isaque Santos Cunha",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "70a2f619-2141-49d1-8ac8-afa0c6d7c1c8",
-        "nome": "Jonathan Batista Rocha",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "3483e2e4-53e2-4c4e-8e22-b0ae39362bd2",
-        "nome": "Kauan de Lima Humberto",
-        "cargo": "Ajudante"
-      },
       {
         "id": "fab53bbb-3e7a-4399-b328-40748a8d90e5",
         "nome": "Leonardo Batista Rocha",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "a1185503-c7cc-44d5-89a0-f014c64b8091",
-        "nome": "Leonardo Fernando Magalhães",
         "cargo": "Ajudante"
       },
       {
@@ -1443,31 +1557,6 @@
         "cargo": "Ajudante"
       },
       {
-        "id": "5bf4c8fa-47f8-460e-8909-d61f4e7eac52",
-        "nome": "Rayan Mohany Carvalho Costa",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "0646cbe2-6efe-431c-9465-51560a1458e8",
-        "nome": "Roberto Carlos dos santos filho",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "5858d956-237a-429b-829e-d0a37456eb9f",
-        "nome": "Welington Bonfim da Silva",
-        "cargo": "Ajudante"
-      },
-      {
-        "id": "b6504df0-42d1-4bc5-92e5-c9fa8eea7492",
-        "nome": "Adriano Fernandes da Silva",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "116567a9-74f8-4ffc-9d7f-9b8acb492d3b",
-        "nome": "Alexander Vieira Rangel",
-        "cargo": "Aplicador 1"
-      },
-      {
         "id": "50beb15f-3eff-4e25-a54d-de2b0f409f43",
         "nome": "Bruno Batista Miranda",
         "cargo": "Aplicador 1"
@@ -1475,11 +1564,6 @@
       {
         "id": "14f62c0f-d39e-4c52-874c-482a165fcada",
         "nome": "Clayton do Carmo",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "fe13f7cb-2cfa-4f56-b7f3-426b7c143ffd",
-        "nome": "Cléber Cardoso",
         "cargo": "Aplicador 1"
       },
       {
@@ -1498,26 +1582,6 @@
         "cargo": "Aplicador 1"
       },
       {
-        "id": "e67460ab-54e8-4773-8ce3-cec4783aab7b",
-        "nome": "Ewerton Batista da Silva",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "597b35e9-ec1f-4986-bb6b-82d0cdfd0c67",
-        "nome": "Jose manoel Mendes dos Santos",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "fe73731c-e50f-4c51-87d7-58559b2b4100",
-        "nome": "Kaike Luiz Gonzaga",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "85be1c95-8d8d-4619-a702-5900277fa055",
-        "nome": "Kleber Luiz da Silva",
-        "cargo": "Aplicador 1"
-      },
-      {
         "id": "6c5172c3-2b8f-4e7f-95f8-4384ea846962",
         "nome": "Luiz Taciano",
         "cargo": "Aplicador 1"
@@ -1525,11 +1589,6 @@
       {
         "id": "452f0b24-16dc-45a1-acec-b5174d05dd15",
         "nome": "Marcelo Aparecido dos Santos",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "bea129dc-eed7-4596-87ef-c21ef8030a7b",
-        "nome": "Marcelo Siqueira Boer",
         "cargo": "Aplicador 1"
       },
       {
@@ -1543,11 +1602,6 @@
         "cargo": "Aplicador 1"
       },
       {
-        "id": "39e5122b-22b6-455b-91e8-4c8731f68517",
-        "nome": "Matheus da Silva de Souza",
-        "cargo": "Aplicador 1"
-      },
-      {
         "id": "ea844e5e-3fe5-40d4-add0-80a6eea846bd",
         "nome": "Márcio Martins de Lira",
         "cargo": "Aplicador 1"
@@ -1555,21 +1609,6 @@
       {
         "id": "2b0dd9e4-dfd2-42b7-a3ea-ad01496d1dce",
         "nome": "Nicolas Matheus Ticianelli",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "afca0329-ebff-4194-92b6-c71ca4ab0041",
-        "nome": "Odair Didre",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "ffc70ead-02b0-473b-addd-8cd1b2f37360",
-        "nome": "Samuel da Costa Silva",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "e728d345-caf5-437c-af67-8f2ec787bd7a",
-        "nome": "Vinícius de Freitas Alencar batista",
         "cargo": "Aplicador 1"
       },
       {
@@ -1583,46 +1622,6 @@
         "cargo": "Aplicador 2"
       },
       {
-        "id": "c5cb57af-268b-4087-9a5e-5f011d3f3f15",
-        "nome": "Angelo julio dos santos",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "92434394-575f-4bb4-b207-4bf64f767624",
-        "nome": "Ariosvaldo Silva Reis",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "cf1e81a1-4988-4247-b742-4fcfcea419f2",
-        "nome": "Daniel Rodrigues dos Santos",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "1ff5713a-f8cf-45c8-92af-432f3b392059",
-        "nome": "Donald Rodriguês",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "5f865a27-6ab2-40d8-ba38-974723cb47e1",
-        "nome": "Franklin Borges de Arruda",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "698c2a1f-82a3-4846-9a6f-abea10450c68",
-        "nome": "Genival Ximenes",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "94f6630d-899f-43b8-b884-523f329f2e2c",
-        "nome": "Hudson da Silva Meira",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "69a7c1ba-1f84-4974-a653-22fd7e26931f",
-        "nome": "Jorge Luis Ribero Mendez",
-        "cargo": "Aplicador 2"
-      },
-      {
         "id": "1f0e982e-6e0a-499a-abd1-6d5c259c7505",
         "nome": "Kaio Mendonça de Oliveira",
         "cargo": "Aplicador 2"
@@ -1633,88 +1632,13 @@
         "cargo": "Aplicador 2"
       },
       {
-        "id": "bd51cc8f-9634-4bb6-b327-4d2639ccc73f",
-        "nome": "Leandro José Oliveira dos Santos",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "21b49069-0ca9-4942-bc96-b3a0a22e7707",
-        "nome": "Maximiliano",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "4b20a0e2-e15e-4647-9667-05a1c8e0db5a",
-        "nome": "Odirley Alves de Oliveira",
-        "cargo": "Aplicador 2"
-      },
-      {
         "id": "1641d611-f024-4c43-ab5f-789757556d55",
         "nome": "Otávio Alves de Almeida",
         "cargo": "Aplicador 2"
       },
       {
-        "id": "f843741f-0abc-40c2-b6e4-82bb7388e199",
-        "nome": "Paulo César Santos de Oliveira",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "3769cf24-2aaf-4f9e-94bb-8753898feac0",
-        "nome": "Samuel Rodrigues dos Santos",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "b3fa9f52-dbb3-4e48-8ae3-c1b7933d0956",
-        "nome": "Vitor Fernando da Silva Bandeira",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "11f55b24-361a-4a2f-8cb0-61d01c9ff6cc",
-        "nome": "Wellington de Almeida Marques",
-        "cargo": "Aplicador 2"
-      },
-      {
-        "id": "8c9780dd-8585-460a-a3b2-9ba5571955e5",
-        "nome": "Egberto Sullivan Tavares de Oliveira",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
-        "nome": "Gilmar Gomes Rafael",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "3be92339-ea00-4a39-88c9-373f366d26fd",
-        "nome": "Jansen Roberto Mendes Silva",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
-        "nome": "João Carlos",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
-        "nome": "Júlio Miranda",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "6b237d14-b591-483f-b945-fa570f4746cc",
-        "nome": "Michael Marinho de Lima",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "3c66db13-cf7f-4412-8f45-20c543817112",
-        "nome": "Ronaldo Adriano Rocha",
-        "cargo": "Encarregado"
-      },
-      {
         "id": "5839a569-8d2b-456a-ae34-498d4c16bf2b",
         "nome": "Wellington Andrelino da Silva",
-        "cargo": "Encarregado"
-      },
-      {
-        "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
-        "nome": "Wiguens Louis",
         "cargo": "Encarregado"
       },
       {
@@ -1728,43 +1652,8 @@
         "cargo": "Líder de Campo"
       },
       {
-        "id": "d34555d6-289b-4d02-ab6f-43eda24bc31a",
-        "nome": "Alexandre Benjamin",
-        "cargo": "Líder de Campo"
-      },
-      {
         "id": "84e286ca-26ce-4ffa-ab24-9f919acfaab6",
         "nome": "Anderson da Silva Santos",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "05cf9f5e-d986-4a4d-b3de-19bb91dbabeb",
-        "nome": "Caio Pedroso dos Santos",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "842eb869-809b-4df6-a268-55803542c688",
-        "nome": "Carlos Eduardo da Silva Neves",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "afc809cc-8b1f-4e62-85a2-7f6a48b8883d",
-        "nome": "Carlos Hugo da Silva Meira",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
-        "nome": "Charles Henrique da Silva",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
-        "nome": "Cosme Eduardo Soares Ragno",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "1a22dc9f-24a5-4b4e-a8fa-2f34bdd22d7c",
-        "nome": "Cristiano Ramalho Sandes",
         "cargo": "Líder de Campo"
       },
       {
@@ -1778,38 +1667,8 @@
         "cargo": "Líder de Campo"
       },
       {
-        "id": "0ab8ddc9-2962-4114-a1af-061c35db430d",
-        "nome": "Flavio moraes dos Santos",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "e27a5196-2c29-489a-9ca9-16688d4af298",
-        "nome": "Francisco Sidrony Alves da Silva",
-        "cargo": "Líder de Campo"
-      },
-      {
         "id": "fa1eccf7-df4e-4ccc-bba7-0130b722d5cd",
         "nome": "Gabriel Ramiro",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "3fdaae47-b52c-407b-a1a1-a95c0afab730",
-        "nome": "Heitor Santos Da Silva Campello",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "7fedf6ff-9265-4c56-be22-0914d0eb9dcf",
-        "nome": "Henrique de Souza",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "df9e0033-111c-460a-96d3-7faa940b3ac1",
-        "nome": "Igor Costa de Paula",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "1338328f-b943-4e17-bfea-73d477be3193",
-        "nome": "Isaías Henrique Costa Rodrigues dos santos",
         "cargo": "Líder de Campo"
       },
       {
@@ -1818,18 +1677,8 @@
         "cargo": "Líder de Campo"
       },
       {
-        "id": "bad27975-bede-41ed-9df2-d024aa033981",
-        "nome": "Jaime Pires de Campos Junior",
-        "cargo": "Líder de Campo"
-      },
-      {
         "id": "7c49506d-88b8-472d-bd3d-a21d1b1c6712",
         "nome": "Josias dos Santos conceição",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "b59418b1-0768-4387-af43-dbb0113e74ed",
-        "nome": "José Ramos de Oliveira Junior",
         "cargo": "Líder de Campo"
       },
       {
@@ -1840,16 +1689,6 @@
       {
         "id": "f7882227-1189-4931-8c91-b9aed974f0c0",
         "nome": "Nathan Augusto Nunes",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "f8298bb0-ec4f-44db-b119-bfa2d77be887",
-        "nome": "Rafael Ramiro",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "7e890794-f477-4446-b01a-c10c9ceda4d7",
-        "nome": "Reinaldo Faustino de Camargo",
         "cargo": "Líder de Campo"
       },
       {
@@ -1868,16 +1707,6 @@
         "cargo": "Líder de Campo"
       },
       {
-        "id": "dc8f4e86-774b-4b16-831d-b247bacc205b",
-        "nome": "Ulisses",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "998a68e2-c09a-4953-82b5-47db222318a9",
-        "nome": "Valter Rodrigues de Azevedo",
-        "cargo": "Líder de Campo"
-      },
-      {
         "id": "94849434-85be-474b-a308-7f105960f483",
         "nome": "William Andrelino da Silva",
         "cargo": "Líder de Campo"
@@ -1893,23 +1722,8 @@
         "cargo": "Preparador"
       },
       {
-        "id": "1cdef30c-eb8b-4119-ba00-a2d5e642b4a2",
-        "nome": "Alexandre Henrique Dourado Domiense",
-        "cargo": "Preparador"
-      },
-      {
-        "id": "39189638-1bf5-45d2-a613-11ad6efd9fb2",
-        "nome": "Cesar Augusto de Sá",
-        "cargo": "Preparador"
-      },
-      {
         "id": "f2a64a7a-c662-414c-a667-e975cccc0b4f",
         "nome": "Danilo Soares Andrade",
-        "cargo": "Preparador"
-      },
-      {
-        "id": "5b1f5536-339c-4b79-9a65-cf46aa59d942",
-        "nome": "Douglas Pereira Rodrigues",
         "cargo": "Preparador"
       },
       {
@@ -1918,37 +1732,445 @@
         "cargo": "Preparador"
       },
       {
+        "id": "51557552-e398-4aea-ae13-5c0de2029442",
+        "nome": "Júlio Cesar da Silva",
+        "cargo": "Preparador"
+      }
+    ],
+    "em_campo_detalhe": [
+      {
+        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
+        "nome": "João Carlos",
+        "cargo": "Encarregado",
+        "qtd_obras": 5
+      },
+      {
+        "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
+        "nome": "Wiguens Louis",
+        "cargo": "Encarregado",
+        "qtd_obras": 5
+      },
+      {
+        "id": "8c9780dd-8585-460a-a3b2-9ba5571955e5",
+        "nome": "Egberto Sullivan Tavares de Oliveira",
+        "cargo": "Encarregado",
+        "qtd_obras": 3
+      },
+      {
+        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
+        "nome": "Júlio Miranda",
+        "cargo": "Encarregado",
+        "qtd_obras": 3
+      },
+      {
+        "id": "6b237d14-b591-483f-b945-fa570f4746cc",
+        "nome": "Michael Marinho de Lima",
+        "cargo": "Encarregado",
+        "qtd_obras": 3
+      },
+      {
+        "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
+        "nome": "Gilmar Gomes Rafael",
+        "cargo": "Encarregado",
+        "qtd_obras": 2
+      },
+      {
+        "id": "3c66db13-cf7f-4412-8f45-20c543817112",
+        "nome": "Ronaldo Adriano Rocha",
+        "cargo": "Encarregado",
+        "qtd_obras": 2
+      },
+      {
+        "id": "b6504df0-42d1-4bc5-92e5-c9fa8eea7492",
+        "nome": "Adriano Fernandes da Silva",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "116567a9-74f8-4ffc-9d7f-9b8acb492d3b",
+        "nome": "Alexander Vieira Rangel",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "d34555d6-289b-4d02-ab6f-43eda24bc31a",
+        "nome": "Alexandre Benjamin",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "1cdef30c-eb8b-4119-ba00-a2d5e642b4a2",
+        "nome": "Alexandre Henrique Dourado Domiense",
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "c5cb57af-268b-4087-9a5e-5f011d3f3f15",
+        "nome": "Angelo julio dos santos",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "92434394-575f-4bb4-b207-4bf64f767624",
+        "nome": "Ariosvaldo Silva Reis",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "9216dc24-3963-4aff-8265-06ca2910338a",
+        "nome": "Ariosvaldo Silva Reis Júnior",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "05cf9f5e-d986-4a4d-b3de-19bb91dbabeb",
+        "nome": "Caio Pedroso dos Santos",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "842eb869-809b-4df6-a268-55803542c688",
+        "nome": "Carlos Eduardo da Silva Neves",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "afc809cc-8b1f-4e62-85a2-7f6a48b8883d",
+        "nome": "Carlos Hugo da Silva Meira",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "39189638-1bf5-45d2-a613-11ad6efd9fb2",
+        "nome": "Cesar Augusto de Sá",
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
+        "nome": "Charles Henrique da Silva",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "fe13f7cb-2cfa-4f56-b7f3-426b7c143ffd",
+        "nome": "Cléber Cardoso",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
+        "nome": "Cosme Eduardo Soares Ragno",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "1a22dc9f-24a5-4b4e-a8fa-2f34bdd22d7c",
+        "nome": "Cristiano Ramalho Sandes",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "cf1e81a1-4988-4247-b742-4fcfcea419f2",
+        "nome": "Daniel Rodrigues dos Santos",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "1ff5713a-f8cf-45c8-92af-432f3b392059",
+        "nome": "Donald Rodriguês",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "5b1f5536-339c-4b79-9a65-cf46aa59d942",
+        "nome": "Douglas Pereira Rodrigues",
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "af8e1d9a-a4b0-4f73-a447-197c7624588c",
+        "nome": "Eryck Bryan de Barros Ramiro",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "e67460ab-54e8-4773-8ce3-cec4783aab7b",
+        "nome": "Ewerton Batista da Silva",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
         "id": "0bfc2d04-6195-422f-aa4f-cda7bbd16950",
         "nome": "Felipe De Oliveira santos",
-        "cargo": "Preparador"
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "0ab8ddc9-2962-4114-a1af-061c35db430d",
+        "nome": "Flavio moraes dos Santos",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
       },
       {
         "id": "61f5ffeb-4a50-4d59-af35-d90775e8006d",
         "nome": "Francisco Igor de melo",
-        "cargo": "Preparador"
+        "cargo": "Preparador",
+        "qtd_obras": 1
       },
       {
-        "id": "51557552-e398-4aea-ae13-5c0de2029442",
-        "nome": "Júlio Cesar da Silva",
-        "cargo": "Preparador"
+        "id": "e27a5196-2c29-489a-9ca9-16688d4af298",
+        "nome": "Francisco Sidrony Alves da Silva",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "5f865a27-6ab2-40d8-ba38-974723cb47e1",
+        "nome": "Franklin Borges de Arruda",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "5d7cadc5-ab7a-4b81-9796-94c52e171556",
+        "nome": "Gabriel dos Santos sena Ribeiro",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "698c2a1f-82a3-4846-9a6f-abea10450c68",
+        "nome": "Genival Ximenes",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "3fdaae47-b52c-407b-a1a1-a95c0afab730",
+        "nome": "Heitor Santos Da Silva Campello",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "7fedf6ff-9265-4c56-be22-0914d0eb9dcf",
+        "nome": "Henrique de Souza",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "94f6630d-899f-43b8-b884-523f329f2e2c",
+        "nome": "Hudson da Silva Meira",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "df9e0033-111c-460a-96d3-7faa940b3ac1",
+        "nome": "Igor Costa de Paula",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "56f44118-1ed5-43f9-9916-df8730b9a877",
+        "nome": "Isaque Santos Cunha",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "1338328f-b943-4e17-bfea-73d477be3193",
+        "nome": "Isaías Henrique Costa Rodrigues dos santos",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "bad27975-bede-41ed-9df2-d024aa033981",
+        "nome": "Jaime Pires de Campos Junior",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "3be92339-ea00-4a39-88c9-373f366d26fd",
+        "nome": "Jansen Roberto Mendes Silva",
+        "cargo": "Encarregado",
+        "qtd_obras": 1
+      },
+      {
+        "id": "70a2f619-2141-49d1-8ac8-afa0c6d7c1c8",
+        "nome": "Jonathan Batista Rocha",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "69a7c1ba-1f84-4974-a653-22fd7e26931f",
+        "nome": "Jorge Luis Ribero Mendez",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "597b35e9-ec1f-4986-bb6b-82d0cdfd0c67",
+        "nome": "Jose manoel Mendes dos Santos",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "b59418b1-0768-4387-af43-dbb0113e74ed",
+        "nome": "José Ramos de Oliveira Junior",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "fe73731c-e50f-4c51-87d7-58559b2b4100",
+        "nome": "Kaike Luiz Gonzaga",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "3483e2e4-53e2-4c4e-8e22-b0ae39362bd2",
+        "nome": "Kauan de Lima Humberto",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "85be1c95-8d8d-4619-a702-5900277fa055",
+        "nome": "Kleber Luiz da Silva",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "bd51cc8f-9634-4bb6-b327-4d2639ccc73f",
+        "nome": "Leandro José Oliveira dos Santos",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "a1185503-c7cc-44d5-89a0-f014c64b8091",
+        "nome": "Leonardo Fernando Magalhães",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "bea129dc-eed7-4596-87ef-c21ef8030a7b",
+        "nome": "Marcelo Siqueira Boer",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "39e5122b-22b6-455b-91e8-4c8731f68517",
+        "nome": "Matheus da Silva de Souza",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "21b49069-0ca9-4942-bc96-b3a0a22e7707",
+        "nome": "Maximiliano",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "afca0329-ebff-4194-92b6-c71ca4ab0041",
+        "nome": "Odair Didre",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "4b20a0e2-e15e-4647-9667-05a1c8e0db5a",
+        "nome": "Odirley Alves de Oliveira",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "f843741f-0abc-40c2-b6e4-82bb7388e199",
+        "nome": "Paulo César Santos de Oliveira",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
       },
       {
         "id": "168bd5c8-f228-4688-b517-71534d7b3ee3",
         "nome": "Paulo Henrique de Carvalho",
-        "cargo": "Preparador"
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "f8298bb0-ec4f-44db-b119-bfa2d77be887",
+        "nome": "Rafael Ramiro",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "5bf4c8fa-47f8-460e-8909-d61f4e7eac52",
+        "nome": "Rayan Mohany Carvalho Costa",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "7e890794-f477-4446-b01a-c10c9ceda4d7",
+        "nome": "Reinaldo Faustino de Camargo",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "0646cbe2-6efe-431c-9465-51560a1458e8",
+        "nome": "Roberto Carlos dos santos filho",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "3769cf24-2aaf-4f9e-94bb-8753898feac0",
+        "nome": "Samuel Rodrigues dos Santos",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
+      },
+      {
+        "id": "ffc70ead-02b0-473b-addd-8cd1b2f37360",
+        "nome": "Samuel da Costa Silva",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
       },
       {
         "id": "95c517e3-635c-4e04-9b6e-97604265db8d",
         "nome": "Sidnei Manoel Rocha da Silva",
-        "cargo": "Preparador"
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "dc8f4e86-774b-4b16-831d-b247bacc205b",
+        "nome": "Ulisses",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "998a68e2-c09a-4953-82b5-47db222318a9",
+        "nome": "Valter Rodrigues de Azevedo",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "e728d345-caf5-437c-af67-8f2ec787bd7a",
+        "nome": "Vinícius de Freitas Alencar batista",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 1
+      },
+      {
+        "id": "b3fa9f52-dbb3-4e48-8ae3-c1b7933d0956",
+        "nome": "Vitor Fernando da Silva Bandeira",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
       },
       {
         "id": "e2a0d219-dfe9-4297-acb1-18007413be58",
         "nome": "Vitor Rodrigues de Azevedo",
-        "cargo": "Preparador"
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "5858d956-237a-429b-829e-d0a37456eb9f",
+        "nome": "Welington Bonfim da Silva",
+        "cargo": "Ajudante",
+        "qtd_obras": 1
+      },
+      {
+        "id": "11f55b24-361a-4a2f-8cb0-61d01c9ff6cc",
+        "nome": "Wellington de Almeida Marques",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 1
       }
     ],
-    "em_campo_detalhe": [],
     "fonte": "cliente.monofloor.cloud/api/prestadores + /api/escalacao-diaria"
   },
   "equipes": [
@@ -1962,11 +2184,55 @@
       "lider_remapeado": false,
       "ativos": 13,
       "total_cadastrados": 19,
-      "escalados_hoje": 0,
-      "util_pct": 0.0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
-      "obras_membros": [],
+      "escalados_hoje": 9,
+      "util_pct": 69.2,
+      "obras_hoje": 6,
+      "obras_lideradas": [
+        {
+          "id": "d569a799-4ddf-44b0-aa3a-1507cc75e799",
+          "cliente": "JEAN LUC SENAC",
+          "cidade": "SÃO PAULO",
+          "fase": "AGUARDANDO LIBERAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "e79c60c1-4169-4df5-b856-220fe82510db",
+          "cliente": "GABRIELA AZEVEDO FORLIN",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "097ee21f-3e27-4904-9929-86aa8b1d6fba",
+          "cliente": "CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2",
+          "cliente": "ADRIANO DE FIGUEIREDO MACORIN",
+          "cidade": "SÃO PAULO / SP",
+          "fase": "AGUARDANDO LIBERAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "1624ef33-fd4c-4b13-a68d-ade47e8acd7d",
+          "cliente": "SILVANA PANDOLFI JANETE",
+          "cidade": "BERTIOGA",
+          "fase": "REVISÃO FINAL OP",
+          "status": "em_execucao"
+        }
+      ],
+      "obras_membros": [
+        {
+          "id": "4f79b468-f013-4da9-9eed-594bf150f89a",
+          "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE ",
+          "cidade": "SP; CEP: 01.532",
+          "fase": "INFORMAÇÕES LOGÍSTICAS",
+          "status": "em_execucao"
+        }
+      ],
       "estado": "saudavel"
     },
     {
@@ -1979,10 +2245,46 @@
       "lider_remapeado": false,
       "ativos": 0,
       "total_cadastrados": 11,
-      "escalados_hoje": 0,
+      "escalados_hoje": 1,
       "util_pct": 0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
+      "obras_hoje": 5,
+      "obras_lideradas": [
+        {
+          "id": "4f79b468-f013-4da9-9eed-594bf150f89a",
+          "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE ",
+          "cidade": "SP; CEP: 01.532",
+          "fase": "INFORMAÇÕES LOGÍSTICAS",
+          "status": "em_execucao"
+        },
+        {
+          "id": "bd0894c1-95cc-4d42-ab81-861d97dbcfa7",
+          "cliente": "PALLOMA BIANCA RAMIREZ URIZZI",
+          "cidade": "SÃO PAULO",
+          "fase": "LOGÍSTICA - EM ENTREGA",
+          "status": "em_execucao"
+        },
+        {
+          "id": "7e12a05d-a837-4599-b8a7-aa84318c39ac",
+          "cliente": "TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "b153f25e-ec17-4018-9111-c22412a7de74",
+          "cliente": "VINICIUS LULUSKI DE SOUZA",
+          "cidade": "SANTO ANDRÉ",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "23586b42-a279-42f1-a98e-84ac1a89a20a",
+          "cliente": "MANUELA VILLAS BOAS SOUZA MARTIN",
+          "cidade": "",
+          "fase": "REAPLICAÇÃO TOTAL",
+          "status": "em_execucao"
+        }
+      ],
       "obras_membros": [],
       "estado": "fantasma"
     },
@@ -1996,10 +2298,25 @@
       "lider_remapeado": true,
       "ativos": 1,
       "total_cadastrados": 12,
-      "escalados_hoje": 0,
-      "util_pct": 0.0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
+      "escalados_hoje": 2,
+      "util_pct": 200.0,
+      "obras_hoje": 2,
+      "obras_lideradas": [
+        {
+          "id": "dec2480f-fc69-4d44-9dbc-d3820badf218",
+          "cliente": "MARINA PIRES DE AGUIAR",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "a79f00f0-19b1-43d4-b9d7-6ab8d219c205",
+          "cliente": "KRYSTAL LURI NUMA",
+          "cidade": "R Senador César Lacerda Vergueira 312 ap",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        }
+      ],
       "obras_membros": [],
       "estado": "parcial"
     },
@@ -2013,10 +2330,32 @@
       "lider_remapeado": false,
       "ativos": 8,
       "total_cadastrados": 10,
-      "escalados_hoje": 0,
-      "util_pct": 0.0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
+      "escalados_hoje": 6,
+      "util_pct": 75.0,
+      "obras_hoje": 3,
+      "obras_lideradas": [
+        {
+          "id": "4741be3f-c279-4894-83e4-44e30dfbbdb6",
+          "cliente": "GUSTAVO PARRILO DA NOBREGA",
+          "cidade": "SÃO PAULO",
+          "fase": "AGUARDANDO LIBERAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "9a409b5e-e4dd-43f6-a530-4b85d6a55b2b",
+          "cliente": "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)",
+          "cidade": "SÃO PAULO",
+          "fase": "OBRA EM EXECUÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
+          "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK",
+          "cidade": "SÃO PAULO",
+          "fase": "AGUARDANDO LIBERAÇÃO",
+          "status": "em_execucao"
+        }
+      ],
       "obras_membros": [],
       "estado": "saudavel"
     },
@@ -2030,10 +2369,32 @@
       "lider_remapeado": true,
       "ativos": 0,
       "total_cadastrados": 12,
-      "escalados_hoje": 0,
+      "escalados_hoje": 1,
       "util_pct": 0,
-      "obras_hoje": 0,
-      "obras_lideradas": [],
+      "obras_hoje": 3,
+      "obras_lideradas": [
+        {
+          "id": "210669e6-c8a4-4e88-93d9-291011a7b51b",
+          "cliente": "JOYCE BAHIENSE GOMES ",
+          "cidade": "RIO DE JANEIRO",
+          "fase": "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "2088ab88-2d39-41a1-95e8-33f5ebfbb9d2",
+          "cliente": "FERNANDO TEMBRA RODRIGUEZ",
+          "cidade": "RIO DE JANEIRO",
+          "fase": "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
+          "cliente": "JULIANA KOMEL DE OLIVEIRA",
+          "cidade": "RIO DE JANEIRO / RJ",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        }
+      ],
       "obras_membros": [],
       "estado": "fantasma"
     },
@@ -2047,11 +2408,26 @@
       "lider_remapeado": false,
       "ativos": 9,
       "total_cadastrados": 12,
-      "escalados_hoje": 0,
-      "util_pct": 0.0,
-      "obras_hoje": 0,
+      "escalados_hoje": 7,
+      "util_pct": 77.8,
+      "obras_hoje": 2,
       "obras_lideradas": [],
-      "obras_membros": [],
+      "obras_membros": [
+        {
+          "id": "6dc04755-5c42-437a-a4a1-c0e81b900eeb",
+          "cliente": "BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO",
+          "cidade": "RIO DE JANEIRO",
+          "fase": "AGUARDANDO LIBERAÇÃO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "d7b1c726-10f3-4de5-8a52-c569033990a6",
+          "cliente": "APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES",
+          "cidade": "SÃO PAULO",
+          "fase": "LOGÍSTICA - EM ENTREGA",
+          "status": "em_execucao"
+        }
+      ],
       "estado": "saudavel"
     }
   ],
@@ -2069,7 +2445,7 @@
     "e648fd2b-e067-4561-a358-1c2988673ccb": {
       "dataVisita": "04/03/2026 17:00",
       "dataEntrada": "",
-      "dataExec": "2026-07-14"
+      "dataExec": "2026-08-03"
     },
     "fdbb659f-7073-4139-a3ee-8333a217f03c": {
       "dataVisita": "01/12/2025 15:00",
@@ -2519,7 +2895,7 @@
     "5afbb2c8-13a7-4d72-94a8-08fdff81835a": {
       "dataVisita": "30/09/2025 17:30",
       "dataEntrada": "",
-      "dataExec": "2026-05-19"
+      "dataExec": "2026-05-01"
     },
     "89c99f6b-1eb9-4cae-9b1b-37e742bfe644": {
       "dataVisita": "02/02/2026 19:00",
@@ -2554,7 +2930,7 @@
     "83695e2d-a79e-41ed-816a-40be98015398": {
       "dataVisita": "",
       "dataEntrada": "",
-      "dataExec": ""
+      "dataExec": "2026-08-03"
     },
     "5f8aef5a-cb27-4432-949d-fa4f6f15c0d3": {
       "dataVisita": "03/02/2026 12:00",
@@ -2569,7 +2945,7 @@
     "6bb762a4-303e-484c-a9f6-33068cabafee": {
       "dataVisita": "09/03/2025 15:30",
       "dataEntrada": "14/04/2026 10:00",
-      "dataExec": "2026-06-02"
+      "dataExec": "2026-06-15"
     },
     "e306a80c-d465-46e1-8530-54777ef90614": {
       "dataVisita": "30/09/2025 15:30",
@@ -2754,7 +3130,7 @@
     "e9ff9980-b507-4ae0-929f-9b7b5fc395d0": {
       "dataVisita": "",
       "dataEntrada": "",
-      "dataExec": "2026-08-17"
+      "dataExec": "2026-08-03"
     },
     "0d8b5bb9-3683-41d4-8f35-6edb7f6e5fc0": {
       "dataVisita": "",
@@ -2900,6 +3276,11 @@
       "dataVisita": "",
       "dataEntrada": "15/02/2027 09:00",
       "dataExec": "2027-02-15"
+    },
+    "f49352d0-2db0-4ef3-9f13-d85deae328f9": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": ""
     },
     "1fb7cf86-f8d6-4792-b74e-15170c20f7ed": {
       "dataVisita": "",
@@ -3251,25 +3632,26 @@
       "d115fc6b",
       "d51326f8",
       "db76891b",
-      "e79c60c1"
+      "e79c60c1",
+      "f49352d0"
     ],
-    "orfas_n": 34,
+    "orfas_n": 35,
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-05T23:07:25.185000+00:00",
-    "total_fluxo": 199,
+    "total_fluxo": 200,
     "com_kira": 129,
     "saudavel": 80,
     "saudavel_pct_no_monitorado": 62.0,
     "atencao": 49,
-    "sem_kira": 70,
+    "sem_kira": 71,
     "clima_dist": {
       "Positivo": 25,
       "Neutro": 56,
       "Tenso": 54,
       "Crítico": 5,
-      "?": 83
+      "?": 84
     },
     "obras_atencao": [
       {
@@ -3561,7 +3943,7 @@
         "clima": "Crítico",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "CRÍTICO: Equipe foi à obra em 04/03 sem material adequado (lixa), precisando se ausentar para compra — indica falha grave no planejamento operacional",
           "CRÍTICO: Cliente declarou explicitamente sentir-se lesado e extrapolação de limites — risco elevado de escalada para reclamação formal ou ação legal",
@@ -6910,7 +7292,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 12,
+        "dias_desde_resumo": 13,
         "alertas": [
           "Cliente e gestor de obra (Gustavo) explicitaram em 22/04 que há 'pontos críticos' pendentes que estão bloqueando outras frentes de serviço necessárias para a mudança — risco real de atraso em cadeia e insatisfação do cliente",
           "Monofloor ficou sem resposta por mais de 5 dias (17 a 22/04) durante fase de encerramento de obra, gerando cobranças múltiplas e mensagem de pressão coletiva de Gustavo — risco de deterioração do relacionamento",
@@ -7743,7 +8125,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "CRÍTICO: Equipe chegou em 20/03 sem briefing adequado e sem alinhamento com as orientações técnicas do Francisco — risco de execução incorreta do reparo nas trincas",
           "CRÍTICO: Monofloor comunicou ao cliente que o reparo é 'paliativo' e que os pontos podem permanecer aparentes — expectativa do cliente provavelmente divergente; risco de insatisfação pós-reparo",
@@ -7897,7 +8279,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "URGENTE: Piso desplacando progressivamente desde pelo menos 02/03 — problema ativo sem solução imediata",
           "CRÍTICO: Estudo de impermeabilização pendente desde final de 2025 sem resultado entregue ao cliente, bloqueando definição dos próximos passos técnicos",
@@ -8033,7 +8415,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "Cliente sem resposta há 6 dias (26/03 a 01/04) após nova promessa de retorno da Monofloor",
           "Michelle expressou insatisfação explícita com o ritmo de comunicação em 16/03: 'sem ficar nessa troca de mensagens 1 a cada semana'",
@@ -8157,7 +8539,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "Relatório técnico da visita de 27/03 ainda não foi entregue ao cliente (31/03) - risco de nova cobrança e insatisfação",
           "Obra permanece sem data confirmada de retomada desde 24/02 - mais de 35 dias de paralisação parcial",
@@ -8274,7 +8656,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "URGENTE: Proposta e orçamento para solução definitiva prometidos há mais de 2 semanas sem entrega — cliente cobra formalmente em 02/04",
           "NOVO PROBLEMA RELATADO: Em 13/03 a cliente informou nova reação no piso, indicando piora do problema durante o período de espera",
@@ -8415,7 +8797,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "Tampa do ralo da varanda estufada: novo problema identificado em 24/03, encaminhado à área técnica mas sem retorno ou solução registrados até 31/03",
           "Reparos do banheiro pendentes há mais de 5 semanas sem data de execução confirmada",
@@ -8600,7 +8982,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "Cliente acabou de se mudar e o piso da entrada do apartamento está danificado — situação de alto impacto emocional e reputacional",
           "Monofloor não possui equipe em Curitiba no momento, sem previsão de atendimento definida",
@@ -8680,7 +9062,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "CONFLITO DE COMUNICAÇÃO: Fernando rejeitou formalmente a proposta de centralização do atendimento em 18/03, o que gerou tensão explícita. A relação com o cliente está fragilizada neste ponto.",
           "INSATISFAÇÃO TÉCNICA CRÍTICA: Fernando questionou de forma contundente em 30/03 a necessidade de lixamento do contrapiso, acusando falta de clareza no manual e sugerindo que o requisito beneficia a Monofloor (menor consumo de produto), não o cliente. Esse conflito técnico precisa ser resolvido com documentação e justificativa clara.",
@@ -9241,6 +9623,14 @@
         "tem_grupo": false
       },
       {
+        "id": "f49352d0-2db0-4ef3-9f13-d85deae328f9",
+        "cliente": "PAULA",
+        "consultor": "—",
+        "cidade": "",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
         "id": "1fb7cf86-f8d6-4792-b74e-15170c20f7ed",
         "cliente": "KATIA MOTA NOGUEIRA",
         "consultor": "Wesley",
@@ -9395,81 +9785,81 @@
         "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
         "nome": "Wiguens Louis",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 19
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 24
       },
       {
         "id": "8c9780dd-8585-460a-a3b2-9ba5571955e5",
         "nome": "Egberto Sullivan Tavares de Oliveira",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 13
-      },
-      {
-        "id": "6b237d14-b591-483f-b945-fa570f4746cc",
-        "nome": "Michael Marinho de Lima",
-        "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 11
-      },
-      {
-        "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
-        "nome": "Gilmar Gomes Rafael",
-        "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 10
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 16
       },
       {
         "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
         "nome": "João Carlos",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 10
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 15
+      },
+      {
+        "id": "6b237d14-b591-483f-b945-fa570f4746cc",
+        "nome": "Michael Marinho de Lima",
+        "cargo": "Encarregado",
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 14
+      },
+      {
+        "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
+        "nome": "Gilmar Gomes Rafael",
+        "cargo": "Encarregado",
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 12
       },
       {
         "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
         "nome": "Júlio Miranda",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 8
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 11
       },
       {
         "id": "3c66db13-cf7f-4412-8f45-20c543817112",
         "nome": "Ronaldo Adriano Rocha",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 6
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 8
       },
       {
         "id": "fe73731c-e50f-4c51-87d7-58559b2b4100",
         "nome": "Kaike Luiz Gonzaga",
         "cargo": "Aplicador 1",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 5
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 6
       },
       {
         "id": "1ff5713a-f8cf-45c8-92af-432f3b392059",
         "nome": "Donald Rodriguês",
         "cargo": "Aplicador 2",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 5
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 6
       },
       {
         "id": "bea129dc-eed7-4596-87ef-c21ef8030a7b",
         "nome": "Marcelo Siqueira Boer",
         "cargo": "Aplicador 1",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       }
     ],
     "top_escalado_7d": [
@@ -9477,81 +9867,81 @@
         "id": "bea129dc-eed7-4596-87ef-c21ef8030a7b",
         "nome": "Marcelo Siqueira Boer",
         "cargo": "Aplicador 1",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       },
       {
         "id": "3483e2e4-53e2-4c4e-8e22-b0ae39362bd2",
         "nome": "Kauan de Lima Humberto",
         "cargo": "Ajudante",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       },
       {
         "id": "85be1c95-8d8d-4619-a702-5900277fa055",
         "nome": "Kleber Luiz da Silva",
         "cargo": "Aplicador 1",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       },
       {
         "id": "3c66db13-cf7f-4412-8f45-20c543817112",
         "nome": "Ronaldo Adriano Rocha",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 6
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 8
       },
       {
         "id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
         "nome": "Cosme Eduardo Soares Ragno",
         "cargo": "Líder de Campo",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       },
       {
         "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
         "nome": "Gilmar Gomes Rafael",
         "cargo": "Encarregado",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 10
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 12
       },
       {
         "id": "1cdef30c-eb8b-4119-ba00-a2d5e642b4a2",
         "nome": "Alexandre Henrique Dourado Domiense",
         "cargo": "Preparador",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       },
       {
         "id": "116567a9-74f8-4ffc-9d7f-9b8acb492d3b",
         "nome": "Alexander Vieira Rangel",
         "cargo": "Aplicador 1",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
-      },
-      {
-        "id": "97a11ff7-e315-47ef-822c-d05180b85ce8",
-        "nome": "Filipe da Silva Lucena",
-        "cargo": "Líder de Campo",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       },
       {
         "id": "9216dc24-3963-4aff-8265-06ca2910338a",
         "nome": "Ariosvaldo Silva Reis Júnior",
         "cargo": "Ajudante",
-        "dias_escalado": 4,
-        "dias_ocioso": 2,
-        "total_obras": 4
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
+      },
+      {
+        "id": "b6504df0-42d1-4bc5-92e5-c9fa8eea7492",
+        "nome": "Adriano Fernandes da Silva",
+        "cargo": "Aplicador 1",
+        "dias_escalado": 5,
+        "dias_ocioso": 1,
+        "total_obras": 5
       }
     ],
     "top_ocioso_7d": [
@@ -9588,33 +9978,9 @@
         "total_obras": 0
       },
       {
-        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
-        "nome": "Charles Henrique da Silva",
-        "cargo": "Líder de Campo",
-        "dias_escalado": 0,
-        "dias_ocioso": 6,
-        "total_obras": 0
-      },
-      {
-        "id": "fe13f7cb-2cfa-4f56-b7f3-426b7c143ffd",
-        "nome": "Cléber Cardoso",
-        "cargo": "Aplicador 1",
-        "dias_escalado": 0,
-        "dias_ocioso": 6,
-        "total_obras": 0
-      },
-      {
         "id": "ae3f3456-c569-4b5e-8b6a-5d8949ddfb25",
         "nome": "Daniel Rodrigues de Oliveira",
         "cargo": "Aplicador 1",
-        "dias_escalado": 0,
-        "dias_ocioso": 6,
-        "total_obras": 0
-      },
-      {
-        "id": "cf1e81a1-4988-4247-b742-4fcfcea419f2",
-        "nome": "Daniel Rodrigues dos Santos",
-        "cargo": "Aplicador 2",
         "dias_escalado": 0,
         "dias_ocioso": 6,
         "total_obras": 0
@@ -9631,6 +9997,30 @@
         "id": "04dbd1d8-9007-42b7-a730-ae7aafd74a65",
         "nome": "David Faria de Lara",
         "cargo": "Aplicador 1",
+        "dias_escalado": 0,
+        "dias_ocioso": 6,
+        "total_obras": 0
+      },
+      {
+        "id": "b1afe6f0-0a7c-4ca4-ab11-22bc0b2387ca",
+        "nome": "Edilson Ariel Andrade da Silva",
+        "cargo": "Aplicador 1",
+        "dias_escalado": 0,
+        "dias_ocioso": 6,
+        "total_obras": 0
+      },
+      {
+        "id": "4ada0e5d-5fd0-4972-bbdf-e0d1fbae689b",
+        "nome": "Felipe Bezerra de Souza",
+        "cargo": "Preparador",
+        "dias_escalado": 0,
+        "dias_ocioso": 6,
+        "total_obras": 0
+      },
+      {
+        "id": "a9a30d47-3699-4e65-948c-5ce628a4e805",
+        "nome": "Fernando dos Santos Silva",
+        "cargo": "Líder de Campo",
         "dias_escalado": 0,
         "dias_ocioso": 6,
         "total_obras": 0
@@ -9657,9 +10047,9 @@
       "reparo": 9,
       "pausadas": 2
     },
-    "total_ativas": 224,
+    "total_ativas": 225,
     "n_180_total": 122,
-    "concentracao_pct": 78.1,
+    "concentracao_pct": 77.8,
     "concentracao_180_pct": 85.2,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
