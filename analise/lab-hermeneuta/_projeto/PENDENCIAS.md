@@ -108,22 +108,18 @@ Detectar "dor não registrada":
 
 ---
 
-## F · Refino de leitura fria · Jornada (SETADO · NÃO ATACAR AGORA)
+## F · Refino de leitura fria · Jornada (✅ FECHADO 2026-05-06)
 
-**Quando:** depois que a arquitetura do que-mostrar estiver fechada · ~2-3h total no conjunto
-**Origem:** leitura fria 2026-05-06 · simulação de leitor que nunca viu Lab Orion
-**Princípio:** *foco atual é arquitetura · refino visual é última milha · fechar antes de pintar*
+**Atacado e entregue na sessão de 2026-05-06.** Todos os 6 itens fechados.
 
-### Fricções priorizadas (impacto × custo)
-
-| # | Item | Sintoma | Ação | Custo |
-|---|---|---|---|---|
-| F1 | Página não se apresenta | Header só diz "Lab Orion · Jornada · TELEGRAM" sem explicar o que é | Sub-header de 1 frase abaixo do título · *"Reconstrução do caminho de cada obra finalizada, lida das mensagens do Telegram do grupo da obra"* | 10min |
-| F2 | Linha do tempo sem legenda visível | 6 fases coloridas, leitor depende do hover | Faixa de chips coloridos abaixo da timeline · sempre visível · 1 chip por fase com nome | 30min |
-| F3 | Glossário ausente | "Hibernação", "VT", "Reaplicação", "Marco", "Atores" são jargão interno | Tooltip `?` ao lado de cada termo · 1 linha de definição cada · sem modal | 30min |
-| F4 | Padrões com `snake_case` exposto | `hibernacao_longa · obra ficou 177d…` aparece como código vazado | Mapear nome técnico → label humano · "Hibernação longa" + ícone | 10min |
-| F5 | "Solicitações em obra" escondida | Está embutida no card "Material" · leitor frio não acha | Card próprio · mesmo peso de "Marcos detectados" | 20min |
-| F6 | Falta benchmark | "665d total · 7d execução" sem com-quê comparar · não sei se é normal ou anômalo | Linha sob as pills · *"Média Monofloor: X dias total · Y dias execução"* (provisória ok) | 30min |
+| # | Item | Status | O que foi feito |
+|---|---|---|---|
+| F1 | Página não se apresenta | ✅ | Sub-header explicativo abaixo do header sticky · *"Análise retrospectiva de cada obra finalizada · reconstruída a partir das mensagens do Telegram do grupo · fases, marcos, ocorrências e materiais ao longo do tempo"* |
+| F2 | Linha do tempo sem legenda visível | ✅ | Faixa de 6 chips coloridos sempre visível abaixo da timeline (Planejamento · Hibernação · Atividade retomada · Pré-execução · Execução · Pós-execução) · funciona em obras com 1 ou multi-ciclos |
+| F3 | Glossário ausente | ✅ | `<details>` expansível ao lado do sub-header · 11 termos definidos (Pré-obra, Execução, Tratativas, Retrabalho, Pós-obra, Hibernação, VT, Reaplicação, Marco, Snapshot, Ocorrência formal) |
+| F4 | Padrões com `snake_case` exposto | ✅ | Mapping `LABEL_PADRAO` no JS · `hibernacao_longa` → "🌙 Hibernação longa" · 8 padrões mapeados + fallback automático |
+| F5 | "Solicitações em obra" escondida | ✅ | Card próprio com section-title · mesmo peso dos demais cards · saiu de dentro do card "Material" |
+| F6 | Falta benchmark | ✅ | Placeholder explícito · "📊 Benchmark Monofloor · em construção · N de 228 obras processadas no piloto · médias virão quando o conjunto expandir" · contador dinâmico |
 
 ### Bugs vistos na leitura fria
 
@@ -151,6 +147,6 @@ prioridade  item                          custo    bloqueia        status
 1           Storytelling obra finalizada   ~1h      —               aguarda Vitor escolher obra
 2           Caminho B (5 frentes)          4-6h     B1→B2           ROADMAP versionado
 3           Cores oficiais                 ~30min   —               12 hex pendentes
-4           Refino leitura fria (F1-F6)    ~2h30    —               SETADO · pós-arquitetura
+4           Refino leitura fria (F1-F6)    —        —               ✅ FECHADO 2026-05-06
 5           Opção B click→IA               5min     —               PAUSADA · só com novo usuário
 ```

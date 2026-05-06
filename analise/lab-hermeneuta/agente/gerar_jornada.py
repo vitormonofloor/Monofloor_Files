@@ -351,6 +351,48 @@ PAD_TELA_TOTAL = re.compile(r"\btela\s+(total|por\s+completo|no\s+piso\s+total|i
 PAD_QTD_KIT = re.compile(r"(\d+)\s*(kits?|baldes?|latas?|sacos?)\b", re.IGNORECASE)
 PAD_SOBROU = re.compile(r"\bsobr(ou|ar[ao])\s+(\d+)?\s*(\w+)?", re.IGNORECASE)
 
+# Camada/demão + produto · ditas pelo aplicador (com ordinal explícito)
+# Ex: "Segunda camada de stelion" · "Primeira demão de lumina aplicado" · "Aplicação primeira camada stelion"
+PAD_CAMADA_PRODUTO = re.compile(
+    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta)\s+(camada|aplica[çc][ãa]o|dem[ãa]o)\b[^\n]{0,80}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b",
+    re.IGNORECASE
+)
+# Aplicação "simples" sem ordinal · vira camada 1 inferida
+# Ex: "Aplicação de primer" · "aplicando verniz" · "Programação aplicação verniz lumina"
+PAD_APLICACAO_SIMPLES = re.compile(
+    r"\baplica(?:ndo|[çc][ãa]o)\b(?:[^\n]{0,40}?)\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b",
+    re.IGNORECASE
+)
+# Produto + finalizado/aplicado/concluído (sem ordinal)
+# Ex: "Verniz finalizado" · "primer aplicado" · "Stelion concluído"
+PAD_PRODUTO_FINALIZADO = re.compile(
+    r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\s+(?:foi\s+)?(?:finaliz|conclu|aplicad)",
+    re.IGNORECASE
+)
+# Sobra com produto · "Sobrou 3 teron fechado" · "sobraram 2 baldes de stelion"
+PAD_SOBROU_PRODUTO = re.compile(
+    r"\bsobr(?:ou|aram?)\s+(\d+)?\s*(?:\w+\s+){0,2}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b",
+    re.IGNORECASE
+)
+# Verbos pra classificar snapshots de material em 2026+
+PAD_VERBO_ENTRADA = re.compile(r"\b(chegou|chegaram|entreg(?:a|ou|aram|amos)|recebi|recebido|envia(?:do|r|ndo|mos)|mandar|mandei|veio|vieram|sa[ií]ram|saiu)\b", re.IGNORECASE)
+PAD_VERBO_ESTOQUE = re.compile(r"\b(temos|tem|tinha|tenho|estamos\s+com|ainda\s+(?:tem|temos)|dispon[ií]ve|material\s+em\s+obra)\b", re.IGNORECASE)
+PAD_VERBO_SOBRA   = re.compile(r"\bsobr(?:ou|aram?|a)\b", re.IGNORECASE)
+PAD_VERBO_SOLIC   = re.compile(r"\b(precis[ao]\b|preciso\b|(?:vamos|iremos)\s+precisar|manda(?:r)?\s+(?:mais|outr))", re.IGNORECASE)
+PAD_VERBO_CONSUMO = re.compile(r"\b(consum[oeiu]|gast(?:ei|ou|amos)|usamos|aplicamos|fizemos|fez\s+em|aplicad[oa]s?\s+\d)", re.IGNORECASE)
+# Cores, renomeações e vocabulário do campo → família de produto-mãe na OS Indústria
+# IMPORTANTE: aplicadores no Telegram usam apelidos diferentes do nome do produto na OS:
+#   - "verniz" no Telegram = LUMINA (produto base) na OS
+#   - "primer" no Telegram = LUMINA PRIMER na OS (mas como tem "PRIMER" literal, mapeamos só PRIMER)
+#   - "teron" no Telegram = LEONA na OS (renomeação abr/2026)
+#   - "kalahari" / "argento" = cores do STELION
+PRODUTO_FAMILIA = {
+    "KALAHARI": "STELION",  # cor STELION
+    "ARGENTO":  "STELION",  # cor STELION
+    "TERON":    "LEONA",    # nome novo do produto (abr/2026); LEONA é o nome canônico mantido
+    "VERNIZ":   "LUMINA",   # aplicador fala "verniz", produto na OS é LUMINA
+}
+
 # Problemas
 PAD_PROBLEMA = re.compile(r"\b(trinca|fissura|rachadura|infiltrac[aã]o|patolog|errad[ao]|atras[ao]u?|problema|defeito|reclamac[aã]o)\b", re.IGNORECASE)
 
@@ -749,7 +791,8 @@ def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_
 
 
 def detectar_consumo(msgs_ordenadas):
-    """Extrai menções a quantidades consumidas/sobras (regex 'X kits/baldes')."""
+    """Extrai menções a quantidades consumidas/sobras (regex 'X kits/baldes').
+    Sobras tentam extrair qtd + produto: 'Sobrou 3 teron fechado' → qtd=3, produto=TERON, fam=LEONA."""
     consumos = []
     sobras = []
     for m in msgs_ordenadas:
@@ -763,14 +806,195 @@ def detectar_consumo(msgs_ordenadas):
                 "unidade": q_match.group(2).lower(),
                 "trecho": texto[:120].replace("\n", " ").strip(),
             })
-        # Sobras
-        if PAD_SOBROU.search(texto):
+        # Sobras com produto explícito (preferido)
+        sobra_prod = PAD_SOBROU_PRODUTO.search(texto)
+        if sobra_prod:
+            qtd_sobra = sobra_prod.group(1)
+            produto_lit = sobra_prod.group(2).upper()
+            produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
             sobras.append({
                 "data": (m.get("timestamp") or "")[:10],
                 "autor": (m.get("sender") or "?")[:30],
-                "trecho": texto[:160].replace("\n", " ").strip(),
+                "qtd": qtd_sobra,
+                "produto": produto_lit,
+                "produto_familia": produto_fam,
+                "trecho": texto[:200].replace("\n", " ").strip(),
+            })
+        elif PAD_SOBROU.search(texto):
+            # fallback sem produto identificado
+            sobras.append({
+                "data": (m.get("timestamp") or "")[:10],
+                "autor": (m.get("sender") or "?")[:30],
+                "qtd": None, "produto": None, "produto_familia": None,
+                "trecho": texto[:200].replace("\n", " ").strip(),
             })
     return consumos, sobras
+
+
+DATA_CORTE_MATERIAL = "2026-01-01"  # Vitor: 2025 não interessa mais
+
+
+def detectar_snapshots_material(msgs_ordenadas, data_min=DATA_CORTE_MATERIAL):
+    """Lista cronológica de snapshots de material em msgs Telegram (a partir de data_min).
+    Cada snapshot = msg com qtd+unidade plausível, classificada em SOBRA/ENTRADA/ESTOQUE/SOLIC/?.
+    Captura também produtos mencionados na msg e (data + autor + trecho)."""
+    snaps = []
+    for m in msgs_ordenadas:
+        texto = m.get("content") or ""
+        if not texto:
+            continue
+        if is_card_bot(texto):
+            continue
+        if "🎬" in texto or "🎙️" in texto:
+            continue
+        ts = (m.get("timestamp") or "")[:10]
+        if not ts or ts < data_min:
+            continue
+        hits = list(PAD_QTD_KIT.finditer(texto))
+        # Filtra qtds plausíveis (≤ 100, evita ruído)
+        qtds = []
+        for h in hits:
+            try:
+                n = int(h.group(1))
+                if 1 <= n <= 100:
+                    qtds.append({"qtd": n, "unidade": h.group(2).lower()})
+            except Exception:
+                pass
+        if not qtds:
+            continue
+        # Classe (hierarquia: SOBRA > CONSUMO > SOLIC > ENTRADA > ESTOQUE > ?)
+        if PAD_VERBO_SOBRA.search(texto):
+            classe = "SOBRA"
+        elif PAD_VERBO_CONSUMO.search(texto):
+            classe = "CONSUMO"
+        elif PAD_VERBO_SOLIC.search(texto):
+            classe = "SOLIC"
+        elif PAD_VERBO_ENTRADA.search(texto):
+            classe = "ENTRADA"
+        elif PAD_VERBO_ESTOQUE.search(texto):
+            classe = "ESTOQUE"
+        else:
+            classe = "?"
+        # Produtos mencionados (família canônica)
+        prods_lit = set(p.upper() for p in re.findall(r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b", texto, re.IGNORECASE))
+        prods_fam = sorted(set(PRODUTO_FAMILIA.get(p, p) for p in prods_lit))
+        snaps.append({
+            "data": ts,
+            "autor": (m.get("sender") or "?")[:40],
+            "classe": classe,
+            "qtds": qtds,
+            "produtos": prods_fam,
+            "trecho": texto[:240].replace("\n", " ").strip(),
+        })
+    snaps.sort(key=lambda x: x["data"])
+    return snaps
+
+
+def _ordinal_pra_int(s):
+    s = (s or "").lower().strip()
+    if s.startswith("1") or s == "primeira": return 1
+    if s.startswith("2") or s == "segunda":  return 2
+    if s.startswith("3") or s == "terceira": return 3
+    if s.startswith("4") or s == "quarta":   return 4
+    return None
+
+
+PAD_SENDER_ROLE_CAMPO = re.compile(r"\b(aplicador|preparador|lider|líder|aplicadora)\b", re.IGNORECASE)
+
+
+def is_aplicador_telegram(sender, aplicadores_set):
+    """is_aplicador relaxado · aceita também senders cujo nome contém 'aplicador|preparador|lider'
+    (formato Telegram do Painel: 'aplicador | William'). Esses são aplicadores externos não cadastrados
+    em /equipe da obra."""
+    if is_aplicador(sender, aplicadores_set):
+        return True
+    if sender and PAD_SENDER_ROLE_CAMPO.search(sender):
+        return True
+    return False
+
+
+def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
+    """Detecta menções de aplicação de camada/demão de produto, ditas por aplicadores.
+    Suporta 2 modos:
+      - 'ordinal': ordinal explícito ('Segunda camada de stelion') · camada=N
+      - 'inferida': aplicação sem ordinal ('Aplicação de primer', 'Verniz finalizado') · camada=1
+    Filtra cards de bot, transcrições, admin pedindo foto.
+    Dedup: pra cada (data + produto_familia), prefere ordinal sobre inferida.
+    Inferida só entra se NÃO houver ordinal pro mesmo (data + produto_familia)."""
+    ordinais = []
+    inferidas = []
+    for m in msgs_ordenadas:
+        texto = m.get("content") or ""
+        if not texto:
+            continue
+        if is_card_bot(texto):
+            continue
+        if "🎬" in texto or "🎙️" in texto:
+            continue
+        sender = m.get("sender") or ""
+        if not is_aplicador_telegram(sender, aplicadores_set):
+            continue
+        data_msg = (m.get("timestamp") or "")[:10]
+        autor = (m.get("sender") or "?")[:30]
+        trecho = texto[:200].replace("\n", " ").strip()
+
+        # Ordinal explícito
+        for hit in PAD_CAMADA_PRODUTO.finditer(texto):
+            cam_n = _ordinal_pra_int(hit.group(1))
+            if not cam_n:
+                continue
+            produto_lit = hit.group(3).upper()
+            produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
+            ordinais.append({
+                "data": data_msg, "autor": autor,
+                "produto": produto_lit, "produto_familia": produto_fam,
+                "camada": cam_n, "tipo": "ordinal", "trecho": trecho,
+            })
+
+        # Aplicação simples (sem ordinal) → camada 1 inferida
+        for hit in PAD_APLICACAO_SIMPLES.finditer(texto):
+            produto_lit = hit.group(1).upper()
+            produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
+            inferidas.append({
+                "data": data_msg, "autor": autor,
+                "produto": produto_lit, "produto_familia": produto_fam,
+                "camada": 1, "tipo": "inferida", "trecho": trecho,
+            })
+        # Produto + finalizado/aplicado
+        for hit in PAD_PRODUTO_FINALIZADO.finditer(texto):
+            produto_lit = hit.group(1).upper()
+            produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
+            inferidas.append({
+                "data": data_msg, "autor": autor,
+                "produto": produto_lit, "produto_familia": produto_fam,
+                "camada": 1, "tipo": "inferida", "trecho": trecho,
+            })
+
+    # Dedup ordinais: 1 por (data + produto_familia + camada)
+    seen_ord = set()
+    out_ord = []
+    familias_com_ordinal = set()
+    for a in ordinais:
+        k = (a["data"], a["produto_familia"], a["camada"])
+        if k in seen_ord: continue
+        seen_ord.add(k)
+        out_ord.append(a)
+        familias_com_ordinal.add(a["produto_familia"])
+
+    # Inferidas só entram se família NÃO tem ordinal (evita ruído)
+    seen_inf = set()
+    out_inf = []
+    for a in inferidas:
+        if a["produto_familia"] in familias_com_ordinal:
+            continue
+        k = (a["produto_familia"],)  # 1 inferida por família é suficiente
+        if k in seen_inf: continue
+        seen_inf.add(k)
+        out_inf.append(a)
+
+    out = out_ord + out_inf
+    out.sort(key=lambda x: (x["data"], x["produto_familia"], x["camada"]))
+    return out
 
 
 def get_aplicadores_set(equipe_endpoint):
@@ -1486,6 +1710,16 @@ def construir_jornada(obra_id):
     aplicadores_set = get_aplicadores_set(equipe_ep)
     marcos_execucao = detectar_marcos_execucao(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim, aplicadores_set)
 
+    # Camadas aplicadas detectadas no Telegram (só msgs de aplicadores oficiais)
+    camadas_aplicadas = detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set)
+
+    # Snapshots de material no Telegram · só obras com execução ≥ 2026-01-01
+    exec_iso = data_exec_confirmada.isoformat() if data_exec_confirmada else None
+    if exec_iso and exec_iso >= DATA_CORTE_MATERIAL:
+        snapshots_material = detectar_snapshots_material(msgs_ordenadas)
+    else:
+        snapshots_material = []
+
     # Problemas
     problemas_msg = detectar_problemas_msg(msgs_ordenadas)
     ocorrencias_fmt = []
@@ -1549,6 +1783,8 @@ def construir_jornada(obra_id):
         },
         "materiais_enviados": envios_materiais,
         "marcos_execucao": marcos_execucao,
+        "camadas_aplicadas": camadas_aplicadas,
+        "snapshots_material": snapshots_material,
         "ciclos": detectar_ciclos(
             marcos,
             fases,

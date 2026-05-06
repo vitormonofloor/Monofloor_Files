@@ -102,6 +102,65 @@
     padding: 40px;
   }
 
+  /* PAGE INTRO · sub-header explicativo + glossário expansível */
+  .page-intro {
+    margin-bottom: 36px;
+    padding-bottom: 8px;
+  }
+  .page-intro-frase {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 920px;
+    margin-bottom: 14px;
+  }
+  details.glossario {
+    border: 1px solid var(--line-soft);
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 0;
+    max-width: 920px;
+  }
+  details.glossario summary {
+    cursor: pointer;
+    padding: 10px 16px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    user-select: none;
+    list-style: none;
+  }
+  details.glossario summary::-webkit-details-marker { display: none; }
+  details.glossario summary::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 8px;
+    color: var(--gold);
+    transition: transform 0.2s ease;
+  }
+  details.glossario[open] summary::before { transform: rotate(90deg); }
+  details.glossario summary:hover { color: var(--ink); background: var(--surface-2); border-radius: 8px; }
+  .glossario-lista {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 8px 18px;
+    padding: 14px 18px 18px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 4px;
+  }
+  .glossario-lista dt {
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  .glossario-lista dd {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
   .section-title {
     font-size: 10.5px;
     font-weight: 700;
@@ -411,6 +470,810 @@
   .tabela td.num { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
   .tabela tr:hover td { background: var(--bg); }
 
+  /* LEGENDA das fases · sempre visível abaixo da timeline */
+  .timeline-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    padding: 16px 4px 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--line-soft);
+    justify-content: center;
+  }
+  .timeline-legenda-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .timeline-legenda-bola {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(42,37,32,0.12);
+    flex-shrink: 0;
+  }
+
+  /* OCORRÊNCIAS · pills no header da obra (perto do nome) */
+  .ocorrencias-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .ocorrencia-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    background: var(--surface);
+  }
+  .ocorrencia-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  .ocorrencia-pill.ativo {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-md);
+  }
+  .ocorrencia-pill .ocorrencia-bola {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .ocorrencia-pill.sev-critica { background: #4a1f1f; color: #fff; }
+  .ocorrencia-pill.sev-critica .ocorrencia-bola { background: #ff5050; box-shadow: 0 0 0 2px rgba(255,255,255,0.18); }
+  .ocorrencia-pill.sev-alta    { background: #fce6e6; color: #8b3a3a; border-color: #e8b8b8; }
+  .ocorrencia-pill.sev-alta .ocorrencia-bola { background: #c45a5a; }
+  .ocorrencia-pill.sev-media   { background: #faecd5; color: #6b4d18; border-color: #e5cb98; }
+  .ocorrencia-pill.sev-media .ocorrencia-bola { background: #c89464; }
+  .ocorrencia-pill.sev-baixa   { background: #e6edf3; color: #335a76; border-color: #b8cfdb; }
+  .ocorrencia-pill.sev-baixa .ocorrencia-bola { background: #7ea0b7; }
+  .ocorrencia-pill-badge {
+    background: rgba(0,0,0,0.18);
+    color: inherit;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 8px;
+    line-height: 1.4;
+  }
+  .ocorrencia-pill.sev-critica .ocorrencia-pill-badge {
+    background: rgba(255,255,255,0.22);
+  }
+
+  .ocorrencias-popover {
+    margin-bottom: 18px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--gold-soft);
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    animation: popoverFadeIn 0.2s ease;
+  }
+  .ocorrencias-popover.oculto { display: none; }
+  .ocorrencias-popover-cab {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .ocorrencias-popover-titulo {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .ocorrencias-popover-fechar {
+    color: var(--ink-faint);
+    font-size: 18px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .ocorrencias-popover-fechar:hover { color: var(--ink); }
+  .ocorrencia-detalhe {
+    display: grid;
+    grid-template-columns: 90px 80px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 12.5px;
+    align-items: baseline;
+  }
+  .ocorrencia-detalhe:last-child { border-bottom: none; }
+  .ocorrencia-detalhe-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .ocorrencia-detalhe-sev {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    text-align: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    align-self: center;
+    height: fit-content;
+  }
+  .ocorrencia-detalhe-sev.critica { background: #4a1f1f; color: #fff; }
+  .ocorrencia-detalhe-sev.alta    { background: #fce6e6; color: #8b3a3a; }
+  .ocorrencia-detalhe-sev.media   { background: #faecd5; color: #6b4d18; }
+  .ocorrencia-detalhe-sev.baixa   { background: #e6edf3; color: #335a76; }
+  .ocorrencia-detalhe-titulo {
+    color: var(--ink);
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  .ocorrencia-acionamentos {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    letter-spacing: 0.04em;
+    cursor: help;
+  }
+  @keyframes popoverFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESUMO da jornada · header denso + chips clicáveis (substitui pills + barra stacked) */
+  .resumo-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    align-items: baseline;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .resumo-num {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .resumo-num-label {
+    font-size: 9.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+  }
+  .resumo-num-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .resumo-num-val small {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-left: 3px;
+  }
+  .resumo-num-range {
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+  .resumo-num.resumo-num-principal .resumo-num-val { color: var(--gold); font-size: 28px; }
+  .resumo-num.resumo-num-principal .resumo-num-label { color: var(--gold-soft); }
+
+  .benchmark-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    margin: -6px 0 14px;
+    background: var(--surface-2);
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .benchmark-placeholder strong {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .benchmark-icon { font-size: 16px; flex-shrink: 0; }
+
+  .macro-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .macro-chip-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--ink);
+    cursor: default;
+    transition: all 0.2s ease;
+  }
+  .macro-chip-btn.clicavel { cursor: pointer; }
+  .macro-chip-btn.clicavel:hover {
+    border-color: var(--gold-soft);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  .macro-chip-btn.ativo {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+    box-shadow: var(--shadow-md);
+  }
+  .macro-chip-btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .macro-chip-pinta {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .macro-chip-btn.PRE_OBRA   .macro-chip-pinta { background: #e8c078; }
+  .macro-chip-btn.EXECUCAO   .macro-chip-pinta { background: #5fa073; }
+  .macro-chip-btn.TRATATIVAS .macro-chip-pinta { background: #c89464; }
+  .macro-chip-btn.RETRABALHO .macro-chip-pinta { background: #c45a5a; }
+  .macro-chip-btn.POS_OBRA   .macro-chip-pinta { background: #7ea0b7; }
+  .macro-chip-btn.HIBERNACAO .macro-chip-pinta {
+    background: repeating-linear-gradient(45deg, #a89e92 0 3px, #8c8276 3px 6px);
+  }
+  .macro-chip-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .macro-chip-corpo .macro-chip-nome {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .macro-chip-corpo .macro-chip-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .macro-chip-badge {
+    margin-left: 4px;
+    padding: 2px 8px;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 10px;
+    min-width: 22px;
+    text-align: center;
+  }
+  .macro-chip-badge.zero {
+    background: var(--surface-2);
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .macro-chip-btn.ativo .macro-chip-badge { background: var(--ink); }
+
+  /* MACRO-ETAPAS · barra horizontal stacked com proporção honesta */
+  .macro-etapas-wrap {
+    margin-top: 24px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+  }
+  .macro-etapas-titulo {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .macro-etapas-titulo small {
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-left: 6px;
+    font-style: italic;
+  }
+  .macro-etapas-barra {
+    display: flex;
+    height: 44px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 14px;
+  }
+  .macro-bloco {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    transition: filter 0.2s ease;
+    cursor: help;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .macro-bloco:hover { filter: brightness(1.08); }
+  .macro-bloco.clicavel { cursor: pointer; }
+  .macro-bloco.clicavel:hover { filter: brightness(1.12); }
+  .macro-bloco.ativo {
+    outline: 3px solid var(--gold);
+    outline-offset: -3px;
+    filter: brightness(1.05);
+  }
+  .macro-bloco-pct { position: relative; z-index: 2; }
+  .macro-bloco-badge {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    background: rgba(0,0,0,0.32);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+  .macro-bloco { position: relative; }
+
+  .macro-detalhe {
+    margin-top: 18px;
+    padding: 18px 20px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    border: 1px solid var(--line-soft);
+    animation: macroFadeIn 0.25s ease;
+  }
+  .macro-detalhe.oculto { display: none; }
+  .macro-detalhe-cab {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .macro-detalhe-label.macro-chip {
+    background: var(--surface);
+    border-color: var(--gold-soft);
+    padding: 6px 14px;
+  }
+  @keyframes macroFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .macro-bloco.PRE_OBRA   { background: linear-gradient(180deg, #f0c382 0%, #e8c078 100%); }
+  .macro-bloco.EXECUCAO   { background: linear-gradient(180deg, #6fb586 0%, #5fa073 100%); }
+  .macro-bloco.RETRABALHO { background: linear-gradient(180deg, #cf6c6c 0%, #c45a5a 100%); }
+  .macro-bloco.POS_OBRA   { background: linear-gradient(180deg, #92aebf 0%, #7ea0b7 100%); }
+  .macro-bloco.HIBERNACAO {
+    background:
+      repeating-linear-gradient(45deg, rgba(168,158,146,0.85) 0 8px, rgba(140,130,118,0.85) 8px 16px);
+    color: #fff;
+  }
+  .macro-etapas-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .macro-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+  }
+  .macro-chip::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .macro-chip.PRE_OBRA::before   { background: #e8c078; }
+  .macro-chip.EXECUCAO::before   { background: #5fa073; }
+  .macro-chip.TRATATIVAS::before { background: #c89464; }
+  .macro-chip.RETRABALHO::before { background: #c45a5a; }
+  .macro-chip.POS_OBRA::before   { background: #7ea0b7; }
+  .macro-chip.HIBERNACAO::before {
+    background: repeating-linear-gradient(45deg, #a89e92 0 3px, #8c8276 3px 6px);
+  }
+  .macro-chip-nome { color: var(--ink); letter-spacing: 0.04em; }
+  .macro-chip-meta { color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; }
+
+  /* EQUIPE DE CAMPO · cascata de bonequinhos */
+  .equipe-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 6px 0;
+  }
+  .equipe-campo-pessoa {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .equipe-campo-pessoa:hover {
+    background: var(--surface-2);
+    transform: translateX(2px);
+  }
+  .equipe-campo-pessoa.lider {
+    background: linear-gradient(90deg, var(--gold-bg) 0%, transparent 70%);
+    border-left: 3px solid var(--gold);
+    padding-left: 13px;
+  }
+  .equipe-campo-emoji {
+    font-size: 36px;
+    line-height: 1;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(42,37,32,0.10));
+  }
+  .equipe-campo-pessoa.lider .equipe-campo-emoji { font-size: 40px; }
+  .equipe-campo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+  }
+  .equipe-campo-nome {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .equipe-campo-pessoa.lider .equipe-campo-nome {
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .equipe-campo-funcao {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .equipe-campo-pessoa.lider .equipe-campo-funcao { color: var(--gold-soft); }
+  .equipe-campo-vazio {
+    text-align: center;
+    color: var(--ink-faint);
+    padding: 24px;
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  /* Subtítulo dentro de card (subseção tipo "Solicitações em obra") */
+  .subsec-titulo {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+
+  /* APLICAÇÃO REGISTRADA · Telegram */
+  .aplicacao-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .aplicacao-item {
+    padding: 10px 12px;
+    border-left: 2px solid var(--gold-soft);
+    background: var(--gold-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 12.5px;
+  }
+  .aplicacao-item.sobra {
+    border-left-color: #5fa073;
+    background: #f1f7f2;
+  }
+  .aplicacao-cab {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .aplicacao-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .aplicacao-item.sobra .aplicacao-data { color: #5fa073; }
+  .aplicacao-autor {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .aplicacao-qtds {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .aplicacao-trecho {
+    color: var(--ink-soft);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .aplicacao-vazio {
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 12px;
+    padding: 12px 0;
+  }
+
+  /* CAMADAS DETECTADAS · pills com produto + nº camadas */
+  .camadas-bloco {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: linear-gradient(90deg, var(--gold-bg) 0%, var(--surface) 100%);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+  }
+  .camadas-bloco-titulo {
+    font-size: 10px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .camadas-bloco-titulo small {
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  .camadas-bloco-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .camada-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--gold-soft);
+    border-radius: 16px;
+    font-size: 11.5px;
+  }
+  .camada-pill strong {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .camada-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+    padding: 2px 6px;
+    background: var(--gold-bg);
+    border-radius: 4px;
+  }
+  .camada-meta {
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 10.5px;
+  }
+  .camada-pill.inferida {
+    border-color: var(--line);
+    background: var(--surface-2);
+    opacity: 0.92;
+  }
+  .camada-pill.inferida .camada-num {
+    color: var(--ink-soft);
+    background: var(--bg);
+  }
+  .camada-tag-inferida {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+    cursor: help;
+  }
+
+  /* SNAPSHOTS DE MATERIAL · timeline 2026+ */
+  .snapshots-section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .snapshots-titulo {
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .snapshots-subtitulo {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .snapshots-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .snapshot-item {
+    display: grid;
+    grid-template-columns: 90px 90px 1fr;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-left: 3px solid var(--ink-faint);
+    border-radius: 0 8px 8px 0;
+    font-size: 12.5px;
+    transition: background 0.2s ease;
+  }
+  .snapshot-item:hover { background: var(--surface-2); }
+  .snapshot-item.SOBRA   { border-left-color: #5fa073; }
+  .snapshot-item.CONSUMO { border-left-color: #c45a5a; }
+  .snapshot-item.SOLIC   { border-left-color: #e8c078; }
+  .snapshot-item.ENTRADA { border-left-color: #7ea0b7; }
+  .snapshot-item.ESTOQUE { border-left-color: #b8884a; }
+  .snap-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .snap-classe {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-align: center;
+    align-self: center;
+    height: fit-content;
+  }
+  .snap-classe.SOBRA   { background: #e8f3ec; color: #2d6c46; }
+  .snap-classe.CONSUMO { background: #f7e6e6; color: #8b3a3a; }
+  .snap-classe.SOLIC   { background: #fbf0d7; color: #8a6018; }
+  .snap-classe.ENTRADA { background: #e3edf3; color: #335a76; }
+  .snap-classe.ESTOQUE { background: #f5ecd9; color: #6e4f1c; }
+  .snap-classe.indef   { background: var(--bg); color: var(--ink-faint); }
+  .snap-corpo { min-width: 0; }
+  .snap-cab {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .snap-qtds {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 12px;
+  }
+  .snap-produtos {
+    font-size: 10.5px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .snap-autor {
+    color: var(--ink-soft);
+    font-size: 11px;
+    font-style: italic;
+    margin-left: auto;
+  }
+  .snap-trecho {
+    color: var(--ink-soft);
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  /* SOBRAS observadas · obs no final */
+  .sobras-bloco {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .sobras-titulo {
+    font-size: 10px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .sobras-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sobra-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--ink);
+    padding: 6px 10px;
+    background: #f1f7f2;
+    border-left: 2px solid #5fa073;
+    border-radius: 0 4px 4px 0;
+  }
+  .sobra-item.generica {
+    background: var(--surface-2);
+    border-left-color: var(--line);
+    color: var(--ink-soft);
+  }
+  .sobra-icon { font-size: 14px; flex-shrink: 0; }
+  .sobra-item small { color: var(--ink-faint); font-style: italic; }
+
   .lista-eventos {
     list-style: none;
   }
@@ -484,6 +1347,16 @@
     font-weight: 700;
     margin-right: 8px;
     font-size: 11.5px;
+  }
+  .padrao-label {
+    color: var(--ink);
+    font-weight: 700;
+    margin-right: 10px;
+    letter-spacing: -0.01em;
+  }
+  .padrao-desc {
+    color: var(--ink-soft);
+    font-size: 12px;
   }
 
   .vazio {
@@ -1024,6 +1897,26 @@
 </header>
 
 <main>
+  <div class="page-intro">
+    <p class="page-intro-frase">Análise retrospectiva de cada obra finalizada · reconstruída a partir das mensagens do Telegram do grupo · fases, marcos, ocorrências e materiais ao longo do tempo.</p>
+    <details class="glossario">
+      <summary>Glossário · termos usados nesta página</summary>
+      <dl class="glossario-lista">
+        <dt>Pré-obra</dt><dd>Tudo que antecede a aplicação física · planejamento, escolha de cor, VT, agendamento</dd>
+        <dt>Execução</dt><dd>Aplicação física do material em obra (1ª entrega)</dd>
+        <dt>Tratativas</dt><dd>Negociações, definições, relatórios e acompanhamento dentro de um ciclo de retrabalho · sem trabalho físico ainda</dd>
+        <dt>Retrabalho</dt><dd>Reaplicação física com prestadores em obra após reprovação · só conta os dias de aplicação nova</dd>
+        <dt>Pós-obra</dt><dd>Após aprovação final do cliente · acompanhamento e fechamento</dd>
+        <dt>Hibernação</dt><dd>30+ dias consecutivos sem mensagens · tempo morto entre interações</dd>
+        <dt>VT</dt><dd>Visita Técnica · diagnóstico realizado em obra (aferição, entrada, qualidade)</dd>
+        <dt>Reaplicação</dt><dd>Aplicação de novo material após reprovação da entrega original</dd>
+        <dt>Marco</dt><dd>Evento detectado em mensagem do Telegram · contrato assinado, cor aprovada, início, finalização, etc</dd>
+        <dt>Snapshot de material</dt><dd>Foto textual do material em obra · detectada em mensagem (estoque, entrada, sobra)</dd>
+        <dt>Ocorrência formal</dt><dd>Registro oficial no Painel de Obras · severidade categorizada (crítica/alta/média/baixa)</dd>
+      </dl>
+    </details>
+  </div>
+
   <div class="section-title">Obras finalizadas</div>
   <div class="obras-grid" id="obras-grid"></div>
 
@@ -1031,12 +1924,14 @@
     <div class="detalhes-header">
       <h2 id="det-cliente">—</h2>
       <span class="obra-id" id="det-id">—</span>
+      <div id="ocorrencias-pills" class="ocorrencias-pills"></div>
     </div>
+    <div id="ocorrencias-popover" class="ocorrencias-popover oculto"></div>
 
     <div class="section-title">Linha do tempo</div>
     <div id="timeline-container"></div>
     <div class="timeline-wrap" style="margin-top:18px">
-      <div class="tempo-pills" id="tempo-pills"></div>
+      <div id="macro-etapas" class="macro-etapas-wrap"></div>
     </div>
 
     <div class="secoes">
@@ -1056,30 +1951,25 @@
       </div>
 
       <div class="card">
-        <div class="section-title">Marcos detectados</div>
-        <ul class="lista-eventos" id="lista-marcos"></ul>
-      </div>
-
-      <div class="card">
         <div class="section-title">Material</div>
         <table class="tabela" id="tab-materiais"></table>
-        <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line-soft)"><strong style="font-size:10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.12em;font-weight:700">Solicitações em obra</strong></div>
+        <div class="subsec-titulo">Aplicação registrada · Telegram</div>
+        <div id="aplicacao-registrada"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Solicitações em obra</div>
         <ul class="lista-eventos" id="lista-solic"></ul>
-      </div>
-
-      <div class="card">
-        <div class="section-title">Ocorrências formais</div>
-        <ul class="lista-eventos" id="lista-ocorr"></ul>
-      </div>
-
-      <div class="card">
-        <div class="section-title">Sinais nas mensagens</div>
-        <ul class="lista-eventos" id="lista-sinais"></ul>
       </div>
 
       <div class="card full">
         <div class="section-title">Material enviado · Ordens de Serviço Indústria</div>
         <div id="materiais-enviados"></div>
+      </div>
+
+      <div class="card full">
+        <div class="section-title">Sinais nas mensagens</div>
+        <ul class="lista-eventos" id="lista-sinais"></ul>
       </div>
 
       <div class="card full">
@@ -1238,37 +2128,48 @@ function renderTimelineEm(svg, fases, marcos){
 
   const totalDias = fases.reduce((sum, f) => sum + Math.max(1, f.duracao_dias), 0);
 
-  // Layout · barra de fases compacta (marcos foram pra lista vertical abaixo)
+  // Layout · callouts alternados acima/abaixo · barra colorida limpa
   const W = 1180;
-  const H = 130;
   const X0 = 40;
   const X1 = W - 20;
   const LARG = X1 - X0;
-  const Y_BARRA = 30;
-  const ALTURA_BARRA = 56;
 
-  // Min-width pra fases curtas continuarem legíveis
+  const Y_TOPO_L1   = 14;   // linha 1 callout topo (nome)
+  const Y_TOPO_L2   = 28;   // linha 2 callout topo (duração)
+  const Y_LINHA_TOPO_INI = 36;
+  const Y_LINHA_TOPO_FIM = 58;
+  const Y_BARRA     = 60;
+  const ALTURA_BARRA = 38;
+  const Y_BARRA_FIM = Y_BARRA + ALTURA_BARRA; // 98
+  const Y_TICK_FIM  = Y_BARRA_FIM + 5;
+  const Y_DATA      = Y_BARRA_FIM + 16;
+  const Y_LINHA_BAIXO_INI = Y_BARRA_FIM + 26;
+  const Y_LINHA_BAIXO_FIM = Y_BARRA_FIM + 44;
+  const Y_BAIXO_L1 = Y_BARRA_FIM + 56;  // 154
+  const Y_BAIXO_L2 = Y_BARRA_FIM + 70;  // 168
+
   const MIN_WIDTH = 70;
   const totalFasesLargura = fases.reduce((sum, f) => sum + Math.max(MIN_WIDTH, (Math.max(1, f.duracao_dias) / totalDias) * LARG), 0);
   const fator = LARG / totalFasesLargura;
 
-  // Cabeçalho da timeline (data início + fim)
-  const dataIni = fases[0].inicio;
   const dataFim = fases[fases.length-1].fim;
 
-  // Eixo central
+  // Renderiza barras coloridas (sem texto dentro) + ticks + callouts alternados
+  // Datas dos ticks: omite quando colidem (gap mínimo); primeira e última sempre visíveis
+  const MIN_GAP_DATA = 65;
+  let lastDataX = -Infinity;
+
   let xCursor = X0;
-  const fasesPos = []; // pra usar nos marcos
   fases.forEach((f, i) => {
     const dias = Math.max(1, f.duracao_dias);
     const wRaw = (dias / totalDias) * LARG;
     const w = Math.max(MIN_WIDTH, wRaw) * fator;
-    fasesPos.push({xIni: xCursor, xFim: xCursor + w, fase: f, dataIni: f.inicio, dataFim: f.fim});
+    const xMeio = xCursor + w/2;
 
     const corTopo = corFase(f.nome, true);
     const corBaixo = corFase(f.nome, false);
 
-    // Gradiente único pra essa fase
+    // Gradiente
     const gradId = `grad-${i}`;
     const defs = svg.querySelector('defs') || svg.appendChild(svgEl('defs'));
     const grad = svgEl('linearGradient', { id: gradId, x1: '0%', y1: '0%', x2: '0%', y2: '100%' });
@@ -1276,10 +2177,10 @@ function renderTimelineEm(svg, fases, marcos){
     grad.appendChild(svgEl('stop', { offset: '100%', 'stop-color': corBaixo }));
     defs.appendChild(grad);
 
-    // Retângulo da fase com gradient + sombra sutil
+    // Retângulo da fase · cor + tooltip · zero texto dentro
     const rect = svgEl('rect', {
       x: xCursor, y: Y_BARRA, width: w, height: ALTURA_BARRA,
-      fill: `url(#${gradId})`, stroke: 'rgba(42,37,32,0.06)', 'stroke-width': '1',
+      fill: `url(#${gradId})`, stroke: 'rgba(42,37,32,0.08)', 'stroke-width': '1',
       rx: '2', ry: '2', style: 'cursor:help; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.04))'
     });
     rect.addEventListener('mouseenter', (e) => mostrarTooltip(e, `<strong>${esc(f.nome)}</strong><br>${fmtData(f.inicio)} → ${fmtData(f.fim)}<br>${dias} dias · ${f.n_msgs} mensagens`));
@@ -1287,46 +2188,73 @@ function renderTimelineEm(svg, fases, marcos){
     rect.addEventListener('mousemove', moverTooltip);
     svg.appendChild(rect);
 
-    // Label da fase (sempre)
-    const txt = svgText(xCursor + w/2, Y_BARRA + ALTURA_BARRA/2 - 2, f.nome.replace(' inicial', '').replace('Atividade retomada', 'Retomada').replace('Despertar e pré-execução', 'Pré-execução').replace('Pós-execução', 'Pós'), {
-      'text-anchor': 'middle', 'font-family': "'Plus Jakarta Sans', sans-serif",
-      'font-size': '12', 'font-weight': '700', 'fill': '#2a2520', 'letter-spacing': '-0.01em'
-    });
-    svg.appendChild(txt);
+    // Callout · alternância: ímpar=topo, par=baixo
+    const noTopo = (i % 2 === 1);
+    const nomeCurto = f.nome
+      .replace(' inicial', '')
+      .replace('Atividade retomada', 'Retomada')
+      .replace('Despertar e pré-execução', 'Pré-execução')
+      .replace('Pós-execução', 'Pós');
+    const dur = `${dias}d · ${f.n_msgs}m`;
 
-    // Duração + msgs (segunda linha)
-    const txt2 = svgText(xCursor + w/2, Y_BARRA + ALTURA_BARRA/2 + 14, `${dias}d · ${f.n_msgs}m`, {
-      'text-anchor': 'middle', 'font-family': "'JetBrains Mono', monospace",
-      'font-size': '10.5', 'fill': 'rgba(42,37,32,0.7)', 'font-weight': '500'
-    });
-    svg.appendChild(txt2);
+    if (noTopo){
+      // Linha conectora topo (sai da barra, sobe)
+      svg.appendChild(svgEl('line', {
+        x1: xMeio, y1: Y_LINHA_TOPO_FIM, x2: xMeio, y2: Y_LINHA_TOPO_INI,
+        stroke: '#a89e92', 'stroke-width': '1', opacity: '0.6'
+      }));
+      svg.appendChild(svgText(xMeio, Y_TOPO_L1, nomeCurto, {
+        'text-anchor': 'middle', 'font-family': "'Plus Jakarta Sans', sans-serif",
+        'font-size': '11.5', 'font-weight': '700', 'fill': '#2a2520', 'letter-spacing': '-0.01em'
+      }));
+      svg.appendChild(svgText(xMeio, Y_TOPO_L2, dur, {
+        'text-anchor': 'middle', 'font-family': "'JetBrains Mono', monospace",
+        'font-size': '10', 'fill': '#6b6156', 'font-weight': '500'
+      }));
+    } else {
+      // Linha conectora baixo (sai da barra, desce — passa pela linha de datas, opacity baixa)
+      svg.appendChild(svgEl('line', {
+        x1: xMeio, y1: Y_LINHA_BAIXO_INI, x2: xMeio, y2: Y_LINHA_BAIXO_FIM,
+        stroke: '#a89e92', 'stroke-width': '1', opacity: '0.6'
+      }));
+      svg.appendChild(svgText(xMeio, Y_BAIXO_L1, nomeCurto, {
+        'text-anchor': 'middle', 'font-family': "'Plus Jakarta Sans', sans-serif",
+        'font-size': '11.5', 'font-weight': '700', 'fill': '#2a2520', 'letter-spacing': '-0.01em'
+      }));
+      svg.appendChild(svgText(xMeio, Y_BAIXO_L2, dur, {
+        'text-anchor': 'middle', 'font-family': "'JetBrains Mono', monospace",
+        'font-size': '10', 'fill': '#6b6156', 'font-weight': '500'
+      }));
+    }
 
-    // Tick + data início (abaixo da barra)
-    const tick = svgEl('line', {
-      x1: xCursor, y1: Y_BARRA + ALTURA_BARRA, x2: xCursor, y2: Y_BARRA + ALTURA_BARRA + 6,
+    // Tick (sempre) + data início (condicional · evita amontoado)
+    svg.appendChild(svgEl('line', {
+      x1: xCursor, y1: Y_BARRA_FIM, x2: xCursor, y2: Y_TICK_FIM,
       stroke: '#a89e92', 'stroke-width': '1'
-    });
-    svg.appendChild(tick);
-    const dt = svgText(xCursor, Y_BARRA + ALTURA_BARRA + 20, fmtData(f.inicio), {
-      'text-anchor': i === 0 ? 'start' : 'middle',
-      'font-family': "'JetBrains Mono', monospace", 'font-size': '10', 'fill': '#6b6156', 'font-weight': '500'
-    });
-    svg.appendChild(dt);
+    }));
+    const ehUltimo = (i === fases.length - 1);
+    const cabeData = (xCursor - lastDataX) >= MIN_GAP_DATA;
+    if (i === 0 || cabeData){
+      svg.appendChild(svgText(xCursor, Y_DATA, fmtData(f.inicio), {
+        'text-anchor': i === 0 ? 'start' : 'middle',
+        'font-family': "'JetBrains Mono', monospace", 'font-size': '10', 'fill': '#6b6156', 'font-weight': '500'
+      }));
+      lastDataX = xCursor;
+    }
 
     xCursor += w;
   });
 
-  // Tick final + data
-  const tickFim = svgEl('line', {
-    x1: xCursor, y1: Y_BARRA + ALTURA_BARRA, x2: xCursor, y2: Y_BARRA + ALTURA_BARRA + 6,
+  // Tick final + data fim (sempre mostra, mas se colide com a última anterior, força gap recuando o anchor)
+  svg.appendChild(svgEl('line', {
+    x1: xCursor, y1: Y_BARRA_FIM, x2: xCursor, y2: Y_TICK_FIM,
     stroke: '#a89e92', 'stroke-width': '1'
-  });
-  svg.appendChild(tickFim);
-  const dtFim = svgText(xCursor, Y_BARRA + ALTURA_BARRA + 20, fmtData(dataFim), {
+  }));
+  // Se data fim ficou perto demais da última visível, ainda mostra (é prioridade), só não dá pra recuar muito
+  svg.appendChild(svgText(xCursor, Y_DATA, fmtData(dataFim), {
     'text-anchor': 'end', 'font-family': "'JetBrains Mono', monospace",
     'font-size': '10', 'fill': '#6b6156', 'font-weight': '500'
-  });
-  svg.appendChild(dtFim);
+  }));
 
   // MARCOS · removidos do SVG · vão pra lista cronológica abaixo (renderCicloMarcosLista)
   marcos = (marcos || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
@@ -1610,6 +2538,24 @@ function renderGantt(marcosExec){
   });
 }
 
+// Legenda das fases · sempre visível abaixo da timeline
+function legendaFasesHTML(){
+  const itens = [
+    { nome: 'Planejamento', cor: 'linear-gradient(180deg, #c8dde0 0%, #b3ccd0 100%)' },
+    { nome: 'Hibernação', cor: 'linear-gradient(180deg, #e6dfd0 0%, #d6cdbd 100%)' },
+    { nome: 'Atividade retomada', cor: 'linear-gradient(180deg, #f5d199 0%, #e8c078 100%)' },
+    { nome: 'Pré-execução', cor: 'linear-gradient(180deg, #efb380 0%, #e09865 100%)' },
+    { nome: 'Execução', cor: 'linear-gradient(180deg, #7eb88d 0%, #5fa073 100%)' },
+    { nome: 'Pós-execução', cor: 'linear-gradient(180deg, #9bbacc 0%, #7ea0b7 100%)' },
+  ];
+  return `<div class="timeline-legenda">
+    ${itens.map(it => `<span class="timeline-legenda-item">
+      <span class="timeline-legenda-bola" style="background:${it.cor}"></span>
+      ${it.nome}
+    </span>`).join('')}
+  </div>`;
+}
+
 function renderTimelineCiclos(j){
   const cont = document.getElementById('timeline-container');
   cont.innerHTML = '';
@@ -1617,7 +2563,7 @@ function renderTimelineCiclos(j){
 
   if (!ciclos.length){
     // Sem ciclos · timeline única (modo padrão · GURGEL e similares)
-    cont.innerHTML = `<div class="timeline-wrap"><svg class="timeline-svg" id="timeline-0" viewBox="0 0 1200 320" preserveAspectRatio="xMinYMin meet"></svg></div>`;
+    cont.innerHTML = `<div class="timeline-wrap"><svg class="timeline-svg" id="timeline-0" viewBox="0 0 1200 180" preserveAspectRatio="xMinYMin meet" style="min-width:1100px;height:auto"></svg>${legendaFasesHTML()}</div>`;
     renderTimelineEm(document.getElementById('timeline-0'), j.fases || [], j.marcos || []);
     return;
   }
@@ -1633,13 +2579,15 @@ function renderTimelineCiclos(j){
         <div class="ciclo-duracao">${c.duracao_dias}d</div>
       </div>
       <div class="timeline-wrap-ciclo">
-        <svg class="timeline-svg" id="${elId}" viewBox="0 0 1200 130" preserveAspectRatio="xMinYMin meet" style="min-width:1100px;height:auto"></svg>
+        <svg class="timeline-svg" id="${elId}" viewBox="0 0 1200 180" preserveAspectRatio="xMinYMin meet" style="min-width:1100px;height:auto"></svg>
         <div class="ciclo-marcos-lista" id="${elId}-marcos"></div>
       </div>
     `);
     renderTimelineEm(document.getElementById(elId), c.fases, c.marcos);
     renderListaMarcos(document.getElementById(`${elId}-marcos`), c.marcos);
   });
+  // Legenda compartilhada · única abaixo de todos os ciclos
+  cont.insertAdjacentHTML('beforeend', `<div class="timeline-wrap" style="padding:14px 32px;margin-top:-20px">${legendaFasesHTML()}</div>`);
 }
 
 function renderListaMarcos(container, marcos){
@@ -1783,6 +2731,356 @@ const COR_MARCO_FASE_LIST = {
   reprovacao_retorno: '#c45a5a',
 };
 
+// Classifica fase em macro-etapa
+// RETRABALHO = SÓ fase "Execução" pura em ciclo de retrabalho (prestadores de fato aplicando)
+// TRATATIVAS = visita de qualidade, relatório, definição, acompanhamento, agendamento (não há trabalho físico)
+// "Despertar e pré-execução" e "Pós-execução" em ciclo de retrabalho = TRATATIVAS, não retrabalho
+function classificarMacroEtapa(faseNome, cicloIdx){
+  const n = (faseNome || '').toLowerCase().trim();
+  if (n.includes('hibern')) return 'HIBERNACAO';
+  if (cicloIdx > 0){
+    if (n === 'execução' || n === 'execucao') return 'RETRABALHO';
+    return 'TRATATIVAS';
+  }
+  // Ciclo 0 · entrega original
+  if (n.startsWith('pós') || n.startsWith('pos-')) return 'POS_OBRA';
+  if (n === 'execução' || n === 'execucao') return 'EXECUCAO';
+  return 'PRE_OBRA';
+}
+
+const MACRO_LABELS = {
+  PRE_OBRA: 'Pré-obra',
+  EXECUCAO: 'Execução',
+  TRATATIVAS: 'Tratativas',
+  RETRABALHO: 'Retrabalho',
+  POS_OBRA: 'Pós-obra',
+  HIBERNACAO: 'Hibernação',
+};
+const MACRO_ORDEM = ['PRE_OBRA', 'EXECUCAO', 'TRATATIVAS', 'RETRABALHO', 'POS_OBRA', 'HIBERNACAO'];
+
+// Ocorrências formais · pills agrupados por tipo + popover com datas/títulos
+const LABEL_OCORRENCIA = {
+  desvio_qualidade:  'Desvio de qualidade',
+  problema_tecnico:  'Problema técnico',
+  falha_comunicacao: 'Falha de comunicação',
+  outro:             'Outras ocorrências',
+};
+const SEV_RANK = { critica: 4, alta: 3, media: 2, baixa: 1 };
+
+let OCORR_SEL = null;
+
+function agruparOcorrenciasPorChave(lista){
+  // Junta ocorrências de mesma (data + titulo) em 1 entrada com _acionamentos = N
+  const map = {};
+  lista.forEach(oc => {
+    const k = `${(oc.data || '').slice(0,10)}__${oc.titulo || ''}`;
+    if (!map[k]) map[k] = { ...oc, _acionamentos: 0 };
+    map[k]._acionamentos++;
+    // Mantém a severidade máxima entre os acionamentos
+    if ((SEV_RANK[oc.severidade] || 0) > (SEV_RANK[map[k].severidade] || 0)){
+      map[k].severidade = oc.severidade;
+    }
+  });
+  return Object.values(map).sort((a,b) => (a.data || '').localeCompare(b.data || ''));
+}
+
+function renderOcorrenciasPills(j){
+  const cont = document.getElementById('ocorrencias-pills');
+  const pop  = document.getElementById('ocorrencias-popover');
+  if (!cont || !pop) return;
+  const ocorr = ((j.friccao || {}).ocorrencias_formais || []).slice();
+  if (!ocorr.length){
+    cont.innerHTML = '';
+    pop.classList.add('oculto');
+    return;
+  }
+  // Agrupar primeiro por tipo, depois agregar (data + titulo) dentro de cada tipo
+  const grupos = {};
+  const totalAcionamentos = {};
+  ocorr.forEach(o => {
+    const t = o.tipo || 'outro';
+    if (!grupos[t]) grupos[t] = [];
+    grupos[t].push(o);
+  });
+  Object.keys(grupos).forEach(t => {
+    totalAcionamentos[t] = grupos[t].length;
+    grupos[t] = agruparOcorrenciasPorChave(grupos[t]);
+  });
+  // Severidade máxima por grupo
+  function sevMax(lst){
+    let max = 'baixa';
+    lst.forEach(o => {
+      if ((SEV_RANK[o.severidade] || 0) > (SEV_RANK[max] || 0)) max = o.severidade || 'baixa';
+    });
+    return max;
+  }
+
+  const pillsHtml = Object.entries(grupos).map(([tipo, lst]) => {
+    const sev = sevMax(lst);
+    const label = LABEL_OCORRENCIA[tipo] || tipo.replace(/_/g, ' ');
+    const totalAc = totalAcionamentos[tipo];
+    const tooltip = totalAc > lst.length ? `${lst.length} ocorrências distintas · ${totalAc} acionamentos no total` : `${lst.length} ocorrência${lst.length === 1 ? '' : 's'}`;
+    return `<button class="ocorrencia-pill sev-${sev}" data-tipo="${esc(tipo)}" title="${esc(tooltip)}">
+      <span class="ocorrencia-bola"></span>
+      <span>${esc(label)}</span>
+      <span class="ocorrencia-pill-badge">${lst.length}</span>
+    </button>`;
+  }).join('');
+
+  cont.innerHTML = pillsHtml;
+  pop.classList.add('oculto');
+  OCORR_SEL = null;
+
+  cont.querySelectorAll('.ocorrencia-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tipo = btn.dataset.tipo;
+      if (OCORR_SEL === tipo){
+        OCORR_SEL = null;
+        cont.querySelectorAll('.ocorrencia-pill').forEach(b => b.classList.remove('ativo'));
+        pop.classList.add('oculto');
+        return;
+      }
+      OCORR_SEL = tipo;
+      cont.querySelectorAll('.ocorrencia-pill').forEach(b => b.classList.toggle('ativo', b.dataset.tipo === tipo));
+      mostrarOcorrenciasPopover(tipo, grupos[tipo], totalAcionamentos[tipo]);
+    });
+  });
+}
+
+function mostrarOcorrenciasPopover(tipo, lista, totalAcionamentos){
+  const pop = document.getElementById('ocorrencias-popover');
+  const label = LABEL_OCORRENCIA[tipo] || tipo.replace(/_/g, ' ');
+  const ordenada = lista.slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
+  const detalhes = ordenada.map(o => {
+    const tagAc = o._acionamentos > 1
+      ? `<span class="ocorrencia-acionamentos" title="mesma ocorrência registrada ${o._acionamentos} vezes neste dia">${o._acionamentos}× acionamentos</span>`
+      : '';
+    return `<div class="ocorrencia-detalhe">
+      <span class="ocorrencia-detalhe-data">${fmtData(o.data)}</span>
+      <span class="ocorrencia-detalhe-sev ${o.severidade || 'baixa'}">${esc(o.severidade || '?')}</span>
+      <span class="ocorrencia-detalhe-titulo">${esc(o.titulo || '—')} ${tagAc}</span>
+    </div>`;
+  }).join('');
+  const cabExtra = (totalAcionamentos > ordenada.length)
+    ? ` · <small style="color:var(--ink-soft);font-weight:500">${totalAcionamentos} acionamentos no total</small>`
+    : '';
+  pop.innerHTML = `
+    <div class="ocorrencias-popover-cab">
+      <span class="ocorrencias-popover-titulo">${esc(label)} · ${ordenada.length} ocorrência${ordenada.length === 1 ? '' : 's'}${cabExtra}</span>
+      <button class="ocorrencias-popover-fechar" aria-label="fechar" onclick="document.getElementById('ocorrencias-popover').classList.add('oculto'); document.querySelectorAll('.ocorrencia-pill').forEach(b=>b.classList.remove('ativo')); OCORR_SEL=null;">✕</button>
+    </div>
+    ${detalhes}
+  `;
+  pop.classList.remove('oculto');
+}
+
+// Pra cada marco, classifica em qual macro-etapa cai (usando data + fases do ciclo)
+function classificarMarcoEmMacro(marco, ciclos, fasesAll){
+  const d = (marco.data || '').slice(0,10);
+  if (!d) return null;
+  // Achar ciclo cuja janela contém a data
+  let cicloIdx = 0;
+  if (ciclos && ciclos.length){
+    let achou = false;
+    for (let i = 0; i < ciclos.length; i++){
+      const ini = (ciclos[i].inicio || '');
+      const fim = (ciclos[i].fim || '9999-12-31');
+      if (d >= ini && d <= fim){ cicloIdx = i; achou = true; break; }
+    }
+    if (!achou){
+      // Se não encontrou, assume último ciclo (em andamento)
+      cicloIdx = ciclos.length - 1;
+    }
+  }
+  const fasesDoCiclo = (ciclos && ciclos.length) ? (ciclos[cicloIdx].fases || []) : fasesAll;
+  for (const f of fasesDoCiclo){
+    const ini = (f.inicio || '');
+    const fim = (f.fim || '9999-12-31');
+    if (d >= ini && d <= fim){
+      return classificarMacroEtapa(f.nome, cicloIdx);
+    }
+  }
+  return cicloIdx > 0 ? 'RETRABALHO' : 'PRE_OBRA';
+}
+
+let MACRO_SEL = null;  // estado do bloco aberto
+
+function renderMacroEtapas(j){
+  const cont = document.getElementById('macro-etapas');
+  if (!cont) return;
+  const ciclos = j.ciclos || [];
+  const fasesPlanas = [];
+  if (ciclos.length){
+    ciclos.forEach((c, idx) => (c.fases || []).forEach(f => fasesPlanas.push({...f, cicloIdx: idx})));
+  } else {
+    (j.fases || []).forEach(f => fasesPlanas.push({...f, cicloIdx: 0}));
+  }
+  if (!fasesPlanas.length){ cont.innerHTML = ''; return; }
+
+  // Acumular dias por macro
+  const totalPorMacro = {};
+  fasesPlanas.forEach(f => {
+    const macro = classificarMacroEtapa(f.nome, f.cicloIdx);
+    totalPorMacro[macro] = (totalPorMacro[macro] || 0) + (f.duracao_dias || 0);
+  });
+  const totalDias = Object.values(totalPorMacro).reduce((a,b) => a+b, 0) || 1;
+
+  // Agrupar marcos por macro
+  const marcosPorMacro = {};
+  (j.marcos || []).forEach(m => {
+    const macro = classificarMarcoEmMacro(m, ciclos, j.fases || []);
+    if (!macro) return;
+    if (!marcosPorMacro[macro]) marcosPorMacro[macro] = [];
+    marcosPorMacro[macro].push(m);
+  });
+
+  const ordenado = MACRO_ORDEM.filter(k => (totalPorMacro[k] || 0) > 0);
+
+  const blocos = ordenado.map(k => {
+    const dias = totalPorMacro[k];
+    const pct = (dias / totalDias) * 100;
+    const pctStr = pct < 1 ? '<1%' : `${pct.toFixed(0)}%`;
+    const nMarcos = (marcosPorMacro[k] || []).length;
+    const tip = `${MACRO_LABELS[k]}: ${dias} dias (${pct.toFixed(1)}%) · ${nMarcos} marco${nMarcos===1?'':'s'} · clique pra ver`;
+    const clickable = nMarcos > 0 ? 'clicavel' : '';
+    return `<div class="macro-bloco ${k} ${clickable}" data-macro="${k}" style="flex-grow:${dias};flex-basis:60px" title="${esc(tip)}">
+      <span class="macro-bloco-pct">${pctStr}</span>
+      ${nMarcos > 0 ? `<span class="macro-bloco-badge">${nMarcos}</span>` : ''}
+    </div>`;
+  }).join('');
+
+  const chips = ordenado.map(k => {
+    const dias = totalPorMacro[k];
+    const pct = (dias / totalDias) * 100;
+    const nMarcos = (marcosPorMacro[k] || []).length;
+    return `<span class="macro-chip ${k}">
+      <span class="macro-chip-nome">${MACRO_LABELS[k]}</span>
+      <span class="macro-chip-meta">${dias}d · ${pct.toFixed(1)}%${nMarcos ? ` · ${nMarcos} marco${nMarcos===1?'':'s'}` : ''}</span>
+    </span>`;
+  }).join('');
+
+  // Header denso · números agregados em 1 linha
+  const tot = j.tempo_total_dias ?? totalDias;
+  const exec = j.tempo_execucao_dias;
+  const hib = j.tempo_hibernacao_dias;
+  const ini = j.data_1a_msg;
+  const fim = j.data_exec_confirmada || j.data_ultima_msg;
+  const pctExec = (exec != null && tot) ? ((exec/tot)*100).toFixed(1) : null;
+  const pctHib  = (hib  != null && tot) ? ((hib /tot)*100).toFixed(1) : null;
+
+  const totalObrasMonofloor = 228;  // referência do contexto Lab Orion · pra placeholder de benchmark
+  const obrasProcessadas = (DADOS && DADOS.obras) ? DADOS.obras.length : 0;
+
+  const headerNumeros = `
+    <div class="resumo-header">
+      <div class="resumo-num resumo-num-principal">
+        <span class="resumo-num-label">Jornada total</span>
+        <span class="resumo-num-val">${tot}<small>d</small></span>
+        <span class="resumo-num-range">${ini ? fmtData(ini) : '—'} → ${fim ? fmtData(fim) : '—'}</span>
+      </div>
+      ${exec != null ? `<div class="resumo-num">
+        <span class="resumo-num-label">Execução</span>
+        <span class="resumo-num-val">${exec}<small>d</small></span>
+        <span class="resumo-num-range">${pctExec}% do total</span>
+      </div>` : ''}
+      ${hib != null && hib > 0 ? `<div class="resumo-num">
+        <span class="resumo-num-label">Hibernação</span>
+        <span class="resumo-num-val">${hib}<small>d</small></span>
+        <span class="resumo-num-range">${pctHib}% do total</span>
+      </div>` : ''}
+    </div>
+    <div class="benchmark-placeholder">
+      <span class="benchmark-icon">📊</span>
+      <span><strong>Benchmark Monofloor · em construção</strong> · ${obrasProcessadas} de ${totalObrasMonofloor} obras processadas no piloto · médias de duração e proporção entre macro-etapas virão quando o conjunto expandir</span>
+    </div>`;
+
+  // Chips clicáveis · navegador dos marcos por macro-etapa
+  const chipsClicaveis = ordenado.map(k => {
+    const dias = totalPorMacro[k];
+    const pct = (dias / totalDias) * 100;
+    const nMarcos = (marcosPorMacro[k] || []).length;
+    const clickable = nMarcos > 0 ? 'clicavel' : '';
+    return `<button class="macro-chip-btn ${k} ${clickable}" data-macro="${k}" ${nMarcos === 0 ? 'disabled' : ''}>
+      <span class="macro-chip-pinta"></span>
+      <span class="macro-chip-corpo">
+        <span class="macro-chip-nome">${MACRO_LABELS[k]}</span>
+        <span class="macro-chip-meta">${dias}d · ${pct.toFixed(1)}%</span>
+      </span>
+      ${nMarcos > 0 ? `<span class="macro-chip-badge">${nMarcos}</span>` : '<span class="macro-chip-badge zero">—</span>'}
+    </button>`;
+  }).join('');
+
+  cont.innerHTML = `
+    ${headerNumeros}
+    <div class="macro-etapas-titulo">Macro-etapas <small>clique pra ver os marcos detectados em cada etapa</small></div>
+    <div class="macro-chips-row">${chipsClicaveis}</div>
+    <div id="macro-detalhe" class="macro-detalhe oculto"></div>
+  `;
+
+  // Wire-up dos cliques
+  cont.querySelectorAll('.macro-chip-btn.clicavel').forEach(el => {
+    el.addEventListener('click', () => {
+      const macro = el.dataset.macro;
+      if (MACRO_SEL === macro){
+        MACRO_SEL = null;
+        cont.querySelectorAll('.macro-chip-btn').forEach(b => b.classList.remove('ativo'));
+        document.getElementById('macro-detalhe').classList.add('oculto');
+        return;
+      }
+      MACRO_SEL = macro;
+      cont.querySelectorAll('.macro-chip-btn').forEach(b => b.classList.toggle('ativo', b.dataset.macro === macro));
+      mostrarMarcosDaMacro(macro, marcosPorMacro[macro] || []);
+    });
+  });
+}
+
+function mostrarMarcosDaMacro(macro, marcos){
+  const det = document.getElementById('macro-detalhe');
+  const COR_MARCO_FASE = {
+    contrato_assinado: '#7ea0b7', amostra_solicitada: '#bdb09b', cor_aprovada: '#d4a548',
+    vt_agendada: '#c8d6e0', vt_realizada: '#5fa073', vt_entrada_realizada: '#5fa073',
+    inicio_anunciado: '#e8c078', material_produzido: '#b8884a', finalizacao: '#2a5a18',
+    aprovacao_cliente: '#d4a548', reprovacao_retorno: '#c45a5a',
+  };
+  const itens = marcos.length
+    ? marcos.map(mk => {
+        const cor = COR_MARCO_FASE[mk.tipo] || 'var(--ink-faint)';
+        const labelMostrar = (mk.tipo === 'reprovacao_retorno' && mk.label_subtipo) ? mk.label_subtipo : (LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '));
+        const tip = `${labelMostrar} · ${fmtDataLong(mk.data)}\n${mk.autor}\n"${(mk.trecho||'').slice(0,200)}"`;
+        return `<div class="marco-item" data-tip="${esc(tip)}">
+          <div class="marco-bola" style="background:${cor}"></div>
+          <div class="marco-info">
+            <div class="marco-data">${fmtData(mk.data)}</div>
+            <div class="marco-label">${esc(labelMostrar)}</div>
+            <div class="marco-autor">${esc(mk.autor)}</div>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div class="vazio">(sem marcos textuais nesta macro-etapa)</div>';
+
+  det.innerHTML = `
+    <div class="macro-detalhe-cab">
+      <span class="macro-detalhe-label macro-chip ${macro}">
+        <span class="macro-chip-nome">${MACRO_LABELS[macro]}</span>
+        <span class="macro-chip-meta">${marcos.length} marco${marcos.length===1?'':'s'}</span>
+      </span>
+    </div>
+    <div class="marcos-timeline">${itens}</div>
+  `;
+  det.classList.remove('oculto');
+
+  // Tooltip rico
+  det.querySelectorAll('.marco-item').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      const linhas = (el.dataset.tip || '').split('\n');
+      const html = `<strong>${esc(linhas[0]||'')}</strong>${linhas[1] ? '<br><em>' + esc(linhas[1]) + '</em>' : ''}${linhas[2] ? '<br>' + esc(linhas[2]) : ''}`;
+      mostrarTooltip(e, html);
+    });
+    el.addEventListener('mousemove', moverTooltip);
+    el.addEventListener('mouseleave', esconderTooltip);
+  });
+}
+
 function renderTempoPills(j){
   const cont = document.getElementById('tempo-pills');
   const ini = j.data_1a_msg;
@@ -1835,8 +3133,9 @@ function renderDetalhes(){
   document.getElementById('det-id').textContent = j.obra_id.slice(0,8);
   document.getElementById('detalhes').classList.add('visivel');
 
+  renderOcorrenciasPills(j);
   renderTimelineCiclos(j);
-  renderTempoPills(j);
+  renderMacroEtapas(j);
 
   const m = j.equipe.monofloor;
   document.getElementById('tab-monofloor').innerHTML = `
@@ -1849,10 +3148,34 @@ function renderDetalhes(){
     </tbody>`;
 
   const prest = j.equipe.prestadores_oficiais || [];
-  document.getElementById('tab-campo').innerHTML = prest.length
-    ? `<thead><tr><th>Nome</th><th>Função</th></tr></thead>
-       <tbody>${prest.map(p => `<tr><td>${esc(p.nome)}</td><td><span class="mono" style="text-transform:uppercase;letter-spacing:.06em;color:var(--gold);font-weight:700">${esc(p.funcao)}</span></td></tr>`).join('')}</tbody>`
-    : '<tbody><tr><td colspan="2" class="vazio">Equipe não cadastrada formalmente</td></tr></tbody>';
+  const elCampo = document.getElementById('tab-campo');
+  function emojiPorFuncao(funcao){
+    const f = (funcao || '').toUpperCase();
+    if (f.includes('LIDER') || f.includes('LÍDER')) return '🧑‍💼';
+    if (f.includes('APLICADOR')) return '👷';
+    if (f.includes('PREPARADOR')) return '🧑‍🔧';
+    if (f.includes('FISCAL')) return '🧑‍✈️';
+    return '🧑';
+  }
+  function fmtFuncao(funcao){
+    return (funcao || '').replace(/_/g, ' ').trim();
+  }
+  if (prest.length){
+    elCampo.outerHTML = `<div class="equipe-campo" id="tab-campo">${
+      prest.map(p => {
+        const isLider = (p.funcao || '').toUpperCase().includes('LIDER');
+        return `<div class="equipe-campo-pessoa${isLider ? ' lider' : ''}">
+          <div class="equipe-campo-emoji">${emojiPorFuncao(p.funcao)}</div>
+          <div class="equipe-campo-info">
+            <div class="equipe-campo-nome">${esc(p.nome)}</div>
+            <div class="equipe-campo-funcao">${esc(fmtFuncao(p.funcao))}</div>
+          </div>
+        </div>`;
+      }).join('')
+    }</div>`;
+  } else {
+    elCampo.outerHTML = '<div class="equipe-campo-vazio" id="tab-campo">Equipe não cadastrada formalmente</div>';
+  }
 
   const senders = (j.equipe.senders_telegram || []).slice(0, 10);
   document.getElementById('tab-senders').innerHTML = `
@@ -1866,54 +3189,7 @@ function renderDetalhes(){
       </tr>
     `).join('')}</tbody>`;
 
-  const marcos = j.marcos || [];
-  // Cor por tipo de marco (alinha com o COR_MARCO_FASE)
-  const COR_MARCO_FASE = {
-    contrato_assinado: '#7ea0b7',
-    amostra_solicitada: '#bdb09b',
-    cor_aprovada: '#d4a548',
-    vt_agendada: '#c8d6e0',
-    vt_realizada: '#5fa073',
-    vt_entrada_realizada: '#5fa073',
-    inicio_anunciado: '#e8c078',
-    material_produzido: '#b8884a',
-    finalizacao: '#2a5a18',
-    aprovacao_cliente: '#d4a548',
-    reprovacao_retorno: '#c45a5a',
-  };
-  const elMarcos = document.getElementById('lista-marcos');
-  // Substitui o ul por div timeline
-  elMarcos.outerHTML = marcos.length
-    ? `<div class="marcos-timeline" id="lista-marcos">${
-        marcos.map(mk => {
-          const cor = COR_MARCO_FASE[mk.tipo] || 'var(--ink-faint)';
-          const labelMostrar = (mk.tipo === 'reprovacao_retorno' && mk.label_subtipo) ? mk.label_subtipo : (LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '));
-          const tip = `${labelMostrar} · ${fmtDataLong(mk.data)}\n${mk.autor}\n"${(mk.trecho||'').slice(0,200)}"`;
-          return `
-            <div class="marco-item" data-tip="${esc(tip)}">
-              <div class="marco-bola" style="background:${cor}"></div>
-              <div class="marco-info">
-                <div class="marco-data">${fmtData(mk.data)}</div>
-                <div class="marco-label">${esc(labelMostrar)}</div>
-                <div class="marco-autor">${esc(mk.autor)}</div>
-              </div>
-            </div>
-          `;
-        }).join('')
-      }</div>`
-    : '<div class="marcos-timeline" id="lista-marcos"><div class="vazio">(sem marcos textuais detectados)</div></div>';
-
-  // Tooltip rich nos marcos
-  document.querySelectorAll('#lista-marcos .marco-item').forEach(el => {
-    el.addEventListener('mouseenter', e => {
-      const linhas = (el.dataset.tip || '').split('\n');
-      const html = `<strong>${esc(linhas[0]||'')}</strong>${linhas[1] ? '<br><em>' + esc(linhas[1]) + '</em>' : ''}${linhas[2] ? '<br>' + esc(linhas[2]) : ''}`;
-      mostrarTooltip(e, html);
-    });
-    el.addEventListener('mousemove', moverTooltip);
-    el.addEventListener('mouseleave', esconderTooltip);
-  });
-
+  // Marcos detectados agora vivem nos blocos clicáveis de Macro-etapas (renderMacroEtapas)
   const mat = j.materiais || {};
   document.getElementById('tab-materiais').innerHTML = `
     <tbody>
@@ -1956,15 +3232,39 @@ function renderDetalhes(){
       }).join('')}</div>`
     : '<div id="lista-solic" class="vazio">(nenhuma solicitação detectada)</div>';
 
-  const ocorr = (j.friccao||{}).ocorrencias_formais || [];
-  document.getElementById('lista-ocorr').innerHTML = ocorr.length
-    ? ocorr.map(o => `<li>
-        <span class="data">${fmtData(o.data)}</span>
-        <span class="severidade ${o.severidade}">${esc(o.severidade||'?')}</span>
-        <strong style="margin-left:8px">${esc(o.tipo||'')}</strong>
-        <span class="trecho">${esc(o.titulo||'')}</span>
-      </li>`).join('')
-    : '<li class="vazio">(sem ocorrências formais)</li>';
+  // === Aplicação registrada · Telegram (consumos detectados; sobras vão pro bloco Obs no Material Enviado) ===
+  const consumos = j.consumos || [];
+  // Filtrar ruído (qtd > 100 = falso positivo regex) e agrupar por (data + autor + trecho)
+  const consLimpos = consumos.filter(c => {
+    const q = parseInt(c.qtd || c.quantidade || 0, 10);
+    return q > 0 && q <= 100;
+  });
+  const grupos = {};
+  consLimpos.forEach(c => {
+    const k = `${(c.data||'').slice(0,10)}__${(c.autor||'')}__${(c.trecho||'').slice(0,60)}`;
+    if (!grupos[k]) grupos[k] = { data: c.data, autor: c.autor, trecho: c.trecho, qtds: [] };
+    grupos[k].qtds.push(`${c.qtd||c.quantidade} ${c.unidade||''}`.trim());
+  });
+  const itensCons = Object.values(grupos).slice(0, 8);
+
+  const elApl = document.getElementById('aplicacao-registrada');
+  if (itensCons.length){
+    const cons_html = itensCons.map(g => `
+      <div class="aplicacao-item">
+        <div class="aplicacao-cab">
+          <span class="aplicacao-data">${fmtData(g.data)}</span>
+          <span class="aplicacao-autor">${esc(g.autor||'—')}</span>
+          <span class="aplicacao-qtds">${esc(g.qtds.join(' · '))}</span>
+        </div>
+        <div class="aplicacao-trecho">"${esc((g.trecho||'').slice(0,180))}"</div>
+      </div>
+    `).join('');
+    elApl.innerHTML = `<div class="aplicacao-lista">${cons_html}</div>`;
+  } else {
+    elApl.innerHTML = '<div class="aplicacao-vazio">(sem consumo mencionado em msgs)</div>';
+  }
+
+  // Ocorrências formais agora aparecem como pills no header (renderOcorrenciasPills)
 
   const sinais = (j.friccao||{}).sinais_msg_telegram || [];
   document.getElementById('lista-sinais').innerHTML = sinais.length
@@ -1989,42 +3289,167 @@ function renderDetalhes(){
     return esc(corMaterial);
   }
 
+  // m²/unidade · multiplica por nº de camadas detectadas no Telegram quando disponível
+  const totalM2 = (j.materiais || {}).total_m2;
+  const camadasMap = {};
+  const camadasDetalhe = {};
+  (j.camadas_aplicadas || []).forEach(c => {
+    const f = c.produto_familia;
+    camadasMap[f] = Math.max(camadasMap[f] || 0, c.camada);
+    if (!camadasDetalhe[f]) camadasDetalhe[f] = [];
+    camadasDetalhe[f].push(c);
+  });
+  function familiaProduto(nomeMat){
+    const n = (nomeMat || '').toUpperCase();
+    if (n.includes('STELION')) return 'STELION';
+    if (n.includes('LILIT')) return 'LILIT';
+    if (n.includes('TERON') || n.includes('LEONA')) return 'LEONA';  // TERON é nome novo de LEONA (abr/2026)
+    if (n.includes('PRIMER')) return 'PRIMER';                        // LUMINA PRIMER → família PRIMER
+    if (n.includes('VERNIZ') || n.includes('LUMINA')) return 'LUMINA';// "verniz" no Telegram = LUMINA na OS
+    return n.split(/\s+/)[0];
+  }
+  function ratioM2(qtdStr, nomeMat){
+    if (!totalM2) return { txt: '—', nCam: 0 };
+    const q = parseFloat(String(qtdStr).replace(',', '.'));
+    if (!q || q <= 0) return { txt: '—', nCam: 0 };
+    const fam = familiaProduto(nomeMat);
+    const nCam = camadasMap[fam] || 1;
+    const r = (totalM2 / q) * nCam;
+    return { txt: r.toFixed(2).replace('.', ','), nCam };
+  }
+
+  // Bloco "Camadas detectadas no Telegram" (mostra fonte do nº de camadas + sobras)
+  function blocoCamadas(){
+    const familias = Object.keys(camadasDetalhe);
+    const sobrasComProduto = (j.sobras || []).filter(s => s.produto);
+    const sobrasSemProduto = (j.sobras || []).filter(s => !s.produto);
+    if (!familias.length && !(j.sobras || []).length) return '';
+
+    const partes = familias.map(f => {
+      const items = camadasDetalhe[f];
+      const n = camadasMap[f];
+      const tipoFamilia = items.every(i => i.tipo === 'inferida') ? 'inferida' : 'ordinal';
+      const autores = [...new Set(items.map(i => i.autor.split('|').slice(-1)[0].trim()))].slice(0, 2).join(', ');
+      const datas = items.map(i => fmtData(i.data));
+      const range = datas.length > 1 ? `${datas[0]}–${datas[datas.length-1]}` : datas[0];
+      const tag = tipoFamilia === 'inferida' ? '<span class="camada-tag-inferida" title="Aplicação detectada sem ordinal explícito · assumida 1 camada">inferida</span>' : '';
+      return `<span class="camada-pill ${tipoFamilia}"><strong>${esc(f)}</strong> <span class="camada-num">${n}× cam.</span> ${tag} <span class="camada-meta">${esc(autores)} · ${esc(range)}</span></span>`;
+    }).join('');
+
+    const sobrasHtml = (sobrasComProduto.length || sobrasSemProduto.length)
+      ? `<div class="sobras-bloco">
+          <div class="sobras-titulo">Obs · sobras observadas no Telegram</div>
+          <div class="sobras-lista">${
+            sobrasComProduto.map(s => `
+              <div class="sobra-item">
+                <span class="sobra-icon">📦</span>
+                <span><strong>${s.qtd || '—'}</strong> de <strong>${esc(s.produto)}</strong>${s.produto_familia && s.produto_familia !== s.produto ? ` <small>(família ${esc(s.produto_familia)})</small>` : ''} · <em>${esc(s.autor.split('|').slice(-1)[0].trim())}</em> · ${fmtData(s.data)}</span>
+              </div>
+            `).join('') +
+            sobrasSemProduto.map(s => `
+              <div class="sobra-item generica">
+                <span class="sobra-icon">📦</span>
+                <span><em>${esc(s.autor.split('|').slice(-1)[0].trim())}</em> · ${fmtData(s.data)} · "${esc((s.trecho||'').slice(0,120))}"</span>
+              </div>
+            `).join('')
+          }</div>
+        </div>`
+      : '';
+
+    return `<div class="camadas-bloco">
+      ${familias.length ? `<div class="camadas-bloco-titulo">Camadas detectadas no Telegram <small>(usadas pra calcular ≈ m²/un.)</small></div>
+      <div class="camadas-bloco-pills">${partes}</div>` : ''}
+      ${sobrasHtml}
+    </div>`;
+  }
+
+  // Snapshots de material no Telegram (2026+) · timeline cronológica
+  function blocoSnapshotsMaterial(){
+    const snaps = j.snapshots_material || [];
+    if (!snaps.length) return '';
+    const itens = snaps.map(s => {
+      const qstr = (s.qtds || []).map(q => `${q.qtd} ${q.unidade}`).join(' · ');
+      const prods = (s.produtos || []).join(', ');
+      const cls = s.classe || '?';
+      const clsHtml = cls === '?' ? '<span class="snap-classe indef">?</span>' : `<span class="snap-classe ${cls}">${cls}</span>`;
+      const itemCls = (cls === '?') ? 'indef' : cls;
+      const autorLimpo = (s.autor || '').split('|').slice(-1)[0].trim();
+      return `<div class="snapshot-item ${itemCls}">
+        <span class="snap-data">${fmtData(s.data)}</span>
+        ${clsHtml}
+        <div class="snap-corpo">
+          <div class="snap-cab">
+            <span class="snap-qtds">${esc(qstr)}</span>
+            ${prods ? `<span class="snap-produtos">${esc(prods)}</span>` : ''}
+            <span class="snap-autor">${esc(autorLimpo)}</span>
+          </div>
+          <div class="snap-trecho">"${esc((s.trecho||'').slice(0,200))}"</div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="snapshots-section">
+      <div class="snapshots-titulo">Material no Telegram · timeline 2026+</div>
+      <div class="snapshots-subtitulo">snapshots cronológicos detectados nas msgs · classificados por verbos-chave (sobra/consumo/solicitação/entrada/estoque)</div>
+      <div class="snapshots-timeline">${itens}</div>
+    </div>`;
+  }
+
   if (envios.length){
     const html = envios.map(e => {
-      const linhas = (e.materiais || []).map(m => `
-        <tr>
-          <td class="num" style="text-align:right;font-weight:700;color:var(--ink);width:90px">${esc(m.quantidade || '—')}</td>
+      const linhas = (e.materiais || []).map(m => {
+        const r = ratioM2(m.quantidade, m.material);
+        const ratioHtml = r.nCam > 1
+          ? `<strong>${r.txt}</strong> <small style="color:var(--gold);font-weight:600">×${r.nCam} cam.</small>`
+          : `${r.txt}`;
+        return `<tr>
+          <td class="num" style="text-align:right;font-weight:700;color:var(--ink);width:80px">${esc(m.quantidade || '—')}</td>
           <td><strong>${esc(m.material || '—')}</strong></td>
           <td>${fmtCor(m.cor)}</td>
-        </tr>
-      `).join('');
+          <td class="num" style="text-align:right;color:var(--ink-soft);font-size:11.5px;width:130px" title="m² total da obra ÷ quantidade · multiplicado por nº de camadas detectadas no Telegram (se houver)">${ratioHtml}</td>
+        </tr>`;
+      }).join('');
       return `
         <div style="margin-bottom:24px">
           <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line-soft)">
             <strong style="font-size:13px;color:var(--ink)">${esc(e.os_nome.replace('IND_STRIA_', '').replace('.pdf', ''))}</strong>
             <span class="mono" style="color:var(--gold);font-weight:600">${fmtData(e.os_data)}</span>
-            <span style="margin-left:auto;font-size:11px;color:var(--ink-faint);font-family:'JetBrains Mono',monospace">${e.materiais.length} ${e.materiais.length === 1 ? 'item' : 'itens'}</span>
+            <span style="margin-left:auto;font-size:11px;color:var(--ink-faint);font-family:'JetBrains Mono',monospace">${e.materiais.length} ${e.materiais.length === 1 ? 'item' : 'itens'}${totalM2 ? ' · obra ' + totalM2 + ' m²' : ''}</span>
           </div>
           <table class="tabela">
-            <thead><tr><th style="text-align:right">Qtd</th><th>Material</th><th>Cor</th></tr></thead>
+            <thead><tr><th style="text-align:right">Qtd</th><th>Material</th><th>Cor</th><th style="text-align:right" title="m² total ÷ qtd × camadas detectadas">≈ m²/un.</th></tr></thead>
             <tbody>${linhas}</tbody>
           </table>
+          ${blocoCamadas()}
+          <div style="margin-top:8px;font-size:10.5px;color:var(--ink-faint);font-style:italic">≈ m²/un. = m² total da obra ÷ quantidade enviada × nº de camadas detectadas. Sem detecção, assume 1 camada.</div>
         </div>
       `;
     }).join('');
-    contMat.innerHTML = html;
+    contMat.innerHTML = html + blocoSnapshotsMaterial();
   } else {
-    contMat.innerHTML = '<div class="vazio">(nenhuma OS Indústria com materiais detalhados encontrada · obra pode ser reaplicação ou OS pendente)</div>';
+    const semOS = `<div class="vazio">(nenhuma OS Indústria com materiais detalhados encontrada · obra pode ser reaplicação ou OS pendente)</div>${blocoCamadas()}`;
+    contMat.innerHTML = semOS + blocoSnapshotsMaterial();
   }
 
   // Gantt da execução · colunas = dias · Y = horas
   renderGantt(j.marcos_execucao || []);
 
+  const LABEL_PADRAO = {
+    hibernacao_longa: '🌙 Hibernação longa',
+    execucao_concentrada: '⚡ Execução concentrada',
+    mudanca_escopo_dia_execucao: '🔀 Mudança de escopo durante execução',
+    retrabalho_em_andamento: '🔁 Retrabalho em andamento',
+    retrabalho_concluido: '✅ Retrabalho concluído',
+    aprovacao_demorada: '⏳ Aprovação demorada',
+    silencio_pos_execucao: '🤐 Silêncio pós-execução',
+    multiplas_visitas_qualidade: '🔍 Múltiplas visitas de qualidade',
+  };
   const pad = j.padroes || [];
   document.getElementById('padroes').innerHTML = pad.length
     ? pad.map(p => {
         const partes = p.split(' · ');
-        return `<div class="padrao-pill"><code>${esc(partes[0])}</code>${partes.slice(1).join(' · ')}</div>`;
+        const codigo = partes[0];
+        const label = LABEL_PADRAO[codigo] || codigo.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        return `<div class="padrao-pill"><strong class="padrao-label">${esc(label)}</strong>${partes.slice(1).length ? '<span class="padrao-desc">' + esc(partes.slice(1).join(' · ')) + '</span>' : ''}</div>`;
       }).join('')
     : '<div class="vazio">(nenhum padrão automático detectado)</div>';
 
