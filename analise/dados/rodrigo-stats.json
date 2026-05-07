@@ -1,22 +1,22 @@
 {
-  "atualizado_em": "2026-05-07T10:29:24Z",
+  "atualizado_em": "2026-05-07T12:19:33Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1042,
-    "ativas": 260,
-    "finalizados": 782,
+    "ativas": 261,
+    "finalizados": 781,
     "em_execucao": 39,
     "pausados": 6,
     "m2_em_execucao": 4703
   },
   "por_status": {
+    "aguardando_execucao": 47,
     "em_execucao": 39,
     "planejamento": 97,
-    "aguardando_execucao": 46,
     "contrato": 9,
     "aguardando_clima": 3,
     "reparo": 21,
-    "finalizado": 547,
+    "finalizado": 546,
     "cancelado": 35,
     "pausado": 6,
     "marcas_rolo_cera": 4,
@@ -35,14 +35,14 @@
       "obras": 24,
       "m2": 4205
     },
-    "funil_total": 146,
-    "com_data_firmada": 80,
+    "funil_total": 147,
+    "com_data_firmada": 81,
     "sem_data_firmada": 66,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2063,
+    "pending_tasks": 2062,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1364,8 +1364,8 @@
     "ativos": 114,
     "inativos": 67,
     "por_cargo": {
-      "Aplicador 1": 24,
-      "Líder de Campo": 34,
+      "Aplicador 1": 23,
+      "Líder de Campo": 35,
       "Ajudante": 16,
       "Encarregado": 9,
       "Aplicador 2": 19,
@@ -1505,11 +1505,6 @@
       {
         "id": "597b35e9-ec1f-4986-bb6b-82d0cdfd0c67",
         "nome": "Jose manoel Mendes dos Santos",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "fe73731c-e50f-4c51-87d7-58559b2b4100",
-        "nome": "Kaike Luiz Gonzaga",
         "cargo": "Aplicador 1"
       },
       {
@@ -1833,6 +1828,11 @@
         "cargo": "Líder de Campo"
       },
       {
+        "id": "fe73731c-e50f-4c51-87d7-58559b2b4100",
+        "nome": "Kaike Luiz Gonzaga",
+        "cargo": "Líder de Campo"
+      },
+      {
         "id": "26d4db58-dcd6-47de-9d33-82d14f4de190",
         "nome": "Magno Maurício Neves",
         "cargo": "Líder de Campo"
@@ -2130,6 +2130,11 @@
       "dataVisita": "",
       "dataEntrada": "",
       "dataExec": ""
+    },
+    "995ef403-aa9b-4aba-b25d-9e74df83e465": {
+      "dataVisita": "21/08/2025 13:00",
+      "dataEntrada": "11/02/2026 13:00",
+      "dataExec": "2026-05-11"
     },
     "1624ef33-fd4c-4b13-a68d-ade47e8acd7d": {
       "dataVisita": "20/02/2026 14:30",
@@ -3139,7 +3144,7 @@
     "2088ab88-2d39-41a1-95e8-33f5ebfbb9d2": {
       "dataVisita": "17/03/2026 14:00",
       "dataEntrada": "20/04/2026 10:00",
-      "dataExec": "2026-04-20"
+      "dataExec": "2026-04-27"
     },
     "23586b42-a279-42f1-a98e-84ac1a89a20a": {
       "dataVisita": "",
@@ -3199,6 +3204,7 @@
       "861a3d98",
       "920dcacc",
       "93d0efc3",
+      "995ef403",
       "9ffabe58",
       "a680acb2",
       "a79f00f0",
@@ -3221,7 +3227,7 @@
       "dec2480f",
       "e79c60c1"
     ],
-    "zumbi_n": 41,
+    "zumbi_n": 42,
     "orfas_ids": [
       "0b692354",
       "1231fb6a",
@@ -3264,16 +3270,16 @@
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-06T23:06:54.140000+00:00",
-    "total_fluxo": 200,
-    "com_kira": 129,
+    "total_fluxo": 201,
+    "com_kira": 130,
     "saudavel": 80,
-    "saudavel_pct_no_monitorado": 62.0,
-    "atencao": 49,
+    "saudavel_pct_no_monitorado": 61.5,
+    "atencao": 50,
     "sem_kira": 71,
     "clima_dist": {
       "Positivo": 25,
       "Neutro": 56,
-      "Tenso": 54,
+      "Tenso": 55,
       "Crítico": 5,
       "?": 84
     },
@@ -7893,6 +7899,118 @@
         ]
       },
       {
+        "id": "995ef403-aa9b-4aba-b25d-9e74df83e465",
+        "cliente": "ARIANE RIBEIRO DOS SANTOS CUNHA",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "CURITIBA",
+        "fase": "CLIENTE FINALIZADO",
+        "status": "aguardando_execucao",
+        "clima": "Tenso",
+        "n_alertas": 5,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 33,
+        "alertas": [
+          "QUALIDADE — Marcas de rolo visíveis no verniz e manchas no piso registradas pela cliente em 09/03. Monofloor justificou as marcas como normais, mas manchas ficaram em análise técnica sem resolução documentada.",
+          "COLETA DE MATERIAL — Prestador Monofloor foi barrado na obra em 09/03. Não há registro de nova tentativa ou conclusão da coleta.",
+          "NO-SHOW — Em 16/02 a equipe de aplicadores esteve presente no local mas não entrou na obra, causando perda de dia de trabalho e insatisfação do encarregado e da responsável.",
+          "SEGUNDA FASE — Data solicitada pela cliente (16 ou 20/04) não está disponível. Monofloor só tem abertura em 30/04, podendo impactar cronograma da obra.",
+          "GAP DE COMUNICAÇÃO — Período de 15 dias sem mensagens (09/03 a 24/03) pode indicar problemas não registrados no canal ou falta de proatividade no acompanhamento."
+        ],
+        "pendencias": [
+          "Confirmação formal do pré-agendamento da segunda fase para 30/04 — data aceita por Luciana, mas não confirmada oficialmente pelo time Monofloor.",
+          "Antecipação da data de 30/04 caso surja disponibilidade, conforme prometido pela Monofloor.",
+          "Resolução definitiva das marcas de rolo e manchas no verniz — Monofloor mencionou análise pelo departamento técnico e coleta de material, sem desfecho registrado na conversa.",
+          "Coleta de material (amostra) pelo prestador Monofloor, que foi barrado na obra em 09/03 e não há confirmação de nova tentativa.",
+          "Aplicação do Monofloor nas paredes da cozinha (incluindo área atrás da máquina de lavar louça e dentro do armário) — programada para etapa 2, sem data definida."
+        ],
+        "resumo_exec": "A obra da cliente Ariane (representada por Luciana) encontra-se ao final da primeira fase de aplicação do Monofloor, com verniz aplicado e marcenaria já prevista para entrada. O relacionamento foi marcado por um incidente de no-show da equipe aplicadora em 16/02 e por insatisfação da cliente com marcas de rolo e manchas no verniz identificadas em 09/03, pontos que não tiveram encerramento formal registrado. O escopo foi bem delimitado ao longo da conversa, com paredes da cozinha e bancadas reservadas para a segunda fase. A segunda fase está pré-agendada para 30/04, contrariando a preferência d",
+        "clima_desc": "O atendimento apresentou momentos de tensão, especialmente com o no-show da equipe Monofloor em 16/02 e a frustração da cliente com marcas de rolo no verniz em 09/03. O clima foi se estabilizando ao longo do período, mas insatisfações pontuais ficaram registradas sem resolução formal.",
+        "periodo": "16/02 a 27/03/2026",
+        "tempo_resp": "Normal",
+        "total_msgs": 91,
+        "eventos": [
+          {
+            "data": "16/02",
+            "iso": "2026-02-16",
+            "texto": "Equipe Monofloor não entrou na obra mesmo estando presente (no carro na frente do local). Encarregado Edvaldo e responsável Luciana aguardavam desde às 8h40. Acesso estava disponível na portaria.",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/02",
+            "iso": "2026-02-18",
+            "texto": "Reagendamento e acesso liberado à tarde. Discussão sobre possibilidade de manter chave na portaria para facilitar acesso diário dos aplicadores.",
+            "classe": "neutro"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Discussão sobre escopo contratado — região próxima à escada incluída na etapa 1; parede da cozinha (incluindo batente da porta) confirmada para a etapa 2.",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Produto de regularização (base) explicado à cliente como primeira camada, com esclarecimento sobre acabamento acetinado do verniz e divergência de tons entre piso (Stelion) e paredes (Lilit).",
+            "classe": "critico"
+          },
+          {
+            "data": "25/02",
+            "iso": "2026-02-25",
+            "texto": "Cliente solicita previsão para profissional de PU nas juntas. Monofloor confirma sexta-feira após 12h.",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/02",
+            "iso": "2026-02-26",
+            "texto": "Profissional do PU solicita dia inteiro; aplicação reagendada para segunda-feira. Discussão sobre possibilidade de aplicar Monofloor na parede da cozinha ainda na etapa 1 — Monofloor recusa, mantém paredes para etapa 2. Prazo de cura do verniz informado: 72h após última camada.",
+            "classe": "critico"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Visita de aprovação do selador agendada e realizada. Luciana faz apontamentos ao Mendes (aplicador), que inicia correções. Cliente libera início da aplicação do verniz.",
+            "classe": "neutro"
+          },
+          {
+            "data": "03/03",
+            "iso": "2026-03-03",
+            "texto": "Cliente questiona se verniz foi finalizado no dia — sem resposta registrada.",
+            "classe": "critico"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "Prestador barrado na obra ao tentar realizar coleta de material. Cliente Luciana relata frustração com marcas de rolo no verniz e manchas no piso. Visita técnica realizada no mesmo dia com o Mendes. Monofloor informa que marcas de rolo são comuns e tendem a suavizar. Decisão: agu",
+            "classe": "critico"
+          },
+          {
+            "data": "24/03",
+            "iso": "2026-03-24",
+            "texto": "Dúvida técnica sobre acabamento de bancada de granito para aplicação de Monofloor — resposta: precisa estar lisa, não necessariamente polida.",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Discussão sobre revestimento de torre de tomada embutida no tampo de pedra — Monofloor confirma viabilidade. Informado que aplicação do Stelion acrescenta até 3mm na espessura.",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/03",
+            "iso": "2026-03-26",
+            "texto": "Luciana solicita agendamento da segunda fase para 16/04 ou 20/04.",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Monofloor informa indisponibilidade para 16 e 20/04. Data mais próxima disponível: 30/04, pré-agendada.",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
         "id": "65dc9222-6c55-4c93-b971-3594a552946e",
         "cliente": "Marina Cugler Ferrari",
         "consultor": "—",
@@ -9663,17 +9781,17 @@
       "pausadas": 2
     },
     "wesley": {
-      "n": 85,
+      "n": 86,
       "mediana": 199,
       "n180": 46,
       "n270": 17,
-      "zumbi": 20,
+      "zumbi": 21,
       "reparo": 9,
       "pausadas": 2
     },
-    "total_ativas": 225,
+    "total_ativas": 226,
     "n_180_total": 122,
-    "concentracao_pct": 77.8,
+    "concentracao_pct": 77.9,
     "concentracao_180_pct": 85.2,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
