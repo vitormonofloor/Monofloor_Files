@@ -17,6 +17,9 @@ Pasta-síntese do desenvolvimento do Lab Orion. Qualquer agente IA chegando agor
 | 7 | `INVENTARIO.md` | Mapa físico: onde mora cada arquivo (repo, frontend pub, worker, memória) |
 | 8 | `JORNADA_LOGICA.md` | Como `gerar_jornada.py` lê msgs do Telegram e detecta fases/marcos/cobranças/solicitações |
 | 9 | `PADRAO_LEITURA_TELEGRAM.md` | **Guia portável** pra outro terminal ler Telegram com seu próprio propósito · sem invadir Lab Orion |
+| 10 | `VOCABULARIO_OPERACIONAL.md` | **Doc canônico** de produtos, termos, aliases, status, vocabulário real do time · consultar antes de escrever regex/copy |
+| 11 | `MAPA_PESSOAS.md` | Quem é quem · função atual + histórica + estilo · ler antes de interpretar mensagens |
+| 12 | `ADR/README.md` | **Architecture Decision Records** · 7 decisões grandes capturadas (Kira-driven, Tratativas×Retrabalho, Universo Qualidade, etc) com alternativas descartadas |
 
 ## O que é o Orion em 1 frase
 

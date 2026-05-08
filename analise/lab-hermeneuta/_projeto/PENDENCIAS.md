@@ -139,20 +139,17 @@ Detectar "dor não registrada":
 
 ---
 
-## G · Calibração da memória institucional (próxima sessão dedicada)
+## G · Calibração da memória institucional (✅ FECHADO 2026-05-07)
 
-**Quando:** próxima sessão · ~3h total
-**Origem:** Vitor pediu em 2026-05-06 *"calibrar ao máximo o aprendizado · não quero que perca nada"*. Items 1 (captura proativa) + 4 (lição estruturada no /sync_save) já foram atacados. Restam 3 frentes mais pesadas.
+**Atacado e entregue na sessão de 2026-05-07.** Todos os 3 itens fechados.
 
-| # | Item | O que faz | Custo | Estado |
-|---|---|---|---|---|
-| G1 | **ADRs · Architecture Decision Records** | Template `_projeto/ADR/` + capturar decisões grandes já tomadas: Kira-driven em vez de IA-pesada · Tratativas separado de Retrabalho · macro-etapas com 5 categorias · snapshots material só 2026+ · F1-F6 leitura fria · cruzamento Kira × ocorrências. Cada ADR = O QUE decidimos + ALTERNATIVAS descartadas + COMO saberemos se erramos. | 1h | Pendente |
-| G2 | **Vocabulário Operacional Monofloor consolidado** | 1 doc canônico unificando: produtos (OS × campo), pessoas (função/papel/cliente), termos de operação (VT, reaplicação, tratativas), apelidos. Hoje disperso em `reference_nomenclatura_produtos`, `reference_padrao_leitura_telegram`, `feedback_telegram_nomes_terceiros`. | 45min | Pendente |
-| G3 | **Mapa de pessoas · 1 doc** | Quem é quem · função atual + histórica (ex: Braiam aplicador→fiscal qualidade dez/2025) · estilo/tom · cliente atendido · risco/observações. Hoje fragmentado em 3 memórias diferentes. | 45min | Pendente |
+| # | Item | Status | O que foi feito |
+|---|---|---|---|
+| G1 | ADRs · Architecture Decision Records | ✅ | `_projeto/ADR/` com 7 ADRs + README/template: Kira-driven (ADR-001), Tratativas×Retrabalho (ADR-002), Macro-etapas 5 categorias (ADR-003), Universo Qualidade 222 (ADR-004), Manifest incremental (ADR-005), Disparo híbrido (ADR-006), ATENA descontinuado (ADR-007) |
+| G2 | Vocabulário Operacional Monofloor consolidado | ✅ | `_projeto/VOCABULARIO_OPERACIONAL.md` · 10 seções: produtos OS×campo, termos operacionais, aliases senders, pessoas com função, status de obra, vocabulário real×acadêmico, cores STELION, filtros prévios Telegram, convenções, índice de memórias-fonte |
+| G3 | Mapa de pessoas · 1 doc | ✅ | `_projeto/MAPA_PESSOAS.md` · 9 seções: Diretoria, Qualidade, Operações, Fiscais, Aplicadores/Líderes, Auxiliares, Externos, Princípios sobre pessoas, índice |
 
-**Critério de aceite G1-G3:** após fechado, qualquer Claude futuro que abrir terminal Monofloor leia esses 3 docs (via CLAUDE.md global ou MEMORY.md) e saiba reproduzir o vocabulário/decisões/pessoas sem precisar perguntar ao Vitor.
-
-**Próximo passo:** começar pelo G1 (mais auditável · funciona como template pros próximos).
+**Próxima Calibração:** quando aparecer informação nova relevante, atualizar os docs canônicos (não criar arquivos novos). ADR novo só pra decisão grande nova (critérios em `ADR/README.md`).
 
 ---
 
