@@ -1,7 +1,51 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-04 · noite (Caminho A entregue · cobertura 10→190 cards reais)
+> **Última atualização:** 2026-05-07 · F1 (Timeline em escala) + F2 (Calibração de memória) fechadas
 > Se você é um agente IA chegando agora · LEIA este arquivo primeiro. Em ~30s você terá contexto suficiente pra trabalhar sem confundir nada.
+
+---
+
+## 🆕 SESSÃO 2026-05-07 · O QUE FECHAMOS HOJE
+
+### Frente 1 · Timeline Obras em produção (✅)
+- **Bloqueio "260 vs 200" resolvido:** API default de 200, `?ativa=true` é ignorado · universo real é 1042 · UI conta 257 · Universo Qualidade D = **222 vivas** (exclui finalizado/concluido/cancelado)
+- **Paralelização** ThreadPoolExecutor 6 workers · primeira rodada 144s · sequencial seria ~12min
+- **Manifest incremental** validado · `dados/manifest_obras.json` · rodadas seguintes 5-30s (skip via `updatedAt`)
+- **Modo `--historico`** (outro terminal) · processou 1042 obras em 9.4min · 6057 marcos · `dados/timeline_historico_2026-05-07.json` (frozen reference pra mediana populacional)
+- **Cobertura por status descoberta:** vivas operacionais 80-100% Telegram · histórico finalizado só 12% (Pipefy puro pré-Telegram) · concluídas 51%
+- **Disparo HÍBRIDO** · 2 crons + botão:
+  - `Monofloor_Timeline_Obras` · 04:00 diário (esta sessão · `cron_timeline_obras.bat`)
+  - `MonofloorTimelineUpdate` · 8h/12h/16h/20h durante expediente (outro terminal · `update_timeline.bat`)
+  - Botão **↻ Atualizar agora** no header copia comando pro clipboard
+  - Manifest dedup garante zero conflito entre crons
+
+### Frente 2 · Calibração da memória institucional (✅)
+- **`_projeto/ADR/`** com 7 Architecture Decision Records + README/template:
+  - ADR-001 Kira-driven · ADR-002 Tratativas×Retrabalho · ADR-003 Macro-etapas · ADR-004 Universo D · ADR-005 Manifest · ADR-006 Disparo híbrido · ADR-007 ATENA descontinuado
+- **`_projeto/VOCABULARIO_OPERACIONAL.md`** · 10 seções consolidadas (produtos OS×campo, termos, aliases, status, vocabulário real, cores, filtros, convenções)
+- **`_projeto/MAPA_PESSOAS.md`** · 9 seções (quem é quem, função atual+histórica, princípios)
+- **Item 1+4 ativos:** captura proativa de princípios + lição estruturada no `/sync_save` (6 categorias)
+
+### Memórias novas desta sessão
+- `reference_api_painel_obras.md` · vocabulário institucional do Painel
+- `reference_orion_docs_canonicos.md` · índice dos 13 docs do `_projeto/` + 7 ADRs
+
+### Pendências pra próxima sessão
+- **Frente 3 · Lab Orion Jornada · piloto expandido (10-15 obras)** (~3h) · calibrar regex em massa antes da rodada cheia · onde mora ~70% do aprendizado de regex que vamos usar pra sempre
+- **Bugs cold read** B1 (Gantt diário vazio em KRYSTAL) e B2 (encoding "C�sar")
+- **Cores oficiais STELION** · 12 hex pendentes de extrair do PDF do catálogo
+- **Storytelling de 1 obra finalizada** (~1h) · ideia Rodrigo · pode ser hoje
+
+### Comando pra retomar nesta sessão (cole no Claude Code)
+
+```
+Lê analise/lab-hermeneuta/RETOMAR.md primeiro · depois _projeto/README.md em ordem 1→13 (incluindo VOCABULARIO_OPERACIONAL.md, MAPA_PESSOAS.md, ADR/README.md) · então `python agente/sentinela.py` pra status atual · liste o que está pendente em ordem de prioridade.
+```
+
+---
+
+## 📜 HISTÓRICO RESUMIDO (anterior)
+> Estado em 2026-05-04 mantido abaixo pra contexto histórico do projeto.
 
 > 📚 **Pasta-síntese completa:** `_projeto/README.md` (entrada · navega 1→7 pra entender em 5min)
 > Esse RETOMAR é overview rápido · `_projeto/` é a fonte canônica de história, estado, arquitetura, pendências, runbook, aprendizados e inventário.
