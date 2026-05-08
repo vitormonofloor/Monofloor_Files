@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-08T01:20:18Z",
+  "atualizado_em": "2026-05-08T04:40:00Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1043,
@@ -42,15 +42,15 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2058,
+    "pending_tasks": 2062,
     "executing_tasks": 2
   },
   "capacidade": {
-    "utilization_percent": 32,
+    "utilization_percent": 28,
     "status": "healthy",
     "aplicadores_total": 95,
-    "aplicadores_necessarios": 30,
-    "aplicadores_por_obra": 9.5,
+    "aplicadores_necessarios": 27,
+    "aplicadores_por_obra": 10.6,
     "capacidade_diaria_m2": 418,
     "capacidade_semanal_m2_puro": 9000,
     "capacidade_semanal_m2_misto": 6300,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"CONFIRMAÇÕES OP 1\"",
-        "daysUntilEntry": 4,
+        "daysUntilEntry": 3,
         "currentStage": "CONFIRMAÇÕES OP 1",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -91,7 +91,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 18,
+        "daysUntilEntry": 17,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 25,
+        "daysUntilEntry": 24,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -112,8 +112,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 18 dias do início",
-        "daysUntilEntry": 18,
+        "message": "Projeto sem equipe definida a 17 dias do início",
+        "daysUntilEntry": 17,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -123,8 +123,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 25 dias do início",
-        "daysUntilEntry": 25,
+        "message": "Projeto sem equipe definida a 24 dias do início",
+        "daysUntilEntry": 24,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -4070,7 +4070,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 24,
+        "dias_desde_resumo": 25,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -4236,7 +4236,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 24,
+        "dias_desde_resumo": 25,
         "alertas": [
           "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
           "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
@@ -9670,26 +9670,26 @@
   "lw": {
     "luana": {
       "n": 89,
-      "mediana": 239,
-      "n180": 57,
-      "n270": 33,
+      "mediana": 249,
+      "n180": 58,
+      "n270": 34,
       "zumbi": 7,
       "reparo": 8,
       "pausadas": 2
     },
     "wesley": {
       "n": 84,
-      "mediana": 199,
-      "n180": 45,
+      "mediana": 203,
+      "n180": 46,
       "n270": 17,
       "zumbi": 20,
       "reparo": 9,
       "pausadas": 2
     },
     "total_ativas": 223,
-    "n_180_total": 119,
+    "n_180_total": 121,
     "concentracao_pct": 77.6,
-    "concentracao_180_pct": 85.7,
+    "concentracao_180_pct": 86.0,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
