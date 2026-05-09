@@ -1,21 +1,21 @@
 {
-  "atualizado_em": "2026-05-09T11:26:32Z",
+  "atualizado_em": "2026-05-09T12:34:10Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
-    "ativas": 260,
-    "finalizados": 785,
+    "ativas": 261,
+    "finalizados": 784,
     "em_execucao": 35,
     "pausados": 6,
     "m2_em_execucao": 3725
   },
   "por_status": {
+    "aguardando_execucao": 47,
     "reparo": 24,
     "pausado": 6,
     "finalizado": 551,
     "planejamento": 96,
-    "aguardando_execucao": 46,
-    "concluido": 234,
+    "concluido": 233,
     "em_execucao": 35,
     "aguardando_clima": 3,
     "contrato": 12,
@@ -35,14 +35,14 @@
       "obras": 24,
       "m2": 4205
     },
-    "funil_total": 145,
+    "funil_total": 146,
     "com_data_firmada": 80,
-    "sem_data_firmada": 65,
+    "sem_data_firmada": 66,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2070,
+    "pending_tasks": 2071,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2186,6 +2186,11 @@
       "dataEntrada": "",
       "dataExec": "2026-05-11"
     },
+    "f6dc0a36-35fc-4128-8860-eeb39337ab56": {
+      "dataVisita": "04/06/2025 15:30",
+      "dataEntrada": "",
+      "dataExec": "2026-07-06"
+    },
     "a3b4316d-7e2b-4f88-bb39-27a7057e256f": {
       "dataVisita": "",
       "dataEntrada": "",
@@ -3226,9 +3231,10 @@
       "db4288be",
       "ddb7768a",
       "dec2480f",
-      "e79c60c1"
+      "e79c60c1",
+      "f6dc0a36"
     ],
-    "zumbi_n": 38,
+    "zumbi_n": 39,
     "orfas_ids": [
       "0b692354",
       "1231fb6a",
@@ -3272,19 +3278,19 @@
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
-    "kira_atualizado_em": "2026-05-08T23:07:00.059000+00:00",
-    "total_fluxo": 198,
+    "kira_atualizado_em": "2026-05-09T12:00:25.033000+00:00",
+    "total_fluxo": 199,
     "com_kira": 132,
     "saudavel": 79,
     "saudavel_pct_no_monitorado": 59.8,
     "atencao": 53,
-    "sem_kira": 66,
+    "sem_kira": 67,
     "clima_dist": {
       "Positivo": 26,
       "Neutro": 55,
       "Tenso": 58,
       "Crítico": 5,
-      "?": 80
+      "?": 81
     },
     "obras_atencao": [
       {
@@ -8980,6 +8986,14 @@
         "tem_grupo": false
       },
       {
+        "id": "f6dc0a36-35fc-4128-8860-eeb39337ab56",
+        "cliente": "MARCIA MALUF AZEM",
+        "consultor": "LUANA",
+        "cidade": "SÃO PAULO",
+        "fase": "CLIENTE FINALIZADO",
+        "tem_grupo": false
+      },
+      {
         "id": "02e37e72-46fc-445d-ad95-b50dc5ed2c49",
         "cliente": "SILAS AUGUSTO FARIA MARTINS",
         "consultor": "LUANA",
@@ -9691,11 +9705,11 @@
   },
   "lw": {
     "luana": {
-      "n": 90,
+      "n": 91,
       "mediana": 250,
       "n180": 61,
       "n270": 39,
-      "zumbi": 7,
+      "zumbi": 8,
       "reparo": 9,
       "pausadas": 2
     },
@@ -9708,9 +9722,9 @@
       "reparo": 10,
       "pausadas": 2
     },
-    "total_ativas": 225,
+    "total_ativas": 226,
     "n_180_total": 123,
-    "concentracao_pct": 77.3,
+    "concentracao_pct": 77.4,
     "concentracao_180_pct": 87.0,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
