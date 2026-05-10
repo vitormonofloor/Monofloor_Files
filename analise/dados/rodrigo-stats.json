@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-09T23:54:50Z",
+  "atualizado_em": "2026-05-10T03:47:42Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
@@ -24,7 +24,7 @@
   },
   "proximos": {
     "15d": {
-      "obras": 12,
+      "obras": 13,
       "m2": 1223
     },
     "30d": {
@@ -68,9 +68,9 @@
       "capacityRisk": 0
     },
     "por_severidade": {
-      "high": 1,
+      "high": 2,
       "medium": 2,
-      "low": 2
+      "low": 1
     },
     "detalhes": [
       {
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"CONFIRMAÇÕES OP 1\"",
-        "daysUntilEntry": 2,
+        "daysUntilEntry": 1,
         "currentStage": "CONFIRMAÇÕES OP 1",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -89,11 +89,22 @@
         "clienteNome": "TITO LIVIO CAPOBIANCO JR 2ª Fase",
         "cidade": "CEP 23970",
         "type": "STAGE_DELAY",
-        "severity": "MEDIUM",
-        "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 16,
+        "severity": "HIGH",
+        "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
+        "daysUntilEntry": 15,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "expectedStage": "REVISÃO FINAL OP"
+        "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
+      },
+      {
+        "projectId": "pf-mklv83up-708520",
+        "clienteNome": "TITO LIVIO CAPOBIANCO JR 2ª Fase",
+        "cidade": "CEP 23970",
+        "type": "NO_TEAM",
+        "severity": "MEDIUM",
+        "message": "Projeto sem equipe definida a 15 dias do início",
+        "daysUntilEntry": 15,
+        "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "expectedStage": "Com equipe alocada"
       },
       {
         "projectId": "pf-mklv83sq-578563",
@@ -102,20 +113,9 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 23,
+        "daysUntilEntry": 22,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
-      },
-      {
-        "projectId": "pf-mklv83up-708520",
-        "clienteNome": "TITO LIVIO CAPOBIANCO JR 2ª Fase",
-        "cidade": "CEP 23970",
-        "type": "NO_TEAM",
-        "severity": "LOW",
-        "message": "Projeto sem equipe definida a 16 dias do início",
-        "daysUntilEntry": 16,
-        "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "expectedStage": "Com equipe alocada"
       },
       {
         "projectId": "pf-mklv83sq-578563",
@@ -123,8 +123,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 23 dias do início",
-        "daysUntilEntry": 23,
+        "message": "Projeto sem equipe definida a 22 dias do início",
+        "daysUntilEntry": 22,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -4106,7 +4106,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 26,
+        "dias_desde_resumo": 27,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -4272,7 +4272,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 26,
+        "dias_desde_resumo": 27,
         "alertas": [
           "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
           "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
@@ -9453,7 +9453,7 @@
     "fonte": "/api/projects/{id} pendenciaManual.whatsappSummary (cada detail fresh, ~3min coleta)"
   },
   "historico_aplicadores": {
-    "dias_acumulados": 10,
+    "dias_acumulados": 11,
     "janela_dias": 7,
     "top_carga_7d": [
       {
@@ -9706,26 +9706,26 @@
   "lw": {
     "luana": {
       "n": 91,
-      "mediana": 250,
-      "n180": 61,
-      "n270": 39,
+      "mediana": 251,
+      "n180": 62,
+      "n270": 41,
       "zumbi": 8,
       "reparo": 9,
       "pausadas": 2
     },
     "wesley": {
       "n": 84,
-      "mediana": 201,
+      "mediana": 202,
       "n180": 46,
-      "n270": 17,
+      "n270": 18,
       "zumbi": 19,
       "reparo": 10,
       "pausadas": 2
     },
     "total_ativas": 226,
-    "n_180_total": 123,
+    "n_180_total": 124,
     "concentracao_pct": 77.4,
-    "concentracao_180_pct": 87.0,
+    "concentracao_180_pct": 87.1,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
