@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-11T01:25:58Z",
+  "atualizado_em": "2026-05-11T05:38:20Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"CONFIRMAÇÕES OP 1\"",
-        "daysUntilEntry": 1,
+        "daysUntilEntry": 0,
         "currentStage": "CONFIRMAÇÕES OP 1",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -91,7 +91,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 15,
+        "daysUntilEntry": 14,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -101,8 +101,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 15 dias do início",
-        "daysUntilEntry": 15,
+        "message": "Projeto sem equipe definida a 14 dias do início",
+        "daysUntilEntry": 14,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -113,7 +113,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 22,
+        "daysUntilEntry": 21,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -123,8 +123,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 22 dias do início",
-        "daysUntilEntry": 22,
+        "message": "Projeto sem equipe definida a 21 dias do início",
+        "daysUntilEntry": 21,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -133,195 +133,6 @@
   "weekly_forecast": [
     {
       "weekNumber": 1,
-      "startDate": "2026-05-04",
-      "endDate": "2026-05-11",
-      "starting": {
-        "count": 2,
-        "totalM2": 983.53,
-        "totalLinear": 0,
-        "projects": [
-          {
-            "id": "pf-mklv83t6-308131",
-            "clienteNome": "JONATHAS DE ALMEIDA NUNES LUKAS",
-            "cidade": "CEP 13092",
-            "metragemM2": 218.2,
-            "linearTotal": null,
-            "dataEntrada": "04/05/2026 03:00",
-            "prazo": 15,
-            "pipefyFase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "22/05/2026"
-          },
-          {
-            "id": "pf-mklv83v6-314299",
-            "clienteNome": "NINA RODRIGUES FIALDINI",
-            "cidade": "CEP 04531",
-            "metragemM2": 765.33,
-            "linearTotal": null,
-            "dataEntrada": "04/05/2026 04:00",
-            "prazo": 30,
-            "pipefyFase": "PROJETOS  - 1ª REVISÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "12/06/2026"
-          }
-        ]
-      },
-      "inExecution": {
-        "count": 8,
-        "totalM2": 2651.0699999999997,
-        "totalLinear": 4.686,
-        "projects": [
-          {
-            "id": "pf-mklv83sg-266944",
-            "clienteNome": "Pedro Henning",
-            "cidade": "Jaguariaíva",
-            "metragemM2": 150,
-            "linearTotal": null,
-            "dataEntrada": "01/04/2026 09:00",
-            "prazo": 30,
-            "pipefyFase": "INDÚSTRIA - EM PRODUÇÃO",
-            "equipe": null,
-            "reserva": true,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "12/05/2026"
-          },
-          {
-            "id": "pf-mklv83t6-308131",
-            "clienteNome": "JONATHAS DE ALMEIDA NUNES LUKAS",
-            "cidade": "CEP 13092",
-            "metragemM2": 218.2,
-            "linearTotal": null,
-            "dataEntrada": "04/05/2026 03:00",
-            "prazo": 15,
-            "pipefyFase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "22/05/2026"
-          },
-          {
-            "id": "pf-mklv83v6-314299",
-            "clienteNome": "NINA RODRIGUES FIALDINI",
-            "cidade": "CEP 04531",
-            "metragemM2": 765.33,
-            "linearTotal": null,
-            "dataEntrada": "04/05/2026 04:00",
-            "prazo": 30,
-            "pipefyFase": "PROJETOS  - 1ª REVISÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "12/06/2026"
-          },
-          {
-            "id": "pf-mklv83ss-108191",
-            "clienteNome": "FERNANDO TEMBRA RODRIGUEZ",
-            "cidade": "CEP 22430",
-            "metragemM2": 140.04,
-            "linearTotal": null,
-            "dataEntrada": "06/04/2026 10:00",
-            "prazo": 30,
-            "pipefyFase": "INDÚSTRIA - EM PRODUÇÃO",
-            "equipe": null,
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "15/05/2026"
-          },
-          {
-            "id": "pf-mklv83tq-815103",
-            "clienteNome": "RAFAEL DE OLIVEIRA BOTELHO CORREA",
-            "cidade": "CEP 22621",
-            "metragemM2": 560.75,
-            "linearTotal": null,
-            "dataEntrada": "24/04/2026 12:00",
-            "prazo": 25,
-            "pipefyFase": "INDÚSTRIA - EM PRODUÇÃO",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "28/05/2026"
-          },
-          {
-            "id": "pf-mklv83s5-513315",
-            "clienteNome": "Andrea Almeida",
-            "cidade": "Belo Horizonte",
-            "metragemM2": 450,
-            "linearTotal": 0,
-            "dataEntrada": "25/03/2026 09:00",
-            "prazo": 30,
-            "pipefyFase": "ENTRADA",
-            "equipe": null,
-            "reserva": true,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "05/05/2026"
-          },
-          {
-            "id": "pf-mklv83vy-116954",
-            "clienteNome": "MARCELO WAJSKOP ABRAMOWICZ",
-            "cidade": "CEP 04531",
-            "metragemM2": 168.69,
-            "linearTotal": 4.686,
-            "dataEntrada": "30/03/2026 03:00",
-            "prazo": 30,
-            "pipefyFase": "REVISÃO FINAL OP",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "08/05/2026"
-          },
-          {
-            "id": "pf-mklv83tl-308135",
-            "clienteNome": "ALEXANDRE BARCELLOS RAMOS",
-            "cidade": "CEP 91340",
-            "metragemM2": 198.06,
-            "linearTotal": null,
-            "dataEntrada": "30/04/2026 03:00",
-            "prazo": 18,
-            "pipefyFase": "PROJETOS  - 1ª REVISÃO",
-            "equipe": "MUTIRÃO",
-            "reserva": false,
-            "obraNoturna": false,
-            "trabalhaSabado": false,
-            "trabalhaDomingo": false,
-            "dataTerminoCalculada": "25/05/2026"
-          }
-        ]
-      },
-      "noturnas": {
-        "count": 0,
-        "totalM2": 0,
-        "projects": []
-      },
-      "capacity": {
-        "applicatorsNeeded": 24,
-        "applicatorsPerProject": 11.9,
-        "utilizationPercent": 25
-      }
-    },
-    {
-      "weekNumber": 2,
       "startDate": "2026-05-11",
       "endDate": "2026-05-18",
       "starting": {
@@ -478,7 +289,7 @@
       }
     },
     {
-      "weekNumber": 3,
+      "weekNumber": 2,
       "startDate": "2026-05-18",
       "endDate": "2026-05-25",
       "starting": {
@@ -586,7 +397,7 @@
       }
     },
     {
-      "weekNumber": 4,
+      "weekNumber": 3,
       "startDate": "2026-05-25",
       "endDate": "2026-06-01",
       "starting": {
@@ -711,7 +522,7 @@
       }
     },
     {
-      "weekNumber": 5,
+      "weekNumber": 4,
       "startDate": "2026-06-01",
       "endDate": "2026-06-08",
       "starting": {
@@ -820,7 +631,7 @@
       }
     },
     {
-      "weekNumber": 6,
+      "weekNumber": 5,
       "startDate": "2026-06-08",
       "endDate": "2026-06-15",
       "starting": {
@@ -896,7 +707,7 @@
       }
     },
     {
-      "weekNumber": 7,
+      "weekNumber": 6,
       "startDate": "2026-06-15",
       "endDate": "2026-06-22",
       "starting": {
@@ -956,7 +767,7 @@
       }
     },
     {
-      "weekNumber": 8,
+      "weekNumber": 7,
       "startDate": "2026-06-22",
       "endDate": "2026-06-29",
       "starting": {
@@ -1049,7 +860,7 @@
       }
     },
     {
-      "weekNumber": 9,
+      "weekNumber": 8,
       "startDate": "2026-06-29",
       "endDate": "2026-07-06",
       "starting": {
@@ -1125,7 +936,7 @@
       }
     },
     {
-      "weekNumber": 10,
+      "weekNumber": 9,
       "startDate": "2026-07-06",
       "endDate": "2026-07-13",
       "starting": {
@@ -1185,7 +996,7 @@
       }
     },
     {
-      "weekNumber": 11,
+      "weekNumber": 10,
       "startDate": "2026-07-13",
       "endDate": "2026-07-20",
       "starting": {
@@ -1262,7 +1073,7 @@
       }
     },
     {
-      "weekNumber": 12,
+      "weekNumber": 11,
       "startDate": "2026-07-20",
       "endDate": "2026-07-27",
       "starting": {
@@ -1306,7 +1117,7 @@
       }
     },
     {
-      "weekNumber": 13,
+      "weekNumber": 12,
       "startDate": "2026-07-27",
       "endDate": "2026-08-03",
       "starting": {
@@ -1335,6 +1146,67 @@
             "trabalhaSabado": false,
             "trabalhaDomingo": false,
             "dataTerminoCalculada": "31/07/2026"
+          }
+        ]
+      },
+      "noturnas": {
+        "count": 0,
+        "totalM2": 0,
+        "projects": []
+      },
+      "capacity": {
+        "applicatorsNeeded": 3,
+        "applicatorsPerProject": 95,
+        "utilizationPercent": 3
+      }
+    },
+    {
+      "weekNumber": 13,
+      "startDate": "2026-08-03",
+      "endDate": "2026-08-10",
+      "starting": {
+        "count": 1,
+        "totalM2": 349.99,
+        "totalLinear": 0,
+        "projects": [
+          {
+            "id": "pf-mklv83ts-147010",
+            "clienteNome": "GABRIEL LEIVAS PROTO",
+            "cidade": "CEP 96015",
+            "metragemM2": 349.99,
+            "linearTotal": null,
+            "dataEntrada": "03/08/2026 12:00",
+            "prazo": 20,
+            "pipefyFase": "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO",
+            "equipe": "MUTIRÃO",
+            "reserva": false,
+            "obraNoturna": false,
+            "trabalhaSabado": false,
+            "trabalhaDomingo": false,
+            "dataTerminoCalculada": "28/08/2026"
+          }
+        ]
+      },
+      "inExecution": {
+        "count": 1,
+        "totalM2": 349.99,
+        "totalLinear": 0,
+        "projects": [
+          {
+            "id": "pf-mklv83ts-147010",
+            "clienteNome": "GABRIEL LEIVAS PROTO",
+            "cidade": "CEP 96015",
+            "metragemM2": 349.99,
+            "linearTotal": null,
+            "dataEntrada": "03/08/2026 12:00",
+            "prazo": 20,
+            "pipefyFase": "RESULTADO VT - AFERIÇÃO/ORIENTAÇÃO",
+            "equipe": "MUTIRÃO",
+            "reserva": false,
+            "obraNoturna": false,
+            "trabalhaSabado": false,
+            "trabalhaDomingo": false,
+            "dataTerminoCalculada": "28/08/2026"
           }
         ]
       },
@@ -4064,7 +3936,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 27,
+        "dias_desde_resumo": 28,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -4230,7 +4102,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 27,
+        "dias_desde_resumo": 28,
         "alertas": [
           "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
           "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
@@ -9706,7 +9578,7 @@
   "lw": {
     "luana": {
       "n": 91,
-      "mediana": 251,
+      "mediana": 252,
       "n180": 62,
       "n270": 41,
       "zumbi": 8,
@@ -9715,17 +9587,17 @@
     },
     "wesley": {
       "n": 84,
-      "mediana": 202,
-      "n180": 46,
-      "n270": 18,
+      "mediana": 203,
+      "n180": 47,
+      "n270": 19,
       "zumbi": 19,
       "reparo": 10,
       "pausadas": 2
     },
     "total_ativas": 226,
-    "n_180_total": 124,
+    "n_180_total": 126,
     "concentracao_pct": 77.4,
-    "concentracao_180_pct": 87.1,
+    "concentracao_180_pct": 86.5,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
