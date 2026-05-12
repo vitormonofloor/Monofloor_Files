@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-12T15:22:55Z",
+  "atualizado_em": "2026-05-12T17:33:49Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
@@ -10,13 +10,13 @@
     "m2_em_execucao": 5062
   },
   "por_status": {
+    "planejamento": 93,
+    "aguardando_clima": 3,
     "aguardando_execucao": 46,
     "em_execucao": 33,
     "finalizado": 560,
-    "planejamento": 93,
     "reparo": 24,
     "pausado": 6,
-    "aguardando_clima": 3,
     "contrato": 11,
     "marcas_rolo_cera": 3,
     "cancelado": 35,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2086,
+    "pending_tasks": 2088,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1221,11 +1221,11 @@
     "fonte": "Painel de Obras (snapshot 2026-05-11T10:58:11.335190)"
   },
   "aplicadores": {
-    "total_cadastrados": 184,
-    "ativos": 117,
+    "total_cadastrados": 185,
+    "ativos": 118,
     "inativos": 67,
     "por_cargo": {
-      "Aplicador 1": 26,
+      "Aplicador 1": 27,
       "Líder de Campo": 36,
       "Ajudante": 17,
       "Encarregado": 9,
@@ -1235,7 +1235,7 @@
     "obras_com_equipe_hoje": 21,
     "pessoas_em_campo_hoje": 55,
     "em_2_ou_mais_obras_hoje": 15,
-    "ociosos_hoje": 62,
+    "ociosos_hoje": 63,
     "conflitos_detalhe": [
       {
         "id": "6b237d14-b591-483f-b945-fa570f4746cc",
@@ -1598,6 +1598,11 @@
       {
         "id": "b1afe6f0-0a7c-4ca4-ab11-22bc0b2387ca",
         "nome": "Edilson Ariel Andrade da Silva",
+        "cargo": "Aplicador 1"
+      },
+      {
+        "id": "fefffe49-164a-4b32-814d-0d06fa437823",
+        "nome": "Emdreo hrycyna",
         "cargo": "Aplicador 1"
       },
       {
@@ -3581,17 +3586,17 @@
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-12T12:01:09.441000+00:00",
     "total_fluxo": 192,
-    "com_kira": 126,
+    "com_kira": 127,
     "saudavel": 76,
-    "saudavel_pct_no_monitorado": 60.3,
-    "atencao": 50,
-    "sem_kira": 66,
+    "saudavel_pct_no_monitorado": 59.8,
+    "atencao": 51,
+    "sem_kira": 65,
     "clima_dist": {
       "Positivo": 26,
       "Neutro": 51,
-      "Tenso": 55,
+      "Tenso": 56,
       "Crítico": 5,
-      "?": 81
+      "?": 80
     },
     "obras_atencao": [
       {
@@ -4229,27 +4234,6 @@
         "eventos": []
       },
       {
-        "id": "89c99f6b-1eb9-4cae-9b1b-37e742bfe644",
-        "cliente": "MARCUS VINICIUS RODRIGUES ELTSCHEMINOV",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "CONFIRMAÇÕES OP 1",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 0,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 7,
-        "alertas": [],
-        "pendencias": [],
-        "resumo_exec": "## Resumo do Projeto Monofloor\n\nO cliente (Suli) recebeu orientações técnicas da equipe sobre o uso de massa/revestimento (NS Aquablock) e confirmou que verificaria internamente antes de prosseguir. Posteriormente, o cliente informou que realizou os serviços de regularização dos pontos apontados em visita e enviou diversas fotos/registros aguardando confirmação da equipe.\n\n---\n\n**🟡 Clima: Neutro**\n*(Cliente proativo, mas aguardando resposta da equipe)*\n\n---\n\n**⚠️ Principais Pendências:**\n\n- [ ] **Confirmação da equipe** sobre os serviços de regularização executados pelo cliente\n- [ ] **Análise",
-        "clima_desc": "",
-        "periodo": "",
-        "tempo_resp": "",
-        "total_msgs": 30,
-        "eventos": []
-      },
-      {
         "id": "5f1da635-275f-40f8-962b-d7f6f6b496d9",
         "cliente": "CLÁUDIO KUTNIKAS",
         "consultor": "LUANA",
@@ -4260,7 +4244,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 4,
+        "dias_desde_resumo": 5,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO prestador Júlio visitou a obra e realizou uma vistoria completa junto à cliente Amanda, identificando pontos de reparo no piso, incluindo riscos na cozinha (frente ao fogão), área de lavanderia e trilhos. A cliente solicitou que os reparos sejam agendados a partir de segunda-feira, considerando a disponibilidade do proprietário Claudio.\n\n---\n\n**🟡 Clima: Neutro**\n\n**📋 Principais Pendências:**\n- ✅ Vistoria realizada — pontos mapeados\n- 🔧 Execução dos reparos aguardando agendamento (a partir de segunda-feira)\n- 📅 Confirmação de data de retorno do Júlio em aberto\n",
@@ -4268,6 +4252,27 @@
         "periodo": "",
         "tempo_resp": "",
         "total_msgs": 30,
+        "eventos": []
+      },
+      {
+        "id": "fb35d2a0-afb2-428b-bd5c-997178f784ef",
+        "cliente": "LEONARDO GUERZONI FURTADO DE OLIVEIRA",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "ITU",
+        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 0,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 0,
+        "alertas": [],
+        "pendencias": [],
+        "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está na fase de pré-instalação, com contrato assinado, visita de aferição realizada em 07/04 e kit de amostras já recebido pelo cliente. O cliente (Ramon) está aguardando resposta sobre a **antecipação da data de início**, sem retorno conclusivo da equipe até o momento.\n\n---\n\n**🟡 Clima: Neutro/Tenso**\n\n---\n\n**📌 Principais Pendências:**\n\n- ✅ ~~Contrato assinado~~\n- ✅ ~~Visita de aferição realizada~~\n- ⏳ **Definição da cor** (Kalahari em análise)\n- ⏳ **Antecipação da data de início** — solicitada 2x sem resposta definitiva\n- ⏳ **Agendamento da instalação",
+        "clima_desc": "",
+        "periodo": "",
+        "tempo_resp": "",
+        "total_msgs": 27,
         "eventos": []
       },
       {
@@ -4281,7 +4286,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 3,
+        "dias_desde_resumo": 4,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se em fase de acompanhamento, com a equipe buscando atualizações de andamento junto ao cliente, que por sua vez reportou uma solicitação de modificação nos pontos hidráulicos da lavanderia. A comunicação está ativa, porém as mensagens aparecem incompletas, dificultando uma visão clara do progresso real.\n\n---\n\n**🟡 Clima: Neutro**\n\n**📋 Principais Pendências:**\n- Definição sobre a modificação dos pontos hidráulicos na lavanderia\n- Atualização formal do status/andamento do projeto\n- Respostas pendentes da equipe às solicitações do cliente\n\n> ⚠️ *N",
@@ -5367,7 +5372,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 18,
+        "dias_desde_resumo": 19,
         "alertas": [
           "QUALIDADE — Acabamento final do Leona apresentou múltiplos defeitos documentados pelo cliente: manchas de suor, marcas de rolo quadriculadas, esbranquiçados, bolhas e pelos. Retrabalho agendado para 23/04 ainda não confirmado operacionalmente",
           "CRONOGRAMA — Retorno da equipe foi prometido para 20/04, depois deslocado para 23/04 e, em 23/04, ainda sem confirmação de execução. Cliente está organizando limpeza do apartamento especificamente para viabilizar a entrada da Monofloor",
@@ -6165,7 +6170,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 26,
+        "dias_desde_resumo": 27,
         "alertas": [
           "Cliente em estado de insatisfação declarada (08/04): afirmou que não está feliz na própria casa e que não está pedindo um favor — risco de deterioração do relacionamento e possível impacto reputacional",
           "Reunião cancelada sem aviso prévio no dia 08/04: falha grave de atendimento que abalou a confiança da cliente; exige postura proativa de recuperação na reunião de 15/04",
@@ -7608,7 +7613,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 9,
+        "dias_desde_resumo": 10,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "Parece que a conversa do WhatsApp foi **cortada** e não contém informações suficientes para análise — apenas a mensagem de boas-vindas da Emanuele foi compartilhada, sem o restante do histórico.\n\n---\n\n**Por favor, cole o conteúdo completo da conversa** para que eu possa:\n\n- 📋 **Resumir** o estado do projeto\n- 🌡️ **Identificar o clima** (Positivo/Neutro/Tenso/Crítico)\n- ⚠️ **Listar as principais pendências**",
@@ -7671,10 +7676,31 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 9,
+        "dias_desde_resumo": 10,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase de definição de materiais/cores, com o cliente Gustavo avaliando amostras do revestimento Lilit para paredes e Stelion para piso, após visita ao showroom e recebimento de kit de amostras em seu endereço. A equipe está responsiva e coordenando com novos integrantes (Marcos, executor da obra), mantendo fluxo ativo de comunicação.\n\n---\n\n**🟡 Clima: Neutro/Positivo**\n\n---\n\n**📋 Principais Pendências:**\n- ⏳ Envio de novas amostras nas cores **Mirage** e **Kalahari** solicitadas pelo cliente\n- ⏳ Definição final de cor pelo cliente (Gustavo/Luisa)\n",
+        "clima_desc": "",
+        "periodo": "",
+        "tempo_resp": "",
+        "total_msgs": 30,
+        "eventos": []
+      },
+      {
+        "id": "89c99f6b-1eb9-4cae-9b1b-37e742bfe644",
+        "cliente": "MARCUS VINICIUS RODRIGUES ELTSCHEMINOV",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "CONFIRMAÇÕES OP 1",
+        "status": "em_execucao",
+        "clima": "Tenso",
+        "n_alertas": 0,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 8,
+        "alertas": [],
+        "pendencias": [],
+        "resumo_exec": "## Resumo do Projeto Monofloor\n\nO cliente (Suli) recebeu orientações técnicas da equipe sobre o uso de massa/revestimento (NS Aquablock) e confirmou que verificaria internamente antes de prosseguir. Posteriormente, o cliente informou que realizou os serviços de regularização dos pontos apontados em visita e enviou diversas fotos/registros aguardando confirmação da equipe.\n\n---\n\n**🟡 Clima: Neutro**\n*(Cliente proativo, mas aguardando resposta da equipe)*\n\n---\n\n**⚠️ Principais Pendências:**\n\n- [ ] **Confirmação da equipe** sobre os serviços de regularização executados pelo cliente\n- [ ] **Análise",
         "clima_desc": "",
         "periodo": "",
         "tempo_resp": "",
@@ -7713,7 +7739,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 12,
+        "dias_desde_resumo": 13,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nA equipe está em fase de execução da aplicação, com prazo estimado de **18 dias úteis**, compartilhando diários de execução e aguardando a definição do cronograma final de camadas para agendamento da vistoria final com as responsáveis (Ju e equipe).\n\n---\n\n**🟡 Clima: Neutro**\n*(Comunicação cordial e colaborativa, sem conflitos aparentes)*\n\n---\n\n**📋 Principais Pendências:**\n\n- ⏳ Cronograma detalhado de conclusão das camadas *(prometido pela equipe, aguardando confirmação)*\n- 📅 Agendamento da **vistoria final** com \"Ju e as meninas\"\n- 🔐 Possível necessidade de **ca",
@@ -7755,7 +7781,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 38,
+        "dias_desde_resumo": 39,
         "alertas": [
           "CRÍTICO: Consultor compareceu à obra 1h15 antes do horário agendado (10h em vez de 11h15) sem comunicação prévia, causando falha grave na visita e escalação à diretoria",
           "CRÍTICO: Cliente Paola relatou ter sido informada verbalmente que o serviço só seria concluído em maio, informação não alinhada com o grupo e que gerou forte insatisfação",
@@ -8792,7 +8818,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 38,
+        "dias_desde_resumo": 39,
         "alertas": [
           "Reunião agendada para 14:00h não foi cumprida no horário — atraso superior a 1 hora sem comunicação prévia ao grupo",
           "Participante utilizou '@todos' demonstrando necessidade de atenção coletiva, indicando possível urgência",
@@ -9122,14 +9148,6 @@
         "consultor": "Renata",
         "cidade": "Curitba",
         "fase": "CONTRATO",
-        "tem_grupo": false
-      },
-      {
-        "id": "fb35d2a0-afb2-428b-bd5c-997178f784ef",
-        "cliente": "LEONARDO GUERZONI FURTADO DE OLIVEIRA",
-        "consultor": "Wesley",
-        "cidade": "ITU",
-        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "tem_grupo": false
       },
       {
