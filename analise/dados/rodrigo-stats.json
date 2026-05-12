@@ -1,18 +1,18 @@
 {
-  "atualizado_em": "2026-05-12T19:59:50Z",
+  "atualizado_em": "2026-05-12T21:36:45Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
     "ativas": 255,
     "finalizados": 790,
-    "em_execucao": 35,
+    "em_execucao": 36,
     "pausados": 6,
-    "m2_em_execucao": 5299
+    "m2_em_execucao": 5771
   },
   "por_status": {
+    "aguardando_execucao": 45,
     "planejamento": 92,
-    "aguardando_execucao": 46,
-    "em_execucao": 35,
+    "em_execucao": 36,
     "finalizado": 559,
     "aguardando_clima": 3,
     "reparo": 24,
@@ -35,14 +35,14 @@
       "obras": 20,
       "m2": 3909
     },
-    "funil_total": 141,
-    "com_data_firmada": 75,
+    "funil_total": 140,
+    "com_data_firmada": 74,
     "sem_data_firmada": 66,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2086,
+    "pending_tasks": 2088,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1232,16 +1232,16 @@
       "Aplicador 2": 20,
       "Preparador": 10
     },
-    "obras_com_equipe_hoje": 23,
+    "obras_com_equipe_hoje": 24,
     "pessoas_em_campo_hoje": 59,
-    "em_2_ou_mais_obras_hoje": 16,
+    "em_2_ou_mais_obras_hoje": 19,
     "ociosos_hoje": 60,
     "conflitos_detalhe": [
       {
         "id": "6b237d14-b591-483f-b945-fa570f4746cc",
         "nome": "Michael Marinho de Lima",
         "cargo": "Encarregado",
-        "qtd_obras": 7,
+        "qtd_obras": 8,
         "obras": [
           {
             "id": "8001bd7a-7121-4fca-ac8d-3641765382f1",
@@ -1262,6 +1262,10 @@
           {
             "id": "6dc04755-5c42-437a-a4a1-c0e81b900eeb",
             "cliente": "BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"
+          },
+          {
+            "id": "d0dd8566-813f-4d0a-bc9e-e8619a07c750",
+            "cliente": "JOSÉ ROBERTO LEME FERRAZ"
           },
           {
             "id": "0eb042d7-e02e-48b6-92a2-72f9a9157c92",
@@ -1442,6 +1446,54 @@
           {
             "id": "0eb042d7-e02e-48b6-92a2-72f9a9157c92",
             "cliente": "APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA"
+          }
+        ]
+      },
+      {
+        "id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
+        "nome": "Cosme Eduardo Soares Ragno",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "6dc04755-5c42-437a-a4a1-c0e81b900eeb",
+            "cliente": "BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"
+          },
+          {
+            "id": "d0dd8566-813f-4d0a-bc9e-e8619a07c750",
+            "cliente": "JOSÉ ROBERTO LEME FERRAZ"
+          }
+        ]
+      },
+      {
+        "id": "5f865a27-6ab2-40d8-ba38-974723cb47e1",
+        "nome": "Franklin Borges de Arruda",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "6dc04755-5c42-437a-a4a1-c0e81b900eeb",
+            "cliente": "BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"
+          },
+          {
+            "id": "d0dd8566-813f-4d0a-bc9e-e8619a07c750",
+            "cliente": "JOSÉ ROBERTO LEME FERRAZ"
+          }
+        ]
+      },
+      {
+        "id": "94f6630d-899f-43b8-b884-523f329f2e2c",
+        "nome": "Hudson da Silva Meira",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "6dc04755-5c42-437a-a4a1-c0e81b900eeb",
+            "cliente": "BRENO SILVEIRO DE ANDRADE LIMA CALAZANS FILHO"
+          },
+          {
+            "id": "d0dd8566-813f-4d0a-bc9e-e8619a07c750",
+            "cliente": "JOSÉ ROBERTO LEME FERRAZ"
           }
         ]
       },
@@ -1865,7 +1917,7 @@
         "id": "6b237d14-b591-483f-b945-fa570f4746cc",
         "nome": "Michael Marinho de Lima",
         "cargo": "Encarregado",
-        "qtd_obras": 7
+        "qtd_obras": 8
       },
       {
         "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
@@ -1913,6 +1965,24 @@
         "id": "afc809cc-8b1f-4e62-85a2-7f6a48b8883d",
         "nome": "Carlos Hugo da Silva Meira",
         "cargo": "Líder de Campo",
+        "qtd_obras": 2
+      },
+      {
+        "id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
+        "nome": "Cosme Eduardo Soares Ragno",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 2
+      },
+      {
+        "id": "5f865a27-6ab2-40d8-ba38-974723cb47e1",
+        "nome": "Franklin Borges de Arruda",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 2
+      },
+      {
+        "id": "94f6630d-899f-43b8-b884-523f329f2e2c",
+        "nome": "Hudson da Silva Meira",
+        "cargo": "Aplicador 2",
         "qtd_obras": 2
       },
       {
@@ -2000,12 +2070,6 @@
         "qtd_obras": 1
       },
       {
-        "id": "fdac068f-61b5-4e1f-ac58-25aadb22bd7b",
-        "nome": "Cosme Eduardo Soares Ragno",
-        "cargo": "Líder de Campo",
-        "qtd_obras": 1
-      },
-      {
         "id": "cf1e81a1-4988-4247-b742-4fcfcea419f2",
         "nome": "Daniel Rodrigues dos Santos",
         "cargo": "Aplicador 2",
@@ -2042,12 +2106,6 @@
         "qtd_obras": 1
       },
       {
-        "id": "5f865a27-6ab2-40d8-ba38-974723cb47e1",
-        "nome": "Franklin Borges de Arruda",
-        "cargo": "Aplicador 2",
-        "qtd_obras": 1
-      },
-      {
         "id": "5d7cadc5-ab7a-4b81-9796-94c52e171556",
         "nome": "Gabriel dos Santos sena Ribeiro",
         "cargo": "Ajudante",
@@ -2063,12 +2121,6 @@
         "id": "7fedf6ff-9265-4c56-be22-0914d0eb9dcf",
         "nome": "Henrique de Souza",
         "cargo": "Líder de Campo",
-        "qtd_obras": 1
-      },
-      {
-        "id": "94f6630d-899f-43b8-b884-523f329f2e2c",
-        "nome": "Hudson da Silva Meira",
-        "cargo": "Aplicador 2",
         "qtd_obras": 1
       },
       {
@@ -2434,7 +2486,7 @@
       "total_cadastrados": 12,
       "escalados_hoje": 9,
       "util_pct": 100.0,
-      "obras_hoje": 6,
+      "obras_hoje": 7,
       "obras_lideradas": [],
       "obras_membros": [
         {
@@ -2464,6 +2516,13 @@
           "cidade": "RIO DE JANEIRO",
           "fase": "AGUARDANDO LIBERAÇÃO",
           "status": "em_execucao"
+        },
+        {
+          "id": "d0dd8566-813f-4d0a-bc9e-e8619a07c750",
+          "cliente": "JOSÉ ROBERTO LEME FERRAZ",
+          "cidade": "SÃO PAULO",
+          "fase": "AGUARDANDO LIBERAÇÃO",
+          "status": "aguardando_execucao"
         },
         {
           "id": "0eb042d7-e02e-48b6-92a2-72f9a9157c92",
@@ -2977,7 +3036,7 @@
     "5f8aef5a-cb27-4432-949d-fa4f6f15c0d3": {
       "dataVisita": "03/02/2026 12:00",
       "dataEntrada": "20/04/2026 11:00",
-      "dataExec": "2026-06-10"
+      "dataExec": "2026-06-16"
     },
     "67498789-ad45-4163-a889-58da4c398372": {
       "dataVisita": "21/03/2025 14:00",
@@ -3177,7 +3236,7 @@
     "79002619-a940-4a1c-b31d-e9eca2f9a101": {
       "dataVisita": "06/02/2026 16:00",
       "dataEntrada": "23/03/2026 19:48",
-      "dataExec": "2026-03-25"
+      "dataExec": "2026-05-13"
     },
     "e9ff9980-b507-4ae0-929f-9b7b5fc395d0": {
       "dataVisita": "",
@@ -3417,7 +3476,7 @@
     "0f32c116-96c2-4026-a17e-e0a92feacf7d": {
       "dataVisita": "02/03/2026 13:00",
       "dataEntrada": "06/04/2026 13:00",
-      "dataExec": "2026-04-08"
+      "dataExec": "2026-05-14"
     },
     "ddb7768a-521e-4164-9714-120250376edd": {
       "dataVisita": "08/10/2025 13:00",
@@ -3665,17 +3724,17 @@
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-12T12:01:09.441000+00:00",
     "total_fluxo": 193,
-    "com_kira": 129,
+    "com_kira": 130,
     "saudavel": 76,
-    "saudavel_pct_no_monitorado": 58.9,
-    "atencao": 53,
-    "sem_kira": 64,
+    "saudavel_pct_no_monitorado": 58.5,
+    "atencao": 54,
+    "sem_kira": 63,
     "clima_dist": {
       "Positivo": 26,
       "Neutro": 51,
-      "Tenso": 58,
+      "Tenso": 59,
       "Crítico": 5,
-      "?": 79
+      "?": 78
     },
     "obras_atencao": [
       {
@@ -4411,6 +4470,27 @@
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se em fase de pré-execução, com amostras em produção e agendamento de visita técnica em negociação, após a cliente recusar a data proposta de 14/05, o que pode impactar a data de início da aplicação do revestimento.\n\n**Clima:** 🟡 **Neutro** *(com leve tensão pontual pela urgência da cliente durante a visita do eletricista e dificuldade de alinhamento de agenda)*\n\n---\n\n### Principais Pendências\n\n| # | Pendência | Status |\n|---|-----------|--------|\n| 1 | Entrega das amostras (formato aquarela tamanho normal) | ⏳ Em produção |\n| 2 | Confirmação ",
+        "clima_desc": "",
+        "periodo": "",
+        "tempo_resp": "",
+        "total_msgs": 30,
+        "eventos": []
+      },
+      {
+        "id": "3781d6a4-085d-4c19-9168-316ffd68b864",
+        "cliente": "UNKÊ ARQUITETURA E ENGENHARIA LTDA (Alameda Casa Branca)",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "SÃO PAULO",
+        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 0,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 0,
+        "alertas": [],
+        "pendencias": [],
+        "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto foi **concluído com sucesso**, com o cliente confirmando aprovação do serviço após visita de inspeção e elogiando especialmente a postura profissional e cuidado da equipe executora.\n\n---\n\n**🟢 Clima: Positivo**\n\n---\n\n**📋 Principais Pendências:**\n\n- ❓ **Retirada dos baldes vazios** — cliente perguntou sobre o descarte, mas não houve confirmação definitiva da equipe\n- ❓ **Agendamento pendente** — equipe mencionou querer agendar algo (mensagem cortada), sem confirmação de data",
         "clima_desc": "",
         "periodo": "",
         "tempo_resp": "",
@@ -9567,14 +9647,6 @@
         "tem_grupo": false
       },
       {
-        "id": "3781d6a4-085d-4c19-9168-316ffd68b864",
-        "cliente": "UNKÊ ARQUITETURA E ENGENHARIA LTDA (Alameda Casa Branca)",
-        "consultor": "LUANA",
-        "cidade": "SÃO PAULO",
-        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "tem_grupo": false
-      },
-      {
         "id": "a3cdf7af-c4f3-456d-ae7d-bc2d369b9dce",
         "cliente": "JONATHAS DE ALMEIDA NUNES LUKAS",
         "consultor": "LUANA",
@@ -9699,7 +9771,7 @@
         "cargo": "Encarregado",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 15
+        "total_obras": 16
       },
       {
         "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
@@ -9797,7 +9869,7 @@
         "cargo": "Líder de Campo",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 3
+        "total_obras": 4
       },
       {
         "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
@@ -9813,7 +9885,7 @@
         "cargo": "Encarregado",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 15
+        "total_obras": 16
       },
       {
         "id": "3be92339-ea00-4a39-88c9-373f366d26fd",
