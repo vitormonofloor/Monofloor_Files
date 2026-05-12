@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-12T00:06:43Z",
+  "atualizado_em": "2026-05-12T04:24:37Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
@@ -46,11 +46,11 @@
     "executing_tasks": 2
   },
   "capacidade": {
-    "utilization_percent": 28,
+    "utilization_percent": 25,
     "status": "healthy",
     "aplicadores_total": 95,
-    "aplicadores_necessarios": 27,
-    "aplicadores_por_obra": 10.6,
+    "aplicadores_necessarios": 24,
+    "aplicadores_por_obra": 11.9,
     "capacidade_diaria_m2": 418,
     "capacidade_semanal_m2_puro": 9000,
     "capacidade_semanal_m2_misto": 6300,
@@ -61,29 +61,18 @@
     "max_obras_minimo": 47
   },
   "alertas": {
-    "total": 5,
+    "total": 4,
     "por_tipo": {
-      "stageDelay": 3,
+      "stageDelay": 2,
       "noTeam": 2,
       "capacityRisk": 0
     },
     "por_severidade": {
-      "high": 2,
+      "high": 1,
       "medium": 2,
       "low": 1
     },
     "detalhes": [
-      {
-        "projectId": "pf-mklv83uz-958713",
-        "clienteNome": "ELLIOTT ROBERT MICHEL FRES",
-        "cidade": "CEP 88065",
-        "type": "STAGE_DELAY",
-        "severity": "HIGH",
-        "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"CONFIRMAÇÕES OP 1\"",
-        "daysUntilEntry": 0,
-        "currentStage": "CONFIRMAÇÕES OP 1",
-        "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
-      },
       {
         "projectId": "pf-mklv83up-708520",
         "clienteNome": "TITO LIVIO CAPOBIANCO JR 2ª Fase",
@@ -91,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 14,
+        "daysUntilEntry": 13,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -101,8 +90,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 14 dias do início",
-        "daysUntilEntry": 14,
+        "message": "Projeto sem equipe definida a 13 dias do início",
+        "daysUntilEntry": 13,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -113,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 21,
+        "daysUntilEntry": 20,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -123,8 +112,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 21 dias do início",
-        "daysUntilEntry": 21,
+        "message": "Projeto sem equipe definida a 20 dias do início",
+        "daysUntilEntry": 20,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -3913,7 +3902,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 28,
+        "dias_desde_resumo": 29,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -4079,7 +4068,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 28,
+        "dias_desde_resumo": 29,
         "alertas": [
           "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
           "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
@@ -9438,7 +9427,7 @@
   "lw": {
     "luana": {
       "n": 88,
-      "mediana": 252,
+      "mediana": 253,
       "n180": 60,
       "n270": 40,
       "zumbi": 8,
@@ -9447,17 +9436,17 @@
     },
     "wesley": {
       "n": 83,
-      "mediana": 202,
-      "n180": 45,
-      "n270": 19,
+      "mediana": 204,
+      "n180": 48,
+      "n270": 20,
       "zumbi": 19,
       "reparo": 10,
       "pausadas": 2
     },
     "total_ativas": 221,
-    "n_180_total": 121,
+    "n_180_total": 124,
     "concentracao_pct": 77.4,
-    "concentracao_180_pct": 86.8,
+    "concentracao_180_pct": 87.1,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
