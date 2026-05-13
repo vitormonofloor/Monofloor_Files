@@ -824,13 +824,36 @@ def detectar_marcos(msgs_ordenadas):
                     if tipo not in primeiro_de_cada:
                         primeiro_de_cada[tipo] = marco
                 else:
-                    # eventos repetíveis (finalizacao, aprovacao_cliente, inicio_anunciado) · dedup por dia
-                    chave = (tipo, marco["data"])
-                    if chave not in {(t["tipo"], t["data"]) for t in todos}:
-                        todos.append(marco)
+                    todos.append(marco)
 
     marcos = list(primeiro_de_cada.values()) + todos
-    return sorted(marcos, key=lambda x: x["data_iso"] or "")
+    marcos.sort(key=lambda x: x["data_iso"] or "")
+    return _dedup_marcos_janela(marcos, janela_dias=5)
+
+
+def _dedup_marcos_janela(marcos, janela_dias=5):
+    """Agrupa marcos consecutivos do mesmo tipo dentro de uma janela de N dias.
+    Mantém o primeiro de cada grupo e descarta os seguintes."""
+    if not marcos:
+        return marcos
+    resultado = []
+    ultimo_por_tipo = {}
+    for m in marcos:
+        tipo = m["tipo"]
+        data = m.get("data", "")
+        chave_anterior = ultimo_por_tipo.get(tipo)
+        if chave_anterior and data:
+            try:
+                d_ant = datetime.strptime(chave_anterior, "%Y-%m-%d")
+                d_cur = datetime.strptime(data, "%Y-%m-%d")
+                if (d_cur - d_ant).days <= janela_dias:
+                    continue
+            except ValueError:
+                pass
+        resultado.append(m)
+        if data:
+            ultimo_por_tipo[tipo] = data
+    return resultado
 
 
 PAD_RESOLUCAO = re.compile(
@@ -1535,17 +1558,268 @@ def _recortar_ciclo(nome, dt_ini, dt_fim, fases, marcos):
     }
 
 
+def classificar_obra(jornada):
+    """Selo de como a obra terminou/está. Usado pra filtrar e comparar cross-obra."""
+    status = (jornada.get("status") or "").lower()
+    ciclos = jornada.get("ciclos", [])
+    n_ciclos = len(ciclos) if ciclos else 1
+
+    if status == "cancelado":
+        return "cancelada"
+    if status == "pausado":
+        return "pausada"
+    if status in ("reparo", "marcas_rolo_cera"):
+        return "retrabalho_ativo"
+    if status in ("finalizado", "concluido"):
+        return "entrega_com_retrabalho" if n_ciclos >= 2 else "entrega_limpa"
+    if status == "em_execucao":
+        return "em_execucao"
+    if status in ("aguardando_execucao", "aguardando_clima"):
+        return "aguardando_execucao"
+    if status in ("planejamento", "contrato"):
+        return "pre_obra"
+    return "desconhecido"
+
+
+LABELS_CLASSIFICACAO = {
+    "entrega_limpa":          "Entrega limpa",
+    "entrega_com_retrabalho": "Entrega com retrabalho",
+    "retrabalho_ativo":       "Retrabalho ativo",
+    "em_execucao":            "Em execução",
+    "aguardando_execucao":    "Aguardando execução",
+    "pre_obra":               "Pré-obra",
+    "pausada":                "Pausada",
+    "cancelada":              "Cancelada",
+    "desconhecido":           "—",
+}
+
+
+def extrair_severidade_max(ocorrencias):
+    """Retorna a severidade máxima dentre as ocorrências formais."""
+    ORDEM = {"critica": 4, "alta": 3, "media": 2, "baixa": 1}
+    best = 0
+    best_label = None
+    for o in ocorrencias:
+        sev = (o.get("severidade") or "").lower()
+        if ORDEM.get(sev, 0) > best:
+            best = ORDEM[sev]
+            best_label = sev
+    return best_label
+
+
+def extrair_regiao(endereco):
+    """Extrai UF/cidade do endereço pra agrupamento cross-obra."""
+    if not endereco or endereco == "—":
+        return None
+    end = endereco.upper()
+    import re as _re
+    m = _re.search(r"([A-ZÀ-Ú\s]+)/([A-Z]{2})", end)
+    if m:
+        return f"{m.group(1).strip()}/{m.group(2)}"
+    for uf in ["SP", "RJ", "MG", "PR", "SC", "RS", "BA", "DF", "GO", "CE", "PE"]:
+        if f"/{uf}" in end or f", {uf}" in end or f"-{uf}" in end:
+            return uf
+    return None
+
+
+def montar_resumo_cross(jornada):
+    """Campos normalizados pra análise cross-obra (filtros, agrupamentos, comparações)."""
+    ciclos = jornada.get("ciclos", [])
+    n_ciclos = len(ciclos) if ciclos else 1
+    marcos = jornada.get("marcos", [])
+    ocorrencias = jornada.get("friccao", {}).get("ocorrencias_formais", [])
+    equipe = jornada.get("equipe", {})
+    monof = equipe.get("monofloor", {})
+
+    reprovacoes = [m for m in marcos if m.get("tipo") == "reprovacao_retorno"]
+    subtipos_repr = [m.get("subtipo") for m in marcos
+                     if m.get("tipo") == "reprovacao_retorno" and m.get("subtipo")]
+
+    tipo_retrabalho = None
+    if n_ciclos >= 2:
+        tem_verniz = any("verniz" in (s or "") for s in subtipos_repr)
+        tem_completa = any("completa" in (s or "") for s in subtipos_repr)
+        if tem_verniz and tem_completa:
+            tipo_retrabalho = "mista"
+        elif tem_verniz:
+            tipo_retrabalho = "verniz"
+        elif tem_completa:
+            tipo_retrabalho = "completa"
+        else:
+            tipo_retrabalho = "nao_classificado"
+
+    prestadores = equipe.get("prestadores_oficiais", [])
+    lider = next((p.get("nome") for p in prestadores if (p.get("funcao") or "").upper() == "LIDER"), None)
+
+    return {
+        "classificacao": jornada.get("classificacao"),
+        "qtd_ciclos": n_ciclos,
+        "tem_retrabalho": n_ciclos >= 2,
+        "tipo_retrabalho": tipo_retrabalho,
+        "consultor": monof.get("consultor_formal"),
+        "operacoes": monof.get("operacoes"),
+        "lider_campo": lider,
+        "severidade_max": extrair_severidade_max(ocorrencias),
+        "qtd_ocorrencias": len(ocorrencias),
+        "qtd_marcos": len(marcos),
+        "produto_principal": (jornada.get("produtos") or ["—"])[0] if jornada.get("produtos") else None,
+        "regiao": extrair_regiao(jornada.get("endereco")),
+        "metragem": jornada.get("metragem"),
+    }
+
+
 def detectar_padroes(jornada):
     padroes = []
+    ciclos = jornada.get("ciclos", [])
+    n_ciclos = len(ciclos) if ciclos else 1
+    marcos = jornada.get("marcos", [])
+    ocorrencias = jornada.get("friccao", {}).get("ocorrencias_formais", [])
+    problemas = jornada.get("friccao", {}).get("sinais_msg_telegram", [])
+
+    # Hibernação longa
     if jornada["tempo_hibernacao_dias"] and jornada["tempo_hibernacao_dias"] >= 60:
         padroes.append(f"hibernacao_longa · obra ficou {jornada['tempo_hibernacao_dias']}d praticamente parada")
+
+    # Execução concentrada (< 5% do tempo total)
     if jornada["tempo_execucao_dias"] and jornada["tempo_total_dias"]:
         pct = jornada["tempo_execucao_dias"] / jornada["tempo_total_dias"] * 100
         if pct < 5:
             padroes.append(f"execucao_concentrada · só {pct:.1f}% do tempo total ({jornada['tempo_execucao_dias']}d de {jornada['tempo_total_dias']}d)")
+
+    # Mudança de escopo durante execução
     if jornada.get("solicitacoes_material") and any(s.get("tela_total") for s in jornada["solicitacoes_material"]):
         padroes.append("mudanca_escopo_dia_execucao · cliente pediu tela total durante execução")
+
+    # Retrabalho recorrente (2+ ciclos)
+    if n_ciclos >= 2:
+        tipo_r = jornada.get("resumo_cross", {}).get("tipo_retrabalho", "")
+        padroes.append(f"retrabalho_{n_ciclos}_ciclos · tipo: {tipo_r or 'a classificar'}")
+
+    # Cliente sumido (3+ falhas de comunicação)
+    falhas_com = [o for o in ocorrencias if o.get("tipo") == "falha_comunicacao"]
+    if len(falhas_com) >= 3:
+        padroes.append(f"cliente_sumido · {len(falhas_com)} ocorrências de falha de comunicação")
+
+    # Pressão de prazo verbalizada
+    PRESSAO_KW = ["prazo apertado", "não tem mais tempo", "sem margem", "prazo curto",
+                   "urgente", "não tem tempo", "correndo contra o tempo", "apertado"]
+    hits_pressao = 0
+    for p in problemas:
+        trecho = (p.get("trecho") or "").lower()
+        if any(kw in trecho for kw in PRESSAO_KW):
+            hits_pressao += 1
+    for m in marcos:
+        trecho = (m.get("trecho") or "").lower()
+        if any(kw in trecho for kw in PRESSAO_KW):
+            hits_pressao += 1
+    if hits_pressao:
+        padroes.append(f"pressao_prazo_verbalizada · {hits_pressao} sinais detectados nas msgs")
+
+    # VT qualidade tardia (>60d pós-execução)
+    vts = [m for m in marcos if m.get("tipo") == "relatorio_vt_qualidade"]
+    exec_ref = jornada.get("data_exec_confirmada") or jornada.get("data_exec_prevista")
+    if vts and exec_ref:
+        for vt in vts:
+            vt_d = vt.get("data")
+            if vt_d and vt_d > exec_ref:
+                try:
+                    delta = (datetime.strptime(vt_d, "%Y-%m-%d") - datetime.strptime(exec_ref, "%Y-%m-%d")).days
+                    if delta > 60:
+                        padroes.append(f"vt_qualidade_tardia · {delta}d após execução")
+                        break
+                except ValueError:
+                    pass
+
+    # Troca de equipe entre ciclos (senders diferentes por fase)
+    if n_ciclos >= 2 and len(ciclos) >= 2:
+        def _senders_ciclo(c):
+            return {m.get("autor") for m in c.get("marcos", []) if m.get("autor")}
+        s1 = _senders_ciclo(ciclos[0])
+        for c in ciclos[1:]:
+            sn = _senders_ciclo(c)
+            if sn and s1 and not sn & s1:
+                padroes.append("troca_equipe_entre_ciclos · equipe diferente no retrabalho")
+                break
+
+    # Alta densidade de ocorrências (>= 8)
+    if len(ocorrencias) >= 8:
+        padroes.append(f"alta_friccao · {len(ocorrencias)} ocorrências formais registradas")
+
     return padroes
+
+
+def gerar_veredito(jornada):
+    """Parágrafo-resumo determinístico da jornada. O que a diretoria lê."""
+    cliente = jornada["cliente"]
+    total_d = jornada.get("tempo_total_dias")
+    exec_d = jornada.get("tempo_execucao_dias")
+    ciclos = jornada.get("ciclos", [])
+    n_ciclos = len(ciclos) if ciclos else 1
+    classif = jornada.get("classificacao", "")
+    ocorrencias = jornada.get("friccao", {}).get("ocorrencias_formais", [])
+    padroes = jornada.get("padroes", [])
+    status = (jornada.get("status") or "").lower()
+    marcos = jornada.get("marcos", [])
+
+    partes = []
+
+    # Frase 1: resumo temporal + classificação
+    if classif in ("entrega_limpa", "entrega_com_retrabalho"):
+        if total_d:
+            partes.append(f"Obra finalizada em {total_d} dias")
+        else:
+            partes.append("Obra finalizada")
+        if exec_d:
+            partes.append(f" com {exec_d} dias de execução real.")
+        else:
+            partes.append(".")
+    elif classif == "retrabalho_ativo":
+        partes.append(f"Obra com retrabalho ativo")
+        if total_d:
+            partes.append(f", {total_d} dias desde o início.")
+        else:
+            partes.append(".")
+    elif classif == "em_execucao":
+        partes.append("Obra em execução no momento.")
+    elif classif == "pre_obra":
+        partes.append("Obra em fase de planejamento/pré-execução.")
+    elif classif == "pausada":
+        partes.append("Obra pausada.")
+    elif classif == "cancelada":
+        partes.append("Obra cancelada.")
+    else:
+        partes.append("Obra em andamento.")
+
+    # Frase 2: retrabalho
+    if n_ciclos >= 2:
+        tipo_r = jornada.get("resumo_cross", {}).get("tipo_retrabalho", "")
+        label_r = {"verniz": "reaplicação de verniz", "completa": "reaplicação completa",
+                    "mista": "reaplicação mista (verniz + base)", "nao_classificado": "retrabalho"}.get(tipo_r, "retrabalho")
+        partes.append(f" Passou por {n_ciclos} ciclos — {label_r}.")
+
+    # Frase 3: problema principal (ocorrência mais grave)
+    criticas = [o for o in ocorrencias if (o.get("severidade") or "").lower() == "critica"]
+    altas = [o for o in ocorrencias if (o.get("severidade") or "").lower() == "alta"]
+    if criticas:
+        partes.append(f" {len(criticas)} ocorrência(s) crítica(s): {criticas[0].get('titulo', '—')[:80]}.")
+    elif altas:
+        partes.append(f" {len(altas)} ocorrência(s) de alta severidade.")
+
+    # Frase 4: padrões que chamam atenção
+    flags = []
+    for p in padroes:
+        if "cliente_sumido" in p:
+            flags.append("cliente sem resposta")
+        elif "pressao_prazo" in p:
+            flags.append("pressão de prazo verbalizada")
+        elif "troca_equipe" in p:
+            flags.append("equipe trocada no retrabalho")
+        elif "vt_qualidade_tardia" in p:
+            flags.append("VT qualidade tardia")
+    if flags:
+        partes.append(f" Sinais: {', '.join(flags)}.")
+
+    return "".join(partes).strip()
 
 
 # ============================================================
@@ -1580,7 +1854,18 @@ def gerar_narrativa_md(j):
     md.append(f"| **Tempo de execução real** | **{j.get('tempo_execucao_dias','—')} dias** |")
     if j.get('tempo_hibernacao_dias'):
         md.append(f"| **Tempo em hibernação** | **{j['tempo_hibernacao_dias']} dias** |")
+    classif = j.get("classificacao", "")
+    label_classif = LABELS_CLASSIFICACAO.get(classif, classif)
+    md.append(f"| **Classificação** | **{label_classif}** |")
+    rc = j.get("resumo_cross", {})
+    if rc.get("qtd_ciclos", 1) >= 2:
+        md.append(f"| Ciclos | {rc['qtd_ciclos']} ({rc.get('tipo_retrabalho','—')}) |")
     md.append("")
+
+    # Veredito
+    if j.get("veredito"):
+        md.append(f"> **{j['veredito']}**")
+        md.append("")
 
     # Equipe
     md.append("## 👥 Elenco")
@@ -2061,7 +2346,10 @@ def construir_jornada(obra_id):
         ),
         "gerado_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
+    jornada["classificacao"] = classificar_obra(jornada)
+    jornada["resumo_cross"] = montar_resumo_cross(jornada)
     jornada["padroes"] = detectar_padroes(jornada)
+    jornada["veredito"] = gerar_veredito(jornada)
 
     return jornada
 
@@ -2073,32 +2361,51 @@ def construir_jornada(obra_id):
 def main():
     JORNADAS_DIR.mkdir(parents=True, exist_ok=True)
 
-    print(f"Gerando jornadas pra {len(OBRAS_PILOTO)} obras-piloto · só Telegram")
+    # Lista dinâmica: se existe _obras_2026_ids.json, usa (merge com piloto). Senão, só piloto.
+    ids_extra_path = Path(__file__).parent / "_obras_2026_ids.json"
+    if ids_extra_path.exists():
+        with open(ids_extra_path, "r") as f:
+            ids_extra = json.load(f)
+        seen = set()
+        obra_ids = []
+        for oid in OBRAS_PILOTO + ids_extra:
+            if oid not in seen:
+                seen.add(oid)
+                obra_ids.append(oid)
+        print(f"Gerando jornadas pra {len(obra_ids)} obras (piloto {len(OBRAS_PILOTO)} + extras {len(ids_extra)}, dedup {len(obra_ids)})")
+    else:
+        obra_ids = OBRAS_PILOTO
+        print(f"Gerando jornadas pra {len(obra_ids)} obras-piloto · só Telegram")
     print()
 
     out = {
         "gerado_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "obras": [],
     }
+    erros = []
     inicio = time.time()
-    for oid in OBRAS_PILOTO:
+    for i, oid in enumerate(obra_ids, 1):
         try:
             j = construir_jornada(oid)
             out["obras"].append(j)
             md = gerar_narrativa_md(j)
             md_path = JORNADAS_DIR / f"{oid}.md"
             md_path.write_text(md, encoding="utf-8")
-            print(f"     ✓ {j['cliente']} · {j.get('tempo_total_dias','?')}d total · {j.get('tempo_execucao_dias','?')}d exec · {len(j['marcos'])} marcos · MD em {md_path.name}")
+            print(f"  [{i:3d}/{len(obra_ids)}] ✓ {j['cliente'][:45]} · {j.get('tempo_total_dias','?')}d · {len(j['marcos'])} marcos")
         except Exception as e:
-            print(f"     ✗ ERRO: {e}")
-            raise
+            erros.append((oid, str(e)))
+            print(f"  [{i:3d}/{len(obra_ids)}] ✗ {oid[:8]} · {e}")
 
     # Salva JSON
     JORNADAS_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
     elapsed = time.time() - inicio
     print()
-    print(f"[OK] {JORNADAS_PATH} · {elapsed:.1f}s · {len(out['obras'])} obras")
+    print(f"[OK] {JORNADAS_PATH} · {elapsed:.1f}s · {len(out['obras'])} obras OK · {len(erros)} erros")
     print(f"[OK] Markdowns em {JORNADAS_DIR}")
+    if erros:
+        print(f"\nErros ({len(erros)}):")
+        for oid, err in erros:
+            print(f"  {oid[:8]}: {err[:80]}")
 
 
 if __name__ == "__main__":

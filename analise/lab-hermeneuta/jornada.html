@@ -215,6 +215,33 @@
   .sidebar-item-status.s-concluido { background: #ece6d9; color: #6b6156; }
   .sidebar-item-status.s-finalizado { background: #d6cdbd; color: #4a4137; }
   .sidebar-item-status.s-contrato { background: #e6edf3; color: #335a76; }
+
+  /* Badge classificação (selo da jornada) */
+  .sidebar-item-classif {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; padding: 2px 6px;
+    border-radius: 3px; line-height: 1.4; white-space: nowrap;
+  }
+  .classif-entrega_limpa { background: #d8f0e0; color: #1e5e36; }
+  .classif-entrega_com_retrabalho { background: #fbe8d0; color: #7a4a10; }
+  .classif-retrabalho_ativo { background: #f7e0e0; color: #8b2a2a; }
+  .classif-em_execucao { background: #d8f0e0; color: #2d6c46; }
+  .classif-aguardando_execucao { background: #fbf0d7; color: #8a6018; }
+  .classif-pre_obra { background: #e6edf3; color: #335a76; }
+  .classif-pausada { background: #f5ecd9; color: #6e4f1c; }
+  .classif-cancelada { background: #e8e0d4; color: #6b6156; }
+
+  /* Veredito no drawer */
+  .rep-veredito {
+    background: #fff; border: 1px solid #e0d8cc; border-left: 3px solid var(--gold);
+    border-radius: 6px; padding: 14px 18px; margin-bottom: 20px;
+    font-size: 13px; line-height: 1.65; color: #3a3530;
+  }
+  .rep-veredito-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 6px;
+  }
   .sidebar-item-numeros {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -2681,6 +2708,9 @@
         <select id="filtro-status" class="sidebar-select">
           <option value="">Todos os status</option>
         </select>
+        <select id="filtro-classif" class="sidebar-select">
+          <option value="">Todas classificações</option>
+        </select>
         <select id="filtro-vista" class="sidebar-select">
           <option value="todas">Todas as obras</option>
           <option value="nao-vistas">Não vistas</option>
@@ -3205,9 +3235,14 @@ function montarRelatorioHTML(j){
       </div>
     </div>` : '';
 
+  const classifLabel = LABELS_CLASSIF[j.classificacao] || j.classificacao || '';
+  const veredito = j.veredito || '';
+
   return `
     <h1>${esc(cliFinal)}</h1>
-    <div class="rep-meta">Relatório de Jornada · ${fmtData(new Date().toISOString().slice(0,10))}</div>
+    <div class="rep-meta">Relatório de Jornada · ${fmtData(new Date().toISOString().slice(0,10))}${classifLabel ? ` · <span class="sidebar-item-classif classif-${esc(j.classificacao || '')}">${esc(classifLabel)}</span>` : ''}</div>
+
+    ${veredito ? `<div class="rep-veredito"><div class="rep-veredito-label">Veredito</div>${esc(veredito)}</div>` : ''}
 
     <div class="rep-narrativa">${gerarNarrativaProsa(j)}</div>
 
@@ -3276,13 +3311,29 @@ function montarRelatorioHTML(j){
 }
 
 const LABEL_PADRAO_GLOBAL = {
-  hibernacao_longa: '🌙 Hibernação longa',
-  execucao_concentrada: '⚡ Execução concentrada',
-  mudanca_escopo_dia_execucao: '🔀 Mudança de escopo durante execução',
-  retrabalho_em_andamento: '🔁 Retrabalho em andamento',
-  retrabalho_concluido: '✅ Retrabalho concluído',
-  aprovacao_demorada: '⏳ Aprovação demorada',
-  silencio_pos_execucao: '🤐 Silêncio pós-execução',
+  hibernacao_longa: 'Hibernacao longa',
+  execucao_concentrada: 'Execucao concentrada',
+  mudanca_escopo_dia_execucao: 'Mudanca de escopo durante execucao',
+  retrabalho_em_andamento: 'Retrabalho em andamento',
+  retrabalho_concluido: 'Retrabalho concluido',
+  aprovacao_demorada: 'Aprovacao demorada',
+  silencio_pos_execucao: 'Silencio pos-execucao',
+  cliente_sumido: 'Cliente sem resposta',
+  pressao_prazo_verbalizada: 'Pressao de prazo verbalizada',
+  troca_equipe_entre_ciclos: 'Equipe trocada no retrabalho',
+  vt_qualidade_tardia: 'VT qualidade tardia',
+  alta_friccao: 'Alta friccao',
+};
+
+const LABELS_CLASSIF = {
+  entrega_limpa: 'Entrega limpa',
+  entrega_com_retrabalho: 'Com retrabalho',
+  retrabalho_ativo: 'Retrabalho ativo',
+  em_execucao: 'Em execucao',
+  aguardando_execucao: 'Aguardando exec.',
+  pre_obra: 'Pre-obra',
+  pausada: 'Pausada',
+  cancelada: 'Cancelada',
 };
 
 // === Tracking "obras já vistas" · localStorage por navegador ===
@@ -3324,10 +3375,12 @@ async function carregar(){
   DADOS = await r.json();
   document.getElementById('stamp').textContent = 'gerado ' + fmtData(DADOS.gerado_em.slice(0,10)) + ' · ' + DADOS.gerado_em.slice(11,16);
   popularFiltroStatus();
+  popularFiltroClassif();
   renderListaSidebar();
   // Listeners de busca/filtro
   document.getElementById('search-obra').addEventListener('input', renderListaSidebar);
   document.getElementById('filtro-status').addEventListener('change', renderListaSidebar);
+  document.getElementById('filtro-classif').addEventListener('change', renderListaSidebar);
   document.getElementById('filtro-vista').addEventListener('change', renderListaSidebar);
 }
 
@@ -3348,6 +3401,22 @@ function popularFiltroStatus(){
   });
 }
 
+function popularFiltroClassif(){
+  const sel = document.getElementById('filtro-classif');
+  const counts = {};
+  (DADOS.obras || []).forEach(o => {
+    const c = o.classificacao || '—';
+    counts[c] = (counts[c] || 0) + 1;
+  });
+  const ordenados = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  ordenados.forEach(([classif, n]) => {
+    const opt = document.createElement('option');
+    opt.value = classif;
+    opt.textContent = `${LABELS_CLASSIF[classif] || formatarStatus(classif)} (${n})`;
+    sel.appendChild(opt);
+  });
+}
+
 function formatarStatus(s){
   if (!s || s === '—') return '—';
   return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -3358,12 +3427,14 @@ function renderListaSidebar(){
   const contador = document.getElementById('contador-obras');
   const busca = (document.getElementById('search-obra').value || '').trim().toLowerCase();
   const status = document.getElementById('filtro-status').value || '';
+  const classif = document.getElementById('filtro-classif').value || '';
   const filtroVista = document.getElementById('filtro-vista').value || 'todas';
   const vistas = getObrasVistas();
 
   // Filtra
   let filtradas = (DADOS.obras || []).filter(o => {
     if (status && o.status !== status) return false;
+    if (classif && (o.classificacao || '—') !== classif) return false;
     if (busca && !(o.cliente || '').toLowerCase().includes(busca)) return false;
     if (filtroVista === 'vistas' && !vistas.has(o.obra_id)) return false;
     if (filtroVista === 'nao-vistas' && vistas.has(o.obra_id)) return false;
@@ -3391,10 +3462,13 @@ function renderListaSidebar(){
     const nMsgs = o.n_msgs_telegram_total || 0;
     const ativo = (OBRA_SEL && OBRA_SEL.obra_id === o.obra_id) ? ' ativo' : '';
     const cls_vista = vistas.has(o.obra_id) ? ' vista' : '';
+    const classif = o.classificacao || '';
+    const classifLabel = LABELS_CLASSIF[classif] || '';
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
       <div class="sidebar-item-cli">${esc(o.cliente)}</div>
       <div class="sidebar-item-meta">
         <span class="sidebar-item-status s-${esc(status)}">${esc(formatarStatus(status))}</span>
+        ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}
         <span class="sidebar-item-numeros">${nMarcos}m · ${nOcorr}occ · ${nMsgs} msgs</span>
       </div>
     </div>`;
