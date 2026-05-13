@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-13T01:23:38Z",
+  "atualizado_em": "2026-05-13T05:13:22Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1045,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2086,
+    "pending_tasks": 2088,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 13,
+        "daysUntilEntry": 12,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 13 dias do início",
-        "daysUntilEntry": 13,
+        "message": "Projeto sem equipe definida a 12 dias do início",
+        "daysUntilEntry": 12,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 20,
+        "daysUntilEntry": 19,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -112,8 +112,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 20 dias do início",
-        "daysUntilEntry": 20,
+        "message": "Projeto sem equipe definida a 19 dias do início",
+        "daysUntilEntry": 19,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -3928,7 +3928,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 29,
+        "dias_desde_resumo": 30,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -4094,7 +4094,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 29,
+        "dias_desde_resumo": 30,
         "alertas": [
           "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
           "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
@@ -9414,7 +9414,7 @@
   "lw": {
     "luana": {
       "n": 86,
-      "mediana": 253,
+      "mediana": 254,
       "n180": 58,
       "n270": 38,
       "zumbi": 6,
@@ -9423,17 +9423,17 @@
     },
     "wesley": {
       "n": 83,
-      "mediana": 204,
-      "n180": 48,
+      "mediana": 205,
+      "n180": 49,
       "n270": 20,
       "zumbi": 19,
       "reparo": 10,
       "pausadas": 2
     },
     "total_ativas": 220,
-    "n_180_total": 122,
+    "n_180_total": 124,
     "concentracao_pct": 76.8,
-    "concentracao_180_pct": 86.9,
+    "concentracao_180_pct": 86.3,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
