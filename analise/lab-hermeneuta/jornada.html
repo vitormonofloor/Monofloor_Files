@@ -102,6 +102,666 @@
     padding: 40px;
   }
 
+  /* LAYOUT 2 colunas · sidebar de obras + conteúdo */
+  .layout-2col {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .sidebar {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar-cab {
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--surface-2);
+  }
+  .sidebar-search {
+    width: 100%;
+    padding: 9px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .sidebar-search:focus { border-color: var(--gold); }
+  .sidebar-search::placeholder { color: var(--ink-faint); }
+  .sidebar-select {
+    width: 100%;
+    padding: 8px 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+  }
+  .sidebar-contador {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: right;
+  }
+  .sidebar-lista {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+  }
+  .sidebar-item {
+    padding: 11px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+  }
+  .sidebar-item:hover { background: var(--bg); }
+  .sidebar-item.ativo {
+    background: var(--gold-bg);
+    border-color: var(--gold);
+    box-shadow: var(--shadow-sm);
+  }
+  .sidebar-item-cli {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .sidebar-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .sidebar-item-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .sidebar-item-status.s-em_execucao { background: #d8f0e0; color: #2d6c46; }
+  .sidebar-item-status.s-reparo { background: #f7e6e6; color: #8b3a3a; }
+  .sidebar-item-status.s-marcas_rolo_cera { background: #f7e6e6; color: #8b3a3a; }
+  .sidebar-item-status.s-planejamento { background: #e6edf3; color: #335a76; }
+  .sidebar-item-status.s-aguardando_execucao { background: #fbf0d7; color: #8a6018; }
+  .sidebar-item-status.s-aguardando_clima { background: #fbf0d7; color: #8a6018; }
+  .sidebar-item-status.s-pausado { background: #f5ecd9; color: #6e4f1c; }
+  .sidebar-item-status.s-concluido { background: #ece6d9; color: #6b6156; }
+  .sidebar-item-status.s-finalizado { background: #d6cdbd; color: #4a4137; }
+  .sidebar-item-status.s-contrato { background: #e6edf3; color: #335a76; }
+  .sidebar-item-numeros {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+  }
+  .sidebar-vazio {
+    padding: 24px 12px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  /* Botão "Gerar relatório" no header da obra */
+  .btn-relatorio {
+    margin-left: 10px;
+    padding: 6px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-relatorio:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* DRAWER · relatório imprimível */
+  .relatorio-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(42,37,32,0.32);
+    z-index: 9000;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+    backdrop-filter: blur(2px);
+  }
+  .relatorio-backdrop.oculto { opacity: 0; pointer-events: none; }
+
+  .relatorio-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(720px, 92vw);
+    height: 100vh;
+    background: var(--surface);
+    border-left: 1px solid var(--line);
+    box-shadow: -8px 0 32px rgba(42,37,32,0.18);
+    z-index: 9001;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(0);
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .relatorio-drawer.oculto { transform: translateX(100%); }
+
+  .relatorio-cab {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .relatorio-cab-titulo {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .relatorio-cab-acoes {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-relatorio-acao {
+    padding: 7px 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--gold);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn-relatorio-acao:hover { background: var(--ink); }
+  .btn-relatorio-fechar {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    transition: all 0.2s;
+  }
+  .btn-relatorio-fechar:hover {
+    background: var(--bg);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .relatorio-conteudo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px 40px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .relatorio-conteudo h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .relatorio-conteudo .rep-meta {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .relatorio-conteudo h2 {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin: 24px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .relatorio-conteudo .rep-resumo {
+    background: var(--gold-bg);
+    border-left: 3px solid var(--gold);
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .relatorio-conteudo .rep-narrativa {
+    margin-bottom: 24px;
+    padding: 4px 0;
+  }
+  .relatorio-conteudo .rep-narrativa p {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 14px;
+    text-align: justify;
+  }
+  .relatorio-conteudo .rep-narrativa p:last-child { margin-bottom: 0; }
+  .relatorio-conteudo .rep-narrativa strong { color: var(--ink); font-weight: 700; }
+  .relatorio-conteudo .rep-narrativa em { color: var(--gold); font-style: italic; }
+  .relatorio-conteudo .rep-narrativa ul {
+    margin-top: 4px;
+    margin-bottom: 0;
+    padding-left: 0;
+  }
+  .relatorio-conteudo .rep-narrativa ul li {
+    padding: 4px 0;
+    border-bottom: none;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-left: 16px;
+    list-style-type: '· ';
+  }
+
+  /* RELATÓRIO EDITORIAL · estilo memorando, sem dashboard */
+  .relatorio-conteudo .rep-divisor {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 28px 0 24px;
+  }
+  .relatorio-conteudo .rep-secao {
+    margin-bottom: 28px;
+  }
+  .relatorio-conteudo .rep-secao-titulo {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .relatorio-conteudo .rep-secao-intro,
+  .relatorio-conteudo .rep-secao-paragrafo {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin: 0 0 14px;
+  }
+  .relatorio-conteudo .rep-secao-paragrafo strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Timeline editorial de marcos · linha vertical com dados à esquerda */
+  .relatorio-conteudo .rep-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 0;
+  }
+  .relatorio-conteudo .rep-timeline-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line-soft);
+    align-items: baseline;
+  }
+  .relatorio-conteudo .rep-timeline-item:last-child { border-bottom: none; }
+  .relatorio-conteudo .rep-timeline-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .relatorio-conteudo .rep-timeline-evento {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .relatorio-conteudo .rep-timeline-autor {
+    color: var(--ink-faint);
+    font-size: 11.5px;
+    font-style: italic;
+    margin-left: 4px;
+  }
+
+  /* Pills de ocorrências · sutis com cor de severidade */
+  .relatorio-conteudo .rep-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .relatorio-conteudo .rep-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 16px;
+    background: var(--surface-2);
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: var(--ink);
+    border: 1px solid var(--line-soft);
+  }
+  .relatorio-conteudo .rep-pill.sev-critica { background: #4a1f1f; color: #fff; border-color: #4a1f1f; }
+  .relatorio-conteudo .rep-pill.sev-alta { background: #fce6e6; color: #8b3a3a; border-color: #e8b8b8; }
+  .relatorio-conteudo .rep-pill.sev-media { background: #faecd5; color: #6b4d18; border-color: #e5cb98; }
+  .relatorio-conteudo .rep-pill.sev-baixa { background: #e6edf3; color: #335a76; border-color: #b8cfdb; }
+  .relatorio-conteudo .rep-pill-data {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    opacity: 0.75;
+    letter-spacing: 0.04em;
+  }
+
+  /* Padrões editoriais · cards sutis */
+  .relatorio-conteudo .rep-padroes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .relatorio-conteudo .rep-padrao {
+    padding: 10px 14px;
+    background: var(--gold-bg);
+    border-left: 2px solid var(--gold-soft);
+    border-radius: 0 6px 6px 0;
+  }
+  .relatorio-conteudo .rep-padrao-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+  }
+  .relatorio-conteudo .rep-padrao-desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    display: block;
+    line-height: 1.5;
+  }
+
+  /* Gráfico donut · macro-etapas no relatório */
+  .relatorio-conteudo .rep-grafico {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 14px 4px;
+    flex-wrap: wrap;
+  }
+  .relatorio-conteudo .rep-grafico-legenda {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .relatorio-conteudo .rep-leg-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .relatorio-conteudo .rep-leg-item:last-child { border-bottom: none; }
+  .relatorio-conteudo .rep-leg-cor {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .relatorio-conteudo .rep-leg-nome {
+    color: var(--ink);
+    font-weight: 600;
+    flex: 1;
+  }
+  .relatorio-conteudo .rep-leg-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .relatorio-conteudo .rep-leg-val small {
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-left: 4px;
+  }
+
+  /* Gráfico barra horizontal · severidade das ocorrências */
+  .relatorio-conteudo .rep-grafico-barra {
+    margin: 14px 0 16px;
+  }
+  .relatorio-conteudo .rep-grafico-legenda-linha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .relatorio-conteudo .rep-leg-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .relatorio-conteudo .rep-leg-inline strong {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink);
+    margin-left: 2px;
+  }
+
+  /* Rodapé do relatório */
+  .relatorio-conteudo .rep-rodape {
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .relatorio-conteudo .rep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .relatorio-conteudo .rep-stat {
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .relatorio-conteudo .rep-stat-label {
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  .relatorio-conteudo .rep-stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+  .relatorio-conteudo .rep-stat-val small { font-size: 10.5px; color: var(--ink-faint); margin-left: 3px; }
+  .relatorio-conteudo ul {
+    list-style: none;
+    padding: 0;
+  }
+  .relatorio-conteudo ul li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+  .relatorio-conteudo ul li:last-child { border-bottom: none; }
+  .relatorio-conteudo .rep-data {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+    font-weight: 700;
+    margin-right: 10px;
+    font-size: 11px;
+  }
+  .relatorio-conteudo .rep-sev {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .relatorio-conteudo .rep-sev.critica { background: #4a1f1f; color: #fff; }
+  .relatorio-conteudo .rep-sev.alta { background: #fce6e6; color: #8b3a3a; }
+  .relatorio-conteudo .rep-sev.media { background: #faecd5; color: #6b4d18; }
+  .relatorio-conteudo .rep-sev.baixa { background: #e6edf3; color: #335a76; }
+  .relatorio-conteudo .rep-insight {
+    padding: 8px 12px;
+    background: var(--surface-2);
+    border-left: 2px solid var(--gold-soft);
+    border-radius: 0 4px 4px 0;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  /* MEDIA PRINT · só drawer aparece · A4-friendly */
+  @media print {
+    body * { visibility: hidden; }
+    #relatorio-drawer, #relatorio-drawer * { visibility: visible; }
+    #relatorio-drawer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: auto;
+      transform: none;
+      box-shadow: none;
+      border: none;
+    }
+    #relatorio-drawer [data-noprint] { display: none !important; }
+    .relatorio-conteudo {
+      overflow: visible;
+      padding: 16px 24px;
+    }
+    .relatorio-backdrop { display: none !important; }
+    @page { margin: 14mm; size: A4; }
+  }
+
+  /* Botão "Marcar como vista" no header da obra */
+  .btn-vista {
+    margin-left: 10px;
+    padding: 6px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-vista:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .btn-vista.vista {
+    background: #e8f3ec;
+    border-color: #5fa073;
+    color: #2d6c46;
+  }
+  .btn-vista.vista::before {
+    content: '✓ ';
+    font-weight: 800;
+  }
+
+  /* Indicador ✓ nas obras já vistas (sidebar) */
+  .sidebar-item.vista .sidebar-item-cli::before {
+    content: '✓ ';
+    color: #5fa073;
+    font-weight: 800;
+    margin-right: 2px;
+  }
+  .sidebar-item.vista {
+    opacity: 0.72;
+  }
+  .sidebar-item.vista:hover, .sidebar-item.vista.ativo {
+    opacity: 1;
+  }
+
+  .conteudo { min-width: 0; }
+  .placeholder-vazio {
+    padding: 60px 40px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 15px;
+    font-style: italic;
+    background: var(--surface);
+    border: 2px dashed var(--line);
+    border-radius: 12px;
+  }
+  .placeholder-vazio.oculto { display: none; }
+
+  @media (max-width: 1100px) {
+    .layout-2col { grid-template-columns: 280px 1fr; gap: 18px; }
+  }
+  @media (max-width: 900px) {
+    .layout-2col { grid-template-columns: 1fr; gap: 16px; }
+    .sidebar { position: static; max-height: none; }
+    .sidebar-lista { max-height: 320px; }
+  }
+
   /* PAGE INTRO · sub-header explicativo + glossário expansível */
   .page-intro {
     margin-bottom: 36px;
@@ -686,6 +1346,83 @@
   .resumo-num.resumo-num-principal .resumo-num-val { color: var(--gold); font-size: 28px; }
   .resumo-num.resumo-num-principal .resumo-num-label { color: var(--gold-soft); }
 
+  /* BENCHMARK · tabela de tempo entre marcos · cross-obras */
+  .benchmark-bloco {
+    margin: -6px 0 18px;
+    padding: 14px 16px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .benchmark-titulo {
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .benchmark-titulo small {
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-left: 6px;
+    font-style: italic;
+  }
+  .benchmark-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .benchmark-tabela th {
+    text-align: left;
+    font-weight: 700;
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .benchmark-tabela th:nth-child(3),
+  .benchmark-tabela th:nth-child(4),
+  .benchmark-tabela th:nth-child(5) { text-align: right; }
+  .benchmark-tabela td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--ink);
+  }
+  .bench-row:last-child td { border-bottom: none; }
+  .bench-row.fraca { opacity: 0.65; }
+  .bench-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 7px !important;
+    border-radius: 3px;
+    text-align: center;
+    width: 50px;
+  }
+  .bench-cat.cat-pre { background: #fbf0d7; color: #8a6018; }
+  .bench-cat.cat-exec { background: #d8f0e0; color: #2d6c46; }
+  .bench-cat.cat-retrab { background: #f7e6e6; color: #8b3a3a; }
+  .bench-trans { color: var(--ink); font-weight: 500; }
+  .bench-med { text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--ink); width: 80px; }
+  .bench-med small { font-size: 10px; color: var(--ink-faint); margin-left: 2px; }
+  .bench-range { text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--ink-soft); font-size: 11px; width: 90px; }
+  .bench-n { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink-faint); width: 60px; }
+  .benchmark-sem-dado {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
   .benchmark-placeholder {
     display: flex;
     align-items: center;
@@ -990,6 +1727,26 @@
     padding: 24px;
     font-size: 12px;
     font-style: italic;
+  }
+  .equipe-campo-fonte {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    font-style: italic;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: var(--surface-2);
+    border-left: 2px solid var(--gold-soft);
+    border-radius: 0 4px 4px 0;
+    line-height: 1.5;
+  }
+  .equipe-campo-msgs {
+    margin-left: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
   }
 
   /* Subtítulo dentro de card (subseção tipo "Solicitações em obra") */
@@ -1917,13 +2674,32 @@
     </details>
   </div>
 
-  <div class="section-title">Obras finalizadas</div>
-  <div class="obras-grid" id="obras-grid"></div>
+  <div class="layout-2col">
+    <aside class="sidebar">
+      <div class="sidebar-cab">
+        <input type="text" id="search-obra" class="sidebar-search" placeholder="🔍 Buscar obra…" autocomplete="off" />
+        <select id="filtro-status" class="sidebar-select">
+          <option value="">Todos os status</option>
+        </select>
+        <select id="filtro-vista" class="sidebar-select">
+          <option value="todas">Todas as obras</option>
+          <option value="nao-vistas">Não vistas</option>
+          <option value="vistas">Já vistas</option>
+        </select>
+        <div class="sidebar-contador" id="contador-obras">— obras</div>
+      </div>
+      <div class="sidebar-lista" id="obras-lista"></div>
+    </aside>
+
+    <section class="conteudo">
+      <div id="placeholder-vazio" class="placeholder-vazio">Selecione uma obra à esquerda pra ver a Jornada do Projeto</div>
 
   <div id="detalhes">
     <div class="detalhes-header">
       <h2 id="det-cliente">—</h2>
       <span class="obra-id" id="det-id">—</span>
+      <button id="btn-gerar-relatorio" class="btn-relatorio" onclick="abrirRelatorio()">📋 Gerar relatório</button>
+      <button id="btn-marcar-vista" class="btn-vista" onclick="toggleVista()">Marcar como vista</button>
       <div id="ocorrencias-pills" class="ocorrencias-pills"></div>
     </div>
     <div id="ocorrencias-popover" class="ocorrencias-popover oculto"></div>
@@ -1983,7 +2759,22 @@
       </div>
     </div>
   </div>
+    </section>
+  </div>
 </main>
+
+<!-- DRAWER · Relatório da obra (slide-in direita · imprimível) -->
+<div id="relatorio-backdrop" class="relatorio-backdrop oculto" onclick="fecharRelatorio()"></div>
+<aside id="relatorio-drawer" class="relatorio-drawer oculto">
+  <header class="relatorio-cab" data-noprint>
+    <strong class="relatorio-cab-titulo">Relatório da obra</strong>
+    <div class="relatorio-cab-acoes">
+      <button class="btn-relatorio-acao" onclick="window.print()">🖨 Salvar PDF</button>
+      <button class="btn-relatorio-fechar" onclick="fecharRelatorio()" aria-label="Fechar">✕</button>
+    </div>
+  </header>
+  <div id="relatorio-conteudo" class="relatorio-conteudo"></div>
+</aside>
 
 <footer>
   Lab Orion · Jornada do Projeto · análise retrospectiva determinística · TELEGRAM-only
@@ -2050,60 +2841,573 @@ const ICONES_MARCO = {
 
 const LABEL_MARCO = {
   contrato_assinado: 'Contrato',
+  escopo_aprovado: 'Escopo aprovado',
   amostra_solicitada: 'Amostra solicitada',
   cor_aprovada: 'Cor aprovada',
   vt_agendada: 'VT agendada',
   vt_realizada: 'VT aferição realizada',
   vt_entrada_realizada: 'VT entrada realizada',
+  equipe_definida: 'Equipe definida',
+  material_entregue: 'Material entregue em obra',
   inicio_anunciado: 'Início anunciado',
   material_produzido: 'Material em obra',
+  obra_postergada: 'Obra postergada',
+  ultima_camada: 'Última camada',
+  troca_aplicador: 'Troca de aplicador',
   finalizacao: 'Finalização',
   aprovacao_cliente: 'Aprovação cliente',
+  relatorio_vt_qualidade: 'Relatório VT qualidade',
   reprovacao_retorno: 'Reprovação / retorno',
 };
+
+// === Drawer · relatório imprimível da obra ===
+function abrirRelatorio(){
+  if (!OBRA_SEL) return;
+  document.getElementById('relatorio-conteudo').innerHTML = montarRelatorioHTML(OBRA_SEL);
+  document.getElementById('relatorio-drawer').classList.remove('oculto');
+  document.getElementById('relatorio-backdrop').classList.remove('oculto');
+  document.body.style.overflow = 'hidden';
+}
+function fecharRelatorio(){
+  document.getElementById('relatorio-drawer').classList.add('oculto');
+  document.getElementById('relatorio-backdrop').classList.add('oculto');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('relatorio-drawer').classList.contains('oculto')){
+    fecharRelatorio();
+  }
+});
+
+// SVG inline · donut + barra · sem dependência externa
+function svgDonut(segmentos, centroLabel){
+  const validos = segmentos.filter(s => s.valor > 0);
+  const total = validos.reduce((s, seg) => s + seg.valor, 0);
+  if (!total) return '';
+  const W = 200, H = 200, R = 78, RIN = 48;
+  const cx = W/2, cy = H/2;
+  let acc = 0;
+  const paths = validos.map(seg => {
+    const frac = seg.valor / total;
+    const ang0 = (acc / total) * Math.PI * 2 - Math.PI/2;
+    acc += seg.valor;
+    const ang1 = (acc / total) * Math.PI * 2 - Math.PI/2;
+    const large = frac > 0.5 ? 1 : 0;
+    const x0 = cx + R * Math.cos(ang0);
+    const y0 = cy + R * Math.sin(ang0);
+    const x1 = cx + R * Math.cos(ang1);
+    const y1 = cy + R * Math.sin(ang1);
+    const x0i = cx + RIN * Math.cos(ang0);
+    const y0i = cy + RIN * Math.sin(ang0);
+    const x1i = cx + RIN * Math.cos(ang1);
+    const y1i = cy + RIN * Math.sin(ang1);
+    return `<path d="M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)} L ${x1i.toFixed(2)} ${y1i.toFixed(2)} A ${RIN} ${RIN} 0 ${large} 0 ${x0i.toFixed(2)} ${y0i.toFixed(2)} Z" fill="${seg.cor}" stroke="#fff" stroke-width="1.5"/>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="170" height="170" style="flex-shrink:0">${paths}<text x="${cx}" y="${cy-4}" text-anchor="middle" dominant-baseline="middle" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="700" fill="#2a2520">${esc(centroLabel || '')}</text><text x="${cx}" y="${cy+18}" text-anchor="middle" dominant-baseline="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#a89e92" letter-spacing="0.08em" text-transform="uppercase">dias</text></svg>`;
+}
+
+function svgBarraStacked(segmentos){
+  const validos = segmentos.filter(s => s.valor > 0);
+  const total = validos.reduce((s, seg) => s + seg.valor, 0);
+  if (!total) return '';
+  const W = 360, H = 28;
+  let x = 0;
+  const rects = validos.map(seg => {
+    const w = (seg.valor / total) * W;
+    const r = `<rect x="${x.toFixed(2)}" y="0" width="${w.toFixed(2)}" height="${H}" fill="${seg.cor}" stroke="#fff" stroke-width="1"/>`;
+    x += w;
+    return r;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="display:block;border-radius:4px;overflow:hidden">${rects}</svg>`;
+}
+
+// Gera narrativa em prosa · template determinístico com inferências
+// Compara com mediana do conjunto pra fazer inferências (alto/baixo/típico)
+function gerarNarrativaProsa(j){
+  const totalDias = j.tempo_total_dias || 0;
+  const execDias = j.tempo_execucao_dias || 0;
+  const hibDias = j.tempo_hibernacao_dias || 0;
+  const pctHib = totalDias ? Math.round(hibDias / totalDias * 100) : 0;
+  const pctExec = totalDias ? Math.round(execDias / totalDias * 100) : 0;
+  const marcos = (j.marcos || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
+  const ocorr = ((j.friccao || {}).ocorrencias_formais || []);
+  const ciclos = j.ciclos || [];
+  const eq = j.equipe || {};
+  const mf = eq.monofloor || {};
+  const aplicTl = (eq.aplicadores_telegram || []).slice(0, 4);
+
+  function porTipo(t){ return marcos.filter(m => m.tipo === t); }
+  const contrato = porTipo('contrato_assinado')[0];
+  const postergacoes = porTipo('obra_postergada');
+  const escopoAprovado = porTipo('escopo_aprovado')[0];
+  const vtAgendada = porTipo('vt_agendada')[0];
+  const equipeDef = porTipo('equipe_definida')[0];
+  const matEntr = porTipo('material_entregue')[0];
+  const ultimaCamada = porTipo('ultima_camada')[0];
+  const aprovacoes = porTipo('aprovacao_cliente');
+  const finalizacoes = porTipo('finalizacao');
+  const vtQualidade = porTipo('relatorio_vt_qualidade');
+  const reprovacoes = porTipo('reprovacao_retorno');
+  const trocaApl = porTipo('troca_aplicador');
+  const occCriticas = ocorr.filter(o => o.severidade === 'critica' || o.severidade === 'alta');
+  const occFalhaCom = ocorr.filter(o => (o.tipo || '').includes('falha_comunicacao'));
+
+  // Detecção de "pressão de prazo" · áudios de Braiam/Taquinho mencionando tempo
+  const temPressaoPrazo = marcos.some(m => /n[ãa]o\s+(t[eê]m|tem)\s+mais\s+tempo|n[ãa]o\s+tem\s+margem\s+de\s+erro|prazo\s+(apertado|curto)/i.test(m.trecho || ''));
+
+  // Comparações com benchmark conhecido das 10 obras (medianas)
+  const BENCH = {
+    ultimaCamadaAprovacao: 17,
+    aprovacaoVTqualidade: 81,
+    vtReprovacao: 42,
+    reprovacaoFinalizacao: 59,
+  };
+  function deltaDias(d1, d2){
+    if (!d1 || !d2) return null;
+    return Math.round((new Date(d2) - new Date(d1)) / 86400000);
+  }
+
+  const paragrafos = [];
+
+  // === PARÁGRAFO 1 · Apresentação ===
+  const enderecoCurto = (j.endereco || '').split('\n').slice(0,2).join(' · ').replace(/\s+/g,' ').trim();
+  const prods = (j.produtos || []).join(' + ') || 'produto não identificado';
+  const cores = (j.cores || []).join(', ');
+  const consultor = mf.consultor || mf.operacoes;
+  paragrafos.push(
+    `A obra de <strong>${esc(j.cliente)}</strong> tem <strong>${j.metragem || '?'}m²</strong> de revestimento <strong>${esc(prods)}</strong>${cores ? `, cor <strong>${esc(cores)}</strong>` : ''}, localizada em ${esc(enderecoCurto.slice(0, 110))}. ` +
+    (contrato ? `O contrato foi assinado em <strong>${fmtData(contrato.data)}</strong>, ` : '') +
+    `e <strong>${totalDias} dias</strong> se passaram desde o início da jornada documentada no Telegram${consultor ? ` (operação Monofloor: <strong>${esc(consultor)}</strong>)` : ''}.`
+  );
+
+  // === PARÁGRAFO 2 · Pré-obra ===
+  let par2 = `A fase pré-obra `;
+  if (postergacoes.length === 0) {
+    par2 += `seguiu sem postergações documentadas. `;
+  } else if (postergacoes.length === 1) {
+    par2 += `teve <strong>1 postergação</strong> registrada (${fmtData(postergacoes[0].data)} · ${esc((postergacoes[0].autor || '').split('|').slice(-1)[0].trim())}). `;
+  } else {
+    par2 += `teve <strong>${postergacoes.length} postergações</strong> sucessivas (${postergacoes.map(p => fmtData(p.data)).join(', ')}), indicando dificuldade de alinhar cronograma com o cliente. `;
+  }
+  if (escopoAprovado) par2 += `O escopo foi aprovado em <strong>${fmtData(escopoAprovado.data)}</strong>. `;
+  if (vtAgendada) par2 += `A VT de entrada foi agendada em ${fmtData(vtAgendada.data)}. `;
+  if (equipeDef) par2 += `A equipe de campo foi definida em ${fmtData(equipeDef.data)}. `;
+  paragrafos.push(par2.trim());
+
+  // === PARÁGRAFO 3 · Execução ===
+  let par3;
+  if (execDias > 0 && ultimaCamada) {
+    par3 = `A execução física aconteceu em <strong>${execDias} dias</strong>`;
+    if (matEntr) par3 += `, com material entregue em <strong>${fmtData(matEntr.data)}</strong>`;
+    par3 += `. A última camada foi aplicada em <strong>${fmtData(ultimaCamada.data)}</strong>`;
+    if ((ultimaCamada.autor || '').includes('|')) par3 += ` (${esc(ultimaCamada.autor.split('|').slice(-1)[0].trim())})`;
+    par3 += '. ';
+    if (aplicTl.length) par3 += `A equipe de campo registrada no Telegram incluiu: ${aplicTl.map(p => esc(p.nome)).join(', ')}. `;
+    if (temPressaoPrazo) par3 += `⚠ <strong>Sinais de pressão de prazo</strong> foram detectados durante a execução · áudios da equipe mencionaram limite de tempo apertado. `;
+  } else {
+    par3 = `A execução física <strong>não foi detectada</strong> via cluster de mensagens densas (≥5 msgs/dia em ±7d da data prevista), sugerindo que o trabalho ainda não começou OU as mensagens não capturam a aplicação no grau de detalhe necessário.`;
+  }
+  paragrafos.push(par3.trim());
+
+  // === PARÁGRAFO 4 · Retrabalho (se houver) ===
+  if (ciclos.length > 1 || vtQualidade.length > 0 || reprovacoes.length > 0) {
+    let par4 = `<strong>Retrabalho documentado</strong>: `;
+    if (vtQualidade.length > 0){
+      par4 += `o primeiro relatório de VT qualidade da Caroline foi em <strong>${fmtData(vtQualidade[0].data)}</strong>`;
+      if (aprovacoes.length > 0){
+        const dt = deltaDias(aprovacoes[0].data, vtQualidade[0].data);
+        if (dt !== null && dt > 0){
+          const cmp = dt > BENCH.aprovacaoVTqualidade * 1.3 ? '<em>acima do típico</em>' : (dt < BENCH.aprovacaoVTqualidade * 0.7 ? '<em>mais rápido que o típico</em>' : '<em>dentro do típico</em>');
+          par4 += ` · ${dt}d após a primeira aprovação (${cmp} de ~${BENCH.aprovacaoVTqualidade}d)`;
+        }
+      }
+      par4 += '. ';
+    }
+    if (reprovacoes.length > 0){
+      par4 += `Foram registradas <strong>${reprovacoes.length} tratativas</strong> de reprovação/retorno entre as datas ${fmtData(reprovacoes[0].data)} e ${fmtData(reprovacoes[reprovacoes.length-1].data)}. `;
+    }
+    if (trocaApl.length > 0){
+      par4 += `<strong>Houve troca de aplicador</strong> em ${trocaApl.map(t => fmtData(t.data)).join(', ')} — sinal de problema operacional durante a obra. `;
+    }
+    if (ciclos.length > 1){
+      const c2 = ciclos[1];
+      par4 += `O segundo ciclo (${esc(c2.nome)}) durou <strong>${c2.duracao_dias}d</strong>, entre ${fmtData(c2.inicio)} e ${fmtData(c2.fim)}. `;
+    }
+    paragrafos.push(par4.trim());
+  }
+
+  // === PARÁGRAFO 5 · Estado atual + inferências ===
+  let par5 = `<strong>Estado atual:</strong> `;
+  if (finalizacoes.length > 0) par5 += `obra com marco de finalização em ${fmtData(finalizacoes[finalizacoes.length-1].data)}`;
+  else if (ciclos.length && ciclos[ciclos.length-1].nome.includes('andamento')) par5 += `obra com ${ciclos[ciclos.length-1].nome.toLowerCase()}`;
+  else par5 += `obra em ${j.status || 'andamento'}`;
+  par5 += '. ';
+
+  const insights = [];
+  if (pctHib >= 25) insights.push(`<strong>Hibernação alta</strong> (${pctHib}% do total · ${hibDias}d) · obra ficou parada por longos períodos`);
+  if (pctExec > 0 && pctExec <= 3) insights.push(`<strong>Execução muito concentrada</strong> (apenas ${pctExec}% do tempo · ${execDias}d) · a obra demorou pouco pra ser aplicada, mas ficou em pré-obra/tratativas`);
+  if (occCriticas.length >= 2) insights.push(`<strong>${occCriticas.length} ocorrências críticas/altas</strong> registradas no Painel · obra de alta atenção`);
+  if (occFalhaCom.length >= 2) insights.push(`<strong>Padrão de falha de comunicação</strong> · ${occFalhaCom.length} registros de "sem resposta" no Painel · indica risco de cliente ausente ou time sem responsável claro`);
+
+  // Inferência cronológica: tempo Última Camada → Aprovação
+  if (ultimaCamada && aprovacoes.length > 0){
+    const dt = deltaDias(ultimaCamada.data, aprovacoes[0].data);
+    if (dt !== null && dt > 0){
+      const cmp = dt > BENCH.ultimaCamadaAprovacao * 1.5 ? `<em>aprovação demorou ${Math.round(dt/BENCH.ultimaCamadaAprovacao*10)/10}× a mediana</em>` : `<em>aprovação dentro do típico</em>`;
+      insights.push(`Última camada → Aprovação cliente: ${dt}d (${cmp} de ${BENCH.ultimaCamadaAprovacao}d)`);
+    }
+  }
+
+  if (insights.length) par5 += `<br><br>Pontos de atenção:<ul style="margin-top:6px">${insights.map(i => `<li>${i}</li>`).join('')}</ul>`;
+  paragrafos.push(par5.trim());
+
+  return paragrafos.map(p => `<p>${p}</p>`).join('');
+}
+
+function montarRelatorioHTML(j){
+  // Macro-etapas agregadas (replica lógica de classificarMacroEtapa)
+  const macros = { PRE_OBRA: 0, EXECUCAO: 0, TRATATIVAS: 0, RETRABALHO: 0, POS_OBRA: 0, HIBERNACAO: 0 };
+  const ciclos = j.ciclos || [];
+  const fasesPlanas = ciclos.length
+    ? ciclos.flatMap((c, idx) => (c.fases || []).map(f => ({ ...f, cicloIdx: idx })))
+    : (j.fases || []).map(f => ({ ...f, cicloIdx: 0 }));
+  fasesPlanas.forEach(f => {
+    const m = classificarMacroEtapa(f.nome, f.cicloIdx);
+    macros[m] = (macros[m] || 0) + (f.duracao_dias || 0);
+  });
+
+  // Ocorrências agrupadas por tipo
+  const ocorr = ((j.friccao || {}).ocorrencias_formais || []);
+  const grupos = {};
+  ocorr.forEach(o => {
+    const t = o.tipo || 'outro';
+    if (!grupos[t]) grupos[t] = [];
+    grupos[t].push(o);
+  });
+
+  // Top marcos cronológicos (filtrar repetidos · pegar 1 por tipo + reprovações distintas)
+  const marcos = (j.marcos || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
+  const topMarcos = [];
+  const vistos = new Set();
+  marcos.forEach(m => {
+    const chave = m.tipo === 'reprovacao_retorno' ? `${m.tipo}-${m.label_subtipo}-${m.data}` : m.tipo;
+    if (!vistos.has(chave)){
+      vistos.add(chave);
+      topMarcos.push(m);
+    }
+  });
+
+  // Equipe (consolidada)
+  const eq = j.equipe || {};
+  const mf = eq.monofloor || {};
+  const prest = eq.prestadores_oficiais || [];
+  const aplicTl = eq.aplicadores_telegram || [];
+
+  // Padrões + insights
+  const padroes = j.padroes || [];
+
+  // Status macro-textual (resumo executivo gerado por template)
+  const totalDias = j.tempo_total_dias || 0;
+  const execDias = j.tempo_execucao_dias || 0;
+  const hibDias = j.tempo_hibernacao_dias || 0;
+  const pctHib = totalDias ? Math.round(hibDias / totalDias * 100) : 0;
+  const pctExec = totalDias ? Math.round(execDias / totalDias * 100) : 0;
+  const cliFinal = j.cliente;
+  const status_label = j.status || 'em andamento';
+  const temRetrabalho = ciclos.length > 1;
+  const ehFinalizada = topMarcos.some(m => m.tipo === 'finalizacao');
+  const ehAprovada = topMarcos.some(m => m.tipo === 'aprovacao_cliente');
+  const occCriticas = ocorr.filter(o => o.severidade === 'critica' || o.severidade === 'alta').length;
+
+  const sintese = [
+    `Obra de ${j.metragem || '?'}m² (${(j.produtos||[]).join(' + ') || '—'}, cor ${(j.cores||[]).join(', ') || '—'})`,
+    `iniciada em ${fmtData(j.data_1a_msg)}, total de ${totalDias}d`,
+    `(${pctHib}% hibernação${execDias ? ' · ' + pctExec + '% execução' : ''})`,
+    temRetrabalho ? `Passou por retrabalho (${ciclos.length} ciclos detectados)` : (ehFinalizada ? 'Entregue sem retrabalho' : ''),
+    occCriticas > 0 ? `${occCriticas} ocorrência${occCriticas===1?'':'s'} crítica/alta no Painel` : '',
+  ].filter(Boolean).join(' · ') + '.';
+
+  const fmtMacro = (k, label) => macros[k] > 0
+    ? `<div class="rep-stat"><div class="rep-stat-label">${label}</div><div class="rep-stat-val">${macros[k]}<small>d</small></div></div>`
+    : '';
+
+  const LABEL_MARCO_TIPO = (mk) => mk.label_subtipo || (LABEL_MARCO[mk.tipo] || mk.tipo.replace(/_/g, ' '));
+
+  const LABEL_OCO = { desvio_qualidade: 'Desvio de qualidade', problema_tecnico: 'Problema técnico', falha_comunicacao: 'Falha de comunicação', outro: 'Outras' };
+
+  // Equipe em texto fluido
+  const equipeTexto = [
+    mf.consultor && `consultoria de <strong>${esc(mf.consultor)}</strong>`,
+    mf.operacoes && `operações por <strong>${esc(mf.operacoes)}</strong>`,
+    mf.atendimento && `atendimento de <strong>${esc(mf.atendimento)}</strong>`,
+  ].filter(Boolean).join(', ');
+
+  const lideresEAplicadores = aplicTl.length
+    ? aplicTl.map(p => esc(p.nome)).join(', ')
+    : (prest.length ? prest.map(p => esc(p.nome)).join(', ') : null);
+
+  // ========== Gráfico 1 · DONUT do tempo da obra (macro-etapas) ==========
+  const CORES_MACRO = {
+    PRE_OBRA: '#e8c078',
+    EXECUCAO: '#5fa073',
+    TRATATIVAS: '#c89464',
+    RETRABALHO: '#c45a5a',
+    POS_OBRA: '#7ea0b7',
+    HIBERNACAO: '#a89e92',
+  };
+  const LABELS_MACRO = {
+    PRE_OBRA: 'Pré-obra',
+    EXECUCAO: 'Execução',
+    TRATATIVAS: 'Tratativas',
+    RETRABALHO: 'Retrabalho',
+    POS_OBRA: 'Pós-obra',
+    HIBERNACAO: 'Hibernação',
+  };
+  const segmentosMacro = ['PRE_OBRA','EXECUCAO','TRATATIVAS','RETRABALHO','POS_OBRA','HIBERNACAO']
+    .filter(k => (macros[k] || 0) > 0)
+    .map(k => ({ valor: macros[k], cor: CORES_MACRO[k], label: LABELS_MACRO[k] }));
+  const totalMacro = segmentosMacro.reduce((s,seg) => s + seg.valor, 0);
+
+  const donutHtml = segmentosMacro.length ? `
+    <div class="rep-grafico">
+      ${svgDonut(segmentosMacro, totalMacro + 'd')}
+      <div class="rep-grafico-legenda">
+        ${segmentosMacro.map(s => `
+          <div class="rep-leg-item">
+            <span class="rep-leg-cor" style="background:${s.cor}"></span>
+            <span class="rep-leg-nome">${esc(s.label)}</span>
+            <span class="rep-leg-val">${s.valor}d <small>(${Math.round(s.valor/totalMacro*100)}%)</small></span>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : '';
+
+  // ========== Gráfico 2 · BARRA de severidades das ocorrências ==========
+  const sevCount = { critica: 0, alta: 0, media: 0, baixa: 0 };
+  ocorr.forEach(o => { if (sevCount[o.severidade] !== undefined) sevCount[o.severidade]++; });
+  const segmentosSev = [
+    { valor: sevCount.critica, cor: '#4a1f1f', label: 'Crítica' },
+    { valor: sevCount.alta, cor: '#c45a5a', label: 'Alta' },
+    { valor: sevCount.media, cor: '#c89464', label: 'Média' },
+    { valor: sevCount.baixa, cor: '#7ea0b7', label: 'Baixa' },
+  ];
+  const totalSev = segmentosSev.reduce((s, seg) => s + seg.valor, 0);
+  const barraSevHtml = totalSev ? `
+    <div class="rep-grafico-barra">
+      ${svgBarraStacked(segmentosSev)}
+      <div class="rep-grafico-legenda-linha">
+        ${segmentosSev.filter(s => s.valor > 0).map(s => `
+          <span class="rep-leg-inline">
+            <span class="rep-leg-cor" style="background:${s.cor}"></span>
+            ${esc(s.label)} <strong>${s.valor}</strong>
+          </span>
+        `).join('')}
+      </div>
+    </div>` : '';
+
+  return `
+    <h1>${esc(cliFinal)}</h1>
+    <div class="rep-meta">Relatório de Jornada · ${fmtData(new Date().toISOString().slice(0,10))}</div>
+
+    <div class="rep-narrativa">${gerarNarrativaProsa(j)}</div>
+
+    ${donutHtml ? `<div class="rep-secao">
+      <div class="rep-secao-titulo">Como o tempo se distribuiu</div>
+      <p class="rep-secao-paragrafo">A obra somou <strong>${totalMacro} dias</strong> documentados. O gráfico mostra em que parte da jornada o tempo foi gasto · útil pra ver quanto da obra é trabalho físico vs. negociação, hibernação e tratativas.</p>
+      ${donutHtml}
+    </div>` : ''}
+
+    <hr class="rep-divisor"/>
+
+    ${topMarcos.length ? `
+    <div class="rep-secao">
+      <div class="rep-secao-titulo">A jornada em marcos</div>
+      <div class="rep-timeline">
+        ${topMarcos.map(mk => `
+          <div class="rep-timeline-item">
+            <div class="rep-timeline-data">${fmtData(mk.data)}</div>
+            <div class="rep-timeline-evento">${esc(LABEL_MARCO_TIPO(mk))} <span class="rep-timeline-autor">por ${esc((mk.autor || '').split('|').slice(-1)[0].trim())}</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : ''}
+
+    ${ocorr.length ? `
+    <div class="rep-secao">
+      <div class="rep-secao-titulo">Ocorrências registradas no Painel</div>
+      <p class="rep-secao-intro">Foram <strong>${ocorr.length}</strong> registros formais ao longo da obra${ocorr.filter(o => o.severidade === 'critica' || o.severidade === 'alta').length ? `, sendo <strong>${ocorr.filter(o => o.severidade === 'critica' || o.severidade === 'alta').length}</strong> de severidade crítica ou alta` : ''}.</p>
+      ${barraSevHtml}
+      <div class="rep-pills">
+        ${ocorr.slice(0, 14).map(o => `<span class="rep-pill sev-${o.severidade || 'baixa'}"><span class="rep-pill-data">${fmtData(o.data)}</span> ${esc(o.titulo || (LABEL_OCO[o.tipo] || o.tipo || ''))}</span>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="rep-secao">
+      <div class="rep-secao-titulo">Quem atuou</div>
+      <p class="rep-secao-paragrafo">
+        Pela Monofloor, a obra teve ${equipeTexto || 'equipe não identificada'}.
+        ${lideresEAplicadores ? `Em campo, ${aplicTl.length ? 'as mensagens do Telegram indicam a presença de' : 'foram registrados oficialmente'} <strong>${lideresEAplicadores}</strong>.` : ''}
+      </p>
+    </div>
+
+    ${(j.materiais_enviados||[]).length ? `
+    <div class="rep-secao">
+      <div class="rep-secao-titulo">Material enviado pela indústria</div>
+      <p class="rep-secao-paragrafo">
+        ${(j.materiais_enviados||[]).flatMap(e => (e.materiais||[]).map(m => `<strong>${esc(m.quantidade || '?')}</strong> de ${esc(m.material || '?')}${m.cor ? ` na cor ${esc(m.cor)}` : ''}`)).join(', ')}.
+      </p>
+    </div>` : ''}
+
+    ${padroes.length ? `
+    <div class="rep-secao">
+      <div class="rep-secao-titulo">O que chama atenção nesta obra</div>
+      <div class="rep-padroes">
+        ${padroes.map(p => {
+          const partes = p.split(' · ');
+          const codigo = partes[0];
+          const label = LABEL_PADRAO_GLOBAL[codigo] || codigo.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          return `<div class="rep-padrao"><span class="rep-padrao-label">${esc(label)}</span>${partes.slice(1).length ? `<span class="rep-padrao-desc">${esc(partes.slice(1).join(' · '))}</span>` : ''}</div>`;
+        }).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="rep-rodape">Lab Orion · análise retrospectiva determinística · leitura das mensagens do Telegram do grupo da obra cruzada com registros do Painel.</div>
+  `;
+}
+
+const LABEL_PADRAO_GLOBAL = {
+  hibernacao_longa: '🌙 Hibernação longa',
+  execucao_concentrada: '⚡ Execução concentrada',
+  mudanca_escopo_dia_execucao: '🔀 Mudança de escopo durante execução',
+  retrabalho_em_andamento: '🔁 Retrabalho em andamento',
+  retrabalho_concluido: '✅ Retrabalho concluído',
+  aprovacao_demorada: '⏳ Aprovação demorada',
+  silencio_pos_execucao: '🤐 Silêncio pós-execução',
+};
+
+// === Tracking "obras já vistas" · localStorage por navegador ===
+const STORAGE_KEY_VISTAS = 'lab-orion-obras-vistas';
+
+function getObrasVistas(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_VISTAS);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch { return new Set(); }
+}
+function setObrasVistas(set){
+  try { localStorage.setItem(STORAGE_KEY_VISTAS, JSON.stringify([...set])); } catch {}
+}
+function toggleVista(){
+  if (!OBRA_SEL) return;
+  const vistas = getObrasVistas();
+  if (vistas.has(OBRA_SEL.obra_id)) vistas.delete(OBRA_SEL.obra_id);
+  else vistas.add(OBRA_SEL.obra_id);
+  setObrasVistas(vistas);
+  atualizarBotaoVista();
+  renderListaSidebar();
+}
+function atualizarBotaoVista(){
+  const btn = document.getElementById('btn-marcar-vista');
+  if (!btn || !OBRA_SEL) return;
+  const vistas = getObrasVistas();
+  if (vistas.has(OBRA_SEL.obra_id)){
+    btn.classList.add('vista');
+    btn.textContent = 'Vista — desmarcar';
+  } else {
+    btn.classList.remove('vista');
+    btn.textContent = 'Marcar como vista';
+  }
+}
 
 async function carregar(){
   const r = await fetch('dados/jornadas.json?t=' + Date.now(), {cache:'no-store'});
   DADOS = await r.json();
   document.getElementById('stamp').textContent = 'gerado ' + fmtData(DADOS.gerado_em.slice(0,10)) + ' · ' + DADOS.gerado_em.slice(11,16);
-  renderObras();
+  popularFiltroStatus();
+  renderListaSidebar();
+  // Listeners de busca/filtro
+  document.getElementById('search-obra').addEventListener('input', renderListaSidebar);
+  document.getElementById('filtro-status').addEventListener('change', renderListaSidebar);
+  document.getElementById('filtro-vista').addEventListener('change', renderListaSidebar);
 }
 
-function renderObras(){
-  const grid = document.getElementById('obras-grid');
-  grid.innerHTML = DADOS.obras.map((o, i) => `
-    <div class="obra-card" data-idx="${i}">
-      <div class="obra-cli">${esc(o.cliente)}</div>
-      <div class="obra-end">${esc((o.endereco||'').split('\n')[0])}</div>
-      <div class="obra-stats">
-        <div>
-          <div class="obra-stat-num">${o.tempo_total_dias ?? '—'}<small>d</small></div>
-          <div class="obra-stat-label">Total</div>
-        </div>
-        <div>
-          <div class="obra-stat-num">${o.tempo_execucao_dias ?? '—'}<small>d</small></div>
-          <div class="obra-stat-label">Execução</div>
-        </div>
-        <div>
-          <div class="obra-stat-num">${o.tempo_hibernacao_dias ?? 0}<small>d</small></div>
-          <div class="obra-stat-label">Hibernação</div>
-        </div>
-      </div>
-      <div class="obra-meta">
-        <span class="obra-meta-item"><strong>${esc((o.produtos||[]).join(' + ') || '—')}</strong></span>
-        <span class="obra-meta-item">${esc((o.cores||[]).join(', ') || '—')}</span>
-        <span class="obra-meta-item"><strong>${o.metragem ?? '—'}</strong> m²</span>
-        <span class="obra-meta-item">${o.n_msgs_telegram_total} msgs</span>
-      </div>
-    </div>
-  `).join('');
+function popularFiltroStatus(){
+  // Popula o select com os status únicos do JSON · ordenados por contagem
+  const sel = document.getElementById('filtro-status');
+  const counts = {};
+  (DADOS.obras || []).forEach(o => {
+    const s = o.status || '—';
+    counts[s] = (counts[s] || 0) + 1;
+  });
+  const ordenados = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  ordenados.forEach(([status, n]) => {
+    const opt = document.createElement('option');
+    opt.value = status;
+    opt.textContent = `${formatarStatus(status)} (${n})`;
+    sel.appendChild(opt);
+  });
+}
 
-  grid.querySelectorAll('.obra-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const idx = parseInt(card.dataset.idx);
+function formatarStatus(s){
+  if (!s || s === '—') return '—';
+  return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function renderListaSidebar(){
+  const lista = document.getElementById('obras-lista');
+  const contador = document.getElementById('contador-obras');
+  const busca = (document.getElementById('search-obra').value || '').trim().toLowerCase();
+  const status = document.getElementById('filtro-status').value || '';
+  const filtroVista = document.getElementById('filtro-vista').value || 'todas';
+  const vistas = getObrasVistas();
+
+  // Filtra
+  let filtradas = (DADOS.obras || []).filter(o => {
+    if (status && o.status !== status) return false;
+    if (busca && !(o.cliente || '').toLowerCase().includes(busca)) return false;
+    if (filtroVista === 'vistas' && !vistas.has(o.obra_id)) return false;
+    if (filtroVista === 'nao-vistas' && vistas.has(o.obra_id)) return false;
+    return true;
+  });
+  // Ordena alfabeticamente por cliente
+  filtradas.sort((a, b) => (a.cliente || '').localeCompare(b.cliente || ''));
+
+  const nVistas = (DADOS.obras||[]).filter(o => vistas.has(o.obra_id)).length;
+  contador.textContent = `${filtradas.length} de ${(DADOS.obras||[]).length} · ${nVistas} vistas`;
+
+  if (!filtradas.length){
+    lista.innerHTML = '<div class="sidebar-vazio">(nenhuma obra encontrada com esses filtros)</div>';
+    return;
+  }
+
+  // Mantém referência ao idx no array DADOS.obras pra OBRA_SEL funcionar
+  const idxByObraId = new Map((DADOS.obras || []).map((o, i) => [o.obra_id, i]));
+
+  lista.innerHTML = filtradas.map(o => {
+    const idx = idxByObraId.get(o.obra_id);
+    const status = o.status || '—';
+    const nMarcos = (o.marcos || []).length;
+    const nOcorr = ((o.friccao || {}).ocorrencias_formais || []).length;
+    const nMsgs = o.n_msgs_telegram_total || 0;
+    const ativo = (OBRA_SEL && OBRA_SEL.obra_id === o.obra_id) ? ' ativo' : '';
+    const cls_vista = vistas.has(o.obra_id) ? ' vista' : '';
+    return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
+      <div class="sidebar-item-cli">${esc(o.cliente)}</div>
+      <div class="sidebar-item-meta">
+        <span class="sidebar-item-status s-${esc(status)}">${esc(formatarStatus(status))}</span>
+        <span class="sidebar-item-numeros">${nMarcos}m · ${nOcorr}occ · ${nMsgs} msgs</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  lista.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const idx = parseInt(item.dataset.idx);
       OBRA_SEL = DADOS.obras[idx];
-      grid.querySelectorAll('.obra-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
+      lista.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('ativo'));
+      item.classList.add('ativo');
+      // Esconde placeholder · mostra detalhes
+      document.getElementById('placeholder-vazio').classList.add('oculto');
       renderDetalhes();
     });
   });
@@ -2625,12 +3929,15 @@ function renderGanttSwimlanes(container, marcos){
     categorias.get(chave).marcos.push(mk);
   });
 
-  // Layout
+  // Layout · LANE alta o suficiente pra acomodar pulso (4 níveis verticais)
   const W = 1180;
   const LABEL_LARG = 200;
-  const LANE_ALTURA = 30;
+  const LANE_ALTURA = 64;
   const PADDING_TOP = 36;  // espaço pro eixo de meses
   const PADDING_BOTTOM = 16;
+  // Pulso · níveis Y dentro da swimlane pra evitar sobreposição quando marcos colidem
+  const NIVEIS_OFFSET = [0, -18, 18, -28, 28];
+  const COLISAO_PX = 90;  // distância mínima horizontal pra ficar no mesmo nível
   const X0 = LABEL_LARG;
   const X1 = W - 12;
   const LARG = X1 - X0;
@@ -2671,24 +3978,35 @@ function renderGanttSwimlanes(container, marcos){
     if (i % 2 === 0){
       partes.push(`<rect x="${X0}" y="${y - LANE_ALTURA/2 + 2}" width="${LARG}" height="${LANE_ALTURA - 4}" fill="rgba(0,0,0,0.015)" rx="3"/>`);
     }
-    // Pontos dos marcos · com keyword ao lado
+    // Pontos dos marcos · pulso intra-swimlane pra evitar sobreposição
+    // Algoritmo: se marco está perto do anterior (<COLISAO_PX), empurra pro próximo nível Y
+    let lastX = -Infinity;
+    let nivelIdx = 0;
     dados.marcos.forEach((mk, mIdx) => {
       const x = xFromData(mk.data);
+      // Detecta colisão · se perto demais, próximo nível · senão volta pro base
+      if (x - lastX < COLISAO_PX){
+        nivelIdx = (nivelIdx + 1) % NIVEIS_OFFSET.length;
+      } else {
+        nivelIdx = 0;
+      }
+      const offset = NIVEIS_OFFSET[nivelIdx];
+      const cy = y + offset;
+
+      // Linha conectora vertical · só se marco está fora da linha base
+      if (offset !== 0){
+        partes.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${cy}" stroke="#a89e92" stroke-width="0.8" opacity="0.45"/>`);
+      }
+
       const tip = `${esc(dados.label)} · ${fmtDataLong(mk.data)}\n${esc(mk.autor)}\n"${esc((mk.trecho||'').slice(0,200))}"`;
       partes.push(`<g class="gantt-marco-pt" data-tip="${tip}" style="cursor:help">
-        <circle cx="${x}" cy="${y}" r="6" fill="${dados.cor}" stroke="#fff" stroke-width="1.5" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.15))"/>
+        <circle cx="${x}" cy="${cy}" r="6" fill="${dados.cor}" stroke="#fff" stroke-width="1.5" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.15))"/>
       </g>`);
-      // Keyword ao lado da bolinha · alterna lado pra evitar sobreposição se 2 pontos próximos
+      // Keyword sempre à direita da bolinha (cabe agora porque nível diferente evita sobreposição)
       if (mk.keyword){
-        const proximaX = mIdx + 1 < dados.marcos.length ? xFromData(dados.marcos[mIdx+1].data) : Infinity;
-        const dist = proximaX - x;
-        const lado = dist < 110 ? 'cima' : 'direita';
-        if (lado === 'direita'){
-          partes.push(`<text x="${x + 12}" y="${y + 4}" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" fill="#3a3530" font-weight="500">${esc(mk.keyword)}</text>`);
-        } else {
-          partes.push(`<text x="${x}" y="${y - 9}" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" fill="#6b6156" font-weight="600">${esc(mk.keyword)}</text>`);
-        }
+        partes.push(`<text x="${x + 11}" y="${cy + 3.5}" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" fill="#3a3530" font-weight="500">${esc(mk.keyword)}</text>`);
       }
+      lastX = x;
     });
     i++;
   }
@@ -2719,15 +4037,22 @@ function renderGanttSwimlanes(container, marcos){
 // Cores acessíveis pra marcos na lista (lista usa subset que evita conflito com fases)
 const COR_MARCO_FASE_LIST = {
   contrato_assinado: '#7ea0b7',
+  escopo_aprovado: '#b8884a',
   amostra_solicitada: '#bdb09b',
   cor_aprovada: '#d4a548',
   vt_agendada: '#c8d6e0',
   vt_realizada: '#5fa073',
   vt_entrada_realizada: '#5fa073',
+  equipe_definida: '#e8c078',
+  material_entregue: '#b8884a',
   inicio_anunciado: '#e8c078',
   material_produzido: '#b8884a',
+  obra_postergada: '#c45a5a',
+  ultima_camada: '#5fa073',
+  troca_aplicador: '#c89464',
   finalizacao: '#2a5a18',
   aprovacao_cliente: '#d4a548',
+  relatorio_vt_qualidade: '#8b5cf6',
   reprovacao_retorno: '#c45a5a',
 };
 
@@ -2971,6 +4296,81 @@ function renderMacroEtapas(j){
   const totalObrasMonofloor = 228;  // referência do contexto Lab Orion · pra placeholder de benchmark
   const obrasProcessadas = (DADOS && DADOS.obras) ? DADOS.obras.length : 0;
 
+  // === Benchmark · tempo entre marcos (cálculo cross-obras) ===
+  function calcularTransicoesBenchmark(){
+    const PARES = [
+      { label: 'Contrato → Amostra solicitada',     a: 'contrato_assinado',      b: 'amostra_solicitada',     cat: 'pre' },
+      { label: 'Amostra → Cor aprovada',            a: 'amostra_solicitada',     b: 'cor_aprovada',           cat: 'pre' },
+      { label: 'Cor aprovada → Escopo aprovado',    a: 'cor_aprovada',           b: 'escopo_aprovado',        cat: 'pre' },
+      { label: 'Escopo → Equipe definida',          a: 'escopo_aprovado',        b: 'equipe_definida',        cat: 'pre' },
+      { label: 'Equipe → Material entregue',        a: 'equipe_definida',        b: 'material_entregue',      cat: 'pre' },
+      { label: 'Material entregue → Última camada', a: 'material_entregue',      b: 'ultima_camada',          cat: 'exec' },
+      { label: 'Última camada → Aprovação cliente', a: 'ultima_camada',          b: 'aprovacao_cliente',      cat: 'exec' },
+      { label: 'Aprovação → 1ª VT qualidade',       a: 'aprovacao_cliente',      b: 'relatorio_vt_qualidade', cat: 'retrab' },
+      { label: 'VT qualidade → Reprovação',         a: 'relatorio_vt_qualidade', b: 'reprovacao_retorno',     cat: 'retrab' },
+      { label: 'Reaplicação → Finalização',         a: 'reprovacao_retorno',     b: 'finalizacao',            cat: 'retrab' },
+    ];
+    function delta(marcos, tipoA, tipoB){
+      const ord = marcos.filter(m => m.data).slice().sort((x,y) => x.data.localeCompare(y.data));
+      const ma = ord.find(m => m.tipo === tipoA);
+      if (!ma) return null;
+      const dA = ma.data.slice(0,10);
+      const mb = ord.find(m => m.tipo === tipoB && m.data.slice(0,10) > dA);
+      if (!mb) return null;
+      const dB = mb.data.slice(0,10);
+      const dt = (new Date(dB) - new Date(dA)) / 86400000;
+      return Math.round(dt);
+    }
+    function mediana(arr){
+      const s = arr.slice().sort((a,b) => a-b);
+      const n = s.length;
+      if (n === 0) return null;
+      return n % 2 ? s[(n-1)/2] : (s[n/2-1] + s[n/2]) / 2;
+    }
+    return PARES.map(p => {
+      const vals = [];
+      (DADOS.obras || []).forEach(o => {
+        const d = delta(o.marcos || [], p.a, p.b);
+        if (d !== null && d >= 0) vals.push(d);
+      });
+      return { ...p, n: vals.length, mediana: mediana(vals), min: vals.length ? Math.min(...vals) : null, max: vals.length ? Math.max(...vals) : null };
+    });
+  }
+  const transicoes = calcularTransicoesBenchmark();
+  const robustas = transicoes.filter(t => t.n >= 3);
+  const fragas = transicoes.filter(t => t.n > 0 && t.n < 3);
+  const semDado = transicoes.filter(t => t.n === 0);
+
+  function renderBenchmarkTabela(){
+    if (!robustas.length && !fragas.length) {
+      return `<div class="benchmark-placeholder"><span class="benchmark-icon">📊</span><span><strong>Benchmark · sem dado ainda</strong> · marcos não disponíveis nas obras processadas</span></div>`;
+    }
+    const linhas = robustas.map(t => `
+      <tr class="bench-row robusta">
+        <td class="bench-cat cat-${t.cat}">${t.cat === 'pre' ? 'Pré' : t.cat === 'exec' ? 'Exec' : 'Retrab'}</td>
+        <td class="bench-trans">${esc(t.label)}</td>
+        <td class="bench-med"><strong>${t.mediana}<small>d</small></strong></td>
+        <td class="bench-range">${t.min}–${t.max}d</td>
+        <td class="bench-n">${t.n}</td>
+      </tr>`).join('');
+    const linhasFracas = fragas.map(t => `
+      <tr class="bench-row fraca">
+        <td class="bench-cat cat-${t.cat}">${t.cat === 'pre' ? 'Pré' : t.cat === 'exec' ? 'Exec' : 'Retrab'}</td>
+        <td class="bench-trans">${esc(t.label)}</td>
+        <td class="bench-med">${t.mediana}<small>d</small></td>
+        <td class="bench-range">${t.min}–${t.max}d</td>
+        <td class="bench-n" title="amostra pequena · interpretar com cuidado">${t.n} ⚠</td>
+      </tr>`).join('');
+    return `<div class="benchmark-bloco">
+      <div class="benchmark-titulo">📊 Benchmark · tempo entre marcos <small>${obrasProcessadas} de ${totalObrasMonofloor} obras processadas · médias se encorpam conforme cresce</small></div>
+      <table class="benchmark-tabela">
+        <thead><tr><th>Etapa</th><th>Transição (A → B)</th><th>Mediana</th><th>Range</th><th>N obras</th></tr></thead>
+        <tbody>${linhas}${linhasFracas}</tbody>
+      </table>
+      ${semDado.length ? `<div class="benchmark-sem-dado">${semDado.length} transição${semDado.length===1?'':'es'} sem dado nas obras atuais · ${semDado.map(t => esc(t.label.split(' →')[0])).join(' · ')}</div>` : ''}
+    </div>`;
+  }
+
   const headerNumeros = `
     <div class="resumo-header">
       <div class="resumo-num resumo-num-principal">
@@ -2989,10 +4389,7 @@ function renderMacroEtapas(j){
         <span class="resumo-num-range">${pctHib}% do total</span>
       </div>` : ''}
     </div>
-    <div class="benchmark-placeholder">
-      <span class="benchmark-icon">📊</span>
-      <span><strong>Benchmark Monofloor · em construção</strong> · ${obrasProcessadas} de ${totalObrasMonofloor} obras processadas no piloto · médias de duração e proporção entre macro-etapas virão quando o conjunto expandir</span>
-    </div>`;
+    ${renderBenchmarkTabela()}`;
 
   // Chips clicáveis · navegador dos marcos por macro-etapa
   const chipsClicaveis = ordenado.map(k => {
@@ -3037,10 +4434,13 @@ function renderMacroEtapas(j){
 function mostrarMarcosDaMacro(macro, marcos){
   const det = document.getElementById('macro-detalhe');
   const COR_MARCO_FASE = {
-    contrato_assinado: '#7ea0b7', amostra_solicitada: '#bdb09b', cor_aprovada: '#d4a548',
+    contrato_assinado: '#7ea0b7', escopo_aprovado: '#b8884a', amostra_solicitada: '#bdb09b', cor_aprovada: '#d4a548',
     vt_agendada: '#c8d6e0', vt_realizada: '#5fa073', vt_entrada_realizada: '#5fa073',
-    inicio_anunciado: '#e8c078', material_produzido: '#b8884a', finalizacao: '#2a5a18',
-    aprovacao_cliente: '#d4a548', reprovacao_retorno: '#c45a5a',
+    equipe_definida: '#e8c078', material_entregue: '#b8884a',
+    inicio_anunciado: '#e8c078', material_produzido: '#b8884a',
+    obra_postergada: '#c45a5a', ultima_camada: '#5fa073', troca_aplicador: '#c89464',
+    finalizacao: '#2a5a18', aprovacao_cliente: '#d4a548',
+    relatorio_vt_qualidade: '#8b5cf6', reprovacao_retorno: '#c45a5a',
   };
   const itens = marcos.length
     ? marcos.map(mk => {
@@ -3133,6 +4533,7 @@ function renderDetalhes(){
   document.getElementById('det-id').textContent = j.obra_id.slice(0,8);
   document.getElementById('detalhes').classList.add('visivel');
 
+  atualizarBotaoVista();
   renderOcorrenciasPills(j);
   renderTimelineCiclos(j);
   renderMacroEtapas(j);
@@ -3160,6 +4561,10 @@ function renderDetalhes(){
   function fmtFuncao(funcao){
     return (funcao || '').replace(/_/g, ' ').trim();
   }
+  // Pessoas conhecidas como líder (do MAPA_PESSOAS) · pra dar destaque visual quando inferido do Telegram
+  const LIDERES_CONHECIDOS = new Set(['wiguens', 'joão carlos', 'júlio miranda', 'julio miranda', 'gilmar', 'egberto', 'geysson', 'julio', 'júlio']);
+  const aplicTl = j.equipe.aplicadores_telegram || [];
+
   if (prest.length){
     elCampo.outerHTML = `<div class="equipe-campo" id="tab-campo">${
       prest.map(p => {
@@ -3173,8 +4578,24 @@ function renderDetalhes(){
         </div>`;
       }).join('')
     }</div>`;
+  } else if (aplicTl.length){
+    // Fallback: /equipe veio vazio do Painel · inferir do Telegram (filtrando Monofloor)
+    elCampo.outerHTML = `<div class="equipe-campo" id="tab-campo">
+      <div class="equipe-campo-fonte">⚠ Equipe não cadastrada no Painel · inferida dos senders Telegram (≥5 msgs · não-Monofloor)</div>
+      ${aplicTl.map(p => {
+        const primeiroNome = (p.nome || '').split(/[\s|]+/)[0].toLowerCase();
+        const isLider = LIDERES_CONHECIDOS.has(primeiroNome);
+        return `<div class="equipe-campo-pessoa${isLider ? ' lider' : ''}">
+          <div class="equipe-campo-emoji">${isLider ? '🧑‍💼' : '👷'}</div>
+          <div class="equipe-campo-info">
+            <div class="equipe-campo-nome">${esc(p.nome)}</div>
+            <div class="equipe-campo-funcao">${isLider ? 'LÍDER' : 'aplicador'} <span class="equipe-campo-msgs">${p.n_msgs} msgs</span></div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
   } else {
-    elCampo.outerHTML = '<div class="equipe-campo-vazio" id="tab-campo">Equipe não cadastrada formalmente</div>';
+    elCampo.outerHTML = '<div class="equipe-campo-vazio" id="tab-campo">Equipe não cadastrada · zero senders de campo no Telegram</div>';
   }
 
   const senders = (j.equipe.senders_telegram || []).slice(0, 10);
@@ -3184,8 +4605,8 @@ function renderDetalhes(){
       <tr>
         <td>${esc(s.nome)}</td>
         <td class="num" style="text-align:right">${s.n_msgs}</td>
-        <td class="num">${(s.primeira_msg||'').slice(0,10)}</td>
-        <td class="num">${(s.ultima_msg||'').slice(0,10)}</td>
+        <td class="num">${s.primeira_msg ? fmtData(s.primeira_msg) : '—'}</td>
+        <td class="num">${s.ultima_msg ? fmtData(s.ultima_msg) : '—'}</td>
       </tr>
     `).join('')}</tbody>`;
 
@@ -3304,8 +4725,10 @@ function renderDetalhes(){
     if (n.includes('STELION')) return 'STELION';
     if (n.includes('LILIT')) return 'LILIT';
     if (n.includes('TERON') || n.includes('LEONA')) return 'LEONA';  // TERON é nome novo de LEONA (abr/2026)
+    if (n.includes('MIRAGE')) return 'LILIT';                          // cor LILIT (paredes)
+    // SAARA é cor compartilhada STELION/LILIT · não mapear · família vem do material principal da OS
     if (n.includes('PRIMER')) return 'PRIMER';                        // LUMINA PRIMER → família PRIMER
-    if (n.includes('VERNIZ') || n.includes('LUMINA')) return 'LUMINA';// "verniz" no Telegram = LUMINA na OS
+    if (n.includes('VERNIZ') || n.includes('LUMINA') || /\bPU\b/.test(n)) return 'LUMINA';// "verniz"/"PU" no Telegram = LUMINA na OS
     return n.split(/\s+/)[0];
   }
   function ratioM2(qtdStr, nomeMat){
@@ -3367,31 +4790,123 @@ function renderDetalhes(){
   function blocoSnapshotsMaterial(){
     const snaps = j.snapshots_material || [];
     if (!snaps.length) return '';
-    const itens = snaps.map(s => {
-      const qstr = (s.qtds || []).map(q => `${q.qtd} ${q.unidade}`).join(' · ');
-      const prods = (s.produtos || []).join(', ');
-      const cls = s.classe || '?';
-      const clsHtml = cls === '?' ? '<span class="snap-classe indef">?</span>' : `<span class="snap-classe ${cls}">${cls}</span>`;
-      const itemCls = (cls === '?') ? 'indef' : cls;
-      const autorLimpo = (s.autor || '').split('|').slice(-1)[0].trim();
-      return `<div class="snapshot-item ${itemCls}">
-        <span class="snap-data">${fmtData(s.data)}</span>
-        ${clsHtml}
-        <div class="snap-corpo">
-          <div class="snap-cab">
-            <span class="snap-qtds">${esc(qstr)}</span>
-            ${prods ? `<span class="snap-produtos">${esc(prods)}</span>` : ''}
-            <span class="snap-autor">${esc(autorLimpo)}</span>
-          </div>
-          <div class="snap-trecho">"${esc((s.trecho||'').slice(0,200))}"</div>
-        </div>
-      </div>`;
-    }).join('');
-    return `<div class="snapshots-section">
-      <div class="snapshots-titulo">Material no Telegram · timeline 2026+</div>
-      <div class="snapshots-subtitulo">snapshots cronológicos detectados nas msgs · classificados por verbos-chave (sobra/consumo/solicitação/entrada/estoque)</div>
-      <div class="snapshots-timeline">${itens}</div>
-    </div>`;
+
+    // Ordem de swimlanes · só inclui categorias que têm pelo menos 1 snapshot
+    const ORDEM_CLS = [
+      { id: 'ENTRADA', label: 'Entrada de material', cor: '#7ea0b7' },
+      { id: 'ESTOQUE', label: 'Material em obra',    cor: '#b8884a' },
+      { id: 'CONSUMO', label: 'Consumo registrado',  cor: '#c45a5a' },
+      { id: 'SOBRA',   label: 'Sobra',               cor: '#5fa073' },
+      { id: 'SOLIC',   label: 'Solicitação',         cor: '#e8c078' },
+      { id: '?',       label: 'Indefinido',          cor: '#a89e92' },
+    ];
+    const porClasse = {};
+    snaps.forEach(s => {
+      const c = s.classe || '?';
+      if (!porClasse[c]) porClasse[c] = [];
+      porClasse[c].push(s);
+    });
+    const swimlanes = ORDEM_CLS.filter(cls => porClasse[cls.id] && porClasse[cls.id].length);
+
+    // Janela cronológica (1ª msg até última msg, com folga)
+    const datas = snaps.map(s => s.data).filter(Boolean).sort();
+    const dataMin = new Date(datas[0]);
+    const dataMax = new Date(datas[datas.length - 1]);
+    // 7 dias de folga em cada lado
+    dataMin.setDate(dataMin.getDate() - 7);
+    dataMax.setDate(dataMax.getDate() + 7);
+    const totalMs = dataMax - dataMin;
+
+    // Layout
+    const W = 1180;
+    const LABEL_LARG = 140;
+    const LANE_ALTURA = 56;
+    const PADDING_TOP = 36;
+    const PADDING_BOTTOM = 16;
+    const X0 = LABEL_LARG;
+    const X1 = W - 24;
+    const LARG = X1 - X0;
+    const H = PADDING_TOP + swimlanes.length * LANE_ALTURA + PADDING_BOTTOM;
+
+    // Pulso · níveis Y dentro da swimlane (mesma lógica do Gantt categorias)
+    const NIVEIS_OFFSET = [0, -16, 16, -26, 26];
+    const COLISAO_PX = 28;  // quadradinhos são menores · colisão menor
+
+    function xFromData(d){
+      if (!d) return X0;
+      const dt = new Date(d);
+      return X0 + ((dt - dataMin) / totalMs) * LARG;
+    }
+
+    // Eixo de meses no topo
+    const mesesMarkers = [];
+    let cursor = new Date(dataMin.getFullYear(), dataMin.getMonth(), 1);
+    while (cursor <= dataMax){
+      mesesMarkers.push(new Date(cursor));
+      cursor.setMonth(cursor.getMonth() + 1);
+    }
+    const stepMes = mesesMarkers.length > 12 ? 2 : 1;
+    const mesesShow = mesesMarkers.filter((_, i) => i % stepMes === 0);
+    const mesNomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+    const partes = [];
+    partes.push(`<div class="snapshots-section">`);
+    partes.push(`<div class="snapshots-titulo">Material no Telegram · timeline 2026+</div>`);
+    partes.push(`<div class="snapshots-subtitulo">cada quadradinho = 1 menção no grupo Telegram · cor por classe · hover pra ver detalhe</div>`);
+    partes.push(`<div style="overflow-x:auto;margin-top:8px"><svg viewBox="0 0 ${W} ${H}" style="width:100%;min-width:900px;display:block" xmlns="http://www.w3.org/2000/svg">`);
+
+    // Eixo de meses (linhas verticais + labels topo)
+    mesesShow.forEach(m => {
+      const x = xFromData(m.toISOString().slice(0,10));
+      partes.push(`<line x1="${x}" y1="${PADDING_TOP - 4}" x2="${x}" y2="${H - PADDING_BOTTOM}" stroke="#e6dfd0" stroke-width="0.6"/>`);
+      partes.push(`<text x="${x}" y="${PADDING_TOP - 12}" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#6b6156" font-weight="600">${mesNomes[m.getMonth()]}/${String(m.getFullYear()).slice(2)}</text>`);
+    });
+
+    // Swimlanes
+    swimlanes.forEach((cls, i) => {
+      const y = PADDING_TOP + i * LANE_ALTURA + LANE_ALTURA / 2;
+      // Label esquerda
+      partes.push(`<text x="${LABEL_LARG - 12}" y="${y + 4}" text-anchor="end" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#3a3530">${esc(cls.label)}</text>`);
+      // Linha guia
+      partes.push(`<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="#e6dfd0" stroke-width="0.8" stroke-dasharray="2,3"/>`);
+      // Zebra
+      if (i % 2 === 0){
+        partes.push(`<rect x="${X0}" y="${y - LANE_ALTURA/2 + 2}" width="${LARG}" height="${LANE_ALTURA - 4}" fill="rgba(0,0,0,0.015)" rx="3"/>`);
+      }
+
+      // Quadradinhos da classe · pulso intra-swimlane
+      const items = (porClasse[cls.id] || []).slice().sort((a,b) => (a.data||'').localeCompare(b.data||''));
+      let lastX = -Infinity;
+      let nivelIdx = 0;
+      items.forEach(s => {
+        const x = xFromData(s.data);
+        if (x - lastX < COLISAO_PX){
+          nivelIdx = (nivelIdx + 1) % NIVEIS_OFFSET.length;
+        } else {
+          nivelIdx = 0;
+        }
+        const offset = NIVEIS_OFFSET[nivelIdx];
+        const cy = y + offset;
+
+        if (offset !== 0){
+          partes.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${cy}" stroke="#a89e92" stroke-width="0.8" opacity="0.4"/>`);
+        }
+
+        // Tooltip rico
+        const qstr = (s.qtds || []).map(q => `${q.qtd} ${q.unidade}`).join(' · ');
+        const prods = (s.produtos || []).join(', ');
+        const autorLimpo = (s.autor || '').split('|').slice(-1)[0].trim();
+        const tip = `${cls.label} · ${fmtDataLong(s.data)}\n${autorLimpo} · ${qstr}${prods ? ' · ' + prods : ''}\n"${(s.trecho || '').slice(0, 200)}"`;
+        // Quadradinho
+        partes.push(`<g class="snap-quad" data-tip="${esc(tip)}" style="cursor:help">
+          <rect x="${x - 6}" y="${cy - 6}" width="12" height="12" fill="${cls.cor}" stroke="#fff" stroke-width="1.5" rx="2" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.15))"/>
+        </g>`);
+      });
+    });
+
+    partes.push('</svg></div>');
+    partes.push('</div>');
+    return partes.join('');
   }
 
   if (envios.length){
@@ -3429,6 +4944,17 @@ function renderDetalhes(){
     const semOS = `<div class="vazio">(nenhuma OS Indústria com materiais detalhados encontrada · obra pode ser reaplicação ou OS pendente)</div>${blocoCamadas()}`;
     contMat.innerHTML = semOS + blocoSnapshotsMaterial();
   }
+
+  // Tooltips dos quadradinhos da timeline de Material no Telegram
+  contMat.querySelectorAll('.snap-quad').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      const linhas = (el.dataset.tip || '').split('\n');
+      const html = `<strong>${esc(linhas[0]||'')}</strong>${linhas[1] ? '<br><em>' + esc(linhas[1]) + '</em>' : ''}${linhas[2] ? '<br>' + esc(linhas[2]) : ''}`;
+      mostrarTooltip(e, html);
+    });
+    el.addEventListener('mousemove', moverTooltip);
+    el.addEventListener('mouseleave', esconderTooltip);
+  });
 
   // Gantt da execução · colunas = dias · Y = horas
   renderGantt(j.marcos_execucao || []);

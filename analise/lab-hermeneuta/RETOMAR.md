@@ -1,5 +1,69 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
+> **Última atualização:** 2026-05-12 · piloto expandido pra 20 obras + auditoria 6 agentes + 7 bugs detectados
+
+---
+
+## 🆕 SESSÃO 2026-05-12 · O QUE FECHAMOS HOJE
+
+### Lab Orion · refinamento profundo da Jornada
+- ✅ Sidebar esquerda (320px sticky) com busca + filtro status + filtro "vistas" (localStorage) · escala pra 200+ obras
+- ✅ Botão "📋 Gerar relatório" no header da obra · drawer slide-in da direita · narrativa em prosa + gráficos (donut tempo + barra severidades) · imprimível com `window.print()` (Salvar como PDF nativo)
+- ✅ Relatório editorial (sem cara de IA/dashboard) · 5 parágrafos com inferências determinísticas
+- ✅ Tracking "obras já vistas" · localStorage · badge ✓ na sidebar
+- ✅ Refinamento Gantt categorias · pulso intra-swimlane (zigzag vertical) quando bolinhas colidem
+- ✅ Material no Telegram · SVG horizontal com swimlanes por classe (ENTRADA/CONSUMO/SOBRA/SOLIC/MATERIAL EM OBRA)
+- ✅ Detalhamento conceitual: ESTOQUE renomeado pra "Material em obra" · CONSUMO regex ampliada · TRATATIVAS vs RETRABALHO refinado · "reaplicação verniz" como subtipo
+- ✅ Datas uniformizadas em todo lugar (DD/MM/AA)
+
+### Piloto expandido · 10 → 20 obras
+- ✅ +10 obras finalizadas/concluídas com fim ≥ dez/2025 e 8+ marcos (MANUELA VILLAS BOAS, MARCOS ANTONIO, MANOELA LATINI, MARIANA PORTO, ÁUREO, NATHALIA, YAHYA, CHRISTIAN KORVER, LEONARDO KAWANO, BM VAREJO)
+- ✅ Critério "corte temporal dez/2025" capturado em memória pra próximas expansões
+- ✅ Benchmark "tempo entre marcos" funcionando · 17d mediana Última→Aprovação, 81d Aprovação→VT qualidade, etc
+
+### Esquadrão de auditoria · 6 agentes paralelos
+- ✅ 6 subagentes Claude lançados simultaneamente · cada um em 1 dimensão (datas, marcos, personagens, materiais, ocorrências, padrões cross-obras)
+- ✅ Tempo total: ~20min · achados ricos em todas frentes
+
+### Vocabulário expandido (gravado em memória)
+- ✅ 12 cores novas (Ash, Everest, Terracota, Atena, Javier, Gengibre, Linho Branco, Ghost, Vert, Sweet, Cherry, Sasha, Camelo)
+- ✅ 4 cores compartilhadas STELION+LILIT (Saara, Ash, Everest, Terracota)
+- ✅ 7 variantes industriais (STELION + ESPESSANTE, STELION 3G DILUIDO, STELION LEONA, LUMINA FOSCO, LUMINA ANTIDERRAPANTE, PU ULTRA, SELADOR)
+- ✅ 10+ pessoas novas (Michael Marinho, Jaú Microcimento, Juninho, F Lucena, Jorge Ribero, Laercio, Josias, Kaike, Pedro Alexandre Santana, Juliana Santos)
+- ✅ 8 variantes de grafia Monofloor identificadas
+- ✅ Bots classificados errado (Kira, Carlos Bot, Bridge, Q Assim Seja) · pra excluir de aplicadores
+
+### Memórias novas/atualizadas
+- `project_auditoria_20_obras_2026_05_12.md` · novo · snapshot consolidado
+- `feedback_corte_temporal_obras_historico.md` · novo
+- `reference_nomenclatura_produtos.md` · atualizado (cores + variantes)
+- `_projeto/MAPA_PESSOAS.md` · atualizado (8 pessoas + variantes + bots)
+- `_projeto/VOCABULARIO_OPERACIONAL.md` · atualizado (pressão de prazo, reparo pontual, reaplicação verniz)
+
+### Pendências pra próxima sessão (7 bugs priorizados)
+
+| Ordem | Bug | Custo | Onde |
+|---|---|---|---|
+| 1 | `status` ausente em 20/20 | 15min | gerar_jornada.py coleta |
+| 2 | `tempo_execucao = None` em 6-8 obras | 1h | Cluster fallback |
+| 3 | Hibernação engolida dentro de fase-mãe | 1h | Detector hibernação |
+| 4 | 72% reprovacao no fallback "tratativa" | 30min | Subtipos verniz/completa |
+| 5 | Falsos positivos por negação/pergunta | 45min | 5 regex novas |
+| 6 | Kira/Bot como aplicador | 10min | PESSOAS_MONOFLOOR |
+| 7 | qtd=None em 100% das OS | 1h | pdfplumber bug |
+
+**Total: ~5h** pra eliminar todos os achados da auditoria.
+
+### Comando pra retomar amanhã (cole no Claude Code)
+
+```
+Lê analise/lab-hermeneuta/RETOMAR.md primeiro · seção topo "SESSÃO 2026-05-12". Memórias críticas: project_auditoria_20_obras_2026_05_12.md, reference_nomenclatura_produtos.md, _projeto/MAPA_PESSOAS.md. Próximo passo: bug #1 (campo status ausente no JSON · ~15min). Lista os 7 bugs em ordem com plano de fix pra cada.
+```
+
+---
+
+## 📜 HISTÓRICO ANTERIOR
+
 > **Última atualização:** 2026-05-07 · F1 (Timeline em escala) + F2 (Calibração de memória) fechadas
 > Se você é um agente IA chegando agora · LEIA este arquivo primeiro. Em ~30s você terá contexto suficiente pra trabalhar sem confundir nada.
 

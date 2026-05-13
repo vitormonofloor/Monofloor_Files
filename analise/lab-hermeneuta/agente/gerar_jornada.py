@@ -53,8 +53,33 @@ BASE_API = "https://cliente.monofloor.cloud/api/projects"
 
 # Obras-piloto (hardcoded · Fase A)
 OBRAS_PILOTO = [
+    # Pilotos originais (sessões 2026-05-05/06)
     "a79f00f0-19b1-43d4-b9d7-6ab8d219c205",  # KRYSTAL LURI NUMA
     "3e5c6392-af93-427a-9e29-3a927e6d5dc6",  # GURGEL DALFONSO
+
+    # Calibração F3 (sessão 2026-05-08) · finalizadas/concluídas com sinal Telegram rico
+    # Mix: 5 com retrabalho · 3 entrega direta · 1 problemática (GUSTAVO)
+    "0e4e10b2-9fbe-49a4-9e42-08ae5624b39c",  # GETULIO TURATTI OST · 2 ciclos · clássico retrabalho
+    "63623d90-e0c0-48e7-bc9d-eb45cc923af5",  # LUIS FERNANDO DE LIMA CARVALHO · 3 ciclos · jornada longuíssima
+    "e6b38375-4075-4f79-9319-f15566722963",  # TALLY FELDMAN SINGAL GROSS · 91m · sinal mais rico
+    "0f3e836e-8e36-4436-bac8-51ef678b17c9",  # P2B ENGENHARIA · entrega direta corporativa
+    "687fbc05-b847-4c52-8af1-d7833b3a4590",  # GUSTAVO DE SOUZA PEREIRA · 2000 msgs · marcas/pausada
+    "b055e234-ebef-41d3-b464-54c2102c0895",  # JAQUES AJZENTAL · poucas msgs · processo paralelo
+    "b8fbadd8-778c-4a3b-9e18-81bba29a6a8e",  # ANDRE KEUNECKE SALERNO · 2 ciclos · sinal médio
+    "9a190357-99d5-4a25-bba2-436ab65542ed",  # RODRIGO DE ALMEIDA SCHMIDT · entrega direta longa
+
+    # Expansão sessão 2026-05-12 · obras finalizadas/concluídas a partir de dez/2025 (corte temporal)
+    # Mix variado: 4 ciclos (raro), 3 ciclos, 2 ciclos, consultores diversos
+    "50068c67-3854-49dd-9302-1a8636cf4a6a",  # MANUELA VILLAS BOAS SOUZA MARTIN · 53m · 4 ciclos · Wesley
+    "e1fe5106-083e-4958-8af0-2a491c826b5b",  # MARCOS ANTONIO TADEU EXPOSTO JUNIOR · 34m · 4 ciclos
+    "c1621370-4f28-4e9b-9f02-10032f9bf7a0",  # MANOELA LATINI GAVASSI FRANCISCO 2ª FASE · 63m · Wesley
+    "c3d79452-b378-4d23-895c-3ba5e8a060ea",  # MARIANA PORTO FACCHINI · 43m · 3 ciclos · Juliana Santos
+    "994a0d5b-e532-44fb-ab3b-19b686d147a6",  # ÁUREO EUSTÁQUIO BRANDÃO · 42m · 3 ciclos · Pedro Alexandre Santana
+    "edc779fb-2dca-4d1a-864a-6234236cf145",  # NATHALIA DE FIGUEIREDO NUNES RABELO · 85m · super-rica · Wesley
+    "13d9ca18-e5fc-42bc-907c-174a2e02ae9f",  # YAHYA EL HASSAN · 57m · 2 ciclos · Wesley
+    "56cd74a9-44ee-40f2-b389-8773ac6df222",  # CHRISTIAN KORVER · 40m · 258 msgs (poucas · testa detector) · Luana
+    "0d0c35bd-3b00-4de2-b898-4dfc61e6fdae",  # LEONARDO KAWANO · 39m · 2 ciclos · Wesley
+    "1b292a9b-8c57-47bd-92e1-824fcd0b7fff",  # BM VAREJO – M. FASHION 1 FASE · 39m · obra corporativa · Wesley
 ]
 
 HOJE = datetime.now(timezone.utc)
@@ -65,19 +90,26 @@ HOJE_DATE = HOJE.date()
 # Atualizar quando descobrir nova pessoa com múltiplas grafias.
 SENDERS_ALIAS = {
     "taquinho": "Gilmar Taquinho",  # KRYSTAL: Taquinho = aplicador | Gilmar Taquinho
+    "b®":       "Braiam Novo",      # RODRIGO/GETULIO: B® com símbolo = Braiam · fiscal qualidade desde 2026
 }
 
 
 def normalizar_sender(sender: str) -> str:
     """Aplica aliases pra unificar pessoa que aparece com nomes diferentes.
-    Ex: 'Taquinho' E 'aplicador | Gilmar Taquinho' viram ambos 'Gilmar Taquinho'."""
+    Ex: 'Taquinho' E 'aplicador | Gilmar Taquinho' viram ambos 'Gilmar Taquinho'.
+    Tokens com caractere especial (ex: 'b®') usam match de substring · sem word boundary."""
     if not sender:
         return sender
     s_low = sender.lower()
     for token, canonico in SENDERS_ALIAS.items():
-        # match: token aparece como palavra inteira no sender
-        if re.search(rf"\b{re.escape(token)}\b", s_low):
-            return canonico
+        token_low = token.lower()
+        # Tokens com caracteres não-word (ex: ®) usam substring direto
+        if re.search(r'\W', token_low):
+            if token_low in s_low:
+                return canonico
+        else:
+            if re.search(rf"\b{re.escape(token_low)}\b", s_low):
+                return canonico
     return sender
 
 # Janelas e thresholds
@@ -327,8 +359,79 @@ PAD_COR_APROVADA = re.compile(
 )
 PAD_INICIO_ANUNCIADO = re.compile(r"in[íi]cio\s+(da\s+obra|previsto|confirmado)\s*[:\s]*(\d{1,2}[/-]\d{1,2})", re.IGNORECASE)
 PAD_MATERIAL_PRODUZIDO = re.compile(r"\b(material\s+produzido|os\s+produzida|ind[uú]stria\s+(finaliz|conclu)|material\s+saiu|material\s+em\s+obra|material\s+enviado)\b", re.IGNORECASE)
-PAD_FINALIZACAO = re.compile(r"\b(obra\s+(finaliz|conclu)|verniz\s+finaliz|piso\s+(finaliz|aprovad|conclu))\b", re.IGNORECASE)
-PAD_APROVACAO_CLIENTE = re.compile(r"\b(obra\s+aprovada|cliente\s+aprov(ou|ado)|aprov(ado|ação).*cliente|v[íi]deo\s+de\s+aprova[çc][aã]o)\b", re.IGNORECASE)
+# FIX BUG: \b após "finaliz" bloqueava "obra finalizada" (no boundary entre z e a) · trocar por \w*
+PAD_FINALIZACAO = re.compile(r"\b(obra\s+(finaliz\w*|conclu\w*)|verniz\s+finaliz\w*|piso\s+(finaliz\w*|aprovad\w*|conclu\w*))", re.IGNORECASE)
+PAD_APROVACAO_CLIENTE = re.compile(r"\b(obra\s+aprovad\w*|cliente\s+aprov(ou|ado|ada)|aprov(ado|ada|ação).*cliente|v[íi]deo\s+de\s+aprova[çc][aã]o)\b", re.IGNORECASE)
+
+# === MARCOS DE FASE GRANDE · trazidos do timeline_10obras (calibrados em P2B/SILVANA/PALLOMA) ===
+# Filtragem cuidadosa: APENAS marcos de fase macro · NÃO trazer detalhe operacional (camada individual,
+# cobrança granular, ocorrência formal · esses são do outro propósito ou já cobertos no Lab Orion)
+
+# Escopo aprovado · marco-charneira pré-obra → liberação
+PAD_ESCOPO_APROVADO = re.compile(r"(♦️\s*)?escopo\s+aprovad\w*", re.IGNORECASE)
+
+# Equipe definida · alocação dos aplicadores (sinal de pré-execução fechando)
+PAD_EQUIPE_DEFINIDA = re.compile(
+    r"\b("
+    r"prestadores\s+dessa\s+obra\s+ser[áa]o"
+    r"|aplicador(es)?\s+ser[áa]o"
+    r"|equipe\s+definida"
+    r"|equipe\s+alocada"
+    r")",
+    re.IGNORECASE,
+)
+
+# Material entregue em obra (logística OK · pronto pra começar)
+PAD_MATERIAL_ENTREGUE = re.compile(
+    r"\b("
+    r"material\s+chegou(\s+(agora|hoje|aqui))?"
+    r"|chegou\s+(o\s+)?material"
+    r"|recebimento\s+(do\s+)?material"
+    r"|material(\s+em\s+obra)?\s+conferido"
+    r")",
+    re.IGNORECASE,
+)
+
+# Relatório VT qualidade · frase-padrão Caroline pós-execução · disparo de retrabalho
+PAD_RELATORIO_VT_QUALIDADE = re.compile(
+    r"recebemos\s+(as\s+)?(imagens|informações)\s+e?\s*(informações)?\s*referentes\s+(à|a)\s+(nossa\s+)?(última\s+)?visita",
+    re.IGNORECASE,
+)
+
+# Obra postergada · sinal de fricção · cronograma reset (importante pra macro-etapas)
+PAD_OBRA_POSTERGADA = re.compile(
+    r"\b("
+    r"obra\s+postergad\w*"
+    r"|projeto\s+postergad\w*"
+    r"|nossa\s+entrada\s+ser[áa]\s+postergad"
+    r"|entrada\s+postergad\w*"
+    r"|🚨\s*obra\s+postergad"
+    r")",
+    re.IGNORECASE,
+)
+
+# Última camada · transição final da execução (pronto pro verniz)
+PAD_ULTIMA_CAMADA = re.compile(
+    r"\b("
+    r"finalizamos\s+(a\s+)?[úu]ltima\s+camada"
+    r"|[úu]ltima\s+camada\s+(aplicad|finaliz)"
+    r"|preparado\s+pra\s+aplica[çc][aã]o\s+do\s+verniz"
+    r"|pronto\s+pro\s+verniz"
+    r")",
+    re.IGNORECASE,
+)
+
+# Troca de aplicador em obra · sinal de problema de pessoa
+PAD_TROCA_APLICADOR = re.compile(
+    r"\b("
+    r"(prestador|aplicador|equipe|filho)\s+\w+\s+assumir[áa]?\s+(as\s+)?atividades?"
+    r"|(no\s+lugar\s+(dele|dela|do\s+\w+))"
+    r"|(em\s+seu\s+lugar\s+est[áa])"
+    r"|(\w+)\s+est[áa]\s+de\s+atestado\s+m[ée]dico"
+    r"|substitu(i[çc][aã]o|indo)\s+(do|na\s+equipe)"
+    r")",
+    re.IGNORECASE,
+)
 
 # Detector de "card de bot" · msgs com separators longos `------` ou padrão APLICADOR:/SUPERVISOR:/CLIENTE: juntos
 PAD_CARD_BOT_SEPARATOR = re.compile(r"-{10,}")
@@ -354,24 +457,24 @@ PAD_SOBROU = re.compile(r"\bsobr(ou|ar[ao])\s+(\d+)?\s*(\w+)?", re.IGNORECASE)
 # Camada/demão + produto · ditas pelo aplicador (com ordinal explícito)
 # Ex: "Segunda camada de stelion" · "Primeira demão de lumina aplicado" · "Aplicação primeira camada stelion"
 PAD_CAMADA_PRODUTO = re.compile(
-    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta)\s+(camada|aplica[çc][ãa]o|dem[ãa]o)\b[^\n]{0,80}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b",
+    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta)\s+(camada|aplica[çc][ãa]o|dem[ãa]o)\b[^\n]{0,80}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
     re.IGNORECASE
 )
 # Aplicação "simples" sem ordinal · vira camada 1 inferida
 # Ex: "Aplicação de primer" · "aplicando verniz" · "Programação aplicação verniz lumina"
 PAD_APLICACAO_SIMPLES = re.compile(
-    r"\baplica(?:ndo|[çc][ãa]o)\b(?:[^\n]{0,40}?)\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b",
+    r"\baplica(?:ndo|[çc][ãa]o)\b(?:[^\n]{0,40}?)\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
     re.IGNORECASE
 )
 # Produto + finalizado/aplicado/concluído (sem ordinal)
 # Ex: "Verniz finalizado" · "primer aplicado" · "Stelion concluído"
 PAD_PRODUTO_FINALIZADO = re.compile(
-    r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\s+(?:foi\s+)?(?:finaliz|conclu|aplicad)",
+    r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\s+(?:foi\s+)?(?:finaliz|conclu|aplicad)",
     re.IGNORECASE
 )
 # Sobra com produto · "Sobrou 3 teron fechado" · "sobraram 2 baldes de stelion"
 PAD_SOBROU_PRODUTO = re.compile(
-    r"\bsobr(?:ou|aram?)\s+(\d+)?\s*(?:\w+\s+){0,2}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b",
+    r"\bsobr(?:ou|aram?)\s+(\d+)?\s*(?:\w+\s+){0,2}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
     re.IGNORECASE
 )
 # Verbos pra classificar snapshots de material em 2026+
@@ -379,7 +482,17 @@ PAD_VERBO_ENTRADA = re.compile(r"\b(chegou|chegaram|entreg(?:a|ou|aram|amos)|rec
 PAD_VERBO_ESTOQUE = re.compile(r"\b(temos|tem|tinha|tenho|estamos\s+com|ainda\s+(?:tem|temos)|dispon[ií]ve|material\s+em\s+obra)\b", re.IGNORECASE)
 PAD_VERBO_SOBRA   = re.compile(r"\bsobr(?:ou|aram?|a)\b", re.IGNORECASE)
 PAD_VERBO_SOLIC   = re.compile(r"\b(precis[ao]\b|preciso\b|(?:vamos|iremos)\s+precisar|manda(?:r)?\s+(?:mais|outr))", re.IGNORECASE)
-PAD_VERBO_CONSUMO = re.compile(r"\b(consum[oeiu]|gast(?:ei|ou|amos)|usamos|aplicamos|fizemos|fez\s+em|aplicad[oa]s?\s+\d)", re.IGNORECASE)
+PAD_VERBO_CONSUMO = re.compile(
+    r"\b("
+    r"consum[oeiu]"  # consumo, consumiu, consumindo, consumimos
+    r"|gast(?:ei|ou|amos|aram)"
+    r"|usamos|usaram|usado[as]?|foram\s+usad"  # NOVO · "usados", "usaram", "foram usados"
+    r"|aplicamos|aplicaram|aplicad[oa]s?"
+    r"|tivemos\s+que\s+usar"  # NOVO · "tivemos que usar X kit"
+    r"|fizemos|fez\s+em"
+    r")",
+    re.IGNORECASE
+)
 # Cores, renomeações e vocabulário do campo → família de produto-mãe na OS Indústria
 # IMPORTANTE: aplicadores no Telegram usam apelidos diferentes do nome do produto na OS:
 #   - "verniz" no Telegram = LUMINA (produto base) na OS
@@ -389,8 +502,14 @@ PAD_VERBO_CONSUMO = re.compile(r"\b(consum[oeiu]|gast(?:ei|ou|amos)|usamos|aplic
 PRODUTO_FAMILIA = {
     "KALAHARI": "STELION",  # cor STELION
     "ARGENTO":  "STELION",  # cor STELION
+    "MIRAGE":   "LILIT",    # cor LILIT (paredes) · ex: TALLY FELDMAN
+    "ARÁBIA":   "STELION",  # cor STELION · ex: P2B ENGENHARIA
+    # SAARA NÃO está aqui · cor COMPARTILHADA STELION/LILIT
+    # ANDRE KEUNECKE: 58 baldes STELION cor Saara · GUSTAVO: 12 baldes LILIT cor Saara
+    # Família deve vir do contexto da OS (nome do material), não do nome da cor
     "TERON":    "LEONA",    # nome novo do produto (abr/2026); LEONA é o nome canônico mantido
     "VERNIZ":   "LUMINA",   # aplicador fala "verniz", produto na OS é LUMINA
+    "PU":       "LUMINA",   # alguns aplicadores chamam o verniz de "PU" (poliuretano)
 }
 
 # Problemas
@@ -454,7 +573,7 @@ def detectar_marco_em_msg(msg, tipo_pad, padrao):
         "tipo": tipo_pad,
         "data": (msg.get("timestamp") or "")[:10],
         "data_iso": msg.get("timestamp"),
-        "autor": (msg.get("sender") or "?")[:35],
+        "autor": normalizar_sender(msg.get("sender") or "?")[:35],
         "trecho": texto[:160].replace("\n", " ").strip(),
         "msg_id": msg.get("id"),
         "match": m.group(0)[:50],
@@ -611,20 +730,31 @@ def detectar_marcos(msgs_ordenadas):
     marcos = []
     padroes = [
         ("contrato_assinado", PAD_CONTRATO),
+        ("escopo_aprovado", PAD_ESCOPO_APROVADO),
         ("vt_agendada", PAD_VT_AGENDADA),
         # vt_entrada_realizada vem ANTES de vt_realizada · regex mais específica vence
         ("vt_entrada_realizada", PAD_VT_ENTRADA_REALIZADA),
         ("vt_realizada", PAD_VT_REALIZADA),
         ("amostra_solicitada", PAD_AMOSTRA_SOLICITADA),
         ("cor_aprovada", PAD_COR_APROVADA),
+        ("equipe_definida", PAD_EQUIPE_DEFINIDA),
+        ("material_entregue", PAD_MATERIAL_ENTREGUE),
         ("inicio_anunciado", PAD_INICIO_ANUNCIADO),
         ("material_produzido", PAD_MATERIAL_PRODUZIDO),
+        ("obra_postergada", PAD_OBRA_POSTERGADA),
+        ("ultima_camada", PAD_ULTIMA_CAMADA),
+        ("troca_aplicador", PAD_TROCA_APLICADOR),
         ("aprovacao_cliente", PAD_APROVACAO_CLIENTE),
+        ("relatorio_vt_qualidade", PAD_RELATORIO_VT_QUALIDADE),
         ("reprovacao_retorno", PAD_REPROVACAO_RETORNO),
         ("finalizacao", PAD_FINALIZACAO),
     ]
     # Pra cada tipo · mantém SÓ o PRIMEIRO match cronológico (a menos que sejam eventos repetíveis)
-    UNICOS = {"contrato_assinado", "cor_aprovada", "vt_agendada", "vt_realizada", "vt_entrada_realizada", "material_produzido"}
+    # NOVOS únicos: escopo_aprovado, equipe_definida (acontecem 1x na obra)
+    # Repetíveis (dedup por dia): material_entregue, obra_postergada, ultima_camada, troca_aplicador, relatorio_vt_qualidade
+    UNICOS = {"contrato_assinado", "escopo_aprovado", "equipe_definida",
+              "cor_aprovada", "vt_agendada", "vt_realizada", "vt_entrada_realizada",
+              "material_produzido"}
     primeiro_de_cada = {}
     todos = []
 
@@ -801,7 +931,7 @@ def detectar_consumo(msgs_ordenadas):
         for q_match in PAD_QTD_KIT.finditer(texto):
             consumos.append({
                 "data": (m.get("timestamp") or "")[:10],
-                "autor": (m.get("sender") or "?")[:30],
+                "autor": normalizar_sender(m.get("sender") or "?")[:30],
                 "qtd": q_match.group(1),
                 "unidade": q_match.group(2).lower(),
                 "trecho": texto[:120].replace("\n", " ").strip(),
@@ -814,7 +944,7 @@ def detectar_consumo(msgs_ordenadas):
             produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
             sobras.append({
                 "data": (m.get("timestamp") or "")[:10],
-                "autor": (m.get("sender") or "?")[:30],
+                "autor": normalizar_sender(m.get("sender") or "?")[:30],
                 "qtd": qtd_sobra,
                 "produto": produto_lit,
                 "produto_familia": produto_fam,
@@ -824,7 +954,7 @@ def detectar_consumo(msgs_ordenadas):
             # fallback sem produto identificado
             sobras.append({
                 "data": (m.get("timestamp") or "")[:10],
-                "autor": (m.get("sender") or "?")[:30],
+                "autor": normalizar_sender(m.get("sender") or "?")[:30],
                 "qtd": None, "produto": None, "produto_familia": None,
                 "trecho": texto[:200].replace("\n", " ").strip(),
             })
@@ -876,11 +1006,11 @@ def detectar_snapshots_material(msgs_ordenadas, data_min=DATA_CORTE_MATERIAL):
         else:
             classe = "?"
         # Produtos mencionados (família canônica)
-        prods_lit = set(p.upper() for p in re.findall(r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz)\b", texto, re.IGNORECASE))
+        prods_lit = set(p.upper() for p in re.findall(r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b", texto, re.IGNORECASE))
         prods_fam = sorted(set(PRODUTO_FAMILIA.get(p, p) for p in prods_lit))
         snaps.append({
             "data": ts,
-            "autor": (m.get("sender") or "?")[:40],
+            "autor": normalizar_sender(m.get("sender") or "?")[:40],
             "classe": classe,
             "qtds": qtds,
             "produtos": prods_fam,
@@ -1144,7 +1274,7 @@ def detectar_problemas_msg(msgs_ordenadas):
             vistos_data.add(chave)
             sinais.append({
                 "data": data,
-                "autor": (m.get("sender") or "?")[:30],
+                "autor": normalizar_sender(m.get("sender") or "?")[:30],
                 "trecho": texto[:200].replace("\n", " ").strip(),
             })
     return sinais
@@ -1153,6 +1283,35 @@ def detectar_problemas_msg(msgs_ordenadas):
 # ============================================================
 # Equipe (cruza fontes)
 # ============================================================
+
+# Pessoas Monofloor conhecidas (do MAPA_PESSOAS) · usadas pra filtrar senders Telegram
+# e inferir quem é equipe de campo (sender que NÃO é Monofloor)
+PESSOAS_MONOFLOOR = {
+    'wesley', 'luana', 'pedro', 'mayara', 'caroline', 'kassandra',
+    'rodrigo', 'nathan', 'cauã', 'caua', 'eduarda', 'karine', 'júlio', 'julio',
+    'francisco', 'thaísa', 'thaisa', 'vanessa', 'mariana', 'gabriel',
+    'juliana', 'mateus', 'taporosky',
+    # Braiam · era aplicador até 2025-12 · fiscal de qualidade desde 2026
+    'braiam', 'braian',
+}
+PAD_LABEL_MONOFLOOR = re.compile(
+    r'\b(monofloor|opera[çc][õo]es|atendimento|qualidade|projetos|admin|comercial|consultor|financeiro|equipe\s+projetos|equipe\s+\|)',
+    re.IGNORECASE
+)
+
+def is_sender_monofloor(sender_nome):
+    """True se o sender é Monofloor (atendimento/operações/qualidade/etc) · excluir da equipe de campo."""
+    if not sender_nome:
+        return False
+    s = sender_nome.lower()
+    if PAD_LABEL_MONOFLOOR.search(s):
+        return True
+    # Pega o primeiro nome (antes de "|" ou espaço)
+    primeiro = re.split(r'[\s|]+', s)[0].strip()
+    if primeiro in PESSOAS_MONOFLOOR:
+        return True
+    return False
+
 
 def montar_equipe(detail, equipe_endpoint, msgs_ordenadas):
     """Cruza /equipe + detail (responsavel*) + senders das msgs Telegram."""
@@ -1193,7 +1352,27 @@ def montar_equipe(detail, equipe_endpoint, msgs_ordenadas):
             "ultima_msg": sender_ultima[s],
         })
 
-    return {"monofloor": monofloor, "prestadores_oficiais": prestadores_oficiais, "senders_telegram": senders}
+    # Inferir equipe de campo dos senders Telegram quando /equipe veio vazio
+    # Filtra senders Monofloor (atendimento, operações, qualidade) · sobra a equipe de campo
+    aplicadores_telegram = []
+    for s in senders:
+        if is_sender_monofloor(s["nome"]):
+            continue
+        # Só considera "aplicador real" se tem volume mínimo (5+ msgs · evita ruído)
+        if s["n_msgs"] >= 5:
+            aplicadores_telegram.append({
+                "nome": s["nome"],
+                "n_msgs": s["n_msgs"],
+                "primeira_msg": s["primeira_msg"],
+                "ultima_msg": s["ultima_msg"],
+            })
+
+    return {
+        "monofloor": monofloor,
+        "prestadores_oficiais": prestadores_oficiais,
+        "senders_telegram": senders,
+        "aplicadores_telegram": aplicadores_telegram,
+    }
 
 
 # ============================================================
@@ -1661,10 +1840,12 @@ def construir_jornada(obra_id):
             cluster_exec_inicio = dias_no_cluster[0]
             cluster_exec_fim = dias_no_cluster[-1]
 
-    # Cálculos
+    # Cálculos · pra obras em andamento (sem data_exec_confirmada), usa data_ultima_msg como fim
     tempo_total = None
-    if primeira_msg and data_exec_confirmada:
-        tempo_total = (data_exec_confirmada - primeira_msg.date()).days
+    if primeira_msg:
+        fim_calc = data_exec_confirmada or (ultima_msg.date() if ultima_msg else None)
+        if fim_calc:
+            tempo_total = (fim_calc - primeira_msg.date()).days
     tempo_execucao = None
     if cluster_exec_inicio and cluster_exec_fim:
         tempo_execucao = (cluster_exec_fim - cluster_exec_inicio).days + 1

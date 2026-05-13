@@ -57,6 +57,9 @@ Aplicadores no Telegram NÃO usam o nome canônico do produto. Eles usam apelido
 | Termo | Definição |
 |---|---|
 | **Reaplicação** | Aplicação de novo material após reprovação da entrega original |
+| **Reaplicação de verniz** | Subtipo de reaplicação · só refaz o **verniz (LUMINA)**, NÃO as camadas base (Stelion/Lilit) · processo mais curto · ainda conta como reaplicação |
+| **Reparo pontual** | Intervenção localizada em área específica · aplicador especializado (ex: Caio) · não exige equipe completa |
+| **Pressão de prazo** | Prazo de entrega que foi repassado ao cliente e tem que ser cumprido · gera execução apressada · sinal pré-defeito (visto em RODRIGO DE ALMEIDA · áudios Braiam + Taquinho 22/04/26: *"não tem margem de erro"*, *"eles não têm mais tempo"*) · padrão: pressão → finalização antecipada → fissura/defeito pós-finalização → reaplicação de verniz |
 | **Marco** | Evento detectado em mensagem do Telegram · texto literal |
 | **Snapshot de material** | Foto textual do material em obra · detectada em msg (estoque/entrada/sobra/consumo) |
 | **Ocorrência formal** | Registro oficial no Painel · severidade categorizada |
