@@ -1,23 +1,23 @@
 {
-  "atualizado_em": "2026-05-13T13:36:45Z",
+  "atualizado_em": "2026-05-13T16:23:39Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1045,
+    "total": 1046,
     "ativas": 255,
-    "finalizados": 790,
-    "em_execucao": 39,
+    "finalizados": 791,
+    "em_execucao": 38,
     "pausados": 6,
-    "m2_em_execucao": 6045
+    "m2_em_execucao": 5992
   },
   "por_status": {
-    "em_execucao": 39,
-    "aguardando_execucao": 44,
-    "finalizado": 560,
+    "finalizado": 561,
     "planejamento": 90,
+    "em_execucao": 38,
+    "contrato": 12,
+    "aguardando_execucao": 44,
     "aguardando_clima": 3,
     "reparo": 24,
     "pausado": 6,
-    "contrato": 11,
     "marcas_rolo_cera": 3,
     "cancelado": 35,
     "concluido": 230
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2096,
+    "pending_tasks": 2094,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1232,16 +1232,56 @@
       "Aplicador 2": 19,
       "Preparador": 10
     },
-    "obras_com_equipe_hoje": 26,
-    "pessoas_em_campo_hoje": 62,
-    "em_2_ou_mais_obras_hoje": 20,
-    "ociosos_hoje": 57,
+    "obras_com_equipe_hoje": 35,
+    "pessoas_em_campo_hoje": 71,
+    "em_2_ou_mais_obras_hoje": 27,
+    "ociosos_hoje": 48,
     "conflitos_detalhe": [
+      {
+        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
+        "nome": "João Carlos",
+        "cargo": "Encarregado",
+        "qtd_obras": 8,
+        "obras": [
+          {
+            "id": "7e12a05d-a837-4599-b8a7-aa84318c39ac",
+            "cliente": "TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA"
+          },
+          {
+            "id": "2b5e9e85-95fb-4768-a76a-07bf5b5bf2f3",
+            "cliente": "VITOR FLAMMIA DE BARROS COSTA"
+          },
+          {
+            "id": "23586b42-a279-42f1-a98e-84ac1a89a20a",
+            "cliente": "MANUELA VILLAS BOAS SOUZA MARTIN"
+          },
+          {
+            "id": "4f79b468-f013-4da9-9eed-594bf150f89a",
+            "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE "
+          },
+          {
+            "id": "af39af57-3b0f-4b4a-b512-6d7adaa5b5ba",
+            "cliente": "HENRIQUE AFFONSO ORCESI DA COSTA"
+          },
+          {
+            "id": "24924d1d-251a-4ed9-9b97-a020e483d608",
+            "cliente": "MARIA AUGUSTA"
+          },
+          {
+            "id": "43002c92-53dc-4e3a-a291-432b0b2a87f2",
+            "cliente": "MICHELLE CRISTINA FREITAS GARDENAL"
+          },
+          {
+            "id": "60bc3b52-820d-4f6c-aca9-ebc07f6e4e58",
+            "cliente": "ELLEN DIOSLEY DE MELO"
+          }
+        ]
+      },
       {
         "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
         "nome": "Wiguens Louis",
         "cargo": "Encarregado",
-        "qtd_obras": 7,
+        "qtd_obras": 8,
         "obras": [
           {
             "id": "e9cfed37-fe20-42c0-877a-3a55b1476fbc",
@@ -1270,6 +1310,42 @@
           {
             "id": "7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2",
             "cliente": "ADRIANO DE FIGUEIREDO MACORIN"
+          },
+          {
+            "id": "d13e0ad0-b474-48f0-b16f-d8fd327fc1bc",
+            "cliente": "LUCIANNE MURTA HADDAD"
+          }
+        ]
+      },
+      {
+        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
+        "nome": "Júlio Miranda",
+        "cargo": "Encarregado",
+        "qtd_obras": 6,
+        "obras": [
+          {
+            "id": "9a409b5e-e4dd-43f6-a530-4b85d6a55b2b",
+            "cliente": "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"
+          },
+          {
+            "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
+            "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK"
+          },
+          {
+            "id": "a9cf011c-d305-4cc5-8d04-fe65e00b6c09",
+            "cliente": "GUILHERME LANGER"
+          },
+          {
+            "id": "316cd248-95c7-4fee-a81c-736540d627c3",
+            "cliente": "PAULA DAYAN SCHOECHT"
+          },
+          {
+            "id": "27470ed1-6481-40c8-8177-baac06b06334",
+            "cliente": "CAROLINA TREMEL PEZUTTO"
+          },
+          {
+            "id": "67498789-ad45-4163-a889-58da4c398372",
+            "cliente": "CARLOS EDUARDO ERMIRIO DE MORAES PASTORIZA"
           }
         ]
       },
@@ -1330,50 +1406,42 @@
         ]
       },
       {
-        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
-        "nome": "João Carlos",
-        "cargo": "Encarregado",
-        "qtd_obras": 4,
-        "obras": [
-          {
-            "id": "7e12a05d-a837-4599-b8a7-aa84318c39ac",
-            "cliente": "TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA"
-          },
-          {
-            "id": "2b5e9e85-95fb-4768-a76a-07bf5b5bf2f3",
-            "cliente": "VITOR FLAMMIA DE BARROS COSTA"
-          },
-          {
-            "id": "23586b42-a279-42f1-a98e-84ac1a89a20a",
-            "cliente": "MANUELA VILLAS BOAS SOUZA MARTIN"
-          },
-          {
-            "id": "4f79b468-f013-4da9-9eed-594bf150f89a",
-            "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE "
-          }
-        ]
-      },
-      {
-        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
-        "nome": "Júlio Miranda",
-        "cargo": "Encarregado",
-        "qtd_obras": 4,
+        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
+        "nome": "Charles Henrique da Silva",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 3,
         "obras": [
           {
             "id": "9a409b5e-e4dd-43f6-a530-4b85d6a55b2b",
             "cliente": "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"
           },
           {
-            "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
-            "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK"
-          },
-          {
-            "id": "a9cf011c-d305-4cc5-8d04-fe65e00b6c09",
-            "cliente": "GUILHERME LANGER"
-          },
-          {
             "id": "316cd248-95c7-4fee-a81c-736540d627c3",
             "cliente": "PAULA DAYAN SCHOECHT"
+          },
+          {
+            "id": "27470ed1-6481-40c8-8177-baac06b06334",
+            "cliente": "CAROLINA TREMEL PEZUTTO"
+          }
+        ]
+      },
+      {
+        "id": "3be92339-ea00-4a39-88c9-373f366d26fd",
+        "nome": "Jansen Roberto Mendes Silva",
+        "cargo": "Encarregado",
+        "qtd_obras": 3,
+        "obras": [
+          {
+            "id": "ca4b3047-28d7-44b3-8c39-e0cf4f71bcaf",
+            "cliente": "MONTRELUX SOLUÇÕES EM VIDRO LTDA"
+          },
+          {
+            "id": "995ef403-aa9b-4aba-b25d-9e74df83e465",
+            "cliente": "ARIANE RIBEIRO DOS SANTOS CUNHA"
+          },
+          {
+            "id": "d4e95de7-022f-4cc1-bb7e-9bcaa634ae5d",
+            "cliente": "MARCOS JOSÉ VEIGA GOMES "
           }
         ]
       },
@@ -1426,18 +1494,34 @@
         ]
       },
       {
-        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
-        "nome": "Charles Henrique da Silva",
-        "cargo": "Líder de Campo",
+        "id": "04dbd1d8-9007-42b7-a730-ae7aafd74a65",
+        "nome": "David Faria de Lara",
+        "cargo": "Aplicador 1",
         "qtd_obras": 2,
         "obras": [
           {
-            "id": "9a409b5e-e4dd-43f6-a530-4b85d6a55b2b",
-            "cliente": "ROBERTA MARQUES DO NASCIMENTO (ESTRELA D'ALVA)"
+            "id": "995ef403-aa9b-4aba-b25d-9e74df83e465",
+            "cliente": "ARIANE RIBEIRO DOS SANTOS CUNHA"
           },
           {
-            "id": "316cd248-95c7-4fee-a81c-736540d627c3",
-            "cliente": "PAULA DAYAN SCHOECHT"
+            "id": "d4e95de7-022f-4cc1-bb7e-9bcaa634ae5d",
+            "cliente": "MARCOS JOSÉ VEIGA GOMES "
+          }
+        ]
+      },
+      {
+        "id": "b1afe6f0-0a7c-4ca4-ab11-22bc0b2387ca",
+        "nome": "Edilson Ariel Andrade da Silva",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "a9cf011c-d305-4cc5-8d04-fe65e00b6c09",
+            "cliente": "GUILHERME LANGER"
+          },
+          {
+            "id": "67498789-ad45-4163-a889-58da4c398372",
+            "cliente": "CARLOS EDUARDO ERMIRIO DE MORAES PASTORIZA"
           }
         ]
       },
@@ -1506,6 +1590,22 @@
         ]
       },
       {
+        "id": "b59418b1-0768-4387-af43-dbb0113e74ed",
+        "nome": "José Ramos de Oliveira Junior",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "24924d1d-251a-4ed9-9b97-a020e483d608",
+            "cliente": "MARIA AUGUSTA"
+          },
+          {
+            "id": "60bc3b52-820d-4f6c-aca9-ebc07f6e4e58",
+            "cliente": "ELLEN DIOSLEY DE MELO"
+          }
+        ]
+      },
+      {
         "id": "a1185503-c7cc-44d5-89a0-f014c64b8091",
         "nome": "Leonardo Fernando Magalhães",
         "cargo": "Ajudante",
@@ -1518,6 +1618,54 @@
           {
             "id": "a9cf011c-d305-4cc5-8d04-fe65e00b6c09",
             "cliente": "GUILHERME LANGER"
+          }
+        ]
+      },
+      {
+        "id": "8723a612-4ae6-4891-b227-b66de3d9d0e0",
+        "nome": "Marcos Santana dos Santos",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "995ef403-aa9b-4aba-b25d-9e74df83e465",
+            "cliente": "ARIANE RIBEIRO DOS SANTOS CUNHA"
+          },
+          {
+            "id": "d4e95de7-022f-4cc1-bb7e-9bcaa634ae5d",
+            "cliente": "MARCOS JOSÉ VEIGA GOMES "
+          }
+        ]
+      },
+      {
+        "id": "21b49069-0ca9-4942-bc96-b3a0a22e7707",
+        "nome": "Maximiliano",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "4f79b468-f013-4da9-9eed-594bf150f89a",
+            "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE "
+          },
+          {
+            "id": "af39af57-3b0f-4b4a-b512-6d7adaa5b5ba",
+            "cliente": "HENRIQUE AFFONSO ORCESI DA COSTA"
+          }
+        ]
+      },
+      {
+        "id": "2b0dd9e4-dfd2-42b7-a3ea-ad01496d1dce",
+        "nome": "Nicolas Matheus Ticianelli",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 2,
+        "obras": [
+          {
+            "id": "995ef403-aa9b-4aba-b25d-9e74df83e465",
+            "cliente": "ARIANE RIBEIRO DOS SANTOS CUNHA"
+          },
+          {
+            "id": "d4e95de7-022f-4cc1-bb7e-9bcaa634ae5d",
+            "cliente": "MARCOS JOSÉ VEIGA GOMES "
           }
         ]
       },
@@ -1680,11 +1828,6 @@
         "cargo": "Aplicador 1"
       },
       {
-        "id": "04dbd1d8-9007-42b7-a730-ae7aafd74a65",
-        "nome": "David Faria de Lara",
-        "cargo": "Aplicador 1"
-      },
-      {
         "id": "fefffe49-164a-4b32-814d-0d06fa437823",
         "nome": "Emdreo hrycyna",
         "cargo": "Aplicador 1"
@@ -1710,11 +1853,6 @@
         "cargo": "Aplicador 1"
       },
       {
-        "id": "8723a612-4ae6-4891-b227-b66de3d9d0e0",
-        "nome": "Marcos Santana dos Santos",
-        "cargo": "Aplicador 1"
-      },
-      {
         "id": "ca10f387-1b62-4ead-b9c3-9e7382900a9e",
         "nome": "Marlon Aurélio dos Santos",
         "cargo": "Aplicador 1"
@@ -1727,11 +1865,6 @@
       {
         "id": "ea844e5e-3fe5-40d4-add0-80a6eea846bd",
         "nome": "Márcio Martins de Lira",
-        "cargo": "Aplicador 1"
-      },
-      {
-        "id": "2b0dd9e4-dfd2-42b7-a3ea-ad01496d1dce",
-        "nome": "Nicolas Matheus Ticianelli",
         "cargo": "Aplicador 1"
       },
       {
@@ -1815,16 +1948,6 @@
         "cargo": "Líder de Campo"
       },
       {
-        "id": "1a22dc9f-24a5-4b4e-a8fa-2f34bdd22d7c",
-        "nome": "Cristiano Ramalho Sandes",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "a9a30d47-3699-4e65-948c-5ce628a4e805",
-        "nome": "Fernando dos Santos Silva",
-        "cargo": "Líder de Campo"
-      },
-      {
         "id": "0ab8ddc9-2962-4114-a1af-061c35db430d",
         "nome": "Flavio moraes dos Santos",
         "cargo": "Líder de Campo"
@@ -1837,11 +1960,6 @@
       {
         "id": "3fdaae47-b52c-407b-a1a1-a95c0afab730",
         "nome": "Heitor Santos Da Silva Campello",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "b59418b1-0768-4387-af43-dbb0113e74ed",
-        "nome": "José Ramos de Oliveira Junior",
         "cargo": "Líder de Campo"
       },
       {
@@ -1860,18 +1978,8 @@
         "cargo": "Líder de Campo"
       },
       {
-        "id": "7e890794-f477-4446-b01a-c10c9ceda4d7",
-        "nome": "Reinaldo Faustino de Camargo",
-        "cargo": "Líder de Campo"
-      },
-      {
         "id": "dd400e26-97d3-4f46-9690-701cdd699e7c",
         "nome": "Rodrigo Conte",
-        "cargo": "Líder de Campo"
-      },
-      {
-        "id": "78872a03-0890-4148-a5e5-cf722a2fe226",
-        "nome": "Ronaldo Rafael Barbosa",
         "cargo": "Líder de Campo"
       },
       {
@@ -1895,11 +2003,6 @@
         "cargo": "Preparador"
       },
       {
-        "id": "4ada0e5d-5fd0-4972-bbdf-e0d1fbae689b",
-        "nome": "Felipe Bezerra de Souza",
-        "cargo": "Preparador"
-      },
-      {
         "id": "51557552-e398-4aea-ae13-5c0de2029442",
         "nome": "Júlio Cesar da Silva",
         "cargo": "Preparador"
@@ -1907,10 +2010,22 @@
     ],
     "em_campo_detalhe": [
       {
+        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
+        "nome": "João Carlos",
+        "cargo": "Encarregado",
+        "qtd_obras": 8
+      },
+      {
         "id": "a1ec420f-55b9-4765-82d1-4539e2037ad5",
         "nome": "Wiguens Louis",
         "cargo": "Encarregado",
-        "qtd_obras": 7
+        "qtd_obras": 8
+      },
+      {
+        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
+        "nome": "Júlio Miranda",
+        "cargo": "Encarregado",
+        "qtd_obras": 6
       },
       {
         "id": "6b237d14-b591-483f-b945-fa570f4746cc",
@@ -1925,16 +2040,16 @@
         "qtd_obras": 4
       },
       {
-        "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
-        "nome": "João Carlos",
-        "cargo": "Encarregado",
-        "qtd_obras": 4
+        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
+        "nome": "Charles Henrique da Silva",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 3
       },
       {
-        "id": "a143c4b5-da77-4ea9-9395-d502a4e9ecae",
-        "nome": "Júlio Miranda",
+        "id": "3be92339-ea00-4a39-88c9-373f366d26fd",
+        "nome": "Jansen Roberto Mendes Silva",
         "cargo": "Encarregado",
-        "qtd_obras": 4
+        "qtd_obras": 3
       },
       {
         "id": "c5cb57af-268b-4087-9a5e-5f011d3f3f15",
@@ -1955,9 +2070,15 @@
         "qtd_obras": 2
       },
       {
-        "id": "3db0ab84-0625-4dcb-af55-521004e57c07",
-        "nome": "Charles Henrique da Silva",
-        "cargo": "Líder de Campo",
+        "id": "04dbd1d8-9007-42b7-a730-ae7aafd74a65",
+        "nome": "David Faria de Lara",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 2
+      },
+      {
+        "id": "b1afe6f0-0a7c-4ca4-ab11-22bc0b2387ca",
+        "nome": "Edilson Ariel Andrade da Silva",
+        "cargo": "Aplicador 1",
         "qtd_obras": 2
       },
       {
@@ -1985,9 +2106,33 @@
         "qtd_obras": 2
       },
       {
+        "id": "b59418b1-0768-4387-af43-dbb0113e74ed",
+        "nome": "José Ramos de Oliveira Junior",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 2
+      },
+      {
         "id": "a1185503-c7cc-44d5-89a0-f014c64b8091",
         "nome": "Leonardo Fernando Magalhães",
         "cargo": "Ajudante",
+        "qtd_obras": 2
+      },
+      {
+        "id": "8723a612-4ae6-4891-b227-b66de3d9d0e0",
+        "nome": "Marcos Santana dos Santos",
+        "cargo": "Aplicador 1",
+        "qtd_obras": 2
+      },
+      {
+        "id": "21b49069-0ca9-4942-bc96-b3a0a22e7707",
+        "nome": "Maximiliano",
+        "cargo": "Aplicador 2",
+        "qtd_obras": 2
+      },
+      {
+        "id": "2b0dd9e4-dfd2-42b7-a3ea-ad01496d1dce",
+        "nome": "Nicolas Matheus Ticianelli",
+        "cargo": "Aplicador 1",
         "qtd_obras": 2
       },
       {
@@ -2081,6 +2226,12 @@
         "qtd_obras": 1
       },
       {
+        "id": "1a22dc9f-24a5-4b4e-a8fa-2f34bdd22d7c",
+        "nome": "Cristiano Ramalho Sandes",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
         "id": "ae3f3456-c569-4b5e-8b6a-5d8949ddfb25",
         "nome": "Daniel Rodrigues de Oliveira",
         "cargo": "Aplicador 1",
@@ -2099,21 +2250,27 @@
         "qtd_obras": 1
       },
       {
-        "id": "b1afe6f0-0a7c-4ca4-ab11-22bc0b2387ca",
-        "nome": "Edilson Ariel Andrade da Silva",
-        "cargo": "Aplicador 1",
-        "qtd_obras": 1
-      },
-      {
         "id": "af8e1d9a-a4b0-4f73-a447-197c7624588c",
         "nome": "Eryck Bryan de Barros Ramiro",
         "cargo": "Ajudante",
         "qtd_obras": 1
       },
       {
+        "id": "4ada0e5d-5fd0-4972-bbdf-e0d1fbae689b",
+        "nome": "Felipe Bezerra de Souza",
+        "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
         "id": "0bfc2d04-6195-422f-aa4f-cda7bbd16950",
         "nome": "Felipe De Oliveira santos",
         "cargo": "Preparador",
+        "qtd_obras": 1
+      },
+      {
+        "id": "a9a30d47-3699-4e65-948c-5ce628a4e805",
+        "nome": "Fernando dos Santos Silva",
+        "cargo": "Líder de Campo",
         "qtd_obras": 1
       },
       {
@@ -2159,12 +2316,6 @@
         "qtd_obras": 1
       },
       {
-        "id": "3be92339-ea00-4a39-88c9-373f366d26fd",
-        "nome": "Jansen Roberto Mendes Silva",
-        "cargo": "Encarregado",
-        "qtd_obras": 1
-      },
-      {
         "id": "70a2f619-2141-49d1-8ac8-afa0c6d7c1c8",
         "nome": "Jonathan Batista Rocha",
         "cargo": "Ajudante",
@@ -2207,12 +2358,6 @@
         "qtd_obras": 1
       },
       {
-        "id": "21b49069-0ca9-4942-bc96-b3a0a22e7707",
-        "nome": "Maximiliano",
-        "cargo": "Aplicador 2",
-        "qtd_obras": 1
-      },
-      {
         "id": "4b20a0e2-e15e-4647-9667-05a1c8e0db5a",
         "nome": "Odirley Alves de Oliveira",
         "cargo": "Aplicador 2",
@@ -2237,6 +2382,12 @@
         "qtd_obras": 1
       },
       {
+        "id": "7e890794-f477-4446-b01a-c10c9ceda4d7",
+        "nome": "Reinaldo Faustino de Camargo",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
         "id": "0646cbe2-6efe-431c-9465-51560a1458e8",
         "nome": "Roberto Carlos dos santos filho",
         "cargo": "Ajudante",
@@ -2245,6 +2396,12 @@
       {
         "id": "fc76da2f-2621-453d-9fea-845f6f9689a2",
         "nome": "Rodolfo Martins da Silva",
+        "cargo": "Líder de Campo",
+        "qtd_obras": 1
+      },
+      {
+        "id": "78872a03-0890-4148-a5e5-cf722a2fe226",
+        "nome": "Ronaldo Rafael Barbosa",
         "cargo": "Líder de Campo",
         "qtd_obras": 1
       },
@@ -2294,7 +2451,7 @@
       "total_cadastrados": 19,
       "escalados_hoje": 11,
       "util_pct": 84.6,
-      "obras_hoje": 8,
+      "obras_hoje": 10,
       "obras_lideradas": [
         {
           "id": "e9cfed37-fe20-42c0-877a-3a55b1476fbc",
@@ -2344,6 +2501,13 @@
           "cidade": "SÃO PAULO / SP",
           "fase": "AGUARDANDO LIBERAÇÃO",
           "status": "em_execucao"
+        },
+        {
+          "id": "d13e0ad0-b474-48f0-b16f-d8fd327fc1bc",
+          "cliente": "LUCIANNE MURTA HADDAD",
+          "cidade": "apto 121",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
         }
       ],
       "obras_membros": [
@@ -2352,6 +2516,13 @@
           "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE ",
           "cidade": "SP; CEP: 01.532",
           "fase": "INFORMAÇÕES LOGÍSTICAS",
+          "status": "em_execucao"
+        },
+        {
+          "id": "af39af57-3b0f-4b4a-b512-6d7adaa5b5ba",
+          "cliente": "HENRIQUE AFFONSO ORCESI DA COSTA",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
           "status": "em_execucao"
         }
       ],
@@ -2369,7 +2540,7 @@
       "total_cadastrados": 11,
       "escalados_hoje": 1,
       "util_pct": 0,
-      "obras_hoje": 4,
+      "obras_hoje": 8,
       "obras_lideradas": [
         {
           "id": "7e12a05d-a837-4599-b8a7-aa84318c39ac",
@@ -2397,6 +2568,34 @@
           "cliente": " LOVELY RITA DIAS MENEZES    SEGUNDA FASE ",
           "cidade": "SP; CEP: 01.532",
           "fase": "INFORMAÇÕES LOGÍSTICAS",
+          "status": "em_execucao"
+        },
+        {
+          "id": "af39af57-3b0f-4b4a-b512-6d7adaa5b5ba",
+          "cliente": "HENRIQUE AFFONSO ORCESI DA COSTA",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "24924d1d-251a-4ed9-9b97-a020e483d608",
+          "cliente": "MARIA AUGUSTA",
+          "cidade": "1872 Casa 23",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "43002c92-53dc-4e3a-a291-432b0b2a87f2",
+          "cliente": "MICHELLE CRISTINA FREITAS GARDENAL",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
+          "status": "em_execucao"
+        },
+        {
+          "id": "60bc3b52-820d-4f6c-aca9-ebc07f6e4e58",
+          "cliente": "ELLEN DIOSLEY DE MELO",
+          "cidade": "CURITIBA",
+          "fase": "CLIENTE FINALIZADO",
           "status": "em_execucao"
         }
       ],
@@ -2461,7 +2660,7 @@
       "total_cadastrados": 10,
       "escalados_hoje": 5,
       "util_pct": 62.5,
-      "obras_hoje": 4,
+      "obras_hoje": 6,
       "obras_lideradas": [
         {
           "id": "9a409b5e-e4dd-43f6-a530-4b85d6a55b2b",
@@ -2489,6 +2688,20 @@
           "cliente": "PAULA DAYAN SCHOECHT",
           "cidade": "São Paulo/São Paulo",
           "fase": "ENTRADA",
+          "status": "em_execucao"
+        },
+        {
+          "id": "27470ed1-6481-40c8-8177-baac06b06334",
+          "cliente": "CAROLINA TREMEL PEZUTTO",
+          "cidade": "SÃO PAULO",
+          "fase": "OBRA CONCLUÍDA",
+          "status": "finalizado"
+        },
+        {
+          "id": "67498789-ad45-4163-a889-58da4c398372",
+          "cliente": "CARLOS EDUARDO ERMIRIO DE MORAES PASTORIZA",
+          "cidade": "SÃO PAULO",
+          "fase": "CLIENTE FINALIZADO",
           "status": "em_execucao"
         }
       ],
@@ -3037,11 +3250,6 @@
       "dataEntrada": "",
       "dataExec": "2026-05-20"
     },
-    "27470ed1-6481-40c8-8177-baac06b06334": {
-      "dataVisita": "03/12/2025 15:15",
-      "dataEntrada": "28/01/2026 17:43",
-      "dataExec": "2026-05-11"
-    },
     "51d5e910-79c5-4b4d-816b-4c179c8497ed": {
       "dataVisita": "",
       "dataEntrada": "03/08/2026 12:00",
@@ -3276,6 +3484,11 @@
       "dataVisita": "",
       "dataEntrada": "",
       "dataExec": "2026-07-27"
+    },
+    "40a09aae-69b2-45de-b8f8-cc9d409ee1e9": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2026-05-21"
     },
     "e199e0bb-6a4e-4a9c-a8e8-c3229b24f322": {
       "dataVisita": "",
@@ -3671,7 +3884,6 @@
       "1fb7cf86",
       "2369c899",
       "24924d1d",
-      "27470ed1",
       "2d00e03f",
       "43002c92",
       "559e9123",
@@ -3703,7 +3915,7 @@
       "dec2480f",
       "f6dc0a36"
     ],
-    "zumbi_n": 37,
+    "zumbi_n": 36,
     "orfas_ids": [
       "0b692354",
       "1231fb6a",
@@ -3716,6 +3928,7 @@
       "2b5e9e85",
       "316cd248",
       "3c9c3ed5",
+      "40a09aae",
       "4f12eabf",
       "501b5b94",
       "5809d778",
@@ -3743,23 +3956,23 @@
       "db76891b",
       "f49352d0"
     ],
-    "orfas_n": 37,
+    "orfas_n": 38,
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-12T12:01:09.441000+00:00",
     "total_fluxo": 193,
-    "com_kira": 130,
+    "com_kira": 129,
     "saudavel": 75,
-    "saudavel_pct_no_monitorado": 57.7,
-    "atencao": 55,
-    "sem_kira": 63,
+    "saudavel_pct_no_monitorado": 58.1,
+    "atencao": 54,
+    "sem_kira": 64,
     "clima_dist": {
       "Positivo": 26,
       "Neutro": 50,
-      "Tenso": 60,
+      "Tenso": 59,
       "Crítico": 5,
-      "?": 78
+      "?": 79
     },
     "obras_atencao": [
       {
@@ -4449,7 +4662,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 5,
+        "dias_desde_resumo": 6,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO prestador Júlio visitou a obra e realizou uma vistoria completa junto à cliente Amanda, identificando pontos de reparo no piso, incluindo riscos na cozinha (frente ao fogão), área de lavanderia e trilhos. A cliente solicitou que os reparos sejam agendados a partir de segunda-feira, considerando a disponibilidade do proprietário Claudio.\n\n---\n\n**🟡 Clima: Neutro**\n\n**📋 Principais Pendências:**\n- ✅ Vistoria realizada — pontos mapeados\n- 🔧 Execução dos reparos aguardando agendamento (a partir de segunda-feira)\n- 📅 Confirmação de data de retorno do Júlio em aberto\n",
@@ -4470,7 +4683,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 0,
+        "dias_desde_resumo": 1,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está na fase de pré-instalação, com contrato assinado, visita de aferição realizada em 07/04 e kit de amostras já recebido pelo cliente. O cliente (Ramon) está aguardando resposta sobre a **antecipação da data de início**, sem retorno conclusivo da equipe até o momento.\n\n---\n\n**🟡 Clima: Neutro/Tenso**\n\n---\n\n**📌 Principais Pendências:**\n\n- ✅ ~~Contrato assinado~~\n- ✅ ~~Visita de aferição realizada~~\n- ⏳ **Definição da cor** (Kalahari em análise)\n- ⏳ **Antecipação da data de início** — solicitada 2x sem resposta definitiva\n- ⏳ **Agendamento da instalação",
@@ -4491,7 +4704,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 4,
+        "dias_desde_resumo": 5,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se em fase de acompanhamento, com a equipe buscando atualizações de andamento junto ao cliente, que por sua vez reportou uma solicitação de modificação nos pontos hidráulicos da lavanderia. A comunicação está ativa, porém as mensagens aparecem incompletas, dificultando uma visão clara do progresso real.\n\n---\n\n**🟡 Clima: Neutro**\n\n**📋 Principais Pendências:**\n- Definição sobre a modificação dos pontos hidráulicos na lavanderia\n- Atualização formal do status/andamento do projeto\n- Respostas pendentes da equipe às solicitações do cliente\n\n> ⚠️ *N",
@@ -4919,7 +5132,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "CONFLITO TÉCNICO CRÍTICO: Equipe de 13/04 orientou uso de AC3/ACR para regularização; equipe de 17/04 contraindicou o mesmo material. Cliente identificou a contradição e está formalmente insatisfeita — risco de responsabilização da Monofloor por retrabalho",
           "RISCO FINANCEIRO: Marcela solicita que a Monofloor absorva custo de R$1.600,00 referente a trincas novas, alegando erro nas orientações passadas pela equipe — sem resposta da empresa",
@@ -5241,7 +5454,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "RISCO DE CRONOGRAMA: TECTO tem próximos fornecedores aguardando liberação do piso desde 07/04; qualquer atraso na execução dos itens pendentes impacta toda a cadeia de obras",
           "ESQUADRIAS DANIFICADAS: Cliente reportou em 24/03 que esquadrias novas estão emperrando após aplicação do Stellium — problema técnico sem solução confirmada, com potencial de responsabilidade da Monofloor",
@@ -5598,7 +5811,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "QUALIDADE — Acabamento final do Leona apresentou múltiplos defeitos documentados pelo cliente: manchas de suor, marcas de rolo quadriculadas, esbranquiçados, bolhas e pelos. Retrabalho agendado para 23/04 ainda não confirmado operacionalmente",
           "CRONOGRAMA — Retorno da equipe foi prometido para 20/04, depois deslocado para 23/04 e, em 23/04, ainda sem confirmação de execução. Cliente está organizando limpeza do apartamento especificamente para viabilizar a entrada da Monofloor",
@@ -6454,126 +6667,6 @@
         ]
       },
       {
-        "id": "27470ed1-6481-40c8-8177-baac06b06334",
-        "cliente": "CAROLINA TREMEL PEZUTTO",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "CLIENTE FINALIZADO",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 20,
-        "alertas": [
-          "QUALIDADE — Reparo pontual de 19/03 resultou em diferença visível de cor e textura relatada pela cliente em 24/03; risco de retrabalho e insatisfação escalada caso não haja resposta técnica rápida",
-          "TÉCNICO — Cliente já havia sido alertada de que revestimentos monolíticos tendem a apresentar marcas em reparos pontuais; resultado confirmou essa limitação, o que pode gerar questionamento sobre a indicação da solução pela Monofloor",
-          "FINANCEIRO — Não há registro de confirmação de pagamento do reparo pontual nem de contato do departamento financeiro com a cliente"
-        ],
-        "pendencias": [
-          "24/03 — Carolina reclamou da diferença de cor e textura após o reparo de 19/03; a equipe técnica foi acionada, mas nenhuma solução ou data de retorno foi confirmada até o fim da conversa",
-          "03/03 — Departamento financeiro deveria entrar em contato com Carolina para envio do boleto do reparo pontual; não há confirmação de que o contato foi realizado ou o pagamento efetivado",
-          "03/03 — Envio do produto Cinderela ao endereço da cliente foi prometido; não há confirmação de entrega na conversa"
-        ],
-        "resumo_exec": "O projeto envolveu um dano pós-obra no lavabo causado por terceiros (instalação de espelho), seguido de visita técnica, diagnóstico e reparo pontual realizado em 19/03. A cliente Carolina aprovou e pagou pelo reparo com urgência, porém em 24/03 reportou resultado insatisfatório: diferença nítida de cor e textura em relação à aplicação original. A equipe Monofloor acionou a área técnica, mas não apresentou solução ou prazo concreto até o final da conversa. Paralelamente, houve queixas sobre marcações no piso durante o período de cura, tratadas com envio de produto de limpeza. O caso exige respo",
-        "clima_desc": "A cliente Carolina demonstra insatisfação crescente com o resultado do reparo pontual realizado em 19/03, relatando diferença visível de cor e textura em relação à aplicação original. O atendimento da Monofloor tem sido responsivo, porém os problemas técnicos acumulados elevam a tensão.",
-        "periodo": "26/02 a 24/03/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 47,
-        "eventos": [
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Cliente solicita fornecimento de material para corrigir risco na parede do lavabo causado pela reinstalação do espelho",
-            "classe": "critico"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Monofloor agenda visita do consultor de qualidade para 27/02 às 11h45",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Visita realizada pelo colaborador Nathan do Amaral Janjão; responsável da obra não estava presente, apenas funcionária do local",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Cliente solicita avaliação adicional dos cantos do lavabo que parecem manchados",
-            "classe": "critico"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente solicita retorno sobre a visita técnica; Monofloor informa que análise está em andamento",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Carolina (proprietária do apartamento) é adicionada ao grupo e relata marcações excessivas no piso mesmo com pouco uso",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Monofloor orienta sobre limpeza e solicita fotos das marcações",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Monofloor apresenta diagnóstico técnico: dano na camada de verniz causado por terceiros (instalação do espelho), e envia orçamento com duas opções: reparo pontual e reaplicação completa da parede",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Carolina opta pelo reparo pontual e aprova o orçamento imediatamente",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Monofloor agenda envio do produto de limpeza Cinderela para o endereço Rua Carlos Weber, 663, Apto 192B, Vila Leopoldina, São Paulo/SP",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Reparo pontual agendado para 19/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Cliente confirma data para 19/03; Luana assume acompanhamento operacional do serviço",
-            "classe": "neutro"
-          },
-          {
-            "data": "19/03",
-            "iso": "2026-03-19",
-            "texto": "Técnico Otavio Alves de Almeida realiza o reparo pontual no lavabo",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/03",
-            "iso": "2026-03-24",
-            "texto": "Carolina relata insatisfação com o resultado do reparo: cor e textura muito diferentes da aplicação original, suspeita de demão faltante",
-            "classe": "critico"
-          },
-          {
-            "data": "24/03",
-            "iso": "2026-03-24",
-            "texto": "Monofloor aciona equipe técnica para verificar e alinhar correção",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
         "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
         "cliente": "JULIANA KOMEL DE OLIVEIRA",
         "consultor": "LUANA",
@@ -6584,7 +6677,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 27,
+        "dias_desde_resumo": 28,
         "alertas": [
           "Cliente em estado de insatisfação declarada (08/04): afirmou que não está feliz na própria casa e que não está pedindo um favor — risco de deterioração do relacionamento e possível impacto reputacional",
           "Reunião cancelada sem aviso prévio no dia 08/04: falha grave de atendimento que abalou a confiança da cliente; exige postura proativa de recuperação na reunião de 15/04",
@@ -6704,7 +6797,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "Data de entrada 30/03 provavelmente perdida: aprovação do escopo não foi realizada no prazo mínimo de 12 dias úteis exigido pela Monofloor — nova data precisa ser negociada",
           "Cliente sem responsável único definido: Thales foi citado em 27/02 como ponto de contato, mas nunca se manifestou na conversa, gerando lacuna de comunicação crítica",
@@ -7138,7 +7231,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "Cliente Ricardo se mudou para o apartamento antes da conclusão dos reparos devido ao atraso de ~19 dias sem resposta da Monofloor, o que tornará a execução mais complexa e impactante para o morador",
           "Insatisfação explícita do cliente Ricardo registrada pelo Eng. Leandro em 07/04: 'o cliente está extremamente insatisfeito com a tratativa'",
@@ -7479,7 +7572,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "Área externa completamente sem agenda: cliente encerrou a discussão em 02/04 dizendo que 'resolve com a equipe comercial', indicando insatisfação e risco de contestação financeira ou de escopo",
           "Equipe ausente na obra em 15/04 sem justificativa registrada: João Kuhlmann não encontrou ninguém; a apuração interna prometida pela Monofloor não teve desfecho documentado na conversa, gerando desconfiança",
@@ -7754,7 +7847,7 @@
         "clima": "Tenso",
         "n_alertas": 2,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "RISCO TÉCNICO/CONTRATUAL: Monofloor nunca alertou o cliente sobre a contraindicação do autonivelante durante o processo comercial. O instalador comunicou isso apenas na visita presencial (09/03), após o escopo já estar definido. O autonivelante foi aplicado mesmo assim (confirmado em 08/04). A Monofloor se isenta contratualmente, mas há risco de conflito se surgirem fissuras — cliente pode alegar omissão de informação relevante no pré-contrato",
           "RISCO DE PRAZO: Data ideal do cliente (última semana de maio) não pôde ser atendida. Data confirmada é 02/06, que segundo Julia Favoretto 'já ultrapassa o limite de prazo' da obra. Isso pode gerar insatisfação ou pressão sobre a equipe de execução"
@@ -7885,7 +7978,7 @@
         "clima": "Tenso",
         "n_alertas": 2,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [
           "HISTÓRICO DE ABANDONO DE ATENDIMENTO: O cliente ficou sem retorno por mais de 18 dias no início da conversa (19/02 a 09/03), o que gerou ameaça formal de reatualização de data e risco de ruptura comercial — padrão que deve ser monitorado para não se repetir",
           "PROMESSA DE RETORNO NÃO CUMPRIDA NO PRAZO: Em 01/04, Juliana comprometeu resposta até 02/04 sobre a prorrogação; o retorno só veio em 15/04, configurando quebra de confiança com o cliente"
@@ -8027,7 +8120,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 10,
+        "dias_desde_resumo": 11,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "Parece que a conversa do WhatsApp foi **cortada** e não contém informações suficientes para análise — apenas a mensagem de boas-vindas da Emanuele foi compartilhada, sem o restante do histórico.\n\n---\n\n**Por favor, cole o conteúdo completo da conversa** para que eu possa:\n\n- 📋 **Resumir** o estado do projeto\n- 🌡️ **Identificar o clima** (Positivo/Neutro/Tenso/Crítico)\n- ⚠️ **Listar as principais pendências**",
@@ -8090,7 +8183,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 10,
+        "dias_desde_resumo": 11,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase de definição de materiais/cores, com o cliente Gustavo avaliando amostras do revestimento Lilit para paredes e Stelion para piso, após visita ao showroom e recebimento de kit de amostras em seu endereço. A equipe está responsiva e coordenando com novos integrantes (Marcos, executor da obra), mantendo fluxo ativo de comunicação.\n\n---\n\n**🟡 Clima: Neutro/Positivo**\n\n---\n\n**📋 Principais Pendências:**\n- ⏳ Envio de novas amostras nas cores **Mirage** e **Kalahari** solicitadas pelo cliente\n- ⏳ Definição final de cor pelo cliente (Gustavo/Luisa)\n",
@@ -8111,7 +8204,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 8,
+        "dias_desde_resumo": 9,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO cliente (Suli) recebeu orientações técnicas da equipe sobre o uso de massa/revestimento (NS Aquablock) e confirmou que verificaria internamente antes de prosseguir. Posteriormente, o cliente informou que realizou os serviços de regularização dos pontos apontados em visita e enviou diversas fotos/registros aguardando confirmação da equipe.\n\n---\n\n**🟡 Clima: Neutro**\n*(Cliente proativo, mas aguardando resposta da equipe)*\n\n---\n\n**⚠️ Principais Pendências:**\n\n- [ ] **Confirmação da equipe** sobre os serviços de regularização executados pelo cliente\n- [ ] **Análise",
@@ -8153,7 +8246,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 13,
+        "dias_desde_resumo": 14,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nA equipe está em fase de execução da aplicação, com prazo estimado de **18 dias úteis**, compartilhando diários de execução e aguardando a definição do cronograma final de camadas para agendamento da vistoria final com as responsáveis (Ju e equipe).\n\n---\n\n**🟡 Clima: Neutro**\n*(Comunicação cordial e colaborativa, sem conflitos aparentes)*\n\n---\n\n**📋 Principais Pendências:**\n\n- ⏳ Cronograma detalhado de conclusão das camadas *(prometido pela equipe, aguardando confirmação)*\n- 📅 Agendamento da **vistoria final** com \"Ju e as meninas\"\n- 🔐 Possível necessidade de **ca",
@@ -9288,7 +9381,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 34,
+        "dias_desde_resumo": 35,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em andamento com visitas técnicas sendo agendadas (incluindo visita do Rodrigo à obra) e uma emergência pendente relacionada a um **ralo que necessita envernizamento urgente** no único banheiro disponível, sem resposta resolutiva até o momento.\n\n---\n\n**🟡 Clima: Tenso**\n\n**Principais Pendências:**\n- ⚠️ **URGENTE:** Envio de técnico para envernizar o ralo do banheiro\n- 📅 Confirmação do agendamento presencial **01/05 a 08/05**\n- 📩 Retorno ainda em aberto pela equipe (cliente aguardando resposta)",
@@ -9637,6 +9730,14 @@
         "tem_grupo": false
       },
       {
+        "id": "40a09aae-69b2-45de-b8f8-cc9d409ee1e9",
+        "cliente": "RAFAEL DE FIGUEIREDO SILVA PINHEIRO",
+        "consultor": "—",
+        "cidade": "São Paulo",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
         "id": "e199e0bb-6a4e-4a9c-a8e8-c3229b24f322",
         "cliente": "MARIA VICTORIA CERVETTO ZUFFO",
         "consultor": "Wesley",
@@ -9825,7 +9926,7 @@
         "cargo": "Encarregado",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 16
+        "total_obras": 17
       },
       {
         "id": "f8afb689-6e41-4e81-a1b2-dd94d1845a82",
@@ -9833,7 +9934,7 @@
         "cargo": "Encarregado",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 12
+        "total_obras": 16
       },
       {
         "id": "26e0b659-29bc-4765-9927-8a5d2c3d6388",
@@ -9849,7 +9950,7 @@
         "cargo": "Encarregado",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 8
+        "total_obras": 10
       },
       {
         "id": "11f55b24-361a-4a2f-8cb0-61d01c9ff6cc",
@@ -9931,7 +10032,7 @@
         "cargo": "Encarregado",
         "dias_escalado": 3,
         "dias_ocioso": 4,
-        "total_obras": 3
+        "total_obras": 5
       },
       {
         "id": "1cdef30c-eb8b-4119-ba00-a2d5e642b4a2",
@@ -10032,14 +10133,6 @@
         "total_obras": 0
       },
       {
-        "id": "1a22dc9f-24a5-4b4e-a8fa-2f34bdd22d7c",
-        "nome": "Cristiano Ramalho Sandes",
-        "cargo": "Líder de Campo",
-        "dias_escalado": 0,
-        "dias_ocioso": 7,
-        "total_obras": 0
-      },
-      {
         "id": "f2a64a7a-c662-414c-a667-e975cccc0b4f",
         "nome": "Danilo Soares Andrade",
         "cargo": "Preparador",
@@ -10048,8 +10141,16 @@
         "total_obras": 0
       },
       {
-        "id": "04dbd1d8-9007-42b7-a730-ae7aafd74a65",
-        "nome": "David Faria de Lara",
+        "id": "5b1f5536-339c-4b79-9a65-cf46aa59d942",
+        "nome": "Douglas Pereira Rodrigues",
+        "cargo": "Preparador",
+        "dias_escalado": 0,
+        "dias_ocioso": 7,
+        "total_obras": 0
+      },
+      {
+        "id": "e67460ab-54e8-4773-8ce3-cec4783aab7b",
+        "nome": "Ewerton Batista da Silva",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
         "dias_ocioso": 7,
@@ -10069,18 +10170,18 @@
       "pausadas": 2
     },
     "wesley": {
-      "n": 84,
+      "n": 83,
       "mediana": 205,
-      "n180": 49,
+      "n180": 48,
       "n270": 20,
-      "zumbi": 20,
+      "zumbi": 19,
       "reparo": 10,
       "pausadas": 2
     },
     "total_ativas": 220,
-    "n_180_total": 124,
-    "concentracao_pct": 76.8,
-    "concentracao_180_pct": 86.3,
+    "n_180_total": 123,
+    "concentracao_pct": 76.4,
+    "concentracao_180_pct": 86.2,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
