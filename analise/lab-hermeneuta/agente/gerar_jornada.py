@@ -316,7 +316,10 @@ SUBTIPOS_REPROVACAO = [
     ("relatorio_qualidade",  re.compile(r"recebemos\s+(as\s+)?(imagens|informações).*visita\s+de\s+qualidade|durante\s+a\s+visita\s+(de\s+qualidade)?|visita\s+de\s+qualidade\s+realizada", re.IGNORECASE)),
     ("agendamento_reparo",   re.compile(r"agenda\s+de\s+(visita|retorno)|in[íi]cio\s+de\s+reparo\s+dia|confirmad[ao]\s+para\s+o\s+dia|continuidade\s+(na|da)\s+reaplica|dar\s+continuidade", re.IGNORECASE)),
     ("decisao_cliente",      re.compile(r"cliente\s+(optou|definiu|decidiu|escolheu)|(\w+)\s+(definiu|optou\s+pela)\s+(fazer\s+)?(uma\s+)?(faixa\s+de\s+|reaplica)", re.IGNORECASE)),
-    ("escopo_definido",      re.compile(r"escopo\s+(para|da|de)\s+reaplica|iremos\s+reaplicar|essas?\s+paredes?\s+para\s+reaplicar|reaplica[çc][aã]o\s+(do\s+piso\s+total|completa|da\s+área|da\s+sala|das?\s+parede)", re.IGNORECASE)),
+    # FIX bug #4 auditoria · subtipos novos · MAIS ESPECÍFICOS ANTES de escopo_definido
+    ("reaplicacao_verniz",   re.compile(r"reaplica[çc][aã]o\s+(do\s+|de\s+)?(verniz|lumina|pu)|reaplicar\s+(o\s+|a\s+)?(verniz|lumina|pu)|nova\s+camada\s+(de\s+)?(verniz|lumina|pu)", re.IGNORECASE)),
+    ("reaplicacao_completa", re.compile(r"reaplica[çc][aã]o\s+(do\s+)?piso\s+(total|completa|completo|inteiro)|reaplica[çc][aã]o\s+completa|refazer\s+(toda\s+|todo\s+)?(o\s+|a\s+)?(piso|obra|aplica[çc][aã]o)|remover\s+(toda\s+|todo\s+)?(o\s+|a\s+)?piso\s+e\s+reaplicar", re.IGNORECASE)),
+    ("escopo_definido",      re.compile(r"escopo\s+(para|da|de)\s+reaplica|iremos\s+reaplicar|essas?\s+paredes?\s+para\s+reaplicar|reaplica[çc][aã]o\s+(da\s+área|da\s+sala|das?\s+parede)", re.IGNORECASE)),
     ("defeito_relatado",     re.compile(r"marc(a|ou)\w*\s+(o\s+)?piso|piso\s+(marcad|com\s+marca)|trinca|fissura|rachadura|descolamento|cliente\s+(est[aá]\s+)?questionando|tendo\s+problema", re.IGNORECASE)),
     ("proposta_tecnica",     re.compile(r"ideal\s+(é|eh|seria)\s+reaplicar|vai\s+(ter\s+que|precisar)\s+refazer|tem\s+que\s+refazer|acredito\s+que.*(ajuste|resolve)|alguns\s+ajustes\s+(j[áa]\s+)?resolve", re.IGNORECASE)),
     ("solicitacao_admin",    re.compile(r"fazer\s+\d+\s+resumos?|poderia\s+fazer\s+(\d+\s+)?resumos?|preciso\s+(de\s+|do\s+)?resumo", re.IGNORECASE)),
@@ -327,6 +330,8 @@ LABELS_SUBTIPO = {
     "relatorio_qualidade":  "Relatório VT qualidade",
     "agendamento_reparo":   "Agendamento de reparo",
     "decisao_cliente":      "Decisão do cliente",
+    "reaplicacao_verniz":   "Reaplicação de verniz",
+    "reaplicacao_completa": "Reaplicação completa",
     "escopo_definido":      "Escopo de reaplicação",
     "defeito_relatado":     "Defeito relatado",
     "proposta_tecnica":     "Proposta técnica",
@@ -564,11 +569,42 @@ PAD_COBRANCA = re.compile(
 
 
 def detectar_marco_em_msg(msg, tipo_pad, padrao):
-    """Verifica se a msg tem o padrão. Retorna dict com info do marco ou None."""
+    """Verifica se a msg tem o padrão. Retorna dict com info do marco ou None.
+    FIX bug #5 auditoria · guards contra falsos positivos:
+    - Negação no contexto (até 30 chars antes do match): 'não aprovou', 'sem aprovação', etc
+    - Pergunta literal (msg termina em ? ou match seguido de ?): 'tem material?' não é fato
+    - Predição futura (verbos no futuro): 'finalizara', 'finalizará', 'irá finalizar'"""
     texto = msg.get("content") or ""
     m = padrao.search(texto)
     if not m:
         return None
+
+    # GUARD 1 · Negação até 30 chars antes do match
+    inicio = m.start()
+    contexto_antes = texto[max(0, inicio - 30):inicio].lower()
+    if re.search(r"\bn[ãa]o\s+\w{0,20}$", contexto_antes) or re.search(r"\bsem\s+\w{0,20}$", contexto_antes):
+        return None
+
+    # GUARD 2 · Pergunta · marcos de FATO não cabem em interrogação
+    TIPOS_QUE_NAO_ACEITAM_PERGUNTA = {
+        "material_produzido", "equipe_definida", "material_entregue",
+        "finalizacao", "aprovacao_cliente", "ultima_camada"
+    }
+    if tipo_pad in TIPOS_QUE_NAO_ACEITAM_PERGUNTA:
+        # Pega 60 chars ao redor do match · se tem '?' próximo, suspeito
+        ao_redor = texto[max(0, inicio - 30):min(len(texto), m.end() + 30)]
+        if "?" in ao_redor:
+            return None
+
+    # GUARD 3 · Predição futura (apenas finalizacao) · "finalizara" / "finalizará" / "irá finalizar"
+    if tipo_pad == "finalizacao":
+        match_str = m.group(0).lower()
+        if re.search(r"finaliz(ar[áa]|ará|aremos|ará?o)", match_str):
+            return None
+        # "irá finalizar", "vai finalizar"
+        if re.search(r"\b(irá|ira|vai|vamos)\s+\w{0,10}\s*finaliz", contexto_antes):
+            return None
+
     out = {
         "tipo": tipo_pad,
         "data": (msg.get("timestamp") or "")[:10],
@@ -597,7 +633,7 @@ def detectar_marco_em_msg(msg, tipo_pad, padrao):
 # Cálculo de fases (cluster por densidade)
 # ============================================================
 
-def calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao):
+def calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao, data_exec_prevista=None):
     """
     Detecta fases automaticamente baseado em densidade de msgs Telegram:
       1. Planejamento inicial · da 1ª msg até primeira pausa ≥30d
@@ -637,14 +673,32 @@ def calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao):
             hibernacoes.append((dias_com_msg[i - 1], dias_com_msg[i], gap))
 
     # Identifica cluster de execução
+    # FIX bug #2 auditoria · obras sem data_exec_confirmada (só prevista no passado) zeravam o cluster
+    # Estratégia: tenta exec_confirmada primeiro · fallback pra exec_prevista (se já passou) · fallback final
+    # pra janela mais ampla buscando o dia mais denso da obra
     cluster_exec_inicio, cluster_exec_fim = None, None
-    if data_exec_confirmada:
-        janela_ini = data_exec_confirmada - timedelta(days=EXEC_JANELA_DIAS)
-        janela_fim = data_exec_confirmada + timedelta(days=EXEC_JANELA_DIAS)
+    data_referencia_exec = data_exec_confirmada or (
+        data_exec_prevista if (data_exec_prevista and data_exec_prevista <= HOJE_DATE) else None
+    )
+    if data_referencia_exec:
+        janela_ini = data_referencia_exec - timedelta(days=EXEC_JANELA_DIAS)
+        janela_fim = data_referencia_exec + timedelta(days=EXEC_JANELA_DIAS)
         dias_no_cluster = [d for d in dias_com_msg if janela_ini <= d <= janela_fim and msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA]
         if dias_no_cluster:
             cluster_exec_inicio = min(dias_no_cluster)
             cluster_exec_fim = max(dias_no_cluster)
+    # Fallback final: se ainda não achou cluster, busca o dia mais denso de toda a obra (≥ 2× threshold)
+    if not cluster_exec_inicio and dias_com_msg:
+        densos = [(d, msgs_por_dia[d]) for d in dias_com_msg if msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA * 2]
+        if densos:
+            # Pega cluster centrado no dia MAIS denso · janela ±5 dias com threshold normal
+            dia_pico = max(densos, key=lambda x: x[1])[0]
+            j_ini = dia_pico - timedelta(days=5)
+            j_fim = dia_pico + timedelta(days=5)
+            dias_no_cluster = [d for d in dias_com_msg if j_ini <= d <= j_fim and msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA]
+            if dias_no_cluster:
+                cluster_exec_inicio = min(dias_no_cluster)
+                cluster_exec_fim = max(dias_no_cluster)
 
     # Monta fases sequenciais
     if hibernacoes:
@@ -1293,6 +1347,18 @@ PESSOAS_MONOFLOOR = {
     'juliana', 'mateus', 'taporosky',
     # Braiam · era aplicador até 2025-12 · fiscal de qualidade desde 2026
     'braiam', 'braian',
+    # Sistemas / bots / IA · NÃO classificar como aplicador (auditoria 2026-05-12)
+    'kira',    # IA Monofloor que faz triagem · vista em TALLY, GUSTAVO, MANOELA, ÁUREO, YAHYA
+    'bot',     # genérico
+    'bridge',  # sistema/integração antiga em LEONARDO
+    'q',       # "Q Assim Seja" em ÁUREO · provável cliente/grupo, não aplicador
+    # Consultores Monofloor novos (auditoria 2026-05-12)
+    'ketlyn',
+    'maria',   # cobre "Maria Clara Monofloor" e similares
+    'isabella', # apareceu como Monofloor em GETULIO
+    'ana',     # cobre "Ana | Monofloor", etc
+    'adriana',
+    'jonathan', # bot/sistema que posta "Contrato assinado"
 }
 PAD_LABEL_MONOFLOOR = re.compile(
     r'\b(monofloor|opera[çc][õo]es|atendimento|qualidade|projetos|admin|comercial|consultor|financeiro|equipe\s+projetos|equipe\s+\|)',
@@ -1305,6 +1371,9 @@ def is_sender_monofloor(sender_nome):
         return False
     s = sender_nome.lower()
     if PAD_LABEL_MONOFLOOR.search(s):
+        return True
+    # Bot/sistema em qualquer parte do nome · "Carlos (Bot)", "X · bot", etc
+    if re.search(r"\(bot\)|\bbot\b|\bkira\b|\bbridge\b", s):
         return True
     # Pega o primeiro nome (antes de "|" ou espaço)
     primeiro = re.split(r'[\s|]+', s)[0].strip()
@@ -1826,19 +1895,35 @@ def construir_jornada(obra_id):
     ultima_msg = parse_iso(msgs_ordenadas[-1].get("timestamp")) if msgs_ordenadas else None
 
     # Detecta cluster de execução
+    # FIX bug #2 · fallback pra exec_prevista (se passou) + fallback final pro dia mais denso
     cluster_exec_inicio, cluster_exec_fim = None, None
-    if data_exec_confirmada and msgs_ordenadas:
+    if msgs_ordenadas:
         msgs_por_dia = defaultdict(int)
         for m in msgs_ordenadas:
             dt = parse_iso(m.get("timestamp"))
             if dt:
                 msgs_por_dia[dt.date()] += 1
-        janela_ini = data_exec_confirmada - timedelta(days=EXEC_JANELA_DIAS)
-        janela_fim = data_exec_confirmada + timedelta(days=EXEC_JANELA_DIAS)
-        dias_no_cluster = sorted([d for d in msgs_por_dia if janela_ini <= d <= janela_fim and msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA])
-        if dias_no_cluster:
-            cluster_exec_inicio = dias_no_cluster[0]
-            cluster_exec_fim = dias_no_cluster[-1]
+        data_referencia_exec = data_exec_confirmada or (
+            data_exec_prevista if (data_exec_prevista and data_exec_prevista <= HOJE_DATE) else None
+        )
+        if data_referencia_exec:
+            janela_ini = data_referencia_exec - timedelta(days=EXEC_JANELA_DIAS)
+            janela_fim = data_referencia_exec + timedelta(days=EXEC_JANELA_DIAS)
+            dias_no_cluster = sorted([d for d in msgs_por_dia if janela_ini <= d <= janela_fim and msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA])
+            if dias_no_cluster:
+                cluster_exec_inicio = dias_no_cluster[0]
+                cluster_exec_fim = dias_no_cluster[-1]
+        # Fallback: busca dia mais denso da obra (≥ 2× threshold)
+        if not cluster_exec_inicio:
+            densos = [(d, msgs_por_dia[d]) for d in msgs_por_dia if msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA * 2]
+            if densos:
+                dia_pico = max(densos, key=lambda x: x[1])[0]
+                j_ini = dia_pico - timedelta(days=5)
+                j_fim = dia_pico + timedelta(days=5)
+                dias_no_cluster = sorted([d for d in msgs_por_dia if j_ini <= d <= j_fim and msgs_por_dia[d] >= EXEC_CLUSTER_MSGS_DIA])
+                if dias_no_cluster:
+                    cluster_exec_inicio = dias_no_cluster[0]
+                    cluster_exec_fim = dias_no_cluster[-1]
 
     # Cálculos · pra obras em andamento (sem data_exec_confirmada), usa data_ultima_msg como fim
     tempo_total = None
@@ -1864,7 +1949,7 @@ def construir_jornada(obra_id):
             tempo_hibernacao += gap
 
     # Fases
-    fases = calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao.date() if data_criacao else None)
+    fases = calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao.date() if data_criacao else None, data_exec_prevista=data_exec_prevista)
 
     # Marcos
     marcos = detectar_marcos(msgs_ordenadas)
@@ -1934,6 +2019,8 @@ def construir_jornada(obra_id):
     jornada = {
         "obra_id": obra_id,
         "cliente": detail.get("clienteNome"),
+        "status": detail.get("status"),  # FIX bug #1 auditoria · campo era ausente em 20/20 · necessário pra ADR-004
+        "fase_atual_painel": detail.get("faseAtual"),  # complemento do status · fase legível
         "endereco": endereco,
         "metragem": detail.get("projetoMetragem") or mat_totals.get("totalM2"),
         "produtos": materiais_resumo["produtos"],

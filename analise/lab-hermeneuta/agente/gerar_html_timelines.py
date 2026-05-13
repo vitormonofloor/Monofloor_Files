@@ -20,6 +20,224 @@ JSON_PILOTO = ROOT / "dados" / "timeline_10obras.json"
 HTML_MASSA = ROOT / "dados" / "timeline_obras.html"
 HTML_PILOTO = ROOT / "dados" / "timeline_10obras.html"
 
+# Obras destrinchadas manualmente pra calibrar vocabulário (match por substring no clienteNome)
+OBRAS_DESTRINCHADAS = [
+    # Sessão 06/05
+    "P2B ENGENHARIA",
+    "SILVANA PANDOLFI",
+    "PALLOMA BIANCA",
+    # Sessão 08/05
+    "GINACERCHI CREMA",
+    "DONA CORINA",
+    # Sessão 12/05 · fechamento da meta de 10
+    "JEAN LUC SENAC",
+    "ARIANE RIBEIRO",
+    "GUSTAVO FONTES",
+    "MARCOS JOS",  # MARCOS JOSÉ VEIGA GOMES (encoding · matchar substring sem acentos)
+    "JORGE LUIZ BARBIERI",
+]
+
+def is_destrinchada(cliente):
+    if not cliente:
+        return False
+    cli_up = cliente.upper()
+    return any(d in cli_up for d in OBRAS_DESTRINCHADAS)
+
+
+# ============================================================
+# Correlações · interpretação por encadeamento de marcos
+# Cada função recebe lista de marcos e retorna lista de insights
+# ============================================================
+
+def _parse_d(s):
+    if not s:
+        return None
+    try:
+        return datetime.strptime(s[:10], "%Y-%m-%d").date()
+    except Exception:
+        return None
+
+
+def _diff_dias(a, b):
+    da, db = _parse_d(a), _parse_d(b)
+    if not da or not db:
+        return None
+    return (da - db).days
+
+
+def derivar_insights(obra):
+    """Deriva insights correlacionais a partir dos marcos da obra.
+    Retorna lista de {tipo, severidade, titulo, descricao, evidencia}.
+    Severidade: 'alta' (bandeira vermelha) · 'media' · 'info'.
+    """
+    insights = []
+    marcos = obra.get("marcos") or []
+    if not marcos:
+        return insights
+
+    by_tipo = {}
+    for m in marcos:
+        by_tipo.setdefault(m["tipo"], []).append(m)
+
+    # Helper · retorna lista de marcos de um tipo
+    def todos(tipo):
+        return by_tipo.get(tipo) or []
+
+    # 1. FINALIZAÇÃO SEM APROVAÇÃO FORMAL
+    if todos("finalizacao") and not todos("aprovacao_cliente"):
+        fin = todos("finalizacao")[0]
+        insights.append({
+            "tipo": "finalizacao_sem_aprovacao",
+            "severidade": "alta",
+            "titulo": "Finalização sem aprovação formal",
+            "descricao": f"Obra registrada como finalizada em {fmt_data(fin['data'])} sem 'cliente aprovou' anterior nas mensagens.",
+            "evidencia": [fin["data"]],
+        })
+
+    # 2. RETRABALHO RELÂMPAGO (aprovação seguida de reprovação em <14d)
+    aprov = todos("aprovacao_cliente")
+    reprov = todos("reprovacao_retorno")
+    for a in aprov:
+        for r in reprov:
+            d = _diff_dias(r["data"], a["data"])
+            if d is not None and 0 < d <= 14:
+                insights.append({
+                    "tipo": "retrabalho_relampago",
+                    "severidade": "alta",
+                    "titulo": f"Retrabalho em {d} dias após aprovação",
+                    "descricao": f"Cliente aprovou em {fmt_data(a['data'])} mas houve reprovação/retorno em {fmt_data(r['data'])}.",
+                    "evidencia": [a["data"], r["data"]],
+                })
+                break  # só registra a primeira ocorrência
+
+    # 3. POSTERGAÇÃO CUMULATIVA (3+ postergações em 60 dias)
+    posts = sorted(todos("obra_postergada") + todos("postergacao_explicita"), key=lambda m: m["data"])
+    if len(posts) >= 3:
+        primeira = posts[0]["data"]
+        ultima = posts[-1]["data"]
+        span = _diff_dias(ultima, primeira) or 0
+        insights.append({
+            "tipo": "postergacao_cumulativa",
+            "severidade": "alta" if len(posts) >= 4 else "media",
+            "titulo": f"{len(posts)} postergações registradas",
+            "descricao": f"Obra postergou {len(posts)}x entre {fmt_data(primeira)} e {fmt_data(ultima)} ({span}d). Sinal de cronograma instável ou cliente recorrente em adiar.",
+            "evidencia": [p["data"] for p in posts],
+        })
+
+    # 4. ESCOPO INSTÁVEL (mudanças de escopo recorrentes)
+    escopo_mudancas = todos("escopo_atualizado") + todos("aditivo_negociando") + todos("aditivo_aprovado")
+    if len(escopo_mudancas) >= 3:
+        insights.append({
+            "tipo": "escopo_instavel",
+            "severidade": "media",
+            "titulo": f"Escopo mudou {len(escopo_mudancas)} vezes",
+            "descricao": "Múltiplas atualizações/aditivos no escopo · processo comercial pode estar fechando obra com requisitos incompletos.",
+            "evidencia": [m["data"] for m in escopo_mudancas[:5]],
+        })
+
+    # 5. GAPS DE PARALISAÇÃO · categorizados por gravidade real
+    # 45-59d  → pausa_normal       (info · feriado, férias, cliente fora)
+    # 60-89d  → pausa_preocupante  (media · obra parando)
+    # 90-179d → obra_parada        (alta · paralisação formal)
+    # 180+d   → obra_zumbi         (crítica · obra abandonada)
+    if len(marcos) >= 2:
+        marcos_ord = sorted(marcos, key=lambda m: m.get("data") or "")
+        gaps_encontrados = []
+        for i in range(1, len(marcos_ord)):
+            d = _diff_dias(marcos_ord[i]["data"], marcos_ord[i-1]["data"])
+            if d and d >= 45:
+                janela_ini = marcos_ord[i-1]["data"]
+                janela_fim = marcos_ord[i]["data"]
+                # Há postergação registrada nesse intervalo?
+                tem_post = any(janela_ini <= p["data"] <= janela_fim for p in posts)
+                if tem_post:
+                    continue
+                gaps_encontrados.append({"dias": d, "ini": janela_ini, "fim": janela_fim})
+        # Reporta até 2 maiores gaps (descendente · pior caso primeiro)
+        gaps_encontrados.sort(key=lambda g: -g["dias"])
+        for g in gaps_encontrados[:2]:
+            d = g["dias"]
+            if d >= 180:
+                tipo = "obra_zumbi"
+                sev = "critica"
+                titulo = f"Obra zumbi · {d} dias sem registro"
+                desc = f"Gap crítico de {d} dias entre {fmt_data(g['ini'])} e {fmt_data(g['fim'])} sem postergação declarada · obra possivelmente abandonada."
+            elif d >= 90:
+                tipo = "obra_parada"
+                sev = "alta"
+                titulo = f"Obra parada · {d} dias sem registro"
+                desc = f"Gap de {d} dias entre {fmt_data(g['ini'])} e {fmt_data(g['fim'])} sem postergação declarada · paralisação formal."
+            elif d >= 60:
+                tipo = "pausa_preocupante"
+                sev = "media"
+                titulo = f"Pausa preocupante · {d} dias"
+                desc = f"Obra ficou {d} dias sem marcos entre {fmt_data(g['ini'])} e {fmt_data(g['fim'])} sem postergação declarada."
+            else:
+                tipo = "pausa_normal"
+                sev = "info"
+                titulo = f"Pausa normal · {d} dias"
+                desc = f"Pausa de {d} dias entre {fmt_data(g['ini'])} e {fmt_data(g['fim'])} · provavelmente feriado/férias/cliente fora."
+            insights.append({
+                "tipo": tipo,
+                "severidade": sev,
+                "titulo": titulo,
+                "descricao": desc,
+                "evidencia": [g["ini"], g["fim"]],
+            })
+
+    # 6. COBRANÇA RECORRENTE (aplicador silencioso)
+    cobs = todos("cobranca_status")
+    if len(cobs) >= 5:
+        insights.append({
+            "tipo": "cobranca_recorrente",
+            "severidade": "media",
+            "titulo": f"{len(cobs)} cobranças de status",
+            "descricao": "Pessoal Monofloor cobrou status do aplicador várias vezes · aplicador silencioso ou comunicação fragilizada.",
+            "evidencia": [c["data"] for c in cobs[:5]],
+        })
+
+    # 7. TEMPO ADITIVO (negociação → aprovação)
+    aditivos_neg = todos("aditivo_negociando")
+    aditivos_apr = todos("aditivo_aprovado")
+    if aditivos_neg and aditivos_apr:
+        primeiro_neg = aditivos_neg[0]["data"]
+        primeiro_apr = aditivos_apr[0]["data"]
+        d = _diff_dias(primeiro_apr, primeiro_neg)
+        if d is not None and d > 0:
+            insights.append({
+                "tipo": "tempo_aditivo",
+                "severidade": "info",
+                "titulo": f"Aditivo aprovado em {d} dias",
+                "descricao": f"Negociação iniciou em {fmt_data(primeiro_neg)} e foi aprovada em {fmt_data(primeiro_apr)}.",
+                "evidencia": [primeiro_neg, primeiro_apr],
+            })
+
+    # 8. INTERRUPÇÃO MATERIAL RECORRENTE
+    interr = todos("interrupcao_material")
+    if len(interr) >= 2:
+        insights.append({
+            "tipo": "interrupcao_recorrente",
+            "severidade": "alta",
+            "titulo": f"{len(interr)} interrupções por material",
+            "descricao": "Falta de material parou a obra mais de uma vez · logística falhando recorrente.",
+            "evidencia": [i["data"] for i in interr],
+        })
+
+    # 9. EVENTOS EXTERNOS · obra com problemas fora da alçada Monofloor
+    eventos_ext = todos("evento_externo")
+    if eventos_ext:
+        n = len(eventos_ext)
+        sev = "alta" if n >= 3 else ("media" if n == 2 else "info")
+        insights.append({
+            "tipo": "eventos_externos",
+            "severidade": sev,
+            "titulo": f"{n} evento{'s' if n != 1 else ''} fora da alçada Monofloor",
+            "descricao": "Problemas externos afetando a obra (vazamentos, terceiros, civil pendente) · não é falha da equipe Monofloor mas trava o cronograma.",
+            "evidencia": [e["data"] for e in eventos_ext[:5]],
+        })
+
+    return insights
+
 # Prefere massa se existir · fallback piloto
 if JSON_MASSA.exists():
     JSON_PATH = JSON_MASSA
@@ -40,6 +258,7 @@ COR_MARCO = {
     "escopo_aprovado":        "#b8884a",
     "escopo_atualizado":      "#d4a548",
     "aditivo_negociando":     "#c45a5a",
+    "aditivo_aprovado":       "#7ea0b7",
     # Vistoria (cinza cool)
     "vt_agendada":            "#9bbacc",
     "vt_realizada":           "#7ea0b7",
@@ -53,6 +272,7 @@ COR_MARCO = {
     "inicio_anunciado":       "#f5d199",
     "anuncio_nova_data":      "#f5d199",
     # Execução (verde da fase execução)
+    "aviso_chegada":          "#a8d4b3",
     "equipe_chegou":          "#7eb88d",
     "camada_produto":         "#5fa073",
     "ultima_camada":          "#2a5a18",
@@ -69,6 +289,7 @@ COR_MARCO = {
     "interrupcao_material":   "#e07878",
     "dia_sem_expediente":     "#a89e92",
     "ocorrencia_formal":      "#8b1538",  # bordô · marca da operação · severo
+    "evento_externo":         "#6b21a8",  # roxo · problema fora da alçada Monofloor
 }
 
 LABELS_MARCO = {
@@ -80,6 +301,7 @@ LABELS_MARCO = {
     "escopo_aprovado":        "Escopo aprovado",
     "escopo_atualizado":      "Escopo atualizado",
     "aditivo_negociando":     "Aditivo em negociação",
+    "aditivo_aprovado":       "Aditivo aprovado",
     "vt_agendada":            "VT agendada",
     "vt_realizada":           "VT realizada",
     "vt_entrada_realizada":   "VT de entrada",
@@ -90,6 +312,7 @@ LABELS_MARCO = {
     "material_entregue":      "Material entregue",
     "inicio_anunciado":       "Início anunciado",
     "anuncio_nova_data":      "Nova data de entrada",
+    "aviso_chegada":          "Aviso de chegada",
     "equipe_chegou":          "Equipe chegou",
     "camada_produto":         "Camada aplicada",
     "ultima_camada":          "Última camada",
@@ -104,6 +327,7 @@ LABELS_MARCO = {
     "interrupcao_material":   "Falta de material",
     "dia_sem_expediente":     "Sem expediente",
     "ocorrencia_formal":      "Ocorrência formal",
+    "evento_externo":         "Evento externo · fora da alçada",
 }
 
 
@@ -253,6 +477,27 @@ def renderizar_grupos(marcos, taxonomia):
 
     classe_grid = f"fases-kanban kanban-{n_fases}fases"
     return f'<div class="{classe_grid}">{"".join(colunas)}</div>'
+
+
+def render_insights(obra):
+    """Renderiza bloco 'Padrões observados' com insights correlacionais."""
+    insights = derivar_insights(obra)
+    if not insights:
+        return ""
+    items = []
+    for ins in insights:
+        sev = ins.get("severidade", "info")
+        items.append(f"""
+        <div class="insight-item insight-{sev}">
+          <div class="insight-titulo">{html.escape(ins['titulo'])}</div>
+          <div class="insight-desc">{html.escape(ins['descricao'])}</div>
+        </div>""")
+    return f"""
+    <div class="insights-wrap">
+      <div class="bloco-fase-titulo">Padrões observados · {len(insights)} insight{"s" if len(insights) != 1 else ""}</div>
+      <div class="insights-grid">{"".join(items)}</div>
+    </div>
+    """
 
 
 def render_heatmap(obra):
@@ -558,8 +803,28 @@ def card_obra(obra, taxonomia):
     badge_ciclos = f'<span class="mini-badge ciclos">{n_ciclos} ciclos</span>' if n_ciclos > 1 else ""
     dt_resumo = f'{dt_total}d' if dt_total is not None else (f'{dt_painel}d' if dt_painel else "—")
 
+    # Atributos pra filtro client-side (busca por cliente, status, fase)
+    data_cliente = html.escape((obra.get("cliente") or "").lower(), quote=True)
+    data_status = html.escape((obra.get("status") or "").lower(), quote=True)
+    data_fase = html.escape((fase_painel or "").lower(), quote=True)
+    data_busca = f"{data_cliente} {data_status} {data_fase}"
+    destrinchada_class = " destrinchada" if is_destrinchada(obra.get("cliente")) else ""
+    badge_destr = '<span class="mini-badge destrinchada-tag" title="Já destrinchada · usada pra calibrar vocabulário">🔬</span>' if is_destrinchada(obra.get("cliente")) else ""
+
+    # Categorias derivadas dos insights pra filtro client-side
+    insights_obra = derivar_insights(obra)
+    categorias = set()
+    for ins in insights_obra:
+        categorias.add(ins["tipo"])
+    if fd.get("tem_retrabalho"):
+        categorias.add("retrabalho_ativo")
+    if is_destrinchada(obra.get("cliente")):
+        categorias.add("destrinchada")
+    categorias.add(f"status_{(obra.get('status') or 'desconhecido').lower()}")
+    data_categorias = " ".join(sorted(categorias))
+
     return f"""
-    <details class="obra-card">
+    <details class="obra-card{destrinchada_class}" data-busca="{data_busca}" data-categorias="{data_categorias}">
       <summary class="obra-summary">
         <span class="sum-grupo grupo-tag {grupo_classe}">{grupo_label}</span>
         <span class="sum-cli">{cliente}</span>
@@ -570,7 +835,7 @@ def card_obra(obra, taxonomia):
           <span class="sum-stat"><b>{dt_resumo}</b></span>
           <span class="sum-stat"><b>{n_msgs}</b> msgs</span>
         </span>
-        <span class="sum-badges">{badge_ciclos}{badge_retr}</span>
+        <span class="sum-badges">{badge_destr}{badge_ciclos}{badge_retr}</span>
         <span class="sum-toggle">▾</span>
       </summary>
       <div class="obra-detail">
@@ -587,6 +852,8 @@ def card_obra(obra, taxonomia):
         </header>
 
         <div class="tempo-pills">{pills}</div>
+
+        {render_insights(obra)}
 
         {render_heatmap(obra)}
 
@@ -897,10 +1164,28 @@ def main():
     com_marcos = [t for t in timelines if (t.get("marcos") or [])]
     sem_marcos = [t for t in timelines if not (t.get("marcos") or [])]
 
-    # Ordena: mais marcos primeiro (vai mostrar P2B com 24 no topo)
+    # Ordena: mais marcos primeiro
     com_marcos.sort(key=lambda t: -len(t.get("marcos") or []))
 
-    cards_html = "".join(card_obra(o, taxonomia) for o in com_marcos)
+    # Separa em 2 blocos: destrinchadas (calibração) vs ainda não destrinchadas
+    destrinchadas = [t for t in com_marcos if is_destrinchada(t.get("cliente"))]
+    ainda_nao = [t for t in com_marcos if not is_destrinchada(t.get("cliente"))]
+
+    cards_destrinchadas_html = "".join(card_obra(o, taxonomia) for o in destrinchadas)
+    cards_ainda_nao_html = "".join(card_obra(o, taxonomia) for o in ainda_nao)
+    cards_html = "".join(card_obra(o, taxonomia) for o in com_marcos)  # mantém pra fallback
+
+    # Contagem de obras por categoria (pra mostrar nos chips de filtro)
+    from collections import Counter as _C
+    cat_counts = _C()
+    for t in com_marcos:
+        ins = derivar_insights(t)
+        for i in ins:
+            cat_counts[i["tipo"]] += 1
+        if (t.get("fase_derivada") or {}).get("tem_retrabalho"):
+            cat_counts["retrabalho_ativo"] += 1
+        if is_destrinchada(t.get("cliente")):
+            cat_counts["destrinchada"] += 1
 
     sem_rows = ""
     for o in sem_marcos:
@@ -1260,6 +1545,41 @@ def main():
     padding-bottom: 6px; border-bottom: 1px solid var(--gold);
   }}
 
+  /* Insights · padrões observados */
+  .insights-wrap {{ margin: 18px 0 14px; }}
+  .insights-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }}
+  .insight-item {{
+    padding: 10px 14px; border-radius: 6px;
+    border-left: 3px solid var(--ink-soft);
+    background: var(--bg);
+  }}
+  .insight-titulo {{
+    font-size: 12px; font-weight: 700; color: var(--ink);
+    margin-bottom: 3px; letter-spacing: -0.01em;
+  }}
+  .insight-desc {{
+    font-size: 11px; color: var(--ink-soft); line-height: 1.45;
+  }}
+  .insight-critica {{
+    border-left-color: #6b1a1a;
+    background: #fce4e4;
+    border-left-width: 5px;
+  }}
+  .insight-critica .insight-titulo {{ color: #6b1a1a; font-weight: 800; }}
+  .insight-alta {{
+    border-left-color: #c45a5a;
+    background: #fef5f0;
+  }}
+  .insight-alta .insight-titulo {{ color: #991b1b; }}
+  .insight-media {{
+    border-left-color: var(--gold);
+    background: var(--gold-bg);
+  }}
+  .insight-info {{
+    border-left-color: #7ea0b7;
+    background: #f0f5f9;
+  }}
+
   /* Heatmap msgs/dia */
   .heatmap-wrap {{ margin: 14px 0 18px; }}
   .heatmap-titulo {{
@@ -1607,8 +1927,122 @@ def main():
 
   /* Controles de bulk expand/collapse */
   .acordeon-controles {{
-    display: flex; gap: 10px; margin-bottom: 8px; align-items: center;
+    display: flex; gap: 10px; align-items: center;
   }}
+
+  /* Filtro de obras */
+  .filtros-wrap {{
+    display: flex; gap: 14px; align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }}
+  .busca-input {{
+    flex: 1; min-width: 280px;
+    padding: 10px 16px; font-size: 13px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: var(--surface); color: var(--ink);
+    font-family: inherit;
+    transition: all 0.15s;
+  }}
+  .busca-input:focus {{
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,136,74,0.15);
+  }}
+  .busca-input[data-resultado]::after {{
+    content: attr(data-resultado);
+  }}
+
+  /* Sub-blocos · destrinchadas vs ainda não */
+  .sub-bloco {{
+    font-size: 14px; font-weight: 800; color: var(--ink);
+    margin: 28px 0 4px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gold-soft);
+    letter-spacing: -0.01em;
+  }}
+  .sub-bloco-info {{
+    font-size: 11.5px; color: var(--ink-soft);
+    margin-bottom: 14px; font-style: italic;
+  }}
+  .bloco-obras {{ margin-bottom: 32px; }}
+
+  /* Card destrinchada · borda dourada destacada */
+  .obra-card.destrinchada {{
+    border-color: var(--gold);
+    background: linear-gradient(to right, var(--gold-bg) 0px, var(--surface) 4px);
+  }}
+  .destrinchada-tag {{
+    background: linear-gradient(135deg, #b8884a 0%, #d4a548 100%);
+    color: #fff;
+    border: none;
+    font-size: 11px;
+    padding: 2px 6px;
+  }}
+
+  /* Card filtrado (oculto via JS) · garantia visual */
+  .obra-card.filtrada {{ display: none !important; }}
+
+  /* Chips de filtro por categoria */
+  .cat-filtros {{
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px 18px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-sm);
+  }}
+  .cat-filtros-titulo {{
+    font-size: 10.5px; font-weight: 700; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 12px;
+  }}
+  .cat-grupo {{
+    display: flex; flex-wrap: wrap; gap: 6px;
+    align-items: center;
+    margin-bottom: 8px;
+  }}
+  .cat-grupo:last-child {{ margin-bottom: 0; }}
+  .cat-grupo-label {{
+    font-size: 10px; font-weight: 700; color: var(--ink-faint);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-right: 8px; min-width: 130px;
+  }}
+  .cat-chip {{
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600;
+    padding: 5px 12px; border-radius: 100px;
+    cursor: pointer; user-select: none;
+    border: 1px solid var(--line);
+    background: var(--bg); color: var(--ink-soft);
+    font-family: inherit;
+    transition: all 0.15s;
+  }}
+  .cat-chip b {{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    background: rgba(0,0,0,0.06);
+    padding: 1px 6px; border-radius: 100px;
+  }}
+  .cat-chip:hover {{ background: var(--gold-bg); border-color: var(--gold); }}
+  .cat-chip.ativa {{
+    background: var(--ink); color: #fff; border-color: var(--ink);
+    box-shadow: var(--shadow-sm);
+  }}
+  .cat-chip.ativa b {{ background: rgba(255,255,255,0.18); color: #fff; }}
+  /* Cores por gravidade na borda quando inativa */
+  .cat-chip.cat-critica {{ border-left: 3px solid #6b1a1a; }}
+  .cat-chip.cat-alta {{ border-left: 3px solid #c45a5a; }}
+  .cat-chip.cat-media {{ border-left: 3px solid var(--gold); }}
+  .cat-chip.cat-info {{ border-left: 3px solid #7ea0b7; }}
+  .cat-chip.cat-status {{ border-left: 3px solid #94a3b8; }}
+  .cat-chip.cat-destrinchada {{ border-left: 3px solid #b8884a; }}
+
+  .resultado-filtros {{
+    display: none;
+    background: var(--gold-bg); border: 1px solid var(--gold-soft);
+    color: var(--gold); padding: 10px 16px;
+    border-radius: 8px; font-size: 12px;
+    margin-bottom: 14px;
+  }}
+  .resultado-filtros strong {{ font-family: 'JetBrains Mono', monospace; font-size: 14px; }}
 
   /* CTA · botões grandes pra navegar entre telas */
   .cta-tela {{
@@ -1724,11 +2158,60 @@ def main():
 
     <h2 class="bloco">Obras com timeline detectada</h2>
     <div class="bloco-sub">Click numa linha pra expandir o Kanban completo da obra · hover nas bolinhas pra ver o trecho real da mensagem</div>
-    <div class="acordeon-controles">
-      <button class="ac-btn" onclick="document.querySelectorAll('.obra-card').forEach(d=>d.open=true)">Expandir todos</button>
-      <button class="ac-btn" onclick="document.querySelectorAll('.obra-card').forEach(d=>d.open=false)">Colapsar todos</button>
+
+    <div class="filtros-wrap">
+      <input type="text" id="busca-obras" class="busca-input" placeholder="🔎 Filtrar por cliente, status ou fase..." oninput="aplicarFiltros()">
+      <div class="acordeon-controles">
+        <button class="ac-btn" onclick="document.querySelectorAll('.obra-card:not(.filtrada)').forEach(d=>d.open=true)">Expandir visíveis</button>
+        <button class="ac-btn" onclick="document.querySelectorAll('.obra-card').forEach(d=>d.open=false)">Colapsar todos</button>
+        <button class="ac-btn" onclick="limparFiltros()">Limpar filtros</button>
+      </div>
     </div>
-    {cards_html}
+
+    <div class="cat-filtros">
+      <div class="cat-filtros-titulo">Filtrar por categoria · click pra ativar/desativar (multi-seleção)</div>
+      <div class="cat-grupo">
+        <span class="cat-grupo-label">⏱ Paralisação</span>
+        <button class="cat-chip cat-critica" data-cat="obra_zumbi" onclick="toggleCat(this)">🚨 Obra zumbi (180+d) <b>{cat_counts.get("obra_zumbi", 0)}</b></button>
+        <button class="cat-chip cat-alta" data-cat="obra_parada" onclick="toggleCat(this)">🚩 Obra parada (90-179d) <b>{cat_counts.get("obra_parada", 0)}</b></button>
+        <button class="cat-chip cat-media" data-cat="pausa_preocupante" onclick="toggleCat(this)">⚠ Pausa preocupante (60-89d) <b>{cat_counts.get("pausa_preocupante", 0)}</b></button>
+        <button class="cat-chip cat-info" data-cat="pausa_normal" onclick="toggleCat(this)">ℹ Pausa normal (45-59d) <b>{cat_counts.get("pausa_normal", 0)}</b></button>
+      </div>
+      <div class="cat-grupo">
+        <span class="cat-grupo-label">🔧 Fricção / problemas</span>
+        <button class="cat-chip cat-alta" data-cat="finalizacao_sem_aprovacao" onclick="toggleCat(this)">Finalizado sem aprovação <b>{cat_counts.get("finalizacao_sem_aprovacao", 0)}</b></button>
+        <button class="cat-chip cat-alta" data-cat="retrabalho_relampago" onclick="toggleCat(this)">Retrabalho relâmpago <b>{cat_counts.get("retrabalho_relampago", 0)}</b></button>
+        <button class="cat-chip cat-alta" data-cat="retrabalho_ativo" onclick="toggleCat(this)">Retrabalho ativo <b>{cat_counts.get("retrabalho_ativo", 0)}</b></button>
+        <button class="cat-chip cat-alta" data-cat="postergacao_cumulativa" onclick="toggleCat(this)">Postergação cumulativa <b>{cat_counts.get("postergacao_cumulativa", 0)}</b></button>
+        <button class="cat-chip cat-media" data-cat="escopo_instavel" onclick="toggleCat(this)">Escopo instável <b>{cat_counts.get("escopo_instavel", 0)}</b></button>
+        <button class="cat-chip cat-media" data-cat="cobranca_recorrente" onclick="toggleCat(this)">Cobrança recorrente <b>{cat_counts.get("cobranca_recorrente", 0)}</b></button>
+        <button class="cat-chip cat-alta" data-cat="interrupcao_recorrente" onclick="toggleCat(this)">Falta de material <b>{cat_counts.get("interrupcao_recorrente", 0)}</b></button>
+        <button class="cat-chip cat-media" data-cat="eventos_externos" onclick="toggleCat(this)">Eventos externos (fora alçada) <b>{cat_counts.get("eventos_externos", 0)}</b></button>
+      </div>
+      <div class="cat-grupo">
+        <span class="cat-grupo-label">📌 Status do Painel</span>
+        <button class="cat-chip cat-status" data-cat="status_em_execucao" onclick="toggleCat(this)">Em execução</button>
+        <button class="cat-chip cat-status" data-cat="status_planejamento" onclick="toggleCat(this)">Planejamento</button>
+        <button class="cat-chip cat-status" data-cat="status_aguardando_execucao" onclick="toggleCat(this)">Aguardando execução</button>
+        <button class="cat-chip cat-status" data-cat="status_reparo" onclick="toggleCat(this)">Reparo</button>
+        <button class="cat-chip cat-status" data-cat="status_pausado" onclick="toggleCat(this)">Pausado</button>
+        <button class="cat-chip cat-status" data-cat="status_marcas_rolo_cera" onclick="toggleCat(this)">Marcas rolo/cera</button>
+      </div>
+      <div class="cat-grupo">
+        <span class="cat-grupo-label">🔬 Outros</span>
+        <button class="cat-chip cat-destrinchada" data-cat="destrinchada" onclick="toggleCat(this)">Destrinchadas (calibração) <b>{cat_counts.get("destrinchada", 0)}</b></button>
+      </div>
+    </div>
+
+    <div class="resultado-filtros" id="resultado-filtros"></div>
+
+    <h3 class="sub-bloco">🔬 Bloco 1 · Obras destrinchadas (calibração de vocabulário) · {len(destrinchadas)} obras</h3>
+    <div class="sub-bloco-info">P2B · SILVANA · PALLOMA · GINACERCHI · DONA CORINA — usadas pra calibrar marcos e vocabulário</div>
+    <div class="bloco-obras">{cards_destrinchadas_html}</div>
+
+    <h3 class="sub-bloco">📋 Bloco 2 · Obras ainda não lidas · {len(ainda_nao)} obras</h3>
+    <div class="sub-bloco-info">Processadas pelo método mas não destrinchadas manualmente · cobertura via vocabulário calibrado</div>
+    <div class="bloco-obras">{cards_ainda_nao_html}</div>
 
     <h2 class="bloco">Obras sem marcos · gap de coverage do Painel</h2>
     <div class="bloco-sub">Painel marca como ativas mas grupo Telegram está vazio · não é falha do método, é dado faltante na fonte</div>
@@ -1746,6 +2229,63 @@ def main():
     document.querySelectorAll('.tela').forEach(t => t.style.display = 'none');
     document.getElementById(id).style.display = 'block';
     window.scrollTo({{top: 0, behavior: 'smooth'}});
+  }}
+
+  // Filtros ativos (multi-categoria + busca textual)
+  const catsAtivas = new Set();
+
+  function toggleCat(btn) {{
+    const cat = btn.getAttribute('data-cat');
+    if (catsAtivas.has(cat)) {{
+      catsAtivas.delete(cat);
+      btn.classList.remove('ativa');
+    }} else {{
+      catsAtivas.add(cat);
+      btn.classList.add('ativa');
+    }}
+    aplicarFiltros();
+  }}
+
+  function limparFiltros() {{
+    catsAtivas.clear();
+    document.querySelectorAll('.cat-chip.ativa').forEach(b => b.classList.remove('ativa'));
+    document.getElementById('busca-obras').value = '';
+    aplicarFiltros();
+  }}
+
+  function aplicarFiltros() {{
+    const termo = (document.getElementById('busca-obras').value || '').toLowerCase().trim();
+    let total = 0;
+    let visiveis = 0;
+    let blocosVisiveis = {{ destrinchadas: 0, ainda_nao: 0 }};
+
+    document.querySelectorAll('.obra-card').forEach(card => {{
+      total++;
+      const busca = card.getAttribute('data-busca') || '';
+      const cats = (card.getAttribute('data-categorias') || '').split(' ');
+      const matchBusca = !termo || busca.includes(termo);
+      const matchCats = catsAtivas.size === 0 || [...catsAtivas].every(c => cats.includes(c));
+      const match = matchBusca && matchCats;
+      if (match) {{
+        card.classList.remove('filtrada');
+        card.style.display = '';
+        visiveis++;
+        if (card.classList.contains('destrinchada')) blocosVisiveis.destrinchadas++;
+        else blocosVisiveis.ainda_nao++;
+      }} else {{
+        card.classList.add('filtrada');
+        card.style.display = 'none';
+      }}
+    }});
+
+    const res = document.getElementById('resultado-filtros');
+    const numFiltros = catsAtivas.size + (termo ? 1 : 0);
+    if (numFiltros > 0) {{
+      res.innerHTML = `<strong>${{visiveis}}</strong> de ${{total}} obras visíveis · ${{numFiltros}} filtro${{numFiltros>1?'s':''}} ativo${{numFiltros>1?'s':''}}`;
+      res.style.display = 'block';
+    }} else {{
+      res.style.display = 'none';
+    }}
   }}
 
   function copiarComandoAtualizar() {{

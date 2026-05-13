@@ -35,6 +35,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 
@@ -333,58 +334,70 @@ def main():
     contagem_u = {"alta": 0, "media": 0, "baixa": 0}
     inicio = time.time()
 
-    for i, obra_v3 in enumerate(ativas, 1):
+    def processar_obra(obra_v3):
+        """Busca 5 endpoints e aplica regras. Retorna (obra_v3, resultado) ou (obra_v3, None)."""
         oid = obra_v3["obra_id"]
-        cliente = (obra_v3.get("cliente") or "?")[:35]
         try:
             detail = fetch(f"{BASE_API}/{oid}")
         except Exception as e:
-            print(f"  [{i}/{len(ativas)}] {cliente:<37} · ERRO detail: {str(e)[:60]}")
-            erros += 1
-            continue
+            return (obra_v3, None, str(e)[:60])
 
-        # Salva detail fresco no snapshot LOCAL (cascata pros outros scripts)
         salvar_detail_snapshot(oid, detail)
 
-        # Endpoints adicionais (best-effort · não trava se falhar)
-        ocorrencias = fetch_safe(f"{BASE_API}/{oid}/ocorrencias") or []
-        materiais = fetch_safe(f"{BASE_API}/{oid}/materiais") or {}
-        equipe = fetch_safe(f"{BASE_API}/{oid}/equipe") or {}
-        fases = fetch_safe(f"{BASE_API}/{oid}/fases") or {}
+        with ThreadPoolExecutor(max_workers=4) as pool_inner:
+            f_oc = pool_inner.submit(fetch_safe, f"{BASE_API}/{oid}/ocorrencias")
+            f_mt = pool_inner.submit(fetch_safe, f"{BASE_API}/{oid}/materiais")
+            f_eq = pool_inner.submit(fetch_safe, f"{BASE_API}/{oid}/equipe")
+            f_fa = pool_inner.submit(fetch_safe, f"{BASE_API}/{oid}/fases")
+            ocorrencias = f_oc.result() or []
+            materiais = f_mt.result() or {}
+            equipe = f_eq.result() or {}
+            fases = f_fa.result() or {}
 
         resultado = aplicar_regras(obra_v3, detail, ocorrencias, materiais, equipe, fases)
+        return (obra_v3, resultado, None)
 
-        # Aplica campos básicos
-        for k in ("veredicto", "urgencia", "flags", "status_sugerido", "tipo_demanda",
-                  "acao_consultor", "analise_kira_trilha", "analise_kira_em"):
-            obra_v3[k] = resultado[k]
+    MAX_WORKERS = 6
+    processados = 0
 
-        # Sobrescreve consultor SE temos um real (responsavelOperacoes preenchido)
-        if resultado["_consultor_real"]:
-            obra_v3["consultor"] = resultado["_consultor_real"]
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        futures = {pool.submit(processar_obra, o): o for o in ativas}
+        for future in as_completed(futures):
+            obra_v3, resultado, err = future.result()
+            processados += 1
+            cliente = (obra_v3.get("cliente") or "?")[:35]
 
-        # Adiciona labels múltiplas no bloco painel
-        if resultado["_painel_labels"]:
-            obra_v3.setdefault("painel", {})["labels"] = resultado["_painel_labels"]
+            if resultado is None:
+                print(f"  [{processados}/{len(ativas)}] {cliente:<37} · ERRO detail: {err}")
+                erros += 1
+                continue
 
-        # Adiciona atraso_dias (mesmo se zero · vira KPI)
-        if resultado["_painel_atraso_dias"] is not None:
-            obra_v3.setdefault("painel", {})["atraso_dias"] = resultado["_painel_atraso_dias"]
+            for k in ("veredicto", "urgencia", "flags", "status_sugerido", "tipo_demanda",
+                      "acao_consultor", "analise_kira_trilha", "analise_kira_em"):
+                obra_v3[k] = resultado[k]
 
-        # Adiciona blocos kira_equipe e kira_materiais se temos
-        if resultado["_kira_equipe"]:
-            obra_v3["kira_equipe"] = resultado["_kira_equipe"]
-        if resultado["_kira_materiais"]:
-            obra_v3["kira_materiais"] = resultado["_kira_materiais"]
+            if resultado["_consultor_real"]:
+                obra_v3["consultor"] = resultado["_consultor_real"]
 
-        sucesso += 1
-        contagem_v[resultado["veredicto"]] = contagem_v.get(resultado["veredicto"], 0) + 1
-        contagem_u[resultado["urgencia"]] = contagem_u.get(resultado["urgencia"], 0) + 1
+            if resultado["_painel_labels"]:
+                obra_v3.setdefault("painel", {})["labels"] = resultado["_painel_labels"]
 
-        if i % 25 == 0 or i == len(ativas):
-            elapsed = time.time() - inicio
-            eta = (elapsed / i) * (len(ativas) - i)
-            print(f"  [{i}/{len(ativas)}] · {elapsed:.0f}s · ETA {eta:.0f}s")
+            if resultado["_painel_atraso_dias"] is not None:
+                obra_v3.setdefault("painel", {})["atraso_dias"] = resultado["_painel_atraso_dias"]
+
+            if resultado["_kira_equipe"]:
+                obra_v3["kira_equipe"] = resultado["_kira_equipe"]
+            if resultado["_kira_materiais"]:
+                obra_v3["kira_materiais"] = resultado["_kira_materiais"]
+
+            sucesso += 1
+            contagem_v[resultado["veredicto"]] = contagem_v.get(resultado["veredicto"], 0) + 1
+            contagem_u[resultado["urgencia"]] = contagem_u.get(resultado["urgencia"], 0) + 1
+
+            if processados % 25 == 0 or processados == len(ativas):
+                elapsed = time.time() - inicio
+                eta = (elapsed / processados) * (len(ativas) - processados)
+                print(f"  [{processados}/{len(ativas)}] · {elapsed:.0f}s · ETA {eta:.0f}s")
 
     write_discord(DISCORD_PATH, data)
 

@@ -76,6 +76,7 @@ WORKERS = 6
 
 SENDERS_ALIAS = {
     "taquinho": "Gilmar Taquinho",
+    "francisco beats": "Francisco",  # outro terminal usa "Francisco Beats Monofloor"
 }
 
 def normalizar_sender(sender):
@@ -104,7 +105,7 @@ def is_card_bot(texto):
     return False
 
 PAD_CONTRATO = re.compile(r"\b(contrato\s+assinado|contrato\s+ok)\b", re.IGNORECASE)
-PAD_VT_AGENDADA = re.compile(r"\bvt\s+(de\s+)?(aferi[çc][aã]o|entrada)\s+agendada\b", re.IGNORECASE)
+PAD_VT_AGENDADA = re.compile(r"\bvt\s+(de\s+)?(aferi[çc][aã]o|entrada|orienta[çc][aã]o)\s+agendada\b|\bvisita\s+(de\s+)?(orienta[çc][aã]o|aferi[çc][aã]o)\s+agendada\b", re.IGNORECASE)
 PAD_VT_ENTRADA_REALIZADA = re.compile(
     r"\b("
     r"vt\s+(de\s+)?entrada\s+(realizada|feita|ok|conclu[ií]da)"
@@ -137,6 +138,14 @@ PAD_REPROVACAO_RETORNO = re.compile(
     r"|reparos?\s+e\s+ajustes\s+(finalizad|conclu)"
     r"|retorno\s+(em\s+obra|necess[áa]rio|para\s+reparo)"
     r"|refazer\s+(a|o|essa|esse)\s+(parede|piso|paredão|área)"
+    # NOVOS · defeitos visuais detectados em vistoria/cura (frases compostas pra evitar amplitude)
+    r"|ficou\s+(bem\s+|muito\s+)?marcad"
+    r"|afundad[ao]\s+(grande|aqui|aparece|no\s+piso|do\s+piso)"
+    r"|afundamento\s+(no|do|na)"
+    r"|depress[aã]o\s+no\s+piso"
+    r"|marca\s+(grande|do\s+rolinho|de\s+rolinho)"
+    r"|faixa\s+(central|mais\s+forte)\s+(de\s+verniz|no\s+piso|aqui)?"
+    r"|linha\s+(mais\s+forte|bem\s+marcad)"
     r")\b",
     re.IGNORECASE,
 )
@@ -236,11 +245,12 @@ PAD_ULTIMA_CAMADA = re.compile(
 # Solicitação de material durante execução · "preciso de mais kit", "manda outro rolo"
 PAD_SOLICITACAO_MATERIAL = re.compile(
     r"\b("
-    r"precis(o|a|amos)\s+(de\s+)?(mais|outro|outra|um|uma|nov[ao])"
-    r"|manda(r)?\s+(mais|outro|outra|nov[ao])"
-    r"|envia(r)?\s+(mais|outro|outra|nov[ao])"
-    r"|falt(a|ou|aram?)\s+(material|kit|balde|tela|massa|primer|verniz|stelion|lillit|teron|cera)"
-    r"|comprar\s+(material|rolo|pinc[éeê]l|lixa|fita)"
+    # FIX falso positivo · "preciso de uma ligação" virava material · agora exige token de material
+    r"precis(o|a|amos)\s+(de\s+)?(mais|outro|outra|um|uma|nov[ao])\s+(kit|balde|tela|massa|primer|verniz|stelion|lillit|teron|cera|material|rolo|pinc[éeê]l|lixa|fita)"
+    r"|manda(r)?\s+(mais|outro|outra|nov[ao])\s+(kit|balde|tela|massa|primer|verniz|stelion|lillit|teron|cera|material|rolo|pinc[éeê]l|lixa|fita)"
+    r"|envia(r)?\s+(mais|outro|outra|nov[ao])\s+(kit|balde|tela|massa|primer|verniz|stelion|lillit|teron|cera|material|rolo|pinc[éeê]l|lixa|fita)"
+    r"|falt(a|ou|aram?)\s+(material|kit|balde|tela|massa|primer|verniz|stelion|lillit|teron|cera|rolo|pinc[éeê]l|lixa|fita)"
+    r"|comprar\s+(material|kit|rolo|pinc[éeê]l|lixa|fita|tela|massa)"
     r"|sair\s+para\s+comprar"
     r"|preciso\s+da\s+libera[çc][aã]o.*pagamento"
     r"|necessito\s+comprar"
@@ -248,20 +258,67 @@ PAD_SOLICITACAO_MATERIAL = re.compile(
     re.IGNORECASE,
 )
 
-# Cobrança de status · "tem equipe em obra?", "já chegou?", "status?"
-# Vem geralmente de não-aplicador (pessoal Monofloor)
+# Cobrança de status · APENAS PERGUNTA · vem de pessoal Monofloor cobrando aplicador
+# Removido "previsão de chegada" (era falso positivo · captura também aviso proativo)
 PAD_COBRANCA_STATUS = re.compile(
     r"\b("
-    r"temos\s+equipe\s+em\s+obra"
-    r"|tem\s+equipe\s+em\s+obra"
-    r"|alguém\s+(j[áa]\s+)?em\s+obra"
-    r"|j[áa]\s+chegou(\s+(algu[ée]m|equipe))?"
+    r"(temos|tem|h[áa])\s+equipe\s+em\s+obra\??"
+    r"|alguém\s+(j[áa]\s+)?em\s+obra\??"
+    r"|j[áa]\s+chegou(\s+(algu[ée]m|equipe))?\?"
     r"|chegou\?"
-    r"|chegaram\?"
-    r"|equipe\s+chegou\?"
+    r"|chegaram\??"
+    r"|equipe\s+chegou\??"
     r"|status\s+(da\s+obra)?\??"
-    r"|alguma\s+(novidade|atualiza[çc][aã]o)"
-    r"|previs[aã]o\s+(de\s+)?chegada"
+    r"|alguma\s+(novidade|atualiza[çc][aã]o)\??"
+    r"|qual\s+a\s+previs[aã]o"
+    r")",
+    re.IGNORECASE,
+)
+
+# Aviso proativo de chegada · líder anuncia que vem ou está chegando · separa de equipe_chegou (já chegou)
+PAD_AVISO_CHEGADA = re.compile(
+    r"\b("
+    r"est(ou|amos)\s+a\s+caminho"
+    r"|previs[aã]o\s+de\s+chegada\s+(entre|às|para)"
+    r"|cheguei\s+por\s+aqui"
+    r"|saindo\s+(daqui|de\s+casa)\s+pra\s+obra"
+    r"|chegando\s+em\s+\d"
+    r")",
+    re.IGNORECASE,
+)
+
+# Evento externo · problemas FORA da alçada da Monofloor (vazamento, terceiro atrapalhando, civil pendente)
+# Mede o "grau de problemas além da alçada da equipe" · sinal de obra mal preparada pelo cliente
+PAD_EVENTO_EXTERNO = re.compile(
+    r"\b("
+    r"vazament\w+(\s+(do|de|aqui|na|aparelhamento))?"
+    r"|infiltra[çc][aã]o\s+(no|na|de)"
+    r"|outros\s+prestadores\s+em\s+obra"
+    r"|eletricista\s+(encostand|atrapalh|com\s+escada)"
+    r"|escada\s+do\s+eletricista\s+encostad"
+    r"|mestre\s+de\s+obras\s+(vai|ir[áa]|precisa)"
+    r"|obra\s+civil\s+(ainda|em\s+andamento|pendente)"
+    r"|contrapiso\s+(ainda|em\s+execu|pendente)"
+    r"|cobertura\s+provis[óo]ria"
+    r"|janelas\s+(n[ãa]o\s+instal|sem\s+instalar|aguardando\s+instala)"
+    r"|vidros?\s+(n[ãa]o\s+chegou|sem\s+instalar|aguardando)"
+    r"|ralos?\s+(sem\s+instalar|n[ãa]o\s+instalad|sem\s+grelha)"
+    r"|interven[çc][õo]es?\s+civis"
+    r"|contamina[çc][aã]o\s+(entre|da|de)\s+camad"
+    r"|chuva\s+(forte|interrompendo|inundo|inundou)"
+    r"|prego\s+da\s+laje"
+    r"|porta\s+n[ãa]o\s+(foi\s+)?retirad"
+    r"|fechamento\s+(n[ãa]o\s+foi|ainda\s+(n[ãa]o|sem))"
+    r")",
+    re.IGNORECASE,
+)
+
+# Aditivo aprovado · separa de aditivo_negociando
+PAD_ADITIVO_APROVADO = re.compile(
+    r"\b("
+    r"aditivo\s+(de\s+\w+\s+)?aprovad\w*"
+    r"|(arquiteta|cliente)\s+aprovou\s+(o\s+)?aditivo"
+    r"|aprovou.*\baditivo"
     r")",
     re.IGNORECASE,
 )
@@ -390,6 +447,7 @@ PADROES = [
     ("cobranca_cor",             PAD_COBRANCA_COR),          # NOVO PALLOMA
     ("cor_aprovada",             PAD_COR_APROVADA),
     ("escopo_em_revisao",        PAD_ESCOPO_REVISAO),        # NOVO PALLOMA
+    ("aditivo_aprovado",         PAD_ADITIVO_APROVADO),      # NOVO DONA CORINA · ANTES de escopo_aprovado (mais específico)
     ("escopo_aprovado",          PAD_ESCOPO_APROVADO),       # NOVO P2B
     ("escopo_atualizado",        PAD_ESCOPO_ATUALIZADO),     # NOVO PALLOMA
     ("aditivo_negociando",       PAD_ADITIVO_NEGOCIANDO),    # NOVO PALLOMA
@@ -400,6 +458,7 @@ PADROES = [
     ("material_entregue",        PAD_MATERIAL_ENTREGUE),     # NOVO P2B
     ("relatorio_vt_qualidade",   PAD_RELATORIO_VT_QUALIDADE),# NOVO P2B
     ("vistoria_cliente",         PAD_VISTORIA_CLIENTE),      # NOVO P2B
+    ("aviso_chegada",            PAD_AVISO_CHEGADA),         # NOVO DONA CORINA · ANTES de equipe_chegou
     ("equipe_chegou",            PAD_EQUIPE_CHEGOU),         # NOVO P2B/SILVANA
     ("solicitacao_material",     PAD_SOLICITACAO_MATERIAL),  # NOVO bloco "ouro fácil"
     ("cobranca_status",          PAD_COBRANCA_STATUS),       # NOVO bloco "ouro fácil"
@@ -408,6 +467,7 @@ PADROES = [
     ("interrupcao_material",     PAD_INTERRUPCAO_MATERIAL),  # NOVO SILVANA
     ("troca_aplicador",          PAD_TROCA_APLICADOR),       # NOVO SILVANA
     ("dia_sem_expediente",       PAD_DIA_SEM_EXPEDIENTE),    # NOVO SILVANA
+    ("evento_externo",           PAD_EVENTO_EXTERNO),        # NOVO JEAN LUC · problemas fora da alçada Monofloor
     ("aprovacao_cliente",        PAD_APROVACAO_CLIENTE),
     ("reprovacao_retorno",       PAD_REPROVACAO_RETORNO),
     ("postergacao_explicita",    PAD_POSTERGACAO_EXPLICITA), # NOVO PALLOMA
@@ -570,7 +630,7 @@ TAXONOMIA = {
             },
             "escopo": {
                 "label": "Escopo",
-                "submarcos": ["escopo_em_revisao", "escopo_aprovado", "escopo_atualizado", "aditivo_negociando"],
+                "submarcos": ["escopo_em_revisao", "escopo_aprovado", "escopo_atualizado", "aditivo_negociando", "aditivo_aprovado"],
             },
             "amostra": {
                 "label": "Amostra",
@@ -609,7 +669,7 @@ TAXONOMIA = {
         "marcos_principais": {
             "equipe_em_obra": {
                 "label": "Equipe em obra",
-                "submarcos": ["equipe_chegou"],
+                "submarcos": ["aviso_chegada", "equipe_chegou"],
             },
             "camada": {
                 "label": "Camadas",
@@ -622,6 +682,10 @@ TAXONOMIA = {
             "incidente": {
                 "label": "Incidentes",
                 "submarcos": ["interrupcao_material", "troca_aplicador", "dia_sem_expediente", "ocorrencia_formal"],
+            },
+            "evento_externo_grupo": {
+                "label": "Eventos externos · fora da alçada",
+                "submarcos": ["evento_externo"],
             },
             "vistoria_final": {
                 "label": "Vistoria cliente",
@@ -941,12 +1005,19 @@ def detectar_marco(msg, tipo, padrao):
 
 def extrair_marcos(msgs_ordenadas):
     primeiro_de_cada = {}
+    # Marcos que PODEM rodar em transcrições (defeito de qualidade descrito em vídeo é informação válida)
+    TIPOS_ACEITAM_TRANSCRICAO = {"reprovacao_retorno"}
+
     repetiveis = []
     for m in msgs_ordenadas:
         texto = m.get("content") or ""
-        if is_card_bot(texto) or "🎬" in texto or "🎙️" in texto:
+        if is_card_bot(texto):
             continue
+        is_transcricao = "🎬" in texto or "🎙️" in texto
         for tipo, pad in PADROES:
+            # Transcrições só rodam tipos da whitelist · resto pula
+            if is_transcricao and tipo not in TIPOS_ACEITAM_TRANSCRICAO:
+                continue
             marco = detectar_marco(m, tipo, pad)
             if marco:
                 if tipo in UNICOS:

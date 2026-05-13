@@ -165,12 +165,6 @@
     .tour-teaser-x{background:none;border:none;color:#a89e92;font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
     .tour-teaser-x:hover{color:#3a3530}
 
-    /* Compatibilidade legada */
-    .lab-tag{display:none}
-    h1.legacy{font-size:26px;font-weight:600;margin:0 0 8px;letter-spacing:-0.01em}
-    h1.legacy .accent{color:#b8a080}
-    .sub{font-size:13px;color:#8a7e72;line-height:1.6;max-width:780px}
-
     /* Status bar */
     .status-bar{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;padding:14px 20px;background:#fff;border:1px solid #e0d8cc;border-left:3px solid #b8a080;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px}
     .st-item{display:flex;flex-direction:column;gap:2px;min-width:80px}
@@ -972,7 +966,7 @@
 </div>
 
 <script>
-function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
 
 // Capitaliza nome próprio: "LUANA SILVA" → "Luana Silva" · respeita partículas
 function capitalizarNome(s){
@@ -1101,6 +1095,7 @@ let STATUS = null;  // sentinela: { geral, checks: [...] }
 async function load(){
   try {
     const r = await fetch('dados/discordancias-v3.json?t='+Date.now(), {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     DADOS = await r.json();
   } catch(e) {
     document.getElementById('lista').innerHTML = '<div class="empty"><strong>Erro ao carregar</strong>dados/discordancias-v3.json não pôde ser lido.</div>';
@@ -1378,6 +1373,7 @@ function renderLista(filtro){
   else if (filtro === 'consultor-divergente') lista = obras.filter(o=>(o.flags||[]).includes('consultor_divergente'));
   else if (filtro === 'clima-tenso') lista = obras.filter(o=>{const c=(o.kira_whatsapp&&o.kira_whatsapp.whatsapp&&o.kira_whatsapp.whatsapp.clima_geral||'').toLowerCase();return c.includes('crit')||c.includes('tens');});
   else if (filtro === 'data-alterada') lista = obras.filter(o=>o.regua && o.regua.data_inicio_alterada);
+  else if (filtro.startsWith('cor:')){ const cn=filtro.slice(4); lista = obras.filter(o=>((o.cores||{}).atual||[]).includes(cn)); }
 
   if (lista.length === 0) {
     document.getElementById('lista').innerHTML = '<div class="empty">Nenhuma obra nesse filtro.</div>';
@@ -2374,15 +2370,7 @@ function renderLampada(){
   // Top cores · clicável (abre drawer com obras + metragem total)
   const topCores = (DADOS.cores_agregado && DADOS.cores_agregado.top_atual) || [];
   const maxCor = topCores.length > 0 ? topCores[0][1] : 1;
-  // Helper · aceita number OU string ("489.89") como metragem
-  const parseM = (v) => {
-    if (typeof v === 'number' && !isNaN(v)) return v;
-    if (typeof v === 'string'){
-      const n = parseFloat(v.replace(',', '.'));
-      return isNaN(n) ? 0 : n;
-    }
-    return 0;
-  };
+  // parseM() definida como função global (abaixo) — aceita number OU string
   // Pré-calcula metragem total por cor a partir de DADOS.obras
   // Itera TODAS as cores em atual (não só [0]) · obra com 2 cores conta pra ambas
   const metragemPorCor = {};
@@ -2613,8 +2601,7 @@ function fecharDrawer(){
   lampOverlay.classList.remove('com-drawer');
 }
 
-// Helper aceita number OU string como metragem
-function _parseM(v){
+function parseM(v){
   if (typeof v === 'number' && !isNaN(v)) return v;
   if (typeof v === 'string'){
     const n = parseFloat(v.replace(',', '.'));
@@ -2631,7 +2618,7 @@ function abrirDrawerCor(corNome){
     return cores.includes(corNome);
   });
   // Calcula metragem total · obras com 2 cores são contadas inteiras
-  const totalM = obras.reduce((s, o) => s + _parseM(o.painel && o.painel.metragem), 0);
+  const totalM = obras.reduce((s, o) => s + parseM(o.painel && o.painel.metragem), 0);
   document.getElementById('lp-drawer-tit').textContent = `Cor · ${corNome}`;
   const subParts = [obras.length === 1 ? '1 obra' : `${obras.length} obras`];
   if (totalM > 0) subParts.push(`${Math.round(totalM)} m² total`);
@@ -2655,7 +2642,7 @@ function renderDrawerItemCor(o){
   const idCurto = (o.obra_id || '').slice(0, 8);
   const fase = (o.painel && (o.painel.fase_atual || o.painel.status_atual)) || '—';
   const urg = (o.urgencia || 'baixa').toLowerCase();
-  const m = _parseM(o.painel && o.painel.metragem);
+  const m = parseM(o.painel && o.painel.metragem);
   const metragemStr = m > 0 ? `${Math.round(m*100)/100} m²` : 'sem metragem';
   return `<button class="lp-drawer-obra" data-obra-id="${esc(o.obra_id)}">
     <div class="lp-drawer-obra-head">
@@ -2680,7 +2667,7 @@ function renderDrawerItem(o, filtroId){
   let detalhe = '';
   if (filtroId === 'data-alterada' && o.regua){
     const n = (o.regua.data_inicio_historico || []).length;
-    const dataAtual = o.regua.data_inicio || o.regua.data_x;
+    const dataAtual = o.regua.data_inicio_x;
     detalhe = `<span class="destaque">${n} remarcação${n>1?'ões':''}</span>${dataAtual ? ` · prevista ${fmtBR(dataAtual)}` : ''}`;
   } else if (filtroId === 'clima-tenso' && o.kira_whatsapp && o.kira_whatsapp.whatsapp){
     const c = (o.kira_whatsapp.whatsapp.clima_geral || '').toLowerCase();
@@ -2697,10 +2684,10 @@ function renderDrawerItem(o, filtroId){
   } else if (filtroId === 'detrator_latente'){
     detalhe = 'sinais de descontentamento';
   } else if (filtroId === 'status_desatualizado'){
-    const dataAtual = o.regua && (o.regua.data_inicio || o.regua.data_x);
+    const dataAtual = o.regua && (o.regua.data_inicio_x);
     detalhe = dataAtual ? `prevista ${fmtBR(dataAtual)}` : '';
   } else if (filtroId === 'urg-alta'){
-    const dataAtual = o.regua && (o.regua.data_inicio || o.regua.data_x);
+    const dataAtual = o.regua && (o.regua.data_inicio_x);
     detalhe = dataAtual ? `prevista ${fmtBR(dataAtual)}` : '';
   } else if (filtroId === 'todos'){
     const v = traduz(o.veredicto || '');
@@ -3013,12 +3000,18 @@ document.getElementById('disp-botoes').addEventListener('click', async (ev) => {
     return false;
   }
   function posicionar(parada){
-    const target = document.querySelector(parada.sel);
+    let target = document.querySelector(parada.sel);
     if (!target){ proximo(true); return; }
+    // Se o alvo está dentro de card colapsado, expande o card pai
+    if (target.getBoundingClientRect().width === 0){
+      const card = target.closest('.obra');
+      if (card) card.classList.add('expanded');
+    }
     const fixo = ehFixed(target);
     if (!fixo) target.scrollIntoView({behavior:'smooth', block:'center'});
     setTimeout(() => {
       const r = target.getBoundingClientRect();
+      if (r.width === 0 && r.height === 0){ proximo(true); return; }
       const top = fixo ? (r.top - 8) : (r.top + window.scrollY - 8);
       const left = fixo ? (r.left - 8) : (r.left + window.scrollX - 8);
       const w = r.width + 16;
