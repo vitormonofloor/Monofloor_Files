@@ -526,42 +526,45 @@ MARCOS_EXECUCAO = [
     ("visita_durante_obra", re.compile(r"\b(cliente\s+(em\s+obra|visitou|esteve\s+em\s+obra|chegou\s+em\s+obra)|visita\s+do\s+cliente|visita\s+(t[eé]cnica\s+)?durante\s+(a\s+)?obra|visita\s+de\s+qualidade|vt\s+de\s+qualidade|inspe[çc][aã]o\s+(em\s+obra|de\s+qualidade)|t[eé]cnico\s+em\s+obra\s+hoje|visita\s+agendada\s+com\s+(os\s+)?respons[áa]veis)\b", re.IGNORECASE)),
     ("verniz_finalizado",  re.compile(r"\b(verniz\s+finaliz|verniz\s+aplicad|finaliza[çc][aã]o\s+do\s+verniz)", re.IGNORECASE)),
     ("obra_finalizada",    re.compile(r"\b(obra\s+finaliz|piso\s+finaliz|piso\s+conclu)", re.IGNORECASE)),
-    ("verniz_iniciado",    re.compile(r"\b(programa[çc][aã]o\s+aplica[çc][aã]o\s+verniz|aplica[çc][aã]o\s+(de\s+)?verniz|aplicando\s+verniz|verniz\s+lumina)", re.IGNORECASE)),
+    ("verniz_iniciado",    re.compile(r"\b(programa[çc][aã]o\s+aplica[çc][aã]o\s+verniz|aplica[çc][aã]o\s+(de\s+)?verniz|aplicando\s+verniz|verniz\s+lumina|envie\s+.*verniz|precisar.*verniz|falta.*verniz)", re.IGNORECASE)),
     ("cura",               re.compile(r"\b(aguardando\s+cura|em\s+cura|cura\s+do\s+(piso|stelion|material)|cura\s+t[eé]cnica)", re.IGNORECASE)),
-    ("camada_3",           re.compile(r"\b(terceira\s+camada|3[ªao°]?\s*camada|3[ªa]\s+demão|terceira\s+demão)", re.IGNORECASE)),
-    ("camada_2",           re.compile(r"\b(segunda\s+camada|2[ªao°]?\s*camada|2[ªa]\s+demão|segunda\s+demão)", re.IGNORECASE)),
-    ("camada_1",           re.compile(r"\b(primeira\s+camada|1[ªao°]?\s*camada|1[ªa]\s+demão|primeira\s+demão)", re.IGNORECASE)),
+    ("camada_3",           re.compile(r"\b(terceira\s+camada|3[ªao°]?\s*camada|3[ªa]\s+demão|terceira\s+demão|tr[eê]s\s+(m[aã]os|camadas|dem[aã]os))", re.IGNORECASE)),
+    ("camada_2",           re.compile(r"\b(segunda\s+camada|2[ªao°]?\s*camada|2[ªa]\s+demão|segunda\s+demão|duas\s+(m[aã]os|camadas|dem[aã]os))", re.IGNORECASE)),
+    ("camada_1",           re.compile(r"\b(primeira\s+camada|1[ªao°]?\s*camada|1[ªa]\s+demão|primeira\s+demão|uma\s+(m[aã]o|camada|dem[aã]o))", re.IGNORECASE)),
+    ("aplicacao_stelion",  re.compile(r"\b(aplic\w+\s+.*ste?li|ste?li\w*\s+aplic|m[aã]os?\s+de\s+ste?li|reparos?\s+.*ste?li|ste?li\w*\s+no\s+piso|passamos?\s+.*ste?li|aplicamos?\s+.*ste?li)", re.IGNORECASE)),
+    ("aplicacao_lilit",    re.compile(r"\b(aplic\w+\s+.*lilit|lilit\w*\s+aplic|m[aã]os?\s+de\s+lilit|reparos?\s+.*lilit|passamos?\s+.*lilit|aplicamos?\s+.*lilit)", re.IGNORECASE)),
+    ("reparo",             re.compile(r"\b(reparos?\s+(apontad|realizad|feit|conclu)|fiz\w*\s+.*reparos?|reparando|reaplicar|reaplica[çc][aã]o)", re.IGNORECASE)),
     ("lixamento",          re.compile(r"\b(lixamento|lixad[ao]|lixando|lixar)\b", re.IGNORECASE)),
     ("aplicacao_tela",     re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?tela|tela\s+aplicad|telar)\b", re.IGNORECASE)),
-    ("aplicacao_teron",    re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?teron|teron\s+aplicad)\b", re.IGNORECASE)),
-    ("aplicacao_primer",   re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?primer|primer\s+aplicad)\b", re.IGNORECASE)),
+    ("aplicacao_teron",    re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?teron|teron\s+aplicad|selador\s+aplic|aplic\w+\s+selador)\b", re.IGNORECASE)),
+    ("aplicacao_primer",   re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?primer|primer\s+aplicad|passamos?\s+.*primer|aplicamos?\s+.*primer)\b", re.IGNORECASE)),
     ("preparacao",         re.compile(r"\b(limpeza|prote[çc][aã]o\s+(das\s+áreas|do\s+ambiente)|requadro|substitui[çc][aã]o\s+de\s+fitas|troca\s+(de\s+)?fitas)", re.IGNORECASE)),
     ("diario_obra",        re.compile(r"\b(di[áa]rio\s+de\s+obra|dia\s+\d{1,2}[/\-]\d{1,2}\b)", re.IGNORECASE)),
-    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando|bom\s+dia[,.]?\s*(pessoal|equipe|galera)?[,.]?\s*(estamos|cheg|iniciar|em\s+obra))", re.IGNORECASE)),
+    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando|bom\s+dia[,.]?\s*(pessoal|equipe|galera)?[,.]?\s*(estamos|cheg|iniciar|em\s+obra)|chegarei\s+[àa]s?\s+\d)", re.IGNORECASE)),
     ("fim_dia",            re.compile(r"\b(saindo\s+(de|da)\s+obra|equipe\s+saindo|acabamos\s+(agora|hoje)|encerrando\s+o\s+dia|finalizamos\s+o\s+dia)", re.IGNORECASE)),
-    ("foto_progresso",     re.compile(r"^\[Foto\]", re.IGNORECASE)),
 ]
 
 LABELS_EXECUCAO = {
     "inicio_dia":          "Início do dia",
     "cobranca_status":     "Cobrança de status",
     "preparacao":          "Preparação",
-    "aplicacao_primer":    "Primer aplicado",
+    "aplicacao_primer":    "Primer",
     "aplicacao_tela":      "Tela aplicada",
-    "aplicacao_teron":     "Teron aplicado",
+    "aplicacao_teron":     "Selador/Teron",
+    "aplicacao_stelion":   "Aplicação Stelion",
+    "aplicacao_lilit":     "Aplicação Lilit",
+    "reparo":              "Reparo",
     "lixamento":           "Lixamento",
-    "camada_1":            "1ª camada Stelion",
-    "camada_2":            "2ª camada Stelion",
-    "camada_3":            "3ª camada Stelion",
+    "camada_1":            "1ª camada",
+    "camada_2":            "2ª camada",
+    "camada_3":            "3ª camada",
     "cura":                "Aguardando cura",
-    "verniz_iniciado":     "Aplicação verniz",
+    "verniz_iniciado":     "Verniz",
     "verniz_finalizado":   "Verniz finalizado",
     "obra_finalizada":     "Obra finalizada",
-    "diario_obra":         "Diário de obra postado",
-    "foto_progresso":      "Foto de progresso",
+    "diario_obra":         "Diário de obra",
     "fim_dia":             "Fim do dia",
-    "visita_durante_obra": "Visita externa em obra",
-    "atividade_campo":     "Atividade em campo",
+    "visita_durante_obra": "Visita em obra",
 }
 
 # Padrão de cobrança de status (msg de não-aplicador perguntando se tem equipe em obra)
@@ -1299,9 +1302,6 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                 # inicio_dia só vale pra aplicador
                 if tipo == "inicio_dia" and not eh_aplicador:
                     continue
-                # foto_progresso só vale pra aplicador (evita fotos de equipe interna)
-                if tipo == "foto_progresso" and not eh_aplicador:
-                    continue
                 chave = (data, tipo)
                 if chave in visto:
                     if tipo == "inicio_dia":
@@ -1320,21 +1320,6 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                 if tipo == "inicio_dia":
                     inicio_dia_por_data[data] = len(marcos) - 1
                 break
-
-        # Fallback: msg de aplicador com >30 chars sem marco especifico → atividade_campo (1 por dia)
-        if not marco_detectado and eh_aplicador and len(texto.strip()) > 30:
-            chave = (data, "atividade_campo")
-            if chave not in visto:
-                visto.add(chave)
-                marco_detectado = {
-                    "data": data,
-                    "hora": hora,
-                    "autor": sender,
-                    "tipo": "atividade_campo",
-                    "label": LABELS_EXECUCAO["atividade_campo"],
-                    "trecho": texto[:200].replace("\n", " ").strip(),
-                }
-                marcos.append(marco_detectado)
 
         # Se não detectou marco técnico E é não-aplicador E ainda não houve inicio_dia no dia → cobrança
         if not marco_detectado and not eh_aplicador and data not in inicio_dia_por_data:
@@ -1784,6 +1769,9 @@ MARCO_PARA_ETAPA = {
     "camada_1":          ["1ª Camada"],
     "camada_2":          ["2ª Camada"],
     "camada_3":          ["3ª Camada"],
+    "aplicacao_stelion": ["1ª Camada", "2ª Camada", "3ª Camada"],
+    "aplicacao_lilit":   ["1ª Camada", "2ª Camada", "3ª Camada"],
+    "reparo":            [],
     "verniz_iniciado":   ["Verniz"],
     "verniz_finalizado": ["Verniz"],
     "obra_finalizada":   [],
