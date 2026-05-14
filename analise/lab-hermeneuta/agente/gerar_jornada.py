@@ -1769,6 +1769,127 @@ def detectar_padroes(jornada):
     return padroes
 
 
+# ============================================================
+# Cruzamento andamento: Telegram (nosso) × Painel (manual)
+# ============================================================
+
+# Mapeamento: tipo de marco_execucao → etapa do andamento_obra no Painel
+MARCO_PARA_ETAPA = {
+    "preparacao":        ["Proteção", "Limpeza"],
+    "aplicacao_primer":  ["Preparo de juntas/Primer", "Preparo das juntas/Primer"],
+    "aplicacao_tela":    ["Massa nas juntas"],
+    "lixamento":         ["Lixamento 1", "Lixamento 2", "Lixamento 3", "Lixamento 4"],
+    "camada_1":          ["1ª Camada"],
+    "camada_2":          ["2ª Camada"],
+    "camada_3":          ["3ª Camada"],
+    "verniz_iniciado":   ["Verniz"],
+    "verniz_finalizado": ["Verniz"],
+    "obra_finalizada":   [],
+    "aplicacao_teron":   ["Selador"],
+}
+
+ETAPAS_ORDENADAS = [
+    "Limpeza", "Proteção", "Preparo de juntas/Primer",
+    "Massa nas juntas", "Selador",
+    "1ª Camada", "2ª Camada", "3ª Camada", "4ª Camada",
+    "Lixamento 1", "Lixamento 2", "Lixamento 3", "Lixamento 4",
+    "Verniz",
+]
+
+SINONIMOS_ETAPA = {
+    "Preparo das juntas/Primer": "Preparo de juntas/Primer",
+}
+
+
+def cruzar_andamento(detail, marcos_execucao):
+    """Cruza andamento detectado no Telegram com checklist manual do Painel.
+    Retorna dict com etapas, datas, e status de cada cruzamento."""
+    # 1. Andamento do Painel (checklist manual)
+    all_fields = (detail.get("acessoDetalhes") or {}).get("allFields") or {}
+    andamento_painel = all_fields.get("andamento_obra") or all_fields.get("copy_of_andamento_obra_piso") or []
+    if isinstance(andamento_painel, str):
+        try:
+            parsed = json.loads(andamento_painel)
+            if isinstance(parsed, list):
+                andamento_painel = [str(s).strip() for s in parsed if s]
+            else:
+                andamento_painel = [s.strip() for s in andamento_painel.split(",") if s.strip()]
+        except (json.JSONDecodeError, ValueError):
+            andamento_painel = [s.strip() for s in andamento_painel.split(",") if s.strip()]
+    andamento_painel = [SINONIMOS_ETAPA.get(s, s) for s in andamento_painel]
+    painel_set = set(andamento_painel)
+
+    # 2. Andamento do Telegram (nosso, com datas)
+    telegram_etapas = {}  # etapa → {data, hora, autor, tipo_marco}
+    for m in (marcos_execucao or []):
+        tipo = m.get("tipo", "")
+        etapas_correspondentes = MARCO_PARA_ETAPA.get(tipo, [])
+        for etapa_raw in etapas_correspondentes:
+            etapa = SINONIMOS_ETAPA.get(etapa_raw, etapa_raw)
+            if etapa not in telegram_etapas:
+                telegram_etapas[etapa] = {
+                    "data": m.get("data"),
+                    "hora": m.get("hora"),
+                    "autor": m.get("autor"),
+                    "tipo_marco": tipo,
+                }
+    telegram_set = set(telegram_etapas.keys())
+
+    # 3. Cruzamento
+    todas_etapas = set(ETAPAS_ORDENADAS) | painel_set | telegram_set
+    resultado = []
+    for etapa in ETAPAS_ORDENADAS:
+        if etapa not in todas_etapas:
+            continue
+        no_painel = etapa in painel_set
+        no_telegram = etapa in telegram_set
+        if no_painel and no_telegram:
+            status_cruz = "confirmado"
+        elif no_telegram and not no_painel:
+            status_cruz = "detectado_sem_painel"
+        elif no_painel and not no_telegram:
+            status_cruz = "painel_sem_deteccao"
+        else:
+            status_cruz = "pendente"
+        item = {
+            "etapa": etapa,
+            "status": status_cruz,
+            "painel": no_painel,
+            "telegram": no_telegram,
+        }
+        if no_telegram:
+            item["data_detectada"] = telegram_etapas[etapa]["data"]
+            item["hora_detectada"] = telegram_etapas[etapa]["hora"]
+            item["autor"] = telegram_etapas[etapa]["autor"]
+        resultado.append(item)
+
+    # Etapas do Painel que não estão na lista ordenada (custom)
+    for etapa in sorted(painel_set - set(ETAPAS_ORDENADAS)):
+        resultado.append({
+            "etapa": etapa,
+            "status": "painel_sem_deteccao" if etapa not in telegram_set else "confirmado",
+            "painel": True,
+            "telegram": etapa in telegram_set,
+        })
+
+    n_confirmado = sum(1 for r in resultado if r["status"] == "confirmado")
+    n_detectado = sum(1 for r in resultado if r["status"] == "detectado_sem_painel")
+    n_painel_only = sum(1 for r in resultado if r["status"] == "painel_sem_deteccao")
+    n_pendente = sum(1 for r in resultado if r["status"] == "pendente")
+
+    return {
+        "etapas": resultado,
+        "andamento_painel": andamento_painel,
+        "resumo": {
+            "confirmado": n_confirmado,
+            "detectado_sem_painel": n_detectado,
+            "painel_sem_deteccao": n_painel_only,
+            "pendente": n_pendente,
+            "total_etapas": len(resultado),
+        },
+    }
+
+
 def gerar_veredito(jornada):
     """Parágrafo-resumo determinístico da jornada. O que a diretoria lê."""
     cliente = jornada["cliente"]
@@ -2321,14 +2442,19 @@ def construir_jornada(obra_id):
     # Endereço completo
     endereco = detail.get("projetoEndereco") or "—"
 
+    # Data de término prevista + metragem pendente
+    data_termino_prevista = parse_data_simples(detail.get("dataTerminoPrevista"))
+    metragem_pendente = detail.get("metragemPendente")
+
     # Monta jornada
     jornada = {
         "obra_id": obra_id,
         "cliente": detail.get("clienteNome"),
-        "status": detail.get("status"),  # FIX bug #1 auditoria · campo era ausente em 20/20 · necessário pra ADR-004
-        "fase_atual_painel": detail.get("faseAtual"),  # complemento do status · fase legível
+        "status": detail.get("status"),
+        "fase_atual_painel": detail.get("faseAtual"),
         "endereco": endereco,
         "metragem": detail.get("projetoMetragem") or mat_totals.get("totalM2"),
+        "metragem_pendente": metragem_pendente,
         "produtos": materiais_resumo["produtos"],
         "cores": materiais_resumo["cores"],
         "data_1a_msg": primeira_msg.date().isoformat() if primeira_msg else None,
@@ -2336,6 +2462,7 @@ def construir_jornada(obra_id):
         "data_criacao_painel": data_criacao_iso[:10] if data_criacao_iso else None,
         "data_exec_prevista": data_exec_prevista.isoformat() if data_exec_prevista else None,
         "data_exec_confirmada": data_exec_confirmada.isoformat() if data_exec_confirmada else None,
+        "data_termino_prevista": data_termino_prevista.isoformat() if data_termino_prevista else None,
         "tempo_total_dias": tempo_total,
         "tempo_execucao_dias": tempo_execucao,
         "tempo_hibernacao_dias": tempo_hibernacao,
@@ -2371,6 +2498,7 @@ def construir_jornada(obra_id):
     jornada["resumo_cross"] = montar_resumo_cross(jornada)
     jornada["padroes"] = detectar_padroes(jornada)
     jornada["veredito"] = gerar_veredito(jornada)
+    jornada["andamento_cruzado"] = cruzar_andamento(detail, marcos_execucao)
 
     return jornada
 

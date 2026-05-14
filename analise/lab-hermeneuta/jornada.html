@@ -2663,12 +2663,62 @@
     letter-spacing: 0.04em;
   }
 
+  /* ANDAMENTO CRUZADO */
+  .andamento-resumo {
+    display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap;
+  }
+  .andamento-resumo .ar-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--ink-soft);
+  }
+  .ar-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .ar-dot.confirmado { background: #4caf50; }
+  .ar-dot.detectado  { background: #f5c542; }
+  .ar-dot.painel     { background: #e57373; }
+  .ar-dot.pendente   { background: var(--line); }
+
+  .andamento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .andamento-etapa {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft);
+    font-size: 12.5px;
+    transition: border-color 0.2s;
+  }
+  .andamento-etapa.confirmado { border-left: 3px solid #4caf50; }
+  .andamento-etapa.detectado_sem_painel { border-left: 3px solid #f5c542; }
+  .andamento-etapa.painel_sem_deteccao  { border-left: 3px solid #e57373; }
+  .andamento-etapa.pendente  { border-left: 3px solid var(--line); opacity: 0.5; }
+
+  .ae-nome {
+    font-weight: 600; color: var(--ink); flex: 1;
+  }
+  .ae-data {
+    font-size: 11px; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .ae-status-icon {
+    font-size: 14px; flex-shrink: 0;
+  }
+  .andamento-vazio {
+    color: var(--ink-faint); font-size: 12px; font-style: italic;
+  }
+
   @media (max-width: 800px) {
     main { padding: 24px; }
     .secoes { grid-template-columns: 1fr; }
     .obra-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .obra-stat-num { font-size: 20px; }
     .detalhes-header h2 { font-size: 20px; }
+    .andamento-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -2781,6 +2831,11 @@
       <div class="card full">
         <div class="section-title">Execução · Gantt diário</div>
         <div class="gantt-wrap" id="marcos-execucao"></div>
+      </div>
+
+      <div class="card full">
+        <div class="section-title">Andamento · Telegram vs Painel</div>
+        <div id="andamento-cruzado"></div>
       </div>
 
       <div class="card full">
@@ -4603,6 +4658,51 @@ function renderTempoPills(j){
   cont.innerHTML = pills.join('');
 }
 
+function renderAndamentoCruzado(ac){
+  const cont = document.getElementById('andamento-cruzado');
+  if (!ac || !ac.etapas || !ac.etapas.length) {
+    cont.innerHTML = '<div class="andamento-vazio">Sem dados de andamento para cruzamento</div>';
+    return;
+  }
+  const ICON = {
+    confirmado: '✓', detectado_sem_painel: '◉',
+    painel_sem_deteccao: '◎', pendente: '·'
+  };
+  const LABEL_STATUS = {
+    confirmado: 'Confirmado', detectado_sem_painel: 'Detectado (s/ Painel)',
+    painel_sem_deteccao: 'Só no Painel', pendente: 'Pendente'
+  };
+  const CLS = {
+    confirmado: 'confirmado', detectado_sem_painel: 'detectado',
+    painel_sem_deteccao: 'painel', pendente: 'pendente'
+  };
+  const r = ac.resumo || {};
+  const resumoHtml = ['confirmado','detectado_sem_painel','painel_sem_deteccao','pendente']
+    .filter(k => r[k])
+    .map(k => `<div class="ar-item"><span class="ar-dot ${CLS[k]}"></span>${r[k]} ${LABEL_STATUS[k]}</div>`)
+    .join('');
+
+  const etapasHtml = ac.etapas.map(et => {
+    const cls = et.status;
+    const icon = ICON[cls] || '·';
+    const dataRaw = et.data_detectada || '';
+    const datas = dataRaw ? (() => {
+      const p = dataRaw.split('-');
+      return p.length === 3 ? `${p[2]}/${p[1]}` : dataRaw;
+    })() : '';
+    return `<div class="andamento-etapa ${cls}">
+      <span class="ae-status-icon">${icon}</span>
+      <span class="ae-nome">${esc(et.etapa)}</span>
+      ${datas ? `<span class="ae-data">${datas}</span>` : ''}
+    </div>`;
+  }).join('');
+
+  cont.innerHTML = `
+    <div class="andamento-resumo">${resumoHtml}</div>
+    <div class="andamento-grid">${etapasHtml}</div>
+  `;
+}
+
 function renderDetalhes(){
   const j = OBRA_SEL;
   document.getElementById('det-cliente').textContent = j.cliente;
@@ -5034,6 +5134,9 @@ function renderDetalhes(){
 
   // Gantt da execução · colunas = dias · Y = horas
   renderGantt(j.marcos_execucao || []);
+
+  // Andamento cruzado · Telegram vs Painel
+  renderAndamentoCruzado(j.andamento_cruzado);
 
   const LABEL_PADRAO = {
     hibernacao_longa: '🌙 Hibernação longa',
