@@ -2401,8 +2401,19 @@ def construir_jornada(obra_id):
     solicitacoes = detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim)
     consumos, sobras = detectar_consumo(msgs_ordenadas)
 
+    # Equipe (precisa rodar antes dos marcos pra alimentar aplicadores_set)
+    equipe = montar_equipe(detail, equipe_ep, msgs_ordenadas)
+
     # Marcos técnicos de execução (msgs durante cluster · distingue aplicador × cobrança)
     aplicadores_set = get_aplicadores_set(equipe_ep)
+    # Fallback: se endpoint /equipe veio vazio, usar nomes inferidos do Telegram
+    if not aplicadores_set:
+        for apl in equipe.get("aplicadores_telegram", []):
+            nome = apl.get("nome", "")
+            for token in re.split(r"\s+", nome):
+                t = token.lower().strip()
+                if len(t) >= 3:
+                    aplicadores_set.add(t)
     marcos_execucao = detectar_marcos_execucao(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim, aplicadores_set)
 
     # Camadas aplicadas detectadas no Telegram (só msgs de aplicadores oficiais)
@@ -2426,9 +2437,6 @@ def construir_jornada(obra_id):
             "titulo": o.get("titulo"),
         })
     ocorrencias_fmt.sort(key=lambda o: o["data"])
-
-    # Equipe
-    equipe = montar_equipe(detail, equipe_ep, msgs_ordenadas)
 
     # Documentos categorizados (debug · não vai pra UI)
     docs_cats = categorizar_documentos(documentos)
