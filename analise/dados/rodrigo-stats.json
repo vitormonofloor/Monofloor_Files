@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-14T01:26:51Z",
+  "atualizado_em": "2026-05-14T05:28:23Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1046,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 12,
+        "daysUntilEntry": 11,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 12 dias do início",
-        "daysUntilEntry": 12,
+        "message": "Projeto sem equipe definida a 11 dias do início",
+        "daysUntilEntry": 11,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 19,
+        "daysUntilEntry": 18,
         "currentStage": "EM CONTRATO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -112,8 +112,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "LOW",
-        "message": "Projeto sem equipe definida a 19 dias do início",
-        "daysUntilEntry": 19,
+        "message": "Projeto sem equipe definida a 18 dias do início",
+        "daysUntilEntry": 18,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -3901,350 +3901,6 @@
         "eventos": []
       },
       {
-        "id": "bb189051-265d-45a7-9af3-7fbd448160ee",
-        "cliente": "RODRIGO LOTUFO VAZ GUIMARÃES",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "CEP 05421",
-        "fase": "CLIENTE FINALIZADO",
-        "status": "aguardando_execucao",
-        "clima": "Tenso",
-        "n_alertas": 7,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
-          "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
-          "ALTO: Rodrigo menciona explicitamente 2 meses de atraso causados por erros e reaplicações da Monofloor — histórico de problemas recorrentes com este cliente",
-          "ALTO: Cliente já está residindo no imóvel, o que limita as opções de reparo e exige logística específica (mínima circulação, 72h de cura)",
-          "MÉDIO: Monofloor alertou que reparos pontuais deixarão marcas estéticas visíveis — risco de nova insatisfação pós-reparo"
-        ],
-        "pendencias": [
-          "Envio do orçamento atualizado com desconto de uma diária pelo time financeiro para Rodrigo",
-          "Resposta à solicitação de fotos de reparos pontuais anteriores (solicitado em 12/03, sem retorno registrado)",
-          "Resposta à pergunta sobre tamanho do dano em área específica (solicitado em 13/03, sem retorno registrado)",
-          "Confirmação formal do agendamento dos reparos para 28/04",
-          "Indicação de contato técnico para Rodrigo alinhar demandas e preparações necessárias para execução do serviço"
-        ],
-        "resumo_exec": "O cliente Rodrigo identificou avarias no piso após o período de marcenaria e acionou a Monofloor para reparos pontuais, rejeitando a reaplicação total por já estar residindo no apartamento. O histórico da obra inclui dois meses de atraso por erros e reaplicações anteriores da Monofloor, o que eleva o nível de exigência e impaciência do cliente. A gestão do caso apresentou falhas graves de comunicação, incluindo silêncio de 25 dias, cobranças ignoradas e desativação do canal sem aviso prévio. Em 07/04, o caso foi assumido pela atendente Mayara, com concessão de desconto de uma diária pela diret",
-        "clima_desc": "O cliente demonstra insatisfação acumulada com atrasos anteriores, qualidade da aplicação e falta de retorno da equipe Monofloor. Apesar de momentos de cordialidade, há cobranças explícitas e sinais de desgaste na relação comercial.",
-        "periodo": "20/02 a 07/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 80,
-        "eventos": [
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Cliente Rodrigo identificou avarias no piso após remoção da proteção pós-obra (período de marcenaria)",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Rodrigo encaminhou fotos dos danos e solicitou alinhamento para reparos",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Monofloor propôs visita de consultor de qualidade para o dia 02/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Rodrigo solicitou visita antecipada pois estava de férias e queria acompanhar",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Após contato telefônico, visita reagendada para 27/02 às 14h15 com consultor Nathan do Amaral Janjão",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Visita técnica realizada pelo consultor Nathan (fotos e vídeos coletados)",
-            "classe": "neutro"
-          },
-          {
-            "data": "05/03",
-            "iso": "2026-03-05",
-            "texto": "Rodrigo cobrou retorno sobre análise do material coletado na visita",
-            "classe": "critico"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Monofloor enviou relatório técnico com proposta de reaplicação total",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Rodrigo rejeitou reaplicação total por já estar residindo no apartamento e solicitou reparos pontuais",
-            "classe": "critico"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Rodrigo destacou que a proteção final do piso foi feita pela própria Monofloor",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Monofloor enviou orçamento para reparos pontuais",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Rodrigo reclamou do valor e do estresse gerado pela obra, mencionando 2 meses de atraso por erros e reaplicações da Monofloor",
-            "classe": "critico"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Monofloor informou que não consegue alterar o valor do orçamento (kit mínimo) e alertou sobre marcas estéticas nos reparos pontuais",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Rodrigo solicitou fotos de reparos pontuais anteriores para avaliação",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Rodrigo perguntou sobre o tamanho do dano em determinada área (sem resposta registrada)",
-            "classe": "critico"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Rodrigo solicitou ligação com Pedro",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "Rodrigo cobrou retorno sobre conversa da sexta-feira anterior (28/03)",
-            "classe": "critico"
-          },
-          {
-            "data": "02/04",
-            "iso": "2026-04-02",
-            "texto": "Rodrigo cobrou retorno novamente, sem resposta",
-            "classe": "critico"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Canal de atendimento anterior desativado; Rodrigo tentou contato marcando múltiplos participantes",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Monofloor direcionou para novos contatos: Thaísa (41 988219796) e Kettlyn (41 999958618)",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Mayara (novo atendimento) assumiu o caso, informou desconto de uma diária concedido pela diretoria e propôs agendamento para 28/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Rodrigo confirmou que já reside no apartamento e que os principais danos estão na varanda/sala",
-            "classe": "bom"
-          }
-        ]
-      },
-      {
-        "id": "79002619-a940-4a1c-b31d-e9eca2f9a101",
-        "cliente": "CAMILA BERRINI GONTIER",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "ILHABELA",
-        "fase": "OBRA CONCLUÍDA",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 6,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
-          "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
-          "MANCHAS NO REVESTIMENTO: Reportadas em 11/04 após finalização da obra — área técnica acionada, retorno pendente para segunda-feira",
-          "ENTREGA DO CINDERELA: Produto prometido/orçado ainda sem entrega definida; equipe questionou se cliente poderia retirar no estoque (São Paulo), demonstrando dificuldade logística",
-          "FALHA DE COMUNICAÇÃO LOGÍSTICA: Horário de entrega de material em 24-25/03 não foi confirmado à cliente, gerando espera noturna sem resposta e desorganização no início da obra"
-        ],
-        "pendencias": [
-          "Entrega do produto Cinderela para Camila (em análise pela diretoria desde 09/04, sem resolução confirmada)",
-          "Retorno da área técnica sobre manchas no revestimento identificadas em 11/04 (prometido para segunda-feira)",
-          "Envio de orçamento do produto Cinderela por Mayara (solicitado em 07/04, não confirmado como enviado)",
-          "Planta da casa solicitada por Camila em 20/02 — não há confirmação de envio na conversa",
-          "Alinhamento de cor e metragem com equipe de projetos (solicitado em 25/02) — não há confirmação de conclusão registrada"
-        ],
-        "resumo_exec": "A obra de revestimento monolítico na residência de Camila transcorreu entre 25/03 e 07/04/2026, com aplicação da cor Sasha e verniz final aprovado pela cliente. Apesar do resultado técnico elogiado — Camila demonstrou satisfação com a qualidade da equipe em campo —, o atendimento foi marcado por falha grave na comunicação da data de início (contrato previa 23/03, execução iniciou em 25/03) e divergência no prazo estimado (2 semanas corridas vs. 18 dias úteis), gerando custos extras de aluguel e insatisfação declarada da cliente. A logística de entrega de materiais também apresentou falha em 24",
-        "clima_desc": "O atendimento iniciou de forma colaborativa, mas gerou tensão significativa em 20/03 devido a divergências de data de início e prazo da obra. Após o início da aplicação, o clima melhorou com elogios à equipe, encerrando com uma pendência de manchas e entrega do produto Cinderela.",
-        "periodo": "19/02 a 11/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 150,
-        "eventos": [
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Camila consultou sobre adesivo epóxi Sikadur; equipe orientou o produto correto (líquido) e Camila confirmou compra",
-            "classe": "bom"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Camila solicitou planta da casa para numeração de rodapés; solicitação encaminhada à equipe de projetos",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/02",
-            "iso": "2026-02-25",
-            "texto": "Orientações sobre aplicação na parede da sala (aprovada) e lateral da lareira (não indicada por temperatura); discussão sobre prateleiras de madeira e alinhamento de cor e metragem com equipe de projetos",
-            "classe": "neutro"
-          },
-          {
-            "data": "05/03",
-            "iso": "2026-03-05",
-            "texto": "Agendada visita técnica pré-obra para 12/03 às 11h com consultor Braiam Gomes Pacheco",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Visita técnica realizada pelo consultor (com alerta de chuvas pela Camila)",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Enviado documento com observações e recomendações pós-visita; início da obra previsto para 23/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/03",
-            "iso": "2026-03-17",
-            "texto": "Confirmação de que o banheiro estava sem uso há pelo menos 10 dias, conforme exigência técnica",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/03",
-            "iso": "2026-03-20",
-            "texto": "CONFLITO: Luana (operacional) comunicou início para 25/03 e prazo de 18 dias úteis; Camila contestou, alegando que contrato previa início em 23/03 e prazo de aproximadamente 2 semanas corridas; Camila havia alugado casa a partir do dia 22/03 e desmontado a residência",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/03",
-            "iso": "2026-03-20",
-            "texto": "Equipe confirmou início para 25/03 e estimativa de conclusão na semana de 20/04",
-            "classe": "bom"
-          },
-          {
-            "data": "23/03",
-            "iso": "2026-03-23",
-            "texto": "Camila se despediu da casa ('Tchau juntas'); equipe orientou que madeira não receberá aplicação por risco de desplacamento",
-            "classe": "critico"
-          },
-          {
-            "data": "24/03",
-            "iso": "2026-03-24",
-            "texto": "Tentativa de entrega de material; equipe não confirmou horário e entrega foi adiada para 25/03",
-            "classe": "bom"
-          },
-          {
-            "data": "24/03",
-            "iso": "2026-03-24",
-            "texto": "noite) - Camila aguardou horário sem resposta da equipe até às 23h52",
-            "classe": "critico"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Equipe informou chegada da equipe para 09h45 somente às 11h25; Camila havia saído para trabalhar; retornou às 11h30; início efetivo da obra",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Primeira camada no piso aplicada; equipe elogiada por Camila ('estão trabalhando até tarde', 'são incríveis')",
-            "classe": "neutro"
-          },
-          {
-            "data": "30/03",
-            "iso": "2026-03-30",
-            "texto": "Obra parada aguardando secagem; Camila fechou a casa com os cachorros",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "Sem luz até 13h; equipe aplicando última camada do Stelion; contratempo na escada relatado; estimativa de finalização terça-feira (07/04); feriado de Páscoa (sexta 04/04) confirmado como pausa",
-            "classe": "bom"
-          },
-          {
-            "data": "02/04",
-            "iso": "2026-04-02",
-            "texto": "Confirmado horário de chegada da equipe para 08h na segunda-feira",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Camila aprovou bancada e banheiro; equipe acelerou trabalho",
-            "classe": "bom"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Camila aprovou o piso; início da aplicação do verniz; Camila interessada no produto Cinderela; equipe orientou sobre ar-condicionado (não recomendado durante cura)",
-            "classe": "bom"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Início do período de cura de 72 horas do verniz",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Material retirado da obra; manual de garantia enviado por setor responsável; Camila solicitou entrega do produto Cinderela",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Equipe questionou se Camila poderia retirar o Cinderela no estoque em São Paulo; Camila informou que não tem como",
-            "classe": "critico"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Mayara comunicou que estava tratando entrega do Cinderela com a diretoria",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/04",
-            "iso": "2026-04-11",
-            "texto": "Camila reportou manchas no revestimento e solicitou orientação; Wesley (Operações) registrou o caso e prometeu retorno na segunda-feira",
-            "classe": "critico"
-          }
-        ]
-      },
-      {
         "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
         "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK",
         "consultor": "Wesley",
@@ -7567,6 +7223,350 @@
         ]
       },
       {
+        "id": "bb189051-265d-45a7-9af3-7fbd448160ee",
+        "cliente": "RODRIGO LOTUFO VAZ GUIMARÃES",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "CEP 05421",
+        "fase": "CLIENTE FINALIZADO",
+        "status": "aguardando_execucao",
+        "clima": "Tenso",
+        "n_alertas": 7,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
+          "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
+          "ALTO: Rodrigo menciona explicitamente 2 meses de atraso causados por erros e reaplicações da Monofloor — histórico de problemas recorrentes com este cliente",
+          "ALTO: Cliente já está residindo no imóvel, o que limita as opções de reparo e exige logística específica (mínima circulação, 72h de cura)",
+          "MÉDIO: Monofloor alertou que reparos pontuais deixarão marcas estéticas visíveis — risco de nova insatisfação pós-reparo"
+        ],
+        "pendencias": [
+          "Envio do orçamento atualizado com desconto de uma diária pelo time financeiro para Rodrigo",
+          "Resposta à solicitação de fotos de reparos pontuais anteriores (solicitado em 12/03, sem retorno registrado)",
+          "Resposta à pergunta sobre tamanho do dano em área específica (solicitado em 13/03, sem retorno registrado)",
+          "Confirmação formal do agendamento dos reparos para 28/04",
+          "Indicação de contato técnico para Rodrigo alinhar demandas e preparações necessárias para execução do serviço"
+        ],
+        "resumo_exec": "O cliente Rodrigo identificou avarias no piso após o período de marcenaria e acionou a Monofloor para reparos pontuais, rejeitando a reaplicação total por já estar residindo no apartamento. O histórico da obra inclui dois meses de atraso por erros e reaplicações anteriores da Monofloor, o que eleva o nível de exigência e impaciência do cliente. A gestão do caso apresentou falhas graves de comunicação, incluindo silêncio de 25 dias, cobranças ignoradas e desativação do canal sem aviso prévio. Em 07/04, o caso foi assumido pela atendente Mayara, com concessão de desconto de uma diária pela diret",
+        "clima_desc": "O cliente demonstra insatisfação acumulada com atrasos anteriores, qualidade da aplicação e falta de retorno da equipe Monofloor. Apesar de momentos de cordialidade, há cobranças explícitas e sinais de desgaste na relação comercial.",
+        "periodo": "20/02 a 07/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 80,
+        "eventos": [
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Cliente Rodrigo identificou avarias no piso após remoção da proteção pós-obra (período de marcenaria)",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Rodrigo encaminhou fotos dos danos e solicitou alinhamento para reparos",
+            "classe": "neutro"
+          },
+          {
+            "data": "23/02",
+            "iso": "2026-02-23",
+            "texto": "Monofloor propôs visita de consultor de qualidade para o dia 02/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "23/02",
+            "iso": "2026-02-23",
+            "texto": "Rodrigo solicitou visita antecipada pois estava de férias e queria acompanhar",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/02",
+            "iso": "2026-02-26",
+            "texto": "Após contato telefônico, visita reagendada para 27/02 às 14h15 com consultor Nathan do Amaral Janjão",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/02",
+            "iso": "2026-02-27",
+            "texto": "Visita técnica realizada pelo consultor Nathan (fotos e vídeos coletados)",
+            "classe": "neutro"
+          },
+          {
+            "data": "05/03",
+            "iso": "2026-03-05",
+            "texto": "Rodrigo cobrou retorno sobre análise do material coletado na visita",
+            "classe": "critico"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Monofloor enviou relatório técnico com proposta de reaplicação total",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Rodrigo rejeitou reaplicação total por já estar residindo no apartamento e solicitou reparos pontuais",
+            "classe": "critico"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Rodrigo destacou que a proteção final do piso foi feita pela própria Monofloor",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Monofloor enviou orçamento para reparos pontuais",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Rodrigo reclamou do valor e do estresse gerado pela obra, mencionando 2 meses de atraso por erros e reaplicações da Monofloor",
+            "classe": "critico"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Monofloor informou que não consegue alterar o valor do orçamento (kit mínimo) e alertou sobre marcas estéticas nos reparos pontuais",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Rodrigo solicitou fotos de reparos pontuais anteriores para avaliação",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/03",
+            "iso": "2026-03-13",
+            "texto": "Rodrigo perguntou sobre o tamanho do dano em determinada área (sem resposta registrada)",
+            "classe": "critico"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Rodrigo solicitou ligação com Pedro",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Rodrigo cobrou retorno sobre conversa da sexta-feira anterior (28/03)",
+            "classe": "critico"
+          },
+          {
+            "data": "02/04",
+            "iso": "2026-04-02",
+            "texto": "Rodrigo cobrou retorno novamente, sem resposta",
+            "classe": "critico"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Canal de atendimento anterior desativado; Rodrigo tentou contato marcando múltiplos participantes",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Monofloor direcionou para novos contatos: Thaísa (41 988219796) e Kettlyn (41 999958618)",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Mayara (novo atendimento) assumiu o caso, informou desconto de uma diária concedido pela diretoria e propôs agendamento para 28/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Rodrigo confirmou que já reside no apartamento e que os principais danos estão na varanda/sala",
+            "classe": "bom"
+          }
+        ]
+      },
+      {
+        "id": "79002619-a940-4a1c-b31d-e9eca2f9a101",
+        "cliente": "CAMILA BERRINI GONTIER",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "ILHABELA",
+        "fase": "OBRA CONCLUÍDA",
+        "status": "em_execucao",
+        "clima": "Tenso",
+        "n_alertas": 6,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "CONFLITO CONTRATUAL: Data de início divergente entre contrato (23/03) e comunicação operacional (25/03); Camila alugou imóvel e desmontou casa baseada na data do contrato — situação não foi formalmente resolvida com adendo",
+          "PRAZO DIVERGENTE: Camila foi informada verbalmente de 2 semanas corridas, mas operacional comunicou 18 dias úteis — gerou insatisfação e custos adicionais de aluguel para a cliente",
+          "MANCHAS NO REVESTIMENTO: Reportadas em 11/04 após finalização da obra — área técnica acionada, retorno pendente para segunda-feira",
+          "ENTREGA DO CINDERELA: Produto prometido/orçado ainda sem entrega definida; equipe questionou se cliente poderia retirar no estoque (São Paulo), demonstrando dificuldade logística",
+          "FALHA DE COMUNICAÇÃO LOGÍSTICA: Horário de entrega de material em 24-25/03 não foi confirmado à cliente, gerando espera noturna sem resposta e desorganização no início da obra"
+        ],
+        "pendencias": [
+          "Entrega do produto Cinderela para Camila (em análise pela diretoria desde 09/04, sem resolução confirmada)",
+          "Retorno da área técnica sobre manchas no revestimento identificadas em 11/04 (prometido para segunda-feira)",
+          "Envio de orçamento do produto Cinderela por Mayara (solicitado em 07/04, não confirmado como enviado)",
+          "Planta da casa solicitada por Camila em 20/02 — não há confirmação de envio na conversa",
+          "Alinhamento de cor e metragem com equipe de projetos (solicitado em 25/02) — não há confirmação de conclusão registrada"
+        ],
+        "resumo_exec": "A obra de revestimento monolítico na residência de Camila transcorreu entre 25/03 e 07/04/2026, com aplicação da cor Sasha e verniz final aprovado pela cliente. Apesar do resultado técnico elogiado — Camila demonstrou satisfação com a qualidade da equipe em campo —, o atendimento foi marcado por falha grave na comunicação da data de início (contrato previa 23/03, execução iniciou em 25/03) e divergência no prazo estimado (2 semanas corridas vs. 18 dias úteis), gerando custos extras de aluguel e insatisfação declarada da cliente. A logística de entrega de materiais também apresentou falha em 24",
+        "clima_desc": "O atendimento iniciou de forma colaborativa, mas gerou tensão significativa em 20/03 devido a divergências de data de início e prazo da obra. Após o início da aplicação, o clima melhorou com elogios à equipe, encerrando com uma pendência de manchas e entrega do produto Cinderela.",
+        "periodo": "19/02 a 11/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 150,
+        "eventos": [
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Camila consultou sobre adesivo epóxi Sikadur; equipe orientou o produto correto (líquido) e Camila confirmou compra",
+            "classe": "bom"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Camila solicitou planta da casa para numeração de rodapés; solicitação encaminhada à equipe de projetos",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/02",
+            "iso": "2026-02-25",
+            "texto": "Orientações sobre aplicação na parede da sala (aprovada) e lateral da lareira (não indicada por temperatura); discussão sobre prateleiras de madeira e alinhamento de cor e metragem com equipe de projetos",
+            "classe": "neutro"
+          },
+          {
+            "data": "05/03",
+            "iso": "2026-03-05",
+            "texto": "Agendada visita técnica pré-obra para 12/03 às 11h com consultor Braiam Gomes Pacheco",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Visita técnica realizada pelo consultor (com alerta de chuvas pela Camila)",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/03",
+            "iso": "2026-03-13",
+            "texto": "Enviado documento com observações e recomendações pós-visita; início da obra previsto para 23/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/03",
+            "iso": "2026-03-17",
+            "texto": "Confirmação de que o banheiro estava sem uso há pelo menos 10 dias, conforme exigência técnica",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "CONFLITO: Luana (operacional) comunicou início para 25/03 e prazo de 18 dias úteis; Camila contestou, alegando que contrato previa início em 23/03 e prazo de aproximadamente 2 semanas corridas; Camila havia alugado casa a partir do dia 22/03 e desmontado a residência",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "Equipe confirmou início para 25/03 e estimativa de conclusão na semana de 20/04",
+            "classe": "bom"
+          },
+          {
+            "data": "23/03",
+            "iso": "2026-03-23",
+            "texto": "Camila se despediu da casa ('Tchau juntas'); equipe orientou que madeira não receberá aplicação por risco de desplacamento",
+            "classe": "critico"
+          },
+          {
+            "data": "24/03",
+            "iso": "2026-03-24",
+            "texto": "Tentativa de entrega de material; equipe não confirmou horário e entrega foi adiada para 25/03",
+            "classe": "bom"
+          },
+          {
+            "data": "24/03",
+            "iso": "2026-03-24",
+            "texto": "noite) - Camila aguardou horário sem resposta da equipe até às 23h52",
+            "classe": "critico"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Equipe informou chegada da equipe para 09h45 somente às 11h25; Camila havia saído para trabalhar; retornou às 11h30; início efetivo da obra",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Primeira camada no piso aplicada; equipe elogiada por Camila ('estão trabalhando até tarde', 'são incríveis')",
+            "classe": "neutro"
+          },
+          {
+            "data": "30/03",
+            "iso": "2026-03-30",
+            "texto": "Obra parada aguardando secagem; Camila fechou a casa com os cachorros",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Sem luz até 13h; equipe aplicando última camada do Stelion; contratempo na escada relatado; estimativa de finalização terça-feira (07/04); feriado de Páscoa (sexta 04/04) confirmado como pausa",
+            "classe": "bom"
+          },
+          {
+            "data": "02/04",
+            "iso": "2026-04-02",
+            "texto": "Confirmado horário de chegada da equipe para 08h na segunda-feira",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Camila aprovou bancada e banheiro; equipe acelerou trabalho",
+            "classe": "bom"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Camila aprovou o piso; início da aplicação do verniz; Camila interessada no produto Cinderela; equipe orientou sobre ar-condicionado (não recomendado durante cura)",
+            "classe": "bom"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Início do período de cura de 72 horas do verniz",
+            "classe": "neutro"
+          },
+          {
+            "data": "08/04",
+            "iso": "2026-04-08",
+            "texto": "Material retirado da obra; manual de garantia enviado por setor responsável; Camila solicitou entrega do produto Cinderela",
+            "classe": "neutro"
+          },
+          {
+            "data": "08/04",
+            "iso": "2026-04-08",
+            "texto": "Equipe questionou se Camila poderia retirar o Cinderela no estoque em São Paulo; Camila informou que não tem como",
+            "classe": "critico"
+          },
+          {
+            "data": "09/04",
+            "iso": "2026-04-09",
+            "texto": "Mayara comunicou que estava tratando entrega do Cinderela com a diretoria",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/04",
+            "iso": "2026-04-11",
+            "texto": "Camila reportou manchas no revestimento e solicitou orientação; Wesley (Operações) registrou o caso e prometeu retorno na segunda-feira",
+            "classe": "critico"
+          }
+        ]
+      },
+      {
         "id": "93d0efc3-f952-434e-9e6b-70793842d504",
         "cliente": "LUIS FERNANDO BECHTOLD",
         "consultor": "[]",
@@ -9351,7 +9351,7 @@
   "lw": {
     "luana": {
       "n": 85,
-      "mediana": 254,
+      "mediana": 255,
       "n180": 58,
       "n270": 38,
       "zumbi": 7,
@@ -9360,17 +9360,17 @@
     },
     "wesley": {
       "n": 83,
-      "mediana": 205,
-      "n180": 48,
+      "mediana": 209,
+      "n180": 49,
       "n270": 20,
       "zumbi": 20,
       "reparo": 9,
       "pausadas": 2
     },
     "total_ativas": 220,
-    "n_180_total": 123,
+    "n_180_total": 124,
     "concentracao_pct": 76.4,
-    "concentracao_180_pct": 86.2,
+    "concentracao_180_pct": 86.3,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
