@@ -1,6 +1,6 @@
 # 🎬 JORNADA · FABIO FEDERICI DE CARVALHO
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-13
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
 
 ## 📋 Ficha técnica
 

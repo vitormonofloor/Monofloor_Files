@@ -1,6 +1,6 @@
 # 🎬 JORNADA · SUELLEN NASTRI CASTRO
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-13
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
 
 ## 📋 Ficha técnica
 
@@ -15,7 +15,7 @@ Rua Estela, 135, Apto 1001, Vila Mariana, São Paulo/SP, CEP 04011-000 |
 | 1ª msg Telegram | 2026-04-02 |
 | Execução prevista | 2026-06-14 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **21 dias** |
+| **Tempo total contrato → entrega** | **42 dias** |
 | **Tempo de execução real** | **None dias** |
 | **Classificação** | **Pré-obra** |
 
@@ -38,12 +38,13 @@ Rua Estela, 135, Apto 1001, Vila Mariana, São Paulo/SP, CEP 04011-000 |
 |---|---:|---|---|
 | Kettlyn | 1 | 2026-04-02 | 2026-04-02 |
 | Pedro | Monofloor | 1 | 2026-04-23 | 2026-04-23 |
+| Jonathan | | 1 | 2026-05-14 | 2026-05-14 |
 
 ## 🗺 Linha do tempo
 
 | Fase | Início | Fim | Duração | Msgs Telegram |
 |---|---|---|---:|---:|
-| **Planejamento + pré-execução** | 2026-04-02 | 2026-04-23 | 22d | 2 |
+| **Planejamento + pré-execução** | 2026-04-02 | 2026-05-14 | 43d | 3 |
 
 ## 📍 Marcos detectados nas mensagens
 

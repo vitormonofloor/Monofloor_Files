@@ -1,6 +1,6 @@
 # 🎬 JORNADA · HENRIQUE AFFONSO ORCESI DA COSTA
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-13
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
 
 ## 📋 Ficha técnica
 
@@ -20,7 +20,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Tempo em hibernação** | **206 dias** |
 | **Classificação** | **Em execução** |
 
-> **Obra em execução no momento.**
+> **Obra em execução no momento. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado.**
 
 ## 👥 Elenco
 
@@ -46,7 +46,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | monofloor | Mariana Marketing | 23 | 2025-08-21 | 2025-09-03 |
 | Francisco Beats Monofloor | 20 | 2025-10-20 | 2025-11-13 |
 | Caio Santos | 15 | 2025-10-23 | 2025-10-27 |
-| equipe | kassandra - diretora de operações | 10 | 2025-09-02 | 2025-11-13 |
+| Vinícius | 14 | 2026-05-13 | 2026-05-14 |
 
 ## 🗺 Linha do tempo
 
@@ -60,7 +60,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Hibernação #3** | 2025-11-14 | 2026-03-29 | 135d | 0 |
 | **Despertar e pré-execução** | 2026-03-29 | 2026-05-06 | 39d | 9 |
 | **Execução** | 2026-05-07 | 2026-05-07 | 1d | 6 |
-| **Pós-execução** | 2026-05-08 | 2026-05-13 | 6d | 10 |
+| **Pós-execução** | 2026-05-08 | 2026-05-14 | 7d | 26 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -96,6 +96,10 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 - 2025-11-14 · 2 balde · _Jaú Microcimento_
 
 ## ⚠ Pontos de fricção
+
+**Ocorrências formais (Painel `/ocorrencias` · 1):**
+
+- **2026-05-14** [critica] incidente_obra · _Infiltração/vazamento detectado_
 
 **Sinais de problema nas mensagens (2):**
 

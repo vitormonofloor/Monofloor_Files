@@ -1,6 +1,6 @@
 # 🎬 JORNADA · MISCI BRASIL COMERCIO DE MODA LTDA 
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-13
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
 
 ## 📋 Ficha técnica
 
@@ -58,7 +58,7 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 ## 📍 Marcos detectados nas mensagens
 
 - **2025-11-03 · contrato_assinado** · _equipe | Jonathan_: "Contrato assinado. [Thaísa](tg://user?id=6619338559)"
-- **2026-02-20 · material_produzido** · _Vanessa Monofloor_: "@MichaelMlima Boa tarde, temos material em obra para realizar os reparos na área interna?"
+- **2026-02-20 · material_produzido** · _Operações | Monofloor_: "@MichaelMlima Boa tarde, temos material em obra para realizar os reparos na área interna?"
 - **2026-04-02 · vt_realizada** · _Wesley | Juliana._: "Bom dia! Nathan Temos os vídeos da visita realizada?"
 
 ## 📦 Material
@@ -84,8 +84,8 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 - 2026-01-15 · 2 kit · _aplicador | Michael Marinho_
 - 2026-01-15 · 2 kit · _aplicador | Michael Marinho_
 - 2026-01-22 · 2 kit · _aplicador | Michael Marinho_
-- 2026-01-27 · 2 kits · _aplicador | Michael Marinho_
 - 2026-01-27 · 2 kits · _michael_
+- 2026-01-27 · 2 kits · _aplicador | Michael Marinho_
 
 **Sobras mencionadas (1):**
 

@@ -1,6 +1,6 @@
 # 🎬 JORNADA · JOSUE MONTEDONIO NASCIMENTO 2° FASE
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-13
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
 
 ## 📋 Ficha técnica
 
@@ -15,7 +15,7 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 | 1ª msg Telegram | 2025-06-04 |
 | Execução prevista | 2026-05-26 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **342 dias** |
+| **Tempo total contrato → entrega** | **344 dias** |
 | **Tempo de execução real** | **8 dias** |
 | **Tempo em hibernação** | **139 dias** |
 | **Classificação** | **Aguardando execução** |
@@ -56,7 +56,7 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 | **Hibernação** | 2025-06-04 | 2025-10-21 | 139d | 0 |
 | **Despertar e pré-execução** | 2025-10-21 | 2025-12-11 | 52d | 30 |
 | **Execução** | 2025-12-12 | 2025-12-19 | 8d | 83 |
-| **Pós-execução** | 2025-12-20 | 2026-05-12 | 144d | 217 |
+| **Pós-execução** | 2025-12-20 | 2026-05-14 | 146d | 218 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -112,5 +112,5 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 139d praticamente parada
-- execucao_concentrada · só 2.3% do tempo total (8d de 342d)
+- execucao_concentrada · só 2.3% do tempo total (8d de 344d)
 - alta_friccao · 20 ocorrências formais registradas

@@ -536,9 +536,10 @@ MARCOS_EXECUCAO = [
     ("aplicacao_teron",    re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?teron|teron\s+aplicad)\b", re.IGNORECASE)),
     ("aplicacao_primer",   re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?primer|primer\s+aplicad)\b", re.IGNORECASE)),
     ("preparacao",         re.compile(r"\b(limpeza|prote[çc][aã]o\s+(das\s+áreas|do\s+ambiente)|requadro|substitui[çc][aã]o\s+de\s+fitas|troca\s+(de\s+)?fitas)", re.IGNORECASE)),
-    ("diario_obra",        re.compile(r"\bdi[áa]rio\s+de\s+obra\b", re.IGNORECASE)),
-    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando)", re.IGNORECASE)),
-    ("fim_dia",            re.compile(r"\b(saindo\s+(de|da)\s+obra|equipe\s+saindo|acabamos\s+(agora|hoje)|encerrando\s+o\s+dia)", re.IGNORECASE)),
+    ("diario_obra",        re.compile(r"\b(di[áa]rio\s+de\s+obra|dia\s+\d{1,2}[/\-]\d{1,2}\b)", re.IGNORECASE)),
+    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando|bom\s+dia[,.]?\s*(pessoal|equipe|galera)?[,.]?\s*(estamos|cheg|iniciar|em\s+obra))", re.IGNORECASE)),
+    ("fim_dia",            re.compile(r"\b(saindo\s+(de|da)\s+obra|equipe\s+saindo|acabamos\s+(agora|hoje)|encerrando\s+o\s+dia|finalizamos\s+o\s+dia)", re.IGNORECASE)),
+    ("foto_progresso",     re.compile(r"^\[Foto\]", re.IGNORECASE)),
 ]
 
 LABELS_EXECUCAO = {
@@ -557,8 +558,10 @@ LABELS_EXECUCAO = {
     "verniz_finalizado":   "Verniz finalizado",
     "obra_finalizada":     "Obra finalizada",
     "diario_obra":         "Diário de obra postado",
+    "foto_progresso":      "Foto de progresso",
     "fim_dia":             "Fim do dia",
     "visita_durante_obra": "Visita externa em obra",
+    "atividade_campo":     "Atividade em campo",
 }
 
 # Padrão de cobrança de status (msg de não-aplicador perguntando se tem equipe em obra)
@@ -1294,10 +1297,13 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                 # inicio_dia só vale pra aplicador
                 if tipo == "inicio_dia" and not eh_aplicador:
                     continue
+                # foto_progresso só vale pra aplicador (evita fotos de equipe interna)
+                if tipo == "foto_progresso" and not eh_aplicador:
+                    continue
                 chave = (data, tipo)
                 if chave in visto:
                     if tipo == "inicio_dia":
-                        break  # já tem inicio_dia desse dia · não detecta cobrança depois
+                        break
                     break
                 visto.add(chave)
                 marco_detectado = {
@@ -1312,6 +1318,21 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                 if tipo == "inicio_dia":
                     inicio_dia_por_data[data] = len(marcos) - 1
                 break
+
+        # Fallback: msg de aplicador com >30 chars sem marco especifico → atividade_campo (1 por dia)
+        if not marco_detectado and eh_aplicador and len(texto.strip()) > 30:
+            chave = (data, "atividade_campo")
+            if chave not in visto:
+                visto.add(chave)
+                marco_detectado = {
+                    "data": data,
+                    "hora": hora,
+                    "autor": sender,
+                    "tipo": "atividade_campo",
+                    "label": LABELS_EXECUCAO["atividade_campo"],
+                    "trecho": texto[:200].replace("\n", " ").strip(),
+                }
+                marcos.append(marco_detectado)
 
         # Se não detectou marco técnico E é não-aplicador E ainda não houve inicio_dia no dia → cobrança
         if not marco_detectado and not eh_aplicador and data not in inicio_dia_por_data:
