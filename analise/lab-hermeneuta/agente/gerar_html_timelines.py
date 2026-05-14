@@ -803,6 +803,51 @@ def card_obra(obra, taxonomia):
     badge_ciclos = f'<span class="mini-badge ciclos">{n_ciclos} ciclos</span>' if n_ciclos > 1 else ""
     dt_resumo = f'{dt_total}d' if dt_total is not None else (f'{dt_painel}d' if dt_painel else "—")
 
+    # Perfil de fluxo (A-F)
+    seq_chave = _seq_chave(marcos)
+    perfil = _classificar_perfil(n_marcos, seq_chave)
+    perfil_label = PERFIL_LABELS.get(perfil, perfil)
+    perfil_cor = PERFIL_CORES.get(perfil, "#999")
+    badge_perfil = f'<span class="mini-badge perfil-badge" style="background:{perfil_cor};color:#fff" title="{perfil_label}">{perfil}</span>'
+
+    # Barra de fluxo esperado
+    FLUXO_ETAPAS = [
+        ("contrato_assinado", "Contrato"),
+        ("escopo_em_revisao", "Escopo"),
+        ("vt_agendada", "VT"),
+        ("material_produzido", "Material"),
+        ("equipe_chegou", "Equipe"),
+        ("camada_produto", "Camada"),
+        ("finalizacao", "Final"),
+        ("aprovacao_cliente", "Aprovacao"),
+    ]
+    fluxo_items = []
+    prev_data = None
+    for tipo_f, label_f in FLUXO_ETAPAS:
+        if tipo_f in seq_chave:
+            dt = seq_chave[tipo_f]
+            delta = ""
+            if prev_data:
+                d = _diff_d(prev_data, dt)
+                if d is not None and d >= 0:
+                    delta = f'<span class="fluxo-delta">{d}d</span>'
+            prev_data = dt
+            fluxo_items.append(f'<div class="fluxo-step ok" title="{label_f}: {dt}">'
+                               f'<div class="fluxo-dot ok"></div>'
+                               f'<div class="fluxo-label">{label_f}</div>'
+                               f'{delta}</div>')
+        else:
+            estado = "pulado" if perfil in ("D", "E", "F") or (perfil == "C" and tipo_f in ("contrato_assinado", "escopo_em_revisao", "vt_agendada", "material_produzido")) else "pendente"
+            cls = "skip" if estado == "pulado" else "pend"
+            fluxo_items.append(f'<div class="fluxo-step {cls}" title="{label_f}: {estado}">'
+                               f'<div class="fluxo-dot {cls}"></div>'
+                               f'<div class="fluxo-label">{label_f}</div></div>')
+    if seq_chave.get("reprovacao_retorno"):
+        fluxo_items.append(f'<div class="fluxo-step reprova" title="Reprovacao: {seq_chave["reprovacao_retorno"]}">'
+                           f'<div class="fluxo-dot reprova"></div>'
+                           f'<div class="fluxo-label">Reprov.</div></div>')
+    barra_fluxo = f'<div class="fluxo-barra">{"".join(fluxo_items)}</div>' if fluxo_items else ""
+
     # Atributos pra filtro client-side (busca por cliente, status, fase)
     data_cliente = html.escape((obra.get("cliente") or "").lower(), quote=True)
     data_status = html.escape((obra.get("status") or "").lower(), quote=True)
@@ -821,6 +866,7 @@ def card_obra(obra, taxonomia):
     if is_destrinchada(obra.get("cliente")):
         categorias.add("destrinchada")
     categorias.add(f"status_{(obra.get('status') or 'desconhecido').lower()}")
+    categorias.add(f"perfil_{perfil}")
     data_categorias = " ".join(sorted(categorias))
 
     return f"""
@@ -835,7 +881,7 @@ def card_obra(obra, taxonomia):
           <span class="sum-stat"><b>{dt_resumo}</b></span>
           <span class="sum-stat"><b>{n_msgs}</b> msgs</span>
         </span>
-        <span class="sum-badges">{badge_destr}{badge_ciclos}{badge_retr}</span>
+        <span class="sum-badges">{badge_perfil}{badge_destr}{badge_ciclos}{badge_retr}</span>
         <span class="sum-toggle">▾</span>
       </summary>
       <div class="obra-detail">
@@ -850,6 +896,8 @@ def card_obra(obra, taxonomia):
           {equipe_html}
           {badge_fd}
         </header>
+
+        {barra_fluxo}
 
         <div class="tempo-pills">{pills}</div>
 
@@ -875,6 +923,371 @@ LABELS_DISCREPANCIA = {
     "reparo_sem_retrabalho":   "Reparo sem registro",
     "painel_atrasa":           "Status atrás",
 }
+
+
+MARCOS_FLUXO_CHAVE = [
+    "contrato_assinado", "escopo_em_revisao", "escopo_aprovado", "cor_aprovada",
+    "amostra_solicitada", "vt_agendada", "vt_realizada", "material_produzido",
+    "material_entregue", "equipe_chegou", "camada_produto", "ultima_camada",
+    "finalizacao", "aprovacao_cliente", "vistoria_cliente", "reprovacao_retorno",
+]
+
+PERFIL_LABELS = {
+    "A": "Sem marcos",
+    "B": "Pré-obra",
+    "C": "Em execução",
+    "D": "Caminho feliz",
+    "E": "Final + reprovação",
+    "F": "Reprovação sem final",
+}
+
+PERFIL_CORES = {
+    "A": "#a89e92",
+    "B": "#b89a4a",
+    "C": "#4a7ab8",
+    "D": "#3d8a5a",
+    "E": "#c45a5a",
+    "F": "#b83a3a",
+}
+
+
+def _seq_chave(marcos_raw):
+    marcos = sorted(marcos_raw, key=lambda m: m.get("data", ""))
+    seq = {}
+    for m in marcos:
+        t = m.get("tipo")
+        if t in MARCOS_FLUXO_CHAVE and t not in seq:
+            seq[t] = m.get("data", "")[:10]
+    return seq
+
+
+def _classificar_perfil(n_marcos, seq):
+    tem = set(seq.keys())
+    tem_exec = bool(tem & {"equipe_chegou", "camada_produto"})
+    tem_final = "finalizacao" in tem
+    tem_repro = "reprovacao_retorno" in tem
+    if n_marcos == 0:
+        return "A"
+    if not tem_exec and not tem_final:
+        return "B"
+    if tem_exec and not tem_final and not tem_repro:
+        return "C"
+    if tem_final and not tem_repro:
+        return "D"
+    if tem_repro and tem_final:
+        return "E"
+    if tem_repro and not tem_final:
+        return "F"
+    if tem_exec:
+        return "C"
+    return "B"
+
+
+def _is_2026(o):
+    dec = o.get("data_exec_confirmada", "")
+    dep = o.get("data_exec_prevista", "")
+    marcos_raw = o.get("marcos") or []
+    primeiro_exec = None
+    for m in sorted(marcos_raw, key=lambda x: x.get("data", "")):
+        if m.get("fase") == "2_execucao" and m.get("tipo") not in ("ocorrencia_formal",):
+            primeiro_exec = m.get("data", "")[:10]
+            break
+    if dec and dec[:4] == "2026":
+        return True
+    if primeiro_exec and primeiro_exec[:4] == "2026":
+        return True
+    if dep and dep[:4] == "2026":
+        return True
+    return False
+
+
+def _diff_d(d1, d2):
+    try:
+        return (datetime.strptime(d2[:10], "%Y-%m-%d") - datetime.strptime(d1[:10], "%Y-%m-%d")).days
+    except Exception:
+        return None
+
+
+def calcular_perfis_fluxo(timelines):
+    from collections import Counter as _C
+    obras_2026 = [o for o in timelines if _is_2026(o)]
+    perfis = _C()
+    grupos = {}
+    for o in obras_2026:
+        marcos_raw = o.get("marcos") or []
+        seq = _seq_chave(marcos_raw)
+        p = _classificar_perfil(len(marcos_raw), seq)
+        perfis[p] += 1
+        grupos.setdefault(p, []).append({"cliente": o.get("cliente", "?"), "seq": seq, "n": len(marcos_raw), "status": o.get("status", "?")})
+
+    total = len(obras_2026)
+    com_exec = sum(perfis.get(p, 0) for p in ("C", "D", "E", "F"))
+    com_final = perfis.get("D", 0) + perfis.get("E", 0)
+    com_repro = perfis.get("E", 0) + perfis.get("F", 0)
+    taxa_repro = round(perfis.get("E", 0) / com_final * 100) if com_final else 0
+
+    transicoes = {}
+    pares = [
+        ("contrato_assinado", "equipe_chegou", "Contrato a Equipe em obra"),
+        ("equipe_chegou", "camada_produto", "Equipe a 1a camada"),
+        ("camada_produto", "finalizacao", "1a camada a Finalização"),
+        ("contrato_assinado", "finalizacao", "Contrato a Finalização"),
+        ("finalizacao", "reprovacao_retorno", "Finalização a Reprovação"),
+    ]
+    for a, b, label in pares:
+        dias = []
+        for o in obras_2026:
+            seq = _seq_chave(o.get("marcos") or [])
+            if a in seq and b in seq:
+                d = _diff_d(seq[a], seq[b])
+                if d is not None and d >= 0:
+                    dias.append(d)
+        if dias:
+            dias.sort()
+            transicoes[label] = {"mediana": dias[len(dias)//2], "min": min(dias), "max": max(dias), "n": len(dias)}
+
+    inversoes = {}
+    pares_inv = [
+        ("equipe_chegou", "camada_produto", "Equipe chega depois da 1a camada"),
+        ("material_produzido", "equipe_chegou", "Material depois da equipe"),
+        ("vt_agendada", "equipe_chegou", "VT depois da equipe"),
+        ("finalizacao", "reprovacao_retorno", "Finalização depois da reprovação"),
+    ]
+    for a, b, label in pares_inv:
+        n_inv = 0
+        n_total_par = 0
+        for o in obras_2026:
+            seq = _seq_chave(o.get("marcos") or [])
+            if a in seq and b in seq:
+                n_total_par += 1
+                if seq[a] > seq[b]:
+                    n_inv += 1
+        if n_total_par:
+            inversoes[label] = {"invertido": n_inv, "total": n_total_par, "pct": round(n_inv / n_total_par * 100)}
+
+    ausentes_repro = {}
+    repro_obras = grupos.get("E", []) + grupos.get("F", [])
+    for etapa in ["vt_realizada", "escopo_em_revisao", "vt_agendada", "material_produzido", "aprovacao_cliente"]:
+        n_aus = sum(1 for o in repro_obras if etapa not in o["seq"])
+        if repro_obras:
+            ausentes_repro[etapa] = {"ausente": n_aus, "total": len(repro_obras), "pct": round(n_aus / len(repro_obras) * 100)}
+
+    return {
+        "total_2026": total,
+        "perfis": dict(perfis),
+        "com_exec": com_exec,
+        "com_final": com_final,
+        "com_repro": com_repro,
+        "taxa_repro_final": taxa_repro,
+        "transicoes": transicoes,
+        "inversoes": inversoes,
+        "ausentes_repro": ausentes_repro,
+    }
+
+
+def render_perfis_fluxo(pf):
+    total = pf["total_2026"]
+    if not total:
+        return ""
+
+    perfil_bars = ""
+    for p in ("A", "B", "C", "D", "E", "F"):
+        n = pf["perfis"].get(p, 0)
+        pct = round(n / total * 100)
+        w = max(pct, 2)
+        cor = PERFIL_CORES.get(p, "#999")
+        label = PERFIL_LABELS.get(p, p)
+        perfil_bars += f'<div style="flex:{w};background:{cor};border-radius:4px;padding:8px 6px;color:#fff;font-size:10px;text-align:center;min-width:40px" title="{label}: {n} obras ({pct}%)"><b>{n}</b><br>{p}</div>'
+
+    trans_rows = ""
+    for label, d in pf["transicoes"].items():
+        trans_rows += f'<tr><td>{html.escape(label)}</td><td class="num">{d["mediana"]}d</td><td class="num">{d["min"]}d</td><td class="num">{d["max"]}d</td><td class="num">{d["n"]}</td></tr>'
+
+    inv_rows = ""
+    for label, d in pf["inversoes"].items():
+        if d["invertido"] > 0:
+            inv_rows += f'<tr><td>{html.escape(label)}</td><td class="num">{d["invertido"]}/{d["total"]}</td><td class="num">{d["pct"]}%</td></tr>'
+
+    aus_rows = ""
+    for etapa, d in sorted(pf["ausentes_repro"].items(), key=lambda x: -x[1]["pct"]):
+        aus_rows += f'<tr><td>{html.escape(etapa)}</td><td class="num">{d["ausente"]}/{d["total"]}</td><td class="num">{d["pct"]}%</td></tr>'
+
+    return f"""
+    <div class="analise-bloco" style="grid-column:1/-1">
+      <h3 class="analise-titulo">Perfis de comportamento · {total} obras 2026</h3>
+      <div class="analise-sub">Cada obra classificada pela sequência de marcos atingidos · caminho feliz = finalizou sem reprovação</div>
+      <div style="display:flex;gap:3px;margin-bottom:14px;align-items:stretch;min-height:44px">{perfil_bars}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;font-size:11px">
+        <div class="stat" style="padding:10px 12px"><div class="v" style="font-size:18px">{pf["com_exec"]}</div><div class="l">Executaram</div></div>
+        <div class="stat" style="padding:10px 12px"><div class="v" style="font-size:18px">{pf["com_final"]}</div><div class="l">Finalizaram</div></div>
+        <div class="stat" style="padding:10px 12px"><div class="v" style="font-size:18px">{pf["com_repro"]}</div><div class="l">Com reprovação</div></div>
+        <div class="stat" style="padding:10px 12px"><div class="v" style="font-size:18px;color:#c45a5a">{pf["taxa_repro_final"]}%</div><div class="l">Reprovação entre finalizadas</div></div>
+      </div>
+      <div style="display:flex;gap:8px;font-size:9px;color:var(--ink-faint);margin-bottom:6px">
+        {"".join(f'<span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:{PERFIL_CORES[p]}"></span>{PERFIL_LABELS[p]}</span>' for p in ("A","B","C","D","E","F"))}
+      </div>
+    </div>
+    <div class="analise-bloco">
+      <h3 class="analise-titulo">Tempos entre marcos-chave</h3>
+      <div class="analise-sub">Mediana de dias entre transições · todas as obras 2026</div>
+      <table class="analise-tabela">
+        <thead><tr><th>Transição</th><th>Mediana</th><th>Min</th><th>Max</th><th>N</th></tr></thead>
+        <tbody>{trans_rows}</tbody>
+      </table>
+    </div>
+    <div class="analise-bloco{"  grave" if any(d["pct"] > 20 for d in pf["inversoes"].values()) else ""}">
+      <h3 class="analise-titulo">Inversões de ordem</h3>
+      <div class="analise-sub">Etapas que aconteceram na ordem errada · indica fluxo quebrado ou registro atrasado</div>
+      <table class="analise-tabela">
+        <thead><tr><th>Inversão</th><th>Obras</th><th>%</th></tr></thead>
+        <tbody>{inv_rows}</tbody>
+      </table>
+    </div>
+    <div class="analise-bloco grave">
+      <h3 class="analise-titulo">Etapas ausentes em obras com reprovação</h3>
+      <div class="analise-sub">Obras que reprovaram e NÃO tinham essas etapas registradas · correlação com qualidade</div>
+      <table class="analise-tabela">
+        <thead><tr><th>Etapa</th><th>Ausente em</th><th>%</th></tr></thead>
+        <tbody>{aus_rows}</tbody>
+      </table>
+    </div>"""
+
+
+def render_diagnostico(pf):
+    total = pf.get("total_2026", 0)
+    if not total:
+        return ""
+    perfis = pf.get("perfis", {})
+    n_a = perfis.get("A", 0)
+    n_b = perfis.get("B", 0)
+    n_c = perfis.get("C", 0)
+    n_d = perfis.get("D", 0)
+    n_e = perfis.get("E", 0)
+    n_f = perfis.get("F", 0)
+    pct_b = round(n_b / total * 100)
+    pct_d = round(n_d / total * 100)
+    com_exec = pf.get("com_exec", 0)
+    com_final = pf.get("com_final", 0)
+    com_repro = pf.get("com_repro", 0)
+    taxa_repro = pf.get("taxa_repro_final", 0)
+
+    trans = pf.get("transicoes", {})
+    med_contrato_equipe = trans.get("Contrato a Equipe em obra", {}).get("mediana", "?")
+    med_equipe_camada = trans.get("Equipe a 1a camada", {}).get("mediana", "?")
+    med_final_repro = trans.get("Finalização a Reprovação", {}).get("mediana", "?")
+
+    vt_aus = pf.get("ausentes_repro", {}).get("vt_realizada", {})
+    pct_vt_aus = vt_aus.get("pct", 0) if vt_aus else 0
+
+    mat_inv = pf.get("inversoes", {}).get("Material depois da equipe", {})
+    pct_mat_inv = mat_inv.get("pct", 0) if mat_inv else 0
+    n_mat_inv = mat_inv.get("invertido", 0) if mat_inv else 0
+    n_mat_total = mat_inv.get("total", 0) if mat_inv else 0
+
+    vt_inv = pf.get("inversoes", {}).get("VT depois da equipe", {})
+    pct_vt_inv = vt_inv.get("pct", 0) if vt_inv else 0
+
+    # --- Bloco 1: Panorama ---
+    panorama = f"""<div class="narr-bloco">
+      <div class="narr-titulo">Panorama do fluxo</div>
+      <p>De <strong>{total} obras</strong> iniciadas em 2026, apenas <strong>{n_d} ({pct_d}%)</strong> seguiram
+      o caminho ideal: contrato &rarr; escopo &rarr; VT &rarr; material &rarr; equipe &rarr; camada &rarr;
+      finalização &rarr; aprovação do cliente.</p>
+      <p><strong>{n_b} obras ({pct_b}%)</strong> ainda estão em pré-obra — contrato assinado, escopo em revisão
+      ou VT agendada, mas nenhuma execução iniciada. Dessas, {n_a} nem têm registro de marco no Telegram.</p>
+      <p>Das que chegaram a executar ({com_exec}), <strong>{com_final}</strong> finalizaram e
+      <strong>{com_repro}</strong> tiveram reprovação registrada.</p>
+    </div>"""
+
+    # --- Bloco 2: Onde o fluxo quebra ---
+    desvios_items = []
+
+    if pct_vt_aus >= 40:
+        desvios_items.append(f"""<div class="narr-desvio narr-grave">
+          <span class="narr-pct">{pct_vt_aus}%</span>
+          <div><strong>das obras reprovadas não tiveram VT registrada.</strong>
+          A Visita Técnica é a principal barreira de prevenção antes da execução. Quando é pulada
+          para não atrasar o cronograma, os problemas que ela pegaria aparecem como reprovação
+          {med_final_repro} dias depois.</div>
+        </div>""")
+
+    if pct_mat_inv >= 30:
+        desvios_items.append(f"""<div class="narr-desvio narr-alerta">
+          <span class="narr-pct">{pct_mat_inv}%</span>
+          <div><strong>das obras receberam material depois da equipe chegar.</strong>
+          Em {n_mat_inv} de {n_mat_total} casos, a produção (OEI) e o cronograma (OE) correram
+          em paralelo sem sincronização. Equipe chega e o material não está lá — ou está errado.</div>
+        </div>""")
+
+    if taxa_repro >= 50:
+        desvios_items.append(f"""<div class="narr-desvio narr-grave">
+          <span class="narr-pct">{taxa_repro}%</span>
+          <div><strong>das obras finalizadas tiveram reprovação.</strong>
+          De {com_final} finalizadas, {n_e} receberam retorno do cliente. A mediana entre finalização
+          e reprovação é de {med_final_repro} dias — a maioria dos problemas não é detectada na hora,
+          aparece com o uso.</div>
+        </div>""")
+
+    if pct_b >= 30:
+        desvios_items.append(f"""<div class="narr-desvio narr-alerta">
+          <span class="narr-pct">{pct_b}%</span>
+          <div><strong>da carteira parada em pré-obra.</strong>
+          {n_b} obras com contrato mas sem execução. Não há gatilho que force a transição
+          de uma etapa pra outra — obra com contrato assinado fica dormindo sem cobrança do próximo passo.</div>
+        </div>""")
+
+    desvios_html = "".join(desvios_items)
+
+    desvios = f"""<div class="narr-bloco">
+      <div class="narr-titulo">Onde o fluxo quebra</div>
+      <div class="narr-desvios">{desvios_html}</div>
+    </div>""" if desvios_items else ""
+
+    # --- Bloco 3: Velocidade ---
+    velocidade = f"""<div class="narr-bloco">
+      <div class="narr-titulo">Velocidade entre marcos</div>
+      <p>A mediana entre <strong>contrato assinado e equipe em obra</strong> é de
+      <strong>{med_contrato_equipe} dias</strong> — o gargalo está no pré-obra, não na execução.</p>
+      <p>Uma vez que a equipe chega, a primeira camada acontece em <strong>{med_equipe_camada} dias</strong>.
+      A execução em si é rápida. Quando demora mais de 15 dias entre equipe e camada, geralmente
+      faltou algo: material, definição de cor, autorização do cliente ou superfície não preparada.</p>
+    </div>"""
+
+    # --- Bloco 4: O que os dados sugerem ---
+    acoes = f"""<div class="narr-bloco narr-acoes">
+      <div class="narr-titulo">O que os dados sugerem</div>
+      <div class="narr-acao-grid">
+        <div class="narr-acao">
+          <div class="narr-acao-tag narr-p0">P0</div>
+          <div><strong>Destravar pré-obra.</strong> Alerta para obra com contrato há +30 dias sem próximo marco.
+          Reunião semanal de desbloqueio: consultor apresenta as 5 obras mais antigas.</div>
+        </div>
+        <div class="narr-acao">
+          <div class="narr-acao-tag narr-p0">P0</div>
+          <div><strong>VT obrigatória antes da execução.</strong> Equipe não agenda sem VT realizada registrada.
+          Se dispensada, registrar "VT dispensada" com justificativa.</div>
+        </div>
+        <div class="narr-acao">
+          <div class="narr-acao-tag narr-p1">P1</div>
+          <div><strong>Sincronizar material com cronograma.</strong> Material confirmado em obra antes de agendar
+          data de execução. OEI com flag "material entregue" que desbloqueia agendamento no OE.</div>
+        </div>
+        <div class="narr-acao">
+          <div class="narr-acao-tag narr-p1">P1</div>
+          <div><strong>Monitorar equipe &rarr; camada.</strong> Se passar de 7 dias é alerta amarelo, 15 dias vermelho.
+          Indica que faltou algo na preparação.</div>
+        </div>
+      </div>
+    </div>"""
+
+    return f"""
+    <div class="diagnostico">
+      <div class="section-title">Diagnóstico do fluxo · {total} obras 2026</div>
+      {panorama}
+      {desvios}
+      {velocidade}
+      {acoes}
+    </div>"""
 
 
 def calcular_analise_cross_obras(timelines, taxonomia):
@@ -1157,9 +1570,10 @@ def render_analise_cross(an, taxonomia):
 def main():
     d = json.loads(JSON_PATH.read_text(encoding="utf-8"))
     timelines = d.get("timelines") or []
-    estat = d.get("estatisticas") or {}
+
     taxonomia = d.get("taxonomia") or {}
     analise_cross = calcular_analise_cross_obras(timelines, taxonomia)
+    perfis_fluxo = calcular_perfis_fluxo(timelines)
 
     com_marcos = [t for t in timelines if (t.get("marcos") or [])]
     sem_marcos = [t for t in timelines if not (t.get("marcos") or [])]
@@ -1186,6 +1600,9 @@ def main():
             cat_counts["retrabalho_ativo"] += 1
         if is_destrinchada(t.get("cliente")):
             cat_counts["destrinchada"] += 1
+        seq = _seq_chave(t.get("marcos") or [])
+        p = _classificar_perfil(len(t.get("marcos") or []), seq)
+        cat_counts[f"perfil_{p}"] += 1
 
     sem_rows = ""
     for o in sem_marcos:
@@ -1202,8 +1619,8 @@ def main():
     n_total = len(timelines)
     n_marcos_total = sum(len(t.get("marcos") or []) for t in timelines)
     gerado_em = d.get("gerado_em", "")
-    mediana_marcos = (estat.get("finalizadas_dt_marcos") or {}).get("mediana", "—")
-    mediana_msg_exec = (estat.get("finalizadas_dt_msg_ate_exec") or {}).get("mediana", "—")
+    pct_feliz = round(perfis_fluxo["perfis"].get("D", 0) / perfis_fluxo["total_2026"] * 100) if perfis_fluxo["total_2026"] else 0
+    taxa_repro_2026 = perfis_fluxo.get("taxa_repro_final", 0)
 
     # Subtítulo do header · adapta entre piloto e massa
     modo_massa = (d.get("modo") == "massa")
@@ -1311,6 +1728,51 @@ def main():
     display: flex; align-items: center; gap: 10px;
   }}
   .section-title::before {{ content: ''; width: 4px; height: 14px; background: var(--gold); border-radius: 2px; }}
+
+  /* Diagnóstico narrativo */
+  .diagnostico {{ margin-bottom: 32px; }}
+  .narr-bloco {{
+    background: var(--surface); border: 1px solid var(--line-soft); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 14px;
+  }}
+  .narr-titulo {{
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--gold); margin-bottom: 10px;
+  }}
+  .narr-bloco p {{
+    font-size: 13px; line-height: 1.7; color: var(--ink-soft); margin: 0 0 8px;
+  }}
+  .narr-bloco p:last-child {{ margin-bottom: 0; }}
+  .narr-bloco p strong {{ color: var(--ink); }}
+  .narr-desvios {{ display: flex; flex-direction: column; gap: 10px; }}
+  .narr-desvio {{
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 14px 16px; border-radius: 8px;
+    font-size: 12.5px; line-height: 1.6; color: var(--ink-soft);
+    border-left: 4px solid var(--line);
+  }}
+  .narr-desvio strong {{ color: var(--ink); }}
+  .narr-desvio.narr-grave {{ background: #fef2f2; border-left-color: #c45a5a; }}
+  .narr-desvio.narr-alerta {{ background: #fefce8; border-left-color: #b89a4a; }}
+  .narr-pct {{
+    font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800;
+    min-width: 56px; text-align: center; color: var(--ink); flex-shrink: 0;
+    line-height: 1.1;
+  }}
+  .narr-acoes {{ background: var(--bg); }}
+  .narr-acao-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }}
+  .narr-acao {{
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--line-soft); border-radius: 8px;
+    padding: 12px 14px; font-size: 12px; line-height: 1.6; color: var(--ink-soft);
+  }}
+  .narr-acao strong {{ color: var(--ink); }}
+  .narr-acao-tag {{
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800;
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0; letter-spacing: 0.05em;
+  }}
+  .narr-p0 {{ background: #c45a5a; color: #fff; }}
+  .narr-p1 {{ background: #b89a4a; color: #fff; }}
 
   /* Stats topo */
   .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }}
@@ -1440,6 +1902,43 @@ def main():
   }}
   .mini-badge.ciclos {{ background: #fef3c7; color: #92400e; border-color: #fde68a; }}
   .mini-badge.retr {{ background: #fee2e2; border-color: #fca5a5; padding: 3px 6px; }}
+  .mini-badge.perfil-badge {{ border: none; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; padding: 3px 8px; }}
+
+  /* Barra de fluxo esperado */
+  .fluxo-barra {{
+    display: flex; align-items: flex-start; gap: 2px;
+    background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 12px; overflow-x: auto;
+  }}
+  .fluxo-step {{
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    min-width: 62px; flex: 1; position: relative;
+  }}
+  .fluxo-step::after {{
+    content: ''; position: absolute; top: 8px; left: 55%; right: -50%; height: 2px;
+    background: var(--line-soft); z-index: 0;
+  }}
+  .fluxo-step:last-child::after {{ display: none; }}
+  .fluxo-dot {{
+    width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line);
+    background: var(--surface); z-index: 1; flex-shrink: 0;
+  }}
+  .fluxo-dot.ok {{ background: #3d8a5a; border-color: #3d8a5a; }}
+  .fluxo-dot.skip {{ background: #fff; border-color: #c45a5a; }}
+  .fluxo-dot.skip::after {{ content: '×'; color: #c45a5a; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: -1px; }}
+  .fluxo-dot.pend {{ background: var(--surface); border-color: var(--line); }}
+  .fluxo-dot.reprova {{ background: #c45a5a; border-color: #c45a5a; }}
+  .fluxo-step.ok .fluxo-label {{ color: var(--ink); font-weight: 600; }}
+  .fluxo-step.skip .fluxo-label {{ color: #c45a5a; font-weight: 600; text-decoration: line-through; }}
+  .fluxo-step.pend .fluxo-label {{ color: var(--ink-faint); }}
+  .fluxo-step.reprova .fluxo-label {{ color: #c45a5a; font-weight: 700; }}
+  .fluxo-label {{ font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; }}
+  .fluxo-delta {{
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink-soft);
+    background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px;
+    padding: 1px 4px; margin-top: 1px;
+  }}
+
   .sum-toggle {{
     color: var(--ink-faint); font-size: 14px;
     transition: transform 0.2s;
@@ -2034,6 +2533,18 @@ def main():
   .cat-chip.cat-info {{ border-left: 3px solid #7ea0b7; }}
   .cat-chip.cat-status {{ border-left: 3px solid #94a3b8; }}
   .cat-chip.cat-destrinchada {{ border-left: 3px solid #b8884a; }}
+  .cat-chip.cat-perfil-A {{ border-left: 3px solid #a89e92; }}
+  .cat-chip.cat-perfil-B {{ border-left: 3px solid #b89a4a; }}
+  .cat-chip.cat-perfil-C {{ border-left: 3px solid #4a7ab8; }}
+  .cat-chip.cat-perfil-D {{ border-left: 3px solid #3d8a5a; }}
+  .cat-chip.cat-perfil-E {{ border-left: 3px solid #c45a5a; }}
+  .cat-chip.cat-perfil-F {{ border-left: 3px solid #b83a3a; }}
+  .cat-chip.cat-perfil-A.ativa {{ background: #a89e92; border-color: #a89e92; }}
+  .cat-chip.cat-perfil-B.ativa {{ background: #b89a4a; border-color: #b89a4a; }}
+  .cat-chip.cat-perfil-C.ativa {{ background: #4a7ab8; border-color: #4a7ab8; }}
+  .cat-chip.cat-perfil-D.ativa {{ background: #3d8a5a; border-color: #3d8a5a; }}
+  .cat-chip.cat-perfil-E.ativa {{ background: #c45a5a; border-color: #c45a5a; }}
+  .cat-chip.cat-perfil-F.ativa {{ background: #b83a3a; border-color: #b83a3a; }}
 
   .resultado-filtros {{
     display: none;
@@ -2133,21 +2644,32 @@ def main():
       <div class="stat"><div class="v">{n_marcos_total}</div><div class="l">Marcos detectados</div></div>
       <div class="stat"><div class="v">{len(com_marcos)}</div><div class="l">Com timeline</div></div>
       <div class="stat"><div class="v">{len(sem_marcos)}</div><div class="l">Sem msgs Telegram</div></div>
-      <div class="stat"><div class="v">{mediana_marcos}<small>d</small></div><div class="l">Tempo médio · obras finalizadas</div></div>
-      <div class="stat"><div class="v">{mediana_msg_exec}<small>d</small></div><div class="l">1ª mensagem até execução · ref. 107d</div></div>
+      <div class="stat"><div class="v">{pct_feliz}<small>%</small></div><div class="l">Caminho feliz · 2026</div></div>
+      <div class="stat"><div class="v" style="color:#c45a5a">{taxa_repro_2026}<small>%</small></div><div class="l">Reprovação · finalizadas 2026</div></div>
     </div>
 
-    <div class="section-title">Análise cross-obras</div>
-    <div class="analise-cross">{render_analise_cross(analise_cross, taxonomia)}</div>
-
-    <div class="section-title">Categorias de marco</div>
-    <div class="legenda">{legenda_html}</div>
+    {render_diagnostico(perfis_fluxo)}
 
     <button class="cta-tela" onclick="mostrarTela('tela-obras')">
       <span class="cta-label">Ver obras detalhadas</span>
       <span class="cta-meta">{len(com_marcos)} timelines · {n_marcos_total} marcos</span>
       <span class="cta-arrow">→</span>
     </button>
+
+    <details class="secao-colapsavel">
+      <summary class="section-title" style="cursor:pointer;user-select:none">Detalhamento técnico · Perfis, transições e inversões</summary>
+      <div class="analise-cross">{render_perfis_fluxo(perfis_fluxo)}</div>
+    </details>
+
+    <details class="secao-colapsavel">
+      <summary class="section-title" style="cursor:pointer;user-select:none">Análise cross-obras</summary>
+      <div class="analise-cross">{render_analise_cross(analise_cross, taxonomia)}</div>
+    </details>
+
+    <details class="secao-colapsavel">
+      <summary class="section-title" style="cursor:pointer;user-select:none">Categorias de marco</summary>
+      <div class="legenda">{legenda_html}</div>
+    </details>
 
   </section>
 
@@ -2157,7 +2679,12 @@ def main():
     <button class="cta-voltar" onclick="mostrarTela('tela-resumo')">← Voltar ao resumo</button>
 
     <h2 class="bloco">Obras com timeline detectada</h2>
-    <div class="bloco-sub">Click numa linha pra expandir o Kanban completo da obra · hover nas bolinhas pra ver o trecho real da mensagem</div>
+    <div class="bloco-sub">Clique numa obra para expandir. A barra de fluxo mostra as 8 etapas esperadas:
+      <span style="color:#3d8a5a;font-weight:700">●</span> completou
+      <span style="color:#c45a5a;font-weight:700">✕</span> pulou
+      <span style="color:var(--ink-faint)">○</span> pendente
+      · Dias entre etapas em destaque.
+    </div>
 
     <div class="filtros-wrap">
       <input type="text" id="busca-obras" class="busca-input" placeholder="🔎 Filtrar por cliente, status ou fase..." oninput="aplicarFiltros()">
@@ -2169,7 +2696,7 @@ def main():
     </div>
 
     <div class="cat-filtros">
-      <div class="cat-filtros-titulo">Filtrar por categoria · click pra ativar/desativar (multi-seleção)</div>
+      <div class="cat-filtros-titulo">Filtrar por categoria · clique para ativar/desativar</div>
       <div class="cat-grupo">
         <span class="cat-grupo-label">⏱ Paralisação</span>
         <button class="cat-chip cat-critica" data-cat="obra_zumbi" onclick="toggleCat(this)">🚨 Obra zumbi (180+d) <b>{cat_counts.get("obra_zumbi", 0)}</b></button>
@@ -2198,8 +2725,12 @@ def main():
         <button class="cat-chip cat-status" data-cat="status_marcas_rolo_cera" onclick="toggleCat(this)">Marcas rolo/cera</button>
       </div>
       <div class="cat-grupo">
-        <span class="cat-grupo-label">🔬 Outros</span>
-        <button class="cat-chip cat-destrinchada" data-cat="destrinchada" onclick="toggleCat(this)">Destrinchadas (calibração) <b>{cat_counts.get("destrinchada", 0)}</b></button>
+        <span class="cat-grupo-label">Perfil de fluxo</span>
+        {"".join(f'<button class="cat-chip cat-perfil-{p}" data-cat="perfil_{p}" onclick="toggleCat(this)">{p} {PERFIL_LABELS[p]} <b>{cat_counts.get(f"perfil_{p}", 0)}</b></button>' for p in ("B","C","D","E","F") if cat_counts.get(f"perfil_{p}", 0) > 0)}
+      </div>
+      <div class="cat-grupo">
+        <span class="cat-grupo-label">Outros</span>
+        <button class="cat-chip cat-destrinchada" data-cat="destrinchada" onclick="toggleCat(this)">Destrinchadas (calibracao) <b>{cat_counts.get("destrinchada", 0)}</b></button>
       </div>
     </div>
 
