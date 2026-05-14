@@ -3864,11 +3864,12 @@ function renderGantt(marcosExec){
     cont.innerHTML = '';
   }
 
-  // Min/max de hora · com padding
-  const horas = marcosExec.map(m => {
+  // Min/max de hora · com padding (ignora retroativos que não têm hora real)
+  const horas = marcosExec.filter(m => m.hora !== 'retro').map(m => {
     const [h, mi] = m.hora.split(':').map(Number);
     return h + mi / 60;
   });
+  if (horas.length === 0) horas.push(6, 18);
   const horaMin = Math.max(0, Math.floor(Math.min(...horas)) - 1);
   const horaMax = Math.min(24, Math.ceil(Math.max(...horas)) + 1);
   const totalHoras = horaMax - horaMin;
@@ -3884,6 +3885,7 @@ function renderGantt(marcosExec){
   const H = PADDING_TOP + totalHoras * ALTURA_HORA + PADDING_BOTTOM;
 
   function yFromHora(hStr){
+    if (hStr === 'retro') return PADDING_TOP + 5;
     const [h, mi] = hStr.split(':').map(Number);
     const horaDecimal = h + mi / 60;
     return PADDING_TOP + (horaDecimal - horaMin) * ALTURA_HORA;
@@ -3913,8 +3915,12 @@ function renderGantt(marcosExec){
     partes.push(`<text x="${xCol + COL_LARG/2}" y="${PADDING_TOP-22}" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#b8884a" letter-spacing="0.04em">D${idx+1}</text>`);
     partes.push(`<text x="${xCol + COL_LARG/2}" y="${PADDING_TOP-7}" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#6b6156" font-weight="600">${fmtData(data)}</text>`);
 
-    // Eventos do dia · ordenados por hora
-    const eventos = porDia[data].slice().sort((a,b) => a.hora.localeCompare(b.hora));
+    // Eventos do dia · ordenados por hora (retroativos primeiro)
+    const eventos = porDia[data].slice().sort((a,b) => {
+      if (a.hora === 'retro' && b.hora !== 'retro') return -1;
+      if (b.hora === 'retro' && a.hora !== 'retro') return 1;
+      return a.hora.localeCompare(b.hora);
+    });
 
     // Desenha linha conectora vertical entre eventos consecutivos do mesmo dia (tracejada · gold)
     eventos.forEach((e, i) => {
@@ -3938,15 +3944,20 @@ function renderGantt(marcosExec){
       const xPill = xCol + 8;
       const wPill = COL_LARG - 16;
       // Tooltip especial pra cobrança · mostra tempo de resposta
-      let tip = e.label + ' · ' + e.hora + ' · ' + e.autor + '\\n' + e.trecho.slice(0,150);
+      const horaDisplay = e.hora === 'retro' ? 'retro' : e.hora;
+      let tip = e.label + ' · ' + horaDisplay + ' · ' + e.autor + (e.retroativo ? ' (retroativo)' : '') + '\\n' + e.trecho.slice(0,150);
       if (e.tipo === 'cobranca_status' && e.tempo_resposta_min != null) {
-        tip = `${e.label} · ${e.hora} · ${e.autor}\\nRespondida em ${e.tempo_resposta_min} min por ${e.respondido_por} (${e.respondido_em})\\n"${e.trecho.slice(0,140)}"`;
+        tip = `${e.label} · ${horaDisplay} · ${e.autor}\\nRespondida em ${e.tempo_resposta_min} min por ${e.respondido_por} (${e.respondido_em})\\n"${e.trecho.slice(0,140)}"`;
       }
-      // Pílula
+      // Pílula · retroativos com borda tracejada
       partes.push(`<g class="gantt-evento-pill" data-tip="${esc(tip)}">`);
-      partes.push(`<rect x="${xPill}" y="${y-10}" width="${wPill}" height="22" fill="${cor}" rx="11" filter="url(#g-shadow)"/>`);
+      if (e.retroativo) {
+        partes.push(`<rect x="${xPill}" y="${y-10}" width="${wPill}" height="22" fill="${cor}" rx="11" filter="url(#g-shadow)" stroke="#fff" stroke-width="1" stroke-dasharray="3,2" opacity="0.85"/>`);
+      } else {
+        partes.push(`<rect x="${xPill}" y="${y-10}" width="${wPill}" height="22" fill="${cor}" rx="11" filter="url(#g-shadow)"/>`);
+      }
       // Hora à esquerda dentro da pílula
-      partes.push(`<text x="${xPill + 10}" y="${y+5}" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#fff" letter-spacing="0.02em">${esc(e.hora)}</text>`);
+      partes.push(`<text x="${xPill + 10}" y="${y+5}" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#fff" letter-spacing="0.02em">${e.hora === 'retro' ? '↩' : esc(e.hora)}</text>`);
       // Label · cobrança mostra delta de resposta no fim
       let labelTxt = e.label;
       if (e.tipo === 'cobranca_status' && e.tempo_resposta_min != null) {
@@ -4130,9 +4141,10 @@ function renderGanttSwimlanes(container, marcos){
         partes.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${cy}" stroke="#a89e92" stroke-width="0.8" opacity="0.45"/>`);
       }
 
-      const tip = `${esc(dados.label)} · ${fmtDataLong(mk.data)}\n${esc(mk.autor)}\n"${esc((mk.trecho||'').slice(0,200))}"`;
+      const retroTag = mk.retroativo ? ' (retroativo)' : '';
+      const tip = `${esc(dados.label)} · ${fmtDataLong(mk.data)}${retroTag}\n${esc(mk.autor)}\n"${esc((mk.trecho||'').slice(0,200))}"`;
       partes.push(`<g class="gantt-marco-pt" data-tip="${tip}" style="cursor:help">
-        <circle cx="${x}" cy="${cy}" r="6" fill="${dados.cor}" stroke="#fff" stroke-width="1.5" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.15))"/>
+        <circle cx="${x}" cy="${cy}" r="6" fill="${dados.cor}" stroke="${mk.retroativo ? '#d4a548' : '#fff'}" stroke-width="1.5" ${mk.retroativo ? 'stroke-dasharray="2,1"' : ''} filter="drop-shadow(0 1px 2px rgba(0,0,0,0.15))"/>
       </g>`);
       // Keyword sempre à direita da bolinha (cabe agora porque nível diferente evita sobreposição)
       if (mk.keyword){

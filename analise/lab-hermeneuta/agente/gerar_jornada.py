@@ -1268,6 +1268,10 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
     visto = set()
     inicio_dia_por_data = {}  # data → idx do marco no array (pra pesquisar depois)
     cobrancas_pendentes = []  # cobranças aguardando próxima msg de aplicador pra calcular tempo
+    cobranca_diario_ontem = False  # flag: alguém pediu "diário de ontem" → próxima msg de aplicador é retroativa
+
+    PAD_ONTEM = re.compile(r"\bontem\b", re.IGNORECASE)
+    PAD_DIARIO_ONTEM = re.compile(r"\b(di[áa]rio\s+de\s+ontem|di[áa]rio\s+do\s+dia\s+anterior|o\s+que\s+(fizeram|fez|foi\s+feito)\s+ontem|temos\s+di[áa]rio\s+de\s+ontem)\b", re.IGNORECASE)
 
     for idx_m, m in enumerate(msgs_janela):
         ts = m.get("timestamp") or ""
@@ -1283,7 +1287,6 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                 if cob["data"] != data:
                     cobrancas_pendentes.remove(cob)
                     continue
-                # Calcula tempo de resposta
                 try:
                     cob_ts = datetime.fromisoformat(cob["data_iso"].replace("Z", "+00:00"))
                     msg_ts = datetime.fromisoformat(ts.replace("Z", "+00:00"))
@@ -1295,6 +1298,25 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                     pass
                 cobrancas_pendentes.remove(cob)
 
+        # Detecta cobrança de diário de ontem (não-aplicador pedindo)
+        if not eh_aplicador and PAD_DIARIO_ONTEM.search(texto):
+            cobranca_diario_ontem = True
+
+        # Determina se esta msg se refere a "ontem" (retroativa)
+        retroativa = False
+        if eh_aplicador and (PAD_ONTEM.search(texto) or cobranca_diario_ontem):
+            retroativa = True
+            cobranca_diario_ontem = False  # consome a flag
+
+        # Data efetiva: se retroativa, atribui ao dia anterior
+        data_efetiva = data
+        if retroativa:
+            try:
+                d = date.fromisoformat(data)
+                data_efetiva = (d - timedelta(days=1)).isoformat()
+            except ValueError:
+                pass
+
         # Detecta marcos técnicos
         marco_detectado = None
         for tipo, pad in MARCOS_EXECUCAO:
@@ -1302,23 +1324,28 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
                 # inicio_dia só vale pra aplicador
                 if tipo == "inicio_dia" and not eh_aplicador:
                     continue
-                chave = (data, tipo)
+                # inicio_dia não faz sentido retroativo
+                if tipo == "inicio_dia" and retroativa:
+                    continue
+                chave = (data_efetiva, tipo)
                 if chave in visto:
                     if tipo == "inicio_dia":
                         break
                     break
                 visto.add(chave)
                 marco_detectado = {
-                    "data": data,
-                    "hora": hora,
+                    "data": data_efetiva,
+                    "hora": hora if not retroativa else "retro",
                     "autor": sender,
                     "tipo": tipo,
                     "label": LABELS_EXECUCAO.get(tipo, tipo),
                     "trecho": texto[:200].replace("\n", " ").strip(),
                 }
+                if retroativa:
+                    marco_detectado["retroativo"] = True
                 marcos.append(marco_detectado)
                 if tipo == "inicio_dia":
-                    inicio_dia_por_data[data] = len(marcos) - 1
+                    inicio_dia_por_data[data_efetiva] = len(marcos) - 1
                 break
 
         # Se não detectou marco técnico E é não-aplicador E ainda não houve inicio_dia no dia → cobrança
