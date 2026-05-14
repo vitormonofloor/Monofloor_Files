@@ -1227,11 +1227,13 @@ def is_aplicador(sender, aplicadores_set):
     """True se o sender Telegram é um aplicador oficial (matching de tokens)."""
     if not sender or not aplicadores_set:
         return False
+    apl_lower = {a.lower() for a in aplicadores_set}
     s = sender.lower()
-    # Tokeniza ignorando pipes/espaços
+    if s in apl_lower:
+        return True
     for token in re.split(r"[\s|]+", s):
         t = token.strip()
-        if t in aplicadores_set:
+        if t and t in apl_lower:
             return True
     return False
 
@@ -2555,6 +2557,98 @@ def main():
         print(f"\nErros ({len(erros)}):")
         for oid, err in erros:
             print(f"  {oid[:8]}: {err[:80]}")
+
+    # ============================================================
+    # GUARDRAILS · sanity checks pós-pipeline
+    # ============================================================
+    validar_sanidade(out["obras"])
+
+
+def validar_sanidade(obras):
+    """Guardrails automáticos: gritam quando algo não faz sentido."""
+    n = len(obras)
+    if n == 0:
+        print("\n[GUARDRAIL] CRITICO · 0 obras geradas!")
+        return
+
+    alertas = []
+
+    # 1. Cobertura de marcos de execução
+    com_marcos = sum(1 for o in obras if len(o.get("marcos_execucao", [])) > 0)
+    pct_marcos = 100 * com_marcos / n
+    if pct_marcos < 30:
+        alertas.append(f"CRITICO · Só {pct_marcos:.0f}% das obras têm marcos_execucao (esperado >30%)")
+
+    # 2. Obras com muitas msgs mas zero marcos = detector com falha
+    suspeitas_silenciosas = []
+    for o in obras:
+        senders = o.get("equipe", {}).get("senders_telegram", [])
+        total_msgs = sum(s.get("msgs", 0) for s in senders) if senders else 0
+        n_marcos_exec = len(o.get("marcos_execucao", []))
+        if total_msgs >= 200 and n_marcos_exec == 0:
+            suspeitas_silenciosas.append(f"  {o['cliente'][:40]:40s} · {total_msgs} msgs · 0 marcos")
+    if suspeitas_silenciosas:
+        alertas.append(f"AVISO · {len(suspeitas_silenciosas)} obras com >=200 msgs e 0 marcos de execução:")
+        alertas.extend(suspeitas_silenciosas[:10])
+
+    # 3. Aplicadores detectados vs usados
+    obras_com_apl = sum(1 for o in obras if len(o.get("equipe", {}).get("aplicadores_telegram", [])) > 0)
+    pct_apl = 100 * obras_com_apl / n
+    if pct_apl < 20:
+        alertas.append(f"CRITICO · Só {pct_apl:.0f}% das obras detectaram aplicadores no Telegram (esperado >20%)")
+
+    # 4. is_aplicador sanity: se tem aplicadores mas nenhum marco veio de aplicador
+    marcos_de_aplicador = 0
+    marcos_total = 0
+    for o in obras:
+        apl_names = {a["nome"] for a in o.get("equipe", {}).get("aplicadores_telegram", [])}
+        for m in o.get("marcos_execucao", []):
+            marcos_total += 1
+            if m.get("autor") in apl_names or any(a.lower() in (m.get("autor") or "").lower() for a in apl_names):
+                marcos_de_aplicador += 1
+    if marcos_total > 0:
+        pct_apl_marcos = 100 * marcos_de_aplicador / marcos_total
+        if pct_apl_marcos < 15:
+            alertas.append(f"CRITICO · Só {pct_apl_marcos:.0f}% dos marcos_execucao vêm de aplicadores (esperado >15%) — possível bug em is_aplicador")
+
+    # 5. Andamento cruzado: se tem painel preenchido mas zero confirmados em tudo
+    total_confirmados = sum(
+        o.get("andamento_cruzado", {}).get("resumo", {}).get("confirmado", 0) for o in obras
+    )
+    total_painel = sum(
+        o.get("andamento_cruzado", {}).get("resumo", {}).get("painel_sem_deteccao", 0) for o in obras
+    )
+    if total_painel > 50 and total_confirmados == 0:
+        alertas.append(f"CRITICO · {total_painel} etapas no Painel mas 0 confirmados — cruzamento possivelmente quebrado")
+
+    # 6. Gantts vazios
+    gantts_vazios = sum(1 for o in obras if len(o.get("marcos_execucao", [])) == 0)
+    pct_vazio = 100 * gantts_vazios / n
+    if pct_vazio > 70:
+        alertas.append(f"AVISO · {pct_vazio:.0f}% das obras com Gantt vazio (esperado <70%)")
+
+    # Relatório
+    print()
+    print(f"{'='*60}")
+    print(f"GUARDRAILS · {n} obras")
+    print(f"{'='*60}")
+    print(f"  Marcos execução:  {com_marcos}/{n} obras ({pct_marcos:.0f}%)")
+    print(f"  Aplicadores:      {obras_com_apl}/{n} obras ({pct_apl:.0f}%)")
+    print(f"  Marcos total:     {marcos_total} · de aplicador: {marcos_de_aplicador} ({100*marcos_de_aplicador/marcos_total:.0f}% )" if marcos_total else "  Marcos total:     0")
+    print(f"  Andamento:        {total_confirmados} confirmados · {total_painel} só painel")
+    print(f"  Gantts vazios:    {gantts_vazios}/{n} ({pct_vazio:.0f}%)")
+
+    if alertas:
+        print()
+        for a in alertas:
+            print(f"  [GUARDRAIL] {a}")
+        print()
+        print(f"  >>> {len([a for a in alertas if 'CRITICO' in a])} críticos · {len([a for a in alertas if 'AVISO' in a])} avisos")
+    else:
+        print()
+        print("  [OK] Todos os guardrails passaram")
+
+    print(f"{'='*60}")
 
 
 if __name__ == "__main__":

@@ -45,8 +45,8 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | Vanessa Monofloor | 28 | 2025-04-03 | 2025-08-15 |
 | monofloor | Mariana Marketing | 23 | 2025-08-21 | 2025-09-03 |
 | Francisco Beats Monofloor | 20 | 2025-10-20 | 2025-11-13 |
+| Vinícius | 19 | 2026-05-13 | 2026-05-14 |
 | Caio Santos | 15 | 2025-10-23 | 2025-10-27 |
-| Vinícius | 14 | 2026-05-13 | 2026-05-14 |
 
 ## 🗺 Linha do tempo
 
@@ -60,7 +60,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Hibernação #3** | 2025-11-14 | 2026-03-29 | 135d | 0 |
 | **Despertar e pré-execução** | 2026-03-29 | 2026-05-06 | 39d | 9 |
 | **Execução** | 2026-05-07 | 2026-05-07 | 1d | 6 |
-| **Pós-execução** | 2026-05-08 | 2026-05-14 | 7d | 26 |
+| **Pós-execução** | 2026-05-08 | 2026-05-14 | 7d | 31 |
 
 ## 📍 Marcos detectados nas mensagens
 
