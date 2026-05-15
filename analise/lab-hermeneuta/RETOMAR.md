@@ -1,6 +1,42 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-14 · marcos retroativos + regex inicio_dia expandido + filtro amanhã
+> **Última atualização:** 2026-05-15 · assertividade 84→94% + benchmark faixa metragem (6 faixas) + Camada 1 entregue
+
+---
+
+## 🆕 SESSÃO 2026-05-15 · O QUE FECHAMOS HOJE
+
+### Assertividade 84% → 93.9%
+- ✅ Fix 1: `classificar_obra()` usa `fase_atual_painel` como override (status stale → entrega_limpa/com_retrabalho)
+- ✅ Fix 2: consultor fallback `monof.get("consultor") or monof.get("operacoes")`
+- ✅ Fix 3: tempo_total fallback usa HOJE_DATE para obras ativas sem fim calculado
+- ✅ `auditar_assertividade.py` — script novo com 10 critérios, campos controlados 99.2%
+
+### Camada 1 — Benchmark por faixa de metragem ✅
+- ✅ `classificar_faixa_metragem()` + `_injetar_benchmark_faixa()` em gerar_jornada.py
+- ✅ 6 faixas: PP(<60) P(60-100) M(100-150) G(150-220) GG(220-300) XG(300+)
+- ✅ Bloco visual no drawer (exec/total/hib/aplicadores vs mediana da faixa)
+- ✅ Badge de faixa na sidebar (ex: "P · 45m²")
+- ✅ Insight: PP tem 66% retrabalho — o dobro das faixas maiores
+
+### Memórias novas
+- `reference_faixas_metragem.md` — 6 faixas definidas pelo Vitor
+- `project_macrodados_3_camadas.md` — roadmap 3 camadas + panorama mensal
+
+### Pendências pra próxima sessão
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Panorama mensal (click mês → obras, faixas, tempo médio) | ~1h |
+| 2 | Camada 2 — Triângulo de consistência material | ~2h |
+| 3 | Camada 3 — Score preditivo de risco (obras ativas) | ~2h |
+| 4 | 7 bugs da auditoria 2026-05-12 (continuam pendentes) | ~5h |
+
+### Comando pra retomar amanhã (cole no Claude Code)
+
+```
+Lê analise/lab-hermeneuta/RETOMAR.md primeiro · seção topo "SESSÃO 2026-05-15". Memória: project_macrodados_3_camadas.md. Próximo passo: panorama mensal (~1h) e depois Camada 2 (consumo material). Entregar sequencial, não dispersar.
+```
 
 ---
 

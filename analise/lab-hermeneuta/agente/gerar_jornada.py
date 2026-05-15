@@ -85,6 +85,23 @@ OBRAS_PILOTO = [
 HOJE = datetime.now(timezone.utc)
 HOJE_DATE = HOJE.date()
 
+FAIXAS_METRAGEM = [
+    ("PP", "Ate 60",        0,    60),
+    ("P",  "60-100",       60,   100),
+    ("M",  "100-150",     100,   150),
+    ("G",  "150-220",     150,   220),
+    ("GG", "220-300",     220,   300),
+    ("XG", "Acima 300",   300, 99999),
+]
+
+def classificar_faixa_metragem(m2):
+    if not isinstance(m2, (int, float)) or m2 <= 0:
+        return None
+    for cod, nome, lo, hi in FAIXAS_METRAGEM:
+        if lo <= m2 < hi:
+            return cod
+    return None
+
 # Aliases de senders no Telegram · normaliza pessoas que aparecem com múltiplas grafias
 # Formato: token-detector (lowercase) → nome canônico
 # Atualizar quando descobrir nova pessoa com múltiplas grafias.
@@ -139,6 +156,15 @@ def fetch_safe(url: str):
     try:
         return fetch(url, max_retries=1)
     except Exception:
+        return None
+
+
+def _to_float(v):
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except (ValueError, TypeError):
         return None
 
 
@@ -1597,11 +1623,31 @@ def _recortar_ciclo(nome, dt_ini, dt_fim, fases, marcos):
     }
 
 
+SEVERIDADE_PESO = {"critica": 4, "alta": 3, "media": 2, "baixa": 1}
+
+def calcular_friccao_nivel(ocorrencias):
+    """Retorna nível de fricção: critico/alto/medio/baixo/nenhum."""
+    if not ocorrencias:
+        return "nenhum"
+    score = sum(SEVERIDADE_PESO.get((o.get("severidade") or "").lower(), 1) for o in ocorrencias)
+    sev_max = max((SEVERIDADE_PESO.get((o.get("severidade") or "").lower(), 1) for o in ocorrencias), default=0)
+    if sev_max >= 4 or score >= 12:
+        return "critico"
+    if sev_max >= 3 or score >= 8:
+        return "alto"
+    if score >= 4:
+        return "medio"
+    return "baixo"
+
+
 def classificar_obra(jornada):
     """Selo de como a obra terminou/está. Usado pra filtrar e comparar cross-obra."""
     status = (jornada.get("status") or "").lower()
+    fase = (jornada.get("fase_atual_painel") or "").upper()
     ciclos = jornada.get("ciclos", [])
     n_ciclos = len(ciclos) if ciclos else 1
+    marcos = jornada.get("marcos", [])
+    tem_reprovacao = any(m.get("tipo") == "reprovacao_retorno" for m in marcos)
 
     if status == "cancelado":
         return "cancelada"
@@ -1610,9 +1656,16 @@ def classificar_obra(jornada):
     if status in ("reparo", "marcas_rolo_cera"):
         return "retrabalho_ativo"
     if status in ("finalizado", "concluido"):
-        return "entrega_com_retrabalho" if n_ciclos >= 2 else "entrega_limpa"
+        return "entrega_com_retrabalho" if (n_ciclos >= 2 or tem_reprovacao) else "entrega_limpa"
+
+    # Fase do painel diz finalizada mas status ficou stale
+    if ("FINALIZADO" in fase or "CONCLU" in fase) and status in (
+        "em_execucao", "aguardando_execucao", "aguardando_clima", "planejamento", "contrato",
+    ):
+        return "entrega_com_retrabalho" if (n_ciclos >= 2 or tem_reprovacao) else "entrega_limpa"
+
     if status == "em_execucao":
-        return "em_execucao"
+        return "em_execucao_com_retrabalho" if tem_reprovacao else "em_execucao"
     if status in ("aguardando_execucao", "aguardando_clima"):
         return "aguardando_execucao"
     if status in ("planejamento", "contrato"):
@@ -1621,14 +1674,15 @@ def classificar_obra(jornada):
 
 
 LABELS_CLASSIFICACAO = {
-    "entrega_limpa":          "Entrega limpa",
-    "entrega_com_retrabalho": "Entrega com retrabalho",
-    "retrabalho_ativo":       "Retrabalho ativo",
-    "em_execucao":            "Em execução",
-    "aguardando_execucao":    "Aguardando execução",
-    "pre_obra":               "Pré-obra",
-    "pausada":                "Pausada",
-    "cancelada":              "Cancelada",
+    "entrega_limpa":              "Entrega limpa",
+    "entrega_com_retrabalho":     "Entrega com retrabalho",
+    "retrabalho_ativo":           "Retrabalho ativo",
+    "em_execucao":                "Em execução",
+    "em_execucao_com_retrabalho": "Em execução (retrabalho)",
+    "aguardando_execucao":        "Aguardando execução",
+    "pre_obra":                   "Pré-obra",
+    "pausada":                    "Pausada",
+    "cancelada":                  "Cancelada",
     "desconhecido":           "—",
 }
 
@@ -1689,13 +1743,17 @@ def montar_resumo_cross(jornada):
 
     prestadores = equipe.get("prestadores_oficiais", [])
     lider = next((p.get("nome") for p in prestadores if (p.get("funcao") or "").upper() == "LIDER"), None)
+    if not lider:
+        aplicadores = equipe.get("aplicadores_telegram", [])
+        if aplicadores:
+            lider = max(aplicadores, key=lambda a: a.get("n_msgs", 0)).get("nome")
 
     return {
         "classificacao": jornada.get("classificacao"),
         "qtd_ciclos": n_ciclos,
-        "tem_retrabalho": n_ciclos >= 2,
+        "tem_retrabalho": n_ciclos >= 2 or any(m.get("tipo") == "reprovacao_retorno" for m in marcos),
         "tipo_retrabalho": tipo_retrabalho,
-        "consultor": monof.get("consultor_formal"),
+        "consultor": monof.get("consultor") or monof.get("operacoes"),
         "operacoes": monof.get("operacoes"),
         "lider_campo": lider,
         "severidade_max": extrair_severidade_max(ocorrencias),
@@ -2375,10 +2433,15 @@ def construir_jornada(obra_id):
 
     # Cálculos · pra obras em andamento (sem data_exec_confirmada), usa data_ultima_msg como fim
     tempo_total = None
-    if primeira_msg:
-        fim_calc = data_exec_confirmada or (ultima_msg.date() if ultima_msg else None)
-        if fim_calc:
-            tempo_total = (fim_calc - primeira_msg.date()).days
+    base_inicio = (data_criacao.date() if data_criacao else None) or (primeira_msg.date() if primeira_msg else None)
+    if base_inicio:
+        fim_calc = ultima_msg.date() if ultima_msg else (data_exec_confirmada or None)
+        if not fim_calc or fim_calc < base_inicio:
+            st = (detail.get("status") or "").lower()
+            if st not in ("finalizado", "concluido", "cancelado"):
+                fim_calc = HOJE_DATE
+        if fim_calc and fim_calc >= base_inicio:
+            tempo_total = (fim_calc - base_inicio).days
     tempo_execucao = None
     if cluster_exec_inicio and cluster_exec_fim:
         tempo_execucao = (cluster_exec_fim - cluster_exec_inicio).days + 1
@@ -2412,7 +2475,7 @@ def construir_jornada(obra_id):
         "ambientes": mat_totals.get("ambientes"),
         "n_items": len(mat_items),
         "n_reaplicacao": sum(1 for m in mat_items if "reaplica" in (m.get("tipoSuperficie") or "").lower()),
-        "produtos": sorted({(m.get("produto") or "").strip() for m in mat_items if m.get("produto")}),
+        "produtos": sorted({(m.get("produto") or "").strip().upper() for m in mat_items if m.get("produto")}),
         "cores": sorted({(m.get("cor") or "").strip() for m in mat_items if m.get("cor")}),
     }
 
@@ -2482,7 +2545,8 @@ def construir_jornada(obra_id):
         "status": detail.get("status"),
         "fase_atual_painel": detail.get("faseAtual"),
         "endereco": endereco,
-        "metragem": detail.get("projetoMetragem") or mat_totals.get("totalM2"),
+        "metragem": _to_float(detail.get("projetoMetragem")) or _to_float(mat_totals.get("totalM2")),
+        "faixa_metragem": classificar_faixa_metragem(_to_float(detail.get("projetoMetragem")) or _to_float(mat_totals.get("totalM2"))),
         "metragem_pendente": metragem_pendente,
         "produtos": materiais_resumo["produtos"],
         "cores": materiais_resumo["cores"],
@@ -2504,6 +2568,7 @@ def construir_jornada(obra_id):
         "consumos": consumos,
         "sobras": sobras,
         "friccao": {
+            "nivel": calcular_friccao_nivel(ocorrencias_fmt),
             "ocorrencias_formais": ocorrencias_fmt,
             "sinais_msg_telegram": problemas_msg,
         },
@@ -2529,7 +2594,102 @@ def construir_jornada(obra_id):
     jornada["veredito"] = gerar_veredito(jornada)
     jornada["andamento_cruzado"] = cruzar_andamento(detail, marcos_execucao)
 
+    alertas = []
+    fase = (jornada.get("fase_atual_painel") or "").upper()
+    st = (jornada.get("status") or "").lower()
+    if "FINALIZADO" in fase and st in ("em_execucao", "planejamento", "aguardando_execucao", "contrato"):
+        alertas.append("status_fase_discrepante")
+    if "CONCLU" in fase and st in ("em_execucao", "planejamento", "aguardando_execucao"):
+        alertas.append("status_fase_discrepante")
+    if jornada.get("n_msgs_telegram_total", 0) >= 2000:
+        alertas.append("teto_api_msgs")
+    jornada["alertas"] = alertas
+
     return jornada
+
+
+def _mediana(vals):
+    if not vals:
+        return None
+    s = sorted(vals)
+    n = len(s)
+    return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2
+
+
+def _injetar_benchmark_faixa(obras):
+    """Calcula medianas por faixa de metragem e injeta comparativo em cada obra."""
+    por_faixa = {}
+    for o in obras:
+        fx = o.get("faixa_metragem")
+        if not fx:
+            continue
+        por_faixa.setdefault(fx, []).append(o)
+
+    benchmarks = {}
+    for fx, grupo in por_faixa.items():
+        n = len(grupo)
+        exec_vals = [o["tempo_execucao_dias"] for o in grupo if o.get("tempo_execucao_dias") and o["tempo_execucao_dias"] > 0]
+        total_vals = [o["tempo_total_dias"] for o in grupo if o.get("tempo_total_dias") and o["tempo_total_dias"] > 0]
+        hib_vals = [o["tempo_hibernacao_dias"] for o in grupo if o.get("tempo_hibernacao_dias") and o["tempo_hibernacao_dias"] > 0]
+        apl_vals = [len(o.get("equipe", {}).get("aplicadores_telegram", [])) for o in grupo]
+        apl_vals = [a for a in apl_vals if a > 0]
+        m2_vals = [o["metragem"] for o in grupo if isinstance(o.get("metragem"), (int, float)) and o["metragem"] > 0]
+
+        retrab = sum(1 for o in grupo if o.get("classificacao", "").startswith("entrega_com_retrabalho") or o.get("classificacao") == "retrabalho_ativo" or o.get("classificacao") == "em_execucao_com_retrabalho")
+
+        benchmarks[fx] = {
+            "faixa": fx,
+            "label": dict(FAIXAS_METRAGEM_LABELS).get(fx, fx),
+            "n_obras": n,
+            "metragem_mediana": round(_mediana(m2_vals), 1) if m2_vals else None,
+            "exec_dias_mediana": _mediana(exec_vals),
+            "total_dias_mediana": _mediana(total_vals),
+            "hib_dias_mediana": _mediana(hib_vals),
+            "n_aplicadores_mediana": _mediana(apl_vals),
+            "pct_retrabalho": round(retrab / n * 100) if n else 0,
+            "m2_por_dia_mediana": round(_mediana([o["metragem"] / o["tempo_execucao_dias"] for o in grupo if isinstance(o.get("metragem"), (int, float)) and o.get("tempo_execucao_dias") and o["tempo_execucao_dias"] > 0 and o["metragem"] > 0]), 1) if exec_vals else None,
+            "m2_por_aplicador_mediana": round(_mediana([o["metragem"] / len(o.get("equipe", {}).get("aplicadores_telegram", [])) for o in grupo if isinstance(o.get("metragem"), (int, float)) and len(o.get("equipe", {}).get("aplicadores_telegram", [])) > 0 and o["metragem"] > 0]), 1) if apl_vals else None,
+        }
+
+    for o in obras:
+        fx = o.get("faixa_metragem")
+        if not fx or fx not in benchmarks:
+            o["benchmark_faixa"] = None
+            continue
+
+        bench = benchmarks[fx]
+        comparativo = {}
+
+        if o.get("tempo_execucao_dias") and bench["exec_dias_mediana"]:
+            ratio = o["tempo_execucao_dias"] / bench["exec_dias_mediana"]
+            comparativo["exec_vs_mediana"] = round(ratio, 2)
+
+        if o.get("tempo_total_dias") and bench["total_dias_mediana"]:
+            ratio = o["tempo_total_dias"] / bench["total_dias_mediana"]
+            comparativo["total_vs_mediana"] = round(ratio, 2)
+
+        if o.get("tempo_hibernacao_dias") and bench["hib_dias_mediana"]:
+            ratio = o["tempo_hibernacao_dias"] / bench["hib_dias_mediana"]
+            comparativo["hib_vs_mediana"] = round(ratio, 2)
+
+        n_apls = len(o.get("equipe", {}).get("aplicadores_telegram", []))
+        if n_apls > 0 and bench["n_aplicadores_mediana"]:
+            comparativo["apls_vs_mediana"] = round(n_apls / bench["n_aplicadores_mediana"], 2)
+
+        o["benchmark_faixa"] = {
+            "faixa": bench,
+            "comparativo": comparativo,
+        }
+
+
+FAIXAS_METRAGEM_LABELS = [
+    ("PP", "Até 60m²"),
+    ("P",  "60–100m²"),
+    ("M",  "100–150m²"),
+    ("G",  "150–220m²"),
+    ("GG", "220–300m²"),
+    ("XG", "Acima de 300m²"),
+]
 
 
 # ============================================================
@@ -2573,6 +2733,9 @@ def main():
         except Exception as e:
             erros.append((oid, str(e)))
             print(f"  [{i:3d}/{len(obra_ids)}] ✗ {oid[:8]} · {e}")
+
+    # Benchmark por faixa de metragem
+    _injetar_benchmark_faixa(out["obras"])
 
     # Salva JSON
     JORNADAS_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")

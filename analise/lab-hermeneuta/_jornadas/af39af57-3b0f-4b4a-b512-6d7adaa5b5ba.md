@@ -15,12 +15,12 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | 1ª msg Telegram | 2025-03-06 |
 | Execução prevista | 2026-05-13 |
 | Execução confirmada | 2026-04-30 |
-| **Tempo total contrato → entrega** | **420 dias** |
+| **Tempo total contrato → entrega** | **62 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **206 dias** |
-| **Classificação** | **Em execução** |
+| **Classificação** | **Entrega com retrabalho** |
 
-> **Obra em execução no momento. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado.**
+> **Obra finalizada em 62 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado.**
 
 ## 👥 Elenco
 
@@ -109,4 +109,4 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 206d praticamente parada
-- execucao_concentrada · só 0.2% do tempo total (1d de 420d)
+- execucao_concentrada · só 1.6% do tempo total (1d de 62d)

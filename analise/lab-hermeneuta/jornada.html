@@ -122,7 +122,7 @@
     overflow: hidden;
   }
   .sidebar-cab {
-    padding: 14px 14px 10px;
+    padding: 10px 12px 8px;
     border-bottom: 1px solid var(--line-soft);
     display: flex;
     flex-direction: column;
@@ -143,18 +143,138 @@
   }
   .sidebar-search:focus { border-color: var(--gold); }
   .sidebar-search::placeholder { color: var(--ink-faint); }
+  .sidebar-filtros-row {
+    display: flex;
+    gap: 4px;
+  }
   .sidebar-select {
-    width: 100%;
-    padding: 8px 10px;
+    flex: 1;
+    min-width: 0;
+    padding: 5px 4px;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     color: var(--ink);
     background: var(--bg);
     border: 1px solid var(--line);
-    border-radius: 6px;
+    border-radius: 5px;
     outline: none;
     cursor: pointer;
   }
+  /* Mini-calendário */
+  .mini-cal {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .mini-cal-ano-sel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    background: var(--bg-card, rgba(255,255,255,0.04));
+    border: 1px solid var(--line);
+  }
+  .mini-cal-ano-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    user-select: none;
+  }
+  .mini-cal-ano-label:hover { color: var(--gold); }
+  .mini-cal-ano-label.ativo { color: var(--gold-dark, #8a6d3b); }
+  .mini-cal-ano-total {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-faint);
+  }
+  .mini-cal-chevron {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 3px;
+    user-select: none;
+    transition: color 0.12s;
+  }
+  .mini-cal-chevron:hover { color: var(--ink); }
+  .mini-cal-outros {
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    padding: 2px 6px 4px;
+  }
+  .mini-cal-outros.aberto { display: flex; }
+  .mini-cal-outro-ano {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.12s;
+  }
+  .mini-cal-outro-ano:hover { background: var(--line); color: var(--ink); }
+  .mini-cal-outro-ano .mini-cal-ano-total { font-size: 8px; }
+  .mini-cal-meses {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .mini-cal-mes {
+    position: relative;
+    padding: 4px 2px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10px;
+    text-align: center;
+    color: var(--ink-faint);
+    border-radius: 4px;
+    cursor: default;
+    user-select: none;
+  }
+  .mini-cal-mes.tem-obras {
+    color: var(--ink);
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .mini-cal-mes.tem-obras:hover {
+    background: var(--line);
+  }
+  .mini-cal-mes.ativo {
+    background: var(--gold, #c4a77d);
+    color: #fff;
+    font-weight: 700;
+  }
+  .mini-cal-mes .mini-cal-badge {
+    position: absolute;
+    top: -1px;
+    right: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    color: var(--ink-faint);
+    line-height: 1;
+  }
+  .mini-cal-mes.ativo .mini-cal-badge { color: rgba(255,255,255,0.7); }
+  .mini-cal-limpar {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10px;
+    color: var(--ink-faint);
+    text-align: center;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+  }
+  .mini-cal-limpar:hover { background: var(--line); color: var(--ink); }
+
   .sidebar-contador {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -226,6 +346,7 @@
   .classif-entrega_com_retrabalho { background: #fbe8d0; color: #7a4a10; }
   .classif-retrabalho_ativo { background: #f7e0e0; color: #8b2a2a; }
   .classif-em_execucao { background: #d8f0e0; color: #2d6c46; }
+  .classif-em_execucao_com_retrabalho { background: #fbe0c8; color: #8a4010; }
   .classif-aguardando_execucao { background: #fbf0d7; color: #8a6018; }
   .classif-pre_obra { background: #e6edf3; color: #335a76; }
   .classif-pausada { background: #f5ecd9; color: #6e4f1c; }
@@ -242,10 +363,81 @@
     letter-spacing: .16em; text-transform: uppercase; color: var(--gold);
     margin-bottom: 6px;
   }
+  .sidebar-item-faixa {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600;
+    color: #8a7a66; background: #f0ebe3; padding: 1px 5px; border-radius: 3px;
+    letter-spacing: .04em;
+  }
+
+  /* Benchmark comparativo no drawer */
+  .rep-benchmark {
+    background: #faf7f2; border: 1px solid #e8e0d4; border-radius: 6px;
+    padding: 14px 18px; margin-bottom: 20px;
+  }
+  .rep-benchmark-titulo {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: #8a7a66;
+    margin-bottom: 10px;
+  }
+  .rep-bench-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+  }
+  .rep-bench-item {
+    background: #fff; border: 1px solid #e8e0d4; border-radius: 4px;
+    padding: 8px 10px; text-align: center;
+  }
+  .rep-bench-item-label {
+    font-size: 9px; color: #8a7a66; text-transform: uppercase;
+    letter-spacing: .08em; margin-bottom: 4px;
+  }
+  .rep-bench-item-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700;
+    color: #3a3530;
+  }
+  .rep-bench-item-cmp {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; margin-top: 3px;
+  }
+  .bench-acima { color: #c0392b; }
+  .bench-abaixo { color: #1e8449; }
+  .bench-neutro { color: #8a7a66; }
+  .rep-bench-rodape {
+    font-size: 9px; color: #a09080; margin-top: 8px; text-align: right;
+  }
+
   .sidebar-item-numeros {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     color: var(--ink-soft);
+  }
+  .sidebar-item-friccao {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+  .fric-critico { background: #d4453010; color: #c0392b; border: 1px solid #c0392b40; }
+  .fric-alto { background: #e67e2210; color: #d35400; border: 1px solid #d3540040; }
+  .fric-medio { background: #f39c1210; color: #b8860b; border: 1px solid #b8860b40; }
+  .fric-baixo { background: #27ae6010; color: #1e8449; border: 1px solid #1e844940; }
+  .sidebar-item-alerta {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: #8e44ad10;
+    color: #8e44ad;
+    border: 1px solid #8e44ad30;
+    margin-left: 3px;
   }
   .sidebar-vazio {
     padding: 24px 12px;
@@ -2754,18 +2946,21 @@
   <div class="layout-2col">
     <aside class="sidebar">
       <div class="sidebar-cab">
-        <input type="text" id="search-obra" class="sidebar-search" placeholder="🔍 Buscar obra…" autocomplete="off" />
-        <select id="filtro-status" class="sidebar-select">
-          <option value="">Todos os status</option>
-        </select>
-        <select id="filtro-classif" class="sidebar-select">
-          <option value="">Todas classificações</option>
-        </select>
-        <select id="filtro-vista" class="sidebar-select">
-          <option value="todas">Todas as obras</option>
-          <option value="nao-vistas">Não vistas</option>
-          <option value="vistas">Já vistas</option>
-        </select>
+        <div id="mini-cal" class="mini-cal"></div>
+        <div class="sidebar-filtros-row">
+          <select id="filtro-status" class="sidebar-select">
+            <option value="">Status</option>
+          </select>
+          <select id="filtro-classif" class="sidebar-select">
+            <option value="">Classif.</option>
+          </select>
+          <select id="filtro-vista" class="sidebar-select">
+            <option value="todas">Vistas</option>
+            <option value="nao-vistas">N/vistas</option>
+            <option value="vistas">Vistas</option>
+          </select>
+        </div>
+        <input type="text" id="search-obra" class="sidebar-search" placeholder="Buscar obra…" autocomplete="off" />
         <div class="sidebar-contador" id="contador-obras">— obras</div>
       </div>
       <div class="sidebar-lista" id="obras-lista"></div>
@@ -3149,6 +3344,51 @@ function gerarNarrativaProsa(j){
   return paragrafos.map(p => `<p>${p}</p>`).join('');
 }
 
+function montarBenchmarkFaixa(j){
+  const b = j.benchmark_faixa;
+  if (!b || !b.faixa) return '';
+  const fx = b.faixa;
+  const cmp = b.comparativo || {};
+
+  function fmtRatio(r, inverted){
+    if (r == null) return '';
+    const pct = Math.round((r - 1) * 100);
+    if (Math.abs(pct) <= 10) return `<span class="bench-neutro">na mediana</span>`;
+    const acima = inverted ? pct < -10 : pct > 10;
+    const cls = acima ? 'bench-acima' : 'bench-abaixo';
+    const sinal = pct > 0 ? '+' : '';
+    return `<span class="${cls}">${sinal}${pct}%</span>`;
+  }
+
+  const nApls = (j.equipe || {}).aplicadores_telegram ? (j.equipe.aplicadores_telegram || []).length : 0;
+
+  const items = [];
+  if (j.tempo_execucao_dias && fx.exec_dias_mediana)
+    items.push({label: 'Execucao', val: j.tempo_execucao_dias + 'd', med: fx.exec_dias_mediana + 'd', ratio: cmp.exec_vs_mediana});
+  if (j.tempo_total_dias && fx.total_dias_mediana)
+    items.push({label: 'Jornada total', val: j.tempo_total_dias + 'd', med: fx.total_dias_mediana + 'd', ratio: cmp.total_vs_mediana});
+  if (j.tempo_hibernacao_dias && fx.hib_dias_mediana)
+    items.push({label: 'Hibernacao', val: j.tempo_hibernacao_dias + 'd', med: fx.hib_dias_mediana + 'd', ratio: cmp.hib_vs_mediana});
+  if (nApls > 0 && fx.n_aplicadores_mediana)
+    items.push({label: 'Aplicadores', val: nApls, med: fx.n_aplicadores_mediana, ratio: cmp.apls_vs_mediana, inverted: true});
+
+  if (!items.length) return '';
+
+  return `<div class="rep-benchmark">
+    <div class="rep-benchmark-titulo">Esta obra vs. faixa ${esc(fx.label)} (${fx.n_obras} obras)</div>
+    <div class="rep-bench-grid">
+      ${items.map(it => `
+        <div class="rep-bench-item">
+          <div class="rep-bench-item-label">${esc(it.label)}</div>
+          <div class="rep-bench-item-val">${it.val}</div>
+          <div class="rep-bench-item-cmp">${fmtRatio(it.ratio, it.inverted)} <small>med ${it.med}</small></div>
+        </div>
+      `).join('')}
+    </div>
+    ${fx.pct_retrabalho != null ? `<div class="rep-bench-rodape">Retrabalho na faixa: ${fx.pct_retrabalho}% · Produtividade: ${fx.m2_por_dia_mediana || '?'} m2/dia · ${fx.m2_por_aplicador_mediana || '?'} m2/aplicador</div>` : ''}
+  </div>`;
+}
+
 function montarRelatorioHTML(j){
   // Macro-etapas agregadas (replica lógica de classificarMacroEtapa)
   const macros = { PRE_OBRA: 0, EXECUCAO: 0, TRATATIVAS: 0, RETRABALHO: 0, POS_OBRA: 0, HIBERNACAO: 0 };
@@ -3299,6 +3539,8 @@ function montarRelatorioHTML(j){
 
     ${veredito ? `<div class="rep-veredito"><div class="rep-veredito-label">Veredito</div>${esc(veredito)}</div>` : ''}
 
+    ${montarBenchmarkFaixa(j)}
+
     <div class="rep-narrativa">${gerarNarrativaProsa(j)}</div>
 
     ${donutHtml ? `<div class="rep-secao">
@@ -3385,6 +3627,7 @@ const LABELS_CLASSIF = {
   entrega_com_retrabalho: 'Com retrabalho',
   retrabalho_ativo: 'Retrabalho ativo',
   em_execucao: 'Em execucao',
+  em_execucao_com_retrabalho: 'Exec. c/ retrabalho',
   aguardando_execucao: 'Aguardando exec.',
   pre_obra: 'Pre-obra',
   pausada: 'Pausada',
@@ -3431,6 +3674,7 @@ async function carregar(){
   document.getElementById('stamp').textContent = 'gerado ' + fmtData(DADOS.gerado_em.slice(0,10)) + ' · ' + DADOS.gerado_em.slice(11,16);
   popularFiltroStatus();
   popularFiltroClassif();
+  popularFiltroPeriodo();
   renderListaSidebar();
   // Listeners de busca/filtro
   document.getElementById('search-obra').addEventListener('input', renderListaSidebar);
@@ -3472,6 +3716,133 @@ function popularFiltroClassif(){
   });
 }
 
+function dataInicioObra(o){
+  return o.data_exec_confirmada || o.data_exec_prevista || o.data_criacao_painel || null;
+}
+
+function mesAnoDeData(d){
+  if (!d) return null;
+  return d.slice(0, 7);
+}
+
+const MESES_LABEL = {
+  '01':'Jan','02':'Fev','03':'Mar','04':'Abr','05':'Mai','06':'Jun',
+  '07':'Jul','08':'Ago','09':'Set','10':'Out','11':'Nov','12':'Dez'
+};
+
+function labelMesAno(ma){
+  if (!ma) return '—';
+  const [ano, mes] = ma.split('-');
+  return `${MESES_LABEL[mes] || mes}/${ano}`;
+}
+
+let PERIODO_SEL = '';
+let ANO_ATIVO = '';
+let ANOS_ABERTO = false;
+
+function popularFiltroPeriodo(){
+  const container = document.getElementById('mini-cal');
+  const counts = {};
+  (DADOS.obras || []).forEach(o => {
+    const ma = mesAnoDeData(dataInicioObra(o));
+    if (ma) counts[ma] = (counts[ma] || 0) + 1;
+  });
+
+  const anos = {};
+  Object.keys(counts).forEach(ma => {
+    const [ano] = ma.split('-');
+    if (!anos[ano]) anos[ano] = {};
+    anos[ano][ma] = counts[ma];
+  });
+
+  const anosOrdenados = Object.keys(anos).sort().reverse();
+  if (!ANO_ATIVO || !anos[ANO_ATIVO]) ANO_ATIVO = anosOrdenados[0] || '';
+  if (!ANO_ATIVO) { container.innerHTML = ''; return; }
+
+  const MESES_GRID = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+  const totalAnoAtivo = Object.values(anos[ANO_ATIVO] || {}).reduce((a,b) => a+b, 0);
+  const anoFiltrado = PERIODO_SEL === ANO_ATIVO;
+  const chevron = ANOS_ABERTO ? '▾' : '▸';
+
+  let html = '';
+  html += `<div class="mini-cal-ano-sel">`;
+  html += `<span class="mini-cal-ano-label${anoFiltrado ? ' ativo' : ''}" id="mc-ano-click">${ANO_ATIVO}</span>`;
+  html += `<span class="mini-cal-ano-total">${totalAnoAtivo} obras</span>`;
+  if (anosOrdenados.length > 1) {
+    html += `<span class="mini-cal-chevron" id="mc-chevron">${chevron}</span>`;
+  }
+  html += `</div>`;
+
+  if (anosOrdenados.length > 1) {
+    html += `<div class="mini-cal-outros${ANOS_ABERTO ? ' aberto' : ''}" id="mc-outros">`;
+    anosOrdenados.filter(a => a !== ANO_ATIVO).forEach(ano => {
+      const total = Object.values(anos[ano]).reduce((a,b) => a+b, 0);
+      html += `<div class="mini-cal-outro-ano" data-ano="${ano}">${ano} <span class="mini-cal-ano-total">${total}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<div class="mini-cal-meses">`;
+  MESES_GRID.forEach(m => {
+    const ma = `${ANO_ATIVO}-${m}`;
+    const n = counts[ma] || 0;
+    const tem = n > 0;
+    const ativo = PERIODO_SEL === ma;
+    html += `<div class="mini-cal-mes${tem ? ' tem-obras' : ''}${ativo ? ' ativo' : ''}" data-ma="${ma}">`;
+    html += MESES_LABEL[m];
+    if (tem) html += `<span class="mini-cal-badge">${n}</span>`;
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  if (PERIODO_SEL) {
+    html += `<div class="mini-cal-limpar" id="limpar-periodo">Limpar filtro</div>`;
+  }
+
+  container.innerHTML = html;
+
+  document.getElementById('mc-ano-click').addEventListener('click', () => {
+    PERIODO_SEL = PERIODO_SEL === ANO_ATIVO ? '' : ANO_ATIVO;
+    popularFiltroPeriodo();
+    renderListaSidebar();
+  });
+
+  const chevronEl = document.getElementById('mc-chevron');
+  if (chevronEl) {
+    chevronEl.addEventListener('click', () => {
+      ANOS_ABERTO = !ANOS_ABERTO;
+      popularFiltroPeriodo();
+    });
+  }
+
+  container.querySelectorAll('.mini-cal-outro-ano').forEach(el => {
+    el.addEventListener('click', () => {
+      ANO_ATIVO = el.dataset.ano;
+      ANOS_ABERTO = false;
+      PERIODO_SEL = '';
+      popularFiltroPeriodo();
+      renderListaSidebar();
+    });
+  });
+
+  container.querySelectorAll('.mini-cal-mes.tem-obras').forEach(el => {
+    el.addEventListener('click', () => {
+      PERIODO_SEL = PERIODO_SEL === el.dataset.ma ? '' : el.dataset.ma;
+      popularFiltroPeriodo();
+      renderListaSidebar();
+    });
+  });
+
+  const limpar = document.getElementById('limpar-periodo');
+  if (limpar) {
+    limpar.addEventListener('click', () => {
+      PERIODO_SEL = '';
+      popularFiltroPeriodo();
+      renderListaSidebar();
+    });
+  }
+}
+
 function formatarStatus(s){
   if (!s || s === '—') return '—';
   return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -3483,6 +3854,7 @@ function renderListaSidebar(){
   const busca = (document.getElementById('search-obra').value || '').trim().toLowerCase();
   const status = document.getElementById('filtro-status').value || '';
   const classif = document.getElementById('filtro-classif').value || '';
+  const periodo = PERIODO_SEL || '';
   const filtroVista = document.getElementById('filtro-vista').value || 'todas';
   const vistas = getObrasVistas();
 
@@ -3490,6 +3862,14 @@ function renderListaSidebar(){
   let filtradas = (DADOS.obras || []).filter(o => {
     if (status && o.status !== status) return false;
     if (classif && (o.classificacao || '—') !== classif) return false;
+    if (periodo) {
+      const ma = mesAnoDeData(dataInicioObra(o)) || '—';
+      if (periodo.length === 4) {
+        if (!ma.startsWith(periodo)) return false;
+      } else {
+        if (ma !== periodo) return false;
+      }
+    }
     if (busca && !(o.cliente || '').toLowerCase().includes(busca)) return false;
     if (filtroVista === 'vistas' && !vistas.has(o.obra_id)) return false;
     if (filtroVista === 'nao-vistas' && vistas.has(o.obra_id)) return false;
@@ -3519,12 +3899,18 @@ function renderListaSidebar(){
     const cls_vista = vistas.has(o.obra_id) ? ' vista' : '';
     const classif = o.classificacao || '';
     const classifLabel = LABELS_CLASSIF[classif] || '';
+    const fricNivel = (o.friccao && o.friccao.nivel && o.friccao.nivel !== 'nenhum') ? o.friccao.nivel : '';
+    const fricHtml = fricNivel ? `<span class="sidebar-item-friccao fric-${esc(fricNivel)}">${esc(fricNivel)}</span>` : '';
+    const alertas = o.alertas || [];
+    const alertHtml = alertas.map(a => `<span class="sidebar-item-alerta">${esc(a.replace(/_/g,' '))}</span>`).join('');
+
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
-      <div class="sidebar-item-cli">${esc(o.cliente)}</div>
+      <div class="sidebar-item-cli">${esc(o.cliente)}${fricHtml}${alertHtml}</div>
       <div class="sidebar-item-meta">
         <span class="sidebar-item-status s-${esc(status)}">${esc(formatarStatus(status))}</span>
         ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}
-        <span class="sidebar-item-numeros">${nMarcos}m · ${nOcorr}occ · ${nMsgs} msgs</span>
+        ${o.faixa_metragem ? `<span class="sidebar-item-faixa">${esc(o.faixa_metragem)}${o.metragem ? ' · ' + Math.round(o.metragem) + 'm²' : ''}</span>` : ''}
+        <span class="sidebar-item-numeros">${nMarcos}m · ${nOcorr}occ · ${nMsgs} msgs${dataInicioObra(o) ? ` · ${fmtData(dataInicioObra(o))}` : ''}</span>
       </div>
     </div>`;
   }).join('');

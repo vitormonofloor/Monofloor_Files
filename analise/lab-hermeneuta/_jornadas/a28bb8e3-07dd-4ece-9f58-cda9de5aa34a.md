@@ -15,7 +15,7 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 | 1ª msg Telegram | 2025-06-04 |
 | Execução prevista | 2026-05-26 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **344 dias** |
+| **Tempo total contrato → entrega** | **60 dias** |
 | **Tempo de execução real** | **8 dias** |
 | **Tempo em hibernação** | **139 dias** |
 | **Classificação** | **Aguardando execução** |
@@ -84,8 +84,8 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 
 **Consumo registrado em msgs (3):**
 
-- 2026-02-11 · 29 kit · _Julio_
 - 2026-02-11 · 29 kit · _aplicador | Julio_
+- 2026-02-11 · 29 kit · _Julio_
 - 2026-03-12 · 1 balde · _Julio_
 
 ## ⚠ Pontos de fricção
@@ -112,5 +112,4 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 139d praticamente parada
-- execucao_concentrada · só 2.3% do tempo total (8d de 344d)
 - alta_friccao · 20 ocorrências formais registradas

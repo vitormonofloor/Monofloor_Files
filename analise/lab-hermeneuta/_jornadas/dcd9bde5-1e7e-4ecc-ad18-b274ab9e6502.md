@@ -15,7 +15,7 @@ Rua Antonia da Silva Mendes de Campos, nº 71, Res Jatobas, Piracicaba/SP, CEP 1
 | 1ª msg Telegram | 2025-05-22 |
 | Execução prevista | None |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **348 dias** |
+| **Tempo total contrato → entrega** | **52 dias** |
 | **Tempo de execução real** | **None dias** |
 | **Tempo em hibernação** | **339 dias** |
 | **Classificação** | **Pré-obra** |

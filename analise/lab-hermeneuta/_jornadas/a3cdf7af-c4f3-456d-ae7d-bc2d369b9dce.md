@@ -15,7 +15,7 @@ Rua Benedito Nardez, nº 1061, 0, Chácara Bela Vista, Campinas/SP, CEP 13092-87
 | 1ª msg Telegram | 2025-07-23 |
 | Execução prevista | 2026-07-22 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **286 dias** |
+| **Tempo total contrato → entrega** | **52 dias** |
 | **Tempo de execução real** | **None dias** |
 | **Tempo em hibernação** | **255 dias** |
 | **Classificação** | **Pré-obra** |

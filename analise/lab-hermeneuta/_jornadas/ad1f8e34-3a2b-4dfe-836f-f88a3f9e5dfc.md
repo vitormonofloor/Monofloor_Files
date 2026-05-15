@@ -15,7 +15,7 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 | 1ª msg Telegram | 2025-10-30 |
 | Execução prevista | 2026-06-09 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **187 dias** |
+| **Tempo total contrato → entrega** | **62 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Classificação** | **Aguardando execução** |
 
@@ -53,7 +53,7 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 |---|---|---|---:|---:|
 | **Planejamento + pré-execução** | 2025-10-30 | 2026-01-20 | 83d | 9 |
 | **Execução** | 2026-01-21 | 2026-01-21 | 1d | 11 |
-| **Pós-execução** | 2026-01-22 | 2026-05-05 | 104d | 24 |
+| **Pós-execução** | 2026-01-22 | 2026-05-15 | 114d | 25 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -81,10 +81,11 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 - **2026-04-15** [media] atraso_entrega · _Início 06/05 provavelmente postergado_
 - **2026-04-16** [media] atraso_entrega · _Entrada adiada para 09/06 por marcenaria_
 
-**Sinais de problema nas mensagens (1):**
+**Sinais de problema nas mensagens (2):**
 
 - **2026-04-01** · _🎬 Transcrição_: "🎬 Transcrição de Vídeo:  "isso tá acontecendo com todos não consigo tirar essa tampa fazer uma baita força depois é muito difícil colocar a "
+- **2026-05-15** · _🎙️ Transcrição_: "🎙️ Transcrição de Áudio:  "Oi, Maiara, boa tarde. Superobrigada pelo retorno. Sobre a visita, podemos marcar dia 1 do 6, sim, às 10? Está co"
 
 ## 🔍 Padrões observados
 
-- execucao_concentrada · só 0.5% do tempo total (1d de 187d)
+- execucao_concentrada · só 1.6% do tempo total (1d de 62d)

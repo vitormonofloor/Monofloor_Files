@@ -9,13 +9,13 @@
 | Cliente | VINICIUS MACHADO ARIAS (LUIS GUILHERME ANDRADE DE ALVARENGA) |
 | Endereço | MOGI DAS CRUZES/SP
 Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mogi das Cruzes/SP, CEP 08773-330 |
-| Metragem | 88.60 m² |
+| Metragem | 88.6 m² |
 | Produto | LILIT, STELION |
 | Cor | Sasha |
 | 1ª msg Telegram | 2025-07-30 |
 | Execução prevista | 2026-06-08 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **279 dias** |
+| **Tempo total contrato → entrega** | **52 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **105 dias** |
 | **Classificação** | **Aguardando execução** |
@@ -88,4 +88,4 @@ Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mog
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 105d praticamente parada
-- execucao_concentrada · só 0.4% do tempo total (1d de 279d)
+- execucao_concentrada · só 1.9% do tempo total (1d de 52d)

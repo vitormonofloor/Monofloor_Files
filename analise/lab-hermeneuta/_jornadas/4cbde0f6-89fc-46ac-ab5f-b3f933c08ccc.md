@@ -15,7 +15,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | 1ª msg Telegram | 2025-10-21 |
 | Execução prevista | 2026-06-15 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **206 dias** |
+| **Tempo total contrato → entrega** | **62 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **102 dias** |
 | **Classificação** | **Aguardando execução** |
@@ -93,4 +93,4 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 102d praticamente parada
-- execucao_concentrada · só 0.5% do tempo total (1d de 206d)
+- execucao_concentrada · só 1.6% do tempo total (1d de 62d)

@@ -9,13 +9,13 @@
 | Cliente | CALLEBE ARAUJO DE MEDEIROS MENDES |
 | Endereço | BRASILIA/DF
 SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 |
-| Metragem | 170 m² |
+| Metragem | 170.0 m² |
 | Produto | — |
 | Cor | — |
 | 1ª msg Telegram | 2025-12-16 |
 | Execução prevista | None |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **147 dias** |
+| **Tempo total contrato → entrega** | **59 dias** |
 | **Tempo de execução real** | **None dias** |
 | **Tempo em hibernação** | **70 dias** |
 | **Classificação** | **Pré-obra** |

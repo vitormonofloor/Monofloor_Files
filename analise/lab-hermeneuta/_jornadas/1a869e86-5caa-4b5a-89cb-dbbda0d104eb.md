@@ -15,11 +15,11 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 | 1ª msg Telegram | 2025-10-30 |
 | Execução prevista | 2026-05-25 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **196 dias** |
+| **Tempo total contrato → entrega** | **60 dias** |
 | **Tempo de execução real** | **8 dias** |
 | **Classificação** | **Retrabalho ativo** |
 
-> **Obra com retrabalho ativo, 196 dias desde o início. 3 ocorrência(s) crítica(s): Autonivelante Quartzolit utilizado - risco alto de patologias.**
+> **Obra com retrabalho ativo, 60 dias desde o início. 3 ocorrência(s) crítica(s): Autonivelante Quartzolit utilizado - risco alto de patologias.**
 
 ## 👥 Elenco
 
@@ -58,7 +58,7 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 ## 📍 Marcos detectados nas mensagens
 
 - **2025-11-03 · contrato_assinado** · _equipe | Jonathan_: "Contrato assinado. [Thaísa](tg://user?id=6619338559)"
-- **2026-02-20 · material_produzido** · _Operações | Monofloor_: "@MichaelMlima Boa tarde, temos material em obra para realizar os reparos na área interna?"
+- **2026-02-20 · material_produzido** · _Vanessa Monofloor_: "@MichaelMlima Boa tarde, temos material em obra para realizar os reparos na área interna?"
 - **2026-04-02 · vt_realizada** · _Wesley | Juliana._: "Bom dia! Nathan Temos os vídeos da visita realizada?"
 
 ## 📦 Material
@@ -118,5 +118,4 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 
 ## 🔍 Padrões observados
 
-- execucao_concentrada · só 4.1% do tempo total (8d de 196d)
 - alta_friccao · 11 ocorrências formais registradas
