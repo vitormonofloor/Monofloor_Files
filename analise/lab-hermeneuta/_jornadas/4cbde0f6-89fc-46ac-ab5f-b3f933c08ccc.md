@@ -1,6 +1,6 @@
 # 🎬 JORNADA · APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
 
 ## 📋 Ficha técnica
 
@@ -15,7 +15,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | 1ª msg Telegram | 2025-10-21 |
 | Execução prevista | 2026-06-15 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **196 dias** |
+| **Tempo total contrato → entrega** | **206 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **102 dias** |
 | **Classificação** | **Aguardando execução** |
@@ -60,7 +60,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | **Hibernação #3** | 2026-03-05 | 2026-04-09 | 35d | 0 |
 | **Despertar e pré-execução** | 2026-04-09 | 2026-04-09 | 1d | 0 |
 | **Execução** | 2026-01-15 | 2026-01-15 | 1d | 18 |
-| **Pós-execução** | 2026-01-16 | 2026-05-05 | 110d | 34 |
+| **Pós-execução** | 2026-01-16 | 2026-05-15 | 120d | 35 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -68,7 +68,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 - **2025-11-13 · escopo_aprovado** · _Gabi | Monofloor_: "♦️Escopo aprovado | Assinatura do contrato aditivo pendente♦️"
 - **2025-11-27 · obra_postergada** · _atendimento | Pedro_: "🚨Obra postergada"
 - **2026-01-16 · relatorio_vt_qualidade** · _equipe | Luana Atendimento_: "APARTAMENTO 805   Olá, pessoal. Bom dia! Tudo bem?   Recebemos as imagens e informações referentes à nossa última visita ao projet"
-- **2026-01-21 · obra_postergada** · _Pedro | Mayara_: "Para registro: após contato com os responsáveis pela obra nos foi passado que a nossa entrada será postergada.  Na próxima semana "
+- **2026-01-21 · obra_postergada** · _atendimento | Pedro_: "Para registro: após contato com os responsáveis pela obra nos foi passado que a nossa entrada será postergada.  Na próxima semana "
 
 ## 📦 Material
 
@@ -77,10 +77,10 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | Campo | Valor |
 |---|---|
 | Total m² | 125.87 |
-| Stelion m² | 137.51 |
-| Lilit m² | 57.14 |
-| Ambientes | 18 |
-| Itens (linhas) | 33 |
+| Stelion m² | 143.81 |
+| Lilit m² | 59.87 |
+| Ambientes | 19 |
+| Itens (linhas) | 36 |
 
 ## ⚠ Pontos de fricção
 
@@ -93,4 +93,4 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 102d praticamente parada
-- execucao_concentrada · só 0.5% do tempo total (1d de 196d)
+- execucao_concentrada · só 0.5% do tempo total (1d de 206d)

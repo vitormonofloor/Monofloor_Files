@@ -1,6 +1,6 @@
 # 🎬 JORNADA · VINICIUS MACHADO ARIAS (LUIS GUILHERME ANDRADE DE ALVARENGA)
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-14
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
 
 ## 📋 Ficha técnica
 
