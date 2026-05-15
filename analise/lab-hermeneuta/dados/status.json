@@ -1,23 +1,21 @@
 {
-  "geral": "crit",
-  "checked_at": "2026-05-13T17:59:03Z",
+  "geral": "warn",
+  "checked_at": "2026-05-14T23:18:25Z",
   "contagem": {
-    "ok": 3,
-    "warn": 4,
-    "crit": 3
+    "ok": 9,
+    "warn": 1,
+    "crit": 0
   },
   "checks": [
     {
       "nome": "Schema do JSON principal",
-      "status": "crit",
-      "detalhe": "discordancias-v3.json não carregou",
-      "sugestao": "Restaurar de dados/backups/"
+      "status": "ok",
+      "detalhe": "230 obras válidas"
     },
     {
       "nome": "Completude das obras",
-      "status": "crit",
-      "detalhe": "0 obras no JSON",
-      "sugestao": "Rodar pipeline IA"
+      "status": "ok",
+      "detalhe": "230 obras com todos campos"
     },
     {
       "nome": "Sessão Telegram",
@@ -26,31 +24,29 @@
     },
     {
       "nome": "Frescor da varredura",
-      "status": "warn",
-      "detalhe": "sem timestamp de varredura",
-      "sugestao": "Rodar varredura.py"
+      "status": "ok",
+      "detalhe": "última varredura há 0.0h"
     },
     {
       "nome": "KIRA WhatsApp",
-      "status": "warn",
-      "detalhe": "nenhuma obra tem dados do KIRA",
-      "sugestao": "Verificar refresh.sh do dashboard principal"
+      "status": "ok",
+      "detalhe": "tag KIRA mais recente há 2d"
     },
     {
       "nome": "Lock de execução",
-      "status": "ok",
-      "detalhe": "sem lock pendente"
+      "status": "warn",
+      "detalhe": "lock fantasma · PID 18340 morto",
+      "sugestao": "Próxima varredura limpa automaticamente"
     },
     {
       "nome": "Backups disponíveis",
-      "status": "warn",
-      "detalhe": "14 backups · último há 16.4h"
+      "status": "ok",
+      "detalhe": "14 backups · mais recente 0.5h"
     },
     {
       "nome": "Drift de quantidade de obras",
-      "status": "crit",
-      "detalhe": "0 obras · REGRESSÃO grave -230 (100%) vs pico 230",
-      "sugestao": "Pipeline pode estar quebrado · investigar URGENTE"
+      "status": "ok",
+      "detalhe": "230 obras · estável vs pico recente"
     },
     {
       "nome": "Erros de pipeline (flag)",
@@ -59,9 +55,8 @@
     },
     {
       "nome": "Saúde do pipeline",
-      "status": "warn",
-      "detalhe": "2 falha(s) no log recente",
-      "sugestao": "Conferir varredura.log"
+      "status": "ok",
+      "detalhe": "sem falhas nas últimas runs"
     }
   ]
 }

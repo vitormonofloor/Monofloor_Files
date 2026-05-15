@@ -540,7 +540,7 @@ MARCOS_EXECUCAO = [
     ("aplicacao_primer",   re.compile(r"\b(aplica[çc][aã]o\s+(de\s+)?primer|primer\s+aplicad|passamos?\s+.*primer|aplicamos?\s+.*primer)\b", re.IGNORECASE)),
     ("preparacao",         re.compile(r"\b(limpeza|prote[çc][aã]o\s+(das\s+áreas|do\s+ambiente)|requadro|substitui[çc][aã]o\s+de\s+fitas|troca\s+(de\s+)?fitas)", re.IGNORECASE)),
     ("diario_obra",        re.compile(r"\b(di[áa]rio\s+de\s+obra|dia\s+\d{1,2}[/\-]\d{1,2}\b)", re.IGNORECASE)),
-    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando|bom\s+dia[,.]?\s*(pessoal|equipe|galera)?[,.]?\s*(estamos|cheg|iniciar|em\s+obra)|chegarei\s+[àa]s?\s+\d)", re.IGNORECASE)),
+    ("inicio_dia",         re.compile(r"\b(equipe\s+em\s+obra|chegando\s+agora|chegamos|estamos\s+chegando|estou\s+(retornando|chegando|na\s+obra|indo)|j[áa]\s+est(ou|amos)\s+(na\s+obra|em\s+obra|chegando)|retornando\s+(pra|para|à)\s+obra|retorno\s+hoje|bom\s+dia[,.]?\s*(pessoal|equipe|galera)?[,.]?\s*(estamos|cheg|iniciar|em\s+obra)|chegarei\s+[àa]s?\s+\d)", re.IGNORECASE)),
     ("fim_dia",            re.compile(r"\b(saindo\s+(de|da)\s+obra|equipe\s+saindo|acabamos\s+(agora|hoje)|encerrando\s+o\s+dia|finalizamos\s+o\s+dia)", re.IGNORECASE)),
 ]
 
@@ -1320,12 +1320,16 @@ def detectar_marcos_execucao(msgs_ordenadas, cluster_inicio, cluster_fim, aplica
         # Detecta marcos técnicos
         marco_detectado = None
         for tipo, pad in MARCOS_EXECUCAO:
-            if pad.search(texto):
+            match = pad.search(texto)
+            if match:
                 # inicio_dia só vale pra aplicador
                 if tipo == "inicio_dia" and not eh_aplicador:
                     continue
                 # inicio_dia não faz sentido retroativo
                 if tipo == "inicio_dia" and retroativa:
+                    continue
+                # inicio_dia descarta se "amanhã" aparece antes do match (fala do futuro, não do agora)
+                if tipo == "inicio_dia" and re.search(r"\bamanh[aã]\b", texto[:match.start()], re.IGNORECASE):
                     continue
                 chave = (data_efetiva, tipo)
                 if chave in visto:
