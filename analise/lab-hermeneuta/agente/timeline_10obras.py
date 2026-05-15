@@ -70,6 +70,37 @@ STATUS_VIVOS_QUALIDADE = {
 # Workers paralelos pra ThreadPoolExecutor · bom equilíbrio I/O × API
 WORKERS = 6
 
+# Status que indicam retorno definitivo
+STATUS_RETORNO = {'reparo', 'marcas_rolo_cera'}
+
+# Nome do card indica fase posterior
+PAD_NOME_RETORNO = re.compile(
+    r"(2[ªa°]|3[ªa°]|segunda|terceira)\s*(fase|etapa)"
+    r"|(?:^|\s)-?\s*(?:area|área)\s+(externa|interna|[2-9]|II|III)",
+    re.IGNORECASE)
+
+# Sinais no Telegram de que o LOCAL já teve aplicação Monofloor antes
+SINAIS_RETORNO_TELEGRAM = [
+    (re.compile(r"(obra|aplica[çc][ãa]o|execu[çc][ãa]o|piso|verniz)\s+(anterior|existente|antig[oa])", re.IGNORECASE),
+     "referência a trabalho anterior"),
+    (re.compile(r"j[áa]\s+(aplicamos|executamos|fizemos|passamos|entregamos)", re.IGNORECASE),
+     "referência a execução prévia"),
+    (re.compile(r"(acionou?|acionar|ativou?)\s+garantia|garantia\s+(acionada|do\s+piso|ativada)", re.IGNORECASE),
+     "acionamento de garantia"),
+    (re.compile(r"p[óo]s[\s\-]?vendas?\s+acionad", re.IGNORECASE),
+     "pós-vendas acionado"),
+    (re.compile(r"retorno\s+(para|pra)\s+(reparo|garantia|corre[çc][ãa]o|corrigir|resolver)", re.IGNORECASE),
+     "retorno para reparo/garantia"),
+    (re.compile(r"(na|da)\s+(primeira|1[ªa°])\s*(fase|etapa|vez|aplica)", re.IGNORECASE),
+     "referência a primeira fase"),
+    (re.compile(r"(piso|verniz)\s+(descascou|soltou|soltando|descascando|craquel|estufou|estufando|levantou|levantando)", re.IGNORECASE),
+     "defeito de aplicação existente"),
+    (re.compile(r"quando\s+(fizemos|aplicamos|passamos|executamos)", re.IGNORECASE),
+     "referência a execução prévia"),
+    (re.compile(r"(refazer|retocar|reaplicar)\s+.{0,20}(que\s+j[áa]|anterior|existente|antigo)", re.IGNORECASE),
+     "refazer trabalho anterior"),
+]
+
 # ============================================================
 # Regex calibradas (copiadas de gerar_jornada.py · evita import)
 # ============================================================
@@ -539,44 +570,84 @@ SUBTIPOS_REPROVACAO = [
         r"continuidade\s+(na|da)\s+reaplica|"
         r"dar\s+continuidade|"
         r"cliente\s+solicitou\s+(a\s+)?data\s+(do\s+)?dia|"
-        r"data\s+(do\s+)?dia\s+\d+/\d+\s+para\s+(realização|reaplica)",
-        re.IGNORECASE)),
-    ("decisao_cliente",      re.compile(
-        r"cliente\s+(optou|definiu|decidiu|escolheu|solicitou|pediu|reprovou|recusou|n[ãa]o\s+aprov)|"
-        r"(ela|ele)\s+pediu\s+(dia\s+)?\d+/\d+\s+(a\s+|o\s+)?reaplica|"
-        r"(\w+)\s+(definiu|optou\s+pela)\s+(fazer\s+)?(uma\s+)?(faixa\s+de\s+|reaplica)",
-        re.IGNORECASE)),
-    ("escopo_definido",      re.compile(
-        r"escopo\s+(para|da|de)\s+reaplica|"
-        r"iremos\s+reaplicar|"
-        r"essas?\s+paredes?\s+para\s+reaplicar|"
-        r"reaplica[çc][aã]o\s+(do|da|dos|das|na)\s+(piso\s+total|completa|área|sala|parede|tampos?|bancadas?)|"
-        r"retornar\s+para\s+reaplicar|"
-        r"realizaremos\s+(apenas\s+)?(a\s+)?reaplica",
+        r"data\s+(do\s+)?dia\s+\d+/\d+\s+para\s+(realização|reaplica)|"
+        r"retorno\s+em\s+obra|nosso\s+retorno\s+em\s+obra|"
+        r"retornamos\s+amanh[ãa]|retornar(emos)?\s+no\s+dia|"
+        r"data\s+agendada\s+para\s+o\s+retorno|"
+        r"tudo\s+certo\s+para\s+(nosso\s+)?retorno",
         re.IGNORECASE)),
     ("defeito_relatado",     re.compile(
         r"marc(a|ou)\w*\s+(o\s+)?piso|"
         r"piso\s+(marcad|com\s+marca)|"
-        r"trinca|fissura|rachadura|descolamento|"
+        r"trinca|fissura|rachadura|descolamento|desplac\w+|"
         r"cliente\s+(est[aá]\s+)?question(a|ando)|"
         r"diferen[çc]a\s+de\s+tonalidade|"
         r"tendo\s+problema|"
-        r"marcas?\s+de\s+rolo",
+        r"marcas?\s+de\s+rolo|"
+        r"problema\s+de\s+cor|"
+        r"infiltra[çc][aã]o|vazamento|vazad[ao]\s+de\s+[áa]gua|"
+        r"danos?\s+significativ|"
+        r"piso\s+(solto|est[áa]\s+solto)|material\s+(que\s+)?(est[aá]\s+)?solto|"
+        r"manchad[ao]|foi\s+manchad|"
+        r"bolhas?\s+(pr[oó]xim|no\s+piso|na\s+parede)|"
+        r"deformidade",
+        re.IGNORECASE)),
+    ("decisao_cliente",      re.compile(
+        r"cliente\s+(optou|definiu|decidiu|escolheu|solicitou|pediu|reprovou|recusou|n[ãa]o\s+aprov)|"
+        r"(ela|ele)\s+pediu\s+(dia\s+)?\d+/\d+\s+(a\s+|o\s+)?reaplica|"
+        r"(\w+)\s+(definiu|optou\s+pela)\s+(fazer\s+)?(uma\s+)?(faixa\s+de\s+|reaplica)|"
+        r"cliente\s+n[ãa]o\s+vai\s+querer|"
+        r"(ela|ele)\s+(n[ãa]o\s+)?(quer|quis)\s+reaplicar|"
+        r"ela\s+n[aã]o\s+ira\s+reaplicar",
         re.IGNORECASE)),
     ("proposta_tecnica",     re.compile(
         r"ideal\s+(é|eh|seria)\s+reaplicar|"
         r"vai\s+(ter\s+que|precisar)\s+(refazer|reaplicar)|"
         r"tem\s+que\s+refazer|"
-        r"precisa\s+reaplicar|"
-        r"teremos\s+que\s+reaplicar|"
+        r"precisa\s+reaplicar|precisa(mos)?\s+reaplicar|"
+        r"teremos\s+que\s+reaplicar|temos\s+que\s+reaplicar|"
+        r"vamos\s+ter\s+que\s+reaplicar|"
         r"acredito\s+que.*(ajuste|resolve)|"
         r"alguns\s+ajustes\s+(j[áa]\s+)?resolve|"
-        r"removedor\s+de\s+cera",
+        r"removedor\s+de\s+cera|"
+        r"lixar\s+(e\s+|pra\s+)?reaplicar|"
+        r"remover\s+(e\s+|pra\s+)?reaplicar|remover\s+todo\s+(o\s+)?material|"
+        r"ser[áa]\s+necess[áa]rio\s+reaplicar|"
+        r"aqui\s+(vamos\s+)?ter\s+que\s+reaplicar|"
+        r"ter[áa]\s+que\s+reaplicar",
+        re.IGNORECASE)),
+    ("escopo_definido",      re.compile(
+        r"escopo\s+(para|da|de)\s+reaplica|"
+        r"iremos\s+reaplicar|"
+        r"essas?\s+paredes?\s+para\s+reaplicar|"
+        r"reaplica[çc][aã]o\s+(do|da|dos|das|na|de)\b|"
+        r"retornar\s+para\s+reaplicar|"
+        r"realizaremos\s+(apenas\s+)?(a\s+)?reaplica|"
+        r"vamos\s+reaplicar|"
+        r"(?:áreas?|metragens?)\s+(?:que\s+)?vamos\s+reaplicar|"
+        r"(?:piso|parede|bancada|teto|verniz|rodap[ée])\s+(?:para|pra)\s+reaplicar|"
+        r"para\s+(?:poder\s+)?reaplicar|"
+        r"quer\s+reaplicar|"
+        r"(?:quando|onde)\s+vamos\s+reaplicar|"
+        r"conseguimos\s+reaplicar|"
+        r"(?:material|baldes?)\s+(?:para|pra)\s+reaplicar|"
+        r"temos\s+material\s+para\s+reaplicar|"
+        r"reaplicar\s+(o\s+)?(verniz|piso|material|stelion|lilit|leona|parede|bancada|teto)|"
+        r"precisar\s+reaplicar|"
+        r"(?:reparo|reparos?)\s+(?:a\s+ser\s+)?realizad|"
+        r"reaplicar\s+(?:essa?|aquela?|toda|mais\s+uma)|"
+        r"(?:lixar|retocar)\s+.{0,15}reaplicar",
+        re.IGNORECASE)),
+    ("registro_campo",       re.compile(
+        r"(?:s[oó]\s+)?para\s+registro\s*[:\.]|"
+        r"apenas\s+para\s+registro|"
+        r"s[oó]\s+para\s+registro",
         re.IGNORECASE)),
     ("solicitacao_admin",    re.compile(
         r"fazer\s+\d+\s+resumos?|"
         r"poderia\s+fazer\s+(\d+\s+)?resumos?|"
-        r"preciso\s+(de\s+|do\s+)?resumo",
+        r"preciso\s+(de\s+|do\s+)?resumo|"
+        r"poderia\s+fazer\s+o\s+resumo\s+para",
         re.IGNORECASE)),
     ("confirmacao_pendente", re.compile(
         r"\b[ée]\s+a\s+reaplica[çc][aã]o\s+(do|da)\b|"
@@ -592,6 +663,7 @@ LABELS_REPROVACAO = {
     "escopo_definido":      "Escopo de reaplicação",
     "defeito_relatado":     "Defeito relatado",
     "proposta_tecnica":     "Proposta técnica",
+    "registro_campo":       "Registro de campo",
     "solicitacao_admin":    "Solicitação admin",
     "confirmacao_pendente": "Confirmação pendente",
     "tratativa":            "Tratativa",
@@ -880,6 +952,111 @@ def detectar_ciclos(marcos):
     return {"pre_obra_marcos": pre_obra, "ciclos": ciclos, "gaps_entre": gaps}
 
 
+PAD_KIRA_RETORNO = re.compile(
+    r"reaplica[çc][ãa]o|reaplicar|reparo|retorno\s+(em|na|pra)\s+obra"
+    r"|garantia\s+acionad|p[óo]s[\s-]?vendas?\s+acionad"
+    r"|defeito|descascou|soltou|craquel|patologia",
+    re.IGNORECASE)
+
+PAD_KIRA_NOVA = re.compile(
+    r"grupo\s+criado|boas[\s-]?vindas|sem\s+atividade|ficha\s+obra"
+    r"|contrato|novo\s+projeto|obra\s+civil\s+n[ãa]o\s+iniciad"
+    r"|manual\s+manuten[çc][ãa]o\s+enviad|aditivo\s+enviad"
+    r"|vt\s+aferi[çc][ãa]o|material\s+ind[uú]stria|pr[eé][\s-]?obra",
+    re.IGNORECASE)
+
+
+def classificar_origem_obra(msgs, status, nome_cliente, marcos=None, tag_kira="", situacao_kira="", tem_reaplicacao=False):
+    """Classifica se a obra é 'nova' (do zero) ou 'retorno' (local já teve aplicação Monofloor).
+
+    Combina 6 fontes: status, nome, materiais (tipoSuperficie), ciclo nos marcos, msgs Telegram, campos Kira do Painel.
+    Retorna dict com origem, fonte, sinais, confianca.
+    """
+    sinais = []
+    fonte = None
+
+    # 1. Status definitivo
+    if (status or '').lower() in STATUS_RETORNO:
+        sinais.append(f"status '{status}' indica reparo/retrabalho")
+        fonte = "status"
+
+    # 2. Nome do card indica fase posterior
+    if PAD_NOME_RETORNO.search(nome_cliente or ''):
+        sinais.append(f"nome indica fase posterior")
+        if not fonte:
+            fonte = "nome"
+
+    # 2b. Materiais com tipoSuperficie=Reaplicação
+    if tem_reaplicacao:
+        sinais.append("materiais com tipoSuperficie 'Reaplicação'")
+        if not fonte:
+            fonte = "materiais"
+
+    # 3. Ciclo completo nos marcos: grupo antigo (pré-2026) + execução + finalização
+    MARCOS_EXEC = {'equipe_chegou', 'camada_produto', 'inicio_obra'}
+    MARCOS_FINAL = {'finalizacao', 'aprovacao_cliente'}
+    data_1a = (msgs[0].get("timestamp") or "")[:4] if msgs else ""
+    grupo_antigo = data_1a and data_1a < "2026"
+    if marcos and grupo_antigo:
+        tipos_m = set(m.get("tipo") for m in marcos)
+        tem_exec = bool(tipos_m & MARCOS_EXEC)
+        tem_final = bool(tipos_m & MARCOS_FINAL)
+        if tem_exec and tem_final:
+            sinais.append(f"ciclo completo (exec+final) com grupo de {data_1a}")
+            if not fonte:
+                fonte = "ciclo"
+        elif tem_exec:
+            sinais.append(f"execução detectada com grupo de {data_1a} (sem finalização)")
+            if not fonte:
+                fonte = "ciclo_parcial"
+
+    # 4. Scan nas mensagens do Telegram
+    msgs_sinais = set()
+    for msg in (msgs or []):
+        texto = msg.get("text", "")
+        if not texto or len(texto) < 10:
+            continue
+        for pad, descricao in SINAIS_RETORNO_TELEGRAM:
+            if pad.search(texto):
+                msgs_sinais.add(descricao)
+    for s in sorted(msgs_sinais):
+        sinais.append(f"telegram: {s}")
+    if msgs_sinais and not fonte:
+        fonte = "telegram"
+
+    # 5. Kira do Painel (tagKira + situacaoAtual) — resolve "sem dados" quando não tem Telegram
+    kira_texto = f"{tag_kira} {situacao_kira}".strip()
+    if kira_texto:
+        if PAD_KIRA_RETORNO.search(kira_texto):
+            sinais.append(f"Kira indica retorno: '{kira_texto[:60]}'")
+            if not fonte:
+                fonte = "kira"
+
+    # Classificação final
+    if fonte in ("status", "nome", "ciclo", "kira", "materiais"):
+        return {"origem": "retorno", "fonte": fonte, "sinais": sinais, "confianca": "alta"}
+
+    if fonte == "ciclo_parcial":
+        return {"origem": "incerta", "fonte": fonte, "sinais": sinais, "confianca": "media"}
+
+    if sinais:
+        confianca = "media" if len(sinais) >= 2 else "baixa"
+        return {"origem": "retorno", "fonte": fonte or "telegram", "sinais": sinais, "confianca": confianca}
+
+    # Sem Telegram — tentar classificar via Kira
+    if not msgs:
+        if kira_texto and PAD_KIRA_NOVA.search(kira_texto):
+            return {"origem": "nova", "fonte": "kira", "sinais": [f"Kira: '{kira_texto[:60]}'"], "confianca": "media"}
+        if kira_texto:
+            return {"origem": "nova", "fonte": "kira", "sinais": [f"Kira sem sinal retorno: '{kira_texto[:60]}'"], "confianca": "baixa"}
+        return {"origem": "pre_contrato", "fonte": "fase_inicial", "sinais": [], "confianca": "media"}
+
+    if grupo_antigo:
+        return {"origem": "nova", "fonte": "telegram", "sinais": [f"grupo de {data_1a} sem marcos de execução"], "confianca": "media"}
+
+    return {"origem": "nova", "fonte": "telegram", "sinais": [], "confianca": "alta"}
+
+
 def derivar_fase_real(marcos):
     """A partir dos marcos detectados, calcula a fase REAL da obra (a mais avançada · ignora retrabalho)."""
     if not marcos:
@@ -1005,31 +1182,56 @@ def detectar_marco(msg, tipo, padrao):
 
 def extrair_marcos(msgs_ordenadas):
     primeiro_de_cada = {}
-    # Marcos que PODEM rodar em transcrições (defeito de qualidade descrito em vídeo é informação válida)
     TIPOS_ACEITAM_TRANSCRICAO = {"reprovacao_retorno"}
 
     repetiveis = []
+    descarte = {"bot": 0, "transcricao": 0, "sem_match": 0, "dedup": 0, "match": 0}
+    amostra_sem_match = []
+
     for m in msgs_ordenadas:
         texto = m.get("content") or ""
         if is_card_bot(texto):
+            descarte["bot"] += 1
             continue
         is_transcricao = "🎬" in texto or "🎙️" in texto
+        casou = False
         for tipo, pad in PADROES:
-            # Transcrições só rodam tipos da whitelist · resto pula
             if is_transcricao and tipo not in TIPOS_ACEITAM_TRANSCRICAO:
                 continue
             marco = detectar_marco(m, tipo, pad)
             if marco:
+                casou = True
                 if tipo in UNICOS:
                     if tipo not in primeiro_de_cada:
                         primeiro_de_cada[tipo] = marco
+                        descarte["match"] += 1
+                    else:
+                        descarte["dedup"] += 1
                 else:
                     chave = (tipo, marco["data"])
                     if chave not in {(t["tipo"], t["data"]) for t in repetiveis}:
                         repetiveis.append(marco)
-                break  # primeiro padrão que casar vence (regex específica antes da genérica)
+                        descarte["match"] += 1
+                    else:
+                        descarte["dedup"] += 1
+                break
+        if not casou:
+            if is_transcricao:
+                descarte["transcricao"] += 1
+            else:
+                descarte["sem_match"] += 1
+                if len(amostra_sem_match) < 30:
+                    txt = texto[:150].replace("\n", " ").strip()
+                    if len(txt) > 15:
+                        amostra_sem_match.append({
+                            "sender": (m.get("sender") or "")[:30],
+                            "data": (m.get("timestamp") or "")[:10],
+                            "trecho": txt,
+                        })
+
     marcos = list(primeiro_de_cada.values()) + repetiveis
-    return sorted(marcos, key=lambda x: x["data_iso"] or "")
+    marcos_sorted = sorted(marcos, key=lambda x: x["data_iso"] or "")
+    return marcos_sorted, descarte, amostra_sem_match
 
 def calcular_intervalos(marcos):
     """Δt em dias entre marcos consecutivos."""
@@ -1085,12 +1287,41 @@ def is_sender_monofloor(sender):
     return bool(PAD_SENDER_MONOFLOOR.search(sender))
 
 
+CONSULTOR_ALIAS = {
+    "luana": "Luana Patricia de Andrade Lima",
+    "luana ": "Luana Patricia de Andrade Lima",
+    "luana patricia de andrade lima": "Luana Patricia de Andrade Lima",
+    "caroline": "Caroline",
+}
+
+
+def _fix_latin1_in_utf8(s):
+    """API retorna codepoints Latin-1 (0xe7=ç, 0xed=í) dentro de JSON UTF-8.
+    Corrige os mais comuns sem precisar de tabela completa."""
+    return s.replace("\xe7", "ç").replace("\xed", "í").replace("\xe3", "ã").replace(
+        "\xe1", "á").replace("\xf3", "ó").replace("\xfa", "ú").replace(
+        "\xea", "ê").replace("\xe9", "é").replace("\xf4", "ô")
+
+
+def normalizar_consultor(raw):
+    """Normaliza nome do consultor: limpa [], encoding Latin-1, unifica grafias."""
+    if not raw or raw == "[]" or not isinstance(raw, str):
+        return None
+    nome = _fix_latin1_in_utf8(raw).strip()
+    if not nome:
+        return None
+    lookup = nome.lower()
+    if lookup in CONSULTOR_ALIAS:
+        return CONSULTOR_ALIAS[lookup]
+    return nome
+
+
 def extrair_equipe_monofloor(detail):
     """Equipe Monofloor (operações, atendimento, consultor, líder de qualidade) do detail."""
     return {
         "operacoes": detail.get("responsavelOperacoes"),
         "atendimento": detail.get("responsavelAtendimento"),
-        "consultor": detail.get("consultorNome"),
+        "consultor": normalizar_consultor(detail.get("consultorNome")),
     }
 
 
@@ -1234,7 +1465,11 @@ def ocorrencia_to_marco(oc):
     status = oc.get("status") or "aberta"
     titulo = (oc.get("titulo") or "").strip()
     descricao = (oc.get("descricao") or "").strip()
-    return {
+    resolucao = (oc.get("resolucao") or "").strip()
+    resolvida_por = (oc.get("resolvidaPor") or "").strip()
+    resolvida_em = (oc.get("resolvidaEm") or "")[:10]
+
+    marco = {
         "tipo": "ocorrencia_formal",
         "data": (oc.get("createdAt") or "")[:10],
         "data_iso": oc.get("createdAt"),
@@ -1248,6 +1483,13 @@ def ocorrencia_to_marco(oc):
         "severidade": severidade,
         "status_oc": status,
     }
+    if resolucao:
+        marco["resolucao"] = resolucao[:200]
+    if resolvida_por:
+        marco["resolvida_por"] = resolvida_por
+    if resolvida_em:
+        marco["resolvida_em"] = resolvida_em
+    return marco
 
 
 def timeline_obra(obra_listing, grupo):
@@ -1259,6 +1501,8 @@ def timeline_obra(obra_listing, grupo):
     equipe_resp = fetch_safe(f"{BASE_API}/{obra_id}/equipe") or {}
     ocorrencias_resp = fetch_safe(f"{BASE_API}/{obra_id}/ocorrencias") or []
     documentos_resp = fetch_safe(f"{BASE_API}/{obra_id}/documentos") or []
+    materiais_resp = fetch_safe(f"{BASE_API}/{obra_id}/materiais") or {}
+    materiais_items = materiais_resp.get("items") if isinstance(materiais_resp, dict) else (materiais_resp if isinstance(materiais_resp, list) else [])
     msgs = sorted(msgs_resp.get("messages", []) or [], key=lambda m: m.get("timestamp") or "")
 
     # Frequência de msgs por dia (heatmap)
@@ -1280,9 +1524,8 @@ def timeline_obra(obra_listing, grupo):
     equipe_monofloor = extrair_equipe_monofloor(detail)
     aplicadores_oficiais = extrair_equipe_oficial(equipe_resp)
 
-    marcos = extrair_marcos(msgs)
+    marcos, descarte_log, amostra_sem_match = extrair_marcos(msgs)
 
-    # Adiciona ocorrências formais como marcos-pseudo (vão pra Incidentes)
     ocorrencias_marcos = [ocorrencia_to_marco(oc) for oc in (ocorrencias_resp or []) if isinstance(oc, dict)]
     if ocorrencias_marcos:
         marcos = sorted(marcos + ocorrencias_marcos, key=lambda x: x.get("data_iso") or "")
@@ -1325,18 +1568,78 @@ def timeline_obra(obra_listing, grupo):
     # Ciclos detectados por cluster de camadas
     ciclos_info = detectar_ciclos(marcos)
 
+    # Origem da obra: nova (do zero) vs retorno (local já teve aplicação)
+    nome_cli = detail.get("clienteNome") or obra_listing.get("clienteNome") or ""
+    status_obra = detail.get("status") or obra_listing.get("status") or ""
+    tag_kira = (detail.get("tagKira") or "").strip()
+    situacao_kira = (detail.get("situacaoAtual") or "").strip()
+    tem_reaplicacao = any("reaplica" in (it.get("tipoSuperficie") or "").lower() for it in (materiais_items or []))
+    origem_obra = classificar_origem_obra(msgs, status_obra, nome_cli, marcos, tag_kira, situacao_kira, tem_reaplicacao)
+
+    n_ocorrencias = sum(1 for m in marcos if m.get("tipo") == "ocorrencia_formal")
+    consultor = equipe_monofloor.get("consultor")
+
+    # Estagio derivado + alerta de obra parada
+    tipos_marcos = set(m.get("tipo") for m in marcos)
+    if tipos_marcos & {"camada_produto"}:
+        estagio = "em_execucao"
+    elif tipos_marcos & {"equipe_chegou"}:
+        estagio = "equipe_em_obra"
+    elif tipos_marcos & {"vt_agendada", "vt_realizada"}:
+        estagio = "pos_vt"
+    elif tipos_marcos & {"contrato_assinado"}:
+        estagio = "pos_contrato"
+    elif marcos:
+        estagio = "com_atividade"
+    else:
+        estagio = "sem_marcos"
+
+    # Dias desde ultima atividade (marco ou msg)
+    datas_atividade = []
+    if marcos:
+        ult_marco = marcos[-1].get("data")
+        if ult_marco:
+            datas_atividade.append(ult_marco)
+    ultima_msg_data = (msgs[-1].get("timestamp") if msgs else "")[:10]
+    if ultima_msg_data:
+        datas_atividade.append(ultima_msg_data)
+    if not datas_atividade:
+        dc = (detail.get("createdAt") or "")[:10]
+        if dc:
+            datas_atividade.append(dc)
+
+    dias_inativo = None
+    ultima_atividade = None
+    if datas_atividade:
+        ultima_atividade = max(datas_atividade)
+        try:
+            dias_inativo = (HOJE - datetime.strptime(ultima_atividade[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)).days
+        except ValueError:
+            pass
+
+    alerta_parada = None
+    if dias_inativo is not None and dias_inativo > 30:
+        if estagio == "pos_contrato":
+            alerta_parada = {"tipo": "contrato_sem_avanço", "dias": dias_inativo}
+        elif estagio in ("sem_marcos", "com_atividade"):
+            alerta_parada = {"tipo": "obra_dormindo", "dias": dias_inativo}
+        elif estagio == "pos_vt":
+            alerta_parada = {"tipo": "pos_vt_sem_execucao", "dias": dias_inativo}
+
     return {
         "obra_id": obra_id,
-        "cliente": detail.get("clienteNome") or obra_listing.get("clienteNome"),
+        "cliente": _fix_latin1_in_utf8(detail.get("clienteNome") or obra_listing.get("clienteNome") or ""),
         "status": detail.get("status") or obra_listing.get("status"),
         "fase_atual_painel": detail.get("faseAtual") or obra_listing.get("faseAtual"),
         "metragem": detail.get("projetoMetragem") or obra_listing.get("projetoMetragem"),
+        "consultor": consultor,
         "data_criacao": (detail.get("createdAt") or "")[:10] or None,
         "data_exec_prevista": (detail.get("dataExecucaoPrevista") or "")[:10] or None,
         "data_exec_confirmada": (detail.get("dataExecucaoConfirmada") or "")[:10] or None,
         "data_1a_msg": (primeira_msg or "")[:10] or None,
         "data_ultima_msg": (msgs[-1].get("timestamp") if msgs else "")[:10] or None,
         "n_msgs_telegram": len(msgs),
+        "n_ocorrencias": n_ocorrencias,
         "grupo_mix": grupo,
         "fase_derivada": fase_derivada,
         "ciclos_info": ciclos_info,
@@ -1351,6 +1654,13 @@ def timeline_obra(obra_listing, grupo):
         "dt_total_marcos_dias": dt_total,
         "dt_1a_msg_ate_exec_dias": dt_painel,
         "counts_por_tipo": dict(counts),
+        "descarte_msgs": descarte_log,
+        "amostra_sem_match": amostra_sem_match,
+        "origem_obra": origem_obra,
+        "estagio": estagio,
+        "dias_inativo": dias_inativo,
+        "ultima_atividade": ultima_atividade,
+        "alerta_parada": alerta_parada,
     }
 
 # ============================================================
@@ -1503,6 +1813,19 @@ def main_massa():
             novo_manifest[oid] = {**manifest[oid], 'arquivada_em': HOJE.strftime('%Y-%m-%dT%H:%M:%SZ')}
     salvar_manifest(novo_manifest)
 
+    descarte_agg = {"bot": 0, "transcricao": 0, "sem_match": 0, "dedup": 0, "match": 0}
+    amostras_agg = []
+    for t in timelines_finais:
+        dl = t.get("descarte_msgs") or {}
+        for k in descarte_agg:
+            descarte_agg[k] += dl.get(k, 0)
+        for a in (t.get("amostra_sem_match") or []):
+            if len(amostras_agg) < 100:
+                amostras_agg.append({**a, "obra": (t.get("cliente") or "?")[:30]})
+    total_msgs = sum(descarte_agg.values())
+    if total_msgs:
+        descarte_agg["taxa_aproveitamento_pct"] = round(descarte_agg["match"] / total_msgs * 100, 1)
+
     out = {
         'gerado_em': HOJE.strftime('%Y-%m-%dT%H:%M:%SZ'),
         'modo': 'massa',
@@ -1517,6 +1840,8 @@ def main_massa():
             'erros': erros,
             'tempo_processamento_s': round(elapsed, 1),
         },
+        'cobertura_regex': descarte_agg,
+        'amostra_msgs_sem_match': amostras_agg,
         'taxonomia': TAXONOMIA,
         'timelines': timelines_finais,
     }

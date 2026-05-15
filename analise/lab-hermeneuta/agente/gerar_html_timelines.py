@@ -856,6 +856,30 @@ def card_obra(obra, taxonomia):
     destrinchada_class = " destrinchada" if is_destrinchada(obra.get("cliente")) else ""
     badge_destr = '<span class="mini-badge destrinchada-tag" title="Já destrinchada · usada pra calibrar vocabulário">🔬</span>' if is_destrinchada(obra.get("cliente")) else ""
 
+    # Origem da obra: nova / retorno / pre_contrato (vem do pipeline)
+    origem = (obra.get('origem_obra') or {}).get('origem', 'pre_contrato')
+    origem_fonte = (obra.get('origem_obra') or {}).get('fonte', '?')
+    origem_sinais = (obra.get('origem_obra') or {}).get('sinais', [])
+    origem_tip = "; ".join(origem_sinais[:3]) if origem_sinais else "sem sinais detectados"
+    if origem == "retorno":
+        badge_natureza = f'<span class="mini-badge natureza-retro" title="Retorno — {html.escape(origem_tip)}">RETORNO</span>'
+    elif origem == "incerta":
+        badge_natureza = f'<span class="mini-badge natureza-incerta" title="Incerta — {html.escape(origem_tip)}">INCERTA</span>'
+    elif origem == "pre_contrato":
+        badge_natureza = '<span class="mini-badge natureza-precontrato" title="Fase inicial de contratação — sem dados operacionais ainda">PRÉ-CONTRATO</span>'
+    else:
+        badge_natureza = ""
+
+    # Badge de alerta de obra parada
+    alerta = obra.get("alerta_parada")
+    badge_alerta = ""
+    if alerta:
+        dias_a = alerta.get("dias", 0)
+        tipo_a = alerta.get("tipo", "")
+        label_a = {"contrato_sem_avanço": "PARADA", "obra_dormindo": "DORMINDO", "pos_vt_sem_execucao": "SEM EXEC"}.get(tipo_a, "INATIVA")
+        cor_a = "#c45a5a" if dias_a > 60 else "#d4a017"
+        badge_alerta = f'<span class="mini-badge alerta-parada" style="background:{cor_a};color:#fff" title="{tipo_a} · {dias_a} dias sem atividade">{label_a} {dias_a}d</span>'
+
     # Categorias derivadas dos insights pra filtro client-side
     insights_obra = derivar_insights(obra)
     categorias = set()
@@ -867,6 +891,11 @@ def card_obra(obra, taxonomia):
         categorias.add("destrinchada")
     categorias.add(f"status_{(obra.get('status') or 'desconhecido').lower()}")
     categorias.add(f"perfil_{perfil}")
+    categorias.add(f"origem_{origem}")
+    estagio = obra.get("estagio") or "desconhecido"
+    categorias.add(f"estagio_{estagio}")
+    if alerta:
+        categorias.add("alerta_parada")
     data_categorias = " ".join(sorted(categorias))
 
     return f"""
@@ -881,7 +910,7 @@ def card_obra(obra, taxonomia):
           <span class="sum-stat"><b>{dt_resumo}</b></span>
           <span class="sum-stat"><b>{n_msgs}</b> msgs</span>
         </span>
-        <span class="sum-badges">{badge_perfil}{badge_destr}{badge_ciclos}{badge_retr}</span>
+        <span class="sum-badges">{badge_alerta}{badge_natureza}{badge_perfil}{badge_destr}{badge_ciclos}{badge_retr}</span>
         <span class="sum-toggle">▾</span>
       </summary>
       <div class="obra-detail">
@@ -1290,6 +1319,480 @@ def render_diagnostico(pf):
     </div>"""
 
 
+# ============================================================
+# Compilação de problemas · contagem por OBRAS únicas
+# ============================================================
+
+CATEGORIAS_OCF = {
+    "Desvio de qualidade": ["desvio_qualidade", "qualidade"],
+    "Defeito de material": ["defeito_material", "erro_producao"],
+    "Problema técnico": ["problema_tecnico"],
+    "Reclamação do cliente": ["reclamacao_cliente"],
+    "Falha de comunicação": ["falha_comunicacao"],
+    "Problema logístico": ["problema_logistico", "atraso_entrega", "atraso"],
+    "Incidente de obra": ["incidente_obra"],
+}
+
+CATEGORIAS_REPRO = {
+    "Defeito relatado": ["defeito_relatado"],
+    "Tratativa": ["tratativa"],
+    "Escopo/expectativa": ["escopo_definido", "decisao_cliente"],
+    "Proposta técnica": ["proposta_tecnica"],
+    "Agendamento reparo": ["agendamento_reparo"],
+    "Registro de campo": ["registro_campo"],
+}
+
+
+def calcular_compilacao_problemas(timelines):
+    total = len(timelines)
+    if not total:
+        return {}
+
+    ocf = {}
+    for cat, subs in CATEGORIAS_OCF.items():
+        afetadas = {}
+        for o in timelines:
+            cli = o.get("cliente", "?")
+            n = sum(1 for m in (o.get("marcos") or [])
+                    if m.get("tipo") == "ocorrencia_formal" and m.get("subtipo") in subs)
+            if n > 0:
+                afetadas[cli] = n
+        ocf[cat] = {"n_obras": len(afetadas),
+                     "top5": sorted(afetadas.items(), key=lambda x: -x[1])[:5]}
+
+    repro = {}
+    for cat, subs in CATEGORIAS_REPRO.items():
+        afetadas = {}
+        for o in timelines:
+            cli = o.get("cliente", "?")
+            n = sum(1 for m in (o.get("marcos") or [])
+                    if m.get("tipo") == "reprovacao_retorno" and m.get("subtipo") in subs)
+            if n > 0:
+                afetadas[cli] = n
+        repro[cat] = {"n_obras": len(afetadas),
+                       "top5": sorted(afetadas.items(), key=lambda x: -x[1])[:5]}
+
+    criticas = [o for o in timelines if o.get("status") in ("reparo", "marcas_rolo_cera")]
+    criticas_sem_registro = []
+    for o in criticas:
+        marcos = o.get("marcos") or []
+        tem = any(m.get("tipo") in ("ocorrencia_formal", "reprovacao_retorno") for m in marcos)
+        if not tem:
+            criticas_sem_registro.append(o.get("cliente", "?"))
+
+    obras_com_qualquer = set()
+    for o in timelines:
+        for m in (o.get("marcos") or []):
+            if m.get("tipo") in ("ocorrencia_formal", "reprovacao_retorno"):
+                obras_com_qualquer.add(o.get("cliente", "?"))
+
+    retrabalho_n = sum(1 for o in timelines if (o.get("fase_derivada") or {}).get("tem_retrabalho"))
+
+    ranking = []
+    for cat, v in ocf.items():
+        ranking.append((cat, v["n_obras"], "ocorrencia"))
+    for cat, v in repro.items():
+        ranking.append((cat, v["n_obras"], "reprovacao"))
+    ranking.append(("Retrabalho ativo", retrabalho_n, "status"))
+    ranking.append(("Status reparo/marcas", len(criticas), "status"))
+    ranking.sort(key=lambda x: -x[1])
+
+    return {
+        "total": total,
+        "com_problema": len(obras_com_qualquer),
+        "sem_problema": total - len(obras_com_qualquer),
+        "pct_com": round(len(obras_com_qualquer) / total * 100),
+        "ocf": ocf,
+        "repro": repro,
+        "ranking": ranking,
+        "criticas_total": len(criticas),
+        "criticas_sem_registro": criticas_sem_registro,
+        "retrabalho_n": retrabalho_n,
+    }
+
+
+def render_compilacao_problemas(comp):
+    if not comp or not comp.get("total"):
+        return ""
+    total = comp["total"]
+    com = comp["com_problema"]
+    sem = comp["sem_problema"]
+    pct = comp["pct_com"]
+
+    panorama = f"""<div class="narr-bloco">
+      <div class="narr-titulo">Raio-x dos problemas</div>
+      <p>De <strong>{total} obras vivas</strong>, <strong>{com} ({pct}%)</strong> têm pelo menos
+      um problema registrado (ocorrência formal ou reprovação). As outras <strong>{sem}</strong>
+      estão limpas nos dados — não necessariamente sem problema, mas sem registro capturado.</p>
+    </div>"""
+
+    # Ranking
+    rows = ""
+    for cat, n, tipo in comp["ranking"]:
+        pct_r = round(n / total * 100)
+        tipo_class = "prob-ocf" if tipo == "ocorrencia" else ("prob-repro" if tipo == "reprovacao" else "prob-status")
+        bar_w = max(2, round(n / total * 100))
+        rows += f"""<tr class="{tipo_class}">
+          <td class="prob-nome">{html.escape(cat)}</td>
+          <td class="prob-n mono">{n}</td>
+          <td class="prob-pct mono">{pct_r}%</td>
+          <td class="prob-bar-cell"><div class="prob-bar" style="width:{bar_w}%"></div></td>
+        </tr>"""
+
+    ranking_html = f"""<div class="narr-bloco">
+      <div class="narr-titulo">Quantas obras têm cada tipo de problema</div>
+      <table class="prob-ranking">
+        <thead><tr><th>Indicador</th><th>Obras</th><th>%</th><th></th></tr></thead>
+        <tbody>{rows}</tbody>
+      </table>
+      <div class="prob-legenda">
+        <span class="prob-leg-item"><span class="prob-leg-dot prob-ocf"></span>Ocorrência formal</span>
+        <span class="prob-leg-item"><span class="prob-leg-dot prob-repro"></span>Reprovação</span>
+        <span class="prob-leg-item"><span class="prob-leg-dot prob-status"></span>Status/retrabalho</span>
+      </div>
+    </div>"""
+
+    # Destaques narrativos
+    destaques = []
+
+    # Destaque 1: desvio de qualidade
+    dq = comp["ocf"].get("Desvio de qualidade", {})
+    if dq.get("n_obras", 0) >= 10:
+        n_dq = dq["n_obras"]
+        pct_dq = round(n_dq / total * 100)
+        top3 = ", ".join(f"{c[:25]} ({n}x)" for c, n in dq["top5"][:3])
+        destaques.append(f"""<div class="narr-desvio narr-grave">
+          <span class="narr-pct">{pct_dq}%</span>
+          <div><strong>das obras tiveram desvio de qualidade.</strong>
+          {n_dq} obras com pelo menos um registro de desvio. Concentração maior em: {top3}.
+          É o problema real mais prevalente — diferente de tratativas, aqui o produto ou processo falhou.</div>
+        </div>""")
+
+    # Destaque 2: obras em reparo SEM registro
+    csr = comp["criticas_sem_registro"]
+    if csr:
+        pct_csr = round(len(csr) / comp["criticas_total"] * 100) if comp["criticas_total"] else 0
+        destaques.append(f"""<div class="narr-desvio narr-grave">
+          <span class="narr-pct">{pct_csr}%</span>
+          <div><strong>das obras em reparo não têm registro de problema.</strong>
+          {len(csr)} de {comp["criticas_total"]} obras em status crítico (reparo/marcas_rolo_cera) não possuem
+          nenhuma ocorrência formal nem reprovação nos dados. O problema existe na realidade mas é invisível
+          para o pipeline — gap de visibilidade que precisa de investigação.</div>
+        </div>""")
+
+    # Destaque 3: tratativa vs defeito real
+    trat = comp["repro"].get("Tratativa", {})
+    defeito = comp["repro"].get("Defeito relatado", {})
+    if trat.get("n_obras", 0) > 0 and defeito.get("n_obras", 0) > 0:
+        n_t = trat["n_obras"]
+        n_d = defeito["n_obras"]
+        destaques.append(f"""<div class="narr-desvio narr-alerta">
+          <span class="narr-pct">{n_t}<small style="font-size:11px">/{n_d}</small></span>
+          <div><strong>Tratativa vs. defeito confirmado.</strong>
+          {n_t} obras tiveram tratativa (negociação, acompanhamento) contra apenas {n_d} com defeito
+          relatado confirmado. Tratativa não é necessariamente problema técnico — é discussão comercial
+          ou alinhamento de expectativa. O índice real de defeito é menor do que o volume bruto sugere.</div>
+        </div>""")
+
+    destaques_html = "".join(destaques)
+    destaques_bloco = f"""<div class="narr-bloco">
+      <div class="narr-titulo">Destaques</div>
+      <div class="narr-desvios">{destaques_html}</div>
+    </div>""" if destaques else ""
+
+    # Top concentradores (top 3 por categoria principal)
+    concentradores = []
+    for cat in ("Desvio de qualidade", "Falha de comunicação", "Problema logístico", "Reclamação do cliente"):
+        info = comp["ocf"].get(cat, {})
+        if info.get("top5"):
+            items = " · ".join(f"{c[:20]} ({n}x)" for c, n in info["top5"][:3])
+            concentradores.append(f"<div class='prob-conc-item'><strong>{cat}:</strong> {items}</div>")
+
+    conc_html = ""
+    if concentradores:
+        conc_html = f"""<div class="narr-bloco">
+          <div class="narr-titulo">Onde se concentra</div>
+          <div class="prob-concentradores">{"".join(concentradores)}</div>
+        </div>"""
+
+    return f"""
+    <div class="compilacao-problemas">
+      <div class="section-title">Compilação de problemas · {total} obras</div>
+      {panorama}
+      {ranking_html}
+      {destaques_bloco}
+      {conc_html}
+    </div>"""
+
+
+def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobertura, n_novas=0, n_retorno=0, n_pre_contrato=0, n_incerta=0):
+    """Narrativa unificada da Tela 1: historia completa de cima a baixo."""
+    total_2026 = pf.get("total_2026", 0) or 1
+    perfis = pf.get("perfis", {})
+    n_d = perfis.get("D", 0)
+    n_b = perfis.get("B", 0)
+    n_e = perfis.get("E", 0)
+    n_f = perfis.get("F", 0)
+    pct_d = round(n_d / total_2026 * 100)
+    pct_b = round(n_b / total_2026 * 100)
+    com_exec = pf.get("com_exec", 0)
+    com_final = pf.get("com_final", 0)
+    com_repro = pf.get("com_repro", 0)
+    taxa_repro = pf.get("taxa_repro_final", 0)
+
+    trans = pf.get("transicoes", {})
+    med_contrato_equipe = trans.get("Contrato a Equipe em obra", {}).get("mediana", "?")
+    med_equipe_camada = trans.get("Equipe a 1a camada", {}).get("mediana", "?")
+    med_final_repro = trans.get("Finalização a Reprovação", {}).get("mediana", "?")
+
+    vt_aus = pf.get("ausentes_repro", {}).get("vt_realizada", {})
+    pct_vt_aus = vt_aus.get("pct", 0) if vt_aus else 0
+
+    mat_inv = pf.get("inversoes", {}).get("Material depois da equipe", {})
+    pct_mat_inv = mat_inv.get("pct", 0) if mat_inv else 0
+    n_mat_inv = mat_inv.get("invertido", 0) if mat_inv else 0
+    n_mat_total = mat_inv.get("total", 0) if mat_inv else 0
+
+    com_prob = comp.get("com_problema", 0) if comp else 0
+    pct_prob = comp.get("pct_com", 0) if comp else 0
+    criticas_total = comp.get("criticas_total", 0) if comp else 0
+    criticas_sem = comp.get("criticas_sem_registro", []) if comp else []
+    ranking = comp.get("ranking", []) if comp else []
+    ocf = comp.get("ocf", {}) if comp else {}
+    repro = comp.get("repro", {}) if comp else {}
+    retrabalho_n = comp.get("retrabalho_n", 0) if comp else 0
+
+    pct_cobertura = round(n_com / n_total * 100) if n_total else 0
+    taxa_regex = cobertura.get("taxa_aproveitamento_pct", 0) if cobertura else 0
+
+    # === CAPITULO 1 · ABERTURA ===
+    pct_novas = round(n_novas / n_total * 100) if n_total else 0
+    pct_retro = round(n_retorno / n_total * 100) if n_total else 0
+    cap1 = f"""<div class="narr-capitulo">
+      <div class="narr-cap-num">01</div>
+      <div class="narr-cap-corpo">
+        <div class="narr-titulo">O que sabemos hoje</div>
+        <p>Existem <strong>{n_total} obras vivas</strong> no Painel de Obras. Cruzando status, nome do card,
+        data da primeira mensagem do Telegram, marcos de execução e visão do Kira, classificamos cada obra
+        por origem — se é a primeira aplicação Monofloor no local ou se já houve trabalho anterior.</p>
+        <div class="narr-indicadores narr-ind-5">
+          <div class="narr-ind narr-ind-nova">
+            <div class="narr-ind-valor">{n_novas}</div>
+            <div class="narr-ind-label">novas — do zero ({pct_novas}%)</div>
+          </div>
+          <div class="narr-ind narr-ind-retro">
+            <div class="narr-ind-valor">{n_retorno}</div>
+            <div class="narr-ind-label">retornos ({pct_retro}%)</div>
+          </div>
+          <div class="narr-ind narr-ind-incerta">
+            <div class="narr-ind-valor">{n_incerta}</div>
+            <div class="narr-ind-label">incertas</div>
+          </div>
+          <div class="narr-ind narr-ind-precontrato">
+            <div class="narr-ind-valor">{n_pre_contrato}</div>
+            <div class="narr-ind-label">pré-contrato</div>
+          </div>
+          <div class="narr-ind">
+            <div class="narr-ind-valor">{n_marcos}</div>
+            <div class="narr-ind-label">marcos detectados</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--ink-soft);margin-top:8px"><strong>Novas</strong> = primeira
+        aplicação Monofloor no local (confirmado via Telegram ou Kira).
+        <strong>Retornos</strong> = local que já teve aplicação anterior (status, nome, ciclo completo
+        ou Kira indica retrabalho).
+        <strong>Incertas</strong> = grupo antigo com execução mas sem finalização clara.
+        <strong>Pré-contrato</strong> = obras em fase inicial de contratação, ainda sem dados operacionais.</p>
+      </div>
+    </div>"""
+
+    # === CAPITULO 2 · SAUDE ===
+    saude_itens = []
+    if pct_b >= 25:
+        saude_itens.append(f"""<div class="narr-stat narr-stat-alerta">
+          <div class="narr-stat-num">{n_b}</div>
+          <div class="narr-stat-desc"><strong>{pct_b}% paradas em pré-obra.</strong> Contrato assinado
+          mas sem execução iniciada. Não há gatilho que force a transição — obra dorme sem cobrança.</div>
+        </div>""")
+    if com_exec:
+        saude_itens.append(f"""<div class="narr-stat">
+          <div class="narr-stat-num">{com_exec}</div>
+          <div class="narr-stat-desc"><strong>Executaram.</strong> Dessas, {com_final} finalizaram e
+          {com_repro} tiveram reprovação. A mediana entre contrato e equipe em obra é de
+          <strong>{med_contrato_equipe} dias</strong> — o gargalo está no pré-obra.</div>
+        </div>""")
+    if taxa_repro >= 40:
+        saude_itens.append(f"""<div class="narr-stat narr-stat-grave">
+          <div class="narr-stat-num" style="color:#c45a5a">{taxa_repro}%</div>
+          <div class="narr-stat-desc"><strong>Taxa de reprovação entre finalizadas.</strong> De {com_final}
+          finalizadas, {n_e} receberam retorno do cliente. A mediana entre finalização e reprovação é de
+          {med_final_repro} dias — o problema não aparece na hora, aparece com o uso.</div>
+        </div>""")
+
+    cap2 = f"""<div class="narr-capitulo">
+      <div class="narr-cap-num">02</div>
+      <div class="narr-cap-corpo">
+        <div class="narr-titulo">Saúde da carteira</div>
+        <p>Das <strong>{total_2026} obras 2026</strong>, apenas <strong>{n_d} ({pct_d}%)</strong> seguiram
+        o caminho ideal completo. A grande maioria desvia em algum ponto — e isso não é exceção, é o padrão.</p>
+        <div class="narr-stats-lista">{"".join(saude_itens)}</div>
+      </div>
+    </div>"""
+
+    # === CAPITULO 3 · PROBLEMAS REAIS ===
+    prob_rows = ""
+    for cat, n, tipo in ranking[:8]:
+        pct_r = round(n / n_total * 100)
+        tipo_class = "prob-ocf" if tipo == "ocorrencia" else ("prob-repro" if tipo == "reprovacao" else "prob-status")
+        bar_w = max(2, round(n / n_total * 100))
+        prob_rows += f"""<tr class="{tipo_class}">
+          <td class="prob-nome">{html.escape(cat)}</td>
+          <td class="prob-n mono">{n}</td>
+          <td class="prob-pct mono">{pct_r}%</td>
+          <td class="prob-bar-cell"><div class="prob-bar" style="width:{bar_w}%"></div></td>
+        </tr>"""
+
+    desvios_narrativos = []
+
+    dq = ocf.get("Desvio de qualidade", {})
+    if dq.get("n_obras", 0) >= 5:
+        n_dq = dq["n_obras"]
+        pct_dq = round(n_dq / n_total * 100)
+        top3 = ", ".join(f"{c[:22]} ({n}x)" for c, n in dq["top5"][:3])
+        desvios_narrativos.append(f"""<div class="narr-desvio narr-grave">
+          <span class="narr-pct">{pct_dq}%</span>
+          <div><strong>das obras tiveram desvio de qualidade</strong> — {n_dq} obras. O problema real
+          mais prevalente. Concentração: {top3}.</div>
+        </div>""")
+
+    if pct_vt_aus >= 40:
+        desvios_narrativos.append(f"""<div class="narr-desvio narr-grave">
+          <span class="narr-pct">{pct_vt_aus}%</span>
+          <div><strong>das obras reprovadas não tiveram VT registrada.</strong> A visita técnica é a
+          barreira de prevenção. Quando é pulada, os problemas aparecem como reprovação
+          {med_final_repro} dias depois.</div>
+        </div>""")
+
+    if pct_mat_inv >= 25:
+        desvios_narrativos.append(f"""<div class="narr-desvio narr-alerta">
+          <span class="narr-pct">{pct_mat_inv}%</span>
+          <div><strong>das obras receberam material depois da equipe chegar.</strong>
+          Em {n_mat_inv} de {n_mat_total} casos, equipe chegou e o material não estava lá.</div>
+        </div>""")
+
+    trat = repro.get("Tratativa", {})
+    defeito = repro.get("Defeito relatado", {})
+    if trat.get("n_obras", 0) > 0 and defeito.get("n_obras", 0) > 0:
+        n_t = trat["n_obras"]
+        n_def = defeito["n_obras"]
+        desvios_narrativos.append(f"""<div class="narr-desvio narr-alerta">
+          <span class="narr-pct">{n_t}<small>/{n_def}</small></span>
+          <div><strong>Tratativa vs. defeito confirmado.</strong> {n_t} obras tiveram tratativa
+          (negociação) contra {n_def} com defeito real. O índice de defeito é menor do que o
+          volume bruto sugere.</div>
+        </div>""")
+
+    concentradores = []
+    for cat in ("Desvio de qualidade", "Falha de comunicação", "Reclamação do cliente"):
+        info = ocf.get(cat, {})
+        if info.get("top5"):
+            items = " · ".join(f"{c[:20]} ({n}x)" for c, n in info["top5"][:3])
+            concentradores.append(f"<div class='prob-conc-item'><strong>{cat}:</strong> {items}</div>")
+
+    conc_html = f"""<div class="narr-concentradores">{"".join(concentradores)}</div>""" if concentradores else ""
+
+    cap3 = f"""<div class="narr-capitulo">
+      <div class="narr-cap-num">03</div>
+      <div class="narr-cap-corpo">
+        <div class="narr-titulo">Os problemas reais</div>
+        <p><strong>{com_prob} de {n_total} obras ({pct_prob}%)</strong> têm pelo menos um problema registrado.
+        Contagem por obras únicas afetadas — não por volume de ocorrências dentro de uma mesma obra.</p>
+        <table class="prob-ranking">
+          <thead><tr><th>Indicador</th><th>Obras</th><th>%</th><th></th></tr></thead>
+          <tbody>{prob_rows}</tbody>
+        </table>
+        <div class="prob-legenda">
+          <span class="prob-leg-item"><span class="prob-leg-dot prob-ocf"></span>Ocorrência formal</span>
+          <span class="prob-leg-item"><span class="prob-leg-dot prob-repro"></span>Reprovação</span>
+          <span class="prob-leg-item"><span class="prob-leg-dot prob-status"></span>Status/retrabalho</span>
+        </div>
+        <div class="narr-desvios" style="margin-top:16px">{"".join(desvios_narrativos)}</div>
+        {conc_html}
+      </div>
+    </div>"""
+
+    # === CAPITULO 4 · O QUE ESCAPA ===
+    gaps = []
+    if n_sem > 0:
+        gaps.append(f"""<div class="narr-gap">
+          <span class="narr-gap-num">{n_sem}</span>
+          <div><strong>obras sem grupo Telegram</strong> — invisíveis para o pipeline.
+          Nenhum marco, nenhum desvio, nenhum sinal. Se um problema acontece nessas obras,
+          não aparece aqui.</div>
+        </div>""")
+
+    if criticas_sem:
+        pct_csr = round(len(criticas_sem) / criticas_total * 100) if criticas_total else 0
+        gaps.append(f"""<div class="narr-gap">
+          <span class="narr-gap-num">{len(criticas_sem)}/{criticas_total}</span>
+          <div><strong>obras em reparo sem registro de problema.</strong> {pct_csr}% das obras em
+          status crítico não têm nenhuma ocorrência nos dados. O problema existe mas não foi
+          capturado.</div>
+        </div>""")
+
+    if taxa_regex and taxa_regex < 5:
+        gaps.append(f"""<div class="narr-gap">
+          <span class="narr-gap-num">{taxa_regex}%</span>
+          <div><strong>das mensagens Telegram viram marco.</strong> O restante são conversas, fotos,
+          áudios e mensagens operacionais que o pipeline não classifica. Pode haver sinais
+          relevantes que escapam da detecção.</div>
+        </div>""")
+
+    cap4 = ""
+    if gaps:
+        cap4 = f"""<div class="narr-capitulo">
+          <div class="narr-cap-num">04</div>
+          <div class="narr-cap-corpo">
+            <div class="narr-titulo">O que o dado não mostra</div>
+            <p>Esses são os limites conhecidos do pipeline. Cada um representa informação que existe na
+            realidade mas que não chega até aqui.</p>
+            <div class="narr-gaps">{"".join(gaps)}</div>
+          </div>
+        </div>"""
+
+    # === CAPITULO 5 · ACOES ===
+    cap5 = f"""<div class="narr-capitulo">
+      <div class="narr-cap-num">05</div>
+      <div class="narr-cap-corpo">
+        <div class="narr-titulo">O que os dados sugerem</div>
+        <div class="narr-acao-grid">
+          <div class="narr-acao">
+            <div class="narr-acao-tag narr-p0">P0</div>
+            <div><strong>Destravar pré-obra.</strong> {n_b} obras com contrato e sem execução.
+            Alerta para obra com contrato há +30 dias sem próximo marco.</div>
+          </div>
+          <div class="narr-acao">
+            <div class="narr-acao-tag narr-p0">P0</div>
+            <div><strong>VT obrigatória antes da execução.</strong> Equipe não agenda sem VT
+            realizada. Se dispensada, registrar com justificativa.</div>
+          </div>
+          <div class="narr-acao">
+            <div class="narr-acao-tag narr-p1">P1</div>
+            <div><strong>Sincronizar material × cronograma.</strong> Material confirmado em obra
+            antes de agendar execução.</div>
+          </div>
+          <div class="narr-acao">
+            <div class="narr-acao-tag narr-p1">P1</div>
+            <div><strong>Investigar obras em reparo sem registro.</strong> {len(criticas_sem)} obras
+            em status crítico sem nenhuma ocorrência nos dados.</div>
+          </div>
+        </div>
+      </div>
+    </div>"""
+
+    return f"""<div class="narrativa-unificada">{cap1}{cap2}{cap3}{cap4}{cap5}</div>"""
+
+
 def calcular_analise_cross_obras(timelines, taxonomia):
     """Agrega métricas cross-obras: mentiras do Painel, medianas populacionais, sinais graves."""
     from collections import Counter as _C
@@ -1574,9 +2077,17 @@ def main():
     taxonomia = d.get("taxonomia") or {}
     analise_cross = calcular_analise_cross_obras(timelines, taxonomia)
     perfis_fluxo = calcular_perfis_fluxo(timelines)
+    compilacao_prob = calcular_compilacao_problemas(timelines)
+    cobertura_regex = d.get("cobertura_regex") or {}
 
     com_marcos = [t for t in timelines if (t.get("marcos") or [])]
     sem_marcos = [t for t in timelines if not (t.get("marcos") or [])]
+
+    # Origem: nova / retorno / incerta / pre_contrato (vem do pipeline)
+    n_novas = sum(1 for t in timelines if (t.get('origem_obra') or {}).get('origem') == 'nova')
+    n_retorno = sum(1 for t in timelines if (t.get('origem_obra') or {}).get('origem') == 'retorno')
+    n_incerta = sum(1 for t in timelines if (t.get('origem_obra') or {}).get('origem') == 'incerta')
+    n_pre_contrato = sum(1 for t in timelines if (t.get('origem_obra') or {}).get('origem') == 'pre_contrato')
 
     # Ordena: mais marcos primeiro
     com_marcos.sort(key=lambda t: -len(t.get("marcos") or []))
@@ -1773,6 +2284,105 @@ def main():
   }}
   .narr-p0 {{ background: #c45a5a; color: #fff; }}
   .narr-p1 {{ background: #b89a4a; color: #fff; }}
+
+  /* Narrativa unificada */
+  .narrativa-unificada {{ margin-bottom: 32px; }}
+  .narr-capitulo {{
+    display: flex; gap: 20px; padding: 28px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }}
+  .narr-capitulo:last-child {{ border-bottom: none; }}
+  .narr-cap-num {{
+    font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 800;
+    color: var(--line); min-width: 44px; line-height: 1; padding-top: 2px;
+  }}
+  .narr-cap-corpo {{ flex: 1; }}
+  .narr-indicadores {{
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px;
+  }}
+  .narr-ind {{
+    background: var(--surface); border: 1px solid var(--line-soft); border-radius: 10px;
+    padding: 14px 16px; text-align: center;
+  }}
+  .narr-ind-valor {{
+    font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 800;
+    color: var(--ink); line-height: 1.1;
+  }}
+  .narr-ind-valor small {{ font-size: 14px; }}
+  .narr-ind-label {{ font-size: 10px; color: var(--ink-faint); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }}
+  .narr-stats-lista {{ display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }}
+  .narr-stat {{
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--line-soft); border-radius: 10px;
+    padding: 16px 18px;
+  }}
+  .narr-stat-alerta {{ border-left: 4px solid #b89a4a; }}
+  .narr-stat-grave {{ border-left: 4px solid #c45a5a; }}
+  .narr-stat-num {{
+    font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 800;
+    min-width: 56px; text-align: center; color: var(--ink); flex-shrink: 0;
+    line-height: 1.1;
+  }}
+  .narr-stat-desc {{ font-size: 13px; line-height: 1.6; color: var(--ink-soft); }}
+  .narr-stat-desc strong {{ color: var(--ink); }}
+  .narr-concentradores {{ margin-top: 14px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 10px; }}
+  .narr-gaps {{ display: flex; flex-direction: column; gap: 12px; }}
+  .narr-gap {{
+    display: flex; gap: 16px; align-items: flex-start;
+    background: #faf5ee; border: 1px dashed var(--gold-soft); border-radius: 10px;
+    padding: 16px 18px;
+  }}
+  .narr-gap-num {{
+    font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800;
+    min-width: 56px; text-align: center; color: var(--gold); flex-shrink: 0;
+    line-height: 1.1;
+  }}
+  .narr-gap div {{ font-size: 13px; line-height: 1.6; color: var(--ink-soft); }}
+  .narr-gap strong {{ color: var(--ink); }}
+  @media (max-width: 700px) {{
+    .narr-capitulo {{ flex-direction: column; gap: 8px; }}
+    .narr-cap-num {{ font-size: 20px; }}
+    .narr-indicadores {{ grid-template-columns: repeat(2, 1fr); }}
+  }}
+
+  /* Compilação de problemas */
+  .compilacao-problemas {{ margin-bottom: 32px; }}
+  .prob-ranking {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
+  .prob-ranking th {{
+    text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--ink-faint); padding: 6px 8px; border-bottom: 1px solid var(--line);
+  }}
+  .prob-ranking td {{ padding: 8px 8px; border-bottom: 1px solid var(--line-soft); }}
+  .prob-ranking tr:last-child td {{ border-bottom: none; }}
+  .prob-nome {{ color: var(--ink); font-weight: 600; }}
+  .prob-n {{ text-align: right; color: var(--ink); font-weight: 700; }}
+  .prob-pct {{ text-align: right; color: var(--ink-soft); min-width: 40px; }}
+  .prob-bar-cell {{ width: 40%; padding-left: 12px !important; }}
+  .prob-bar {{
+    height: 8px; border-radius: 4px; min-width: 3px;
+    transition: width 0.3s;
+  }}
+  .prob-ocf .prob-bar {{ background: #c45a5a; }}
+  .prob-ocf .prob-nome::before {{ content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #c45a5a; margin-right: 8px; }}
+  .prob-repro .prob-bar {{ background: #b89a4a; }}
+  .prob-repro .prob-nome::before {{ content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #b89a4a; margin-right: 8px; }}
+  .prob-status .prob-bar {{ background: var(--ink-faint); }}
+  .prob-status .prob-nome::before {{ content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); margin-right: 8px; }}
+  .prob-legenda {{
+    display: flex; gap: 16px; margin-top: 12px; font-size: 10.5px; color: var(--ink-faint);
+  }}
+  .prob-leg-item {{ display: flex; align-items: center; gap: 5px; }}
+  .prob-leg-dot {{ width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }}
+  .prob-leg-dot.prob-ocf {{ background: #c45a5a; }}
+  .prob-leg-dot.prob-repro {{ background: #b89a4a; }}
+  .prob-leg-dot.prob-status {{ background: var(--ink-faint); }}
+  .prob-concentradores {{ display: flex; flex-direction: column; gap: 6px; }}
+  .prob-conc-item {{
+    font-size: 12.5px; line-height: 1.6; color: var(--ink-soft);
+    padding: 6px 0; border-bottom: 1px solid var(--line-soft);
+  }}
+  .prob-conc-item:last-child {{ border-bottom: none; }}
+  .prob-conc-item strong {{ color: var(--ink); font-weight: 600; }}
 
   /* Stats topo */
   .stats {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }}
@@ -2478,6 +3088,69 @@ def main():
     padding: 2px 6px;
   }}
 
+  /* Badge retorno/pre-contrato */
+  .natureza-retro {{
+    background: #8b4513; color: #fff; border: none;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.08em;
+    padding: 2px 6px; border-radius: 3px;
+  }}
+  .natureza-precontrato {{
+    background: #3a5a8c; color: #b8d4f0; border: none;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 2px 6px; border-radius: 3px;
+  }}
+  .alerta-parada {{
+    font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
+    padding: 2px 8px; border-radius: 3px; border: none;
+    animation: pulse-alerta 2s ease-in-out infinite;
+  }}
+  @keyframes pulse-alerta {{
+    0%, 100% {{ opacity: 1; }}
+    50% {{ opacity: 0.7; }}
+  }}
+
+  /* Filtro origem da obra */
+  .natureza-filtro {{
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 18px;
+    box-shadow: var(--shadow-sm);
+  }}
+  .nat-label {{
+    font-size: 10.5px; font-weight: 700; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-right: 6px;
+  }}
+  .nat-btn {{
+    padding: 8px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    border: 2px solid var(--line);
+    background: var(--surface); color: var(--ink);
+    cursor: pointer; transition: all 0.15s;
+  }}
+  .nat-btn b {{ font-family: 'JetBrains Mono', monospace; font-size: 15px; margin-left: 6px; }}
+  .nat-btn:hover {{ border-color: var(--gold-soft); }}
+  .nat-btn.nat-ativa {{ border-color: var(--gold); background: var(--gold-bg); color: var(--gold); }}
+  .nat-btn.nat-nova.nat-ativa {{ border-color: #4a9; background: rgba(68,170,153,0.12); color: #4a9; }}
+  .nat-btn.nat-retro.nat-ativa {{ border-color: #8b4513; background: rgba(139,69,19,0.12); color: #c47a3a; }}
+  .nat-btn.nat-incerta.nat-ativa {{ border-color: #b8860b; background: rgba(184,134,11,0.12); color: #d4a017; }}
+  .nat-btn.nat-precontrato.nat-ativa {{ border-color: #3a5a8c; background: rgba(58,90,140,0.12); color: #6b9fd4; }}
+
+  /* Badge incerta */
+  .natureza-incerta {{
+    background: #8b7500; color: #fff; border: none;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 2px 6px; border-radius: 3px;
+  }}
+
+  /* Indicador visual origem nos cards da narrativa */
+  .narr-ind-nova .narr-ind-valor {{ color: #4a9; }}
+  .narr-ind-retro .narr-ind-valor {{ color: #c47a3a; }}
+  .narr-ind-incerta .narr-ind-valor {{ color: #d4a017; }}
+  .narr-ind-precontrato .narr-ind-valor {{ color: #6b9fd4; }}
+  .narr-ind-5 {{ grid-template-columns: repeat(5, 1fr); }}
+
   /* Card filtrado (oculto via JS) · garantia visual */
   .obra-card.filtrada {{ display: none !important; }}
 
@@ -2635,20 +3308,10 @@ def main():
 
 <main>
 
-  <!-- ========== TELA 1 · RESUMO ========== -->
+  <!-- ========== TELA 1 · VISÃO GERAL ========== -->
   <section id="tela-resumo" class="tela">
 
-    <div class="section-title">Resumo</div>
-    <div class="stats">
-      <div class="stat"><div class="v">{n_total}</div><div class="l">Obras analisadas</div></div>
-      <div class="stat"><div class="v">{n_marcos_total}</div><div class="l">Marcos detectados</div></div>
-      <div class="stat"><div class="v">{len(com_marcos)}</div><div class="l">Com timeline</div></div>
-      <div class="stat"><div class="v">{len(sem_marcos)}</div><div class="l">Sem msgs Telegram</div></div>
-      <div class="stat"><div class="v">{pct_feliz}<small>%</small></div><div class="l">Caminho feliz · 2026</div></div>
-      <div class="stat"><div class="v" style="color:#c45a5a">{taxa_repro_2026}<small>%</small></div><div class="l">Reprovação · finalizadas 2026</div></div>
-    </div>
-
-    {render_diagnostico(perfis_fluxo)}
+    {render_narrativa_unificada(perfis_fluxo, compilacao_prob, n_total, n_marcos_total, len(com_marcos), len(sem_marcos), cobertura_regex, n_novas, n_retorno, n_pre_contrato, n_incerta)}
 
     <button class="cta-tela" onclick="mostrarTela('tela-obras')">
       <span class="cta-label">Ver obras detalhadas</span>
@@ -2693,6 +3356,15 @@ def main():
         <button class="ac-btn" onclick="document.querySelectorAll('.obra-card').forEach(d=>d.open=false)">Colapsar todos</button>
         <button class="ac-btn" onclick="limparFiltros()">Limpar filtros</button>
       </div>
+    </div>
+
+    <div class="natureza-filtro">
+      <div class="nat-label">Origem da obra</div>
+      <button class="nat-btn nat-todas nat-ativa" onclick="filtrarNatureza(this, 'todas')">Todas <b>{n_total}</b></button>
+      <button class="nat-btn nat-nova" onclick="filtrarNatureza(this, 'nova')">Novas (do zero) <b>{n_novas}</b></button>
+      <button class="nat-btn nat-retro" onclick="filtrarNatureza(this, 'retorno')">Retornos <b>{n_retorno}</b></button>
+      <button class="nat-btn nat-incerta" onclick="filtrarNatureza(this, 'incerta')">Incertas <b>{n_incerta}</b></button>
+      <button class="nat-btn nat-precontrato" onclick="filtrarNatureza(this, 'pre_contrato')">Pré-contrato <b>{n_pre_contrato}</b></button>
     </div>
 
     <div class="cat-filtros">
@@ -2762,8 +3434,16 @@ def main():
     window.scrollTo({{top: 0, behavior: 'smooth'}});
   }}
 
-  // Filtros ativos (multi-categoria + busca textual)
+  // Filtros ativos (multi-categoria + busca textual + natureza)
   const catsAtivas = new Set();
+  let naturezaAtiva = 'todas';
+
+  function filtrarNatureza(btn, tipo) {{
+    naturezaAtiva = tipo;
+    document.querySelectorAll('.nat-btn').forEach(b => b.classList.remove('nat-ativa'));
+    btn.classList.add('nat-ativa');
+    aplicarFiltros();
+  }}
 
   function toggleCat(btn) {{
     const cat = btn.getAttribute('data-cat');
@@ -2779,7 +3459,10 @@ def main():
 
   function limparFiltros() {{
     catsAtivas.clear();
+    naturezaAtiva = 'todas';
     document.querySelectorAll('.cat-chip.ativa').forEach(b => b.classList.remove('ativa'));
+    document.querySelectorAll('.nat-btn').forEach(b => b.classList.remove('nat-ativa'));
+    document.querySelector('.nat-todas').classList.add('nat-ativa');
     document.getElementById('busca-obras').value = '';
     aplicarFiltros();
   }}
@@ -2796,7 +3479,8 @@ def main():
       const cats = (card.getAttribute('data-categorias') || '').split(' ');
       const matchBusca = !termo || busca.includes(termo);
       const matchCats = catsAtivas.size === 0 || [...catsAtivas].every(c => cats.includes(c));
-      const match = matchBusca && matchCats;
+      const matchNat = naturezaAtiva === 'todas' || cats.includes('origem_' + naturezaAtiva);
+      const match = matchBusca && matchCats && matchNat;
       if (match) {{
         card.classList.remove('filtrada');
         card.style.display = '';
@@ -2810,9 +3494,10 @@ def main():
     }});
 
     const res = document.getElementById('resultado-filtros');
-    const numFiltros = catsAtivas.size + (termo ? 1 : 0);
+    const numFiltros = catsAtivas.size + (termo ? 1 : 0) + (naturezaAtiva !== 'todas' ? 1 : 0);
+    const natLabel = naturezaAtiva === 'nova' ? ' · mostrando novas (do zero)' : (naturezaAtiva === 'retorno' ? ' · mostrando retornos' : (naturezaAtiva === 'incerta' ? ' · mostrando incertas' : (naturezaAtiva === 'pre_contrato' ? ' · mostrando pré-contrato' : '')));
     if (numFiltros > 0) {{
-      res.innerHTML = `<strong>${{visiveis}}</strong> de ${{total}} obras visíveis · ${{numFiltros}} filtro${{numFiltros>1?'s':''}} ativo${{numFiltros>1?'s':''}}`;
+      res.innerHTML = `<strong>${{visiveis}}</strong> de ${{total}} obras visíveis · ${{numFiltros}} filtro${{numFiltros>1?'s':''}} ativo${{numFiltros>1?'s':''}}${{natLabel}}`;
       res.style.display = 'block';
     }} else {{
       res.style.display = 'none';
