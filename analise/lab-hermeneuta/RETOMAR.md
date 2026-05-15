@@ -1,10 +1,46 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-12 · piloto expandido pra 20 obras + auditoria 6 agentes + 7 bugs detectados
+> **Última atualização:** 2026-05-14 · marcos retroativos + regex inicio_dia expandido + filtro amanhã
 
 ---
 
-## 🆕 SESSÃO 2026-05-12 · O QUE FECHAMOS HOJE
+## 🆕 SESSÃO 2026-05-14 · O QUE FECHAMOS HOJE
+
+### Marcos retroativos (atribuição D-1)
+- ✅ Quando aplicador escreve "ontem fizemos X", marco atribuído ao dia anterior com `hora: "retro"` e `retroativo: True`
+- ✅ Gantt SVG: retroativos com borda tracejada branca + icone ↩ no lugar da hora
+- ✅ Swimlane: retroativos com borda tracejada dourada + tag "(retroativo)" no tooltip
+- ✅ 6 marcos retroativos legítimos em 5 obras na primeira varredura
+
+### Regex inicio_dia expandido + filtro amanhã
+- ✅ 5+ padrões novos: "estou retornando/chegando/na obra", "já estou/estamos em obra", "retornando pra obra", "chegarei às"
+- ✅ Filtro "amanhã" — descarta inicio_dia se "amanhã" aparece antes do match no texto (evita falso positivo tipo "amanhã já estou retornando")
+- ✅ **Guilherme Haidar corrigido:** 0 → 6 marcos (dias 05 e 06/05), Gantt funcional
+- ✅ 724 marcos totais, guardrails OK, deployado via publicar.py
+
+### Pendências pra próxima sessão (7 bugs da auditoria 2026-05-12 continuam)
+
+| Ordem | Bug | Custo | Onde |
+|---|---|---|---|
+| 1 | `status` ausente em 20/20 | 15min | gerar_jornada.py coleta |
+| 2 | `tempo_execucao = None` em 6-8 obras | 1h | Cluster fallback |
+| 3 | Hibernação engolida dentro de fase-mãe | 1h | Detector hibernação |
+| 4 | 72% reprovacao no fallback "tratativa" | 30min | Subtipos verniz/completa |
+| 5 | Falsos positivos por negação/pergunta | 45min | 5 regex novas |
+| 6 | Kira/Bot como aplicador | 10min | PESSOAS_MONOFLOOR |
+| 7 | qtd=None em 100% das OS | 1h | pdfplumber bug |
+
+**Total: ~5h** pra eliminar todos os achados da auditoria.
+
+### Comando pra retomar amanhã (cole no Claude Code)
+
+```
+Lê analise/lab-hermeneuta/RETOMAR.md primeiro · seção topo "SESSÃO 2026-05-14". Memórias críticas: project_auditoria_20_obras_2026_05_12.md. Próximo passo: bug #1 (campo status ausente no JSON · ~15min). Lista os 7 bugs em ordem com plano de fix pra cada.
+```
+
+---
+
+## 📜 SESSÃO 2026-05-12 · HISTÓRICO
 
 ### Lab Orion · refinamento profundo da Jornada
 - ✅ Sidebar esquerda (320px sticky) com busca + filtro status + filtro "vistas" (localStorage) · escala pra 200+ obras
