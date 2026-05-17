@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-17T01:26:52Z",
+  "atualizado_em": "2026-05-17T05:30:57Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1049,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2107,
+    "pending_tasks": 2106,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -68,9 +68,9 @@
       "capacityRisk": 0
     },
     "por_severidade": {
-      "high": 1,
+      "high": 2,
       "medium": 2,
-      "low": 1
+      "low": 0
     },
     "detalhes": [
       {
@@ -80,8 +80,19 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 9,
+        "daysUntilEntry": 8,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
+      },
+      {
+        "projectId": "pf-mklv83sq-578563",
+        "clienteNome": "CAMILA E ROBERTA (INTEGRALUX)",
+        "cidade": "Não informada",
+        "type": "STAGE_DELAY",
+        "severity": "HIGH",
+        "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
+        "daysUntilEntry": 15,
+        "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
       {
@@ -90,8 +101,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 9 dias do início",
-        "daysUntilEntry": 9,
+        "message": "Projeto sem equipe definida a 8 dias do início",
+        "daysUntilEntry": 8,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -99,21 +110,10 @@
         "projectId": "pf-mklv83sq-578563",
         "clienteNome": "CAMILA E ROBERTA (INTEGRALUX)",
         "cidade": "Não informada",
-        "type": "STAGE_DELAY",
-        "severity": "MEDIUM",
-        "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 16,
-        "currentStage": "EM CONTRATO",
-        "expectedStage": "REVISÃO FINAL OP"
-      },
-      {
-        "projectId": "pf-mklv83sq-578563",
-        "clienteNome": "CAMILA E ROBERTA (INTEGRALUX)",
-        "cidade": "Não informada",
         "type": "NO_TEAM",
-        "severity": "LOW",
-        "message": "Projeto sem equipe definida a 16 dias do início",
-        "daysUntilEntry": 16,
+        "severity": "MEDIUM",
+        "message": "Projeto sem equipe definida a 15 dias do início",
+        "daysUntilEntry": 15,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -6875,7 +6875,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 33,
+        "dias_desde_resumo": 34,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -7195,7 +7195,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 33,
+        "dias_desde_resumo": 34,
         "alertas": [
           "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
           "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
@@ -9212,7 +9212,7 @@
   "lw": {
     "luana": {
       "n": 84,
-      "mediana": 257,
+      "mediana": 258,
       "n180": 55,
       "n270": 36,
       "zumbi": 7,
@@ -9221,9 +9221,9 @@
     },
     "wesley": {
       "n": 80,
-      "mediana": 211,
+      "mediana": 212,
       "n180": 47,
-      "n270": 20,
+      "n270": 21,
       "zumbi": 18,
       "reparo": 9,
       "pausadas": 2
