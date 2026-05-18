@@ -1,22 +1,22 @@
 {
-  "atualizado_em": "2026-05-18T16:29:05Z",
+  "atualizado_em": "2026-05-18T18:20:14Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1049,
-    "ativas": 251,
-    "finalizados": 798,
-    "em_execucao": 36,
+    "total": 1050,
+    "ativas": 249,
+    "finalizados": 801,
+    "em_execucao": 33,
     "pausados": 5,
-    "m2_em_execucao": 6162
+    "m2_em_execucao": 4937
   },
   "por_status": {
+    "contrato": 16,
     "planejamento": 90,
-    "finalizado": 570,
+    "finalizado": 573,
     "aguardando_execucao": 43,
-    "em_execucao": 36,
+    "em_execucao": 33,
     "pausado": 5,
     "aguardando_clima": 3,
-    "contrato": 15,
     "reparo": 22,
     "concluido": 228,
     "cancelado": 35,
@@ -2142,8 +2142,8 @@
           "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
           "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK",
           "cidade": "SÃO PAULO",
-          "fase": "AGUARDANDO LIBERAÇÃO",
-          "status": "em_execucao"
+          "fase": "OBRA CONCLUÍDA",
+          "status": "finalizado"
         }
       ],
       "obras_membros": [],
@@ -2307,6 +2307,11 @@
       "dataEntrada": "01/08/2026 10:00",
       "dataExec": "2026-08-01"
     },
+    "b3e8b2d9-3562-40c5-8674-3467edeb8402": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2026-06-20"
+    },
     "906f9000-ca41-4104-ba3b-87ede936480e": {
       "dataVisita": "04/11/2025 13:00",
       "dataEntrada": "05/01/2026 13:00",
@@ -2411,11 +2416,6 @@
       "dataVisita": "",
       "dataEntrada": "",
       "dataExec": "2026-05-20"
-    },
-    "868406f1-a1eb-4ab3-88a0-b83402150225": {
-      "dataVisita": "01/12/2025 16:30",
-      "dataEntrada": "28/01/2026 13:16",
-      "dataExec": "2026-05-13"
     },
     "d115fc6b-854d-455b-ac91-87dfdd0e183f": {
       "dataVisita": "",
@@ -2987,11 +2987,6 @@
       "dataEntrada": "",
       "dataExec": "2026-07-08"
     },
-    "cc59e8c4-ccb7-4999-b7b1-6759a22e924a": {
-      "dataVisita": "24/09/2025 18:00",
-      "dataEntrada": "",
-      "dataExec": "2026-05-13"
-    },
     "6213aa79-f0cd-48e1-ae71-57bbb65b65ae": {
       "dataVisita": "29/04/2025 12:00",
       "dataEntrada": "",
@@ -3202,11 +3197,6 @@
       "dataEntrada": "",
       "dataExec": "2026-08-03"
     },
-    "76643c95-c198-4fd9-be8b-c083e0b211ae": {
-      "dataVisita": "12/02/2026 19:00",
-      "dataEntrada": "13/04/2026 11:00",
-      "dataExec": "2026-05-01"
-    },
     "1541645c-c586-46d3-b40e-c4b7b7436b6d": {
       "dataVisita": "13/03/2026 17:00",
       "dataEntrada": "04/05/2026 12:00",
@@ -3331,7 +3321,6 @@
       "c6908776",
       "c7962dae",
       "c9992b92",
-      "cc59e8c4",
       "ce7f056c",
       "d13e0ad0",
       "db4288be",
@@ -3339,7 +3328,7 @@
       "dec2480f",
       "f6dc0a36"
     ],
-    "zumbi_n": 38,
+    "zumbi_n": 37,
     "orfas_ids": [
       "0b692354",
       "1231fb6a",
@@ -3373,8 +3362,8 @@
       "a869c12c",
       "ab17feda",
       "acb1d3d3",
+      "b3e8b2d9",
       "c6908776",
-      "cc59e8c4",
       "d115fc6b",
       "d13e0ad0",
       "d51326f8",
@@ -3386,16 +3375,16 @@
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-17T23:01:07.182000+00:00",
-    "total_fluxo": 192,
-    "com_kira": 127,
-    "saudavel": 71,
-    "saudavel_pct_no_monitorado": 55.9,
-    "atencao": 56,
+    "total_fluxo": 190,
+    "com_kira": 125,
+    "saudavel": 70,
+    "saudavel_pct_no_monitorado": 56.0,
+    "atencao": 55,
     "sem_kira": 65,
     "clima_dist": {
       "Positivo": 24,
-      "Neutro": 48,
-      "Tenso": 59,
+      "Neutro": 47,
+      "Tenso": 58,
       "Crítico": 6,
       "?": 78
     },
@@ -3686,7 +3675,7 @@
         "clima": "Crítico",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "REAPLICAÇÃO TOTAL DO PISO ACIONADA VIA GARANTIA: decisão tomada em 31/03 pelo diretor Rodrigo; envolve remoção (~4 dias) e reaplicação (~15 dias) em obra com entrega prevista para 17/04 — cronograma extremamente apertado",
           "FISSURAS ATIVAS E PROGRESSIVAS: identificadas nos banheiros suíte e lavabo, além de estrias evoluindo na sala e cozinha; sem laudo técnico emitido até o encerramento da conversa",
@@ -4244,190 +4233,6 @@
         "tempo_resp": "",
         "total_msgs": 30,
         "eventos": []
-      },
-      {
-        "id": "76643c95-c198-4fd9-be8b-c083e0b211ae",
-        "cliente": "PEDRO RUBENS SILVEIRA MELLO BERLINCK",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "AGUARDANDO LIBERAÇÃO",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 5,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 25,
-        "alertas": [
-          "CONFLITO TÉCNICO CRÍTICO: Equipe de 13/04 orientou uso de AC3/ACR para regularização; equipe de 17/04 contraindicou o mesmo material. Cliente identificou a contradição e está formalmente insatisfeita — risco de responsabilização da Monofloor por retrabalho",
-          "RISCO FINANCEIRO: Marcela solicita que a Monofloor absorva custo de R$1.600,00 referente a trincas novas, alegando erro nas orientações passadas pela equipe — sem resposta da empresa",
-          "CLIENTE AMEAÇA ESCALAR: Marcela mencionou contato com Rodrigo e Cassandra para resolver a situação — indica insatisfação grave e risco de ruptura do relacionamento comercial",
-          "OBRA PARALISADA SEM PRAZO: Desde 17/04 a obra está parada aguardando regularização das superfícies e alinhamento técnico — sem cronograma comunicado à cliente até 22/04",
-          "AUSÊNCIA DE RESPOSTA PÓS-CRISE: Após os alertas críticos de 17/04, não há registro de nenhuma resposta da Monofloor até 22/04 — período de 5 dias sem comunicação efetiva"
-        ],
-        "pendencias": [
-          "COTAÇÃO DE ADITIVO (30/03): Marcela solicitou cotação para aplicação na face interna de porta — encaminhado à equipe de Arquitetura mas sem retorno registrado na conversa até 22/04",
-          "DADOS DA EQUIPE (09/04): Marcela solicitou nomes, RG e CPF da equipe para acesso ao condomínio — Monofloor disse que iria levantar mas não há confirmação de envio na conversa",
-          "LIGAÇÃO TELEFÔNICA (17/04): Marcela solicitou contato telefônico urgente múltiplas vezes — nenhum retorno registrado",
-          "CRONOGRAMA ATUALIZADO (22/04): Marcela perguntou sobre previsão de conclusão da obra — sem resposta da Monofloor",
-          "PROPOSTA DE ABSORÇÃO DE CUSTO R$1.600,00 (22/04): Marcela solicita retorno urgente sobre responsabilidade pelo custo de reparos em trincas novas — sem resposta registrada"
-        ],
-        "resumo_exec": "O projeto passou por sucessivos reagendamentos desde fevereiro, com entrada efetiva apenas em 13/04, já marcada por conflito com pintores em obra. A partir de 17/04, a situação se tornou crítica: a equipe técnica da Monofloor identificou necessidade de paralisação total por irregularidades no substrato, mas a recomendação foi contradita por orientações dadas pela própria equipe dias antes — gerando forte insatisfação da cliente Marcela, que classificou a comunicação como 'terrorismo' e solicitou ligação urgente não atendida. Há cinco pendências abertas sem resposta, incluindo uma solicitação f",
-        "clima_desc": "A cliente Marcela demonstra frustração crescente com inconsistências técnicas entre equipes, falta de retorno telefônico e paralisação da obra. O clima evoluiu de neutro para tenso a partir de 17/04, com linguagem assertiva e ameaça de escalar para supervisores.",
-        "periodo": "23/02 a 22/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 150,
-        "eventos": [
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Negociação de data para visita técnica — cliente consegue reorganizar agenda e confirma visita para 26/02 às 10:30",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Cliente informa que obra não estará pronta para entrada em 18/03 e solicita nova data",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Nova data de entrada confirmada para 13/04/2026",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Monofloor solicita centralização do contato em um responsável — Marcela Albuquerque indicada (marcela@malbu.arq.br)",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Comunicado de migração de canal de atendimento para novo número (41 98822-1783)",
-            "classe": "neutro"
-          },
-          {
-            "data": "30/03",
-            "iso": "2026-03-30",
-            "texto": "Marcela solicita cotação de aditivo para face interna de porta — encaminhado para equipe de Arquitetura",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Visita de entrada de obra realizada às 13:45h pelo consultor Nathan do Amaral Janjão — recebido por Danilo ou Gabriel (engenheiro da obra)",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Relatório de visita enviado; horário de expediente confirmado (09h-17h, seg-sex); entrega de material solicitada para segunda-feira",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Cliente informa que pintura está em andamento e restringe entrada de outros prestadores até conclusão",
-            "classe": "bom"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Marcela solicita nomes e documentos (RG/CPF) da equipe para entrada no condomínio",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/04",
-            "iso": "2026-04-10",
-            "texto": "Monofloor confirma que está levantando dados da equipe — sem envio efetivo registrado na conversa",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Equipe Monofloor chega à obra mas encontra pintores ainda trabalhando — impossibilidade de início",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Após intervenção de Marcela, decide-se que a equipe retornará na quarta-feira (16/04)",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Identificados pontos de massa irregular (PVA) que necessitam regularização antes da aplicação do monolítico",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Monofloor confirma retorno para quinta-feira 16/04 — após consulta ao setor responsável",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "Marcela solicita horário de chegada da equipe para 16/04 e informa que enviará pessoa do escritório para recebê-los",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "Monofloor alinha horário de chegada para 17/04; levanta questão sobre requadros de janelas e trilhos; registra marcas e manchas pré-existentes",
-            "classe": "critico"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Equipe inicia aplicação de massa nas paredes; conflito técnico: instaladores de segunda (13/04) orientaram uso de AC3/ACR, equipe de 17/04 contraindicou o material e recomendou massa cimentícia com 7 dias de cura por cm",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Monofloor recomenda paralisação total da obra até regularização de todas as áreas",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Marcela reage com forte insatisfação, classifica comunicação da Monofloor como 'terrorismo', solicita ligação telefônica urgente e questiona troca de equipe",
-            "classe": "critico"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Marcela ameaça contatar Cassandra e Rodrigo (supervisores/diretores) para resolver a situação",
-            "classe": "critico"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Sem registro de ligação ou resolução na conversa após os alertas de Marcela",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Marcela solicita atualização do cronograma e previsão de conclusão — sem resposta registrada",
-            "classe": "critico"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Marcela informa que tentou contato com Rodrigo sem sucesso",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Marcela apresenta proposta de absorção de custo de R$1.600,00 referente a trincas novas, solicitando retorno urgente da Monofloor",
-            "classe": "critico"
-          }
-        ]
       },
       {
         "id": "ad2c9413-d9e2-47cb-93c2-cf396ca17db4",
@@ -7026,7 +6831,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "CRÍTICO: Consultor compareceu à obra 1h15 antes do horário agendado (10h em vez de 11h15) sem comunicação prévia, causando falha grave na visita e escalação à diretoria",
           "CRÍTICO: Cliente Paola relatou ter sido informada verbalmente que o serviço só seria concluído em maio, informação não alinhada com o grupo e que gerou forte insatisfação",
@@ -7612,7 +7417,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "Tampa do ralo da varanda estufada: novo problema identificado em 24/03, encaminhado à área técnica mas sem retorno ou solução registrados até 31/03",
           "Reparos do banheiro pendentes há mais de 5 semanas sem data de execução confirmada",
@@ -7741,7 +7546,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "Relatório técnico da visita de 27/03 ainda não foi entregue ao cliente (31/03) - risco de nova cobrança e insatisfação",
           "Obra permanece sem data confirmada de retomada desde 24/02 - mais de 35 dias de paralisação parcial",
@@ -8106,7 +7911,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "Cliente sem resposta há 6 dias (26/03 a 01/04) após nova promessa de retorno da Monofloor",
           "Michelle expressou insatisfação explícita com o ritmo de comunicação em 16/03: 'sem ficar nessa troca de mensagens 1 a cada semana'",
@@ -8230,7 +8035,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "URGENTE: Proposta e orçamento para solução definitiva prometidos há mais de 2 semanas sem entrega — cliente cobra formalmente em 02/04",
           "NOVO PROBLEMA RELATADO: Em 13/03 a cliente informou nova reação no piso, indicando piora do problema durante o período de espera",
@@ -8371,7 +8176,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "Reunião agendada para 14:00h não foi cumprida no horário — atraso superior a 1 hora sem comunicação prévia ao grupo",
           "Participante utilizou '@todos' demonstrando necessidade de atenção coletiva, indicando possível urgência",
@@ -8759,6 +8564,14 @@
         "tem_grupo": false
       },
       {
+        "id": "b3e8b2d9-3562-40c5-8674-3467edeb8402",
+        "cliente": "JUNIA LIMA",
+        "consultor": "—",
+        "cidade": "SP_CAPITAL",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
         "id": "920dcacc-ed7e-4715-bc7e-a071c4b4a528",
         "cliente": "PRISCILA MIRANDA BETTONI MALTA (ELEPAR)",
         "consultor": "Wesley",
@@ -9083,14 +8896,6 @@
         "cliente": "RICARDO ALVES MARUJO",
         "consultor": "Wesley",
         "cidade": "IBIUNA",
-        "fase": "CLIENTE FINALIZADO",
-        "tem_grupo": false
-      },
-      {
-        "id": "cc59e8c4-ccb7-4999-b7b1-6759a22e924a",
-        "cliente": "SYLVIA DIEDERICHSEN STICKEL",
-        "consultor": "[]",
-        "cidade": "SÃO PAULO",
         "fase": "CLIENTE FINALIZADO",
         "tem_grupo": false
       },
@@ -9495,18 +9300,18 @@
       "pausadas": 2
     },
     "wesley": {
-      "n": 80,
-      "mediana": 213,
-      "n180": 48,
+      "n": 78,
+      "mediana": 216,
+      "n180": 47,
       "n270": 21,
       "zumbi": 18,
       "reparo": 9,
       "pausadas": 2
     },
-    "total_ativas": 216,
-    "n_180_total": 119,
-    "concentracao_pct": 75.5,
-    "concentracao_180_pct": 85.7,
+    "total_ativas": 214,
+    "n_180_total": 117,
+    "concentracao_pct": 75.2,
+    "concentracao_180_pct": 86.3,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
