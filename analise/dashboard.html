@@ -1447,6 +1447,7 @@
       </div>
     </div>
     <div class="links">
+      <a href="jornada-obras-qualidade.html" style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);padding:4px 10px;border:1px solid var(--accent);border-radius:4px;">Jornada de Obras</a>
       <span class="stamp"><span id="snapshot-badge"></span><span class="mono" id="stamp-snapshot">—</span> · <span class="mono" id="stamp-now">—</span></span>
       <div id="headline-badge"></div>
     </div>
@@ -1744,7 +1745,7 @@
       <div class="q2-list">
         <h3>Obras filtradas <span class="counter" id="q2-count">0</span></h3>
         <table id="q2-table">
-          <thead><tr><th>Cliente</th><th>Cidade</th><th>Fase</th><th>Consultor</th><th class="num">m²</th><th class="num">Idade</th></tr></thead>
+          <thead><tr><th>Cliente</th><th>Cidade</th><th>Fase</th><th>Consultor</th><th class="num">m²</th><th class="num">Idade</th><th>Risco</th></tr></thead>
           <tbody id="q2-tbody"></tbody>
         </table>
       </div>
@@ -2162,6 +2163,10 @@
   <details class="footer-tech">
     <summary>Área técnica</summary>
     <div class="footer-tech-links">
+      <a href="relatorios/jornada-obras-1a-edicao-2026-05-13.html"><strong>📄 Relatório Jornada de Obras · 1ª Edição (13/05)</strong> · pra Diretoria</a>
+      <a href="jornada-obras-qualidade.html">Jornada de Obras · KPIs de qualidade (timeline cross-obras)</a>
+      <a href="lab-hermeneuta/dados/leituras.html">Bancada de Leituras (interpretativa · pessoal)</a>
+      <a href="lab-hermeneuta/dados/timeline_obras.html">Timeline de Obras (pipeline técnico · 220 obras)</a>
       <a href="modelagem.html">Modelagem de dados (campos · APIs)</a>
       <a href="plano.html">Plano de trabalho (etapas · cruzamentos)</a>
       <a href="auditoria.html">Auditoria v6 (versão anterior)</a>
@@ -2256,6 +2261,13 @@ loadDashboardData();
 
 function q2EscHtml(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
+function q2RiskChip(nivel){
+  if (!nivel) return '<span class="chip mut">—</span>';
+  var cls = nivel==='critico'?'sc':nivel==='alto'?'rd':nivel==='moderado'?'am':'gn';
+  var lbl = nivel==='critico'?'CRÍTICO':nivel==='alto'?'ALTO':nivel==='moderado'?'MODERADO':'BAIXO';
+  return '<span class="chip '+cls+'">'+lbl+'</span>';
+}
+
 function q2Init(){
   const ativas = Q2_OBRAS;
   const statuses = [
@@ -2336,6 +2348,7 @@ function q2Filter(status){
       + '<td>' + q2EscHtml(consultorCurto) + '</td>'
       + '<td class="num">' + (o.m2 ? o.m2.toLocaleString('pt-BR') : '—') + '</td>'
       + '<td class="num ' + idadeCls + '">' + idade + '</td>'
+      + '<td>' + q2RiskChip(o.risco_nivel) + '</td>'
       + '</tr>';
   }).join('');
 
@@ -2413,6 +2426,17 @@ function q2ShowDiagFiltered(list){
     if (semConsultor) sinais.push('<span class="q2s-bigN">' + semConsultor + '</span> <span class="q2s-pct">sem consultor</span><span class="q2s-flag crit">crítico</span>');
     if (orfas && orfas !== semConsultor) sinais.push('<span class="q2s-bigN">' + orfas + '</span> <span class="q2s-pct">órfãs</span>');
     html += stat('Sinais críticos', sinais.join('<span class="q2s-divider">·</span>'));
+  }
+  var nCrit = list.filter(o=>o.risco_nivel==='critico').length;
+  var nAlto = list.filter(o=>o.risco_nivel==='alto').length;
+  var nMod  = list.filter(o=>o.risco_nivel==='moderado').length;
+  var nComRisco = nCrit + nAlto + nMod;
+  if (nComRisco > 0) {
+    var rParts = [];
+    if (nCrit) rParts.push('<span class="q2s-bigN">' + nCrit + '</span> <span class="q2s-pct">crítico</span><span class="q2s-flag crit">!</span>');
+    if (nAlto) rParts.push('<span class="q2s-bigN">' + nAlto + '</span> <span class="q2s-pct">alto</span>');
+    if (nMod) rParts.push('<span class="q2s-bigN">' + nMod + '</span> <span class="q2s-pct">moderado</span>');
+    html += stat('Score de risco', rParts.join('<span class="q2s-divider">·</span>'));
   }
   html += '</div>';
 

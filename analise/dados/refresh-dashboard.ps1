@@ -26,11 +26,12 @@ if ($rawText[0] -eq [char]0xFEFF) { $rawText = $rawText.Substring(1) }
 $existing = $rawText | ConvertFrom-Json
 Write-Host "  Existing snapshot: $($existing.snapshot_date)"
 
-# 2. Read Pipefy dates
+# 2. Read Pipefy dates (opcional — arquivo pode não existir mais)
 Write-Host "`n[2/7] Reading Pipefy dates..."
+$pipefyMap = @{}
+if (Test-Path $pipefyPath) {
 $pipefyRaw = [System.IO.File]::ReadAllText($pipefyPath, [System.Text.Encoding]::UTF8)
 $pipefyData = $pipefyRaw | ConvertFrom-Json
-$pipefyMap = @{}
 foreach ($prop in $pipefyData.PSObject.Properties) {
     $key = $prop.Name.ToUpper().Trim()
     if (-not $pipefyMap.ContainsKey($key)) {
@@ -40,6 +41,9 @@ foreach ($prop in $pipefyData.PSObject.Properties) {
     }
 }
 Write-Host "  Pipefy entries: $($pipefyMap.Count)"
+} else {
+    Write-Host "  Pipefy dates file not found, using createdAt fallback"
+}
 
 function Get-PipefyDate($clienteName) {
     if (-not $clienteName) { return $null }
@@ -141,7 +145,15 @@ $metTotal = ($metragens | Measure-Object -Sum).Sum
 $metSorted = $metragens | Sort-Object
 $metMediana = if ($metSorted.Count -gt 0) { $metSorted[[math]::Floor($metSorted.Count/2)] } else { 0 }
 
-# Q2_OBRAS with Pipefy ages
+# Q2_OBRAS with Pipefy ages (fallback: idade anterior > createdAt)
+$existingAgeMap = @{}
+if ($existing.Q2_OBRAS) {
+    foreach ($eo in $existing.Q2_OBRAS) {
+        if ($eo.id -and $eo.idade) { $existingAgeMap[$eo.id] = $eo.idade }
+    }
+}
+Write-Host "  Existing age map: $($existingAgeMap.Count) entries"
+
 $q2Obras = @()
 $idades = @()
 $matchedPipefy = 0
@@ -153,6 +165,11 @@ foreach ($p in $ativas) {
         $dt = [DateTime]::Parse($pipefyDate)
         $age = ($todayDate - $dt).Days
         $matchedPipefy++
+    } elseif ($existingAgeMap.ContainsKey($p.id)) {
+        $prevSnap = $existing.snapshot_date
+        if ($prevSnap) {
+            try { $daysDiff = ($todayDate - [DateTime]::Parse($prevSnap)).Days; $age = $existingAgeMap[$p.id] + $daysDiff } catch { $age = $existingAgeMap[$p.id] }
+        } else { $age = $existingAgeMap[$p.id] }
     } else {
         if ($p.createdAt) {
             try { $dt = [DateTime]::Parse($p.createdAt); $age = ($todayDate - $dt).Days } catch { $age = 0 }
@@ -173,6 +190,39 @@ foreach ($p in $ativas) {
 }
 
 Write-Host "  Pipefy match: $matchedPipefy / $total_ativas"
+
+# Merge score de risco do Timeline (Lab Orion)
+$timelinePath = 'C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta\dados\timeline_obras.json'
+if (Test-Path $timelinePath) {
+    $tlRaw = [System.IO.File]::ReadAllText($timelinePath, [System.Text.Encoding]::UTF8)
+    $tlData = $tlRaw | ConvertFrom-Json
+    $tlMap = @{}
+    foreach ($t in $tlData.timelines) { $tlMap[$t.obra_id] = $t }
+    $mergedRisco = 0; $mergedConsultor = 0
+    for ($i = 0; $i -lt $q2Obras.Count; $i++) {
+        $oid = $q2Obras[$i].id
+        if ($tlMap.ContainsKey($oid)) {
+            $tl = $tlMap[$oid]
+            if ($tl.score_risco) {
+                $q2Obras[$i] | Add-Member -NotePropertyName 'risco_nivel' -NotePropertyValue $tl.score_risco.nivel
+                $q2Obras[$i] | Add-Member -NotePropertyName 'risco_valor' -NotePropertyValue $tl.score_risco.valor
+                $mergedRisco++
+            }
+            if ($tl.alerta_parada) {
+                $q2Obras[$i] | Add-Member -NotePropertyName 'alerta_parada' -NotePropertyValue $tl.alerta_parada
+            }
+            if ($tl.consultor -and $tl.consultor -ne '') {
+                $q2Obras[$i].consultor = $tl.consultor
+                $mergedConsultor++
+            }
+        }
+    }
+    $semConsultorAtivas = @($q2Obras | Where-Object { -not $_.consultor -or $_.consultor -eq '' -or $_.consultor -eq '[]' -or $_.consultor -eq $null }).Count
+    Write-Host "  Timeline risk merged: $mergedRisco / $($q2Obras.Count)"
+    Write-Host "  Timeline consultor merged: $mergedConsultor (sem consultor: $semConsultorAtivas)"
+} else {
+    Write-Host "  Timeline JSON not found, skipping risk merge"
+}
 
 $idadesSorted = $idades | Sort-Object
 $idadeMedia = if ($idades.Count -gt 0) { [math]::Round(($idades | Measure-Object -Average).Average, 0) } else { 0 }
