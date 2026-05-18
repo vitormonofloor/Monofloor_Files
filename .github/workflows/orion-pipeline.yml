@@ -1,0 +1,96 @@
+name: Orion Pipeline · cron 2h
+
+# Roda gerar_jornada.py a cada 2h e publica no Cloudflare Worker.
+# Resultado: dados frescos em https://orion-pub.vitor-monofloor.workers.dev/
+#
+# Secrets necessarios:
+#   PAT_LAB_PUB          — PAT com escopo `repo` (clone/push orion-pub)
+#   CLOUDFLARE_API_TOKEN — token CF Workers Edit
+#   CLOUDFLARE_ACCOUNT_ID
+
+on:
+  schedule:
+    - cron: '15 */2 * * *'  # :15 de cada 2h (evita coincidencia com outros workflows)
+  workflow_dispatch:  # botao manual no GitHub UI
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout Monofloor_Files
+        uses: actions/checkout@v4
+
+      - name: Checkout orion-pub
+        uses: actions/checkout@v4
+        with:
+          repository: vitormonofloor/orion-pub
+          token: ${{ secrets.PAT_LAB_PUB }}
+          path: _orion-pub
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install pdfplumber
+
+      - name: Setup Node 22 (wrangler)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instalar wrangler
+        run: npm install -g wrangler@latest
+
+      - name: Rodar pipeline gerar_jornada.py
+        working-directory: analise/lab-hermeneuta
+        run: python agente/gerar_jornada.py
+
+      - name: Copiar arquivos pro repo pub
+        run: |
+          SRC="analise/lab-hermeneuta"
+          DST="_orion-pub/public"
+          mkdir -p "$DST/dados"
+          cp "$SRC/jornada.html"              "$DST/jornada.html"
+          cp "$SRC/index.html"                "$DST/index.html"
+          cp "$SRC/dados/jornadas.json"       "$DST/dados/jornadas.json"
+          cp "$SRC/dados/status.json"         "$DST/dados/status.json"          2>/dev/null || true
+          cp "$SRC/dados/historico-kpis.json" "$DST/dados/historico-kpis.json"  2>/dev/null || true
+          echo "Arquivos copiados"
+
+      - name: Commit + push orion-pub
+        run: |
+          cd _orion-pub
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/
+          if git diff --staged --quiet; then
+            echo "Sem mudancas no JSON — pulando commit"
+          else
+            git commit -m "pipeline cron · $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git push
+          fi
+
+      - name: Deploy Cloudflare Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          cd _orion-pub
+          wrangler deploy
+
+      - name: Resumo
+        if: always()
+        run: |
+          echo "## Orion Pipeline" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f "analise/lab-hermeneuta/dados/jornadas.json" ]; then
+            N=$(python3 -c "import json; d=json.load(open('analise/lab-hermeneuta/dados/jornadas.json')); print(len(d['obras']))")
+            echo "- Obras processadas: **$N**" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- Deploy: https://orion-pub.vitor-monofloor.workers.dev/" >> $GITHUB_STEP_SUMMARY
