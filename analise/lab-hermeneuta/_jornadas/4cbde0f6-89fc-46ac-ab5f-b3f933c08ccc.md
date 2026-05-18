@@ -1,6 +1,6 @@
 # 🎬 JORNADA · APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
 
 ## 📋 Ficha técnica
 
@@ -15,9 +15,9 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | 1ª msg Telegram | 2025-10-21 |
 | Execução prevista | 2026-06-15 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **62 dias** |
+| **Tempo total contrato → entrega** | **206 dias** |
 | **Tempo de execução real** | **1 dias** |
-| **Tempo em hibernação** | **102 dias** |
+| **Tempo em hibernação** | **99 dias** |
 | **Classificação** | **Aguardando execução** |
 
 > **Obra em andamento. 1 ocorrência(s) crítica(s): Equipe deslocada sem frente de trabalho.**
@@ -53,11 +53,11 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | Fase | Início | Fim | Duração | Msgs Telegram |
 |---|---|---|---:|---:|
 | **Planejamento inicial** | 2025-10-21 | 2025-12-12 | 53d | 16 |
-| **Hibernação #1** | 2025-12-12 | 2026-01-15 | 34d | 0 |
+| **Hibernação #1** | 2025-12-13 | 2026-01-14 | 33d | 0 |
 | **Atividade retomada** | 2026-01-15 | 2026-01-21 | 7d | 26 |
-| **Hibernação #2** | 2026-01-22 | 2026-02-24 | 33d | 0 |
+| **Hibernação #2** | 2026-01-23 | 2026-02-23 | 32d | 0 |
 | **Atividade retomada** | 2026-02-24 | 2026-03-04 | 9d | 10 |
-| **Hibernação #3** | 2026-03-05 | 2026-04-09 | 35d | 0 |
+| **Hibernação #3** | 2026-03-06 | 2026-04-08 | 34d | 0 |
 | **Despertar e pré-execução** | 2026-04-09 | 2026-04-09 | 1d | 0 |
 | **Execução** | 2026-01-15 | 2026-01-15 | 1d | 18 |
 | **Pós-execução** | 2026-01-16 | 2026-05-15 | 120d | 35 |
@@ -68,7 +68,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 - **2025-11-13 · escopo_aprovado** · _Gabi | Monofloor_: "♦️Escopo aprovado | Assinatura do contrato aditivo pendente♦️"
 - **2025-11-27 · obra_postergada** · _atendimento | Pedro_: "🚨Obra postergada"
 - **2026-01-16 · relatorio_vt_qualidade** · _equipe | Luana Atendimento_: "APARTAMENTO 805   Olá, pessoal. Bom dia! Tudo bem?   Recebemos as imagens e informações referentes à nossa última visita ao projet"
-- **2026-01-21 · obra_postergada** · _atendimento | Pedro_: "Para registro: após contato com os responsáveis pela obra nos foi passado que a nossa entrada será postergada.  Na próxima semana "
+- **2026-01-21 · obra_postergada** · _Pedro | Mayara_: "Para registro: após contato com os responsáveis pela obra nos foi passado que a nossa entrada será postergada.  Na próxima semana "
 
 ## 📦 Material
 
@@ -92,5 +92,5 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 
 ## 🔍 Padrões observados
 
-- hibernacao_longa · obra ficou 102d praticamente parada
-- execucao_concentrada · só 1.6% do tempo total (1d de 62d)
+- hibernacao_longa · obra ficou 99d praticamente parada
+- execucao_concentrada · só 0.5% do tempo total (1d de 206d)

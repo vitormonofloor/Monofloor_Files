@@ -1,9 +1,9 @@
 {
   "geral": "warn",
-  "checked_at": "2026-05-15T21:18:07Z",
+  "checked_at": "2026-05-18T15:10:28Z",
   "contagem": {
-    "ok": 9,
-    "warn": 1,
+    "ok": 8,
+    "warn": 2,
     "crit": 0
   },
   "checks": [
@@ -35,13 +35,13 @@
     {
       "nome": "Lock de execução",
       "status": "warn",
-      "detalhe": "lock fantasma · PID 24312 morto",
+      "detalhe": "lock fantasma · PID 16708 morto",
       "sugestao": "Próxima varredura limpa automaticamente"
     },
     {
       "nome": "Backups disponíveis",
       "status": "ok",
-      "detalhe": "14 backups · mais recente 5.5h"
+      "detalhe": "14 backups · mais recente 1.7h"
     },
     {
       "nome": "Drift de quantidade de obras",
@@ -55,8 +55,9 @@
     },
     {
       "nome": "Saúde do pipeline",
-      "status": "ok",
-      "detalhe": "sem falhas nas últimas runs"
+      "status": "warn",
+      "detalhe": "2 falha(s) no log recente",
+      "sugestao": "Conferir varredura.log"
     }
   ]
 }

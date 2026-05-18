@@ -1,6 +1,6 @@
 # 🎬 JORNADA · JONATHAS DE ALMEIDA NUNES LUKAS
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
 
 ## 📋 Ficha técnica
 
@@ -15,9 +15,9 @@ Rua Benedito Nardez, nº 1061, 0, Chácara Bela Vista, Campinas/SP, CEP 13092-87
 | 1ª msg Telegram | 2025-07-23 |
 | Execução prevista | 2026-07-22 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **52 dias** |
-| **Tempo de execução real** | **None dias** |
-| **Tempo em hibernação** | **255 dias** |
+| **Tempo total contrato → entrega** | **286 dias** |
+| **Tempo de execução real** | **0 dias** |
+| **Tempo em hibernação** | **251 dias** |
 | **Classificação** | **Pré-obra** |
 
 > **Obra em fase de planejamento/pré-execução.**
@@ -48,13 +48,13 @@ Rua Benedito Nardez, nº 1061, 0, Chácara Bela Vista, Campinas/SP, CEP 13092-87
 | Fase | Início | Fim | Duração | Msgs Telegram |
 |---|---|---|---:|---:|
 | **Planejamento inicial** | 2025-07-23 | 2025-07-25 | 3d | 9 |
-| **Hibernação #1** | 2025-07-25 | 2025-09-08 | 45d | 0 |
+| **Hibernação #1** | 2025-07-26 | 2025-09-07 | 44d | 0 |
 | **Atividade retomada** | 2025-09-08 | 2025-09-08 | 1d | 0 |
-| **Hibernação #2** | 2025-09-08 | 2025-12-15 | 98d | 0 |
+| **Hibernação #2** | 2025-09-09 | 2025-12-14 | 97d | 0 |
 | **Atividade retomada** | 2025-12-15 | 2025-12-15 | 1d | 0 |
-| **Hibernação #3** | 2025-12-15 | 2026-01-15 | 31d | 0 |
+| **Hibernação #3** | 2025-12-16 | 2026-01-14 | 30d | 0 |
 | **Atividade retomada** | 2026-01-15 | 2026-01-15 | 1d | 0 |
-| **Hibernação #4** | 2026-01-15 | 2026-04-06 | 81d | 0 |
+| **Hibernação #4** | 2026-01-16 | 2026-04-05 | 80d | 0 |
 | **Atividade retomada** | 2026-04-06 | 2026-05-04 | 29d | 1 |
 
 ## 📍 Marcos detectados nas mensagens
@@ -79,4 +79,4 @@ Rua Benedito Nardez, nº 1061, 0, Chácara Bela Vista, Campinas/SP, CEP 13092-87
 
 ## 🔍 Padrões observados
 
-- hibernacao_longa · obra ficou 255d praticamente parada
+- hibernacao_longa · obra ficou 251d praticamente parada

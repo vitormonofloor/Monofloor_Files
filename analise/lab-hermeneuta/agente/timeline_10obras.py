@@ -50,6 +50,111 @@ BASE_API = "https://cliente.monofloor.cloud/api/projects"
 
 HOJE = datetime.now(timezone.utc)
 
+# ============================================================
+# CONSTANTES CONFIGURÁVEIS · Rendimento de materiais (Camada 2)
+# Valores conservadores · declarados como constante, nunca hardcode
+# Fonte: estimativa engenharia Monofloor (validar com time industrial)
+# ============================================================
+
+# Rendimento TOTAL em m² por unidade de material enviado
+# (considera múltiplas camadas de aplicação — a OS envia material pra TODAS as demãos)
+# Aplicação típica: STELION 2-3 camadas, LILIT 2 camadas, LEONA 2 camadas
+# Rendimento per-coat: STELION ~8m²/kg, LILIT ~6m²/kg
+# Rendimento TOTAL (considerando multi-coat): dividir por número médio de camadas
+# IMPORTANTE: valores aproximados · validar com time industrial
+RENDIMENTO_M2_POR_KG = {
+    "STELION":  3.0,   # ~8 m²/kg per coat × ~2.5 camadas ≈ 3.2 → arredonda pra 3.0 (conservador)
+    "LILIT":    3.0,   # ~6 m²/kg per coat × ~2 camadas ≈ 3.0
+    "LEONA":    3.0,   # base/nivelamento · 2 camadas
+    "TERON":    3.0,   # LEONA renomeado abr/2026
+    "LUMINA":   6.0,   # verniz 2 camadas · alto rendimento per coat (~12 m²/kg)
+    "PRIMER":   6.0,   # selante 2 camadas · similar ao verniz
+    "SELADOR":  5.0,   # estimativa conservadora
+    "PU ULTRA": 6.0,   # variante LUMINA
+}
+
+# Margem de tolerância para classificação de superdimensionamento
+# Se material enviado > (1 + MARGEM_SUPERDIMENSIONAMENTO) * cobertura teórica → superdimensionado
+MARGEM_SUPERDIMENSIONAMENTO = 0.30  # 30% acima do teórico
+
+# Mapeamento de nome do material na OS → família canônica
+# Ordem importa: PRIMER antes de LUMINA (senão "LUMINA PRIMER" cai em LUMINA)
+FAMILIA_PRODUTO = {
+    "STELION":        "STELION",
+    "LILIT":          "LILIT",
+    "LEONA":          "LEONA",
+    "TERON":          "LEONA",
+    "LUMINA PRIMER":  "PRIMER",
+    "PRIMER":         "PRIMER",
+    "LUMINA":         "LUMINA",
+    "VERNIZ":         "LUMINA",
+    "PU ULTRA":       "LUMINA",
+    "PU":             "LUMINA",
+    "SELADOR":        "SELADOR",
+}
+
+# Famílias que são PRODUTO-BASE (cobrem m² diretamente)
+# LUMINA/PRIMER/SELADOR são acabamento — não competem diretamente com m² do piso
+FAMILIAS_BASE = {"STELION", "LILIT", "LEONA"}
+
+# ============================================================
+# CONSTANTES CONFIGURÁVEIS · Score preditivo de risco (Camada 3)
+# Pesos ajustáveis · score 0-100 onde 100 = máximo risco
+# Fácil de calibrar: basta alterar os pesos abaixo
+# ============================================================
+
+RISCO_PESO_INATIVO_30 = 25       # dias_inativo > 30 (obra parada é sinal grave)
+RISCO_PESO_INATIVO_60 = 15       # dias_inativo > 60 (adicional, total 40)
+RISCO_PESO_POSTERGACAO_2 = 15    # n_postergacoes >= 2 (postergação cascata)
+RISCO_PESO_REPROVACAO_1 = 20     # n_reprovacoes >= 1 (já teve problema)
+RISCO_PESO_REPROVACAO_3 = 10     # n_reprovacoes >= 3 (adicional)
+RISCO_PESO_OCORRENCIAS_3 = 10    # n_ocorrencias >= 3 (muitas ocorrências formais)
+RISCO_PESO_SEM_MARCOS = 15       # estagio == "sem_marcos" (obra invisível)
+RISCO_PESO_RETORNO = 5           # natureza == "retorno" (retornos têm mais risco base)
+RISCO_PESO_POUCA_MSG = 10        # n_msgs_telegram < 5 (pouca comunicação)
+
+RISCO_FAIXAS = [
+    (0,  20, "baixo",    "#4caf50"),  # verde
+    (21, 40, "moderado", "#d4a017"),  # amarelo
+    (41, 60, "alto",     "#e67e22"),  # laranja
+    (61, 100, "critico", "#c45a5a"),  # vermelho
+]
+
+# Origens elegíveis para score (pre_contrato e incerta ficam N/A)
+RISCO_ORIGENS_ELEGIVEIS = {"nova", "retorno"}
+
+# Regex de sinais de consumo no Telegram (Dimensão C)
+PAD_SINAL_SOBRA = re.compile(
+    r"\b("
+    r"sobrou\s+(material|balde|kit|produto|stelion|lilit|leona|teron|verniz|primer)"
+    r"|material\s+sobr(ou|ando)"
+    r"|sobraram?\s+\d+\s+(balde|kit|kg)"
+    r"|sobra\s+de\s+material"
+    r"|material\s+que\s+sobrou"
+    r"|muito\s+material\s+sobrando"
+    r"|devolver\s+(o\s+)?(material|balde|kit)"
+    r"|devolv(er|endo|eu)\s+material"
+    r"|material\s+(pra|para)\s+(devol|retorn)"
+    r")\b",
+    re.IGNORECASE,
+)
+
+PAD_SINAL_FALTA = re.compile(
+    r"\b("
+    r"(material|balde|kit|produto|stelion|lilit|leona|teron|verniz|primer)\s+(acabou|acabando|acabaram)"
+    r"|acabou\s+(o\s+)?(material|balde|kit|produto)"
+    r"|falt(ou|ando|a|aram)\s+(material|balde|kit|produto|stelion|lilit|leona|teron|verniz|primer)"
+    r"|material\s+(insuficiente|n[ãa]o\s+(vai\s+)?dar|n[ãa]o\s+chega)"
+    r"|sem\s+material\s+(pra|para|em)"
+    r"|precis(o|a|amos)\s+(de\s+)?mais\s+(material|balde|kit)"
+    r"|manda(r)?\s+mais\s+(material|balde|kit)"
+    r"|envia(r)?\s+mais\s+(material|balde|kit)"
+    r"|material\s+n[ãa]o\s+(deu|d[áa])"
+    r"|n[ãa]o\s+(vai\s+)?ter\s+material\s+(suficiente|pra|para)"
+    r")\b",
+    re.IGNORECASE,
+)
+
 # Seed reproduzível pra modo piloto (aleatório validável)
 random.seed(20260506)
 
@@ -975,6 +1080,10 @@ def classificar_origem_obra(msgs, status, nome_cliente, marcos=None, tag_kira=""
     sinais = []
     fonte = None
 
+    # 0. Contrato sem nenhum dado = pre_contrato (card recem-criado no Painel)
+    if (status or '').lower() == 'contrato' and not msgs and not (marcos or []):
+        return {"origem": "pre_contrato", "fonte": "status_contrato", "sinais": ["status contrato sem dados operacionais"], "confianca": "alta"}
+
     # 1. Status definitivo
     if (status or '').lower() in STATUS_RETORNO:
         sinais.append(f"status '{status}' indica reparo/retrabalho")
@@ -1055,6 +1164,207 @@ def classificar_origem_obra(msgs, status, nome_cliente, marcos=None, tag_kira=""
         return {"origem": "nova", "fonte": "telegram", "sinais": [f"grupo de {data_1a} sem marcos de execução"], "confianca": "media"}
 
     return {"origem": "nova", "fonte": "telegram", "sinais": [], "confianca": "alta"}
+
+
+# ============================================================
+# Camada 2 · Triângulo de Consistência Material
+# Cruza: m² da obra × material enviado × sinais de consumo Telegram
+# ============================================================
+
+def _classificar_familia(nome_material):
+    """Mapeia nome do material da OS para família canônica.
+    Ordem importa: PRIMER antes de LUMINA (LUMINA PRIMER → PRIMER)."""
+    if not nome_material:
+        return None
+    n = nome_material.upper().strip()
+    # Match por substring, na ordem correta
+    for chave, familia in FAMILIA_PRODUTO.items():
+        if chave in n:
+            return familia
+    return None
+
+
+def _parse_qtd_br(s):
+    """Converte quantidade no formato brasileiro ('20,00') para float."""
+    if not s:
+        return 0.0
+    try:
+        return float(str(s).replace(".", "").replace(",", "."))
+    except (ValueError, TypeError):
+        return 0.0
+
+
+def _detectar_sinais_campo(marcos, msgs):
+    """Detecta sinais de consumo de material nas mensagens Telegram.
+    Retorna dict com sinal_sobra, sinal_falta, detalhes[]."""
+    sinal_sobra = False
+    sinal_falta = False
+    detalhes = []
+
+    # Scan nos marcos existentes (solicitacao_material + interrupcao_material já detectados)
+    for m in (marcos or []):
+        tipo = m.get("tipo")
+        if tipo == "interrupcao_material":
+            sinal_falta = True
+            detalhes.append(f"Marco '{tipo}' em {m.get('data', '?')}: {m.get('trecho', '')[:80]}")
+        elif tipo == "solicitacao_material":
+            sinal_falta = True
+            detalhes.append(f"Marco '{tipo}' em {m.get('data', '?')}: {m.get('trecho', '')[:80]}")
+
+    # Scan adicional por padrões de sobra/falta nas mensagens brutas
+    for msg in (msgs or []):
+        texto = msg.get("content") or msg.get("text") or ""
+        if not texto or len(texto) < 8:
+            continue
+        if PAD_SINAL_SOBRA.search(texto):
+            sinal_sobra = True
+            detalhes.append(f"Sobra em {(msg.get('timestamp') or '')[:10]}: {texto[:80]}")
+        if PAD_SINAL_FALTA.search(texto):
+            sinal_falta = True
+            detalhes.append(f"Falta em {(msg.get('timestamp') or '')[:10]}: {texto[:80]}")
+
+    return {
+        "sinal_sobra": sinal_sobra,
+        "sinal_falta": sinal_falta,
+        "detalhes": detalhes[:10],  # limita pra não inflar JSON
+    }
+
+
+def analisar_consistencia_material(obra_dict, marcos=None, msgs=None):
+    """Triângulo de consistência: m² × material enviado × sinais de campo.
+
+    Retorna dict com classificação, números e sinais.
+    Classificação:
+      - material_ok: enviado compatível com m² E sem sinais de falta
+      - subdimensionado: enviado < teórico OU sinais de falta
+      - superdimensionado: enviado > 130% teórico OU sinais de sobra
+      - sem_dados: m² ou materiais ausentes
+    """
+    metragem_raw = obra_dict.get("metragem")
+    materiais_enviados = obra_dict.get("materiais_enviados") or []
+    materiais_api = obra_dict.get("materiais_api") or []
+
+    # ---- Dimensão A: metragem ----
+    m2 = None
+    if metragem_raw:
+        try:
+            m2 = float(str(metragem_raw).replace(",", "."))
+        except (ValueError, TypeError):
+            m2 = None
+
+    # ---- Dimensão B: material enviado (OS PDF + API) ----
+    # Consolida todos os itens de material por família
+    itens_por_familia = defaultdict(float)  # familia → kg total
+
+    # Fonte 1: OS Indústria (PDF)
+    for envio in materiais_enviados:
+        for item in envio.get("materiais") or []:
+            familia = _classificar_familia(item.get("material"))
+            qtd = _parse_qtd_br(item.get("quantidade"))
+            if familia and qtd > 0:
+                itens_por_familia[familia] += qtd
+
+    # Fonte 2: API /materiais (se disponível)
+    for item in materiais_api:
+        nome = item.get("produto") or item.get("nome") or item.get("material") or ""
+        familia = _classificar_familia(nome)
+        qtd = 0.0
+        for campo_qtd in ("quantidade", "qtd", "quantidadeEnviada"):
+            val = item.get(campo_qtd)
+            if val:
+                qtd = _parse_qtd_br(val)
+                if qtd > 0:
+                    break
+        if familia and qtd > 0:
+            itens_por_familia[familia] += qtd
+
+    # Total de material-base enviado (STELION/LILIT/LEONA — o que cobre m²)
+    material_base_kg = sum(v for k, v in itens_por_familia.items() if k in FAMILIAS_BASE)
+    material_total_kg = sum(itens_por_familia.values())
+    tem_material = material_base_kg > 0
+
+    # ---- Dimensão C: sinais de campo (Telegram) ----
+    sinais = _detectar_sinais_campo(marcos, msgs)
+    sinal_sobra = sinais["sinal_sobra"]
+    sinal_falta = sinais["sinal_falta"]
+
+    # ---- Cobertura teórica ----
+    # Calcula quanto material-base seria necessário pra cobrir m²
+    # Usa a família dominante (maior volume enviado) pra definir rendimento
+    cobertura_teorica_kg = None
+    rendimento_usado = None
+    familia_dominante = None
+
+    if m2 and m2 > 0:
+        # Tenta usar a família dominante do material enviado
+        familias_base_enviadas = {k: v for k, v in itens_por_familia.items() if k in FAMILIAS_BASE}
+        if familias_base_enviadas:
+            familia_dominante = max(familias_base_enviadas, key=familias_base_enviadas.get)
+            rendimento_usado = RENDIMENTO_M2_POR_KG.get(familia_dominante, 7.0)
+        else:
+            # Sem material-base enviado · usa média conservadora STELION
+            rendimento_usado = RENDIMENTO_M2_POR_KG.get("STELION", 8.0)
+            familia_dominante = "STELION (estimado)"
+        cobertura_teorica_kg = m2 / rendimento_usado
+
+    # ---- Classificação ----
+    classificacao = "sem_dados"
+    detalhe = ""
+
+    if not m2 and not tem_material:
+        classificacao = "sem_dados"
+        detalhe = "Sem m² e sem materiais enviados"
+    elif not m2:
+        classificacao = "sem_dados"
+        detalhe = f"Sem m² · {material_base_kg:.1f} kg de material-base enviados"
+    elif not tem_material:
+        if sinal_falta:
+            classificacao = "subdimensionado"
+            detalhe = f"{m2:.0f} m² sem material registrado + sinais de falta no Telegram"
+        elif sinal_sobra:
+            classificacao = "sem_dados"
+            detalhe = f"{m2:.0f} m² sem material registrado (sinal de sobra, mas sem base pra comparar)"
+        else:
+            classificacao = "sem_dados"
+            detalhe = f"{m2:.0f} m² sem material registrado nas OS/API"
+    else:
+        # Temos m² e material · podemos calcular ratio
+        ratio = material_base_kg / cobertura_teorica_kg if cobertura_teorica_kg else 0
+
+        if sinal_falta:
+            classificacao = "subdimensionado"
+            detalhe = (f"Enviado {material_base_kg:.1f} kg ({familia_dominante}) "
+                       f"para {m2:.0f} m² (teórico: {cobertura_teorica_kg:.1f} kg) "
+                       f"+ sinais de falta no Telegram")
+        elif ratio < 0.85:
+            classificacao = "subdimensionado"
+            detalhe = (f"Enviado {material_base_kg:.1f} kg ({familia_dominante}) "
+                       f"para {m2:.0f} m² · ratio {ratio:.0%} do teórico ({cobertura_teorica_kg:.1f} kg)")
+        elif sinal_sobra:
+            classificacao = "superdimensionado"
+            detalhe = (f"Enviado {material_base_kg:.1f} kg ({familia_dominante}) "
+                       f"para {m2:.0f} m² + sinais de sobra no Telegram")
+        elif ratio > (1 + MARGEM_SUPERDIMENSIONAMENTO):
+            classificacao = "superdimensionado"
+            detalhe = (f"Enviado {material_base_kg:.1f} kg ({familia_dominante}) "
+                       f"para {m2:.0f} m² · ratio {ratio:.0%} do teórico ({cobertura_teorica_kg:.1f} kg)")
+        else:
+            classificacao = "material_ok"
+            detalhe = (f"Enviado {material_base_kg:.1f} kg ({familia_dominante}) "
+                       f"para {m2:.0f} m² · ratio {ratio:.0%} · compatível")
+
+    return {
+        "classificacao": classificacao,
+        "m2": m2,
+        "cobertura_teorica_kg": round(cobertura_teorica_kg, 1) if cobertura_teorica_kg else None,
+        "material_base_kg": round(material_base_kg, 1) if material_base_kg else 0,
+        "material_total_kg": round(material_total_kg, 1) if material_total_kg else 0,
+        "itens_por_familia": {k: round(v, 1) for k, v in itens_por_familia.items()} if itens_por_familia else {},
+        "familia_dominante": familia_dominante,
+        "rendimento_usado_m2_kg": rendimento_usado,
+        "sinais_campo": sinais,
+        "detalhe": detalhe,
+    }
 
 
 def derivar_fase_real(marcos):
@@ -1288,10 +1598,27 @@ def is_sender_monofloor(sender):
 
 
 CONSULTOR_ALIAS = {
-    "luana": "Luana Patricia de Andrade Lima",
-    "luana ": "Luana Patricia de Andrade Lima",
-    "luana patricia de andrade lima": "Luana Patricia de Andrade Lima",
+    "luana": "Luana Lima",
+    "luana ": "Luana Lima",
+    "luana patricia de andrade lima": "Luana Lima",
+    "luana lima": "Luana Lima",
+    "wesley": "Wesley Carvalho",
+    "wesley matheus de carvalho": "Wesley Carvalho",
+    "wesley carvalho": "Wesley Carvalho",
+    "pedro": "Pedro Santana",
+    "pedro alexandre santana": "Pedro Santana",
+    "pedro santana": "Pedro Santana",
+    "pedro marçal": "Pedro Santana",
+    "pedro marcal": "Pedro Santana",
+    "juliana santos": "Juliana Santos",
+    "juliana": "Juliana Santos",
+    "mayara": "Mayara",
     "caroline": "Caroline",
+}
+
+NAO_E_CONSULTOR = {
+    "thaísa de lara barbosa", "thaisa de lara barbosa", "thaísa barbosa", "thaisa barbosa",
+    "renata garcia penna", "renata penna",
 }
 
 
@@ -1304,13 +1631,16 @@ def _fix_latin1_in_utf8(s):
 
 
 def normalizar_consultor(raw):
-    """Normaliza nome do consultor: limpa [], encoding Latin-1, unifica grafias."""
+    """Normaliza nome do consultor: limpa [], encoding Latin-1, unifica grafias.
+    Retorna None se nome pertence a NAO_E_CONSULTOR (projetos, comercial, etc)."""
     if not raw or raw == "[]" or not isinstance(raw, str):
         return None
     nome = _fix_latin1_in_utf8(raw).strip()
     if not nome:
         return None
     lookup = nome.lower()
+    if lookup in NAO_E_CONSULTOR:
+        return None
     if lookup in CONSULTOR_ALIAS:
         return CONSULTOR_ALIAS[lookup]
     return nome
@@ -1492,6 +1822,97 @@ def ocorrencia_to_marco(oc):
     return marco
 
 
+# ============================================================
+# Score preditivo de risco (Camada 3)
+# ============================================================
+
+def calcular_score_risco(obra_dict):
+    """Calcula score preditivo de risco para obra ativa.
+    Retorna dict {valor, nivel, cor, sinais, detalhe} ou None se obra não elegível.
+    Obras pre_contrato e incerta retornam None (dados insuficientes).
+    """
+    origem = (obra_dict.get("origem_obra") or {}).get("origem", "")
+    if origem not in RISCO_ORIGENS_ELEGIVEIS:
+        return None
+
+    sinais = []
+    valor = 0
+
+    # 1. Inatividade
+    dias_inativo = obra_dict.get("dias_inativo") or 0
+    if dias_inativo > 60:
+        valor += RISCO_PESO_INATIVO_30 + RISCO_PESO_INATIVO_60
+        sinais.append(f"Inativa {dias_inativo}d (>60d)")
+    elif dias_inativo > 30:
+        valor += RISCO_PESO_INATIVO_30
+        sinais.append(f"Inativa {dias_inativo}d (>30d)")
+
+    # 2. Postergações (derivadas dos marcos)
+    counts = obra_dict.get("counts_por_tipo") or {}
+    n_postergacoes = counts.get("obra_postergada", 0) + counts.get("postergacao_explicita", 0)
+    if n_postergacoes >= 2:
+        valor += RISCO_PESO_POSTERGACAO_2
+        sinais.append(f"{n_postergacoes} postergacoes")
+
+    # 3. Reprovações (derivadas dos marcos)
+    n_reprovacoes = counts.get("reprovacao_retorno", 0)
+    if n_reprovacoes >= 3:
+        valor += RISCO_PESO_REPROVACAO_1 + RISCO_PESO_REPROVACAO_3
+        sinais.append(f"{n_reprovacoes} reprovacoes (>=3)")
+    elif n_reprovacoes >= 1:
+        valor += RISCO_PESO_REPROVACAO_1
+        sinais.append(f"{n_reprovacoes} reprovacao(oes)")
+
+    # 4. Ocorrências formais
+    n_ocorrencias = obra_dict.get("n_ocorrencias") or 0
+    if n_ocorrencias >= 3:
+        valor += RISCO_PESO_OCORRENCIAS_3
+        sinais.append(f"{n_ocorrencias} ocorrencias formais")
+
+    # 5. Estágio
+    estagio = obra_dict.get("estagio") or ""
+    if estagio == "sem_marcos":
+        valor += RISCO_PESO_SEM_MARCOS
+        sinais.append("Sem marcos detectados")
+
+    # 6. Natureza retorno
+    if origem == "retorno":
+        valor += RISCO_PESO_RETORNO
+        sinais.append("Retorno (risco base maior)")
+
+    # 7. Pouca comunicação
+    n_msgs = obra_dict.get("n_msgs_telegram") or 0
+    if n_msgs < 5:
+        valor += RISCO_PESO_POUCA_MSG
+        sinais.append(f"Apenas {n_msgs} msgs Telegram")
+
+    # Cap em 100
+    valor = min(valor, 100)
+
+    # Classificar por faixa
+    nivel = "baixo"
+    cor = "#4caf50"
+    for faixa_min, faixa_max, faixa_nivel, faixa_cor in RISCO_FAIXAS:
+        if faixa_min <= valor <= faixa_max:
+            nivel = faixa_nivel
+            cor = faixa_cor
+            break
+
+    # Detalhe legível
+    if sinais:
+        detalhe = " | ".join(sinais)
+    else:
+        detalhe = "Nenhum sinal de risco detectado"
+
+    return {
+        "valor": valor,
+        "nivel": nivel,
+        "cor": cor,
+        "sinais": sinais,
+        "detalhe": detalhe,
+    }
+
+
 def timeline_obra(obra_listing, grupo):
     obra_id = obra_listing["id"]
     print(f"  · [{grupo}] {obra_listing.get('clienteNome','?')[:40]} ({obra_id[:8]}) · fetch...")
@@ -1576,8 +1997,16 @@ def timeline_obra(obra_listing, grupo):
     tem_reaplicacao = any("reaplica" in (it.get("tipoSuperficie") or "").lower() for it in (materiais_items or []))
     origem_obra = classificar_origem_obra(msgs, status_obra, nome_cli, marcos, tag_kira, situacao_kira, tem_reaplicacao)
 
+    # Camada 2 · Triângulo de consistência material
+    obra_para_analise = {
+        "metragem": detail.get("projetoMetragem") or obra_listing.get("projetoMetragem"),
+        "materiais_enviados": materiais_enviados,
+        "materiais_api": materiais_items or [],
+    }
+    consistencia_material = analisar_consistencia_material(obra_para_analise, marcos=marcos, msgs=msgs)
+
     n_ocorrencias = sum(1 for m in marcos if m.get("tipo") == "ocorrencia_formal")
-    consultor = equipe_monofloor.get("consultor")
+    consultor = equipe_monofloor.get("consultor") or normalizar_consultor(equipe_monofloor.get("operacoes"))
 
     # Estagio derivado + alerta de obra parada
     tipos_marcos = set(m.get("tipo") for m in marcos)
@@ -1626,7 +2055,7 @@ def timeline_obra(obra_listing, grupo):
         elif estagio == "pos_vt":
             alerta_parada = {"tipo": "pos_vt_sem_execucao", "dias": dias_inativo}
 
-    return {
+    resultado = {
         "obra_id": obra_id,
         "cliente": _fix_latin1_in_utf8(detail.get("clienteNome") or obra_listing.get("clienteNome") or ""),
         "status": detail.get("status") or obra_listing.get("status"),
@@ -1657,11 +2086,17 @@ def timeline_obra(obra_listing, grupo):
         "descarte_msgs": descarte_log,
         "amostra_sem_match": amostra_sem_match,
         "origem_obra": origem_obra,
+        "consistencia_material": consistencia_material,
         "estagio": estagio,
         "dias_inativo": dias_inativo,
         "ultima_atividade": ultima_atividade,
         "alerta_parada": alerta_parada,
     }
+
+    # Score preditivo de risco (Camada 3)
+    resultado["score_risco"] = calcular_score_risco(resultado)
+
+    return resultado
 
 # ============================================================
 # Main
@@ -1770,7 +2205,37 @@ def main_massa():
 
     a_processar = novas + modificadas
     if not a_processar:
-        print("[3/5] nada a processar · universo sem mudanças desde última rodada.")
+        # Sem mudanças na API, mas pode ter campo novo (ex: score_risco) a adicionar
+        # Carrega timelines anteriores e enriquece
+        if SAIDA_MASSA.exists():
+            try:
+                antigo = json.loads(SAIDA_MASSA.read_text(encoding="utf-8"))
+                tl_ant = antigo.get('timelines', [])
+                precisa_score = any("score_risco" not in t for t in tl_ant)
+                precisa_consultor = any(not t.get("consultor") and (t.get("equipe_monofloor") or {}).get("operacoes") for t in tl_ant)
+                if precisa_score or precisa_consultor:
+                    print("[3/5] enriquecendo timelines com campos novos...")
+                    n_enriq = 0
+                    n_fix_c = 0
+                    for t in tl_ant:
+                        if "score_risco" not in t:
+                            t["score_risco"] = calcular_score_risco(t)
+                            n_enriq += 1
+                        if not t.get("consultor"):
+                            eq = t.get("equipe_monofloor") or {}
+                            fb = normalizar_consultor(eq.get("operacoes"))
+                            if fb:
+                                t["consultor"] = fb
+                                n_fix_c += 1
+                    antigo['gerado_em'] = HOJE.strftime('%Y-%m-%dT%H:%M:%SZ')
+                    SAIDA_MASSA.write_text(json.dumps(antigo, ensure_ascii=False, indent=2), encoding="utf-8")
+                    print(f"     · {n_enriq} scores + {n_fix_c} consultores enriquecidos · JSON regravado")
+                else:
+                    print("[3/5] nada a processar · universo sem mudanças desde última rodada.")
+            except Exception:
+                print("[3/5] nada a processar · universo sem mudanças desde última rodada.")
+        else:
+            print("[3/5] nada a processar · universo sem mudanças desde última rodada.")
         return
 
     print(f"[3/5] processando {len(a_processar)} obras em paralelo ({WORKERS} workers)...")
@@ -1795,6 +2260,28 @@ def main_massa():
         if o['id'] in timelines_anteriores:
             timelines_finais.append(timelines_anteriores[o['id']])
     print(f"     · {len(timelines_finais)} timelines totais (novas+modificadas+inalteradas reaproveitadas)")
+
+    # Enriquecer consultor: fallback para responsavelOperacoes (cache pode ter consultor=None)
+    n_fix_consultor = 0
+    for t in timelines_finais:
+        if not t.get("consultor"):
+            eq = t.get("equipe_monofloor") or {}
+            fallback = normalizar_consultor(eq.get("operacoes"))
+            if fallback:
+                t["consultor"] = fallback
+                n_fix_consultor += 1
+    if n_fix_consultor:
+        print(f"     · {n_fix_consultor} obras com consultor recuperado via responsavelOperacoes")
+
+    # Enriquecer com score preditivo de risco (Camada 3)
+    # Roda em todas as timelines (inclusive cache) pra garantir que o campo existe
+    n_com_score = 0
+    for t in timelines_finais:
+        if "score_risco" not in t:
+            t["score_risco"] = calcular_score_risco(t)
+        if t.get("score_risco"):
+            n_com_score += 1
+    print(f"     · {n_com_score} obras com score de risco · {len(timelines_finais) - n_com_score} N/A")
     print()
 
     # Atualiza manifest
@@ -1851,6 +2338,44 @@ def main_massa():
     print(f"     · manifest: {MANIFEST_PATH}")
     print()
     print(f"[OK] Massa: {len(timelines_finais)} timelines · {elapsed:.1f}s processando · {len(erros)} erros")
+
+    # Auditoria automática: compara JSON gerado com estado atual do Painel
+    print()
+    auditar_sincronia(timelines_finais, todas)
+
+
+def auditar_sincronia(timelines, todas_api):
+    """Compara JSON gerado com listing atual do Painel. Grita se divergir."""
+    print("[AUDIT] Verificando sincronia com Painel de Obras...")
+    painel_idx = {o["id"]: o for o in todas_api}
+    STATUS_VIVOS = {'planejamento', 'aguardando_execucao', 'em_execucao', 'reparo',
+                    'contrato', 'pausado', 'marcas_rolo_cera', 'aguardando_clima'}
+
+    problemas = []
+
+    # Status divergente
+    for t in timelines:
+        oid = t.get("obra_id", "")
+        if oid in painel_idx:
+            sp = painel_idx[oid].get("status", "")
+            sj = t.get("status", "")
+            if sp != sj:
+                problemas.append(f"  STATUS | {t['cliente'][:40]:40s} | nosso={sj} | painel={sp}")
+
+    # Obras vivas no Painel que não estão no JSON
+    json_ids = {t.get("obra_id") for t in timelines}
+    ausentes = [o for o in todas_api if o.get("status") in STATUS_VIVOS and o["id"] not in json_ids]
+    for o in ausentes:
+        problemas.append(f"  AUSENTE | {(o.get('clienteNome') or '?')[:40]:40s} | status={o.get('status')}")
+
+    if problemas:
+        print(f"[AUDIT] ⚠ {len(problemas)} DIVERGENCIAS DETECTADAS:")
+        for p in problemas[:20]:
+            print(p)
+        if len(problemas) > 20:
+            print(f"  ... e mais {len(problemas) - 20}")
+    else:
+        print(f"[AUDIT] ✓ Sincronizado · {len(timelines)} obras = {sum(1 for o in todas_api if o.get('status') in STATUS_VIVOS)} no Painel")
 
 
 def main_historico():

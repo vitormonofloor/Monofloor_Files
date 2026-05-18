@@ -345,6 +345,13 @@
   .classif-entrega_limpa { background: #d8f0e0; color: #1e5e36; }
   .classif-entrega_com_retrabalho { background: #fbe8d0; color: #7a4a10; }
   .classif-retrabalho_ativo { background: #f7e0e0; color: #8b2a2a; }
+  .badge-origem-retrab {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 2px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle;
+  }
+  .badge-origem-heranca { background: #d5cfc6; color: #7a7265; border: 1px solid #c0b8ab; }
+  .badge-origem-recente { background: #e84040; color: #fff; }
   .classif-em_execucao { background: #d8f0e0; color: #2d6c46; }
   .classif-em_execucao_com_retrabalho { background: #fbe0c8; color: #8a4010; }
   .classif-aguardando_execucao { background: #fbf0d7; color: #8a6018; }
@@ -403,6 +410,175 @@
   .bench-neutro { color: #8a7a66; }
   .rep-bench-rodape {
     font-size: 9px; color: #a09080; margin-top: 8px; text-align: right;
+  }
+
+  /* Score de risco — badge sidebar */
+  .badge-risco {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 2px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle;
+  }
+  .badge-risco-critico { background: #c0392b; color: #fff; }
+  .badge-risco-alto { background: #e67e22; color: #fff; }
+  .badge-risco-medio { background: #f0c040; color: #5a4a20; }
+
+  /* Score de risco — bloco no drawer */
+  .rep-risco {
+    background: #faf7f2; border: 1px solid #e8e0d4; border-radius: 6px;
+    padding: 14px 18px; margin-bottom: 20px;
+  }
+  .rep-risco.risco-critico { border-left: 3px solid #c0392b; }
+  .rep-risco.risco-alto { border-left: 3px solid #e67e22; }
+  .rep-risco.risco-medio { border-left: 3px solid #f0c040; }
+  .rep-risco.risco-baixo { border-left: 3px solid #1e8449; }
+  .rep-risco-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .rep-risco-titulo {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: #8a7a66;
+  }
+  .rep-risco-score {
+    font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800;
+  }
+  .rep-risco-score.risco-critico { color: #c0392b; }
+  .rep-risco-score.risco-alto { color: #e67e22; }
+  .rep-risco-score.risco-medio { color: #b8960a; }
+  .rep-risco-score.risco-baixo { color: #1e8449; }
+  .rep-risco-nivel {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em; padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .rep-risco-nivel.risco-critico { background: #c0392b; color: #fff; }
+  .rep-risco-nivel.risco-alto { background: #e67e22; color: #fff; }
+  .rep-risco-nivel.risco-medio { background: #f0c040; color: #5a4a20; }
+  .rep-risco-nivel.risco-baixo { background: #d8f0e0; color: #2d6c46; }
+  .rep-risco-sinais {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px;
+  }
+  .rep-risco-sinal {
+    font-size: 10px; background: #fff; border: 1px solid #e0d8cc;
+    border-radius: 3px; padding: 3px 7px; color: #5a4a30;
+  }
+
+  /* Consistencia material — Camada 2 */
+  .rep-material {
+    background: #faf7f2; border: 1px solid #e8e0d4; border-radius: 6px;
+    padding: 14px 18px; margin-bottom: 20px;
+  }
+  .rep-material.mat-critico { border-left: 3px solid #c0392b; }
+  .rep-material.mat-atencao { border-left: 3px solid #e67e22; }
+  .rep-material.mat-ok { border-left: 3px solid #1e8449; }
+  .rep-material-titulo {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: #8a7a66;
+    margin-bottom: 10px;
+  }
+  .rep-mat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .rep-mat-item {
+    background: #fff; border: 1px solid #e8e0d4; border-radius: 4px;
+    padding: 8px 10px; text-align: center;
+  }
+  .rep-mat-item-fam {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+    color: #3a3530; margin-bottom: 4px;
+  }
+  .rep-mat-item-nums {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #8a7a66;
+    line-height: 1.6;
+  }
+  .rep-mat-item-nums strong { color: #3a3530; }
+  .mat-veredito {
+    display: inline-block; font-size: 8px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; padding: 2px 6px; border-radius: 3px; margin-top: 4px;
+  }
+  .mat-compativel { background: #d8f0e0; color: #2d6c46; }
+  .mat-consumo_acima { background: #f8d7da; color: #8b1a1a; }
+  .mat-sobra_provavel { background: #fff3cd; color: #856404; }
+  .mat-sem_registro_consumo { background: #e8e0d4; color: #6b6156; }
+  .mat-sem_os_industria { background: #e6edf3; color: #335a76; }
+  .rep-mat-alertas {
+    margin-top: 8px; font-size: 10px; color: #8b1a1a;
+  }
+
+  /* Panorama mensal */
+  .panorama-mensal {
+    display: none; margin-bottom: 16px;
+  }
+  .panorama-mensal.visivel { display: block; }
+  .panorama-mensal details {
+    background: #f8f5f0; border: 1px solid #e8e0d4; border-radius: 8px;
+  }
+  .panorama-mensal summary {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: #8a7a66;
+    padding: 10px 16px; cursor: pointer; list-style: none; user-select: none;
+  }
+  .panorama-mensal summary::-webkit-details-marker { display: none; }
+  .panorama-mensal summary::before { content: '▸ '; }
+  .panorama-mensal details[open] summary::before { content: '▾ '; }
+  .panorama-corpo { padding: 4px 16px 14px; }
+  .panorama-titulo { display: none; }
+  .panorama-kpis {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px;
+    margin-bottom: 12px;
+  }
+  .panorama-kpi {
+    background: #fff; border: 1px solid #e8e0d4; border-radius: 4px;
+    padding: 6px 8px; text-align: center;
+  }
+  .panorama-kpi-valor {
+    font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700;
+    color: #3a3530;
+  }
+  .panorama-kpi-label {
+    font-size: 8px; color: #8a7a66; text-transform: uppercase;
+    letter-spacing: .08em; margin-top: 2px;
+  }
+  .panorama-faixas {
+    display: flex; gap: 3px; margin-bottom: 8px; height: 22px; border-radius: 3px;
+    overflow: hidden;
+  }
+  .panorama-faixa-bar {
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+    color: #fff; min-width: 18px; transition: flex .3s, opacity .2s;
+    cursor: pointer;
+  }
+  .panorama-faixa-bar:hover { opacity: .85; }
+  .panorama-faixas.tem-sel .panorama-faixa-bar { opacity: .35; }
+  .panorama-faixas.tem-sel .panorama-faixa-bar.fx-ativo { opacity: 1; box-shadow: 0 0 0 2px #3a3530; }
+  .panorama-faixa-bar[data-fx="PP"] { background: #a0785a; }
+  .panorama-faixa-bar[data-fx="P"]  { background: #b8956e; }
+  .panorama-faixa-bar[data-fx="M"]  { background: #c4a77d; }
+  .panorama-faixa-bar[data-fx="G"]  { background: #7a9b6d; }
+  .panorama-faixa-bar[data-fx="GG"] { background: #5a8a7a; }
+  .panorama-faixa-bar[data-fx="XG"] { background: #4a6e8a; }
+  .panorama-legenda {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
+  }
+  .panorama-leg-item {
+    font-size: 9px; color: #6b6156; display: flex; align-items: center; gap: 3px;
+  }
+  .panorama-leg-dot {
+    width: 8px; height: 8px; border-radius: 2px; display: inline-block;
+  }
+  .panorama-classif {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;
+  }
+  .panorama-classif-chip {
+    font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 600;
+    padding: 2px 6px; border-radius: 3px; background: #efe8dd; color: #6b6156;
+  }
+  .panorama-tempos {
+    font-size: 9px; color: #6b6156; line-height: 1.6;
+  }
+  .panorama-tempos strong {
+    font-family: 'JetBrains Mono', monospace; color: #3a3530;
   }
 
   .sidebar-item-numeros {
@@ -2967,6 +3143,7 @@
     </aside>
 
     <section class="conteudo">
+      <div id="panorama-mensal" class="panorama-mensal"></div>
       <div id="placeholder-vazio" class="placeholder-vazio">Selecione uma obra à esquerda pra ver a Jornada do Projeto</div>
 
   <div id="detalhes">
@@ -3389,6 +3566,80 @@ function montarBenchmarkFaixa(j){
   </div>`;
 }
 
+const LABELS_SINAL_RISCO = {
+  sem_msg_telegram: 'Sem Telegram vinculado',
+  reprovacao_ativa: 'Reprovacao ativa',
+  friccao_critica: 'Friccao critica',
+  friccao_alta: 'Friccao alta',
+  friccao_media: 'Friccao media',
+  status_stale: 'Status desatualizado no Painel',
+};
+function labelSinal(s){
+  if (LABELS_SINAL_RISCO[s]) return LABELS_SINAL_RISCO[s];
+  const m = s.match(/^silencio_(\d+)d$/);
+  if (m) return m[1] + ' dias sem msg no Telegram';
+  const p = s.match(/^postergacoes_(\d+)$/);
+  if (p) return p[1] + ' postergacoes detectadas';
+  const e = s.match(/^exec_([\d.]+)x_mediana$/);
+  if (e) return 'Execucao ' + e[1] + 'x acima da mediana';
+  return s.replace(/_/g, ' ');
+}
+const LABEL_NIVEL_RISCO = { critico: 'Critico', alto: 'Alto', medio: 'Medio', baixo: 'Baixo' };
+
+function montarScoreRisco(j){
+  const r = j.score_risco;
+  if (!r) return '';
+  const nv = r.nivel || 'baixo';
+  return `<div class="rep-risco risco-${nv}">
+    <div class="rep-risco-header">
+      <div class="rep-risco-titulo">Score de risco</div>
+      <div class="rep-risco-score risco-${nv}">${r.score}</div>
+      <div class="rep-risco-nivel risco-${nv}">${LABEL_NIVEL_RISCO[nv] || nv}</div>
+    </div>
+    ${r.sinais && r.sinais.length ? `<div class="rep-risco-sinais">${r.sinais.map(s => `<span class="rep-risco-sinal">${esc(labelSinal(s))}</span>`).join('')}</div>` : ''}
+  </div>`;
+}
+
+const LABEL_VEREDITO_MAT = {
+  compativel: 'Compativel',
+  consumo_acima: 'Consumo acima',
+  sobra_provavel: 'Sobra provavel',
+  sem_registro_consumo: 'Sem registro',
+  sem_os_industria: 'Sem OS',
+};
+
+function montarConsistenciaMaterial(j){
+  const cm = j.consistencia_material;
+  if (!cm) return '';
+  const prods = cm.produtos || [];
+  if (!prods.length) return '';
+  const nv = cm.nivel || 'ok';
+
+  const fontes = [];
+  if (cm.tem_os) fontes.push('OS Industria');
+  if (cm.tem_consumo_telegram) fontes.push('Telegram');
+  if (cm.tem_metragem) fontes.push('Metragem');
+
+  return `<div class="rep-material mat-${nv}">
+    <div class="rep-material-titulo">Consistencia de material · fontes: ${fontes.join(' + ') || 'parcial'}</div>
+    <div class="rep-mat-grid">
+      ${prods.map(p => `
+        <div class="rep-mat-item">
+          <div class="rep-mat-item-fam">${esc(p.familia)}</div>
+          <div class="rep-mat-item-nums">
+            ${p.enviado ? `Enviado <strong>${p.enviado}</strong><br>` : ''}
+            ${p.consumido ? `Consumido <strong>${p.consumido}</strong><br>` : ''}
+            ${p.sobra_declarada ? `Sobra decl. <strong>${p.sobra_declarada}</strong><br>` : ''}
+            ${p.esperado_m2 ? `Esperado (m²) <strong>~${p.esperado_m2}</strong>` : ''}
+          </div>
+          ${p.veredito ? `<div class="mat-veredito mat-${p.veredito}">${LABEL_VEREDITO_MAT[p.veredito] || p.veredito}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+    ${cm.alertas && cm.alertas.length ? `<div class="rep-mat-alertas">${cm.alertas.map(a => esc(a)).join(' · ')}</div>` : ''}
+  </div>`;
+}
+
 function montarRelatorioHTML(j){
   // Macro-etapas agregadas (replica lógica de classificarMacroEtapa)
   const macros = { PRE_OBRA: 0, EXECUCAO: 0, TRATATIVAS: 0, RETRABALHO: 0, POS_OBRA: 0, HIBERNACAO: 0 };
@@ -3535,11 +3786,13 @@ function montarRelatorioHTML(j){
 
   return `
     <h1>${esc(cliFinal)}</h1>
-    <div class="rep-meta">Relatório de Jornada · ${fmtData(new Date().toISOString().slice(0,10))}${classifLabel ? ` · <span class="sidebar-item-classif classif-${esc(j.classificacao || '')}">${esc(classifLabel)}</span>` : ''}</div>
+    <div class="rep-meta">Relatório de Jornada · ${fmtData(new Date().toISOString().slice(0,10))}${classifLabel ? ` · <span class="sidebar-item-classif classif-${esc(j.classificacao || '')}">${esc(classifLabel)}</span>` : ''}${j.origem_retrabalho === 'heranca' ? '<span class="badge-origem-retrab badge-origem-heranca" title="Aplicacao original feita antes de 2026">retrab. antigo</span>' : j.origem_retrabalho === 'recente' ? '<span class="badge-origem-retrab badge-origem-recente" title="Aplicacao original feita em 2026">retrab. 2026</span>' : ''}${j.score_risco && j.score_risco.nivel !== 'baixo' ? `<span class="badge-risco badge-risco-${j.score_risco.nivel}" title="Score: ${j.score_risco.score}/100">${LABEL_NIVEL_RISCO[j.score_risco.nivel]}</span>` : ''}</div>
 
     ${veredito ? `<div class="rep-veredito"><div class="rep-veredito-label">Veredito</div>${esc(veredito)}</div>` : ''}
 
     ${montarBenchmarkFaixa(j)}
+    ${montarScoreRisco(j)}
+    ${montarConsistenciaMaterial(j)}
 
     <div class="rep-narrativa">${gerarNarrativaProsa(j)}</div>
 
@@ -3737,6 +3990,7 @@ function labelMesAno(ma){
 }
 
 let PERIODO_SEL = '';
+let FAIXA_SEL = '';
 let ANO_ATIVO = '';
 let ANOS_ABERTO = false;
 
@@ -3756,7 +4010,8 @@ function popularFiltroPeriodo(){
   });
 
   const anosOrdenados = Object.keys(anos).sort().reverse();
-  if (!ANO_ATIVO || !anos[ANO_ATIVO]) ANO_ATIVO = anosOrdenados[0] || '';
+  const anoCorrente = String(new Date().getFullYear());
+  if (!ANO_ATIVO || !anos[ANO_ATIVO]) ANO_ATIVO = anos[anoCorrente] ? anoCorrente : anosOrdenados[0] || '';
   if (!ANO_ATIVO) { container.innerHTML = ''; return; }
 
   const MESES_GRID = ['01','02','03','04','05','06','07','08','09','10','11','12'];
@@ -3848,7 +4103,115 @@ function formatarStatus(s){
   return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
+let _PANORAMA_PERIODO_CACHE = '';
+function renderPanoramaMensal(){
+  const el = document.getElementById('panorama-mensal');
+  if (!PERIODO_SEL || PERIODO_SEL.length !== 7) {
+    el.classList.remove('visivel');
+    FAIXA_SEL = '';
+    _PANORAMA_PERIODO_CACHE = '';
+    return;
+  }
+  if (_PANORAMA_PERIODO_CACHE === PERIODO_SEL) return;
+  _PANORAMA_PERIODO_CACHE = PERIODO_SEL;
+  FAIXA_SEL = '';
+
+  const obras = (DADOS.obras || []).filter(o => {
+    const ma = mesAnoDeData(dataInicioObra(o));
+    return ma === PERIODO_SEL;
+  });
+  const n = obras.length;
+  if (!n) { el.classList.remove('visivel'); return; }
+
+  const FAIXAS_ORD = ['PP','P','M','G','GG','XG'];
+  const FAIXAS_COR = {PP:'#a0785a',P:'#b8956e',M:'#c4a77d',G:'#7a9b6d',GG:'#5a8a7a',XG:'#4a6e8a'};
+  const FAIXAS_LBL = {PP:'< 60m²',P:'60-100',M:'100-150',G:'150-220',GG:'220-300',XG:'300+'};
+
+  const fxCount = {};
+  FAIXAS_ORD.forEach(f => fxCount[f] = 0);
+  const classifCount = {};
+  const execDias = [], totalDias = [], hibDias = [];
+  let m2Total = 0, nApls = 0, nRetrab = 0, nHeranca = 0, nRecente = 0;
+  let nRiscoCrit = 0, nRiscoAlto = 0, nRiscoMed = 0;
+
+  obras.forEach(o => {
+    const fx = o.faixa_metragem;
+    if (fx && fxCount[fx] !== undefined) fxCount[fx]++;
+    const cl = o.classificacao || 'desconhecido';
+    classifCount[cl] = (classifCount[cl] || 0) + 1;
+    if (cl.includes('retrabalho')) {
+      nRetrab++;
+      if (o.origem_retrabalho === 'heranca') nHeranca++;
+      else if (o.origem_retrabalho === 'recente') nRecente++;
+    }
+    if (o.tempo_execucao_dias > 0) execDias.push(o.tempo_execucao_dias);
+    if (o.tempo_total_dias > 0) totalDias.push(o.tempo_total_dias);
+    if (o.tempo_hibernacao_dias > 0) hibDias.push(o.tempo_hibernacao_dias);
+    if (typeof o.metragem === 'number' && o.metragem > 0) m2Total += o.metragem;
+    const apls = ((o.equipe || {}).aplicadores_telegram || []).length;
+    if (apls > 0) nApls += apls;
+    const rnv = o.score_risco && o.score_risco.nivel;
+    if (rnv === 'critico') nRiscoCrit++;
+    else if (rnv === 'alto') nRiscoAlto++;
+    else if (rnv === 'medio') nRiscoMed++;
+  });
+
+  function med(arr){ if(!arr.length) return 0; arr.sort((a,b)=>a-b); const m=Math.floor(arr.length/2); return arr.length%2?arr[m]:Math.round((arr[m-1]+arr[m])/2); }
+
+  const barHtml = FAIXAS_ORD.filter(f => fxCount[f] > 0).map(f => {
+    const pct = Math.max(fxCount[f] / n * 100, 8);
+    return `<div class="panorama-faixa-bar" data-fx="${f}" style="flex:${pct}" title="${f}: ${fxCount[f]} obras">${fxCount[f]}</div>`;
+  }).join('');
+
+  const legHtml = FAIXAS_ORD.filter(f => fxCount[f] > 0).map(f =>
+    `<span class="panorama-leg-item"><span class="panorama-leg-dot" style="background:${FAIXAS_COR[f]}"></span>${f} ${FAIXAS_LBL[f]}</span>`
+  ).join('');
+
+  const classifHtml = Object.entries(classifCount).sort((a,b) => b[1]-a[1]).map(([cl, cnt]) =>
+    `<span class="panorama-classif-chip">${LABELS_CLASSIF[cl] || cl} ${cnt}</span>`
+  ).join('');
+
+  const pctRetrab = n ? Math.round(nRetrab / n * 100) : 0;
+
+  el.innerHTML = `
+    <details>
+      <summary>Panorama ${labelMesAno(PERIODO_SEL)} · ${n} obras · ${Math.round(m2Total).toLocaleString('pt-BR')} m²</summary>
+      <div class="panorama-corpo">
+        <div class="panorama-kpis">
+          <div class="panorama-kpi"><div class="panorama-kpi-valor">${n}</div><div class="panorama-kpi-label">Obras</div></div>
+          <div class="panorama-kpi"><div class="panorama-kpi-valor">${Math.round(m2Total).toLocaleString('pt-BR')}</div><div class="panorama-kpi-label">m² total</div></div>
+          <div class="panorama-kpi"><div class="panorama-kpi-valor">${nRetrab}</div><div class="panorama-kpi-label">Retrabalho (${pctRetrab}%)</div></div>
+          ${nRetrab > 0 ? `<div class="panorama-kpi"><div class="panorama-kpi-valor">${nHeranca}</div><div class="panorama-kpi-label">Heranca (anos ant.)</div></div>
+          <div class="panorama-kpi"><div class="panorama-kpi-valor">${nRecente}</div><div class="panorama-kpi-label">Recente (${new Date().getFullYear()})</div></div>
+          <div class="panorama-kpi"><div class="panorama-kpi-valor">${nRetrab - nHeranca - nRecente}</div><div class="panorama-kpi-label">Incerto</div></div>` : ''}
+          ${(nRiscoCrit + nRiscoAlto) > 0 ? `<div class="panorama-kpi"><div class="panorama-kpi-valor" style="color:#c0392b">${nRiscoCrit}</div><div class="panorama-kpi-label">Risco critico</div></div>
+          <div class="panorama-kpi"><div class="panorama-kpi-valor" style="color:#e67e22">${nRiscoAlto}</div><div class="panorama-kpi-label">Risco alto</div></div>` : ''}
+        </div>
+        <div class="panorama-faixas">${barHtml}</div>
+        <div class="panorama-legenda">${legHtml}</div>
+        <div class="panorama-classif">${classifHtml}</div>
+        <div class="panorama-tempos">
+          Exec. mediana <strong>${med(execDias)}d</strong> · Jornada <strong>${med(totalDias)}d</strong> · Hibernacao <strong>${med(hibDias)}d</strong> · Aplicadores <strong>${nApls}</strong>
+        </div>
+      </div>
+    </details>
+  `;
+  el.classList.add('visivel');
+
+  // Click nas barras de faixa → filtra sidebar
+  el.querySelectorAll('.panorama-faixa-bar').forEach(bar => {
+    bar.addEventListener('click', () => {
+      const fx = bar.dataset.fx;
+      FAIXA_SEL = FAIXA_SEL === fx ? '' : fx;
+      el.querySelectorAll('.panorama-faixa-bar').forEach(b => b.classList.toggle('fx-ativo', b.dataset.fx === FAIXA_SEL));
+      el.querySelector('.panorama-faixas').classList.toggle('tem-sel', !!FAIXA_SEL);
+      renderListaSidebar();
+    });
+  });
+}
+
 function renderListaSidebar(){
+  renderPanoramaMensal();
   const lista = document.getElementById('obras-lista');
   const contador = document.getElementById('contador-obras');
   const busca = (document.getElementById('search-obra').value || '').trim().toLowerCase();
@@ -3870,13 +4233,20 @@ function renderListaSidebar(){
         if (ma !== periodo) return false;
       }
     }
+    if (FAIXA_SEL && (o.faixa_metragem || '') !== FAIXA_SEL) return false;
     if (busca && !(o.cliente || '').toLowerCase().includes(busca)) return false;
     if (filtroVista === 'vistas' && !vistas.has(o.obra_id)) return false;
     if (filtroVista === 'nao-vistas' && vistas.has(o.obra_id)) return false;
     return true;
   });
-  // Ordena alfabeticamente por cliente
-  filtradas.sort((a, b) => (a.cliente || '').localeCompare(b.cliente || ''));
+  // Ordena: risco critico/alto primeiro, depois alfabetico
+  const _RISCO_PESO = {critico: 0, alto: 1, medio: 2, baixo: 3};
+  filtradas.sort((a, b) => {
+    const ra = (a.score_risco && a.score_risco.nivel) || 'baixo';
+    const rb = (b.score_risco && b.score_risco.nivel) || 'baixo';
+    const diff = (_RISCO_PESO[ra] ?? 4) - (_RISCO_PESO[rb] ?? 4);
+    return diff !== 0 ? diff : (a.cliente || '').localeCompare(b.cliente || '');
+  });
 
   const nVistas = (DADOS.obras||[]).filter(o => vistas.has(o.obra_id)).length;
   contador.textContent = `${filtradas.length} de ${(DADOS.obras||[]).length} · ${nVistas} vistas`;
@@ -3903,9 +4273,12 @@ function renderListaSidebar(){
     const fricHtml = fricNivel ? `<span class="sidebar-item-friccao fric-${esc(fricNivel)}">${esc(fricNivel)}</span>` : '';
     const alertas = o.alertas || [];
     const alertHtml = alertas.map(a => `<span class="sidebar-item-alerta">${esc(a.replace(/_/g,' '))}</span>`).join('');
+    const origemHtml = o.origem_retrabalho === 'heranca' ? '<span class="badge-origem-retrab badge-origem-heranca" title="Retrabalho de aplicacao feita antes de 2026">retrab. antigo</span>' : o.origem_retrabalho === 'recente' ? '<span class="badge-origem-retrab badge-origem-recente" title="Retrabalho de aplicacao feita em 2026">retrab. 2026</span>' : '';
+    const riscoNv = o.score_risco && o.score_risco.nivel && o.score_risco.nivel !== 'baixo' ? o.score_risco.nivel : '';
+    const riscoHtml = riscoNv ? `<span class="badge-risco badge-risco-${esc(riscoNv)}" title="Score risco: ${o.score_risco.score}/100 · ${(o.score_risco.sinais||[]).map(s => labelSinal(s)).join(', ')}">${esc(LABEL_NIVEL_RISCO[riscoNv] || riscoNv)}</span>` : '';
 
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
-      <div class="sidebar-item-cli">${esc(o.cliente)}${fricHtml}${alertHtml}</div>
+      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${fricHtml}${alertHtml}</div>
       <div class="sidebar-item-meta">
         <span class="sidebar-item-status s-${esc(status)}">${esc(formatarStatus(status))}</span>
         ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}

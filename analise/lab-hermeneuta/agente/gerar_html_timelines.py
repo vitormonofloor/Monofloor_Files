@@ -1,4 +1,4 @@
-"""
+﻿"""
 gerar_html_timelines.py · HTML de visualização das timelines
 ==============================================================
 
@@ -13,6 +13,7 @@ import json
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
+from statistics import median as _median
 
 ROOT = Path(__file__).parent.parent
 JSON_MASSA = ROOT / "dados" / "timeline_obras.json"
@@ -237,6 +238,239 @@ def derivar_insights(obra):
         })
 
     return insights
+
+
+def calcular_obras_acao_imediata(timelines):
+    """Cruza score risco + alerta parada + material subdimensionado pra gerar lista de acao."""
+    obras = []
+    for t in timelines:
+        sr = t.get("score_risco") or {}
+        nivel = sr.get("nivel", "")
+        valor = sr.get("valor", 0) or 0
+        alerta = t.get("alerta_parada")
+        cm = (t.get("consistencia_material") or {}).get("classificacao", "")
+        origem = (t.get("origem_obra") or {}).get("origem", "")
+        if origem in ("pre_contrato", "incerta"):
+            continue
+
+        sinais_acao = []
+        peso = 0
+        if nivel == "critico":
+            sinais_acao.append("risco critico")
+            peso += 30
+        elif nivel == "alto":
+            sinais_acao.append("risco alto")
+            peso += 15
+        if alerta:
+            dias = alerta.get("dias", 0)
+            tipo_alerta = alerta.get("tipo", "")
+            if dias > 60:
+                sinais_acao.append(f"parada ha {dias}d")
+                peso += 20
+            elif dias > 30:
+                sinais_acao.append(f"inativa {dias}d")
+                peso += 10
+        if cm == "subdimensionado":
+            sinais_acao.append("material insuficiente")
+            peso += 10
+
+        if sinais_acao:
+            obras.append({
+                "cliente": t.get("cliente", "?"),
+                "status": t.get("status", "?"),
+                "consultor": t.get("consultor") or "Sem consultor",
+                "score": valor,
+                "nivel": nivel,
+                "sinais": sinais_acao,
+                "peso": peso,
+                "obra_id": t.get("obra_id", ""),
+            })
+
+    obras.sort(key=lambda x: -x["peso"])
+    return obras
+
+
+def render_resumo_executivo(timelines, obras_acao):
+    """Bloco de resumo executivo no topo: o que esta grave e o que fazer."""
+    n_total = len(timelines)
+    origens = {}
+    for t in timelines:
+        o = (t.get("origem_obra") or {}).get("origem", "?")
+        origens[o] = origens.get(o, 0) + 1
+
+    n_operacionais = n_total - origens.get("pre_contrato", 0)
+
+    sr_dist = {"critico": 0, "alto": 0, "moderado": 0, "baixo": 0}
+    for t in timelines:
+        nivel = (t.get("score_risco") or {}).get("nivel", "")
+        if nivel in sr_dist:
+            sr_dist[nivel] += 1
+
+    n_alerta = sum(1 for t in timelines if t.get("alerta_parada"))
+    n_sub = sum(1 for t in timelines if (t.get("consistencia_material") or {}).get("classificacao") == "subdimensionado")
+    n_retrabalho = sum(1 for t in timelines if (t.get("status") or "") in ("reparo", "marcas_rolo_cera"))
+
+    n_acao = len(obras_acao)
+    n_graves = sum(1 for o in obras_acao if o["peso"] >= 25)
+
+    consultores_problema = {}
+    for o in obras_acao:
+        c = o["consultor"]
+        consultores_problema[c] = consultores_problema.get(c, 0) + 1
+    top_consultor = max(consultores_problema, key=consultores_problema.get) if consultores_problema else "?"
+    top_consultor_n = consultores_problema.get(top_consultor, 0)
+
+    # Bullets
+    bullets = []
+    if n_graves:
+        bullets.append(f'<li class="re-grave"><strong>{n_graves} obras exigem atencao imediata</strong> — risco critico combinado com inatividade ou material insuficiente</li>')
+    bullets.append(f'<li><strong>{sr_dist["critico"] + sr_dist["alto"]} obras em risco alto/critico</strong> ({sr_dist["critico"]} criticas, {sr_dist["alto"]} altas) de {n_operacionais} operacionais</li>')
+    if n_alerta:
+        bullets.append(f'<li><strong>{n_alerta} obras paradas</strong> ha mais de 30 dias sem nenhuma atividade registrada</li>')
+    if n_sub:
+        bullets.append(f'<li><strong>{n_sub} obras com material insuficiente</strong> — material enviado nao cobre a metragem do projeto</li>')
+    if n_retrabalho:
+        bullets.append(f'<li><strong>{n_retrabalho} em retrabalho ativo</strong> (reparo ou marcas de rolo/cera)</li>')
+    if top_consultor != "?" and top_consultor_n >= 3:
+        bullets.append(f'<li><strong>{top_consultor}</strong> concentra {top_consultor_n} das {n_acao} obras com pendencia</li>')
+
+    bullets_html = "\n".join(bullets)
+
+    # Tabela de acao imediata (top 15)
+    top_obras = obras_acao[:15]
+    rows = []
+    for i, o in enumerate(top_obras, 1):
+        sinais_txt = " + ".join(o["sinais"])
+        cor_score = "#c45a5a" if o["nivel"] == "critico" else "#e67e22" if o["nivel"] == "alto" else "#d4a017"
+        score_html = f'<span style="color:{cor_score};font-weight:700">{o["score"]}</span>' if o["score"] else "-"
+        rows.append(f"""<tr>
+          <td style="color:var(--ink-soft)">{i}</td>
+          <td><strong>{o["cliente"][:45]}</strong></td>
+          <td>{o["status"]}</td>
+          <td>{o["consultor"]}</td>
+          <td style="text-align:center">{score_html}</td>
+          <td style="font-size:12px">{sinais_txt}</td>
+        </tr>""")
+    rows_html = "\n".join(rows)
+
+    return f"""
+    <div class="resumo-executivo">
+      <div class="re-header">
+        <div class="re-titulo">O que precisa de atencao agora</div>
+        <div class="re-subtitulo">{n_acao} obras com pelo menos 1 sinal de alerta · {n_graves} graves</div>
+      </div>
+      <ul class="re-bullets">
+        {bullets_html}
+      </ul>
+      <div class="re-tabela-wrap">
+        <table class="re-tabela">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Obra</th>
+              <th>Status</th>
+              <th>Consultor</th>
+              <th>Score</th>
+              <th>Por que precisa de atencao</th>
+            </tr>
+          </thead>
+          <tbody>{rows_html}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+def render_risco_panorama(timelines):
+    """Renderiza bloco de Indice de Risco na Tela 1: distribuicao + TOP 10 criticas."""
+    # Separar elegiveis vs N/A
+    elegiveis = []
+    n_na = 0
+    for t in timelines:
+        sr = t.get("score_risco")
+        if sr:
+            elegiveis.append(t)
+        else:
+            n_na += 1
+
+    if not elegiveis:
+        return ""
+
+    # Contagem por nivel
+    dist = {"baixo": 0, "moderado": 0, "alto": 0, "critico": 0}
+    for t in elegiveis:
+        nivel = t["score_risco"]["nivel"]
+        dist[nivel] = dist.get(nivel, 0) + 1
+
+    n_total = len(elegiveis)
+    cores = {"baixo": "#4caf50", "moderado": "#d4a017", "alto": "#e67e22", "critico": "#c45a5a"}
+    labels = {"baixo": "Baixo (0-20)", "moderado": "Moderado (21-40)", "alto": "Alto (41-60)", "critico": "Critico (61-100)"}
+
+    # Barras horizontais empilhadas
+    barras_html = ""
+    for nivel in ("critico", "alto", "moderado", "baixo"):
+        n = dist[nivel]
+        if n == 0:
+            continue
+        pct = round(n / n_total * 100, 1)
+        barras_html += f'<div class="risco-barra-seg" style="width:{pct}%;background:{cores[nivel]}" title="{labels[nivel]}: {n} obras ({pct}%)"></div>'
+
+    # Cards por nivel
+    cards_html = ""
+    for nivel in ("critico", "alto", "moderado", "baixo"):
+        n = dist[nivel]
+        pct = round(n / n_total * 100) if n_total else 0
+        cards_html += f"""<div class="risco-card" style="--risco-cor: {cores[nivel]}">
+          <div class="risco-card-valor">{n}</div>
+          <div class="risco-card-label">{labels[nivel]}</div>
+          <div class="risco-card-pct">{pct}%</div>
+        </div>"""
+
+    # TOP 10 obras criticas (ordenadas por score desc)
+    top10 = sorted(elegiveis, key=lambda t: -(t["score_risco"]["valor"]))[:10]
+    top10_rows = ""
+    for i, t in enumerate(top10):
+        sr = t["score_risco"]
+        cli = html.escape((t.get("cliente") or "?")[:35])
+        status = t.get("status") or "?"
+        sinais_txt = html.escape(" | ".join(sr["sinais"][:3]))
+        cor = sr["cor"]
+        top10_rows += f"""<tr>
+          <td class="mono" style="text-align:center">{i+1}</td>
+          <td class="top10-cli">{cli}</td>
+          <td class="mono" style="text-align:center;color:{cor};font-weight:700">{sr['valor']}</td>
+          <td><span class="risco-nivel-tag" style="background:{cor};color:#fff">{sr['nivel'].upper()}</span></td>
+          <td class="top10-sinais">{sinais_txt}</td>
+          <td class="mono">{status}</td>
+        </tr>"""
+
+    na_nota = f'<div class="risco-nota">{n_na} obras com dados insuficientes (pre-contrato ou incerta) nao recebem indice.</div>' if n_na > 0 else ""
+
+    return f"""
+    <div class="risco-panorama">
+      <div class="section-title">Indice de Risco · triagem preventiva</div>
+      <div class="risco-intro">
+        <p>Score forward-looking que identifica sinais de risco em obras ativas.
+        Combina inatividade, postergacoes, reprovacoes, ocorrencias e volume de comunicacao.
+        <strong>Ferramenta de triagem, nao diagnostico definitivo.</strong></p>
+      </div>
+      {na_nota}
+      <div class="risco-barra-wrap">
+        <div class="risco-barra">{barras_html}</div>
+        <div class="risco-barra-legenda">
+          <span>{n_total} obras avaliadas</span>
+        </div>
+      </div>
+      <div class="risco-cards">{cards_html}</div>
+      <div class="risco-top10">
+        <div class="risco-top10-titulo">TOP 10 obras com maior indice de risco</div>
+        <table class="risco-top10-table">
+          <thead><tr><th>#</th><th>Cliente</th><th>IR</th><th>Nivel</th><th>Sinais contribuintes</th><th>Status</th></tr></thead>
+          <tbody>{top10_rows}</tbody>
+        </table>
+      </div>
+    </div>"""
+
 
 # Prefere massa se existir · fallback piloto
 if JSON_MASSA.exists():
@@ -586,6 +820,80 @@ def render_materiais_enviados(obra):
     """
 
 
+def render_consistencia_material(obra):
+    """Bloco de consistência material (Camada 2) por obra."""
+    cm = obra.get("consistencia_material") or {}
+    classificacao = cm.get("classificacao", "sem_dados")
+    if classificacao == "sem_dados" and not cm.get("m2") and not cm.get("material_base_kg"):
+        return ""  # Nada pra mostrar
+
+    cores = {
+        "material_ok": "#3d8a5a",
+        "subdimensionado": "#c45a5a",
+        "superdimensionado": "#d4a017",
+        "sem_dados": "#64748b",
+    }
+    labels = {
+        "material_ok": "Compativel",
+        "subdimensionado": "Subdimensionado",
+        "superdimensionado": "Superdimensionado",
+        "sem_dados": "Sem dados",
+    }
+    cor = cores.get(classificacao, "#64748b")
+    label = labels.get(classificacao, "?")
+    detalhe = html.escape(cm.get("detalhe") or "")
+
+    m2 = cm.get("m2")
+    m2_str = f"{m2:.0f} m²" if m2 else "—"
+    teo = cm.get("cobertura_teorica_kg")
+    teo_str = f"{teo:.1f} kg" if teo else "—"
+    base = cm.get("material_base_kg", 0)
+    base_str = f"{base:.1f} kg" if base else "—"
+    rend = cm.get("rendimento_usado_m2_kg")
+    rend_str = f"{rend:.0f} m²/kg" if rend else "—"
+    fam = cm.get("familia_dominante") or "—"
+
+    # Itens por família
+    itens_fam = cm.get("itens_por_familia") or {}
+    fam_chips = ""
+    if itens_fam:
+        chips = []
+        for f, v in sorted(itens_fam.items(), key=lambda x: -x[1]):
+            chips.append(f'<span class="cm-fam-chip">{html.escape(f)} <b>{v:.1f}</b> kg</span>')
+        fam_chips = f'<div class="cm-familias">{"".join(chips)}</div>'
+
+    # Sinais de campo
+    sinais = cm.get("sinais_campo") or {}
+    sinais_html = ""
+    sinal_sobra = sinais.get("sinal_sobra", False)
+    sinal_falta = sinais.get("sinal_falta", False)
+    if sinal_sobra or sinal_falta:
+        tags = []
+        if sinal_falta:
+            tags.append('<span class="cm-sinal cm-sinal-falta">Sinal de falta</span>')
+        if sinal_sobra:
+            tags.append('<span class="cm-sinal cm-sinal-sobra">Sinal de sobra</span>')
+        sinais_html = f'<div class="cm-sinais">{"".join(tags)}</div>'
+
+    return f"""
+    <div class="cm-bloco">
+      <div class="cm-header">
+        <span class="cm-titulo">Consistência material</span>
+        <span class="cm-class" style="background:{cor};color:#fff">{html.escape(label)}</span>
+      </div>
+      <div class="cm-detalhe">{detalhe}</div>
+      <div class="cm-grid">
+        <div class="cm-item"><div class="cm-item-val mono">{m2_str}</div><div class="cm-item-label">Metragem</div></div>
+        <div class="cm-item"><div class="cm-item-val mono">{base_str}</div><div class="cm-item-label">Enviado (base)</div></div>
+        <div class="cm-item"><div class="cm-item-val mono">{teo_str}</div><div class="cm-item-label">Teórico</div></div>
+        <div class="cm-item"><div class="cm-item-val mono">{rend_str}</div><div class="cm-item-label">Rendimento ({html.escape(fam)})</div></div>
+      </div>
+      {fam_chips}
+      {sinais_html}
+    </div>
+    """
+
+
 def card_obra(obra, taxonomia):
     cliente = html.escape(obra.get("cliente") or "—")
     status = obra.get("status") or "—"
@@ -870,6 +1178,19 @@ def card_obra(obra, taxonomia):
     else:
         badge_natureza = ""
 
+    # Badge de consistência material (Camada 2)
+    cm = obra.get("consistencia_material") or {}
+    cm_class = cm.get("classificacao", "sem_dados")
+    cm_badge_map = {
+        "material_ok":         ("MAT OK",    "mat-ok",    "#3d8a5a"),
+        "subdimensionado":     ("MAT SUB",   "mat-sub",   "#c45a5a"),
+        "superdimensionado":   ("MAT SUPER", "mat-super", "#d4a017"),
+        "sem_dados":           ("MAT ?",     "mat-sem",   "#64748b"),
+    }
+    cm_label, cm_css, cm_cor = cm_badge_map.get(cm_class, ("MAT ?", "mat-sem", "#64748b"))
+    cm_tip = html.escape(cm.get("detalhe", "") or "Sem dados para análise de material")
+    badge_material = f'<span class="mini-badge {cm_css}" style="background:{cm_cor};color:#fff" title="{cm_tip}">{cm_label}</span>'
+
     # Badge de alerta de obra parada
     alerta = obra.get("alerta_parada")
     badge_alerta = ""
@@ -879,6 +1200,23 @@ def card_obra(obra, taxonomia):
         label_a = {"contrato_sem_avanço": "PARADA", "obra_dormindo": "DORMINDO", "pos_vt_sem_execucao": "SEM EXEC"}.get(tipo_a, "INATIVA")
         cor_a = "#c45a5a" if dias_a > 60 else "#d4a017"
         badge_alerta = f'<span class="mini-badge alerta-parada" style="background:{cor_a};color:#fff" title="{tipo_a} · {dias_a} dias sem atividade">{label_a} {dias_a}d</span>'
+
+    # Badge de score preditivo de risco (Camada 3)
+    sr = obra.get("score_risco")
+    badge_risco = ""
+    score_valor_attr = -1  # -1 = N/A (pra sort ficar no final)
+    if sr:
+        sr_valor = sr.get("valor", 0)
+        sr_nivel = sr.get("nivel", "baixo")
+        sr_cor = sr.get("cor", "#64748b")
+        sr_sinais = sr.get("sinais", [])
+        sr_tip = html.escape(" | ".join(sr_sinais) if sr_sinais else "Nenhum sinal de risco")
+        sr_label_map = {"baixo": "BAIXO", "moderado": "MODERADO", "alto": "ALTO", "critico": "CRITICO"}
+        sr_label = sr_label_map.get(sr_nivel, sr_nivel.upper())
+        badge_risco = f'<span class="mini-badge risco-badge risco-{sr_nivel}" style="background:{sr_cor};color:#fff" title="Indice de Risco: {sr_valor} · {sr_tip}">IR {sr_valor} {sr_label}</span>'
+        score_valor_attr = sr_valor
+    else:
+        badge_risco = '<span class="mini-badge risco-badge risco-na" title="Indice de Risco: N/A — dados insuficientes (pre-contrato ou incerta)">IR N/A</span>'
 
     # Categorias derivadas dos insights pra filtro client-side
     insights_obra = derivar_insights(obra)
@@ -896,10 +1234,16 @@ def card_obra(obra, taxonomia):
     categorias.add(f"estagio_{estagio}")
     if alerta:
         categorias.add("alerta_parada")
+    categorias.add(f"mat_{cm_class}")
+    # Score de risco como categoria filtravel
+    if sr:
+        categorias.add(f"risco_{sr.get('nivel', 'baixo')}")
+    else:
+        categorias.add("risco_na")
     data_categorias = " ".join(sorted(categorias))
 
     return f"""
-    <details class="obra-card{destrinchada_class}" data-busca="{data_busca}" data-categorias="{data_categorias}">
+    <details class="obra-card{destrinchada_class}" data-busca="{data_busca}" data-categorias="{data_categorias}" data-score="{score_valor_attr}">
       <summary class="obra-summary">
         <span class="sum-grupo grupo-tag {grupo_classe}">{grupo_label}</span>
         <span class="sum-cli">{cliente}</span>
@@ -910,7 +1254,7 @@ def card_obra(obra, taxonomia):
           <span class="sum-stat"><b>{dt_resumo}</b></span>
           <span class="sum-stat"><b>{n_msgs}</b> msgs</span>
         </span>
-        <span class="sum-badges">{badge_alerta}{badge_natureza}{badge_perfil}{badge_destr}{badge_ciclos}{badge_retr}</span>
+        <span class="sum-badges">{badge_risco}{badge_alerta}{badge_material}{badge_natureza}{badge_perfil}{badge_destr}{badge_ciclos}{badge_retr}</span>
         <span class="sum-toggle">▾</span>
       </summary>
       <div class="obra-detail">
@@ -935,6 +1279,8 @@ def card_obra(obra, taxonomia):
         {render_heatmap(obra)}
 
         {render_materiais_enviados(obra)}
+
+        {render_consistencia_material(obra)}
 
         <div class="ciclo-marcos-lista">
           {grupos_html}
@@ -1525,7 +1871,7 @@ def render_compilacao_problemas(comp):
     </div>"""
 
 
-def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobertura, n_novas=0, n_retorno=0, n_pre_contrato=0, n_incerta=0):
+def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobertura, n_novas=0, n_retorno=0, n_pre_contrato=0, n_incerta=0, dist_mat=None):
     """Narrativa unificada da Tela 1: historia completa de cima a baixo."""
     total_2026 = pf.get("total_2026", 0) or 1
     perfis = pf.get("perfis", {})
@@ -1721,7 +2067,58 @@ def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobert
       </div>
     </div>"""
 
-    # === CAPITULO 4 · O QUE ESCAPA ===
+    # === CAPITULO 4 · MATERIAL (Camada 2) ===
+    dm = dist_mat or {}
+    n_ok_m = dm.get("material_ok", 0)
+    n_sub_m = dm.get("subdimensionado", 0)
+    n_sup_m = dm.get("superdimensionado", 0)
+    n_sd_m = dm.get("sem_dados", 0)
+    n_analisavel_m = n_ok_m + n_sub_m + n_sup_m
+    pct_ok_m = round(n_ok_m / n_analisavel_m * 100) if n_analisavel_m else 0
+    pct_sub_m = round(n_sub_m / n_analisavel_m * 100) if n_analisavel_m else 0
+    pct_sup_m = round(n_sup_m / n_analisavel_m * 100) if n_analisavel_m else 0
+    pct_sd_m = round(n_sd_m / n_total * 100) if n_total else 0
+
+    cap_mat = ""
+    if n_analisavel_m > 0 or n_sd_m > 0:
+        mat_bars_html = ""
+        if n_analisavel_m > 0:
+            w_ok_m = max(2, round(n_ok_m / n_analisavel_m * 100))
+            w_sub_m = max(2, round(n_sub_m / n_analisavel_m * 100))
+            w_sup_m = max(2, round(n_sup_m / n_analisavel_m * 100))
+            mat_bars_html = f"""
+            <div class="cm-dist-bar">
+              <div class="cm-bar-seg cm-bar-ok" style="width:{w_ok_m}%" title="Compatível: {n_ok_m} obras ({pct_ok_m}%)"></div>
+              <div class="cm-bar-seg cm-bar-sub" style="width:{w_sub_m}%" title="Subdimensionado: {n_sub_m} obras ({pct_sub_m}%)"></div>
+              <div class="cm-bar-seg cm-bar-sup" style="width:{w_sup_m}%" title="Superdimensionado: {n_sup_m} obras ({pct_sup_m}%)"></div>
+            </div>"""
+        mat_ind_html = f"""
+        <div class="narr-indicadores narr-ind-5">
+          <div class="narr-ind" style="border-left:3px solid #3d8a5a"><div class="narr-ind-valor">{n_ok_m}</div><div class="narr-ind-label">compatível ({pct_ok_m}%)</div></div>
+          <div class="narr-ind" style="border-left:3px solid #c45a5a"><div class="narr-ind-valor">{n_sub_m}</div><div class="narr-ind-label">subdimensionado ({pct_sub_m}%)</div></div>
+          <div class="narr-ind" style="border-left:3px solid #d4a017"><div class="narr-ind-valor">{n_sup_m}</div><div class="narr-ind-label">superdimensionado ({pct_sup_m}%)</div></div>
+          <div class="narr-ind" style="border-left:3px solid #64748b"><div class="narr-ind-valor">{n_sd_m}</div><div class="narr-ind-label">sem dados ({pct_sd_m}%)</div></div>
+          <div class="narr-ind"><div class="narr-ind-valor">{n_analisavel_m}</div><div class="narr-ind-label">analisáveis</div></div>
+        </div>"""
+        mat_alerta_html = ""
+        if n_sub_m > 0:
+            mat_alerta_html += f"""<div class="narr-stat narr-stat-alerta"><div class="narr-stat-num" style="color:#c45a5a">{n_sub_m}</div><div class="narr-stat-desc"><strong>obras com material subdimensionado.</strong> Material-base enviado abaixo do necessário para a metragem, ou sinais de falta de material detectados nas mensagens Telegram.</div></div>"""
+        if n_sup_m > 0:
+            mat_alerta_html += f"""<div class="narr-stat narr-stat-alerta"><div class="narr-stat-num" style="color:#d4a017">{n_sup_m}</div><div class="narr-stat-desc"><strong>obras com material superdimensionado.</strong> Enviado mais de 130% do teórico, ou sinais de sobra no Telegram.</div></div>"""
+        if n_sd_m > n_analisavel_m:
+            mat_alerta_html += f"""<div class="narr-stat"><div class="narr-stat-num" style="color:#64748b">{pct_sd_m}%</div><div class="narr-stat-desc"><strong>das obras sem dados suficientes.</strong> Falta metragem ou material registrado na OS/API.</div></div>"""
+        cap_mat = f"""<div class="narr-capitulo">
+          <div class="narr-cap-num">04</div>
+          <div class="narr-cap-corpo">
+            <div class="narr-titulo">Consistência de material</div>
+            <p>Cruzamos <strong>metragem da obra × material enviado (OS Indústria + API) × sinais de consumo no Telegram</strong> para detectar subdimensionamento ou excesso. Rendimentos consideram múltiplas camadas de aplicação (STELION ~3 m²/kg total, LILIT ~3 m²/kg total).</p>
+            {mat_bars_html}
+            {mat_ind_html}
+            <div class="narr-stats-lista">{mat_alerta_html}</div>
+          </div>
+        </div>"""
+
+    # === CAPITULO 5 · O QUE ESCAPA ===
     gaps = []
     if n_sem > 0:
         gaps.append(f"""<div class="narr-gap">
@@ -1748,10 +2145,10 @@ def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobert
           relevantes que escapam da detecção.</div>
         </div>""")
 
-    cap4 = ""
+    cap5_esc = ""
     if gaps:
-        cap4 = f"""<div class="narr-capitulo">
-          <div class="narr-cap-num">04</div>
+        cap5_esc = f"""<div class="narr-capitulo">
+          <div class="narr-cap-num">05</div>
           <div class="narr-cap-corpo">
             <div class="narr-titulo">O que o dado não mostra</div>
             <p>Esses são os limites conhecidos do pipeline. Cada um representa informação que existe na
@@ -1760,9 +2157,9 @@ def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobert
           </div>
         </div>"""
 
-    # === CAPITULO 5 · ACOES ===
-    cap5 = f"""<div class="narr-capitulo">
-      <div class="narr-cap-num">05</div>
+    # === CAPITULO 6 · ACOES ===
+    cap6 = f"""<div class="narr-capitulo">
+      <div class="narr-cap-num">06</div>
       <div class="narr-cap-corpo">
         <div class="narr-titulo">O que os dados sugerem</div>
         <div class="narr-acao-grid">
@@ -1790,7 +2187,7 @@ def render_narrativa_unificada(pf, comp, n_total, n_marcos, n_com, n_sem, cobert
       </div>
     </div>"""
 
-    return f"""<div class="narrativa-unificada">{cap1}{cap2}{cap3}{cap4}{cap5}</div>"""
+    return f"""<div class="narrativa-unificada">{cap1}{cap2}{cap3}{cap_mat}{cap5_esc}{cap6}</div>"""
 
 
 def calcular_analise_cross_obras(timelines, taxonomia):
@@ -2070,6 +2467,367 @@ def render_analise_cross(an, taxonomia):
     return "".join(blocos)
 
 
+# ============================================================
+# Faixas de metragem (PP/P/M/G/GG/XG) — espelhado de gerar_jornada.py
+# ============================================================
+FAIXAS_METRAGEM = [
+    ("PP", "Ate 60 m2",   0,    60),
+    ("P",  "60-100 m2",  60,   100),
+    ("M",  "100-150 m2", 100,  150),
+    ("G",  "150-220 m2", 150,  220),
+    ("GG", "220-300 m2", 220,  300),
+    ("XG", "Acima 300 m2", 300, 99999),
+]
+FAIXAS_ORDEM = [f[0] for f in FAIXAS_METRAGEM]
+FAIXAS_LABELS = {f[0]: f[1] for f in FAIXAS_METRAGEM}
+
+
+def _classificar_faixa(m2_str):
+    """Retorna codigo de faixa (PP/P/M/G/GG/XG) ou None."""
+    try:
+        m2 = float(str(m2_str).replace(",", "."))
+    except (ValueError, TypeError):
+        return None
+    if m2 <= 0:
+        return None
+    for cod, _, lo, hi in FAIXAS_METRAGEM:
+        if lo <= m2 < hi:
+            return cod
+    return None
+
+
+def _data_inicio_obra(obra):
+    """Retorna YYYY-MM como mes de inicio da obra. Prioridade:
+    1. data_exec_confirmada
+    2. primeiro marco de fase 2_execucao
+    3. data_exec_prevista
+    4. data_1a_msg
+    """
+    dec = obra.get("data_exec_confirmada")
+    if dec and dec[:4] != "None":
+        return dec[:7]
+    marcos = obra.get("marcos") or []
+    for m in sorted(marcos, key=lambda x: x.get("data", "")):
+        if m.get("fase") == "2_execucao" and m.get("tipo") not in ("ocorrencia_formal",):
+            d = m.get("data", "")
+            if d and len(d) >= 7:
+                return d[:7]
+    dep = obra.get("data_exec_prevista")
+    if dep and dep[:4] != "None":
+        return dep[:7]
+    d1 = obra.get("data_1a_msg")
+    if d1 and d1[:4] != "None":
+        return d1[:7]
+    return None
+
+
+# ============================================================
+# FRENTE 1 — Panorama mensal
+# ============================================================
+
+def calcular_panorama_mensal(timelines):
+    """Agrupa obras por mes de inicio e calcula metricas por mes."""
+    meses = defaultdict(lambda: {
+        "n": 0, "faixas": defaultdict(int), "tempos": [], "retrabalho": 0,
+    })
+    for o in timelines:
+        mes = _data_inicio_obra(o)
+        if not mes:
+            continue
+        bucket = meses[mes]
+        bucket["n"] += 1
+        fx = _classificar_faixa(o.get("metragem"))
+        if fx:
+            bucket["faixas"][fx] += 1
+        dt = o.get("dt_total_marcos_dias")
+        if dt is not None and dt > 0:
+            bucket["tempos"].append(dt)
+        fd = o.get("fase_derivada") or {}
+        if fd.get("tem_retrabalho"):
+            bucket["retrabalho"] += 1
+    # Converte defaultdicts
+    result = {}
+    for mes, data in sorted(meses.items()):
+        med = int(_median(data["tempos"])) if data["tempos"] else None
+        pct_r = round(data["retrabalho"] / data["n"] * 100) if data["n"] else 0
+        result[mes] = {
+            "n": data["n"],
+            "faixas": dict(data["faixas"]),
+            "mediana_tempo": med,
+            "pct_retrabalho": pct_r,
+            "n_retrabalho": data["retrabalho"],
+        }
+    return result
+
+
+def render_panorama_mensal(panorama):
+    """Renderiza tabela panorama mensal para a Tela 2."""
+    if not panorama:
+        return ""
+    meses_ordenados = sorted(panorama.keys(), reverse=True)
+    max_n = max(v["n"] for v in panorama.values()) or 1
+
+    rows = []
+    for mes in meses_ordenados:
+        d = panorama[mes]
+        # Formata mes legivel em PT-BR
+        _MESES_PT = {1:"Jan",2:"Fev",3:"Mar",4:"Abr",5:"Mai",6:"Jun",7:"Jul",8:"Ago",9:"Set",10:"Out",11:"Nov",12:"Dez"}
+        try:
+            dt = datetime.strptime(mes, "%Y-%m")
+            mes_label = f"{_MESES_PT[dt.month]}/{dt.year}"
+        except Exception:
+            mes_label = mes
+        # Mini-barras por faixa
+        faixa_chips = []
+        for fx in FAIXAS_ORDEM:
+            n_fx = d["faixas"].get(fx, 0)
+            if n_fx > 0:
+                faixa_chips.append(
+                    f'<span class="pm-faixa-chip" title="{FAIXAS_LABELS.get(fx, fx)}: {n_fx} obras">'
+                    f'<span class="pm-faixa-cod">{fx}</span>'
+                    f'<span class="pm-faixa-n">{n_fx}</span></span>')
+        faixas_html = "".join(faixa_chips) if faixa_chips else '<span class="pm-sem-faixa">--</span>'
+        # Barra proporcional
+        bar_w = round(d["n"] / max_n * 100)
+        mediana_str = f'{d["mediana_tempo"]}d' if d["mediana_tempo"] is not None else "--"
+        pct_r = d["pct_retrabalho"]
+        pct_r_class = " pm-r-alto" if pct_r >= 30 else (" pm-r-med" if pct_r >= 15 else "")
+        rows.append(f"""<tr>
+          <td class="pm-mes">{mes_label}</td>
+          <td class="pm-n">
+            <div class="pm-bar-wrap">
+              <div class="pm-bar" style="width:{bar_w}%"></div>
+              <span class="pm-bar-label">{d["n"]}</span>
+            </div>
+          </td>
+          <td class="pm-faixas">{faixas_html}</td>
+          <td class="pm-tempo mono">{mediana_str}</td>
+          <td class="pm-retr{pct_r_class} mono">{pct_r}%</td>
+        </tr>""")
+
+    return f"""
+    <div class="panorama-mensal">
+      <div class="section-title">Panorama mensal da carteira</div>
+      <div class="pm-sub">Obras agrupadas pelo mes de inicio (execucao confirmada ou 1o marco). Faixa de metragem: PP &lt;60 / P 60-100 / M 100-150 / G 150-220 / GG 220-300 / XG 300+</div>
+      <div class="pm-scroll">
+        <table class="pm-tabela">
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Obras iniciadas</th>
+              <th>Distribuicao por faixa</th>
+              <th>Mediana execucao</th>
+              <th>% Retrabalho</th>
+            </tr>
+          </thead>
+          <tbody>{"".join(rows)}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+# ============================================================
+# FRENTE 2a — Padrao por consultor
+# ============================================================
+
+def calcular_padrao_consultor(timelines):
+    """Agrupa obras por consultor e calcula indice de problema."""
+    consultores = defaultdict(lambda: {
+        "obras": 0, "retrabalho": 0, "alerta": 0,
+        "dias_inativos": [], "ocorrencias": [], "clientes": [],
+    })
+    for o in timelines:
+        cons = (o.get("consultor") or "").strip()
+        if not cons:
+            cons = "Sem consultor"
+        bucket = consultores[cons]
+        bucket["obras"] += 1
+        bucket["clientes"].append(o.get("cliente", "?"))
+        fd = o.get("fase_derivada") or {}
+        if fd.get("tem_retrabalho"):
+            bucket["retrabalho"] += 1
+        if o.get("alerta_parada"):
+            bucket["alerta"] += 1
+        di = o.get("dias_inativo")
+        if di is not None:
+            bucket["dias_inativos"].append(di)
+        noc = o.get("n_ocorrencias") or 0
+        bucket["ocorrencias"].append(noc)
+
+    result = []
+    for cons, d in consultores.items():
+        n = d["obras"]
+        pct_r = round(d["retrabalho"] / n * 100) if n else 0
+        pct_a = round(d["alerta"] / n * 100) if n else 0
+        med_di = int(_median(d["dias_inativos"])) if d["dias_inativos"] else 0
+        avg_oc = round(sum(d["ocorrencias"]) / n, 1) if n else 0
+        # Indice de problema: retrabalho=3, alerta_parada=2, ocorrencias_medio=1
+        indice = d["retrabalho"] * 3 + d["alerta"] * 2 + sum(d["ocorrencias"])
+        result.append({
+            "consultor": cons,
+            "obras": n,
+            "pct_retrabalho": pct_r,
+            "pct_alerta": pct_a,
+            "mediana_dias_inativo": med_di,
+            "avg_ocorrencias": avg_oc,
+            "indice_problema": indice,
+            "n_retrabalho": d["retrabalho"],
+            "n_alerta": d["alerta"],
+        })
+    result.sort(key=lambda x: -x["indice_problema"])
+    return result
+
+
+def render_padrao_consultor(dados_consultor):
+    """Renderiza tabela ranqueada de consultores na Tela 1."""
+    if not dados_consultor:
+        return ""
+    max_indice = max(d["indice_problema"] for d in dados_consultor) or 1
+
+    rows = []
+    for i, d in enumerate(dados_consultor):
+        bar_w = round(d["indice_problema"] / max_indice * 100) if max_indice else 0
+        nome_curto = d["consultor"].split(" ")
+        if len(nome_curto) >= 2:
+            nome_display = f"{nome_curto[0]} {nome_curto[-1]}"
+        else:
+            nome_display = d["consultor"]
+        pct_r_class = " pc-alto" if d["pct_retrabalho"] >= 30 else (" pc-med" if d["pct_retrabalho"] >= 15 else "")
+        pct_a_class = " pc-alto" if d["pct_alerta"] >= 40 else (" pc-med" if d["pct_alerta"] >= 20 else "")
+        rows.append(f"""<tr>
+          <td class="pc-pos mono">{i+1}</td>
+          <td class="pc-nome" title="{html.escape(d['consultor'])}">{html.escape(nome_display)}</td>
+          <td class="pc-obras mono">{d["obras"]}</td>
+          <td class="pc-val{pct_r_class} mono">{d["pct_retrabalho"]}%</td>
+          <td class="pc-val{pct_a_class} mono">{d["pct_alerta"]}%</td>
+          <td class="pc-val mono">{d["mediana_dias_inativo"]}d</td>
+          <td class="pc-val mono">{d["avg_ocorrencias"]}</td>
+          <td class="pc-indice">
+            <div class="pc-bar-wrap">
+              <div class="pc-bar" style="width:{bar_w}%"></div>
+              <span class="pc-bar-label">{d["indice_problema"]}</span>
+            </div>
+          </td>
+        </tr>""")
+
+    return f"""
+    <div class="padrao-consultor">
+      <div class="section-title">Padrao por consultor · indice de problema</div>
+      <div class="pc-sub">Ranqueado pelo indice de problema (retrabalho x3 + alerta parada x2 + ocorrencias x1). Quanto maior, mais problemas concentrados naquele consultor.</div>
+      <div class="pc-scroll">
+        <table class="pc-tabela">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Consultor</th>
+              <th>Obras</th>
+              <th>% Retr.</th>
+              <th>% Alerta</th>
+              <th>Med. inativo</th>
+              <th>Ocorr. medio</th>
+              <th>Indice problema</th>
+            </tr>
+          </thead>
+          <tbody>{"".join(rows)}</tbody>
+        </table>
+      </div>
+    </div>
+    """
+
+
+# ============================================================
+# FRENTE 2b — Tempo por faixa de metragem
+# ============================================================
+
+def calcular_tempo_por_faixa(timelines):
+    """Agrupa obras por faixa de metragem e calcula metricas de tempo."""
+    faixas = defaultdict(lambda: {
+        "n": 0, "tempos_total": [], "tempos_exec": [], "retrabalho": 0,
+    })
+    for o in timelines:
+        fx = _classificar_faixa(o.get("metragem"))
+        if not fx:
+            continue
+        bucket = faixas[fx]
+        bucket["n"] += 1
+        dt_total = o.get("dt_total_marcos_dias")
+        if dt_total is not None and dt_total > 0:
+            bucket["tempos_total"].append(dt_total)
+        dt_exec = o.get("dt_1a_msg_ate_exec_dias")
+        if dt_exec is not None and dt_exec > 0:
+            bucket["tempos_exec"].append(dt_exec)
+        fd = o.get("fase_derivada") or {}
+        if fd.get("tem_retrabalho"):
+            bucket["retrabalho"] += 1
+
+    result = []
+    for fx in FAIXAS_ORDEM:
+        d = faixas.get(fx)
+        if not d or d["n"] == 0:
+            continue
+        n = d["n"]
+        med_total = int(_median(d["tempos_total"])) if d["tempos_total"] else None
+        med_exec = int(_median(d["tempos_exec"])) if d["tempos_exec"] else None
+        pct_r = round(d["retrabalho"] / n * 100) if n else 0
+        result.append({
+            "faixa": fx,
+            "label": FAIXAS_LABELS.get(fx, fx),
+            "n": n,
+            "mediana_tempo_total": med_total,
+            "mediana_tempo_exec": med_exec,
+            "pct_retrabalho": pct_r,
+            "n_retrabalho": d["retrabalho"],
+        })
+    return result
+
+
+def render_tempo_por_faixa(dados_faixa):
+    """Renderiza tabela comparativa de tempos por faixa na Tela 1."""
+    if not dados_faixa:
+        return ""
+    max_n = max(d["n"] for d in dados_faixa) or 1
+
+    rows = []
+    for d in dados_faixa:
+        bar_w = round(d["n"] / max_n * 100)
+        med_total_str = f'{d["mediana_tempo_total"]}d' if d["mediana_tempo_total"] is not None else "--"
+        med_exec_str = f'{d["mediana_tempo_exec"]}d' if d["mediana_tempo_exec"] is not None else "--"
+        pct_r = d["pct_retrabalho"]
+        pct_r_class = " tf-alto" if pct_r >= 30 else (" tf-med" if pct_r >= 15 else "")
+        rows.append(f"""<tr>
+          <td class="tf-faixa"><span class="tf-cod">{d["faixa"]}</span><span class="tf-label">{html.escape(d["label"])}</span></td>
+          <td class="tf-n">
+            <div class="tf-bar-wrap">
+              <div class="tf-bar" style="width:{bar_w}%"></div>
+              <span class="tf-bar-label">{d["n"]}</span>
+            </div>
+          </td>
+          <td class="tf-val mono">{med_total_str}</td>
+          <td class="tf-val mono">{med_exec_str}</td>
+          <td class="tf-val{pct_r_class} mono">{pct_r}%</td>
+        </tr>""")
+
+    return f"""
+    <div class="tempo-faixa">
+      <div class="section-title">Tempo por faixa de metragem</div>
+      <div class="tf-sub">Comparativo entre faixas de m2. Mediana do tempo entre marcos (execucao) e do tempo entre 1a mensagem e execucao confirmada. PP &lt;60 / P 60-100 / M 100-150 / G 150-220 / GG 220-300 / XG 300+</div>
+      <table class="tf-tabela">
+        <thead>
+          <tr>
+            <th>Faixa</th>
+            <th>Obras</th>
+            <th>Med. entre marcos</th>
+            <th>Med. 1a msg a exec</th>
+            <th>% Retrabalho</th>
+          </tr>
+        </thead>
+        <tbody>{"".join(rows)}</tbody>
+      </table>
+    </div>
+    """
+
+
 def main():
     d = json.loads(JSON_PATH.read_text(encoding="utf-8"))
     timelines = d.get("timelines") or []
@@ -2079,6 +2837,21 @@ def main():
     perfis_fluxo = calcular_perfis_fluxo(timelines)
     compilacao_prob = calcular_compilacao_problemas(timelines)
     cobertura_regex = d.get("cobertura_regex") or {}
+
+    # Novas frentes: panorama mensal + cross-obra por consultor + tempo por faixa
+    panorama_mensal = calcular_panorama_mensal(timelines)
+    dados_consultor = calcular_padrao_consultor(timelines)
+    dados_faixa = calcular_tempo_por_faixa(timelines)
+
+    # Resumo executivo + obras que precisam de acao
+    obras_acao = calcular_obras_acao_imediata(timelines)
+    resumo_executivo_html = render_resumo_executivo(timelines, obras_acao)
+
+    # Camada 2 · Agregação de consistência material
+    dist_mat = {"material_ok": 0, "subdimensionado": 0, "superdimensionado": 0, "sem_dados": 0}
+    for t in timelines:
+        cm_cl = (t.get("consistencia_material") or {}).get("classificacao", "sem_dados")
+        dist_mat[cm_cl] = dist_mat.get(cm_cl, 0) + 1
 
     com_marcos = [t for t in timelines if (t.get("marcos") or [])]
     sem_marcos = [t for t in timelines if not (t.get("marcos") or [])]
@@ -2114,6 +2887,12 @@ def main():
         seq = _seq_chave(t.get("marcos") or [])
         p = _classificar_perfil(len(t.get("marcos") or []), seq)
         cat_counts[f"perfil_{p}"] += 1
+        # Contar nivel de risco
+        sr = t.get("score_risco")
+        if sr:
+            cat_counts[f"risco_{sr.get('nivel', 'baixo')}"] += 1
+        else:
+            cat_counts["risco_na"] += 1
 
     sem_rows = ""
     for o in sem_marcos:
@@ -2755,6 +3534,77 @@ def main():
     color: var(--ink);
   }}
   .os-tabela tr:last-child td {{ border-bottom: none; }}
+
+  /* Consistência material · Camada 2 */
+  .cm-bloco {{
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }}
+  .cm-header {{
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 8px;
+  }}
+  .cm-titulo {{
+    font-size: 12px; font-weight: 800; color: var(--ink);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }}
+  .cm-class {{
+    font-size: 10px; font-weight: 800; padding: 2px 10px;
+    border-radius: 100px; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }}
+  .cm-detalhe {{
+    font-size: 11.5px; color: var(--ink-soft);
+    margin-bottom: 10px; line-height: 1.5;
+  }}
+  .cm-grid {{
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; margin-bottom: 8px;
+  }}
+  .cm-item {{
+    background: var(--bg); border: 1px solid var(--line-soft);
+    border-radius: 6px; padding: 8px 10px; text-align: center;
+  }}
+  .cm-item-val {{
+    font-size: 14px; font-weight: 800; color: var(--ink);
+  }}
+  .cm-item-label {{
+    font-size: 9px; color: var(--ink-faint); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-top: 2px;
+  }}
+  .cm-familias {{
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 6px;
+  }}
+  .cm-fam-chip {{
+    font-size: 10px; padding: 3px 8px;
+    border-radius: 100px; background: var(--bg);
+    border: 1px solid var(--line-soft); color: var(--ink-soft);
+    font-weight: 600;
+  }}
+  .cm-fam-chip b {{ color: var(--gold); font-family: 'JetBrains Mono', monospace; }}
+  .cm-sinais {{ display: flex; gap: 6px; margin-top: 6px; }}
+  .cm-sinal {{
+    font-size: 10px; font-weight: 700; padding: 3px 10px;
+    border-radius: 100px;
+  }}
+  .cm-sinal-falta {{ background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }}
+  .cm-sinal-sobra {{ background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }}
+  /* Barra de distribuição material · Tela 1 */
+  .cm-dist-bar {{
+    display: flex; height: 18px; border-radius: 6px; overflow: hidden;
+    margin: 10px 0 6px; border: 1px solid var(--line-soft);
+  }}
+  .cm-bar-seg {{ min-width: 4px; transition: width 0.3s; cursor: help; }}
+  .cm-bar-ok {{ background: #3d8a5a; }}
+  .cm-bar-sub {{ background: #c45a5a; }}
+  .cm-bar-sup {{ background: #d4a017; }}
+  @media (max-width: 800px) {{
+    .cm-grid {{ grid-template-columns: repeat(2, 1fr); }}
+  }}
   .os-tabela td.num, .os-tabela td.mono {{ font-family: 'JetBrains Mono', monospace; font-weight: 600; }}
 
   /* Header de ciclo · separador entre ciclos */
@@ -3294,6 +4144,188 @@ def main():
     main {{ padding: 20px 16px; }}
     .obra-detail {{ padding: 16px 14px; }}
   }}
+
+  /* ===== Indice de Risco · Camada 3 ===== */
+  .risco-panorama {{
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+  }}
+  .risco-panorama .section-title {{ margin-bottom: 12px; }}
+  .risco-intro p {{
+    font-size: 13px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 16px;
+  }}
+  .risco-intro p strong {{ color: var(--ink); }}
+  .risco-nota {{
+    font-size: 11px; color: var(--ink-faint); margin-bottom: 12px;
+    padding: 8px 12px; background: var(--surface-2); border-radius: 6px;
+    border-left: 3px solid var(--line);
+  }}
+  .risco-barra-wrap {{ margin-bottom: 20px; }}
+  .risco-barra {{
+    display: flex; height: 14px; border-radius: 7px; overflow: hidden;
+    background: var(--line-soft);
+  }}
+  .risco-barra-seg {{ transition: width 0.3s; }}
+  .risco-barra-legenda {{
+    display: flex; justify-content: flex-end; margin-top: 4px;
+    font-size: 10px; color: var(--ink-faint);
+  }}
+  .risco-cards {{
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-bottom: 24px;
+  }}
+  .risco-card {{
+    background: var(--surface-2); border: 1px solid var(--line-soft);
+    border-radius: 10px; padding: 16px; text-align: center;
+    border-top: 3px solid var(--risco-cor);
+  }}
+  .risco-card-valor {{
+    font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 800;
+    color: var(--risco-cor); line-height: 1.1;
+  }}
+  .risco-card-label {{
+    font-size: 10px; color: var(--ink-faint); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-top: 4px;
+  }}
+  .risco-card-pct {{
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-soft); margin-top: 2px;
+  }}
+  .risco-top10 {{ margin-top: 8px; }}
+  .risco-top10-titulo {{
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--ink-soft); margin-bottom: 10px;
+  }}
+  .risco-top10-table {{
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+  }}
+  .risco-top10-table th {{
+    text-align: left; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--ink-faint);
+    padding: 6px 8px; border-bottom: 1px solid var(--line);
+  }}
+  .risco-top10-table td {{
+    padding: 8px 8px; border-bottom: 1px solid var(--line-soft);
+  }}
+  .risco-top10-table tr:last-child td {{ border-bottom: none; }}
+  .top10-cli {{ color: var(--ink); font-weight: 600; max-width: 260px; }}
+  .top10-sinais {{ font-size: 11px; color: var(--ink-faint); max-width: 320px; }}
+  .risco-nivel-tag {{
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; letter-spacing: 0.06em;
+  }}
+  /* Badge de risco no acordeao */
+  .risco-badge {{
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.04em;
+  }}
+  .risco-na {{
+    background: #64748b !important; opacity: 0.6;
+  }}
+  /* Chips de filtro por risco */
+  .cat-risco-critico {{ border-color: #c45a5a; color: #c45a5a; }}
+  .cat-risco-critico.ativa {{ background: #c45a5a; color: #fff; border-color: #c45a5a; }}
+  .cat-risco-alto {{ border-color: #e67e22; color: #e67e22; }}
+  .cat-risco-alto.ativa {{ background: #e67e22; color: #fff; border-color: #e67e22; }}
+  .cat-risco-moderado {{ border-color: #d4a017; color: #d4a017; }}
+  .cat-risco-moderado.ativa {{ background: #d4a017; color: #fff; border-color: #d4a017; }}
+  .cat-risco-baixo {{ border-color: #4caf50; color: #4caf50; }}
+  .cat-risco-baixo.ativa {{ background: #4caf50; color: #fff; border-color: #4caf50; }}
+  .cat-risco-na {{ border-color: #64748b; color: #64748b; }}
+  .cat-risco-na.ativa {{ background: #64748b; color: #fff; border-color: #64748b; }}
+  /* Controles de ordenacao */
+  .sort-controles {{
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px; padding: 8px 0;
+  }}
+  .sort-label {{
+    font-size: 11px; font-weight: 600; color: var(--ink-faint);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }}
+  .sort-btn {{
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 6px; padding: 5px 12px;
+    font-size: 11px; font-weight: 600; color: var(--ink-soft);
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }}
+  .sort-btn:hover {{ background: var(--gold-bg); color: var(--gold); border-color: var(--gold); }}
+  .sort-btn.sort-ativa {{
+    background: var(--gold); color: #fff; border-color: var(--gold);
+  }}
+  @media (max-width: 700px) {{
+    .risco-cards {{ grid-template-columns: repeat(2, 1fr); }}
+    .risco-top10-table {{ font-size: 11px; }}
+    .top10-sinais {{ display: none; }}
+  }}
+  .panorama-mensal {{ background: var(--surface); border: 1px solid var(--line-soft); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }}
+  .pm-sub {{ font-size: 11px; color: var(--ink-faint); margin-bottom: 14px; line-height: 1.5; }}
+  .pm-scroll {{ overflow-x: auto; }}
+  .pm-tabela {{ width: 100%; border-collapse: collapse; font-size: 12px; }}
+  .pm-tabela th {{ text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); padding: 8px 10px; border-bottom: 2px solid var(--line); }}
+  .pm-tabela td {{ padding: 8px 10px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }}
+  .pm-mes {{ font-weight: 600; white-space: nowrap; color: var(--ink); }}
+  .pm-n {{ width: 160px; }}
+  .pm-bar-wrap {{ display: flex; align-items: center; gap: 8px; height: 22px; }}
+  .pm-bar {{ height: 14px; background: var(--gold); border-radius: 3px; min-width: 4px; transition: width 0.3s; }}
+  .pm-bar-label {{ font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--ink); }}
+  .pm-faixas {{ display: flex; gap: 4px; flex-wrap: wrap; }}
+  .pm-faixa-chip {{ display: inline-flex; align-items: center; gap: 3px; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 4px; padding: 2px 6px; font-size: 10px; }}
+  .pm-faixa-cod {{ font-weight: 700; color: var(--gold); }}
+  .pm-faixa-n {{ font-family: 'JetBrains Mono', monospace; color: var(--ink-soft); }}
+  .pm-sem-faixa {{ color: var(--ink-faint); font-size: 10px; }}
+  .pm-tempo {{ text-align: center; }}
+  .pm-retr {{ text-align: center; }}
+  .pm-r-alto {{ color: #c45a5a; font-weight: 700; }}
+  .pm-r-med {{ color: #b89a4a; font-weight: 600; }}
+  .padrao-consultor {{ background: var(--surface); border: 1px solid var(--line-soft); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }}
+  .pc-sub {{ font-size: 11px; color: var(--ink-faint); margin-bottom: 14px; line-height: 1.5; }}
+  .pc-scroll {{ overflow-x: auto; }}
+  .pc-tabela {{ width: 100%; border-collapse: collapse; font-size: 12px; }}
+  .pc-tabela th {{ text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); padding: 8px 10px; border-bottom: 2px solid var(--line); }}
+  .pc-tabela td {{ padding: 8px 10px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }}
+  .pc-pos {{ width: 30px; text-align: center; color: var(--ink-faint); }}
+  .pc-nome {{ font-weight: 600; color: var(--ink); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+  .pc-obras {{ text-align: center; font-weight: 700; }}
+  .pc-val {{ text-align: center; }}
+  .pc-alto {{ color: #c45a5a; font-weight: 700; }}
+  .pc-med {{ color: #b89a4a; font-weight: 600; }}
+  .pc-indice {{ width: 160px; }}
+  .pc-bar-wrap {{ display: flex; align-items: center; gap: 8px; height: 22px; }}
+  .pc-bar {{ height: 14px; background: #c45a5a; border-radius: 3px; min-width: 4px; opacity: 0.7; transition: width 0.3s; }}
+  .pc-bar-label {{ font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--ink-soft); }}
+  .tempo-faixa {{ background: var(--surface); border: 1px solid var(--line-soft); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }}
+  .tf-sub {{ font-size: 11px; color: var(--ink-faint); margin-bottom: 14px; line-height: 1.5; }}
+  .tf-tabela {{ width: 100%; border-collapse: collapse; font-size: 12px; }}
+  .tf-tabela th {{ text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); padding: 8px 10px; border-bottom: 2px solid var(--line); }}
+  .tf-tabela td {{ padding: 10px 10px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }}
+  .tf-faixa {{ display: flex; align-items: center; gap: 8px; }}
+  .tf-cod {{ font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; color: var(--gold); min-width: 28px; }}
+  .tf-label {{ font-size: 11px; color: var(--ink-faint); }}
+  .tf-n {{ width: 140px; }}
+  .tf-bar-wrap {{ display: flex; align-items: center; gap: 8px; height: 22px; }}
+  .tf-bar {{ height: 14px; background: var(--gold); border-radius: 3px; min-width: 4px; opacity: 0.6; transition: width 0.3s; }}
+  .tf-bar-label {{ font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--ink); }}
+  .tf-val {{ text-align: center; }}
+  .tf-alto {{ color: #c45a5a; font-weight: 700; }}
+  .tf-med {{ color: #b89a4a; font-weight: 600; }}
+  /* Resumo Executivo */
+  .resumo-executivo {{ background: var(--surface); border: 2px solid var(--gold); border-radius: 14px; padding: 24px 28px; margin-bottom: 28px; }}
+  .re-header {{ margin-bottom: 16px; }}
+  .re-titulo {{ font-size: 18px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }}
+  .re-subtitulo {{ font-size: 12px; color: var(--ink-faint); margin-top: 4px; }}
+  .re-bullets {{ list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 8px; }}
+  .re-bullets li {{ font-size: 13px; color: var(--ink); padding: 8px 14px; background: rgba(196,167,125,0.06); border-radius: 8px; border-left: 3px solid var(--gold); line-height: 1.5; }}
+  .re-bullets li.re-grave {{ border-left-color: #c45a5a; background: rgba(196,90,90,0.06); }}
+  .re-tabela-wrap {{ overflow-x: auto; }}
+  .re-tabela {{ width: 100%; border-collapse: collapse; font-size: 12px; }}
+  .re-tabela th {{ text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); padding: 8px 10px; border-bottom: 2px solid var(--line); }}
+  .re-tabela td {{ padding: 8px 10px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }}
+  .re-tabela tr:hover {{ background: rgba(196,167,125,0.04); }}
+  @media (max-width: 900px) {{ .pm-tabela, .pc-tabela, .tf-tabela, .re-tabela {{ font-size: 11px; }} .panorama-mensal, .padrao-consultor, .tempo-faixa, .resumo-executivo {{ padding: 14px 12px; }} }}
 </style>
 </head>
 <body>
@@ -3311,7 +4343,15 @@ def main():
   <!-- ========== TELA 1 · VISÃO GERAL ========== -->
   <section id="tela-resumo" class="tela">
 
-    {render_narrativa_unificada(perfis_fluxo, compilacao_prob, n_total, n_marcos_total, len(com_marcos), len(sem_marcos), cobertura_regex, n_novas, n_retorno, n_pre_contrato, n_incerta)}
+    {resumo_executivo_html}
+
+    {render_narrativa_unificada(perfis_fluxo, compilacao_prob, n_total, n_marcos_total, len(com_marcos), len(sem_marcos), cobertura_regex, n_novas, n_retorno, n_pre_contrato, n_incerta, dist_mat)}
+
+    {render_padrao_consultor(dados_consultor)}
+
+    {render_tempo_por_faixa(dados_faixa)}
+
+    {render_risco_panorama(timelines)}
 
     <button class="cta-tela" onclick="mostrarTela('tela-obras')">
       <span class="cta-label">Ver obras detalhadas</span>
@@ -3401,12 +4441,35 @@ def main():
         {"".join(f'<button class="cat-chip cat-perfil-{p}" data-cat="perfil_{p}" onclick="toggleCat(this)">{p} {PERFIL_LABELS[p]} <b>{cat_counts.get(f"perfil_{p}", 0)}</b></button>' for p in ("B","C","D","E","F") if cat_counts.get(f"perfil_{p}", 0) > 0)}
       </div>
       <div class="cat-grupo">
+        <span class="cat-grupo-label">Indice de Risco</span>
+        <button class="cat-chip cat-risco-critico" data-cat="risco_critico" onclick="toggleCat(this)">Critico (61-100) <b>{cat_counts.get("risco_critico", 0)}</b></button>
+        <button class="cat-chip cat-risco-alto" data-cat="risco_alto" onclick="toggleCat(this)">Alto (41-60) <b>{cat_counts.get("risco_alto", 0)}</b></button>
+        <button class="cat-chip cat-risco-moderado" data-cat="risco_moderado" onclick="toggleCat(this)">Moderado (21-40) <b>{cat_counts.get("risco_moderado", 0)}</b></button>
+        <button class="cat-chip cat-risco-baixo" data-cat="risco_baixo" onclick="toggleCat(this)">Baixo (0-20) <b>{cat_counts.get("risco_baixo", 0)}</b></button>
+        <button class="cat-chip cat-risco-na" data-cat="risco_na" onclick="toggleCat(this)">N/A <b>{cat_counts.get("risco_na", 0)}</b></button>
+      </div>
+      <div class="cat-grupo">
+        <span class="cat-grupo-label">Material</span>
+        <button class="cat-chip" style="border-left:3px solid #3d8a5a" data-cat="mat_material_ok" onclick="toggleCat(this)">MAT OK <b>{dist_mat.get("material_ok", 0)}</b></button>
+        <button class="cat-chip" style="border-left:3px solid #c45a5a" data-cat="mat_subdimensionado" onclick="toggleCat(this)">Subdimensionado <b>{dist_mat.get("subdimensionado", 0)}</b></button>
+        <button class="cat-chip" style="border-left:3px solid #d4a017" data-cat="mat_superdimensionado" onclick="toggleCat(this)">Superdimensionado <b>{dist_mat.get("superdimensionado", 0)}</b></button>
+        <button class="cat-chip" style="border-left:3px solid #64748b" data-cat="mat_sem_dados" onclick="toggleCat(this)">Sem dados <b>{dist_mat.get("sem_dados", 0)}</b></button>
+      </div>
+      <div class="cat-grupo">
         <span class="cat-grupo-label">Outros</span>
         <button class="cat-chip cat-destrinchada" data-cat="destrinchada" onclick="toggleCat(this)">Destrinchadas (calibracao) <b>{cat_counts.get("destrinchada", 0)}</b></button>
       </div>
     </div>
 
+    <div class="sort-controles">
+      <span class="sort-label">Ordenar por:</span>
+      <button class="sort-btn sort-ativa" onclick="ordenarObras('marcos')">Marcos (padrao)</button>
+      <button class="sort-btn" onclick="ordenarObras('risco')">Indice de Risco</button>
+    </div>
+
     <div class="resultado-filtros" id="resultado-filtros"></div>
+
+    {render_panorama_mensal(panorama_mensal)}
 
     <h3 class="sub-bloco">🔬 Bloco 1 · Obras destrinchadas (calibração de vocabulário) · {len(destrinchadas)} obras</h3>
     <div class="sub-bloco-info">P2B · SILVANA · PALLOMA · GINACERCHI · DONA CORINA — usadas pra calibrar marcos e vocabulário</div>
@@ -3502,6 +4565,34 @@ def main():
     }} else {{
       res.style.display = 'none';
     }}
+  }}
+
+  let ordenacaoAtual = 'marcos';
+
+  function ordenarObras(tipo) {{
+    ordenacaoAtual = tipo;
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('sort-ativa'));
+    event.target.classList.add('sort-ativa');
+
+    // Ordenar ambos os blocos de obras
+    document.querySelectorAll('.bloco-obras').forEach(container => {{
+      const cards = Array.from(container.querySelectorAll('.obra-card'));
+      cards.sort((a, b) => {{
+        if (tipo === 'risco') {{
+          const sa = parseInt(a.getAttribute('data-score') || '-1');
+          const sb = parseInt(b.getAttribute('data-score') || '-1');
+          return sb - sa;  // desc: maior risco primeiro
+        }} else {{
+          // Padrao: mais marcos primeiro (pela contagem no sum-stat)
+          const ma = a.querySelector('.sum-stats .sum-stat b');
+          const mb = b.querySelector('.sum-stats .sum-stat b');
+          const na = ma ? parseInt(ma.textContent) || 0 : 0;
+          const nb = mb ? parseInt(mb.textContent) || 0 : 0;
+          return nb - na;
+        }}
+      }});
+      cards.forEach(card => container.appendChild(card));
+    }});
   }}
 
   function copiarComandoAtualizar() {{

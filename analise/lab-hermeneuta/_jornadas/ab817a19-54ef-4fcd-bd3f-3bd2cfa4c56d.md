@@ -1,6 +1,6 @@
 # 🎬 JORNADA · CALLEBE ARAUJO DE MEDEIROS MENDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
 
 ## 📋 Ficha técnica
 
@@ -15,9 +15,9 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | 1ª msg Telegram | 2025-12-16 |
 | Execução prevista | None |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **59 dias** |
-| **Tempo de execução real** | **None dias** |
-| **Tempo em hibernação** | **70 dias** |
+| **Tempo total contrato → entrega** | **147 dias** |
+| **Tempo de execução real** | **0 dias** |
+| **Tempo em hibernação** | **68 dias** |
 | **Classificação** | **Pré-obra** |
 
 > **Obra em fase de planejamento/pré-execução.**
@@ -63,9 +63,9 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | Fase | Início | Fim | Duração | Msgs Telegram |
 |---|---|---|---:|---:|
 | **Planejamento inicial** | 2025-12-16 | 2025-12-19 | 4d | 6 |
-| **Hibernação #1** | 2025-12-19 | 2026-01-19 | 31d | 0 |
+| **Hibernação #1** | 2025-12-20 | 2026-01-18 | 30d | 0 |
 | **Atividade retomada** | 2026-01-19 | 2026-02-27 | 40d | 8 |
-| **Hibernação #2** | 2026-02-28 | 2026-04-08 | 39d | 0 |
+| **Hibernação #2** | 2026-03-01 | 2026-04-07 | 38d | 0 |
 | **Atividade retomada** | 2026-04-08 | 2026-05-11 | 34d | 10 |
 
 ## 📍 Marcos detectados nas mensagens
@@ -91,4 +91,4 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 
 ## 🔍 Padrões observados
 
-- hibernacao_longa · obra ficou 70d praticamente parada
+- hibernacao_longa · obra ficou 68d praticamente parada

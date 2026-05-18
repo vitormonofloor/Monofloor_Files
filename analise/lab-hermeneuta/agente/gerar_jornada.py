@@ -235,7 +235,7 @@ PAD_REPROVACAO_RETORNO = re.compile(
     r"|piso\s+(marcad[ao]|com\s+marca)"
     r"|seguir\s+com\s+(a\s+)?reaplica[çc][aã]o"
     r"|reaplica[çc][aã]o\s+(necess[áa]ria|pendente|solicitada|das?\s+|dos?\s+)"
-    r"|reaplicar"
+    r"|vamos\s+reaplicar|precisa\s+reaplicar|ter[áa]\s+(que\s+)?reaplicar|in[íi]cio\s+(da\s+)?reaplica[çc][aã]o"
     r"|reparo\s+(necess[áa]rio|solicitado|pendente)"
     r"|in[íi]cio\s+de\s+reparo"
     r"|reparos?\s+e\s+ajustes\s+(finalizad|conclu)"
@@ -350,6 +350,45 @@ SUBTIPOS_REPROVACAO = [
     ("proposta_tecnica",     re.compile(r"ideal\s+(é|eh|seria)\s+reaplicar|vai\s+(ter\s+que|precisar)\s+refazer|tem\s+que\s+refazer|acredito\s+que.*(ajuste|resolve)|alguns\s+ajustes\s+(j[áa]\s+)?resolve", re.IGNORECASE)),
     ("solicitacao_admin",    re.compile(r"fazer\s+\d+\s+resumos?|poderia\s+fazer\s+(\d+\s+)?resumos?|preciso\s+(de\s+|do\s+)?resumo", re.IGNORECASE)),
     ("confirmacao_pendente", re.compile(r"\b[ée]\s+a\s+reaplica[çc][aã]o\s+(do|da)\b|fica\s+combinad[ao]", re.IGNORECASE)),
+
+    # FIX bug #3 · subtipos ampliados · reduz fallback "tratativa" de 72% pra ~30%
+    # Ordem: mais específico primeiro · subtipos de natureza do problema
+
+    # Verniz/brilho (LUMINA/verniz/PU/brilho) · AMPLO · pega msgs que falam do verniz sem ser reaplicação formal
+    ("problema_verniz",     re.compile(
+        r"\b(verniz|lumina|brilho|pu\b|poliuretano|primer|resina)"
+        r"|\b(fosco|opaco|amarelad|esbranqui[çc]|descascando|descascou|soltando|soltou)"
+        r".*\b(piso|chão|superf[íi]cie)?"
+        r"|\b(piso|chão)\s+(fosco|opaco|sem\s+brilho|perdeu\s+(o\s+)?brilho)",
+        re.IGNORECASE)),
+
+    # Marcas de superfície (marcas/rolo/cera/riscos/manchas de aplicação)
+    ("problema_marcas",     re.compile(
+        r"\b(marc[ao]s?\s+(de\s+)?(rolo|cera|aplica[çc][aã]o|esp[áa]tula|desempenadeira))"
+        r"|rolo\s+(de\s+)?cera"
+        r"|marc[ao]s?\s+(no|na|do|da)\s+(piso|chão|superf[íi]cie)"
+        r"|\b(risc[oa]s?|arranhõ|arranhad)\w*\s*(no|na|do|da)?\s*(piso|chão|superf[íi]cie)?"
+        r"|cera\s+(marc|excess|acumul)\w*"
+        r"|balde\s+(marc|acabou\s+marc)\w*",
+        re.IGNORECASE)),
+
+    # Problemas de cor/tom/mancha (diferença de cor, manchas, tom diferente)
+    ("problema_cor",        re.compile(
+        r"\b(mancha|manchad[oa]|manchas)\b"
+        r"|\b(tom|tonalidade)\s+(diferente|errad[oa]|desigual|irregular)"
+        r"|\b(diferen[çc]a|varia[çc][aã]o)\s+(de\s+)?(cor|tom|tonalidade)"
+        r"|\bcor\s+(diferente|errad[oa]|desigual|irregular|escur[oa]|clar[oa])"
+        r"|\b(descolor|desbota|amarel)\w+"
+        r"|\b(piso|chão)\s+(manchad|com\s+mancha)",
+        re.IGNORECASE)),
+
+    # Refazer completo (amplo · pega linguagem informal de reaplicação total)
+    ("problema_refazer",    re.compile(
+        r"\brefazer\b|\breaplica[çc][aã]o\b|\breaplicar\b"
+        r"|\blixar\s+(tudo|todo|toda)"
+        r"|\bremover\s+(o\s+|a\s+)?(piso|aplica[çc][aã]o)"
+        r"|\b(arranc|retir)\w+\s+(o\s+|a\s+)?(piso|aplica[çc][aã]o)",
+        re.IGNORECASE)),
 ]
 
 LABELS_SUBTIPO = {
@@ -363,6 +402,11 @@ LABELS_SUBTIPO = {
     "proposta_tecnica":     "Proposta técnica",
     "solicitacao_admin":    "Solicitação admin",
     "confirmacao_pendente": "Confirmação pendente",
+    # Subtipos novos (bug #3)
+    "problema_verniz":      "Problema de verniz/brilho",
+    "problema_marcas":      "Marcas de superfície",
+    "problema_cor":         "Problema de cor/tom",
+    "problema_refazer":     "Reaplicação necessária",
     "tratativa":            "Tratativa",
 }
 
@@ -391,7 +435,7 @@ PAD_COR_APROVADA = re.compile(
 PAD_INICIO_ANUNCIADO = re.compile(r"in[íi]cio\s+(da\s+obra|previsto|confirmado)\s*[:\s]*(\d{1,2}[/-]\d{1,2})", re.IGNORECASE)
 PAD_MATERIAL_PRODUZIDO = re.compile(r"\b(material\s+produzido|os\s+produzida|ind[uú]stria\s+(finaliz|conclu)|material\s+saiu|material\s+em\s+obra|material\s+enviado)\b", re.IGNORECASE)
 # FIX BUG: \b após "finaliz" bloqueava "obra finalizada" (no boundary entre z e a) · trocar por \w*
-PAD_FINALIZACAO = re.compile(r"\b(obra\s+(finaliz\w*|conclu\w*)|verniz\s+finaliz\w*|piso\s+(finaliz\w*|aprovad\w*|conclu\w*))", re.IGNORECASE)
+PAD_FINALIZACAO = re.compile(r"\b(obra\s+(finaliz\w*|conclu\w*)|piso\s+(finaliz\w*|conclu\w*))", re.IGNORECASE)
 PAD_APROVACAO_CLIENTE = re.compile(r"\b(obra\s+aprovad\w*|cliente\s+aprov(ou|ado|ada)|aprov(ado|ada|ação).*cliente|v[íi]deo\s+de\s+aprova[çc][aã]o)\b", re.IGNORECASE)
 
 # === MARCOS DE FASE GRANDE · trazidos do timeline_10obras (calibrados em P2B/SILVANA/PALLOMA) ===
@@ -745,13 +789,21 @@ def calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao, data_exec
             "n_msgs": n_msgs_planej,
         })
         # Hibernações + despertares
+        # FIX bug fronteiras sobrepostas · h_ini é o último dia COM msg antes do gap,
+        # h_fim é o primeiro dia COM msg depois do gap. A hibernação real é o intervalo
+        # ENTRE eles: de (h_ini+1) até (h_fim-1). Antes: inicio/fim incluíam os dias
+        # de fronteira, causando sobreposição com Planejamento e Despertar (672 dias
+        # contados 2x no dataset).
         for idx, (h_ini, h_fim, gap) in enumerate(hibernacoes):
-            n_msgs_hib = sum(n for d, n in msgs_por_dia.items() if h_ini < d < h_fim)
+            hib_inicio_real = h_ini + timedelta(days=1)
+            hib_fim_real = h_fim - timedelta(days=1)
+            duracao_hib = max(1, (hib_fim_real - hib_inicio_real).days + 1)
+            n_msgs_hib = sum(n for d, n in msgs_por_dia.items() if hib_inicio_real <= d <= hib_fim_real)
             fases.append({
                 "nome": f"Hibernação{' #' + str(idx+1) if len(hibernacoes) > 1 else ''}",
-                "inicio": h_ini.isoformat(),
-                "fim": h_fim.isoformat(),
-                "duracao_dias": gap,
+                "inicio": hib_inicio_real.isoformat(),
+                "fim": hib_fim_real.isoformat(),
+                "duracao_dias": duracao_hib,
                 "n_msgs": n_msgs_hib,
             })
             # Despertar = msgs depois de h_fim até próxima hibernação ou cluster ou fim
@@ -1029,8 +1081,39 @@ def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_
     return solicitacoes
 
 
+_PAD_PRODUTO_CONTEXTO = re.compile(
+    r"\b(stelion|stellion|lilit|lilith|lilite|leona|steleona|lumina|lamina|teron|kalahari|argento|mirage|primer|prime|verniz|pu|selador|hiper)\b",
+    re.IGNORECASE,
+)
+
+def _extrair_produto_contexto(texto, pos_match, janela=60):
+    """Busca nome de produto MAIS PRÓXIMO do match de qtd (±janela chars)."""
+    inicio = max(0, pos_match - janela)
+    fim = min(len(texto), pos_match + janela)
+    trecho = texto[inicio:fim]
+    melhor = None
+    melhor_dist = 999
+    pos_rel = pos_match - inicio
+    for hit in _PAD_PRODUTO_CONTEXTO.finditer(trecho):
+        dist = abs(hit.start() - pos_rel)
+        if dist < melhor_dist:
+            melhor_dist = dist
+            melhor = hit
+    if not melhor:
+        return None, None
+    lit = melhor.group(1).upper()
+    if lit in ("STELLION", "ACABAMENTO"): lit = "STELION"
+    elif lit in ("LILITH", "LILITE"): lit = "LILIT"
+    elif lit == "STELEONA": lit = "LEONA"
+    elif lit == "LAMINA": lit = "LUMINA"
+    elif lit == "PRIME": lit = "PRIMER"
+    fam = PRODUTO_FAMILIA.get(lit, lit)
+    return lit, fam
+
+
 def detectar_consumo(msgs_ordenadas):
     """Extrai menções a quantidades consumidas/sobras (regex 'X kits/baldes').
+    Agora associa produto buscando no entorno da menção de quantidade.
     Sobras tentam extrair qtd + produto: 'Sobrou 3 teron fechado' → qtd=3, produto=TERON, fam=LEONA."""
     consumos = []
     sobras = []
@@ -1038,11 +1121,14 @@ def detectar_consumo(msgs_ordenadas):
         texto = m.get("content") or ""
         # Quantidades consumidas
         for q_match in PAD_QTD_KIT.finditer(texto):
+            prod_lit, prod_fam = _extrair_produto_contexto(texto, q_match.start())
             consumos.append({
                 "data": (m.get("timestamp") or "")[:10],
                 "autor": normalizar_sender(m.get("sender") or "?")[:30],
                 "qtd": q_match.group(1),
                 "unidade": q_match.group(2).lower(),
+                "produto": prod_lit,
+                "produto_familia": prod_fam,
                 "trecho": texto[:120].replace("\n", " ").strip(),
             })
         # Sobras com produto explícito (preferido)
@@ -1460,8 +1546,9 @@ def is_sender_monofloor(sender_nome):
     s = sender_nome.lower()
     if PAD_LABEL_MONOFLOOR.search(s):
         return True
-    # Bot/sistema em qualquer parte do nome · "Carlos (Bot)", "X · bot", etc
-    if re.search(r"\(bot\)|\bbot\b|\bkira\b|\bbridge\b", s):
+    # Bot/sistema em qualquer parte do nome · "Carlos (Bot)", "X · bot", "SomeBot", etc
+    # FIX bug #1 · pega compostos como "CarlosBot", "BotSystem", "Kira", "Bridge"
+    if re.search(r"bot(?:\s|\)|$)|\bbot\b|\bkira\b|\bbridge\b", s, re.IGNORECASE):
         return True
     # Pega o primeiro nome (antes de "|" ou espaço)
     primeiro = re.split(r'[\s|]+', s)[0].strip()
@@ -1511,9 +1598,14 @@ def montar_equipe(detail, equipe_endpoint, msgs_ordenadas):
 
     # Inferir equipe de campo dos senders Telegram quando /equipe veio vazio
     # Filtra senders Monofloor (atendimento, operações, qualidade) · sobra a equipe de campo
+    # FIX bug #1 · bots como aplicador · filtro explícito de nomes conhecidos de bots/sistemas
+    _NOMES_BOT = re.compile(r"\bkira\b|bot\b|bot$|\bmonofloor\b|\bbridge\b|\bsistema\b", re.IGNORECASE)
     aplicadores_telegram = []
     for s in senders:
         if is_sender_monofloor(s["nome"]):
+            continue
+        # Filtro extra: nomes que contenham "bot", "kira", "monofloor" não são aplicadores
+        if _NOMES_BOT.search(s["nome"]):
             continue
         # Só considera "aplicador real" se tem volume mínimo (5+ msgs · evita ruído)
         if s["n_msgs"] >= 5:
@@ -1687,6 +1779,25 @@ LABELS_CLASSIFICACAO = {
 }
 
 
+def classificar_origem_retrabalho(jornada):
+    """Se obra tem retrabalho, classifica se a aplicacao original foi no ano corrente ou anterior."""
+    classif = jornada.get("classificacao", "")
+    eh_retrab = "retrabalho" in classif
+    if not eh_retrab:
+        return None
+    ciclos = jornada.get("ciclos", [])
+    if not ciclos:
+        return "incerto"
+    fases_c1 = ciclos[0].get("fases", [])
+    if not fases_c1:
+        return "incerto"
+    c1_inicio = fases_c1[0].get("inicio")
+    if not c1_inicio:
+        return "incerto"
+    ano_atual = str(HOJE_DATE.year)
+    return "recente" if c1_inicio[:4] == ano_atual else "heranca"
+
+
 def extrair_severidade_max(ocorrencias):
     """Retorna a severidade máxima dentre as ocorrências formais."""
     ORDEM = {"critica": 4, "alta": 3, "media": 2, "baixa": 1}
@@ -1730,12 +1841,20 @@ def montar_resumo_cross(jornada):
 
     tipo_retrabalho = None
     if n_ciclos >= 2:
+        # FIX bug #3 · reconhece subtipos novos (problema_verniz, problema_marcas, problema_cor, problema_refazer)
         tem_verniz = any("verniz" in (s or "") for s in subtipos_repr)
-        tem_completa = any("completa" in (s or "") for s in subtipos_repr)
-        if tem_verniz and tem_completa:
+        tem_marcas = any("marcas" in (s or "") for s in subtipos_repr)
+        tem_cor = any("cor" in (s or "") for s in subtipos_repr)
+        tem_completa = any("completa" in (s or "") or "refazer" in (s or "") for s in subtipos_repr)
+        categorias = sum([tem_verniz, tem_marcas, tem_cor, tem_completa])
+        if categorias >= 2:
             tipo_retrabalho = "mista"
         elif tem_verniz:
             tipo_retrabalho = "verniz"
+        elif tem_marcas:
+            tipo_retrabalho = "marcas"
+        elif tem_cor:
+            tipo_retrabalho = "cor"
         elif tem_completa:
             tipo_retrabalho = "completa"
         else:
@@ -1966,6 +2085,240 @@ def cruzar_andamento(detail, marcos_execucao):
             "pendente": n_pendente,
             "total_etapas": len(resultado),
         },
+    }
+
+
+_PAD_FAMILIA_OS = re.compile(r"\b(STELION|LILIT|LEONA|TERON|LUMINA|PRIMER|SELADOR|PU)\b", re.IGNORECASE)
+
+RENDIMENTO_ESPERADO = {
+    "STELION": 4.0,
+    "LILIT": 5.0,
+    "LEONA": 4.0,
+    "LUMINA": 12.0,
+    "PRIMER": 15.0,
+    "SELADOR": 12.0,
+}
+
+def _parse_qtd_os(s):
+    """Converte string de quantidade da OS para float.
+    Formatos aceitos: "18,00", "18.00", "18", "1.500,00", "18 un", espaços extras."""
+    if not s:
+        return 0.0
+    txt = str(s).strip()
+    # Remove sufixos de unidade (un, kg, lt, pç, m², etc.)
+    txt = re.sub(r"\s*(un|kg|lt|pç|pc|m2|m²|cx|gl|bd|rl|sc)\s*$", "", txt, flags=re.IGNORECASE).strip()
+    if not txt:
+        return 0.0
+    # Detecta formato brasileiro 1.500,00 (ponto milhar, vírgula decimal)
+    if re.match(r"^\d{1,3}(\.\d{3})+(,\d+)?$", txt):
+        txt = txt.replace(".", "").replace(",", ".")
+    else:
+        # Formato simples: troca vírgula por ponto decimal
+        txt = txt.replace(",", ".")
+    # Remove caracteres não-numéricos remanescentes (exceto ponto)
+    txt = re.sub(r"[^\d.]", "", txt)
+    try:
+        return float(txt) if txt else 0.0
+    except ValueError:
+        return 0.0
+
+
+def _familia_do_material_os(nome_material):
+    if not nome_material:
+        return None
+    hit = _PAD_FAMILIA_OS.search(nome_material)
+    if not hit:
+        return None
+    lit = hit.group(1).upper()
+    return PRODUTO_FAMILIA.get(lit, lit)
+
+
+def calcular_consistencia_material(jornada):
+    """Camada 2: cruza material enviado (OS Industria) x consumo (Telegram) x metragem.
+    Retorna dict com resumo por familia de produto + veredito de consistencia."""
+    metragem = jornada.get("metragem")
+    envios = jornada.get("materiais_enviados") or []
+    consumos = jornada.get("consumos") or []
+    snapshots = jornada.get("snapshots_material") or []
+    sobras = jornada.get("sobras") or []
+
+    enviado = {}
+    for envio in envios:
+        for mat in envio.get("materiais") or []:
+            fam = _familia_do_material_os(mat.get("material"))
+            if not fam:
+                continue
+            qtd = _parse_qtd_os(mat.get("quantidade"))
+            if qtd <= 0:
+                continue
+            enviado[fam] = enviado.get(fam, 0) + qtd
+
+    consumido = {}
+    for c in consumos:
+        fam = c.get("produto_familia")
+        if not fam:
+            continue
+        try:
+            qtd = int(c["qtd"])
+        except (ValueError, TypeError, KeyError):
+            continue
+        if 1 <= qtd <= 100:
+            consumido[fam] = consumido.get(fam, 0) + qtd
+
+    for snap in snapshots:
+        if snap.get("classe") != "CONSUMO":
+            continue
+        prods = snap.get("produtos") or []
+        qtds = snap.get("qtds") or []
+        total_snap = sum(q.get("qtd", 0) for q in qtds)
+        if total_snap <= 0 or not prods:
+            continue
+        por_prod = total_snap / len(prods)
+        for p in prods:
+            consumido[p] = consumido.get(p, 0) + por_prod
+
+    sobra_total = {}
+    for s in sobras:
+        fam = s.get("produto_familia")
+        if not fam:
+            continue
+        try:
+            qtd = int(s["qtd"])
+        except (ValueError, TypeError, KeyError):
+            continue
+        if 1 <= qtd <= 100:
+            sobra_total[fam] = sobra_total.get(fam, 0) + qtd
+
+    todas_familias = sorted(set(list(enviado.keys()) + list(consumido.keys())))
+    if not todas_familias:
+        return None
+
+    produtos = []
+    alertas = []
+    for fam in todas_familias:
+        env = enviado.get(fam, 0)
+        cons = round(consumido.get(fam, 0))
+        sob = sobra_total.get(fam, 0)
+        rend = RENDIMENTO_ESPERADO.get(fam)
+        esperado = round(metragem / rend) if (metragem and rend) else None
+
+        veredito = None
+        if env > 0 and cons > 0:
+            ratio = cons / env
+            if ratio > 1.2:
+                veredito = "consumo_acima"
+                alertas.append(f"{fam}: consumiu {cons} vs enviou {env}")
+            elif ratio < 0.6:
+                veredito = "sobra_provavel"
+            else:
+                veredito = "compativel"
+        elif env > 0 and cons == 0:
+            veredito = "sem_registro_consumo"
+        elif env == 0 and cons > 0:
+            veredito = "sem_os_industria"
+
+        produtos.append({
+            "familia": fam,
+            "enviado": env,
+            "consumido": cons,
+            "sobra_declarada": sob,
+            "esperado_m2": esperado,
+            "veredito": veredito,
+        })
+
+    n_compat = sum(1 for p in produtos if p["veredito"] == "compativel")
+    n_alerta = sum(1 for p in produtos if p["veredito"] in ("consumo_acima", "sobra_provavel"))
+    nivel = "ok" if n_alerta == 0 else "atencao" if n_alerta <= 1 else "critico"
+
+    return {
+        "produtos": produtos,
+        "alertas": alertas,
+        "nivel": nivel,
+        "tem_os": bool(enviado),
+        "tem_consumo_telegram": bool(consumido),
+        "tem_metragem": bool(metragem),
+    }
+
+
+STATUS_ENCERRADOS = {"finalizado", "concluido", "cancelado"}
+
+def calcular_score_risco(jornada):
+    """Score preditivo 0-100 pra obras ATIVAS. Quanto maior, mais atenção precisa.
+    Retorna None pra obras já encerradas."""
+    status = (jornada.get("status") or "").lower()
+    if status in STATUS_ENCERRADOS:
+        return None
+
+    sinais = []
+    score = 0
+
+    # 1 · Silêncio no Telegram (dias sem msg)
+    ultima_msg = jornada.get("data_ultima_msg_telegram")
+    if ultima_msg:
+        try:
+            delta = (HOJE_DATE - datetime.strptime(ultima_msg[:10], "%Y-%m-%d").date()).days
+        except (ValueError, TypeError):
+            delta = 0
+        if delta >= 30:
+            score += 30
+            sinais.append(f"silencio_{delta}d")
+        elif delta >= 14:
+            score += 20
+            sinais.append(f"silencio_{delta}d")
+        elif delta >= 7:
+            score += 10
+            sinais.append(f"silencio_{delta}d")
+    else:
+        score += 15
+        sinais.append("sem_msg_telegram")
+
+    # 2 · Postergações detectadas nos marcos
+    marcos = jornada.get("marcos", [])
+    n_postergacoes = sum(1 for m in marcos if m.get("tipo") == "postergacao")
+    if n_postergacoes >= 3:
+        score += 20
+        sinais.append(f"postergacoes_{n_postergacoes}")
+    elif n_postergacoes >= 1:
+        score += 10
+        sinais.append(f"postergacoes_{n_postergacoes}")
+
+    # 3 · Reprovações sem resolução (obra ativa com reprovação = risco)
+    tem_reprovacao = any(m.get("tipo") == "reprovacao_retorno" for m in marcos)
+    if tem_reprovacao:
+        score += 15
+        sinais.append("reprovacao_ativa")
+
+    # 4 · Fricção alta sem resolução
+    fric_nivel = (jornada.get("friccao", {}).get("nivel") or "").lower()
+    if fric_nivel in ("critica", "alta"):
+        score += 15
+        sinais.append(f"friccao_{fric_nivel}")
+    elif fric_nivel == "media":
+        score += 5
+        sinais.append("friccao_media")
+
+    # 5 · Tempo de execução acima da mediana da faixa (benchmark)
+    bench = jornada.get("benchmark_faixa")
+    if bench and bench.get("comparativo"):
+        ratio_exec = bench["comparativo"].get("exec_vs_mediana", 1.0)
+        if ratio_exec >= 2.0:
+            score += 15
+            sinais.append(f"exec_{ratio_exec:.1f}x_mediana")
+        elif ratio_exec >= 1.5:
+            score += 10
+            sinais.append(f"exec_{ratio_exec:.1f}x_mediana")
+
+    # 6 · Status stale (painel diz fase avançada mas status ficou pra trás)
+    fase = (jornada.get("fase_atual_painel") or "").upper()
+    if ("FINALIZADO" in fase or "CONCLU" in fase) and status not in STATUS_ENCERRADOS:
+        score += 10
+        sinais.append("status_stale")
+
+    nivel = "critico" if score >= 60 else "alto" if score >= 40 else "medio" if score >= 20 else "baixo"
+    return {
+        "score": min(score, 100),
+        "nivel": nivel,
+        "sinais": sinais,
     }
 
 
@@ -2244,6 +2597,24 @@ def extrair_materiais_enviados(pdf_bytes: bytes) -> list:
                         continue
                     # A linha seguinte é o cabeçalho de colunas (Código | Quantidade | ...)
                     # Dados começam 2 linhas depois
+                    # Detecta posição das colunas pelo cabeçalho real
+                    header_row = tab[idx_header + 1] if idx_header + 1 < len(tab) else []
+                    col_map = {}
+                    for ci, hcel in enumerate(header_row):
+                        h = (hcel or "").strip().lower()
+                        if "digo" in h or h == "cod" or h == "código":
+                            col_map["codigo"] = ci
+                        elif "quant" in h or h == "qtd" or h == "qtde":
+                            col_map["quantidade"] = ci
+                        elif "material" in h or "descri" in h or "produto" in h:
+                            col_map["material"] = ci
+                        elif h == "lote":
+                            col_map["lote"] = ci
+                        elif h == "cor" or h == "cores":
+                            col_map["cor"] = ci
+                        elif "valor" in h or h == "total" or "preço" in h or "preco" in h:
+                            col_map["valor"] = ci
+
                     for row in tab[idx_header + 2:]:
                         # Limpa células
                         cels = [(c or "").strip() for c in row]
@@ -2253,47 +2624,67 @@ def extrair_materiais_enviados(pdf_bytes: bytes) -> list:
                         joined = " ".join(cels).lower()
                         if joined.startswith("total") or "observ" in joined or "assinatur" in joined:
                             break
-                        # Tenta mapear por posição (estrutura típica: ['', codigo, qtd, material, lote, cor, valor, ...])
-                        # Mas pode ter colunas vazias no início/fim · vou usar heurística
-                        nao_vazias = [c for c in cels if c]
-                        # Material precisa estar presente · tipicamente palavra com letras
-                        # Quantidade precisa ser número
+
                         material = None
                         qtd = None
                         codigo = None
                         cor = None
                         lote = None
                         valor = None
-                        for c in cels:
-                            if not c:
-                                continue
-                            # Código · 3-6 dígitos sem decimal · vem PRIMEIRO no PDF
-                            if codigo is None and re.match(r"^\d{3,6}$", c):
-                                codigo = c
-                                continue
-                            # Quantidade · número com decimal (vírgula ou ponto)
-                            if qtd is None and re.match(r"^\d+[,\.]\d+$", c.replace(" ", "")):
-                                qtd = c
-                                continue
-                            # Quantidade fallback · número simples (caso sem decimal)
-                            if qtd is None and re.match(r"^\d{1,3}$", c):
-                                qtd = c
-                                continue
-                            # Material · texto significativo
-                            if material is None and len(c) > 3 and re.search(r"[A-Z]{3,}", c):
-                                if c.lower() not in ("personalizada", "padrão", "padrao") and not c.startswith("R$"):
-                                    material = c
+
+                        # === Estratégia 1: mapeamento posicional (se cabeçalho foi detectado) ===
+                        if col_map:
+                            def _cel(key, _cm=col_map, _cs=cels):
+                                idx = _cm.get(key)
+                                if idx is not None and idx < len(_cs):
+                                    return _cs[idx]
+                                return ""
+                            codigo = _cel("codigo") or None
+                            qtd_raw = _cel("quantidade")
+                            material = _cel("material") or None
+                            lote = _cel("lote") or None
+                            cor = _cel("cor") or None
+                            valor = _cel("valor") or None
+                            # Valida quantidade: precisa ser numérica
+                            if qtd_raw:
+                                cleaned = re.sub(r"\s*(un|kg|lt|pç|pc|m2|m²|cx|gl|bd|rl|sc)\s*$", "", qtd_raw, flags=re.IGNORECASE).strip()
+                                if re.match(r"^\d[\d.,\s]*$", cleaned):
+                                    qtd = qtd_raw
+
+                        # === Estratégia 2: heurística (fallback se posicional falhou) ===
+                        if not material or not qtd:
+                            nao_vazias = [c for c in cels if c]
+                            for c in cels:
+                                if not c:
                                     continue
-                            # Cor (vem depois do material tipicamente)
-                            if material and cor is None and len(c) < 30 and re.search(r"[a-zà-ú]", c.lower()):
-                                cor = c
-                                continue
-                            # Valor (R$ X,XX)
-                            if valor is None and (c.startswith("R$") or re.match(r"^[\d.,]+$", c) and "," in c):
-                                valor = c
-                                continue
-                        # Só registra se tem material + quantidade
-                        if material and qtd:
+                                # Regex de quantidade robusto (aceita "18,00", "18.00", "18", "1.500,00", "18 un")
+                                c_limpo = re.sub(r"\s*(un|kg|lt|pç|pc|m2|m²|cx|gl|bd|rl|sc)\s*$", "", c, flags=re.IGNORECASE).strip()
+                                # Código · 3-6 dígitos sem decimal · vem PRIMEIRO no PDF
+                                if codigo is None and re.match(r"^\d{3,6}$", c_limpo):
+                                    codigo = c_limpo
+                                    continue
+                                # Quantidade · número com decimal (vírgula ou ponto), incluindo milhar
+                                if qtd is None and re.match(r"^\d[\d.,]*\d$|^\d$", c_limpo):
+                                    # Confirma que não é um valor R$ (tipicamente > 4 dígitos com vírgula)
+                                    if not c.startswith("R$"):
+                                        qtd = c_limpo
+                                        continue
+                                # Material · texto significativo
+                                if material is None and len(c) > 3 and re.search(r"[A-Z]{3,}", c):
+                                    if c.lower() not in ("personalizada", "padrão", "padrao") and not c.startswith("R$"):
+                                        material = c
+                                        continue
+                                # Cor (vem depois do material tipicamente)
+                                if material and cor is None and len(c) < 30 and re.search(r"[a-zà-ú]", c.lower()):
+                                    cor = c
+                                    continue
+                                # Valor (R$ X,XX)
+                                if valor is None and (c.startswith("R$") or (re.match(r"^[\d.,]+$", c) and "," in c and len(c) > 6)):
+                                    valor = c
+                                    continue
+
+                        # Registra se tem material (quantidade None é aceita, parseada depois)
+                        if material:
                             materiais.append({
                                 "codigo": codigo,
                                 "quantidade": qtd,
@@ -2304,8 +2695,8 @@ def extrair_materiais_enviados(pdf_bytes: bytes) -> list:
                             })
                     if materiais:
                         return materiais
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"     ⚠ erro extraindo materiais do PDF: {e}")
     return materiais
 
 
@@ -2432,8 +2823,12 @@ def construir_jornada(obra_id):
                     cluster_exec_fim = dias_no_cluster[-1]
 
     # Cálculos · pra obras em andamento (sem data_exec_confirmada), usa data_ultima_msg como fim
+    # FIX bug hibernação engolida · base_inicio usa primeira_msg (alinhado com fases e hibernação)
+    # data_criacao do Painel é irrelevante: 187/253 obras = 2026-03-14 (migração em massa do Pipefy)
+    # Antes: base_inicio = data_criacao (que podia ser ANOS depois da 1a msg) → tempo_total artificialmente
+    # curto, tempo_hibernacao > tempo_total em 123 obras, proporções absurdas
     tempo_total = None
-    base_inicio = (data_criacao.date() if data_criacao else None) or (primeira_msg.date() if primeira_msg else None)
+    base_inicio = (primeira_msg.date() if primeira_msg else None) or (data_criacao.date() if data_criacao else None)
     if base_inicio:
         fim_calc = ultima_msg.date() if ultima_msg else (data_exec_confirmada or None)
         if not fim_calc or fim_calc < base_inicio:
@@ -2442,11 +2837,14 @@ def construir_jornada(obra_id):
                 fim_calc = HOJE_DATE
         if fim_calc and fim_calc >= base_inicio:
             tempo_total = (fim_calc - base_inicio).days
-    tempo_execucao = None
+    tempo_execucao = 0
     if cluster_exec_inicio and cluster_exec_fim:
         tempo_execucao = (cluster_exec_fim - cluster_exec_inicio).days + 1
 
     # Hibernações totais
+    # FIX bug hibernação engolida · gap entre dias_com_msg[i-1] e dias_com_msg[i] inclui os
+    # dias de fronteira (que têm msgs). A hibernação real é gap-1 (período sem msgs).
+    # Alinhado com a correção nas fases onde inicio = h_ini+1 e fim = h_fim-1.
     msgs_por_dia = defaultdict(int)
     for m in msgs_ordenadas:
         dt = parse_iso(m.get("timestamp"))
@@ -2457,7 +2855,7 @@ def construir_jornada(obra_id):
     for i in range(1, len(dias_com_msg)):
         gap = (dias_com_msg[i] - dias_com_msg[i - 1]).days
         if gap >= HIBERNACAO_GAP_DIAS:
-            tempo_hibernacao += gap
+            tempo_hibernacao += gap - 1  # exclui dia de fronteira (pertence à fase ativa)
 
     # Fases
     fases = calcular_fases(msgs_ordenadas, data_exec_confirmada, data_criacao.date() if data_criacao else None, data_exec_prevista=data_exec_prevista)
@@ -2539,10 +2937,30 @@ def construir_jornada(obra_id):
     metragem_pendente = detail.get("metragemPendente")
 
     # Monta jornada
+    # FIX bug #2 · status ausente · fallback pra fase_atual_painel ou "desconhecido"
+    _status_raw = detail.get("status")
+    if not _status_raw or not str(_status_raw).strip():
+        _fase_raw = detail.get("faseAtual") or ""
+        _fase_up = _fase_raw.upper()
+        if "FINALIZADO" in _fase_up or "CONCLU" in _fase_up:
+            _status_raw = "finalizado"
+        elif "CANCELADO" in _fase_up:
+            _status_raw = "cancelado"
+        elif "PAUSADO" in _fase_up or "SUSPEN" in _fase_up:
+            _status_raw = "pausado"
+        elif "EXECU" in _fase_up:
+            _status_raw = "em_execucao"
+        elif "PLANEJ" in _fase_up or "AGUAR" in _fase_up:
+            _status_raw = "planejamento"
+        elif "CONTRATO" in _fase_up:
+            _status_raw = "contrato"
+        else:
+            _status_raw = "desconhecido"
+
     jornada = {
         "obra_id": obra_id,
         "cliente": detail.get("clienteNome"),
-        "status": detail.get("status"),
+        "status": _status_raw,
         "fase_atual_painel": detail.get("faseAtual"),
         "endereco": endereco,
         "metragem": _to_float(detail.get("projetoMetragem")) or _to_float(mat_totals.get("totalM2")),
@@ -2589,6 +3007,7 @@ def construir_jornada(obra_id):
         "gerado_em": HOJE.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     jornada["classificacao"] = classificar_obra(jornada)
+    jornada["origem_retrabalho"] = classificar_origem_retrabalho(jornada)
     jornada["resumo_cross"] = montar_resumo_cross(jornada)
     jornada["padroes"] = detectar_padroes(jornada)
     jornada["veredito"] = gerar_veredito(jornada)
@@ -2736,6 +3155,14 @@ def main():
 
     # Benchmark por faixa de metragem
     _injetar_benchmark_faixa(out["obras"])
+
+    # Score preditivo de risco (depende de benchmark_faixa)
+    for o in out["obras"]:
+        o["score_risco"] = calcular_score_risco(o)
+
+    # Camada 2: consistência material (enviado x consumido x metragem)
+    for o in out["obras"]:
+        o["consistencia_material"] = calcular_consistencia_material(o)
 
     # Salva JSON
     JORNADAS_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")

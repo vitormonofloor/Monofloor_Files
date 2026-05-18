@@ -1,6 +1,6 @@
 # 🎬 JORNADA · MARCELO PUERTO PERIANES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
 
 ## 📋 Ficha técnica
 
@@ -15,9 +15,9 @@ Rua Antonia da Silva Mendes de Campos, nº 71, Res Jatobas, Piracicaba/SP, CEP 1
 | 1ª msg Telegram | 2025-05-22 |
 | Execução prevista | None |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **52 dias** |
-| **Tempo de execução real** | **None dias** |
-| **Tempo em hibernação** | **339 dias** |
+| **Tempo total contrato → entrega** | **348 dias** |
+| **Tempo de execução real** | **0 dias** |
+| **Tempo em hibernação** | **336 dias** |
 | **Classificação** | **Pré-obra** |
 
 > **Obra em fase de planejamento/pré-execução.**
@@ -48,11 +48,11 @@ Rua Antonia da Silva Mendes de Campos, nº 71, Res Jatobas, Piracicaba/SP, CEP 1
 | Fase | Início | Fim | Duração | Msgs Telegram |
 |---|---|---|---:|---:|
 | **Planejamento inicial** | 2025-05-22 | 2025-05-30 | 9d | 6 |
-| **Hibernação #1** | 2025-05-30 | 2025-07-17 | 48d | 0 |
+| **Hibernação #1** | 2025-05-31 | 2025-07-16 | 47d | 0 |
 | **Atividade retomada** | 2025-07-17 | 2025-07-17 | 1d | 0 |
-| **Hibernação #2** | 2025-07-17 | 2026-01-15 | 182d | 0 |
+| **Hibernação #2** | 2025-07-18 | 2026-01-14 | 181d | 0 |
 | **Atividade retomada** | 2026-01-15 | 2026-01-15 | 1d | 0 |
-| **Hibernação #3** | 2026-01-15 | 2026-05-04 | 109d | 0 |
+| **Hibernação #3** | 2026-01-16 | 2026-05-03 | 108d | 0 |
 | **Atividade retomada** | 2026-05-04 | 2026-05-04 | 1d | 1 |
 
 ## 📍 Marcos detectados nas mensagens
@@ -75,4 +75,4 @@ Rua Antonia da Silva Mendes de Campos, nº 71, Res Jatobas, Piracicaba/SP, CEP 1
 
 ## 🔍 Padrões observados
 
-- hibernacao_longa · obra ficou 339d praticamente parada
+- hibernacao_longa · obra ficou 336d praticamente parada

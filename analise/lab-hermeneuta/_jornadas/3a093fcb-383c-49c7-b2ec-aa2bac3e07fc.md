@@ -1,6 +1,6 @@
 # 🎬 JORNADA · SUELLEN NASTRI CASTRO
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
 
 ## 📋 Ficha técnica
 
@@ -15,8 +15,8 @@ Rua Estela, 135, Apto 1001, Vila Mariana, São Paulo/SP, CEP 04011-000 |
 | 1ª msg Telegram | 2026-04-02 |
 | Execução prevista | 2026-06-14 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **61 dias** |
-| **Tempo de execução real** | **None dias** |
+| **Tempo total contrato → entrega** | **42 dias** |
+| **Tempo de execução real** | **0 dias** |
 | **Classificação** | **Pré-obra** |
 
 > **Obra em fase de planejamento/pré-execução.**

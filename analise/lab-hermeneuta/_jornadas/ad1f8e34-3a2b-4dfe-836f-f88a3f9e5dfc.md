@@ -1,6 +1,6 @@
 # 🎬 JORNADA · RAFAEL PEREIRA FERNANDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-15
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
 
 ## 📋 Ficha técnica
 
@@ -15,7 +15,7 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 | 1ª msg Telegram | 2025-10-30 |
 | Execução prevista | 2026-06-09 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **62 dias** |
+| **Tempo total contrato → entrega** | **197 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Classificação** | **Aguardando execução** |
 
@@ -88,4 +88,4 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 
 ## 🔍 Padrões observados
 
-- execucao_concentrada · só 1.6% do tempo total (1d de 62d)
+- execucao_concentrada · só 0.5% do tempo total (1d de 197d)
