@@ -47,8 +47,19 @@ jobs:
       - name: Instalar wrangler
         run: npm install -g wrangler@latest
 
+      - name: Testar acesso API Monofloor
+        run: |
+          curl -sf -o /dev/null -w "API: %{http_code} em %{time_total}s\n" \
+            -H "User-Agent: lab-orion/1.0" \
+            "https://cliente.monofloor.cloud/api/projects?limit=1" || {
+            echo "::error::API Monofloor inacessivel do GitHub Actions"
+            exit 1
+          }
+
       - name: Rodar pipeline gerar_jornada.py
         working-directory: analise/lab-hermeneuta
+        env:
+          PYTHONUNBUFFERED: "1"
         run: python agente/gerar_jornada.py
 
       - name: Copiar arquivos pro repo pub

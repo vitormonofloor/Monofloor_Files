@@ -26,12 +26,14 @@ Uso: python agente/gerar_jornada.py
 
 import io
 import json
+import os
 import re
 import sys
 import time
 import urllib.error
 import urllib.request
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 
@@ -138,12 +140,14 @@ EXEC_JANELA_DIAS = 7  # janela ao redor de dataExecucaoConfirmada pra cluster
 # Utilitários de fetch e parsing
 # ============================================================
 
+FETCH_TIMEOUT = int(os.environ.get("ORION_FETCH_TIMEOUT", "15"))
+
 def fetch(url: str, max_retries: int = 2):
     last_err = None
     for tentativa in range(max_retries + 1):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "lab-orion/1.0"})
-            with urllib.request.urlopen(req, timeout=30) as r:
+            with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT) as r:
                 return json.load(r)
         except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError) as e:
             last_err = e
@@ -2568,7 +2572,7 @@ def baixar_pdf(url_local: str) -> bytes | None:
     full_url = "https://cliente.monofloor.cloud/api" + url_local
     try:
         req = urllib.request.Request(full_url, headers={"User-Agent": "lab-orion/1.0"})
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT) as r:
             return r.read()
     except Exception:
         return None
@@ -3141,17 +3145,28 @@ def main():
     }
     erros = []
     inicio = time.time()
-    for i, oid in enumerate(obra_ids, 1):
-        try:
-            j = construir_jornada(oid)
-            out["obras"].append(j)
-            md = gerar_narrativa_md(j)
-            md_path = JORNADAS_DIR / f"{oid}.md"
-            md_path.write_text(md, encoding="utf-8")
-            print(f"  [{i:3d}/{len(obra_ids)}] ✓ {j['cliente'][:45]} · {j.get('tempo_total_dias','?')}d · {len(j['marcos'])} marcos")
-        except Exception as e:
-            erros.append((oid, str(e)))
-            print(f"  [{i:3d}/{len(obra_ids)}] ✗ {oid[:8]} · {e}")
+    max_workers = int(os.environ.get("ORION_WORKERS", "4"))
+
+    def _processar(oid):
+        j = construir_jornada(oid)
+        md = gerar_narrativa_md(j)
+        md_path = JORNADAS_DIR / f"{oid}.md"
+        md_path.write_text(md, encoding="utf-8")
+        return j
+
+    done_count = 0
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(_processar, oid): oid for oid in obra_ids}
+        for fut in as_completed(futures):
+            oid = futures[fut]
+            done_count += 1
+            try:
+                j = fut.result()
+                out["obras"].append(j)
+                print(f"  [{done_count:3d}/{len(obra_ids)}] ✓ {j['cliente'][:45]} · {j.get('tempo_total_dias','?')}d · {len(j['marcos'])} marcos")
+            except Exception as e:
+                erros.append((oid, str(e)))
+                print(f"  [{done_count:3d}/{len(obra_ids)}] ✗ {oid[:8]} · {e}")
 
     # Benchmark por faixa de metragem
     _injetar_benchmark_faixa(out["obras"])
