@@ -1,6 +1,6 @@
 # 🎬 JORNADA · RAFAEL PEREIRA FERNANDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-19
 
 ## 📋 Ficha técnica
 
@@ -13,9 +13,9 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 | Produto | LILIT, STELION |
 | Cor | Atena |
 | 1ª msg Telegram | 2025-10-30 |
-| Execução prevista | 2026-06-09 |
+| Execução prevista | 2026-06-30 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **197 dias** |
+| **Tempo total contrato → entrega** | **200 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Classificação** | **Aguardando execução** |
 
@@ -41,10 +41,10 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 | equipe | Jonathan | 3 | 2025-10-30 | 2025-11-13 |
 | Ketlyn Monofloor | 3 | 2026-01-26 | 2026-02-10 |
 | Pedro | Monofloor | 3 | 2026-04-15 | 2026-04-15 |
+| Mayara | Monofloor | 3 | 2026-05-04 | 2026-05-18 |
 | Equipe | Juliana Agenda | 2 | 2025-11-11 | 2026-02-28 |
 | equipe | Luana Atendimento | 2 | 2026-01-23 | 2026-01-23 |
 | Luana, Mayara, Pedro | Monofloor | 2 | 2026-03-03 | 2026-03-03 |
-| Mayara | Monofloor | 2 | 2026-05-04 | 2026-05-04 |
 | equipe projetos | Mariana | monofloor | 1 | 2025-11-13 | 2025-11-13 |
 
 ## 🗺 Linha do tempo
@@ -53,7 +53,7 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 |---|---|---|---:|---:|
 | **Planejamento + pré-execução** | 2025-10-30 | 2026-01-20 | 83d | 9 |
 | **Execução** | 2026-01-21 | 2026-01-21 | 1d | 11 |
-| **Pós-execução** | 2026-01-22 | 2026-05-15 | 114d | 25 |
+| **Pós-execução** | 2026-01-22 | 2026-05-18 | 117d | 26 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -88,4 +88,4 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 
 ## 🔍 Padrões observados
 
-- execucao_concentrada · só 0.5% do tempo total (1d de 197d)
+- execucao_concentrada · só 0.5% do tempo total (1d de 200d)

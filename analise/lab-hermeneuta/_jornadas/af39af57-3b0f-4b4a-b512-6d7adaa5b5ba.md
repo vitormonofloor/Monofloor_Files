@@ -1,6 +1,6 @@
 # 🎬 JORNADA · HENRIQUE AFFONSO ORCESI DA COSTA
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-19
 
 ## 📋 Ficha técnica
 
@@ -15,12 +15,12 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | 1ª msg Telegram | 2025-03-06 |
 | Execução prevista | 2026-05-13 |
 | Execução confirmada | 2026-04-30 |
-| **Tempo total contrato → entrega** | **438 dias** |
+| **Tempo total contrato → entrega** | **439 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **203 dias** |
 | **Classificação** | **Entrega limpa** |
 
-> **Obra finalizada em 438 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado.**
+> **Obra finalizada em 439 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado.**
 
 ## 👥 Elenco
 
@@ -41,7 +41,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | Jaú Microcimento | 119 | 2025-11-06 | 2025-11-14 |
 | equipe | Luana Atendimento | 86 | 2025-08-15 | 2025-11-14 |
 | F Lucena | 48 | 2025-10-15 | 2025-11-04 |
-| Vinícius | 32 | 2026-05-13 | 2026-05-18 |
+| Vinícius | 33 | 2026-05-13 | 2026-05-19 |
 | Maria Clara Monofloor | 29 | 2025-10-24 | 2025-11-14 |
 | Vanessa Monofloor | 28 | 2025-04-03 | 2025-08-15 |
 | monofloor | Mariana Marketing | 23 | 2025-08-21 | 2025-09-03 |
@@ -60,7 +60,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Hibernação #3** | 2025-11-15 | 2026-03-28 | 134d | 0 |
 | **Despertar e pré-execução** | 2026-03-29 | 2026-05-06 | 39d | 9 |
 | **Execução** | 2026-05-07 | 2026-05-07 | 1d | 6 |
-| **Pós-execução** | 2026-05-08 | 2026-05-18 | 11d | 47 |
+| **Pós-execução** | 2026-05-08 | 2026-05-19 | 12d | 48 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -95,11 +95,13 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 
 ## ⚠ Pontos de fricção
 
-**Ocorrências formais (Painel `/ocorrencias` · 3):**
+**Ocorrências formais (Painel `/ocorrencias` · 5):**
 
 - **2026-05-14** [critica] incidente_obra · _Infiltração/vazamento detectado_
 - **2026-05-15** [alta] incidente_obra · _Infiltração/vazamento pendente crítico — prestador aguardando horário_
 - **2026-05-17** [alta] problema_logistico · _Infiltração não resolvida bloqueia obra_
+- **2026-05-18** [media] problema_logistico · _Chuva molhou piso proteção falhou aplicação pausada_
+- **2026-05-19** [media] falha_comunicacao · _Cliente não avisado da chegada_
 
 **Sinais de problema nas mensagens (2):**
 
@@ -109,4 +111,4 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 203d praticamente parada
-- execucao_concentrada · só 0.2% do tempo total (1d de 438d)
+- execucao_concentrada · só 0.2% do tempo total (1d de 439d)

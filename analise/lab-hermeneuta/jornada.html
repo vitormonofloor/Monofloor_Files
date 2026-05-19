@@ -376,18 +376,38 @@
     letter-spacing: .04em;
   }
 
-  /* Macrodados na visão principal */
+  /* Macrodados na visão principal — compacto */
   .det-macrodados {
-    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: flex-start;
   }
-  .det-macrodados .rep-risco,
-  .det-macrodados .rep-benchmark,
-  .det-macrodados .rep-material { flex: 1 1 280px; min-width: 250px; margin-bottom: 0; }
+  .det-macrodados .rep-risco { margin-bottom: 0; padding: 8px 14px; }
+  .det-macrodados .rep-risco-header { margin-bottom: 0; }
+  .det-macrodados .rep-risco-sinais { margin-top: 4px; }
+  .det-macrodados .rep-risco-sinal { font-size: 9px; padding: 2px 5px; }
   .det-veredito {
-    width: 100%; padding: 10px 14px; border-radius: 6px;
+    width: 100%; padding: 8px 12px; border-radius: 5px;
     background: #faf7f2; border-left: 3px solid var(--accent);
-    font-size: 13px; line-height: 1.5; color: var(--ink);
+    font-size: 12px; line-height: 1.5; color: var(--ink);
   }
+  .det-macrodados details {
+    background: #faf7f2; border: 1px solid #e8e0d4; border-radius: 5px;
+    overflow: hidden;
+  }
+  .det-macrodados details summary {
+    padding: 6px 12px; font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: #8a7a66; cursor: pointer; user-select: none; list-style: none;
+  }
+  .det-macrodados details summary::before { content: '▸ '; }
+  .det-macrodados details[open] summary::before { content: '▾ '; }
+  .det-macrodados details summary::-webkit-details-marker { display: none; }
+  .det-macrodados details .rep-benchmark,
+  .det-macrodados details .rep-material {
+    border: none; border-radius: 0; border-top: 1px solid #e8e0d4;
+    margin-bottom: 0; padding: 10px 14px;
+  }
+  .det-macrodados details .rep-benchmark-titulo,
+  .det-macrodados details .rep-material-titulo { display: none; }
 
   /* Benchmark comparativo */
   .rep-benchmark {
@@ -1150,15 +1170,33 @@
 
   .conteudo { min-width: 0; }
   .placeholder-vazio {
-    padding: 60px 40px;
-    text-align: center;
-    color: var(--ink-faint);
-    font-size: 15px;
-    font-style: italic;
+    padding: 30px;
     background: var(--surface);
-    border: 2px dashed var(--line);
+    border: 1px solid var(--line);
     border-radius: 12px;
   }
+  .placeholder-msg {
+    text-align: center; color: var(--ink-faint); font-size: 13px;
+    font-style: italic; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line);
+  }
+  .panorama-geral { text-align: left; }
+  .pg-titulo {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; color: #8a7a66; margin-bottom: 12px;
+  }
+  .pg-kpis { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .pg-kpi {
+    background: #fff; border: 1px solid #e8e0d4; border-radius: 5px;
+    padding: 8px 14px; text-align: center; min-width: 80px; flex: 1 1 80px;
+  }
+  .pg-kpi-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: var(--ink);
+  }
+  .pg-kpi-val.pg-vermelho { color: #c0392b; }
+  .pg-kpi-val.pg-laranja { color: #e67e22; }
+  .pg-kpi-val.pg-verde { color: #1e8449; }
+  .pg-kpi-label { font-size: 9px; color: #8a7a66; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+  .pg-frase { font-size: 12px; color: var(--ink); line-height: 1.6; }
   .placeholder-vazio.oculto { display: none; }
 
   @media (max-width: 1100px) {
@@ -3144,7 +3182,7 @@
             <option value="">Classif.</option>
           </select>
           <select id="filtro-vista" class="sidebar-select">
-            <option value="todas">Vistas</option>
+            <option value="todas">Todas</option>
             <option value="nao-vistas">N/vistas</option>
             <option value="vistas">Vistas</option>
           </select>
@@ -3157,7 +3195,10 @@
 
     <section class="conteudo">
       <div id="panorama-mensal" class="panorama-mensal"></div>
-      <div id="placeholder-vazio" class="placeholder-vazio">Selecione uma obra à esquerda pra ver a Jornada do Projeto</div>
+      <div id="placeholder-vazio" class="placeholder-vazio">
+        <div id="panorama-geral" class="panorama-geral"></div>
+        <div class="placeholder-msg">Selecione uma obra a esquerda pra ver a Jornada do Projeto</div>
+      </div>
 
   <div id="detalhes">
     <div class="detalhes-header">
@@ -3936,6 +3977,44 @@ function atualizarBotaoVista(){
   }
 }
 
+function renderPanoramaGeral(){
+  const el = document.getElementById('panorama-geral');
+  if (!el || !DADOS) return;
+  const obras = DADOS.obras || [];
+  const n = obras.length;
+  const nAtivas = obras.filter(o => !['finalizado','concluido','cancelado'].includes((o.status||'').toLowerCase())).length;
+  const scores = obras.map(o => o.score_risco).filter(Boolean);
+  const nCrit = scores.filter(s => s.nivel === 'critico').length;
+  const nAlto = scores.filter(s => s.nivel === 'alto').length;
+  const nMedio = scores.filter(s => s.nivel === 'medio').length;
+  const nBaixo = scores.filter(s => s.nivel === 'baixo').length;
+  const nRetrab = obras.filter(o => (o.classificacao||'').includes('retrabalho')).length;
+  const nSemMsgs = obras.filter(o => (o.n_msgs_telegram_total||0) === 0).length;
+  const matOk = obras.filter(o => o.consistencia_material && o.consistencia_material.nivel === 'ok').length;
+  const matCrit = obras.filter(o => o.consistencia_material && o.consistencia_material.nivel === 'critico').length;
+  const matAtenc = obras.filter(o => o.consistencia_material && o.consistencia_material.nivel === 'atencao').length;
+  const pctRetrab = n ? Math.round(nRetrab / n * 100) : 0;
+
+  const frase = nCrit > 0
+    ? `${nCrit} obra${nCrit>1?'s':''} em risco critico e ${nAlto} em risco alto precisam de atencao imediata.`
+    : nAlto > 0
+    ? `Nenhuma obra critica. ${nAlto} obra${nAlto>1?'s':''} em risco alto merecem acompanhamento.`
+    : `Operacao estavel. ${nBaixo} obras em risco baixo, ${nMedio} em medio.`;
+
+  el.innerHTML = `
+    <div class="pg-titulo">Panorama geral · ${n} obras</div>
+    <div class="pg-kpis">
+      <div class="pg-kpi"><div class="pg-kpi-val">${nAtivas}</div><div class="pg-kpi-label">Ativas</div></div>
+      <div class="pg-kpi"><div class="pg-kpi-val${nCrit ? ' pg-vermelho' : ''}">${nCrit}</div><div class="pg-kpi-label">Risco critico</div></div>
+      <div class="pg-kpi"><div class="pg-kpi-val${nAlto ? ' pg-laranja' : ''}">${nAlto}</div><div class="pg-kpi-label">Risco alto</div></div>
+      <div class="pg-kpi"><div class="pg-kpi-val">${nMedio}</div><div class="pg-kpi-label">Risco medio</div></div>
+      <div class="pg-kpi"><div class="pg-kpi-val">${nRetrab}</div><div class="pg-kpi-label">Retrabalho (${pctRetrab}%)</div></div>
+      <div class="pg-kpi"><div class="pg-kpi-val">${nSemMsgs}</div><div class="pg-kpi-label">Sem Telegram</div></div>
+    </div>
+    <div class="pg-frase">${frase}</div>
+  `;
+}
+
 async function carregar(){
   const r = await fetch('dados/jornadas.json?t=' + Date.now(), {cache:'no-store'});
   DADOS = await r.json();
@@ -3944,6 +4023,7 @@ async function carregar(){
   popularFiltroClassif();
   popularFiltroPeriodo();
   renderListaSidebar();
+  renderPanoramaGeral();
   // Listeners de busca/filtro
   document.getElementById('search-obra').addEventListener('input', renderListaSidebar);
   document.getElementById('filtro-status').addEventListener('change', renderListaSidebar);
@@ -5499,10 +5579,17 @@ function renderDetalhes(){
   atualizarBotaoVista();
   renderOcorrenciasPills(j);
 
-  // Macrodados na visão principal (antes da timeline)
+  // Macrodados na visão principal — compacto
   const elMacro = document.getElementById('det-macrodados');
   const vereHTML = j.veredito ? `<div class="det-veredito">${esc(j.veredito)}</div>` : '';
-  elMacro.innerHTML = vereHTML + montarScoreRisco(j) + montarBenchmarkFaixa(j) + montarConsistenciaMaterial(j);
+  const benchHTML = montarBenchmarkFaixa(j);
+  const matHTML = montarConsistenciaMaterial(j);
+  const bFx = (j.benchmark_faixa||{}).faixa;
+  const benchWrap = benchHTML ? `<details><summary>Benchmark ${bFx ? bFx.label + ' · ' + bFx.n_obras + ' obras' : ''}</summary>${benchHTML}</details>` : '';
+  const cm = j.consistencia_material;
+  const matLabel = cm ? `Material · ${(cm.produtos||[]).length} produtos${cm.alertas && cm.alertas.length ? ' · ' + cm.alertas.length + ' alerta(s)' : ''}` : '';
+  const matWrap = matHTML ? `<details><summary>${matLabel}</summary>${matHTML}</details>` : '';
+  elMacro.innerHTML = vereHTML + montarScoreRisco(j) + benchWrap + matWrap;
 
   renderTimelineCiclos(j);
   renderMacroEtapas(j);

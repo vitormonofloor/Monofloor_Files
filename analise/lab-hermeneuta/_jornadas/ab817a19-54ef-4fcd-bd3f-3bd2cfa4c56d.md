@@ -1,6 +1,6 @@
 # 🎬 JORNADA · CALLEBE ARAUJO DE MEDEIROS MENDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-18
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-19
 
 ## 📋 Ficha técnica
 
@@ -39,7 +39,7 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 |---|---|
 | Gilmar Gomes Rafael | LIDER |
 | Filipe da Silva Lucena | APLICADOR_3 |
-| Jose manoel Mendes dos Santos | APLICADOR_1 |
+| Jose Manoel Mendes dos Santos | APLICADOR_1 |
 | Ademir de Jesus Silva | APLICADOR_3 |
 | Isaías Henrique Costa Rodrigues dos santos | APLICADOR_3 |
 
