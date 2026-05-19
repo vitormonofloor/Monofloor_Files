@@ -19,7 +19,7 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 | **Tempo de execução real** | **8 dias** |
 | **Classificação** | **Retrabalho ativo** |
 
-> **Obra com retrabalho ativo, 196 dias desde o início. 3 ocorrência(s) crítica(s): Autonivelante Quartzolit utilizado - risco alto de patologias.**
+> **Obra com retrabalho ativo, 196 dias desde o início. 3 ocorrência(s) crítica(s): Autonivelante Quartzolit utilizado - risco alto de patologias. 1 remarcação de data detectada (desde 2025-11-08).**
 
 ## 👥 Elenco
 
@@ -58,7 +58,8 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 ## 📍 Marcos detectados nas mensagens
 
 - **2025-11-03 · contrato_assinado** · _equipe | Jonathan_: "Contrato assinado. [Thaísa](tg://user?id=6619338559)"
-- **2026-02-20 · material_produzido** · _Operações | Monofloor_: "@MichaelMlima Boa tarde, temos material em obra para realizar os reparos na área interna?"
+- **2025-11-08 · obra_postergada** · _Vanessa Monofloor_: "Visita reagendada para segunda feira 10/11as 13h [João](tg://user?id=6412021648)"
+- **2026-02-20 · material_produzido** · _Vanessa Monofloor_: "@MichaelMlima Boa tarde, temos material em obra para realizar os reparos na área interna?"
 - **2026-04-02 · vt_realizada** · _Wesley | Juliana._: "Bom dia! Nathan Temos os vídeos da visita realizada?"
 
 ## 📦 Material

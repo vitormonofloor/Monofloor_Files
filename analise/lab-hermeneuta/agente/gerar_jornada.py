@@ -2414,6 +2414,18 @@ def gerar_veredito(jornada):
     if flags:
         partes.append(f" Sinais: {', '.join(flags)}.")
 
+    postergacoes = [m for m in marcos if m.get("tipo") in ("postergacao", "obra_postergada")]
+    if postergacoes:
+        datas_p = sorted(m.get("data", "") for m in postergacoes if m.get("data"))
+        if len(postergacoes) == 1:
+            partes.append(f" 1 remarcação de data detectada")
+        else:
+            partes.append(f" {len(postergacoes)} remarcações de data detectadas")
+        if datas_p:
+            partes.append(f" (desde {datas_p[0][:10]}).")
+        else:
+            partes.append(".")
+
     return "".join(partes).strip()
 
 

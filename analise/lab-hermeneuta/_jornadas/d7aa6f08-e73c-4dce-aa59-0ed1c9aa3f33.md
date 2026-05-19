@@ -21,7 +21,7 @@ Rua João Amaro, 324, casa 1, Vila Cordeiro, São Paulo/SP, CEP 04583-
 | **Tempo em hibernação** | **91 dias** |
 | **Classificação** | **Pré-obra** |
 
-> **Obra em fase de planejamento/pré-execução. 1 ocorrência(s) crítica(s): [PLANEJAMENTO] Análise pré-execução — CRISE DE COR, NÃO PRONTO.**
+> **Obra em fase de planejamento/pré-execução. 1 ocorrência(s) crítica(s): [PLANEJAMENTO] Análise pré-execução — CRISE DE COR, NÃO PRONTO. 2 remarcações de data detectadas (desde 2025-12-04).**
 
 ## 👥 Elenco
 

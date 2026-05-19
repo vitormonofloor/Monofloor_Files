@@ -20,7 +20,7 @@ Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mog
 | **Tempo em hibernação** | **102 dias** |
 | **Classificação** | **Aguardando execução** |
 
-> **Obra em andamento.**
+> **Obra em andamento. 1 remarcação de data detectada (desde 2025-09-25).**
 
 ## 👥 Elenco
 

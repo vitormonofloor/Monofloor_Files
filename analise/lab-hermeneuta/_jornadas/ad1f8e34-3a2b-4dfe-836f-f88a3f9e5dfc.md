@@ -19,7 +19,7 @@ ENDEREÇO:  Rua Dona Brígida, 620 ap 801 A (residencial) Vila Mariana CEP 04111
 | **Tempo de execução real** | **1 dias** |
 | **Classificação** | **Aguardando execução** |
 
-> **Obra em andamento.**
+> **Obra em andamento. 3 remarcações de data detectadas (desde 2025-12-02).**
 
 ## 👥 Elenco
 

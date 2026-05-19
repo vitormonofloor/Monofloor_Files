@@ -20,7 +20,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 | **Tempo em hibernação** | **99 dias** |
 | **Classificação** | **Aguardando execução** |
 
-> **Obra em andamento. 1 ocorrência(s) crítica(s): Equipe deslocada sem frente de trabalho.**
+> **Obra em andamento. 1 ocorrência(s) crítica(s): Equipe deslocada sem frente de trabalho. 2 remarcações de data detectadas (desde 2025-11-27).**
 
 ## 👥 Elenco
 
@@ -68,7 +68,7 @@ Rua José Maria Lisboa, nº 678, apartamento 805, Jardim Paulista, São Paulo/SP
 - **2025-11-13 · escopo_aprovado** · _Gabi | Monofloor_: "♦️Escopo aprovado | Assinatura do contrato aditivo pendente♦️"
 - **2025-11-27 · obra_postergada** · _atendimento | Pedro_: "🚨Obra postergada"
 - **2026-01-16 · relatorio_vt_qualidade** · _equipe | Luana Atendimento_: "APARTAMENTO 805   Olá, pessoal. Bom dia! Tudo bem?   Recebemos as imagens e informações referentes à nossa última visita ao projet"
-- **2026-01-21 · obra_postergada** · _Pedro | Mayara_: "Para registro: após contato com os responsáveis pela obra nos foi passado que a nossa entrada será postergada.  Na próxima semana "
+- **2026-01-21 · obra_postergada** · _atendimento | Pedro_: "Para registro: após contato com os responsáveis pela obra nos foi passado que a nossa entrada será postergada.  Na próxima semana "
 
 ## 📦 Material
 

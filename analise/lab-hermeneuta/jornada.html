@@ -455,6 +455,15 @@
   .badge-risco-alto { background: #e67e22; color: #fff; }
   .badge-risco-medio { background: #f0c040; color: #5a4a20; }
 
+  .badge-posterg {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 2px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle;
+  }
+  .badge-posterg-1 { background: #fbf0d7; color: #8a6018; }
+  .badge-posterg-2 { background: #f5d9a0; color: #7a4a10; }
+  .badge-posterg-3 { background: #e67e22; color: #fff; }
+
   /* Score de risco — bloco no drawer */
   .rep-risco {
     background: #faf7f2; border: 1px solid #e8e0d4; border-radius: 6px;
@@ -4425,9 +4434,12 @@ function renderListaSidebar(){
     const origemHtml = o.origem_retrabalho === 'heranca' ? '<span class="badge-origem-retrab badge-origem-heranca" title="Retrabalho de aplicacao feita antes de 2026">retrab. antigo</span>' : o.origem_retrabalho === 'recente' ? '<span class="badge-origem-retrab badge-origem-recente" title="Retrabalho de aplicacao feita em 2026">retrab. 2026</span>' : '';
     const riscoNv = o.score_risco && o.score_risco.nivel && o.score_risco.nivel !== 'baixo' ? o.score_risco.nivel : '';
     const riscoHtml = riscoNv ? `<span class="badge-risco badge-risco-${esc(riscoNv)}" title="Score risco: ${o.score_risco.score}/100 · ${(o.score_risco.sinais||[]).map(s => labelSinal(s)).join(', ')}">${esc(LABEL_NIVEL_RISCO[riscoNv] || riscoNv)}</span>` : '';
+    const nPosterg = (o.marcos || []).filter(m => m.tipo === 'obra_postergada').length;
+    const postgCls = nPosterg >= 3 ? 'badge-posterg-3' : nPosterg >= 2 ? 'badge-posterg-2' : 'badge-posterg-1';
+    const postgHtml = nPosterg > 0 ? `<span class="badge-posterg ${postgCls}" title="${nPosterg} remarcação(ões) detectada(s) no Telegram">${nPosterg}x remarc.</span>` : '';
 
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
-      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${fricHtml}${alertHtml}</div>
+      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${postgHtml}${fricHtml}${alertHtml}</div>
       <div class="sidebar-item-meta">
         <span class="sidebar-item-status s-${esc(status)}">${esc(formatarStatus(status))}</span>
         ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}

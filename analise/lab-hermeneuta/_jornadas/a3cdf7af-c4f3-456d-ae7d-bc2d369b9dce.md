@@ -20,7 +20,7 @@ Rua Benedito Nardez, nº 1061, 0, Chácara Bela Vista, Campinas/SP, CEP 13092-87
 | **Tempo em hibernação** | **251 dias** |
 | **Classificação** | **Pré-obra** |
 
-> **Obra em fase de planejamento/pré-execução.**
+> **Obra em fase de planejamento/pré-execução. 2 remarcações de data detectadas (desde 2025-12-15).**
 
 ## 👥 Elenco
 

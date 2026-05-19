@@ -20,7 +20,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Tempo em hibernação** | **203 dias** |
 | **Classificação** | **Entrega limpa** |
 
-> **Obra finalizada em 439 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado.**
+> **Obra finalizada em 439 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado. 1 remarcação de data detectada (desde 2025-08-12).**
 
 ## 👥 Elenco
 
@@ -60,12 +60,13 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Hibernação #3** | 2025-11-15 | 2026-03-28 | 134d | 0 |
 | **Despertar e pré-execução** | 2026-03-29 | 2026-05-06 | 39d | 9 |
 | **Execução** | 2026-05-07 | 2026-05-07 | 1d | 6 |
-| **Pós-execução** | 2026-05-08 | 2026-05-19 | 12d | 48 |
+| **Pós-execução** | 2026-05-08 | 2026-05-19 | 12d | 52 |
 
 ## 📍 Marcos detectados nas mensagens
 
 - **2025-03-14 · contrato_assinado** · _equipe | Jonathan_: "Contrato assinado."
 - **2025-07-14 · amostra_solicitada** · _Vanessa Monofloor_: "Amostra solicitada no Pipe."
+- **2025-08-12 · obra_postergada** · _Vanessa Monofloor_: "Visita reagendada para o dia 14/08 as 12:30"
 - **2025-11-14 · finalizacao** · _Jaú Microcimento_: "Segunda camada de verniz aplicado ✅ Obra finalizada"
 
 ## 📦 Material
