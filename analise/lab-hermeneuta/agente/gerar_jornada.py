@@ -2353,7 +2353,7 @@ def gerar_acoes_pendentes(jornada):
     alertas = jornada.get("alertas", [])
     ocorrencias = friccao.get("ocorrencias_formais", [])
 
-    if classif in ("entrega_limpa", "entrega_com_retrabalho", "cancelada"):
+    if status in STATUS_ENCERRADOS:
         return []
 
     acoes = []
