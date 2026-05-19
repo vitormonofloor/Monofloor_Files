@@ -1197,6 +1197,59 @@
   .pg-kpi-val.pg-verde { color: #1e8449; }
   .pg-kpi-label { font-size: 9px; color: #8a7a66; text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
   .pg-frase { font-size: 12px; color: var(--ink); line-height: 1.6; }
+
+  /* TENDÊNCIA MENSAL · barras horizontais comparativas */
+  .pg-secao { margin-top: 18px; }
+  .pg-secao-titulo {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: #8a7a66; margin-bottom: 8px;
+  }
+  .pg-trend-grid {
+    display: grid; grid-template-columns: 70px 1fr; gap: 3px 10px; align-items: center;
+    font-size: 11px; color: var(--ink);
+  }
+  .pg-trend-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8a7a66; text-align: right; }
+  .pg-trend-bar-wrap { display: flex; align-items: center; gap: 6px; height: 18px; }
+  .pg-trend-bar {
+    height: 14px; border-radius: 3px; min-width: 2px; transition: width .3s;
+  }
+  .pg-trend-bar.iniciadas { background: #b8a080; }
+  .pg-trend-bar.finalizadas { background: #1e8449; }
+  .pg-trend-bar.retrabalho { background: #c0392b; }
+  .pg-trend-val { font-family: 'JetBrains Mono', monospace; font-size: 10px; white-space: nowrap; }
+  .pg-trend-legenda { display: flex; gap: 14px; margin-top: 6px; font-size: 10px; color: #8a7a66; }
+  .pg-trend-legenda span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  .pg-trend-legenda .leg-ini::before { background: #b8a080; }
+  .pg-trend-legenda .leg-fin::before { background: #1e8449; }
+  .pg-trend-legenda .leg-ret::before { background: #c0392b; }
+
+  /* CAPACIDADE · gauge horizontal */
+  .pg-gauge-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .pg-gauge-track {
+    flex: 1; height: 22px; background: #eee7db; border-radius: 6px; position: relative; overflow: hidden;
+  }
+  .pg-gauge-fill {
+    height: 100%; border-radius: 6px; transition: width .4s;
+  }
+  .pg-gauge-fill.saudavel { background: linear-gradient(90deg, #b8a080, #1e8449); }
+  .pg-gauge-fill.atencao { background: linear-gradient(90deg, #b8a080, #e67e22); }
+  .pg-gauge-fill.critico { background: linear-gradient(90deg, #e67e22, #c0392b); }
+  .pg-gauge-pct {
+    font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 800;
+    min-width: 55px; text-align: right;
+  }
+  .pg-gauge-pct.saudavel { color: #1e8449; }
+  .pg-gauge-pct.atencao { color: #e67e22; }
+  .pg-gauge-pct.critico { color: #c0392b; }
+  .pg-cap-detail { font-size: 11px; color: var(--ink); line-height: 1.7; }
+  .pg-cap-detail b { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .pg-consul-grid {
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 2px 12px;
+    font-size: 10px; margin-top: 8px; color: var(--ink);
+  }
+  .pg-consul-grid .hdr { font-weight: 700; color: #8a7a66; text-transform: uppercase; letter-spacing: .05em; font-size: 9px; padding-bottom: 4px; border-bottom: 1px solid #e8e0d4; }
+  .pg-consul-grid .val { font-family: 'JetBrains Mono', monospace; text-align: right; }
+
   .placeholder-vazio.oculto { display: none; }
 
   @media (max-width: 1100px) {
@@ -3339,6 +3392,7 @@ function fmtDataLong(s){
 }
 
 function esc(s){ return String(s||'').replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtNum(v){ return v == null ? '—' : Number(v).toLocaleString('pt-BR', {maximumFractionDigits:1}); }
 
 // Ícones SVG por tipo de marco · stroke-based · monocromáticos
 const ICONES_MARCO = {
@@ -4001,6 +4055,94 @@ function renderPanoramaGeral(){
     ? `Nenhuma obra critica. ${nAlto} obra${nAlto>1?'s':''} em risco alto merecem acompanhamento.`
     : `Operacao estavel. ${nBaixo} obras em risco baixo, ${nMedio} em medio.`;
 
+  // Tendência mensal
+  const tend = DADOS.tendencia_mensal || [];
+  const ultimos6 = tend.slice(-6);
+  const maxIni = Math.max(...ultimos6.map(m => m.iniciadas), 1);
+  const mesesNomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const fmtMes = (m) => { const [a,mm] = m.split('-'); return mesesNomes[parseInt(mm)-1] + '/' + a.slice(2); };
+
+  let trendHTML = '';
+  if (ultimos6.length >= 2) {
+    const barMax = 120;
+    let rows = '';
+    for (const m of ultimos6) {
+      const wIni = Math.round(m.iniciadas / maxIni * barMax);
+      const wFin = Math.round(m.finalizadas / maxIni * barMax);
+      const wRet = Math.round(m.com_retrabalho / maxIni * barMax);
+      rows += `<div class="pg-trend-label">${fmtMes(m.mes)}</div>
+        <div class="pg-trend-bar-wrap">
+          <div class="pg-trend-bar iniciadas" style="width:${wIni}px" title="Iniciadas: ${m.iniciadas}"></div>
+          <div class="pg-trend-bar finalizadas" style="width:${wFin}px" title="Finalizadas: ${m.finalizadas}"></div>
+          ${wRet > 0 ? `<div class="pg-trend-bar retrabalho" style="width:${wRet}px" title="Retrabalho: ${m.com_retrabalho}"></div>` : ''}
+          <span class="pg-trend-val">${m.iniciadas}/${m.finalizadas}${m.com_retrabalho ? ' · ' + m.com_retrabalho + 'r' : ''}</span>
+        </div>`;
+    }
+    // Variação mês atual vs anterior
+    const cur = ultimos6[ultimos6.length - 1];
+    const prev = ultimos6[ultimos6.length - 2];
+    let varFrase = '';
+    if (prev.iniciadas > 0) {
+      const varPct = Math.round((cur.iniciadas - prev.iniciadas) / prev.iniciadas * 100);
+      const seta = varPct > 0 ? '↑' : varPct < 0 ? '↓' : '→';
+      const cor = varPct > 20 ? 'pg-laranja' : varPct < -10 ? 'pg-verde' : '';
+      varFrase = `<span class="${cor}">${seta} ${Math.abs(varPct)}% obras iniciadas vs mes anterior</span>`;
+    }
+    if (prev.finalizadas > 0 && cur.finalizadas > 0) {
+      const varFin = Math.round((cur.finalizadas - prev.finalizadas) / prev.finalizadas * 100);
+      const setaF = varFin > 0 ? '↑' : varFin < 0 ? '↓' : '→';
+      const corF = varFin > 0 ? 'pg-verde' : varFin < -20 ? 'pg-laranja' : '';
+      varFrase += (varFrase ? ' · ' : '') + `<span class="${corF}">${setaF} ${Math.abs(varFin)}% finalizadas</span>`;
+    }
+
+    trendHTML = `<div class="pg-secao">
+      <div class="pg-secao-titulo">Tendencia mensal · iniciadas / finalizadas</div>
+      <div class="pg-trend-grid">${rows}</div>
+      <div class="pg-trend-legenda">
+        <span class="leg-ini">Iniciadas</span>
+        <span class="leg-fin">Finalizadas</span>
+        <span class="leg-ret">Retrabalho</span>
+      </div>
+      ${varFrase ? `<div class="pg-frase" style="margin-top:6px">${varFrase}</div>` : ''}
+    </div>`;
+  }
+
+  // Capacidade
+  const cap = DADOS.capacidade || {};
+  let capHTML = '';
+  if (cap.capacidade_mensal_m2) {
+    const pctUt = cap.utilizacao_pct || 0;
+    const stCap = cap.status || 'saudavel';
+    const fillW = Math.min(pctUt, 100);
+    const consuls = (cap.por_consultor || []).slice(0, 6);
+    let consulGrid = '';
+    if (consuls.length) {
+      let consulRows = '<div class="hdr">Consultor</div><div class="hdr val">Obras</div><div class="hdr val">m²</div><div class="hdr val">Retrab</div>';
+      for (const c of consuls) {
+        consulRows += `<div>${esc(c.nome)}</div><div class="val">${c.obras}</div><div class="val">${fmtNum(c.m2)}</div><div class="val">${c.retrabalho || '—'}</div>`;
+      }
+      consulGrid = `<details style="margin-top:8px"><summary style="font-size:10px;color:#8a7a66;cursor:pointer">Por consultor (${consuls.length})</summary><div class="pg-consul-grid">${consulRows}</div></details>`;
+    }
+
+    const funil30 = cap.funil_30d || {};
+    const funil60 = cap.funil_60d || {};
+    const funilFrase = funil30.obras ? `${funil30.obras} obras (${fmtNum(funil30.m2)} m²) nos proximos 30d` : '';
+    const funilFrase60 = funil60.obras ? ` · ${funil60.obras} em 60d` : '';
+
+    capHTML = `<div class="pg-secao">
+      <div class="pg-secao-titulo">Capacidade · m² em execucao vs instalada</div>
+      <div class="pg-gauge-wrap">
+        <div class="pg-gauge-track"><div class="pg-gauge-fill ${stCap}" style="width:${fillW}%"></div></div>
+        <div class="pg-gauge-pct ${stCap}">${pctUt}%</div>
+      </div>
+      <div class="pg-cap-detail">
+        <b>${fmtNum(cap.m2_em_execucao)}</b> m² em ${cap.obras_em_execucao} obras ativas · capacidade <b>${fmtNum(cap.capacidade_mensal_m2)}</b> m²/mes · <b>${cap.aplicadores_total}</b> aplicadores
+        ${funilFrase ? `<br>Funil: ${funilFrase}${funilFrase60}` : ''}
+      </div>
+      ${consulGrid}
+    </div>`;
+  }
+
   el.innerHTML = `
     <div class="pg-titulo">Panorama geral · ${n} obras</div>
     <div class="pg-kpis">
@@ -4012,6 +4154,8 @@ function renderPanoramaGeral(){
       <div class="pg-kpi"><div class="pg-kpi-val">${nSemMsgs}</div><div class="pg-kpi-label">Sem Telegram</div></div>
     </div>
     <div class="pg-frase">${frase}</div>
+    ${capHTML}
+    ${trendHTML}
   `;
 }
 

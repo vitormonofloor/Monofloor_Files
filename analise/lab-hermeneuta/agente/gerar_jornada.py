@@ -3116,6 +3116,213 @@ FAIXAS_METRAGEM_LABELS = [
 
 
 # ============================================================
+# Tendência mensal · agrega métricas por mês pra ver evolução
+# ============================================================
+
+def _calcular_tendencia_mensal(obras):
+    """Agrega métricas mensais pra identificar se operação melhora ou piora."""
+    por_mes = defaultdict(lambda: {
+        "iniciadas": 0,
+        "finalizadas": 0,
+        "em_execucao": 0,
+        "m2_iniciado": 0,
+        "m2_finalizado": 0,
+        "m2_em_execucao": 0,
+        "com_retrabalho": 0,
+        "scores": [],
+        "tempos_exec": [],
+    })
+
+    for o in obras:
+        m2 = o.get("metragem") or 0
+        classif = o.get("classificacao") or ""
+        status = (o.get("status") or "").lower()
+
+        mes_atual = HOJE_DATE.strftime("%Y-%m")
+
+        # Mês de início: usa data_exec_confirmada ou data_1a_msg como proxy
+        dt_inicio = o.get("data_exec_confirmada") or o.get("data_1a_msg") or o.get("data_criacao_painel")
+        if dt_inicio:
+            mes_inicio = dt_inicio[:7]  # "2026-03"
+            if "2025-12" <= mes_inicio <= mes_atual:
+                por_mes[mes_inicio]["iniciadas"] += 1
+                por_mes[mes_inicio]["m2_iniciado"] += m2
+
+        # Mês de finalização: usa data_ultima_msg pra obras encerradas
+        if status in ("finalizado", "concluido"):
+            dt_fim = o.get("data_ultima_msg") or o.get("data_exec_confirmada")
+            if dt_fim:
+                mes_fim = dt_fim[:7]
+                if "2025-12" <= mes_fim <= mes_atual:
+                    por_mes[mes_fim]["finalizadas"] += 1
+                    por_mes[mes_fim]["m2_finalizado"] += m2
+
+        # Obras ativas em cada mês (usa data_exec_confirmada como início, data_ultima_msg como fim)
+        dt_a = o.get("data_exec_confirmada") or o.get("data_1a_msg")
+        dt_b = o.get("data_ultima_msg") or HOJE_DATE.isoformat()
+        if dt_a and status not in ("cancelado",):
+            mes_a = dt_a[:7]
+            mes_b = dt_b[:7]
+            mes_cur = mes_a
+            while mes_cur <= mes_b and mes_cur <= HOJE_DATE.strftime("%Y-%m"):
+                if mes_cur >= "2025-12":
+                    por_mes[mes_cur]["em_execucao"] += 1
+                    por_mes[mes_cur]["m2_em_execucao"] += m2
+                # Avançar mês
+                y, m = int(mes_cur[:4]), int(mes_cur[5:7])
+                m += 1
+                if m > 12:
+                    m = 1
+                    y += 1
+                mes_cur = f"{y:04d}-{m:02d}"
+
+        # Retrabalho
+        if "retrabalho" in classif and dt_inicio:
+            mes_r = dt_inicio[:7]
+            if mes_r >= "2025-12":
+                por_mes[mes_r]["com_retrabalho"] += 1
+
+        # Score (só ativas)
+        sr = o.get("score_risco")
+        if sr and dt_inicio:
+            mes_s = HOJE_DATE.strftime("%Y-%m")
+            por_mes[mes_s]["scores"].append(sr.get("valor", 0))
+
+        # Tempo de execução (obras com dados completos)
+        tex = o.get("tempo_execucao_dias")
+        if tex and tex > 0 and dt_inicio:
+            mes_t = dt_inicio[:7]
+            if mes_t >= "2025-12":
+                por_mes[mes_t]["tempos_exec"].append(tex)
+
+    mes_limite = HOJE_DATE.strftime("%Y-%m")
+    resultado = []
+    for mes in sorted(por_mes.keys()):
+        if mes > mes_limite:
+            continue
+        d = por_mes[mes]
+        scores = d.pop("scores")
+        tempos = d.pop("tempos_exec")
+        d["mes"] = mes
+        d["score_medio"] = round(sum(scores) / len(scores), 1) if scores else None
+        d["exec_dias_mediana"] = _mediana(tempos)
+        d["pct_retrabalho"] = round(d["com_retrabalho"] / d["iniciadas"] * 100) if d["iniciadas"] else 0
+        d["m2_iniciado"] = round(d["m2_iniciado"], 1)
+        d["m2_finalizado"] = round(d["m2_finalizado"], 1)
+        d["m2_em_execucao"] = round(d["m2_em_execucao"], 1)
+        resultado.append(d)
+
+    return resultado
+
+
+# ============================================================
+# Capacidade · m² produzido vs capacidade instalada
+# ============================================================
+
+RODRIGO_STATS_PATH = Path(__file__).parent.parent.parent / "dados" / "rodrigo-stats.json"
+
+CONSULTOR_CANON = {
+    "luana": "Luana Patricia",
+    "luana patricia de andrade lima": "Luana Patricia",
+    "luana patricia": "Luana Patricia",
+    "wesley": "Wesley Matheus",
+    "wesley matheus de carvalho": "Wesley Matheus",
+    "wesley matheus": "Wesley Matheus",
+    "pedro marçal": "Pedro Marçal",
+    "pedro alexandre santana": "Pedro Alexandre",
+}
+
+def _normalizar_consultor(nome):
+    if not nome or not isinstance(nome, str):
+        return "Sem consultor"
+    nome = nome.strip()
+    if not nome or nome == "[]":
+        return "Sem consultor"
+    return CONSULTOR_CANON.get(nome.lower(), nome)
+
+
+def _calcular_capacidade(obras):
+    """Cruza m² em execução com capacidade instalada (rodrigo-stats.json)."""
+    # Ler rodrigo-stats se disponível
+    cap_mensal = 9196  # default produtiva
+    cap_diaria = 418
+    aplicadores_total = 95
+    try:
+        if RODRIGO_STATS_PATH.exists():
+            with open(RODRIGO_STATS_PATH, "r", encoding="utf-8") as f:
+                rs = json.load(f)
+            cap_data = rs.get("capacidade", {})
+            cap_mensal = cap_data.get("capacidade_mensal_produtiva", cap_mensal)
+            cap_diaria = cap_data.get("capacidade_diaria_m2", cap_diaria)
+            aplicadores_total = cap_data.get("aplicadores_total", aplicadores_total)
+    except Exception:
+        pass
+
+    # m² em execução agora (status em_execucao + aguardando_clima + reparo)
+    status_ativos = {"em_execucao", "aguardando_clima", "reparo", "marcas_rolo_cera"}
+    em_exec = [o for o in obras if (o.get("status") or "").lower() in status_ativos]
+    m2_em_exec = sum(o.get("metragem") or 0 for o in em_exec)
+
+    # Por consultor
+    por_consultor = defaultdict(lambda: {"obras": 0, "m2": 0, "retrabalho": 0})
+    for o in obras:
+        status = (o.get("status") or "").lower()
+        if status in ("finalizado", "concluido", "cancelado"):
+            continue
+        cons = _normalizar_consultor(o.get("resumo_cross", {}).get("consultor"))
+        m2 = o.get("metragem") or 0
+        por_consultor[cons]["obras"] += 1
+        por_consultor[cons]["m2"] += m2
+        if "retrabalho" in (o.get("classificacao") or ""):
+            por_consultor[cons]["retrabalho"] += 1
+
+    consultores = []
+    for nome, dados in sorted(por_consultor.items(), key=lambda x: -x[1]["m2"]):
+        consultores.append({
+            "nome": nome,
+            "obras": dados["obras"],
+            "m2": round(dados["m2"], 1),
+            "retrabalho": dados["retrabalho"],
+        })
+
+    # Funil (próximos 30d/60d): contar obras com data_exec_prevista no período
+    funil_30d = 0
+    funil_60d = 0
+    m2_funil_30d = 0
+    m2_funil_60d = 0
+    for o in obras:
+        dep = o.get("data_exec_prevista")
+        if not dep:
+            continue
+        try:
+            dt = datetime.strptime(dep[:10], "%Y-%m-%d").date()
+        except (ValueError, TypeError):
+            continue
+        delta = (dt - HOJE_DATE).days
+        if 0 <= delta <= 60:
+            funil_60d += 1
+            m2_funil_60d += o.get("metragem") or 0
+            if delta <= 30:
+                funil_30d += 1
+                m2_funil_30d += o.get("metragem") or 0
+
+    utilizacao = round(m2_em_exec / cap_mensal * 100) if cap_mensal else 0
+
+    return {
+        "capacidade_mensal_m2": cap_mensal,
+        "capacidade_diaria_m2": cap_diaria,
+        "aplicadores_total": aplicadores_total,
+        "m2_em_execucao": round(m2_em_exec, 1),
+        "obras_em_execucao": len(em_exec),
+        "utilizacao_pct": utilizacao,
+        "status": "critico" if utilizacao > 90 else "atencao" if utilizacao > 70 else "saudavel",
+        "funil_30d": {"obras": funil_30d, "m2": round(m2_funil_30d, 1)},
+        "funil_60d": {"obras": funil_60d, "m2": round(m2_funil_60d, 1)},
+        "por_consultor": consultores,
+    }
+
+
+# ============================================================
 # Main
 # ============================================================
 
@@ -3178,6 +3385,14 @@ def main():
     # Camada 2: consistência material (enviado x consumido x metragem)
     for o in out["obras"]:
         o["consistencia_material"] = calcular_consistencia_material(o)
+
+    # Tendência mensal (evolução mês a mês)
+    out["tendencia_mensal"] = _calcular_tendencia_mensal(out["obras"])
+    print(f"  Tendência mensal: {len(out['tendencia_mensal'])} meses")
+
+    # Capacidade (m² em execução vs capacidade instalada)
+    out["capacidade"] = _calcular_capacidade(out["obras"])
+    print(f"  Capacidade: {out['capacidade']['m2_em_execucao']} m² em exec · {out['capacidade']['utilizacao_pct']}% utilização")
 
     # Salva JSON
     JORNADAS_PATH.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
