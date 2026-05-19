@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-19T01:30:33Z",
+  "atualizado_em": "2026-05-19T06:13:30Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1053,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 7,
+        "daysUntilEntry": 6,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 7 dias do início",
-        "daysUntilEntry": 7,
+        "message": "Projeto sem equipe definida a 6 dias do início",
+        "daysUntilEntry": 6,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 14,
+        "daysUntilEntry": 13,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -112,8 +112,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 14 dias do início",
-        "daysUntilEntry": 14,
+        "message": "Projeto sem equipe definida a 13 dias do início",
+        "daysUntilEntry": 13,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       }
@@ -6554,7 +6554,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 35,
+        "dias_desde_resumo": 36,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -6874,7 +6874,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 35,
+        "dias_desde_resumo": 36,
         "alertas": [
           "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
           "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
@@ -8944,26 +8944,26 @@
   "lw": {
     "luana": {
       "n": 82,
-      "mediana": 259,
+      "mediana": 260,
       "n180": 53,
-      "n270": 36,
+      "n270": 37,
       "zumbi": 7,
       "reparo": 7,
       "pausadas": 2
     },
     "wesley": {
       "n": 79,
-      "mediana": 213,
-      "n180": 47,
-      "n270": 21,
+      "mediana": 214,
+      "n180": 48,
+      "n270": 22,
       "zumbi": 18,
       "reparo": 9,
       "pausadas": 2
     },
     "total_ativas": 216,
-    "n_180_total": 116,
+    "n_180_total": 117,
     "concentracao_pct": 74.5,
-    "concentracao_180_pct": 86.2,
+    "concentracao_180_pct": 86.3,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
