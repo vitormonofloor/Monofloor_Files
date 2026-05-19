@@ -1566,7 +1566,7 @@ def montar_equipe(detail, equipe_endpoint, msgs_ordenadas):
     monofloor = {
         "atendimento": detail.get("responsavelAtendimento"),
         "operacoes": detail.get("responsavelOperacoes"),
-        "consultor": detail.get("consultorNome"),
+        "consultor": detail.get("consultorNome") if isinstance(detail.get("consultorNome"), str) else None,
         "vendedor": (detail.get("acessoDetalhes") or {}).get("vendedor"),
     }
     prestadores_oficiais = []
@@ -2257,7 +2257,7 @@ def calcular_score_risco(jornada):
     score = 0
 
     # 1 · Silêncio no Telegram (dias sem msg)
-    ultima_msg = jornada.get("data_ultima_msg_telegram")
+    ultima_msg = jornada.get("data_ultima_msg")
     if ultima_msg:
         try:
             delta = (HOJE_DATE - datetime.strptime(ultima_msg[:10], "%Y-%m-%d").date()).days
@@ -2967,8 +2967,8 @@ def construir_jornada(obra_id):
         "status": _status_raw,
         "fase_atual_painel": detail.get("faseAtual"),
         "endereco": endereco,
-        "metragem": _to_float(detail.get("projetoMetragem")) or _to_float(mat_totals.get("totalM2")),
-        "faixa_metragem": classificar_faixa_metragem(_to_float(detail.get("projetoMetragem")) or _to_float(mat_totals.get("totalM2"))),
+        "metragem": _to_float(detail.get("projetoMetragem")) if detail.get("projetoMetragem") is not None else _to_float(mat_totals.get("totalM2")),
+        "faixa_metragem": classificar_faixa_metragem(_to_float(detail.get("projetoMetragem")) if detail.get("projetoMetragem") is not None else _to_float(mat_totals.get("totalM2"))),
         "metragem_pendente": metragem_pendente,
         "produtos": materiais_resumo["produtos"],
         "cores": materiais_resumo["cores"],

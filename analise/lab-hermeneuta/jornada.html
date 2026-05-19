@@ -376,7 +376,20 @@
     letter-spacing: .04em;
   }
 
-  /* Benchmark comparativo no drawer */
+  /* Macrodados na visão principal */
+  .det-macrodados {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px;
+  }
+  .det-macrodados .rep-risco,
+  .det-macrodados .rep-benchmark,
+  .det-macrodados .rep-material { flex: 1 1 280px; min-width: 250px; margin-bottom: 0; }
+  .det-veredito {
+    width: 100%; padding: 10px 14px; border-radius: 6px;
+    background: #faf7f2; border-left: 3px solid var(--accent);
+    font-size: 13px; line-height: 1.5; color: var(--ink);
+  }
+
+  /* Benchmark comparativo */
   .rep-benchmark {
     background: #faf7f2; border: 1px solid #e8e0d4; border-radius: 6px;
     padding: 14px 18px; margin-bottom: 20px;
@@ -3156,6 +3169,8 @@
     </div>
     <div id="ocorrencias-popover" class="ocorrencias-popover oculto"></div>
 
+    <div id="det-macrodados" class="det-macrodados"></div>
+
     <div class="section-title">Linha do tempo</div>
     <div id="timeline-container"></div>
     <div class="timeline-wrap" style="margin-top:18px">
@@ -5483,6 +5498,12 @@ function renderDetalhes(){
 
   atualizarBotaoVista();
   renderOcorrenciasPills(j);
+
+  // Macrodados na visão principal (antes da timeline)
+  const elMacro = document.getElementById('det-macrodados');
+  const vereHTML = j.veredito ? `<div class="det-veredito">${esc(j.veredito)}</div>` : '';
+  elMacro.innerHTML = vereHTML + montarScoreRisco(j) + montarBenchmarkFaixa(j) + montarConsistenciaMaterial(j);
+
   renderTimelineCiclos(j);
   renderMacroEtapas(j);
 
