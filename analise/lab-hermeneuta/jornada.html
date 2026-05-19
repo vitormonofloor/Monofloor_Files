@@ -1250,22 +1250,6 @@
   .pg-consul-grid .hdr { font-weight: 700; color: #8a7a66; text-transform: uppercase; letter-spacing: .05em; font-size: 9px; padding-bottom: 4px; border-bottom: 1px solid #e8e0d4; }
   .pg-consul-grid .val { font-family: 'JetBrains Mono', monospace; text-align: right; }
 
-  /* VISÃO OPERACIONAL · sempre visível no topo */
-  #visao-operacional { margin-bottom: 16px; }
-  #visao-operacional:empty { display: none; }
-  .vo-bloco {
-    background: #f8f5f0; border: 1px solid #e8e0d4; border-radius: 8px; margin-bottom: 10px;
-  }
-  .vo-bloco summary {
-    font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
-    letter-spacing: .08em; text-transform: uppercase; color: #8a7a66;
-    padding: 10px 16px; cursor: pointer; list-style: none; user-select: none;
-  }
-  .vo-bloco summary::-webkit-details-marker { display: none; }
-  .vo-bloco summary::before { content: '▸ '; }
-  .vo-bloco[open] summary::before { content: '▾ '; }
-  .vo-corpo { padding: 4px 16px 14px; }
-
   .placeholder-vazio.oculto { display: none; }
 
   @media (max-width: 1100px) {
@@ -3263,7 +3247,6 @@
     </aside>
 
     <section class="conteudo">
-      <div id="visao-operacional"></div>
       <div id="panorama-mensal" class="panorama-mensal"></div>
       <div id="placeholder-vazio" class="placeholder-vazio">
         <div id="panorama-geral" class="panorama-geral"></div>
@@ -4086,105 +4069,6 @@ function renderPanoramaGeral(){
   `;
 }
 
-function renderVisaoOperacional(){
-  const el = document.getElementById('visao-operacional');
-  if (!el || !DADOS) return;
-
-  const mesesNomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const fmtMes = (m) => { const [a,mm] = m.split('-'); return mesesNomes[parseInt(mm)-1] + '/' + a.slice(2); };
-
-  // === CAPACIDADE ===
-  const cap = DADOS.capacidade || {};
-  let capHTML = '';
-  if (cap.capacidade_mensal_m2) {
-    const pctUt = cap.utilizacao_pct || 0;
-    const stCap = cap.status || 'saudavel';
-    const fillW = Math.min(pctUt, 100);
-    const consuls = (cap.por_consultor || []).filter(c => c.nome !== 'Sem consultor').slice(0, 5);
-    let consulGrid = '';
-    if (consuls.length) {
-      let consulRows = '<div class="hdr">Consultor</div><div class="hdr val">Obras</div><div class="hdr val">m²</div><div class="hdr val">Retrab</div>';
-      for (const c of consuls) {
-        consulRows += `<div>${esc(c.nome)}</div><div class="val">${c.obras}</div><div class="val">${fmtNum(c.m2)}</div><div class="val">${c.retrabalho || '—'}</div>`;
-      }
-      consulGrid = `<div class="pg-consul-grid" style="margin-top:10px">${consulRows}</div>`;
-    }
-
-    const funil30 = cap.funil_30d || {};
-    const funil60 = cap.funil_60d || {};
-    const funilFrase = funil30.obras ? `Funil: ${funil30.obras} obras (${fmtNum(funil30.m2)} m²) em 30d` : '';
-    const funilFrase60 = funil60.obras ? ` · ${funil60.obras} em 60d` : '';
-
-    capHTML = `<details class="vo-bloco" open>
-      <summary>Capacidade · ${fmtNum(cap.m2_em_execucao)} m² em ${cap.obras_em_execucao} obras · ${pctUt}% utilização</summary>
-      <div class="vo-corpo">
-        <div class="pg-gauge-wrap">
-          <div class="pg-gauge-track"><div class="pg-gauge-fill ${stCap}" style="width:${fillW}%"></div></div>
-          <div class="pg-gauge-pct ${stCap}">${pctUt}%</div>
-        </div>
-        <div class="pg-cap-detail">
-          Capacidade produtiva: <b>${fmtNum(cap.capacidade_mensal_m2)}</b> m²/mes · <b>${cap.aplicadores_total}</b> aplicadores
-          ${funilFrase ? `<br>${funilFrase}${funilFrase60}` : ''}
-        </div>
-        ${consulGrid}
-      </div>
-    </details>`;
-  }
-
-  // === TENDÊNCIA MENSAL ===
-  const tend = DADOS.tendencia_mensal || [];
-  const ultimos6 = tend.slice(-6);
-  const maxVal = Math.max(...ultimos6.map(m => Math.max(m.iniciadas, m.finalizadas)), 1);
-  let trendHTML = '';
-  if (ultimos6.length >= 2) {
-    const barMax = 140;
-    let rows = '';
-    for (const m of ultimos6) {
-      const wIni = Math.round(m.iniciadas / maxVal * barMax);
-      const wFin = Math.round(m.finalizadas / maxVal * barMax);
-      const wRet = Math.round(m.com_retrabalho / maxVal * barMax);
-      rows += `<div class="pg-trend-label">${fmtMes(m.mes)}</div>
-        <div class="pg-trend-bar-wrap">
-          <div class="pg-trend-bar iniciadas" style="width:${wIni}px" title="Iniciadas: ${m.iniciadas}"></div>
-          <div class="pg-trend-bar finalizadas" style="width:${wFin}px" title="Finalizadas: ${m.finalizadas}"></div>
-          ${wRet > 0 ? `<div class="pg-trend-bar retrabalho" style="width:${wRet}px" title="Retrabalho: ${m.com_retrabalho}"></div>` : ''}
-          <span class="pg-trend-val">${m.iniciadas} ini / ${m.finalizadas} fin${m.com_retrabalho ? ' / ' + m.com_retrabalho + ' ret' : ''}</span>
-        </div>`;
-    }
-    const cur = ultimos6[ultimos6.length - 1];
-    const prev = ultimos6[ultimos6.length - 2];
-    let varFrase = '';
-    if (prev.iniciadas > 0) {
-      const varPct = Math.round((cur.iniciadas - prev.iniciadas) / prev.iniciadas * 100);
-      const seta = varPct > 0 ? '↑' : varPct < 0 ? '↓' : '→';
-      const cor = varPct > 20 ? 'pg-laranja' : varPct < -10 ? 'pg-verde' : '';
-      varFrase = `<span class="${cor}">${seta} ${Math.abs(varPct)}% iniciadas vs ${fmtMes(prev.mes)}</span>`;
-    }
-    if (prev.finalizadas > 0 && cur.finalizadas > 0) {
-      const varFin = Math.round((cur.finalizadas - prev.finalizadas) / prev.finalizadas * 100);
-      const setaF = varFin > 0 ? '↑' : varFin < 0 ? '↓' : '→';
-      const corF = varFin > 0 ? 'pg-verde' : varFin < -20 ? 'pg-laranja' : '';
-      varFrase += (varFrase ? ' · ' : '') + `<span class="${corF}">${setaF} ${Math.abs(varFin)}% finalizadas</span>`;
-    }
-
-    const sumLabel = `${cur.iniciadas} ini / ${cur.finalizadas} fin em ${fmtMes(cur.mes)}`;
-    trendHTML = `<details class="vo-bloco" open>
-      <summary>Tendencia · ${sumLabel}${varFrase ? ' · ' : ''}${varFrase.replace(/<[^>]+>/g,'')}</summary>
-      <div class="vo-corpo">
-        <div class="pg-trend-grid">${rows}</div>
-        <div class="pg-trend-legenda">
-          <span class="leg-ini">Iniciadas</span>
-          <span class="leg-fin">Finalizadas</span>
-          <span class="leg-ret">Retrabalho</span>
-        </div>
-        ${varFrase ? `<div class="pg-frase" style="margin-top:6px">${varFrase}</div>` : ''}
-      </div>
-    </details>`;
-  }
-
-  el.innerHTML = capHTML + trendHTML;
-}
-
 async function carregar(){
   const r = await fetch('dados/jornadas.json?t=' + Date.now(), {cache:'no-store'});
   DADOS = await r.json();
@@ -4194,7 +4078,6 @@ async function carregar(){
   popularFiltroPeriodo();
   renderListaSidebar();
   renderPanoramaGeral();
-  renderVisaoOperacional();
   // Listeners de busca/filtro
   document.getElementById('search-obra').addEventListener('input', renderListaSidebar);
   document.getElementById('filtro-status').addEventListener('change', renderListaSidebar);

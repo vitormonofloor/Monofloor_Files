@@ -269,6 +269,27 @@
     .disp-recorte.todas .disp-recorte-qtd{color:#a86b30}
     .disp-rodape{display:flex;justify-content:flex-end;margin-top:2px}
 
+    /* Tendência mensal */
+    .tend-box{background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:18px 20px 14px;margin-bottom:16px}
+    .tend-titulo{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a7e72;margin-bottom:14px}
+    .tend-grid{display:grid;grid-template-columns:60px 1fr;gap:4px 12px;align-items:center}
+    .tend-mes{font-family:'JetBrains Mono',monospace;font-size:10px;color:#8a7e72;text-align:right}
+    .tend-row{display:flex;align-items:center;gap:6px;height:20px}
+    .tend-bar{height:16px;border-radius:3px;min-width:2px;transition:width .3s}
+    .tend-bar.ini{background:#b8a080}
+    .tend-bar.fin{background:#3d8a5a}
+    .tend-bar.ret{background:#c45a5a}
+    .tend-nums{font-family:'JetBrains Mono',monospace;font-size:10px;color:#5a5048;white-space:nowrap}
+    .tend-legenda{display:flex;gap:16px;margin-top:10px;font-size:10px;color:#8a7e72}
+    .tend-legenda span::before{content:'';display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+    .tend-legenda .l-ini::before{background:#b8a080}
+    .tend-legenda .l-fin::before{background:#3d8a5a}
+    .tend-legenda .l-ret::before{background:#c45a5a}
+    .tend-variacao{font-size:12px;color:#3a3530;margin-top:8px;line-height:1.5}
+    .tend-variacao .up{color:#c45a5a;font-weight:600}
+    .tend-variacao .down{color:#3d8a5a;font-weight:600}
+    .tend-variacao .flat{color:#8a7e72}
+
     /* Section title */
     .section-title{font-size:11px;font-family:'JetBrains Mono',monospace;color:#b8a080;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid #d8d0c4}
 
@@ -866,6 +887,9 @@
     <div class="resumo-completo" id="resumo-completo"></div>
   </div>
 
+  <!-- Tendência mensal · dados do jornadas.json -->
+  <div id="tendencia-mensal" style="display:none"></div>
+
   <!-- Disparador -->
   <div class="disparador">
     <div class="disparador-head">
@@ -1111,6 +1135,12 @@ async function load(){
     const r3 = await fetch('dados/status.json?t='+Date.now(), {cache:'no-store'});
     if (r3.ok) STATUS = await r3.json();
   } catch(e) { STATUS = null; }
+  // Jornadas (tendência mensal · opcional)
+  let JORNADAS = null;
+  try {
+    const r4 = await fetch('dados/jornadas.json?t='+Date.now(), {cache:'no-store'});
+    if (r4.ok) JORNADAS = await r4.json();
+  } catch(e) { JORNADAS = null; }
   renderSentinela();
 
   const obras = DADOS.obras || [];
@@ -1167,6 +1197,9 @@ async function load(){
 
   // Resumo executivo visual
   renderResumoVisual();
+
+  // Tendência mensal (jornadas.json)
+  renderTendenciaMensal(JORNADAS);
 
   // Filtro pessoal · primeiro (afeta os outros)
   renderMeuFiltro();
@@ -2106,6 +2139,66 @@ function chipComSpark(num, label, cls, kpiKey, invertido = true){
     <div class="resumo-chip-label">${esc(label)}</div>
     ${sparkHtml}
     ${deltaHtml}
+  </div>`;
+}
+
+function renderTendenciaMensal(jornadas){
+  const el = document.getElementById('tendencia-mensal');
+  if (!el || !jornadas || !jornadas.tendencia_mensal) return;
+  const tend = jornadas.tendencia_mensal;
+  if (tend.length < 2) return;
+
+  const ultimos = tend.slice(-6);
+  const maxVal = Math.max(...ultimos.map(m => Math.max(m.iniciadas, m.finalizadas)), 1);
+  const barMax = 160;
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const fmtM = (s) => { const [a,mm] = s.split('-'); return meses[parseInt(mm)-1] + '/' + a.slice(2); };
+
+  let rows = '';
+  for (const m of ultimos) {
+    const wI = Math.round(m.iniciadas / maxVal * barMax);
+    const wF = Math.round(m.finalizadas / maxVal * barMax);
+    const wR = m.com_retrabalho > 0 ? Math.max(Math.round(m.com_retrabalho / maxVal * barMax), 2) : 0;
+    rows += `<div class="tend-mes">${fmtM(m.mes)}</div><div class="tend-row">` +
+      `<div class="tend-bar ini" style="width:${wI}px" title="Iniciadas: ${m.iniciadas}"></div>` +
+      `<div class="tend-bar fin" style="width:${wF}px" title="Finalizadas: ${m.finalizadas}"></div>` +
+      (wR > 0 ? `<div class="tend-bar ret" style="width:${wR}px" title="Retrabalho: ${m.com_retrabalho}"></div>` : '') +
+      `<span class="tend-nums">${m.iniciadas} / ${m.finalizadas}` +
+      (m.com_retrabalho ? ` / <span style="color:#c45a5a">${m.com_retrabalho}r</span>` : '') +
+      `</span></div>`;
+  }
+
+  // Variação mês vs mês anterior
+  const cur = ultimos[ultimos.length - 1];
+  const prev = ultimos[ultimos.length - 2];
+  let varHTML = '';
+  if (prev.iniciadas > 0) {
+    const pct = Math.round((cur.iniciadas - prev.iniciadas) / prev.iniciadas * 100);
+    const cls = pct > 15 ? 'up' : pct < -10 ? 'down' : 'flat';
+    const seta = pct > 0 ? '↑' : pct < 0 ? '↓' : '→';
+    varHTML += `<span class="${cls}">${seta} ${Math.abs(pct)}% iniciadas</span>`;
+  }
+  if (prev.finalizadas > 0 && cur.finalizadas > 0) {
+    const pctF = Math.round((cur.finalizadas - prev.finalizadas) / prev.finalizadas * 100);
+    const clsF = pctF > 0 ? 'down' : pctF < -15 ? 'up' : 'flat';
+    const setaF = pctF > 0 ? '↑' : pctF < 0 ? '↓' : '→';
+    varHTML += (varHTML ? ' · ' : '') + `<span class="${clsF}">${setaF} ${Math.abs(pctF)}% finalizadas</span>`;
+  }
+  if (cur.pct_retrabalho > 0) {
+    const clsR = cur.pct_retrabalho > 25 ? 'up' : 'flat';
+    varHTML += (varHTML ? ' · ' : '') + `<span class="${clsR}">${cur.pct_retrabalho}% retrabalho em ${fmtM(cur.mes)}</span>`;
+  }
+
+  el.style.display = 'block';
+  el.innerHTML = `<div class="tend-box">
+    <div class="tend-titulo">Tendencia mensal · iniciadas / finalizadas / retrabalho</div>
+    <div class="tend-grid">${rows}</div>
+    <div class="tend-legenda">
+      <span class="l-ini">Iniciadas</span>
+      <span class="l-fin">Finalizadas</span>
+      <span class="l-ret">Retrabalho</span>
+    </div>
+    ${varHTML ? `<div class="tend-variacao">${fmtM(cur.mes)} vs ${fmtM(prev.mes)}: ${varHTML}</div>` : ''}
   </div>`;
 }
 
