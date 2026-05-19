@@ -3334,11 +3334,12 @@ def _calcular_tendencia_mensal(obras):
             if mes_r >= "2025-12":
                 por_mes[mes_r]["com_retrabalho"] += 1
 
-        # Score (só ativas)
+        # Score (todas as obras com score)
         sr = o.get("score_risco")
-        if sr and dt_inicio:
-            mes_s = HOJE_DATE.strftime("%Y-%m")
-            por_mes[mes_s]["scores"].append(sr.get("valor", 0))
+        if isinstance(sr, dict) and dt_inicio:
+            mes_s = dt_inicio[:7]
+            if mes_s >= "2025-12":
+                por_mes[mes_s]["scores"].append(sr.get("score", 0))
 
         # Tempo de execução (obras com dados completos)
         tex = o.get("tempo_execucao_dias")

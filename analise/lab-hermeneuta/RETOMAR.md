@@ -1,6 +1,42 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-15 · assertividade 84→94% + benchmark faixa metragem (6 faixas) + Camada 1 entregue
+> **Última atualização:** 2026-05-19 · score encerradas + sidebar separada + auditoria 66 obras maio
+
+---
+
+## 🆕 SESSAO 2026-05-19 · O QUE FECHAMOS HOJE
+
+### 3 refinamentos prescritivos encerrados
+- ✅ Postergacoes: badge "Nx remarc." sidebar + mencao veredito (184 deteccoes, 83 obras)
+- ✅ Acoes pendentes: bloco "O que fazer agora" com prioridade (205 obras)
+- ✅ Friccao cliente: DESCARTADO (Telegram = time interno, cliente = WhatsApp, Orion nao le)
+
+### Fixes da auditoria (66 obras maio/2026)
+- ✅ Score para finalizadas/concluidas: antes null, agora retrospectivo (253/253 com score)
+- ✅ Bug genero friccao: "critico" != "critica" — score NUNCA pontuava friccao. 33→4 inversoes
+- ✅ Sidebar separada: ativas em cima, encerradas em bloco colapsavel `<details>`
+- ✅ score_medio mensal: campo "score" nao "valor" + mes de inicio correto
+- ✅ Publicado no orion-pub
+
+### Memorias novas
+- `feedback_escopo_focado_qualidade.md` — auditar so o recorte pedido
+- `reference_bug_genero_friccao.md` — bug historico corrigido
+
+### Pendencias pra proxima sessao
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Classificacao entrega_limpa: incluir ocorrencias (13/17 questionaveis) | ~30min |
+| 2 | Duplicacao Telegram: detectar/alertar pares (7 confirmados no universo) | ~1h |
+| 3 | Metragem anomala: 3 obras 0m2 finalizadas, 7 com <10m2 | ~30min |
+| 4 | Camada 2 — Triangulo de consistencia material | ~2h |
+| 5 | Camada 3 — Score preditivo refinado | ~2h |
+
+### Comando pra retomar amanha (cole no Claude Code)
+
+```
+Le analise/lab-hermeneuta/RETOMAR.md primeiro · secao topo "SESSAO 2026-05-19". Memoria: project_jornada_refinamento_3pontos.md. Proximo passo: fix classificacao entrega_limpa (~30min) e duplicacao telegram (~1h). Focar so nas 66 de maio, nao expandir.
+```
 
 ---
 

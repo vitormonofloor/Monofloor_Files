@@ -84,8 +84,8 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 
 **Consumo registrado em msgs (3):**
 
-- 2026-02-11 · 29 kit · _aplicador | Julio_
 - 2026-02-11 · 29 kit · _Julio_
+- 2026-02-11 · 29 kit · _aplicador | Julio_
 - 2026-03-12 · 1 balde · _Julio_
 
 ## ⚠ Pontos de fricção

@@ -692,6 +692,16 @@
     font-size: 12px;
     font-style: italic;
   }
+  .sidebar-encerradas { margin: 0; }
+  .sidebar-enc-header {
+    display: block; padding: 7px 10px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-faint); background: var(--bg-inset, #1a1816);
+    border-top: 1px solid var(--borda); border-bottom: 1px solid var(--borda);
+    position: sticky; top: 0; z-index: 2;
+  }
+  .sidebar-enc-header:hover { color: var(--accent); }
 
   /* Botão "Gerar relatório" no header da obra */
   .btn-relatorio {
@@ -4449,19 +4459,23 @@ function renderListaSidebar(){
   });
 
   const nVistas = (DADOS.obras||[]).filter(o => vistas.has(o.obra_id)).length;
-  contador.textContent = `${filtradas.length} de ${(DADOS.obras||[]).length} · ${nVistas} vistas`;
 
   if (!filtradas.length){
     lista.innerHTML = '<div class="sidebar-vazio">(nenhuma obra encontrada com esses filtros)</div>';
+    contador.textContent = `0 de ${(DADOS.obras||[]).length}`;
     return;
   }
 
-  // Mantém referência ao idx no array DADOS.obras pra OBRA_SEL funcionar
+  const _STATUS_ENC = new Set(['finalizado','concluido','cancelado']);
+  const ativas = filtradas.filter(o => !_STATUS_ENC.has(o.status));
+  const encerradas = filtradas.filter(o => _STATUS_ENC.has(o.status));
+  contador.textContent = `${ativas.length} ativas · ${encerradas.length} encerradas · ${nVistas} vistas`;
+
   const idxByObraId = new Map((DADOS.obras || []).map((o, i) => [o.obra_id, i]));
 
-  lista.innerHTML = filtradas.map(o => {
+  function htmlItem(o){
     const idx = idxByObraId.get(o.obra_id);
-    const status = o.status || '—';
+    const st = o.status || '—';
     const nMarcos = (o.marcos || []).length;
     const nOcorr = ((o.friccao || {}).ocorrencias_formais || []).length;
     const nMsgs = o.n_msgs_telegram_total || 0;
@@ -4475,7 +4489,7 @@ function renderListaSidebar(){
     const alertHtml = alertas.map(a => `<span class="sidebar-item-alerta">${esc(a.replace(/_/g,' '))}</span>`).join('');
     const origemHtml = o.origem_retrabalho === 'heranca' ? '<span class="badge-origem-retrab badge-origem-heranca" title="Retrabalho de aplicacao feita antes de 2026">retrab. antigo</span>' : o.origem_retrabalho === 'recente' ? '<span class="badge-origem-retrab badge-origem-recente" title="Retrabalho de aplicacao feita em 2026">retrab. 2026</span>' : '';
     const riscoNv = o.score_risco && o.score_risco.nivel && o.score_risco.nivel !== 'baixo' ? o.score_risco.nivel : '';
-    const riscoHtml = riscoNv ? `<span class="badge-risco badge-risco-${esc(riscoNv)}" title="Score risco: ${o.score_risco.score}/100 · ${(o.score_risco.sinais||[]).map(s => labelSinal(s)).join(', ')}">${esc(LABEL_NIVEL_RISCO[riscoNv] || riscoNv)}</span>` : '';
+    const riscoHtml = riscoNv ? `<span class="badge-risco badge-risco-${esc(riscoNv)}" title="Score: ${o.score_risco.score}/100 · ${(o.score_risco.sinais||[]).map(s => labelSinal(s)).join(', ')}">${esc(LABEL_NIVEL_RISCO[riscoNv] || riscoNv)}</span>` : '';
     const nPosterg = (o.marcos || []).filter(m => m.tipo === 'obra_postergada').length;
     const postgCls = nPosterg >= 3 ? 'badge-posterg-3' : nPosterg >= 2 ? 'badge-posterg-2' : 'badge-posterg-1';
     const postgHtml = nPosterg > 0 ? `<span class="badge-posterg ${postgCls}" title="${nPosterg} remarcação(ões) detectada(s) no Telegram">${nPosterg}x remarc.</span>` : '';
@@ -4483,13 +4497,26 @@ function renderListaSidebar(){
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
       <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${postgHtml}${fricHtml}${alertHtml}</div>
       <div class="sidebar-item-meta">
-        <span class="sidebar-item-status s-${esc(status)}">${esc(formatarStatus(status))}</span>
+        <span class="sidebar-item-status s-${esc(st)}">${esc(formatarStatus(st))}</span>
         ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}
         ${o.faixa_metragem ? `<span class="sidebar-item-faixa">${esc(o.faixa_metragem)}${o.metragem ? ' · ' + Math.round(o.metragem) + 'm²' : ''}</span>` : ''}
         <span class="sidebar-item-numeros">${nMarcos}m · ${nOcorr}occ · ${nMsgs} msgs${dataInicioObra(o) ? ` · ${fmtData(dataInicioObra(o))}` : ''}</span>
       </div>
     </div>`;
-  }).join('');
+  }
+
+  let html = '';
+  if (ativas.length) html += ativas.map(htmlItem).join('');
+  if (encerradas.length){
+    const nCrit = encerradas.filter(o => o.score_risco && o.score_risco.nivel === 'critico').length;
+    const nAlto = encerradas.filter(o => o.score_risco && o.score_risco.nivel === 'alto').length;
+    const resumo = [nCrit && `${nCrit} critico`, nAlto && `${nAlto} alto`].filter(Boolean).join(' · ');
+    html += `<details class="sidebar-encerradas">
+      <summary class="sidebar-enc-header">Encerradas (${encerradas.length})${resumo ? ' · '+resumo : ''}</summary>
+      ${encerradas.map(htmlItem).join('')}
+    </details>`;
+  }
+  lista.innerHTML = html;
 
   lista.querySelectorAll('.sidebar-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -4497,7 +4524,6 @@ function renderListaSidebar(){
       OBRA_SEL = DADOS.obras[idx];
       lista.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('ativo'));
       item.classList.add('ativo');
-      // Esconde placeholder · mostra detalhes
       document.getElementById('placeholder-vazio').classList.add('oculto');
       renderDetalhes();
     });
