@@ -477,14 +477,31 @@ PAD_RELATORIO_VT_QUALIDADE = re.compile(
     re.IGNORECASE,
 )
 
-# Obra postergada · sinal de fricção · cronograma reset (importante pra macro-etapas)
+# Obra postergada / remarcada · sinal de fricção · cronograma reset
 PAD_OBRA_POSTERGADA = re.compile(
     r"\b("
+    # Padrão formal (Pedro/Wesley/Mayara) — alta frequência
     r"obra\s+postergad\w*"
     r"|projeto\s+postergad\w*"
     r"|nossa\s+entrada\s+ser[áa]\s+postergad"
     r"|entrada\s+postergad\w*"
     r"|🚨\s*obra\s+postergad"
+    # Substantivo "postergação da entrada/data"
+    r"|posterga[çc][ãa]o\s+d[aoe]"
+    # Adiar / remarcar / reagendar
+    r"|pediu\s+(para\s+)?adia"
+    r"|adiar(mos)?\s+(a\s+)?(nossa\s+)?entrada"
+    r"|in[íi]cio\s+adiad[oa]"
+    r"|entrada\s+adiad[oa]"
+    r"|teremos\s+que\s+remarcar"
+    r"|reagendad[oa]"
+    r"|reagendando"
+    # Negação indireta do cliente
+    r"|n[ãa]o\s+ser[áa]\s+poss[íi]vel\s+iniciar"
+    r"|pr[ée].?agenda\s+n[ãa]o\s+ser[áa]\s+vi[áa]v"
+    # Nova data de entrada
+    r"|nova\s+data\s+d[ea]\s+(nossa\s+)?entrada"
+    r"|alinhar(mos)?\s+(a\s+)?nova\s+data"
     r")",
     re.IGNORECASE,
 )
@@ -2278,7 +2295,7 @@ def calcular_score_risco(jornada):
 
     # 2 · Postergações detectadas nos marcos
     marcos = jornada.get("marcos", [])
-    n_postergacoes = sum(1 for m in marcos if m.get("tipo") == "postergacao")
+    n_postergacoes = sum(1 for m in marcos if m.get("tipo") in ("postergacao", "obra_postergada"))
     if n_postergacoes >= 3:
         score += 20
         sinais.append(f"postergacoes_{n_postergacoes}")
