@@ -60,7 +60,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Hibernação #3** | 2025-11-15 | 2026-03-28 | 134d | 0 |
 | **Despertar e pré-execução** | 2026-03-29 | 2026-05-06 | 39d | 9 |
 | **Execução** | 2026-05-07 | 2026-05-07 | 1d | 6 |
-| **Pós-execução** | 2026-05-08 | 2026-05-19 | 12d | 52 |
+| **Pós-execução** | 2026-05-08 | 2026-05-19 | 12d | 55 |
 
 ## 📍 Marcos detectados nas mensagens
 

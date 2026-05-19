@@ -2343,6 +2343,128 @@ def calcular_score_risco(jornada):
     }
 
 
+def gerar_acoes_pendentes(jornada):
+    """Bloco prescritivo: o que fazer agora com essa obra. Lista priorizada."""
+    status = (jornada.get("status") or "").lower()
+    classif = jornada.get("classificacao", "")
+    score = jornada.get("score_risco") or {}
+    marcos = jornada.get("marcos", [])
+    friccao = jornada.get("friccao") or {}
+    alertas = jornada.get("alertas", [])
+    ocorrencias = friccao.get("ocorrencias_formais", [])
+
+    if classif in ("entrega_limpa", "entrega_com_retrabalho", "cancelada"):
+        return []
+
+    acoes = []
+
+    criticas = [o for o in ocorrencias if (o.get("severidade") or "").lower() == "critica"]
+    altas_occ = [o for o in ocorrencias if (o.get("severidade") or "").lower() == "alta"]
+    if criticas:
+        acoes.append({
+            "prioridade": "urgente",
+            "acao": f"Tratar {len(criticas)} ocorrencia(s) critica(s)",
+            "detalhe": criticas[0].get("titulo", "")[:80],
+        })
+    elif altas_occ:
+        acoes.append({
+            "prioridade": "alta",
+            "acao": f"Tratar {len(altas_occ)} ocorrencia(s) de alta severidade",
+            "detalhe": altas_occ[0].get("titulo", "")[:80],
+        })
+
+    ultima_msg = jornada.get("data_ultima_msg")
+    dias_silencio = 0
+    if ultima_msg:
+        try:
+            dias_silencio = (HOJE_DATE - datetime.strptime(ultima_msg[:10], "%Y-%m-%d").date()).days
+        except (ValueError, TypeError):
+            pass
+    if dias_silencio >= 30:
+        acoes.append({
+            "prioridade": "urgente",
+            "acao": f"Sem atividade ha {dias_silencio} dias no Telegram",
+            "detalhe": "Verificar se obra ainda esta ativa",
+        })
+    elif dias_silencio >= 14:
+        acoes.append({
+            "prioridade": "alta",
+            "acao": f"Silencio de {dias_silencio} dias no grupo Telegram",
+            "detalhe": "Cobrar atualizacao da equipe",
+        })
+    elif dias_silencio >= 7:
+        acoes.append({
+            "prioridade": "media",
+            "acao": f"{dias_silencio} dias sem mensagem no grupo",
+            "detalhe": "Acompanhar",
+        })
+
+    postergacoes = [m for m in marcos if m.get("tipo") in ("postergacao", "obra_postergada")]
+    if len(postergacoes) >= 3:
+        acoes.append({
+            "prioridade": "alta",
+            "acao": f"{len(postergacoes)} remarcacoes de data",
+            "detalhe": "Alinhar nova data firme com cliente",
+        })
+    elif postergacoes:
+        acoes.append({
+            "prioridade": "media",
+            "acao": f"{len(postergacoes)} remarcacao(oes) de data",
+            "detalhe": "Confirmar data atual esta mantida",
+        })
+
+    fric_nivel = (friccao.get("nivel") or "").lower()
+    if fric_nivel in ("critica", "alta"):
+        acoes.append({
+            "prioridade": "alta",
+            "acao": "Sinais de insatisfacao do cliente",
+            "detalhe": f"Nivel friccao: {fric_nivel}",
+        })
+
+    if status in ("reparo", "marcas_rolo_cera"):
+        acoes.append({
+            "prioridade": "alta",
+            "acao": "Acompanhar retrabalho em andamento",
+            "detalhe": f"Status: {status.replace('_', ' ')}",
+        })
+    elif status == "pausado":
+        acoes.append({
+            "prioridade": "media",
+            "acao": "Investigar motivo da pausa",
+            "detalhe": "Definir previsao de retomada",
+        })
+    elif status == "aguardando_execucao":
+        acoes.append({
+            "prioridade": "media",
+            "acao": "Confirmar data de inicio e equipe",
+            "detalhe": "Aguardando execucao",
+        })
+    elif status in ("planejamento", "contrato"):
+        acoes.append({
+            "prioridade": "baixa",
+            "acao": "Acompanhar evolucao do contrato/planejamento",
+            "detalhe": f"Fase: {status}",
+        })
+
+    if "status_fase_discrepante" in alertas:
+        acoes.append({
+            "prioridade": "media",
+            "acao": "Status diverge da fase no Painel",
+            "detalhe": "Verificar e corrigir no Painel de Obras",
+        })
+
+    if not acoes and status == "em_execucao":
+        acoes.append({
+            "prioridade": "ok",
+            "acao": "Sem pendencias identificadas",
+            "detalhe": "Obra em andamento normal",
+        })
+
+    PESO = {"urgente": 0, "alta": 1, "media": 2, "baixa": 3, "ok": 4}
+    acoes.sort(key=lambda a: PESO.get(a["prioridade"], 9))
+    return acoes
+
+
 def gerar_veredito(jornada):
     """Parágrafo-resumo determinístico da jornada. O que a diretoria lê."""
     cliente = jornada["cliente"]
@@ -3056,6 +3178,7 @@ def construir_jornada(obra_id):
     if jornada.get("n_msgs_telegram_total", 0) >= 2000:
         alertas.append("teto_api_msgs")
     jornada["alertas"] = alertas
+    jornada["acoes_pendentes"] = gerar_acoes_pendentes(jornada)
 
     return jornada
 
