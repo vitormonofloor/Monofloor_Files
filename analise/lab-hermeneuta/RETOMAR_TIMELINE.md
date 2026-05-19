@@ -1,10 +1,63 @@
 # 🎯 RETOMAR TIMELINE · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-15 · assertividade 94% + pre_contrato + 6a fonte materiais + consultor normalizado + alerta parada + Camada 1 benchmark
+> **Última atualização:** 2026-05-19 · Timeline v2 mockup 100% dados reais + radar auditável + arquitetura 4 camadas + 10 ideias estratégicas
 
 ---
 
-## 🆕 SESSÃO 2026-05-15 · O QUE FECHAMOS HOJE
+## 🆕 SESSÃO 2026-05-19 · O QUE FECHAMOS HOJE
+
+### Timeline v2 — mockup alimentado com dados 100% reais
+- ✅ `analise/mockup-timeline-v2.html` — 30+ pontos de dados substituídos, auditoria 30/30
+- ✅ Trail SVG: 6 nós reais (Planej.88 → Contrato19 → Ag.Exec43 → EmExec36 → Retrab21 → Parado7)
+- ✅ Signals: Idade 179d, Gargalo PLANEJ., Silêncio 8.4%, Acima benchmark 53.4%
+- ✅ Radar com fórmulas declaráveis: Tempo 39.7% (<=150d/total), Fluxo 91.6% (sem alerta/total), Qualidade 90.2% (sem retrab/total), Risco 78.4% (baixo+mod/scored)
+- ✅ Eixo cards com dados reais: faixas PP/P/M, 18 alertas breakdown, 21 obras retrabalho, 40 alto+crítico
+- ✅ Tabela atenção: 5 obras críticas reais (Flávia Augusta, Priscila Miranda, Glaucia Alves, Monalisa, Mariana Loiacono)
+- ✅ Cross-obras: Wesley 43% retrabalho (9/21), Sem consultor 41 obras 84d (são as MAIS NOVAS), Planejamento gargalo 88 vs 36
+
+### Arquitetura 4 camadas definida
+- ✅ Central (snapshot executivo) → Orion (per-obra detalhe) → Jornada (per-obra narrativa) → Timeline (análise agregada)
+- ✅ Cada camada com papel exclusivo, sem sobreposição
+- ✅ Princípio: todo score/métrica = fórmula auditável dos dados, nunca heurística do modelo
+
+### Correções durante auditoria
+- ✅ Faixa m2=0 classificava como PP → guard `if m2 <= 0: return '?'`
+- ✅ PP benchmark 175d→179d, P 178d→180d após fix (merge m2 de 3 fontes)
+- ✅ Benchmark % recalculado: P +1%, M +19% (base PP 179d)
+- ✅ Discrepância timeline 215 vs dashboard 214 identificada (GUILHERME HAIDAR extra)
+
+### Brainstorm estratégico — 10 ideias para próximas sessões
+
+**Previsão:** 1) Radar trajetória (velocidade risco), 2) Simulador "e se" (mover obras/consultores)
+**Padrões ocultos:** 3) DNA obra (clustering), 4) Padrão recuperação, 5) Previsibilidade por consultor
+**Visão executiva:** 6) Relatório narrativo automático (semanal), 7) Dupla lente (Central vs Timeline)
+**Operação:** 8) Throughput real (fila planejamento), 9) Dispersão (entropia), 10) Sazonalidade por mês
+
+### Memórias novas
+- `feedback_scores_derivados_dados.md` — todo score precisa fórmula auditável
+- `project_arquitetura_4_camadas.md` — 4 camadas + pipeline unificado + 10 ideias
+
+### Pendências pra próxima sessão
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Pipeline unificado (1 script Python → analise-unificada.json) | ~2h |
+| 2 | Snapshots semanais (salvar estado toda segunda, habilita tendência) | ~1h |
+| 3 | Panorama mensal (evolução carteira mês a mês) | ~1h |
+| 4 | Camada 2 — Triângulo de consistência material | ~2h |
+| 5 | Camada 3 — Score preditivo de risco (obras ativas) | ~2h |
+| 6 | Cross-obra: padrões por consultor × tipo problema | ~1h |
+| 7 | Relatório narrativo automático (ideia #6 do brainstorm) | ~2h |
+
+### Comando pra retomar (cole no Claude Code)
+
+```
+Lê analise/lab-hermeneuta/RETOMAR_TIMELINE.md primeiro · seção topo "SESSÃO 2026-05-19". Memórias: project_arquitetura_4_camadas.md, feedback_scores_derivados_dados.md. Timeline v2 mockup pronto com dados reais (30/30 auditoria). Próximo passo: pipeline unificado (~2h) ou snapshots semanais (~1h). 214 obras dashboard, radar com fórmulas declaráveis (Tempo 39.7%, Fluxo 91.6%, Qualidade 90.2%, Risco 78.4%). 10 ideias estratégicas documentadas na memória.
+```
+
+---
+
+## 📜 SESSÃO 2026-05-15 · Assertividade 94% + Camada 1 benchmark
 
 ### Assertividade 84% → 93.9% (Parte 1)
 - ✅ `classificar_obra()` usa `fase_atual_painel` como override (status stale → entrega_limpa/com_retrabalho)
