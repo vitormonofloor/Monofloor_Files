@@ -1,21 +1,21 @@
 {
-  "atualizado_em": "2026-05-19T19:05:11Z",
+  "atualizado_em": "2026-05-19T21:02:04Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1053,
-    "ativas": 250,
-    "finalizados": 803,
-    "em_execucao": 36,
+    "total": 1054,
+    "ativas": 252,
+    "finalizados": 802,
+    "em_execucao": 33,
     "pausados": 4,
-    "m2_em_execucao": 5462
+    "m2_em_execucao": 5207
   },
   "por_status": {
+    "planejamento": 91,
+    "contrato": 20,
     "aguardando_execucao": 43,
-    "finalizado": 575,
-    "planejamento": 88,
-    "reparo": 19,
-    "contrato": 19,
-    "em_execucao": 36,
+    "reparo": 20,
+    "finalizado": 574,
+    "em_execucao": 33,
     "cancelado": 36,
     "aguardando_clima": 3,
     "pausado": 4,
@@ -35,14 +35,14 @@
       "obras": 14,
       "m2": 3216
     },
-    "funil_total": 134,
-    "com_data_firmada": 68,
+    "funil_total": 137,
+    "com_data_firmada": 71,
     "sem_data_firmada": 66,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2124,
+    "pending_tasks": 2123,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2187,7 +2187,7 @@
           "cliente": "JOSÉ ROBERTO LEME FERRAZ",
           "cidade": "SÃO PAULO",
           "fase": "AGUARDANDO LIBERAÇÃO",
-          "status": "em_execucao"
+          "status": "planejamento"
         }
       ],
       "obras_membros": [],
@@ -2561,7 +2561,7 @@
     "d0dd8566-813f-4d0a-bc9e-e8619a07c750": {
       "dataVisita": "04/12/2025 11:15",
       "dataEntrada": "06/04/2026 10:00",
-      "dataExec": "2026-05-19"
+      "dataExec": "2026-06-15"
     },
     "63048196-6e11-4d7b-8c5a-a2a31d60ff30": {
       "dataVisita": "",
@@ -2692,6 +2692,11 @@
       "dataVisita": "",
       "dataEntrada": "03/06/2027 00:00",
       "dataExec": "2027-06-02"
+    },
+    "abb93b6f-ef09-4147-b1f2-174c9bc9c80b": {
+      "dataVisita": "05/09/2025 12:00",
+      "dataEntrada": "05/01/2026 12:00",
+      "dataExec": "2026-05-27"
     },
     "8ad097b9-766a-4959-8bef-b23c9cdd182b": {
       "dataVisita": "21/05/2025 15:30",
@@ -2931,7 +2936,7 @@
     "0f32c116-96c2-4026-a17e-e0a92feacf7d": {
       "dataVisita": "02/03/2026 13:00",
       "dataEntrada": "06/04/2026 13:00",
-      "dataExec": "2026-05-14"
+      "dataExec": ""
     },
     "8d7b2b2e-434d-4a19-a02c-92a006105508": {
       "dataVisita": "11/09/2025 14:00",
@@ -3263,6 +3268,11 @@
       "dataEntrada": "",
       "dataExec": "2026-07-20"
     },
+    "868bd673-f324-4a40-8b5d-246ab26a7567": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2026-05-26"
+    },
     "2be08c42-3d40-4aba-96bd-f712d4a947b7": {
       "dataVisita": "09/01/2025 13:00",
       "dataEntrada": "",
@@ -3326,7 +3336,7 @@
     "a8b20644-b006-431a-99bf-da2d4397afa8": {
       "dataVisita": "06/11/2025 13:00",
       "dataEntrada": "05/01/2026 13:00",
-      "dataExec": "2026-05-18"
+      "dataExec": "2026-06-01"
     },
     "f49352d0-2db0-4ef3-9f13-d85deae328f9": {
       "dataVisita": "",
@@ -3365,6 +3375,7 @@
       "a8eff05f",
       "a9cf011c",
       "ab17feda",
+      "abb93b6f",
       "ad2c9413",
       "af39af57",
       "bb189051",
@@ -3379,7 +3390,7 @@
       "dec2480f",
       "f6dc0a36"
     ],
-    "zumbi_n": 37,
+    "zumbi_n": 38,
     "orfas_ids": [
       "0b692354",
       "19f65b84",
@@ -3402,6 +3413,7 @@
       "76b4d8a7",
       "7f45fa66",
       "83767b24",
+      "868bd673",
       "88ec8531",
       "93d0efc3",
       "98fac762",
@@ -3423,23 +3435,23 @@
       "f49352d0",
       "fd444f0c"
     ],
-    "orfas_n": 41,
+    "orfas_n": 42,
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-19T12:01:16.024000+00:00",
-    "total_fluxo": 193,
-    "com_kira": 125,
+    "total_fluxo": 194,
+    "com_kira": 124,
     "saudavel": 71,
-    "saudavel_pct_no_monitorado": 56.8,
-    "atencao": 54,
-    "sem_kira": 68,
+    "saudavel_pct_no_monitorado": 57.3,
+    "atencao": 53,
+    "sem_kira": 70,
     "clima_dist": {
       "Positivo": 24,
       "Neutro": 48,
       "Tenso": 56,
       "Crítico": 5,
-      "?": 80
+      "?": 82
     },
     "obras_atencao": [
       {
@@ -4060,7 +4072,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 6,
+        "dias_desde_resumo": 7,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está passando por um **reagendamento de manutenção**, com a data original sendo cancelada pela cliente, que propôs o dia 25/05, porém a equipe só tem disponibilidade a partir de **10/08**. Aguarda-se a confirmação da cliente sobre aceitação da nova data.\n\n---\n\n**🟡 Clima: Neutro**\n*(reagendamento sem conflito declarado, mas com incerteza)*\n\n---\n\n**📋 Principais Pendências:**\n- [ ] Confirmação da cliente sobre a data **10/08**\n- [ ] Retorno de Luiza após alinhar com a cliente",
@@ -4081,7 +4093,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 6,
+        "dias_desde_resumo": 7,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se em fase de agendamento de acabamento do piso, com data pré-agendada para **06/07**, após confirmação da cor pelo cliente e alinhamento entre equipe (Mayara) e cliente (Leticia).\n\nA comunicação segue de forma organizada, porém com histórico de **demoras nas respostas do cliente**, e há uma solicitação recente de **vistoria no apartamento** ainda pendente de resposta/confirmação.\n\n---\n\n🟡 **Clima: Neutro-Positivo**\n\n📋 **Principais Pendências:**\n- Resposta à solicitação de **vistoria no apartamento**\n- Confirmação definitiva do início dos traba",
@@ -4144,7 +4156,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 6,
+        "dias_desde_resumo": 7,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto foi **concluído com sucesso**, com o cliente confirmando aprovação do serviço após visita de inspeção e elogiando especialmente a postura profissional e cuidado da equipe executora.\n\n---\n\n**🟢 Clima: Positivo**\n\n---\n\n**📋 Principais Pendências:**\n\n- ❓ **Retirada dos baldes vazios** — cliente perguntou sobre o descarte, mas não houve confirmação definitiva da equipe\n- ❓ **Agendamento pendente** — equipe mencionou querer agendar algo (mensagem cortada), sem confirmação de data",
@@ -4302,194 +4314,6 @@
             "iso": "2026-04-23",
             "texto": "Cliente pergunta se é possível remarcar para segunda e terça (28–29/04)",
             "classe": "critico"
-          }
-        ]
-      },
-      {
-        "id": "0f32c116-96c2-4026-a17e-e0a92feacf7d",
-        "cliente": "GN DERMATO LTDA",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "CONFIRMAÇÕES OP 1",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 4,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 26,
-        "alertas": [
-          "QUALIDADE — Piso não aprovado pelo cliente após múltiplas vistorias (17/04, 20/04, 23/04): falhas em rodapés invertidos, juntas de dilatação, áreas sem produto e pontos sujos em marcenaria",
-          "GESTÃO DE EQUIPE — Cliente exige presença de coordenador responsável em campo; equipe atual demonstrou, segundo o cliente, falta de visão crítica para entrega do serviço",
-          "PRAZO CRÍTICO — Cliente registrou em 22/04 que não pode mais perder prazo; atraso na liberação do verniz impacta diretamente o cronograma geral da obra",
-          "IMAGEM — Respingos de Monofloor em portas e marcenarias não removidos podem gerar custo de reparação e conflito contratual"
-        ],
-        "pendencias": [
-          "Aprovação do piso pendente: cliente vistoriou em 23/04 às 01h51 e não aprovou — requer presença de coordenador responsável na próxima vistoria, ainda sem data confirmada",
-          "Limpeza de respingos de Monofloor em portas e marcenarias: apontado pelo cliente em 23/04, sem confirmação de execução pela equipe",
-          "Remoção de todas as fitas crepe e entrega com lixamento completo: cliente identificou fitas escondendo pontos de acabamento ruim; equipe ainda não confirmou resolução",
-          "Designação de coordenador/responsável técnico para acompanhar a obra em campo: exigência explícita do cliente em 23/04, sem resposta da Monofloor até o fim da conversa"
-        ],
-        "resumo_exec": "A obra iniciou em 08/04 após duas visitas técnicas e ajustes no contrapiso, com entrada reajustada de 06/04 para 08/04 por prazo de secagem. A execução do revestimento avançou, mas a aprovação para aplicação do verniz foi bloqueada pelo cliente em três vistorias consecutivas (17/04, 20/04 e 23/04) devido a falhas de acabamento nos rodapés, juntas de dilatação, áreas sem produto e pontos sujos em marcenaria. Em 23/04, o cliente escalou o tom de forma clara, exigindo coordenador responsável em campo, entrega com lixamento completo e remoção de fitas crepe que estavam mascarando pontos problemáti",
-        "clima_desc": "O cliente demonstrou cooperação ao longo da maior parte do atendimento, mas a partir de 22/04 o tom escalou para cobrança direta por urgência e qualidade. A última mensagem registra insatisfação clara com a execução e ausência de supervisão técnica em campo.",
-        "periodo": "18/02 a 23/04/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 99,
-        "eventos": [
-          {
-            "data": "18/02",
-            "iso": "2026-02-18",
-            "texto": "Cliente Daniel solicita visita para avaliação do contrapiso",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Visita agendada para 02/03 às 10h com o colaborador Nathan",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Visita realizada; Monofloor identifica regularizações necessárias antes da aplicação",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Monofloor envia relatório com observações técnicas e confirma pré-agendamento de entrada para 06/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "Cliente solicita antecipação da entrada para 25/03 alegando risco de 10 dias de obra parada",
-            "classe": "critico"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Monofloor informa indisponibilidade para 25/03 e mantém data de 06/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Cliente insiste na antecipação; Monofloor confirma que não há encaixe disponível",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/03",
-            "iso": "2026-03-17",
-            "texto": "Cliente volta a solicitar antecipação e informa possibilidade de trabalho em finais de semana 24h",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/03",
-            "iso": "2026-03-26",
-            "texto": "Monofloor agenda visita pré-entrada para 30/03 às 12h",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/03",
-            "iso": "2026-03-26",
-            "texto": "Cliente não pode receber em 30/03 e pede reagendamento para 01/04; Monofloor sinaliza possível postergação da entrada, cliente rejeita e mantém visita em 30/03 com funcionário seu",
-            "classe": "critico"
-          },
-          {
-            "data": "30/03",
-            "iso": "2026-03-30",
-            "texto": "Visita realizada por Nathan; identificadas irregularidades no contrapiso (pequenos buracos)",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Cliente informa que Rafael Kobashi mobilizará equipe para tratamento com Planiprep SC da Mapei",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Monofloor envia relatório da visita de 30/03 e informa que entrada é reajustada para 08/04 devido ao prazo mínimo de 7 dias de secagem",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Monofloor estima 15 dias úteis de execução mais 72h de cura do verniz",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Monofloor solicita liberação de 5 colaboradores na portaria (Josias, Rodolfo, Sidnei, Gilmar e José Manoel)",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Confirmada chegada da equipe para 08/04 às 9h",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Equipe inicia aplicação em obra",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Monofloor informa que não é possível revestir sobre perfis plásticos; junta fica aparente com acordo do cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "Monofloor solicita visita de aprovação para liberação do verniz; agendada para 17/04 às 9h",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Visita realizada; cliente não libera verniz e aponta pontos de revisão; promete enviar relatório",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Monofloor informa que regularizações já foram feitas e agenda nova visita para 20/04 às 9h",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/04",
-            "iso": "2026-04-18",
-            "texto": "Cliente confirma disponibilidade apenas na quarta-feira (23/04) às 9h",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/04",
-            "iso": "2026-04-20",
-            "texto": "Cliente realiza vistoria e não libera verniz; aponta falhas em rodapés invertidos, irregularidades na superfície, pontos pretos, acabamento nas juntas de dilatação e áreas sem produto nos recuos de marcenaria",
-            "classe": "critico"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Cliente cobra urgência máxima e registra insatisfação com ritmo e qualidade da execução",
-            "classe": "critico"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Pedro (Operações) agenda nova visita para 23/04 às 9h; cliente confirma presença às 11h30",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/04",
-            "iso": "2026-04-23",
-            "texto": "Cliente vistoria o piso à madrugada e não aprova; registra ausência de coordenador em campo, fitas crepe escondendo acabamentos ruins, sujeira de Monofloor em portas e marcenarias, e exige acompanhamento de responsável na próxima vistoria",
-            "classe": "neutro"
           }
         ]
       },
@@ -6520,7 +6344,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 13,
+        "dias_desde_resumo": 14,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\n**Estado:** As informações disponíveis na conversa são **insuficientes** para gerar um resumo consistente — a mensagem está truncada e não há conteúdo substantivo além da apresentação inicial da equipe de contratos.\n\n---\n\n**Clima:** 🟡 **Neutro**\n*(apenas saudação formal registrada)*\n\n**Principais Pendências:** ❓ Não identificáveis com os dados fornecidos.\n\n---\n\n> ⚠️ **Recomendação:** Cole o conteúdo completo da conversa para que eu possa gerar uma análise precisa das pendências, prazos e riscos do projeto.",
@@ -6642,7 +6466,7 @@
         "consultor_full": "Wesley Matheus de Carvalho",
         "cidade": "SÃO PAULO",
         "fase": "CLIENTE FINALIZADO",
-        "status": "em_execucao",
+        "status": "planejamento",
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
@@ -6688,7 +6512,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 11,
+        "dias_desde_resumo": 12,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se na fase inicial de onboarding, com contrato assinado, cor **Everest** selecionada e instalação prevista para **01/07**, porém ainda há necessidade de alinhamento técnico sobre o contrapiso e organização dos participantes do grupo.\n\n**Clima:** 🟡 **Positivo** — cliente engajado e entusiasmado com o produto, inclusive indicando para outra obra.\n\n---\n\n**Principais Pendências:**\n- 📦 Envio do kit de amostras para o Studio Scatena (Rua Fernão Dias, 206)\n- 🔧 Agendamento de **visita técnica** solicitada pelo cliente\n- 📋 Alinhamento sobre preparo do ",
@@ -6709,7 +6533,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 28,
+        "dias_desde_resumo": 29,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\n**Status:** Cliente aguarda confirmação de agendamento do serviço, com proposta de início a partir de **20/05**, após conclusão do deck prevista para **15/05**.\n\n**Clima:** 🟡 **Neutro** *(com leve tensão pela ausência de resposta da equipe)*\n\n---\n\n### 📋 Principais Pendências\n\n| # | Pendência | Responsável |\n|---|-----------|-------------|\n| 1 | Confirmar disponibilidade para início em **20/05** | Monofloor |\n| 2 | Alinhar data oficial de agendamento do serviço | Monofloor |\n\n> ⚠️ **Atenção:** Cliente já enviou múltiplas mensagens sem resposta confirmada — risco ",
@@ -8311,7 +8135,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 31,
+        "dias_desde_resumo": 32,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor - Bela Cintra\n\nO projeto está em andamento com a execução do piso (hard) já realizada, porém enfrenta um imprevisto de vazamento que exigiu reparo e gerou a necessidade de correção no revestimento da parede. A equipe está avaliando o próximo passo considerando o material utilizado (Top Cem) e o tempo de secagem necessário.\n\n---\n\n**🟡 Clima: Neutro/Tenso**\n\n**Principais Pendências:**\n- ✅ ~~Dados e acesso do aplicador Josias~~ *(resolvido)*\n- 🔴 Correção do revestimento da parede afetada pelo vazamento\n- 🔴 Confirmação do prazo de secagem e agendamento do retorno\n- 🔴 ",
@@ -8558,6 +8382,14 @@
         "consultor": "Wesley",
         "cidade": "SÃO PAULO",
         "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "tem_grupo": false
+      },
+      {
+        "id": "abb93b6f-ef09-4147-b1f2-174c9bc9c80b",
+        "cliente": "GUILHERME HAIDAR BERJEAUT",
+        "consultor": "Wesley",
+        "cidade": "SÃO PAULO / SP",
+        "fase": "CLIENTE FINALIZADO",
         "tem_grupo": false
       },
       {
@@ -8837,6 +8669,14 @@
         "cliente": "VALDIRENE SOARES SECATO",
         "consultor": "—",
         "cidade": "Itaim Bibi",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
+        "id": "868bd673-f324-4a40-8b5d-246ab26a7567",
+        "cliente": "AMOSTRAS CLINGER - JOVELINA CRISTINA DE OLIVEIRA",
+        "consultor": "—",
+        "cidade": "",
         "fase": "CONTRATO",
         "tem_grupo": false
       },
@@ -9153,17 +8993,17 @@
       "pausadas": 1
     },
     "wesley": {
-      "n": 78,
-      "mediana": 214,
+      "n": 79,
+      "mediana": 211,
       "n180": 47,
       "n270": 22,
-      "zumbi": 17,
-      "reparo": 9,
+      "zumbi": 18,
+      "reparo": 10,
       "pausadas": 2
     },
-    "total_ativas": 214,
+    "total_ativas": 216,
     "n_180_total": 114,
-    "concentracao_pct": 74.3,
+    "concentracao_pct": 74.1,
     "concentracao_180_pct": 86.0,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
