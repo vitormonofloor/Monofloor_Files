@@ -105,7 +105,6 @@ header.top {
 .aside-col::-webkit-scrollbar { width: 3px; }
 .aside-col::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-/* Aside panels — one per section, stacked but only active visible */
 .aside-panel {
   padding: 28px 24px;
   opacity: 0; transform: translateY(12px);
@@ -118,7 +117,6 @@ header.top {
   position: relative; pointer-events: auto; visibility: visible;
 }
 
-/* Aside building blocks */
 .aside-label {
   font-family: var(--mono); font-size: 8.5px; font-weight: 700;
   color: var(--accent); letter-spacing: .16em; text-transform: uppercase;
@@ -134,9 +132,7 @@ header.top {
   background: var(--card-2); border: 1px solid var(--border); border-radius: 6px;
   font-size: 12px; color: #6b6156; line-height: 1.65;
 }
-.aside-card-title {
-  font-size: 11px; font-weight: 600; color: var(--text-2); margin-bottom: 6px;
-}
+.aside-card-title { font-size: 11px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; }
 .aside-card em { font-style: normal; color: var(--accent); font-weight: 600; }
 .aside-card code {
   font-family: var(--mono); font-size: 10px; background: var(--card-3);
@@ -199,35 +195,15 @@ header.top {
 .manchete-text strong { color: var(--text-2); font-weight: 600; }
 .manchete-text .neg { color: var(--red); font-weight: 600; }
 
-/* ====== PIPELINE — board game trail ====== */
+/* ====== PIPELINE ====== */
 .pipeline { margin-bottom: 28px; }
-.pipeline-header {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin-bottom: 18px;
-}
-.pipeline-title {
-  font-family: var(--mono); font-size: 9px; font-weight: 700;
-  color: var(--muted); letter-spacing: .14em; text-transform: uppercase;
-}
+.pipeline-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; }
+.pipeline-title { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
 .pipeline-legend { font-size: 10px; color: var(--muted-2); font-style: italic; }
-
-/* Trail — single SVG cascade */
-.trail-svg {
-  width: 100%; height: auto; overflow: visible;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-}
-.trail-path {
-  fill: none; stroke: var(--border-2); stroke-width: 2.5;
-  stroke-dasharray: 8 6; stroke-linecap: round;
-}
-.trail-path-red {
-  fill: none; stroke: rgba(196,90,90,.4); stroke-width: 2.5;
-  stroke-dasharray: 6 5; stroke-linecap: round;
-}
-.trail-node-circle {
-  stroke-width: 2.5; cursor: default;
-  transition: transform .2s, filter .2s;
-}
+.trail-svg { width: 100%; height: auto; overflow: visible; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.trail-path { fill: none; stroke: var(--border-2); stroke-width: 2.5; stroke-dasharray: 8 6; stroke-linecap: round; }
+.trail-path-red { fill: none; stroke: rgba(196,90,90,.4); stroke-width: 2.5; stroke-dasharray: 6 5; stroke-linecap: round; }
+.trail-node-circle { stroke-width: 2.5; cursor: default; transition: transform .2s, filter .2s; }
 .trail-node-circle:hover { filter: brightness(1.06) drop-shadow(0 2px 6px rgba(0,0,0,.08)); }
 .trail-num { font-weight: 700; fill: var(--text-2); }
 .trail-phase { font-weight: 700; font-size: 7px; letter-spacing: 1.2px; text-transform: uppercase; }
@@ -240,136 +216,65 @@ header.top {
 .trail-tag-stem { stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 3 3; }
 .trail-gargalo-ring { fill: none; stroke: rgba(196,90,90,.2); stroke-width: 4; }
 
-/* ====== SIGNALS (dynamic metrics only Timeline knows) ====== */
-.signals {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
-  margin-bottom: 28px;
-}
+/* ====== SIGNALS ====== */
+.signals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 28px; }
 @media(max-width:900px) { .signals { grid-template-columns: repeat(2, 1fr); } }
-.signal {
-  background: var(--card); border: 1px solid var(--border);
-  padding: 14px 16px; transition: all .15s;
-}
+.signal { background: var(--card); border: 1px solid var(--border); padding: 14px 16px; transition: all .15s; }
 .signal:first-child { border-radius: 6px 0 0 6px; }
 .signal:last-child { border-radius: 0 6px 6px 0; }
 .signal:hover { background: var(--card-2); }
-.signal-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 24px; height: 24px; border-radius: 5px; margin-bottom: 8px;
-  font-size: 11px; font-weight: 700;
-}
+.signal-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 5px; margin-bottom: 8px; font-size: 11px; font-weight: 700; }
 .signal-icon.up { background: rgba(196,90,90,.1); color: var(--red); }
 .signal-icon.down { background: rgba(61,138,90,.1); color: var(--green); }
 .signal-icon.warn { background: rgba(184,154,74,.1); color: var(--amber); }
 .signal-icon.info { background: rgba(74,122,184,.1); color: var(--blue); }
-.signal-label {
-  font-size: 10px; color: var(--muted); text-transform: uppercase;
-  letter-spacing: .08em; font-weight: 500; margin-bottom: 4px;
-}
-.signal-value {
-  font-family: var(--mono); font-size: 20px; font-weight: 700;
-  color: var(--text-2); line-height: 1; letter-spacing: -.02em;
-}
+.signal-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 500; margin-bottom: 4px; }
+.signal-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text-2); line-height: 1; letter-spacing: -.02em; }
 .signal-value small { font-size: 11px; color: var(--muted); font-weight: 400; }
 .signal-sub { font-size: 10px; color: var(--muted-2); margin-top: 3px; line-height: 1.4; }
 
-/* ====== EIXOS (radar left sticky, cards right) ====== */
-.eixos-layout {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;
-}
+/* ====== EIXOS ====== */
+.eixos-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
 @media(max-width:900px) { .eixos-layout { grid-template-columns: 1fr; } }
-
-/* Radar chart — left column, sticky, translucent like cards */
-.eixos-radar {
-  background: rgba(255,255,255,.45); border: 1px solid rgba(224,216,204,.5); border-radius: 8px;
-  padding: 24px 12px; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; position: sticky; top: 80px; min-height: 420px;
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-}
+.eixos-radar { background: rgba(255,255,255,.45); border: 1px solid rgba(224,216,204,.5); border-radius: 8px; padding: 24px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: sticky; top: 80px; min-height: 420px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .eixos-radar svg { width: 100%; max-width: 360px; height: auto; }
 .radar-grid { fill: none; stroke: var(--border); stroke-width: 0.5; }
 .radar-grid-mid { fill: none; stroke: var(--border); stroke-width: 0.3; stroke-dasharray: 3,3; }
 .radar-axis { stroke: var(--border); stroke-width: 0.5; }
-.radar-shape {
-  fill: rgba(184,160,128,.12); stroke: var(--accent); stroke-width: 2;
-  stroke-linejoin: round; transition: all .6s cubic-bezier(.22,.61,.36,1);
-}
+.radar-shape { fill: rgba(184,160,128,.12); stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; transition: all .6s cubic-bezier(.22,.61,.36,1); }
 .radar-dot { fill: var(--accent); transition: r .3s ease, fill .3s ease, filter .3s ease; }
 .radar-dot:hover { r: 6; fill: var(--accent-warm); }
-.radar-dot.pulse { filter: drop-shadow(0 0 8px rgba(184,160,128,.7)); }
 .radar-label { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .radar-label-val { font-family: var(--mono); font-size: 11px; font-weight: 600; }
-.eixos-radar-legenda {
-  margin-top: 14px; font-size: 10px; color: var(--muted); text-align: center;
-  line-height: 1.6; font-style: italic;
-}
-
-/* Detail cards — stacked vertically, hidden by default for reveal animation */
 .eixos-cards { display: flex; flex-direction: column; gap: 12px; }
-.eixo-card {
-  background: rgba(255,255,255,.55); border: 1px solid rgba(224,216,204,.6); border-radius: 8px;
-  padding: 18px 20px; display: grid; grid-template-columns: 1fr 200px; gap: 16px;
-  opacity: 0; transform: translateY(20px);
-  transition: opacity .7s ease, transform .7s cubic-bezier(.22,.61,.36,1);
-  align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-}
+.eixo-card { background: rgba(255,255,255,.55); border: 1px solid rgba(224,216,204,.6); border-radius: 8px; padding: 18px 20px; display: grid; grid-template-columns: 1fr 200px; gap: 16px; opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,.61,.36,1); align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .eixo-card:hover { background: rgba(255,255,255,.75); box-shadow: 0 3px 12px rgba(42,37,32,.05); }
-.eixo-left {}
 .eixo-top-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
-.eixo-titulo {
-  font-family: var(--mono); font-size: 9px; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase;
-}
+.eixo-titulo { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .eixo-titulo.tempo { color: var(--blue); }
 .eixo-titulo.fluxo { color: var(--green); }
 .eixo-titulo.qualidade { color: var(--amber); }
 .eixo-titulo.risco-t { color: var(--red); }
-.eixo-num {
-  font-family: var(--mono); font-size: 28px; font-weight: 700;
-  color: var(--text-2); line-height: 1; letter-spacing: -.02em;
-}
+.eixo-num { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--text-2); line-height: 1; letter-spacing: -.02em; }
 .eixo-num .unit { font-size: 12px; color: var(--muted); margin-left: 2px; font-weight: 400; }
 .eixo-desc { font-size: 12px; color: #6b6156; line-height: 1.5; margin-top: 4px; }
 .eixo-desc em { font-style: normal; font-weight: 600; color: var(--text-2); }
-
-/* Mini chart area (SVG inline in each card) */
 .eixo-chart { display: flex; flex-direction: column; align-items: flex-end; }
 .eixo-chart svg { width: 200px; height: 60px; }
-.eixo-chart-label {
-  font-family: var(--mono); font-size: 8px; color: var(--muted-2);
-  letter-spacing: .06em; margin-top: 4px; text-align: right;
-}
-/* Bar chart mini */
+.eixo-chart-label { font-family: var(--mono); font-size: 8px; color: var(--muted-2); letter-spacing: .06em; margin-top: 4px; text-align: right; }
 .eixo-bars { display: flex; align-items: flex-end; gap: 3px; height: 50px; }
-.eixo-bar {
-  width: 18px; border-radius: 2px 2px 0 0; transition: height .6s ease-out;
-  position: relative; cursor: default;
-}
-.eixo-bar::after {
-  content: attr(data-label); position: absolute; bottom: -14px; left: 50%;
-  transform: translateX(-50%); font-family: var(--mono); font-size: 7px;
-  color: var(--muted-3); white-space: nowrap;
-}
-@media(max-width:900px) {
-  .eixo-card { grid-template-columns: 1fr; }
-  .eixo-chart { align-items: flex-start; }
-}
-.eixo-detalhe { font-family: var(--mono); font-size: 9px; color: var(--muted-2); margin-top: 4px; }
+.eixo-bar { width: 18px; border-radius: 2px 2px 0 0; transition: height .6s ease-out; position: relative; cursor: default; }
+.eixo-bar::after { content: attr(data-label); position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 7px; color: var(--muted-3); white-space: nowrap; }
+@media(max-width:900px) { .eixo-card { grid-template-columns: 1fr; } .eixo-chart { align-items: flex-start; } }
 
 /* ====== TABLES ====== */
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 5px; padding: 20px; }
 table.t { width: 100%; border-collapse: collapse; font-size: 12px; }
-table.t thead th {
-  background: var(--card-2); color: var(--muted); font-size: 10px;
-  text-transform: uppercase; letter-spacing: .07em;
-  padding: 8px 10px; text-align: left; font-weight: 500;
-  border-bottom: 1px solid var(--border-2); white-space: nowrap;
-}
+table.t thead th { background: var(--card-2); color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .07em; padding: 8px 10px; text-align: left; font-weight: 500; border-bottom: 1px solid var(--border-2); white-space: nowrap; }
 table.t tbody td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
 table.t tbody tr:last-child td { border-bottom: none; }
 table.t tbody tr:hover { background: rgba(42,37,32,.03); cursor: pointer; }
 table.t .cli { color: var(--text); font-weight: 500; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
 .pill { display: inline-block; padding: 2px 7px; border-radius: 3px; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
 .pill.nova { background: rgba(74,122,184,.08); color: var(--blue); border: 1px solid rgba(74,122,184,.2); }
 .pill.retorno { background: rgba(138,92,176,.08); color: var(--purple); border: 1px solid rgba(138,92,176,.2); }
@@ -382,10 +287,7 @@ table.t .cli { color: var(--text); font-weight: 500; max-width: 240px; overflow:
 /* ====== RISCO ====== */
 .risco-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
 @media(max-width:900px) { .risco-grid { grid-template-columns: repeat(2,1fr); } }
-.risco-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-  padding: 16px; transition: all .15s; border-left: 4px solid var(--muted-3);
-}
+.risco-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; transition: all .15s; border-left: 4px solid var(--muted-3); }
 .risco-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(42,37,32,.06); }
 .risco-card.critico { border-left-color: var(--scarlet); }
 .risco-card.alto { border-left-color: var(--red); }
@@ -400,1210 +302,638 @@ table.t .cli { color: var(--text); font-weight: 500; max-width: 240px; overflow:
 .risco-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
 .risco-pct { font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight: 600; }
 
-/* ====== CROSS — Achados visuais ====== */
-
-/* Top row: 3 discovery cards */
-.cross-discoveries {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
-  margin-bottom: 16px;
-}
+/* ====== CROSS ====== */
+.cross-discoveries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
 @media(max-width:900px) { .cross-discoveries { grid-template-columns: 1fr; } }
-
-.discovery {
-  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  padding: 22px 20px; position: relative; overflow: hidden;
-  transition: transform .15s, box-shadow .15s;
-}
+.discovery { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 22px 20px; position: relative; overflow: hidden; transition: transform .15s, box-shadow .15s; }
 .discovery:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(42,37,32,.07); }
-.discovery-tag {
-  font-family: var(--mono); font-size: 8px; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 6px;
-}
-.discovery-tag .dtag {
-  padding: 2px 7px; border-radius: 3px; font-size: 8px;
-}
+.discovery-tag { font-family: var(--mono); font-size: 8px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.discovery-tag .dtag { padding: 2px 7px; border-radius: 3px; font-size: 8px; }
 .discovery-tag .dtag.crit { background: rgba(196,90,90,.1); color: var(--red); }
 .discovery-tag .dtag.warn { background: rgba(184,154,74,.1); color: var(--amber); }
-
-/* Discovery: visual center — the thing you can't miss */
 .discovery-visual { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
-
-/* Big ring / donut for percentages */
-.disc-ring {
-  width: 72px; height: 72px; flex-shrink: 0; position: relative;
-}
+.disc-ring { width: 72px; height: 72px; flex-shrink: 0; position: relative; }
 .disc-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .disc-ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
-.disc-ring-fill { fill: none; stroke-width: 6; stroke-linecap: round;
-  transition: stroke-dashoffset .8s cubic-bezier(.22,.61,.36,1); }
-.disc-ring-center {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-  font-family: var(--mono); font-weight: 700; line-height: 1;
-  display: flex; flex-direction: column; align-items: center;
-}
+.disc-ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset .8s cubic-bezier(.22,.61,.36,1); }
+.disc-ring-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: var(--mono); font-weight: 700; line-height: 1; display: flex; flex-direction: column; align-items: center; }
 .disc-ring-num { font-size: 20px; color: var(--text-2); }
 .disc-ring-unit { font-size: 8px; color: var(--muted); letter-spacing: .08em; margin-top: 1px; }
-
-/* Comparison bars (with vs without) */
 .disc-compare { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 .disc-compare-row { display: flex; align-items: center; gap: 10px; }
 .disc-compare-label { font-size: 10px; color: var(--muted); width: 72px; text-align: right; flex-shrink: 0; }
 .disc-compare-bar-wrap { flex: 1; height: 22px; background: var(--card-3); border-radius: 4px; overflow: hidden; position: relative; }
-.disc-compare-bar {
-  height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px;
-  font-family: var(--mono); font-size: 10px; font-weight: 700; color: #fff;
-  transition: width .8s cubic-bezier(.22,.61,.36,1);
-}
-.disc-compare-delta {
-  font-family: var(--mono); font-size: 11px; font-weight: 700;
-  flex-shrink: 0; width: 48px; text-align: center;
-}
-
-/* Bubble proportion */
+.disc-compare-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-family: var(--mono); font-size: 10px; font-weight: 700; color: #fff; transition: width .8s cubic-bezier(.22,.61,.36,1); }
+.disc-compare-delta { font-family: var(--mono); font-size: 11px; font-weight: 700; flex-shrink: 0; width: 48px; text-align: center; }
 .disc-bubbles { display: flex; align-items: flex-end; gap: 12px; justify-content: center; }
-.disc-bubble {
-  border-radius: 50%; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  transition: transform .6s cubic-bezier(.22,.61,.36,1);
-}
+.disc-bubble { border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .6s cubic-bezier(.22,.61,.36,1); }
 .disc-bubble-num { font-family: var(--mono); font-weight: 700; line-height: 1; }
 .disc-bubble-label { font-size: 7px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; margin-top: 2px; }
-
 .discovery-text { font-size: 12px; color: #6b6156; line-height: 1.55; }
 .discovery-text strong { color: var(--text-2); font-weight: 600; }
 .discovery-text .neg { color: var(--red); font-weight: 600; }
-.discovery-text .accent { color: var(--accent-warm); font-weight: 600; }
 
-/* Bottom row: 2 detail blocks */
 .cross-details { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
 @media(max-width:800px) { .cross-details { grid-template-columns: 1fr; } }
-
-.cross-block {
-  background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px;
-}
-.cross-block-head {
-  font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--accent);
-  letter-spacing: .16em; text-transform: uppercase; margin-bottom: 14px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-}
-
-/* Horizontal bar rows inside cross-block */
+.cross-block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+.cross-block-head { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--accent); letter-spacing: .16em; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 .hbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .hbar-row:last-child { margin-bottom: 0; }
 .hbar-label { font-size: 11px; color: var(--text); width: 110px; flex-shrink: 0; }
-.hbar-label small { color: var(--muted); font-size: 10px; }
 .hbar-track { flex: 1; height: 18px; background: var(--card-3); border-radius: 3px; overflow: hidden; position: relative; }
-.hbar-fill {
-  height: 100%; border-radius: 3px; min-width: 2px;
-  transition: width .7s cubic-bezier(.22,.61,.36,1);
-  display: flex; align-items: center; padding-left: 6px;
-  font-family: var(--mono); font-size: 9px; font-weight: 600; color: #fff;
-}
-.hbar-value {
-  font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text-2);
-  width: 36px; text-align: right; flex-shrink: 0;
-}
-
-/* Benchmark visual bars */
+.hbar-fill { height: 100%; border-radius: 3px; min-width: 2px; transition: width .7s cubic-bezier(.22,.61,.36,1); display: flex; align-items: center; padding-left: 6px; font-family: var(--mono); font-size: 9px; font-weight: 600; color: #fff; }
+.hbar-value { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text-2); width: 36px; text-align: right; flex-shrink: 0; }
 .bench-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .bench-row:last-child { margin-bottom: 0; }
-.bench-faixa {
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
-  width: 28px; text-align: center; flex-shrink: 0;
-  padding: 2px 0; border-radius: 3px; color: #fff;
-}
+.bench-faixa { font-family: var(--mono); font-size: 10px; font-weight: 600; width: 28px; text-align: center; flex-shrink: 0; padding: 2px 0; border-radius: 3px; color: #fff; }
 .bench-bar-wrap { flex: 1; height: 14px; background: var(--card-3); border-radius: 3px; overflow: hidden; position: relative; }
-.bench-bar {
-  height: 100%; border-radius: 3px;
-  transition: width .7s cubic-bezier(.22,.61,.36,1);
-}
-.bench-bar-marker {
-  position: absolute; top: -2px; bottom: -2px; width: 2px;
-  border-radius: 1px; z-index: 2;
-}
+.bench-bar { height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.22,.61,.36,1); }
 .bench-val { font-family: var(--mono); font-size: 10px; color: var(--text); font-weight: 600; width: 40px; flex-shrink: 0; }
 .bench-dev { font-family: var(--mono); font-size: 9px; font-weight: 600; width: 48px; flex-shrink: 0; text-align: right; }
 
-/* Insight — stronger */
-.insight {
-  padding: 18px 20px; margin-top: 0;
-  background: linear-gradient(135deg, #fdfaf4, #fef8ee); border: 1px solid #e8d8b8;
-  border-left: 5px solid var(--accent); border-radius: 8px;
-  font-size: 12.5px; line-height: 1.7; color: var(--text);
-}
+.insight { padding: 18px 20px; margin-top: 0; background: linear-gradient(135deg, #fdfaf4, #fef8ee); border: 1px solid #e8d8b8; border-left: 5px solid var(--accent); border-radius: 8px; font-size: 12.5px; line-height: 1.7; color: var(--text); }
 .insight strong { color: var(--text-2); font-family: var(--mono); font-weight: 600; background: rgba(184,160,128,.18); padding: 1px 5px; border-radius: 3px; }
-.insight-title {
-  font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--accent);
-  letter-spacing: .16em; text-transform: uppercase; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 6px;
-}
-.insight-title::before {
-  content: ''; display: inline-block; width: 6px; height: 6px;
-  border-radius: 50%; background: var(--accent);
-}
-
+.insight-title { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--accent); letter-spacing: .16em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.insight-title::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 .main-footer { border-top: 1px solid var(--border); padding: 20px 0; margin-top: 40px; color: var(--muted); font-size: 11px; }
+
+.load-error { max-width: 600px; margin: 80px auto; padding: 24px; background: #fef5f2; border: 1px solid rgba(196,90,90,.3); border-radius: 8px; text-align: center; color: var(--red); font-size: 14px; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="top">
   <div class="top-row">
-    <div class="top-brand">
-      <div class="top-brand-mark">M</div>
-      <div class="top-brand-text">Timelines</div>
-    </div>
+    <div class="top-brand"><div class="top-brand-mark">M</div><div class="top-brand-text">Timelines</div></div>
     <div class="top-sep"></div>
     <nav class="top-nav">
-      <a href="#visao-geral" class="active">Visao geral</a>
+      <a href="#visao-geral" class="active">Visao geral <span class="badge" id="navBadge">--</span></a>
       <a href="#eixos">Eixos</a>
-      <a href="#atencao" class="has-alert">Atencao <span class="badge">5</span></a>
+      <a href="#atencao" class="has-alert">Atencao <span class="badge" id="navAlertBadge">--</span></a>
       <a href="#risco">Risco</a>
       <a href="#cross">Cross-obra</a>
     </nav>
     <div class="top-right">
-      <div class="top-stamp">
-        <span class="dot"></span>
-        <span class="mono">19 mai 2026</span> &middot; 214 obras
-      </div>
-      <div class="top-links">
-        <a href="#">Central</a>
-        <a href="#">Orion</a>
-      </div>
+      <div class="top-stamp"><span class="dot"></span> Atualizado <span class="mono" id="headerDate">--</span></div>
+      <div class="top-links"><a href="dashboard.html">Central</a><a href="lab-hermeneuta/index.html">Orion</a></div>
     </div>
   </div>
 </header>
 
-<!-- LAYOUT -->
 <div class="layout">
-
-<!-- ========== MAIN ========== -->
 <main class="main-col">
 
-  <!-- VISAO GERAL -->
   <section class="section" id="visao-geral">
-    <div class="manchete zona-vermelha">
-      <span class="manchete-tag">Atencao</span>
-      <span class="manchete-text">
-        <strong>88 obras em planejamento</strong> (41% do portfolio) — maior gargalo do fluxo.
-        <span class="neg">40 obras em risco alto ou critico</span> (14 criticas).
-        Idade media: <strong>179 dias</strong>.
-      </span>
+    <div class="manchete zona-vermelha" id="manchete">
+      <div class="manchete-tag">Zona de atencao</div>
+      <div class="manchete-text" id="mancheteText">Carregando dados...</div>
     </div>
-    <!-- Pipeline: where are the obras RIGHT NOW in their journey -->
-    <!-- Pipeline: board game cascade trail -->
     <div class="pipeline">
       <div class="pipeline-header">
-        <div class="pipeline-title">Jornada das obras</div>
+        <div class="pipeline-title">Pipeline operacional</div>
         <div class="pipeline-legend">Cada casa = fase do fluxo &middot; numero dentro = obras nessa fase agora &middot; tamanho proporcional</div>
       </div>
-
-      <svg class="trail-svg" viewBox="0 0 820 260" id="trailSvg">
-        <!-- Curved paths connecting nodes -->
-        <path class="trail-path" id="tPath1" d="M95,38 C140,38 140,98 195,98"/>
-        <path class="trail-path" id="tPath2" d="M215,98 C260,98 270,48 340,48"/>
-        <path class="trail-path" id="tPath3" d="M370,48 C420,48 420,138 480,138"/>
-        <path class="trail-path" id="tPath4" d="M510,138 C560,138 560,78 620,78"/>
-        <path class="trail-path-red" id="tPath5" d="M645,78 C685,78 690,188 740,188"/>
-
-        <!-- === NODE 1: Planejamento — GARGALO (88 obras, 41%) === -->
-        <circle class="trail-gargalo-ring" cx="75" cy="28" r="42"/>
-        <circle class="trail-node-circle" cx="75" cy="28" r="36" fill="rgba(196,90,90,.08)" stroke="#c45a5a"/>
-        <text class="trail-num" x="75" y="25" text-anchor="middle" font-size="20">88</text>
-        <text class="trail-phase" x="75" y="37" text-anchor="middle" fill="#c45a5a">PLANEJ.</text>
-        <line class="trail-tag-stem" x1="75" y1="64" x2="75" y2="73" style="stroke:rgba(196,90,90,.4)"/>
-        <rect class="trail-tag-bg-red" x="45" y="74" width="60" height="16"/>
-        <text class="trail-days" x="75" y="85" text-anchor="middle" fill="#c45a5a" font-size="9">41% <tspan class="trail-days-unit" fill="#c45a5a">do total</tspan></text>
-        <text class="trail-alert" x="75" y="99" text-anchor="middle" fill="#c45a5a">GARGALO</text>
-        <text class="trail-desc" x="75" y="111" text-anchor="middle" style="fill:#c45a5a">88 obras represadas</text>
-
-        <!-- === NODE 2: Contrato (19 obras, 8.9%) === -->
-        <circle class="trail-node-circle" cx="195" cy="88" r="19" fill="rgba(221,232,240,.6)" stroke="#8ab4d4"/>
-        <text class="trail-num" x="195" y="86" text-anchor="middle" font-size="12">19</text>
-        <text class="trail-phase" x="195" y="95" text-anchor="middle" fill="#4a7ab8">CONTRATO</text>
-        <line class="trail-tag-stem" x1="195" y1="107" x2="195" y2="116"/>
-        <rect class="trail-tag-bg" x="166" y="117" width="58" height="16"/>
-        <text class="trail-days" x="195" y="128" text-anchor="middle" font-size="9">8.9% <tspan class="trail-days-unit">do total</tspan></text>
-        <text class="trail-desc" x="195" y="142" text-anchor="middle">Proposta ate assinatura</text>
-
-        <!-- === NODE 3: Ag. Execucao (43 obras, 20.1%) === -->
-        <circle class="trail-node-circle" cx="340" cy="38" r="27" fill="rgba(224,238,216,.6)" stroke="#7aba6a"/>
-        <text class="trail-num" x="340" y="35" text-anchor="middle" font-size="16">43</text>
-        <text class="trail-phase" x="340" y="47" text-anchor="middle" fill="#3d8a5a">AG.EXEC.</text>
-        <line class="trail-tag-stem" x1="340" y1="65" x2="340" y2="74"/>
-        <rect class="trail-tag-bg" x="310" y="75" width="60" height="16"/>
-        <text class="trail-days" x="340" y="86" text-anchor="middle" font-size="9">20.1% <tspan class="trail-days-unit">do total</tspan></text>
-        <text class="trail-desc" x="340" y="100" text-anchor="middle">Pronta, aguardando inicio</text>
-
-        <!-- === NODE 4: Em Execucao (36 obras, 16.8%) === -->
-        <circle class="trail-node-circle" cx="480" cy="128" r="25" fill="rgba(245,237,217,.6)" stroke="#d4b44a"/>
-        <text class="trail-num" x="480" y="125" text-anchor="middle" font-size="16">36</text>
-        <text class="trail-phase" x="480" y="137" text-anchor="middle" fill="#b89a4a">EXECUCAO</text>
-        <line class="trail-tag-stem" x1="480" y1="153" x2="480" y2="162"/>
-        <rect class="trail-tag-bg" x="452" y="163" width="56" height="16"/>
-        <text class="trail-days" x="480" y="174" text-anchor="middle" font-size="9">16.8% <tspan class="trail-days-unit">do total</tspan></text>
-        <text class="trail-desc" x="480" y="188" text-anchor="middle">Aplicacao em campo</text>
-
-        <!-- === NODE 5: Retrabalho (21 obras, 9.8%) === -->
-        <circle class="trail-node-circle" cx="620" cy="68" r="22" fill="rgba(245,230,210,.6)" stroke="#c47a4a"/>
-        <text class="trail-num" x="620" y="66" text-anchor="middle" font-size="13">21</text>
-        <text class="trail-phase" x="620" y="76" text-anchor="middle" fill="#c47a4a">RETRAB.</text>
-        <line class="trail-tag-stem" x1="620" y1="90" x2="620" y2="99"/>
-        <rect class="trail-tag-bg" x="592" y="100" width="56" height="16"/>
-        <text class="trail-days" x="620" y="111" text-anchor="middle" font-size="9">9.8% <tspan class="trail-days-unit">do total</tspan></text>
-        <text class="trail-desc" x="620" y="125" text-anchor="middle">Reparo + marcas cera</text>
-
-        <!-- === NODE 6: Parado — dashed (7 obras, 3.3%) === -->
-        <circle cx="740" cy="188" r="17" fill="rgba(196,90,90,.06)" stroke="#c45a5a" stroke-width="2.5" stroke-dasharray="5 4"/>
-        <text class="trail-num" x="740" y="186" text-anchor="middle" font-size="12" fill="#c45a5a">7</text>
-        <text class="trail-phase" x="740" y="196" text-anchor="middle" fill="#c45a5a">PARADO</text>
-        <line class="trail-tag-stem" x1="740" y1="205" x2="740" y2="214" style="stroke:rgba(196,90,90,.3)"/>
-        <rect class="trail-tag-bg-red" x="714" y="215" width="52" height="16"/>
-        <text class="trail-days" x="740" y="226" text-anchor="middle" fill="#c45a5a" font-size="9">3.3% <tspan class="trail-days-unit" fill="#c45a5a">paradas</tspan></text>
-        <text class="trail-desc" x="740" y="240" text-anchor="middle" style="fill:#c45a5a">Pausado + clima</text>
-      </svg>
+      <svg class="trail-svg" viewBox="0 0 820 260" id="trailSvg"></svg>
     </div>
-
-    <!-- Signals: dynamic patterns only the Timeline knows -->
-    <div class="signals">
-      <div class="signal">
-        <div class="signal-icon up">&#8593;</div>
-        <div class="signal-label">Idade media</div>
-        <div class="signal-value" style="color:var(--red)">179<small>dias</small></div>
-        <div class="signal-sub">Mediana 201d. Portfolio maduro — maioria passou dos 6 meses de vida.</div>
-      </div>
-      <div class="signal">
-        <div class="signal-icon warn">!</div>
-        <div class="signal-label">Fase gargalo</div>
-        <div class="signal-value">PLAN<small>ej.</small></div>
-        <div class="signal-sub">88 obras (41%) represadas em planejamento. Maior concentracao do fluxo.</div>
-      </div>
-      <div class="signal">
-        <div class="signal-icon info">%</div>
-        <div class="signal-label">Silencio</div>
-        <div class="signal-value">8.4<small>%</small></div>
-        <div class="signal-sub">18 obras com alerta de parada — sem movimentacao recente registrada.</div>
-      </div>
-      <div class="signal">
-        <div class="signal-icon down">&#8593;</div>
-        <div class="signal-label">Acima do benchmark</div>
-        <div class="signal-value">53.4<small>%</small></div>
-        <div class="signal-sub">109 de 204 obras acima da media de tempo da sua faixa. 10 sem metragem.</div>
-      </div>
-    </div>
+    <div class="signals" id="signals"></div>
   </section>
 
-  <!-- EIXOS -->
   <section class="section" id="eixos">
-    <div class="section-head">
-      <h2>Eixos estrategicos</h2>
-      <div class="sub">4 dimensoes que definem a saude do portfolio — radar + detalhe por eixo</div>
-    </div>
+    <div class="section-head"><h2>Eixos estrategicos</h2><div class="sub">4 dimensoes que definem a saude do portfolio — radar + detalhe por eixo</div></div>
     <div class="eixos-layout">
-
-      <!-- Radar Chart -->
       <div class="eixos-radar">
         <svg viewBox="-40 -10 300 230" id="radarSvg">
-          <!-- Grid rings -->
           <polygon class="radar-grid" points="110,30 186,70 186,150 110,190 34,150 34,70"/>
           <polygon class="radar-grid-mid" points="110,50 168,80 168,140 110,170 52,140 52,80"/>
           <polygon class="radar-grid-mid" points="110,70 150,90 150,130 110,150 70,130 70,90"/>
-          <!-- Axes -->
           <line class="radar-axis" x1="110" y1="30" x2="110" y2="190"/>
           <line class="radar-axis" x1="34" y1="70" x2="186" y2="150"/>
           <line class="radar-axis" x1="186" y1="70" x2="34" y2="150"/>
-          <!-- Data shape (will animate) -->
           <polygon class="radar-shape" id="radarShape" points="110,110 110,110 110,110 110,110"/>
-          <!-- Dots -->
           <circle class="radar-dot" id="rDot0" cx="110" cy="110" r="4"/>
           <circle class="radar-dot" id="rDot1" cx="110" cy="110" r="4"/>
           <circle class="radar-dot" id="rDot2" cx="110" cy="110" r="4"/>
           <circle class="radar-dot" id="rDot3" cx="110" cy="110" r="4"/>
-          <!-- Labels — repositioned with room -->
-          <text class="radar-label-val" x="110" y="10" text-anchor="middle" fill="#4a7ab8">40%</text>
+          <text class="radar-label-val" id="rVal0" x="110" y="10" text-anchor="middle" fill="#4a7ab8">--%</text>
           <text class="radar-label" x="110" y="22" text-anchor="middle" fill="#4a7ab8">TEMPO</text>
           <text class="radar-label" x="198" y="66" text-anchor="start" fill="#3d8a5a">FLUXO</text>
-          <text class="radar-label-val" x="198" y="80" text-anchor="start" fill="#3d8a5a">91.6%</text>
+          <text class="radar-label-val" id="rVal1" x="198" y="80" text-anchor="start" fill="#3d8a5a">--%</text>
           <text class="radar-label" x="198" y="152" text-anchor="start" fill="#b89a4a">QUALIDADE</text>
-          <text class="radar-label-val" x="198" y="166" text-anchor="start" fill="#b89a4a">90.2%</text>
+          <text class="radar-label-val" id="rVal2" x="198" y="166" text-anchor="start" fill="#b89a4a">--%</text>
           <text class="radar-label" x="22" y="152" text-anchor="end" fill="#c45a5a">RISCO</text>
-          <text class="radar-label-val" x="22" y="166" text-anchor="end" fill="#c45a5a">78.4%</text>
+          <text class="radar-label-val" id="rVal3" x="22" y="166" text-anchor="end" fill="#c45a5a">--%</text>
         </svg>
       </div>
-
-      <!-- Detail cards -->
-      <div class="eixos-cards">
-        <!-- TEMPO -->
-        <div class="eixo-card" style="border-left: 3px solid #4a7ab8">
-          <div class="eixo-left">
-            <div class="eixo-top-row">
-              <div class="eixo-titulo tempo">Tempo</div>
-              <div class="eixo-num">179<span class="unit">dias</span></div>
-            </div>
-            <div class="eixo-desc">
-              Media geral do portfolio. Obras <em>PP levam 179d</em>, <em>P 180d</em>, <em>M 213d</em>.
-              Mediana 201d — portfolio maduro, poucas obras recentes puxando pra baixo.
-            </div>
-          </div>
-          <div class="eixo-chart">
-            <div class="eixo-bars" id="tempoChart"></div>
-            <div class="eixo-chart-label">media por faixa (PP → XG)</div>
-          </div>
-        </div>
-
-        <!-- FLUXO -->
-        <div class="eixo-card" style="border-left: 3px solid #3d8a5a">
-          <div class="eixo-left">
-            <div class="eixo-top-row">
-              <div class="eixo-titulo fluxo">Fluxo</div>
-              <div class="eixo-num">91.6<span class="unit">%</span></div>
-            </div>
-            <div class="eixo-desc">
-              Das obras, <em>91.6% tiveram movimentacao</em> recente.
-              Apenas 18 obras (8.4%) com alerta de parada — sem registro Telegram nem mudanca de fase.
-            </div>
-          </div>
-          <div class="eixo-chart">
-            <svg viewBox="0 0 200 60">
-              <!-- Breakdown dos 18 alertas de parada -->
-              <text x="0" y="10" font-family="var(--mono)" font-size="7" fill="#8a7e72">ALERTAS ATIVOS (18)</text>
-              <!-- obra_dormindo: 14 -->
-              <rect x="0" y="16" width="156" height="10" rx="2" fill="rgba(196,90,90,.15)"/>
-              <rect x="0" y="16" width="156" height="10" rx="2" fill="var(--red)" opacity="0.5"/>
-              <text x="160" y="24" font-family="var(--mono)" font-size="8" fill="#c45a5a">14 dormindo</text>
-              <!-- contrato_sem_avanco: 3 -->
-              <rect x="0" y="30" width="33" height="10" rx="2" fill="rgba(184,154,74,.15)"/>
-              <rect x="0" y="30" width="33" height="10" rx="2" fill="var(--amber)" opacity="0.5"/>
-              <text x="37" y="38" font-family="var(--mono)" font-size="8" fill="#b89a4a">3 contrato parado</text>
-              <!-- pos_vt_sem_execucao: 1 -->
-              <rect x="0" y="44" width="11" height="10" rx="2" fill="rgba(74,122,184,.15)"/>
-              <rect x="0" y="44" width="11" height="10" rx="2" fill="var(--blue)" opacity="0.5"/>
-              <text x="15" y="52" font-family="var(--mono)" font-size="8" fill="#4a7ab8">1 pos-VT s/ exec</text>
-            </svg>
-            <div class="eixo-chart-label">tipo de alerta (18 obras paradas)</div>
-          </div>
-        </div>
-
-        <!-- QUALIDADE -->
-        <div class="eixo-card" style="border-left: 3px solid #b89a4a">
-          <div class="eixo-left">
-            <div class="eixo-top-row">
-              <div class="eixo-titulo qualidade">Qualidade</div>
-              <div class="eixo-num">21<span class="unit">obras</span></div>
-            </div>
-            <div class="eixo-desc">
-              <em>9.8% do portfolio</em> em retrabalho (19 reparos + 2 marcas cera).
-              Wesley 9, Luana 7, sem consultor 4, Pedro 1. Distribuicao mais equilibrada que esperado.
-            </div>
-          </div>
-          <div class="eixo-chart">
-            <svg viewBox="0 0 200 60">
-              <!-- Horizontal breakdown bars -->
-              <text x="0" y="10" font-family="var(--mono)" font-size="7" fill="#8a7e72">TIPO DE PROBLEMA</text>
-              <!-- reparo -->
-              <rect x="0" y="16" width="160" height="10" rx="2" fill="rgba(196,90,90,.15)"/>
-              <rect x="0" y="16" width="160" height="10" rx="2" fill="var(--red)" opacity="0.5"/>
-              <text x="164" y="24" font-family="var(--mono)" font-size="8" fill="#c45a5a">19 reparo</text>
-              <!-- marcas cera -->
-              <rect x="0" y="30" width="18" height="10" rx="2" fill="rgba(184,154,74,.15)"/>
-              <rect x="0" y="30" width="18" height="10" rx="2" fill="var(--amber)" opacity="0.6"/>
-              <text x="22" y="38" font-family="var(--mono)" font-size="8" fill="#b89a4a">2 marcas</text>
-            </svg>
-            <div class="eixo-chart-label">top 3 categorias</div>
-          </div>
-        </div>
-
-        <!-- RISCO -->
-        <div class="eixo-card" style="border-left: 3px solid #c45a5a">
-          <div class="eixo-left">
-            <div class="eixo-top-row">
-              <div class="eixo-titulo risco-t">Risco</div>
-              <div class="eixo-num">40<span class="unit">obras</span></div>
-            </div>
-            <div class="eixo-desc">
-              <em>18.7% em alto ou critico</em> (14 criticos + 26 altos).
-              45.3% do portfolio em risco baixo. 29 obras ainda sem score calculado.
-            </div>
-          </div>
-          <div class="eixo-chart">
-            <svg viewBox="0 0 200 60">
-              <!-- Donut-like horizontal waffle/proportional -->
-              <text x="0" y="10" font-family="var(--mono)" font-size="7" fill="#8a7e72">DISTRIBUICAO</text>
-              <!-- stacked horizontal bar (97+48+26+14+29=214) -->
-              <rect x="0" y="18" width="200" height="20" rx="4" fill="#e8e0d4"/>
-              <rect x="0" y="18" width="91" height="20" rx="4" fill="rgba(61,138,90,.5)"/>
-              <rect x="91" y="18" width="45" height="20" fill="rgba(184,154,74,.5)"/>
-              <rect x="136" y="18" width="24" height="20" fill="rgba(196,90,90,.5)"/>
-              <rect x="160" y="18" width="13" height="20" fill="rgba(184,58,58,.7)"/>
-              <rect x="173" y="18" width="27" height="20" rx="0 4 4 0" fill="rgba(180,170,160,.3)"/>
-              <!-- labels -->
-              <text x="45" y="31" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="#fff" font-weight="700">97 baixo</text>
-              <text x="113" y="31" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#fff" font-weight="700">48</text>
-              <text x="148" y="31" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#fff" font-weight="700">26</text>
-              <text x="167" y="31" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#fff" font-weight="700">14</text>
-              <!-- bottom labels -->
-              <text x="45" y="50" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#3d8a5a">45.3%</text>
-              <text x="113" y="50" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#b89a4a">22.4%</text>
-              <text x="148" y="50" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#c45a5a">12.1%</text>
-              <text x="167" y="50" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#b83a3a">6.5%</text>
-              <text x="186" y="50" text-anchor="middle" font-family="var(--mono)" font-size="6" fill="#8a7e72">s/score</text>
-            </svg>
-            <div class="eixo-chart-label">baixo → critico (proporcional)</div>
-          </div>
-        </div>
-
-      </div>
+      <div class="eixos-cards" id="eixosCards"></div>
     </div>
   </section>
 
-  <!-- ATENCAO -->
   <section class="section" id="atencao">
-    <div class="section-head" style="border-left-color:var(--red)">
-      <h2>Demanda de atencao</h2>
-      <div class="sub">Obras que combinam idade elevada, paralisacao ou problemas</div>
-    </div>
-    <div class="card">
-      <table class="t">
-        <thead><tr><th>Obra</th><th>Nat.</th><th>Idade</th><th>Risco</th><th>Motivo</th><th>Consultor</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><span class="cli">FLAVIA AUGUSTA DE ASSIS ROCHA</span></td>
-            <td><span class="pill nova">nova</span></td>
-            <td style="font-family:var(--mono);text-align:right;color:var(--amber)">127</td>
-            <td><span class="score-badge critico">Crit 75</span></td>
-            <td style="font-size:11px;color:#6b6156">Ag. execucao</td>
-            <td style="font-size:11px;color:var(--muted)">Wesley</td>
-          </tr>
-          <tr>
-            <td><span class="cli">PRISCILA MIRANDA BETTONI MALTA</span></td>
-            <td><span class="pill retorno">ret</span></td>
-            <td style="font-family:var(--mono);text-align:right;color:var(--scarlet);font-weight:600">223</td>
-            <td><span class="score-badge critico">Crit 75</span></td>
-            <td style="font-size:11px;color:#6b6156">Presa em planejamento</td>
-            <td style="font-size:11px;color:var(--muted)">Wesley</td>
-          </tr>
-          <tr>
-            <td><span class="cli">GLAUCIA ALVES</span></td>
-            <td><span class="pill retorno">ret</span></td>
-            <td style="font-family:var(--mono);text-align:right;color:var(--green)">66</td>
-            <td><span class="score-badge critico">Crit 70</span></td>
-            <td style="font-size:11px;color:#6b6156">Reparo ativo</td>
-            <td style="font-size:11px;color:var(--muted)">Luana</td>
-          </tr>
-          <tr>
-            <td><span class="cli">MONALISA PARTICIPACOES</span></td>
-            <td><span class="pill retorno">ret</span></td>
-            <td style="font-family:var(--mono);text-align:right;color:var(--green)">89</td>
-            <td><span class="score-badge critico">Crit 70</span></td>
-            <td style="font-size:11px;color:#6b6156">Reparo ativo</td>
-            <td style="font-size:11px;color:var(--muted)">Wesley</td>
-          </tr>
-          <tr>
-            <td><span class="cli">MARIANA LOIACONO BUENO</span></td>
-            <td><span class="pill nova">nova</span></td>
-            <td style="font-family:var(--mono);text-align:right;color:var(--green)">66</td>
-            <td><span class="score-badge critico">Crit 70</span></td>
-            <td style="font-size:11px;color:#6b6156">Reparo ativo</td>
-            <td style="font-size:11px;color:var(--muted)">Luana</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="section-head" style="border-left-color:var(--red)"><h2>Demanda de atencao</h2><div class="sub">Obras que combinam idade elevada, paralisacao ou problemas</div></div>
+    <div class="card"><table class="t"><thead><tr><th>Obra</th><th>Nat.</th><th>Idade</th><th>Risco</th><th>Status</th><th>Consultor</th></tr></thead><tbody id="atencaoBody"></tbody></table></div>
   </section>
 
-  <!-- RISCO -->
   <section class="section" id="risco">
-    <div class="section-head">
-      <h2>Distribuicao de risco</h2>
-      <div class="sub">Score composto de 5 variaveis</div>
-    </div>
-    <div class="risco-grid">
-      <div class="risco-card critico">
-        <div class="risco-tag">Critico</div>
-        <div style="display:flex;align-items:flex-end;gap:8px"><div class="risco-num">14</div><div class="risco-pct">6.5%</div></div>
-        <div class="risco-sub">Score 70-75 &middot; maioria em reparo</div>
-      </div>
-      <div class="risco-card alto">
-        <div class="risco-tag">Alto</div>
-        <div style="display:flex;align-items:flex-end;gap:8px"><div class="risco-num">26</div><div class="risco-pct">12.1%</div></div>
-        <div class="risco-sub">Score 60-69 &middot; risco operacional</div>
-      </div>
-      <div class="risco-card medio">
-        <div class="risco-tag">Medio</div>
-        <div style="display:flex;align-items:flex-end;gap:8px"><div class="risco-num">48</div><div class="risco-pct">22.4%</div></div>
-        <div class="risco-sub">Score 30-59 &middot; monitoramento</div>
-      </div>
-      <div class="risco-card baixo">
-        <div class="risco-tag">Baixo</div>
-        <div style="display:flex;align-items:flex-end;gap:8px"><div class="risco-num">97</div><div class="risco-pct">45.3%</div></div>
-        <div class="risco-sub">Score 0-29 &middot; 29 sem score calculado</div>
-      </div>
-    </div>
+    <div class="section-head"><h2>Distribuicao de risco</h2><div class="sub">Score composto — idade, paralisacao, problemas, metragem, historico</div></div>
+    <div class="risco-grid" id="riscoGrid"></div>
   </section>
 
-  <!-- CROSS -->
   <section class="section" id="cross">
-    <div class="section-head">
-      <h2>Analise cross-obra</h2>
-      <div class="sub">Padroes que so aparecem cruzando dados entre obras</div>
-    </div>
-
-    <!-- 3 DISCOVERIES — impossible to miss -->
-    <div class="cross-discoveries">
-
-      <!-- DISCOVERY 1: Wesley concentra retrabalho -->
-      <div class="discovery" style="border-top: 3px solid var(--red);">
-        <div class="discovery-tag"><span class="dtag crit">Risco</span> Concentracao de retrabalho</div>
-        <div class="discovery-visual">
-          <div class="disc-ring">
-            <svg viewBox="0 0 72 72">
-              <circle class="disc-ring-bg" cx="36" cy="36" r="28"/>
-              <circle class="disc-ring-fill" cx="36" cy="36" r="28"
-                stroke="var(--red)" stroke-dasharray="175.9" stroke-dashoffset="175.9"
-                data-target="99.7" id="ringWesley"/>
-            </svg>
-            <div class="disc-ring-center">
-              <span class="disc-ring-num" style="color:var(--red)">43</span>
-              <span class="disc-ring-unit">% retrabalho</span>
-            </div>
-          </div>
-          <div>
-            <div style="font-size:22px;font-weight:700;color:var(--text-2);font-family:var(--mono);line-height:1">Wesley</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">78 obras &middot; 9 em retrabalho</div>
-          </div>
-        </div>
-        <div class="discovery-text">
-          Concentra <span class="neg">43% de todo retrabalho</span> (9 de 21) com 36% das obras. Luana tem 81 obras mas <strong>7 retrabalhos</strong> (33%). Desproporcao clara.
-        </div>
-      </div>
-
-      <!-- DISCOVERY 2: Sem consultor = obras novas sem atribuicao -->
-      <div class="discovery" style="border-top: 3px solid var(--amber);">
-        <div class="discovery-tag"><span class="dtag warn">Atencao</span> Obras sem consultor</div>
-        <div class="discovery-visual" style="flex-direction:column;gap:10px">
-          <div class="disc-compare" style="width:100%">
-            <div class="disc-compare-row">
-              <div class="disc-compare-label">Com consultor</div>
-              <div class="disc-compare-bar-wrap">
-                <div class="disc-compare-bar" style="width:0%;background:var(--accent)" data-target="80">202d</div>
-              </div>
-              <div class="disc-compare-delta" style="color:var(--muted)">173 obras</div>
-            </div>
-            <div class="disc-compare-row">
-              <div class="disc-compare-label" style="color:var(--amber);font-weight:600">Sem consultor</div>
-              <div class="disc-compare-bar-wrap">
-                <div class="disc-compare-bar" style="width:0%;background:var(--amber)" data-target="33">84d</div>
-              </div>
-              <div class="disc-compare-delta" style="color:var(--amber)">41 obras</div>
-            </div>
-          </div>
-        </div>
-        <div class="discovery-text" style="margin-top:4px">
-          <strong>41 obras</strong> (19%) sem consultor designado. Sao as mais <strong>novas</strong> (84d vs 202d) — provavelmente entraram recentemente e ainda nao foram atribuidas. 4 delas ja em retrabalho.
-        </div>
-      </div>
-
-      <!-- DISCOVERY 3: Planejamento mega-gargalo -->
-      <div class="discovery" style="border-top: 3px solid var(--scarlet);">
-        <div class="discovery-tag"><span class="dtag crit">Critico</span> Gargalo de fluxo</div>
-        <div class="discovery-visual" style="justify-content:center;gap:20px;padding:6px 0">
-          <div class="disc-bubbles">
-            <div style="text-align:center">
-              <div class="disc-bubble" style="width:80px;height:80px;background:rgba(184,58,58,.1);border:2px solid rgba(184,58,58,.3)"
-                   data-scale="1">
-                <span class="disc-bubble-num" style="font-size:22px;color:var(--scarlet)">88</span>
-                <span class="disc-bubble-label" style="color:var(--red)">OBRAS</span>
-              </div>
-              <div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-top:6px;font-weight:600">41%</div>
-              <div style="font-size:8px;color:var(--red);letter-spacing:.06em;font-weight:600">EM PLANEJAMENTO</div>
-            </div>
-            <div style="font-size:18px;color:var(--muted-3);align-self:center;margin-bottom:20px">vs</div>
-            <div style="text-align:center">
-              <div class="disc-bubble" style="width:52px;height:52px;background:rgba(184,154,74,.1);border:2px solid rgba(184,154,74,.3)"
-                   data-scale="1">
-                <span class="disc-bubble-num" style="font-size:15px;color:var(--amber)">36</span>
-                <span class="disc-bubble-label" style="color:var(--amber)">OBRAS</span>
-              </div>
-              <div style="font-family:var(--mono);font-size:9px;color:var(--amber);margin-top:6px">16.8%</div>
-              <div style="font-size:8px;color:var(--amber);letter-spacing:.06em">EM EXECUCAO</div>
-            </div>
-          </div>
-        </div>
-        <div class="discovery-text">
-          Para cada obra em execucao, <span class="neg">2.4 obras esperam em planejamento</span>. Pipeline congestionado: a entrada nao acompanha a saida. Mais obras aguardando do que sendo executadas.
-        </div>
-      </div>
-    </div>
-
-    <!-- DETAIL BLOCKS -->
-    <div class="cross-details">
-
-      <!-- Status pipeline — horizontal bars -->
-      <div class="cross-block">
-        <div class="cross-block-head">Distribuicao por status</div>
-        <div class="hbar-row">
-          <div class="hbar-label">Planejamento</div>
-          <div class="hbar-track"><div class="hbar-fill" style="width:0%;background:var(--red)" data-target="100">88</div></div>
-          <div class="hbar-value">88</div>
-        </div>
-        <div class="hbar-row">
-          <div class="hbar-label">Ag. execucao</div>
-          <div class="hbar-track"><div class="hbar-fill" style="width:0%;background:var(--amber)" data-target="49">43</div></div>
-          <div class="hbar-value">43</div>
-        </div>
-        <div class="hbar-row">
-          <div class="hbar-label">Em execucao</div>
-          <div class="hbar-track"><div class="hbar-fill" style="width:0%;background:var(--green)" data-target="41">36</div></div>
-          <div class="hbar-value">36</div>
-        </div>
-        <div class="hbar-row">
-          <div class="hbar-label">Retrabalho</div>
-          <div class="hbar-track"><div class="hbar-fill" style="width:0%;background:#c47a4a" data-target="24">21</div></div>
-          <div class="hbar-value">21</div>
-        </div>
-        <div class="hbar-row">
-          <div class="hbar-label">Contrato + Parado</div>
-          <div class="hbar-track"><div class="hbar-fill" style="width:0%;background:var(--blue)" data-target="30">26</div></div>
-          <div class="hbar-value">26</div>
-        </div>
-      </div>
-
-      <!-- Benchmark tempo por faixa — dados reais -->
-      <div class="cross-block">
-        <div class="cross-block-head">Benchmark tempo por faixa</div>
-        <div class="bench-row">
-          <div class="bench-faixa" style="background:var(--green)">PP</div>
-          <div class="bench-bar-wrap">
-            <div class="bench-bar" style="width:0%;background:rgba(61,138,90,.35)" data-target="82"></div>
-          </div>
-          <div class="bench-val">179d</div>
-          <div class="bench-dev" style="color:var(--green)">ref</div>
-        </div>
-        <div class="bench-row">
-          <div class="bench-faixa" style="background:#6a9a5a">P</div>
-          <div class="bench-bar-wrap">
-            <div class="bench-bar" style="width:0%;background:rgba(106,154,90,.35)" data-target="84"></div>
-          </div>
-          <div class="bench-val">180d</div>
-          <div class="bench-dev" style="color:var(--muted)">+1%</div>
-        </div>
-        <div class="bench-row">
-          <div class="bench-faixa" style="background:var(--amber)">M</div>
-          <div class="bench-bar-wrap">
-            <div class="bench-bar" style="width:0%;background:rgba(184,154,74,.35)" data-target="100"></div>
-          </div>
-          <div class="bench-val">213d</div>
-          <div class="bench-dev" style="color:var(--amber)">+19%</div>
-        </div>
-        <div style="font-size:10px;color:var(--muted);padding:6px 0;font-style:italic;border-top:1px dashed var(--border);margin-top:4px">
-          Faixas G/GG/XG: sem dados suficientes neste portfolio (0 obras com metragem nessas faixas).
-          Total m2 mapeado: 34.747 m2 em 190 obras.
-        </div>
-      </div>
-    </div>
-
-    <!-- INSIGHT — conclusion -->
-    <div class="insight">
-      <div class="insight-title">Conclusao da analise cruzada</div>
-      Tres padroes que a analise individual nao revela:
-      <strong>Wesley</strong> concentra 43% dos retrabalhos (9/21) com 36% das obras — desproporcao que indica risco operacional.
-      <strong>41 obras sem consultor</strong> sao as mais novas (84d) — provavelmente entraram recentemente e precisam de atribuicao.
-      <strong>Planejamento</strong> acumula 88 obras (41%) — para cada obra em execucao, 2.4 esperam na fila. Pipeline congestionado.
-    </div>
+    <div class="section-head"><h2>Analise cross-obra</h2><div class="sub">Padroes que so aparecem cruzando dados entre obras</div></div>
+    <div class="cross-discoveries" id="crossDiscoveries"></div>
+    <div class="cross-details" id="crossDetails"></div>
+    <div class="insight" id="insightBlock"></div>
   </section>
 
-  <footer class="main-footer">
-    Qualidade Monofloor &middot; Timeline v2 &middot; 19 mai 2026 &middot; 3 fontes (dashboard-data, timeline_obras, jornadas)
-  </footer>
+  <footer class="main-footer" id="footer">Qualidade Monofloor · Timeline v2</footer>
 </main>
 
-<!-- ========== ASIDE DINÂMICO ========== -->
-<aside class="aside-col">
-
-  <!-- PANEL: visao-geral -->
-  <div class="aside-panel active" data-for="visao-geral">
-    <div class="aside-label"><span class="dot-ctx"></span> Contexto &middot; Visao geral</div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">O que voce esta olhando</div>
-      Ferramenta de analise agregada que cruza <em>3 fontes</em> pra revelar padroes entre obras — risco, fluxo, gargalos e descobertas cross-obra.
-      <div class="aside-formula">
-        dashboard-data.json (214 obras)<br>
-        timeline_obras.json (score risco)<br>
-        jornadas.json (classificacao, m2)
-      </div>
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Pipeline de fases</div>
-      Mostra onde cada obra esta <em>agora</em> no fluxo. A barra e proporcional — segmentos maiores = mais obras naquela fase. Se uma fase acumula, e gargalo.
-      <div class="aside-formula">
-        Planej. → Contrato → Ag.Exec. →<br>
-        Execucao → Retrabalho<br>
-        Parado (separado)
-      </div>
-      "Parado" inclui pausado + aguardando clima — obras fora do fluxo normal.
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Sinais de dinamica</div>
-      4 metricas que so a Timeline calcula:
-      <div style="margin-top:6px;font-size:11px;line-height:1.8">
-        <strong style="color:var(--text-2)">Tendencia</strong> — o portfolio esta envelhecendo ou rejuvenescendo?<br>
-        <strong style="color:var(--text-2)">Gargalo</strong> — qual fase demora mais em media?<br>
-        <strong style="color:var(--text-2)">Silencio</strong> — quantas obras sem comunicacao em 30d?<br>
-        <strong style="color:var(--text-2)">Benchmark</strong> — quantas acima do tempo esperado pra sua faixa?
-      </div>
-    </div>
-
-    <div class="aside-verdict warn">
-      <strong>Por que nao tem "total de obras" aqui?</strong> Esse dado ja esta na Central de Qualidade. A Timeline mostra o que a Central nao mostra: como as obras se movem, onde travam e quais padroes emergem entre elas.
-    </div>
-  </div>
-
-  <!-- PANEL: eixos -->
-  <div class="aside-panel" data-for="eixos">
-    <div class="aside-label"><span class="dot-ctx"></span> Contexto &middot; Eixos estrategicos</div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Por que 4 eixos?</div>
-      A diretoria pensa em 5 perguntas: tempo, volume, problemas, capacidade, saude. Os eixos da Timeline cobrem 4 delas — volume ja esta na visao geral (214 obras).
-      <div class="aside-formula">
-        Tempo  = obras &le;150d / total<br>
-        Fluxo  = sem alerta / total<br>
-        Qualid = sem retrabalho / total<br>
-        Risco  = baixo+mod / com score
-      </div>
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Tempo: o que "179 dias" significa</div>
-      Dias corridos desde a criacao do card no Painel ate hoje. Mediana 201d.<br><br>
-      <strong style="color:var(--text-2);font-size:11px">Nao confundir com prazo de execucao.</strong><br>
-      Obra de 200 dias pode estar no prazo — se o contrato demorou 5 meses, a execucao nem comecou.
-      <div style="margin-top:8px;font-size:11px">
-        <span style="color:var(--green)">&#9679;</span> &lt;90d ok &nbsp;
-        <span style="color:var(--amber)">&#9679;</span> 90-180d atencao &nbsp;
-        <span style="color:var(--red)">&#9679;</span> &gt;180d critico
-      </div>
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Fluxo: como e medido</div>
-      Obras com <em>alerta_parada</em> no timeline_obras.json. 3 tipos detectados: obra_dormindo (14), contrato_sem_avanco (3), pos_vt_sem_execucao (1). Total: 18 obras = 8.4%.
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Qualidade vs Risco</div>
-      Qualidade conta <em>problemas registrados</em> (reparo, marcas, material). Risco e o <em>score composto</em> — inclui qualidade mas tambem idade e paralisacao. Obra sem problema pode ter risco alto se esta parada ha muito tempo.
-    </div>
-
-    <div class="aside-verdict warn">
-      <strong>Calibracao:</strong> benchmarks por faixa (PP: 179d, P: 180d, M: 213d) sao medias reais das 204 obras com metragem. 10 obras sem m2 excluidas. Faixas G/GG/XG sem obras neste portfolio.
-    </div>
-  </div>
-
-  <!-- PANEL: atencao -->
-  <div class="aside-panel" data-for="atencao">
-    <div class="aside-label"><span class="dot-ctx"></span> Contexto &middot; Demanda de atencao</div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Criterio de entrada na lista</div>
-      Uma obra aparece aqui se atende <em>pelo menos 2</em> destes criterios:<br><br>
-      &middot; Idade &gt;150 dias<br>
-      &middot; Paralisada (sem movimentacao &gt;14d)<br>
-      &middot; Problema registrado (reparo, material, etc)<br>
-      &middot; Score de risco &gt;= 60 (alto ou critico)
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Como ler "Idade: 342"</div>
-      342 dias desde que o card foi criado no Painel de Obras. Nao significa 342 dias de obra — pode incluir meses de contrato, amostra, VT. O numero mede <em>quanto tempo essa obra esta no radar</em>, nao quanto tempo o pedreiro esta la.
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Natureza importa</div>
-      <span class="pill retorno" style="font-size:8px">ret</span> = retorno (2a passagem, reparo, faseada).<br>
-      Cronograma original ja foi cumprido.<br>
-      <em>Nao contar como atraso</em> em metricas de prazo — e pos-entrega.
-      <div class="aside-quote">
-        "Retrabalho = dias de aplicacao fisica. Tratativas = visitas, relatorios, definicoes. Misturar mente sobre o gargalo."
-      </div>
-    </div>
-
-    <div class="aside-verdict crit">
-      <strong>Padrao visivel:</strong> Wesley aparece 3x na lista (incluindo as 2 com score mais alto: 75). Luana aparece 2x (obras em reparo). Todas as 5 sao criticas — score 70-75.
-    </div>
-  </div>
-
-  <!-- PANEL: risco -->
-  <div class="aside-panel" data-for="risco">
-    <div class="aside-label"><span class="dot-ctx"></span> Contexto &middot; Distribuicao de risco</div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Formula do score</div>
-      <div class="aside-formula">
-        score = (idade_norm * 0.30)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (paralisacao * 0.25)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (problemas * 0.20)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (faixa_m2 * 0.15)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (hist_consultor * 0.10)
-      </div>
-      <div style="margin-top:8px;font-size:11px;color:var(--muted)">
-        Cada variavel normalizada 0-100. Score final: soma ponderada.
-      </div>
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Faixas de corte</div>
-      <div class="aside-stat-row"><span><span class="aside-flag crit">Critico</span></span><span class="vl">80-100</span></div>
-      <div class="aside-stat-row"><span><span class="aside-flag warn">Alto</span></span><span class="vl">60-79</span></div>
-      <div class="aside-stat-row"><span>Medio</span><span class="vl">30-59</span></div>
-      <div class="aside-stat-row"><span><span class="aside-flag ok">Baixo</span></span><span class="vl">0-29</span></div>
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">O que os m2 revelam</div>
-      14 obras criticas (score 70-75). Maioria em status de reparo ativo. 29 obras ainda sem score calculado — representam 13.6% do portfolio. Total m2 mapeado: 34.747.
-    </div>
-
-    <div class="aside-verdict">
-      <strong>Score e v1</strong> (maio/2026). Os pesos estao em calibracao. A distribuicao atual (45.3% baixo, 22.9% moderado) sugere portfolio razoavelmente saudavel. 13.6% sem score ainda — obras novas sem dados suficientes.
-    </div>
-  </div>
-
-  <!-- PANEL: cross -->
-  <div class="aside-panel" data-for="cross">
-    <div class="aside-label"><span class="dot-ctx"></span> Contexto &middot; Analise cross-obra</div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">O que e "cross-obra"</div>
-      Padroes que so aparecem quando voce compara multiplas obras. Olhar obra por obra nao mostra que Wesley concentra 43% dos retrabalhos, ou que 88 obras esperam em planejamento.
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Faixas de metragem</div>
-      Benchmark justo — nao da pra comparar 80 m2 com 4.000.
-      <div class="aside-stat-row"><span>PP</span><span class="vl">&lt;100 m2</span></div>
-      <div class="aside-stat-row"><span>P</span><span class="vl">100-500</span></div>
-      <div class="aside-stat-row"><span>M</span><span class="vl">500-1500</span></div>
-      <div class="aside-stat-row"><span>G</span><span class="vl">1500-3000</span></div>
-      <div class="aside-stat-row"><span>GG</span><span class="vl">3000-8000</span></div>
-      <div class="aside-stat-row"><span>XG</span><span class="vl">&gt;8000</span></div>
-    </div>
-
-    <div class="aside-verdict crit">
-      <strong>3 achados principais:</strong><br>
-      1. Wesley concentra 43% dos retrabalhos (9/21) com 36% das obras<br>
-      2. 41 obras sem consultor sao as mais novas (84d) — precisam atribuicao<br>
-      3. Planejamento acumula 88 obras (41%) — pipeline congestionado
-    </div>
-
-    <div class="aside-card">
-      <div class="aside-card-title">Limitacoes</div>
-      <span style="font-size:11px;color:var(--muted);line-height:1.7">
-        &middot; Metragem: 190/214 obras com m2 mapeado (24 sem dado).<br>
-        &middot; Faixas G/GG/XG: 0 obras — portfolio concentrado em PP/P/M.<br>
-        &middot; Score risco: 29 obras (13.6%) sem score calculado.<br>
-        &middot; Score v1 — pesos em calibracao.
-      </span>
-    </div>
-  </div>
-
-</aside>
-
+<aside class="aside-col" id="asideCol"></aside>
 </div>
 
 <script>
-// Dynamic aside: swap panel based on which section is visible
-const sections = document.querySelectorAll('.section[id]');
-const navLinks = document.querySelectorAll('.top-nav a');
-const panels = document.querySelectorAll('.aside-panel');
-let currentPanel = 'visao-geral';
+const TRAIL_NODES = [
+  { keys: ['planejamento'], label: 'PLANEJ.', color: '#c45a5a', fill: 'rgba(196,90,90,.08)', desc: 'Obras represadas', cx: 75, cy: 28 },
+  { keys: ['contrato'], label: 'CONTRATO', color: '#8ab4d4', fill: 'rgba(221,232,240,.6)', desc: 'Proposta ate assinatura', cx: 195, cy: 88 },
+  { keys: ['aguardando_execucao'], label: 'AG.EXEC.', color: '#7aba6a', fill: 'rgba(224,238,216,.6)', desc: 'Pronta, aguardando inicio', cx: 340, cy: 38 },
+  { keys: ['em_execucao'], label: 'EXECUCAO', color: '#d4b44a', fill: 'rgba(245,237,217,.6)', desc: 'Aplicacao em campo', cx: 480, cy: 128 },
+  { keys: ['reparo','marcas_rolo_cera'], label: 'RETRAB.', color: '#c47a4a', fill: 'rgba(245,230,210,.6)', desc: 'Reparo + marcas cera', cx: 620, cy: 68 },
+  { keys: ['pausado','aguardando_clima'], label: 'PARADO', color: '#c45a5a', fill: 'rgba(196,90,90,.06)', desc: 'Pausado + clima', cx: 740, cy: 188, dashed: true }
+];
 
-function updateContext() {
-  let active = 'visao-geral';
-  const scrollY = window.scrollY + 120;
+const TRAIL_PATHS = [
+  'M95,38 C140,38 140,98 195,98',
+  'M215,98 C260,98 270,48 340,48',
+  'M370,48 C420,48 420,138 480,138',
+  'M510,138 C560,138 560,78 620,78',
+  'M645,78 C685,78 690,188 740,188'
+];
 
-  sections.forEach(s => {
-    if (s.offsetTop <= scrollY) active = s.id;
-  });
+const FAIXA_ORDER = ['PP','P','M','G','GG','XG'];
+const FAIXA_COLORS = { PP:'#3d8a5a', P:'#6a9a5a', M:'#b89a4a', G:'#c47a4a', GG:'#c45a5a', XG:'#b83a3a' };
+const RISCO_LEVELS = [
+  { key: 'critico', label: 'Critico', cls: 'critico', range: 'Score 70-100' },
+  { key: 'alto', label: 'Alto', cls: 'alto', range: 'Score 60-69' },
+  { key: 'moderado', label: 'Medio', cls: 'medio', range: 'Score 30-59' },
+  { key: 'baixo', label: 'Baixo', cls: 'baixo', range: 'Score 0-29' }
+];
 
-  if (active !== currentPanel) {
-    currentPanel = active;
+function fmt(d) {
+  const dt = new Date(d);
+  const dd = dt.getDate(), mm = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][dt.getMonth()], yy = dt.getFullYear();
+  return dd + ' ' + mm + ' ' + yy;
+}
+function pct(n, t) { return t > 0 ? Math.round(n / t * 1000) / 10 : 0; }
+function idadeCor(d) { return d > 180 ? 'var(--scarlet)' : d > 90 ? 'var(--amber)' : 'var(--green)'; }
 
-    // Nav
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + active);
-    });
-
-    // Panels
-    panels.forEach(p => {
-      p.classList.toggle('active', p.dataset.for === active);
-    });
-
-    // Scroll aside to top when panel changes
-    document.querySelector('.aside-col').scrollTop = 0;
-  }
+function renderHeader(D) {
+  document.getElementById('headerDate').textContent = fmt(D.gerado_em);
+  document.getElementById('navBadge').textContent = D.indicadores.portfolio.total;
+  const critAlto = (D.indicadores.distribuicao_risco.critico || 0) + (D.indicadores.distribuicao_risco.alto || 0);
+  document.getElementById('navAlertBadge').textContent = critAlto;
 }
 
-window.addEventListener('scroll', updateContext);
-updateContext();
+function renderManchete(D) {
+  const p = D.indicadores.portfolio, g = D.indicadores.gargalo, r = D.indicadores.retrabalho, a = D.indicadores.alertas;
+  document.getElementById('mancheteText').innerHTML =
+    `Portfolio de <strong>${p.total} obras</strong> com idade media <span class="neg">${p.idade_media}d</span>. ` +
+    `Gargalo em <strong>${g.fase}</strong> (${g.n_obras} obras, ${g.pct}%). ` +
+    `<span class="neg">${r.total} em retrabalho</span>. ${a.total} paradas.`;
+}
 
-// Smooth scroll for nav links
-navLinks.forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
+function renderTrail(D) {
+  const dist = D.indicadores.distribuicao_fase;
+  const total = D.indicadores.portfolio.total;
+  const svg = document.getElementById('trailSvg');
+  let html = '';
+  TRAIL_PATHS.forEach((d, i) => {
+    const cls = i === TRAIL_PATHS.length - 1 ? 'trail-path-red' : 'trail-path';
+    html += `<path class="${cls}" id="tPath${i+1}" d="${d}"/>`;
   });
-});
+  let maxCount = 0;
+  const counts = TRAIL_NODES.map(n => {
+    const c = n.keys.reduce((s, k) => s + (dist[k] || 0), 0);
+    if (c > maxCount) maxCount = c;
+    return c;
+  });
+  const gargaloIdx = counts.indexOf(maxCount);
 
-// Animate on load
-window.addEventListener('load', () => {
-  // === RADAR + EIXO CARDS — connected animation ===
-  const shape = document.getElementById('radarShape');
-  const cx = 110, cy = 110;
-  // Radar scores derivados dos dados:
-  // Tempo  = obras <= 150d / total = 85/214 = 39.7%
-  // Fluxo  = sem alerta_parada / total = 196/214 = 91.6%
-  // Qualid = sem retrabalho / total = 193/214 = 90.2%
-  // Risco  = baixo+moderado / com score = 145/185 = 78.4%
-  const axes = [
-    { pct: 0.397, vx: 110, vy: 30,  dot: 'rDot0', freq: 0.7,  amp: 4 },
-    { pct: 0.916, vx: 186, vy: 70,  dot: 'rDot1', freq: 0.9,  amp: 3.5 },
-    { pct: 0.902, vx: 186, vy: 150, dot: 'rDot2', freq: 0.6,  amp: 3 },
-    { pct: 0.784, vx: 34,  vy: 150, dot: 'rDot3', freq: 1.1,  amp: 4.5 }
-  ];
-  const targets = axes.map(a => ({
-    x: cx + a.pct * (a.vx - cx),
-    y: cy + a.pct * (a.vy - cy),
-    dot: a.dot, freq: a.freq, amp: a.amp,
-    dx: a.vx - cx, dy: a.vy - cy
-  }));
+  TRAIL_NODES.forEach((n, i) => {
+    const count = counts[i];
+    const r = Math.max(14, Math.round(count / maxCount * 36));
+    const p = pct(count, total);
+    const isGargalo = i === gargaloIdx;
+    const isRed = n.dashed || isGargalo;
+    const stemY1 = n.cy + r + 6, stemY2 = stemY1 + 9;
+    const tagY = stemY2 + 1;
+    const fillColor = isGargalo ? n.color : '';
 
-  // Phase 1: expand from center (900ms)
-  let radarStart = null;
-  const expandDur = 900;
-  let expanded = false;
-
-  function radarExpand(ts) {
-    if (!radarStart) radarStart = ts;
-    const t = Math.min((ts - radarStart) / expandDur, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    const pts = targets.map(p => {
-      const x = cx + ease * (p.x - cx);
-      const y = cy + ease * (p.y - cy);
-      return x.toFixed(1) + ',' + y.toFixed(1);
-    });
-    shape.setAttribute('points', pts.join(' '));
-    targets.forEach(p => {
-      const dot = document.getElementById(p.dot);
-      dot.setAttribute('cx', (cx + ease * (p.x - cx)).toFixed(1));
-      dot.setAttribute('cy', (cy + ease * (p.y - cy)).toFixed(1));
-    });
-    if (t < 1) {
-      requestAnimationFrame(radarExpand);
+    if (isGargalo) html += `<circle class="trail-gargalo-ring" cx="${n.cx}" cy="${n.cy}" r="${r + 6}"/>`;
+    if (n.dashed) {
+      html += `<circle cx="${n.cx}" cy="${n.cy}" r="${r}" fill="${n.fill}" stroke="${n.color}" stroke-width="2.5" stroke-dasharray="5 4"/>`;
     } else {
-      expanded = true;
-      requestAnimationFrame(radarBreathe);
+      html += `<circle class="trail-node-circle" cx="${n.cx}" cy="${n.cy}" r="${r}" fill="${n.fill}" stroke="${n.color}"/>`;
+    }
+    const numSize = r > 25 ? 20 : r > 18 ? 16 : 12;
+    html += `<text class="trail-num" x="${n.cx}" y="${n.cy - 3}" text-anchor="middle" font-size="${numSize}" ${isRed ? 'fill="'+n.color+'"' : ''}>${count}</text>`;
+    html += `<text class="trail-phase" x="${n.cx}" y="${n.cy + 9}" text-anchor="middle" fill="${n.color}">${n.label}</text>`;
+    html += `<line class="trail-tag-stem" x1="${n.cx}" y1="${stemY1}" x2="${n.cx}" y2="${stemY2}" ${isRed ? 'style="stroke:rgba(196,90,90,.4)"' : ''}/>`;
+    html += `<rect class="${isRed ? 'trail-tag-bg-red' : 'trail-tag-bg'}" x="${n.cx - 30}" y="${tagY}" width="60" height="16"/>`;
+    html += `<text class="trail-days" x="${n.cx}" y="${tagY + 11}" text-anchor="middle" ${isRed ? 'fill="'+n.color+'"' : ''} font-size="9">${p}% <tspan class="trail-days-unit" ${isRed ? 'fill="'+n.color+'"' : ''}>do total</tspan></text>`;
+    if (isGargalo) html += `<text class="trail-alert" x="${n.cx}" y="${tagY + 25}" text-anchor="middle" fill="${n.color}">GARGALO</text>`;
+    html += `<text class="trail-desc" x="${n.cx}" y="${tagY + (isGargalo ? 37 : 25)}" text-anchor="middle" ${isRed ? 'style="fill:'+n.color+'"' : ''}>${n.desc}</text>`;
+  });
+  svg.innerHTML = html;
+}
+
+function renderSignals(D) {
+  const p = D.indicadores.portfolio, g = D.indicadores.gargalo, a = D.indicadores.alertas, bm = D.indicadores.benchmark_faixa._acima_media;
+  const silPct = pct(a.total, p.total);
+  document.getElementById('signals').innerHTML = `
+    <div class="signal"><div class="signal-icon up">&#8593;</div><div class="signal-label">Idade media</div>
+      <div class="signal-value" style="color:var(--red)">${p.idade_media}<small>dias</small></div>
+      <div class="signal-sub">Mediana ${p.idade_mediana}d. Portfolio maduro — maioria passou dos 6 meses.</div></div>
+    <div class="signal"><div class="signal-icon warn">!</div><div class="signal-label">Fase gargalo</div>
+      <div class="signal-value">${g.fase.substring(0,4).toUpperCase()}<small>${g.fase.substring(4)}</small></div>
+      <div class="signal-sub">${g.n_obras} obras (${g.pct}%) represadas. Maior concentracao do fluxo.</div></div>
+    <div class="signal"><div class="signal-icon info">%</div><div class="signal-label">Silencio</div>
+      <div class="signal-value">${silPct}<small>%</small></div>
+      <div class="signal-sub">${a.total} obras com alerta de parada — sem movimentacao recente.</div></div>
+    <div class="signal"><div class="signal-icon down">&#8593;</div><div class="signal-label">Acima do benchmark</div>
+      <div class="signal-value">${bm.pct}<small>%</small></div>
+      <div class="signal-sub">${bm.numerador} de ${bm.denominador} obras acima da media de tempo da sua faixa.</div></div>`;
+}
+
+function renderRadar(D) {
+  const r = D.indicadores.radar;
+  document.getElementById('rVal0').textContent = r.tempo.pct + '%';
+  document.getElementById('rVal1').textContent = r.fluxo.pct + '%';
+  document.getElementById('rVal2').textContent = r.qualidade.pct + '%';
+  document.getElementById('rVal3').textContent = r.risco.pct + '%';
+}
+
+function renderEixos(D) {
+  const r = D.indicadores.radar, p = D.indicadores.portfolio, rt = D.indicadores.retrabalho;
+  const al = D.indicadores.alertas, dr = D.indicadores.distribuicao_risco, bf = D.indicadores.benchmark_faixa;
+  const dist = D.indicadores.distribuicao_fase;
+  const nReparo = dist.reparo || 0, nMarcas = dist.marcas_rolo_cera || 0;
+  const critAlto = (dr.critico || 0) + (dr.alto || 0);
+  const semScore = dr.sem_score || 0;
+  const total = p.total;
+
+  const faixaDesc = FAIXA_ORDER.filter(f => bf[f]).map(f => `${f} ${bf[f].idade_media}d`).join(', ');
+  const alertDesc = Object.entries(al.por_tipo || {}).map(([k,v]) => `${v} ${k.replace(/_/g,' ')}`).join(', ');
+  const retrabDesc = Object.entries(rt.por_consultor || {}).slice(0,3).map(([k,v]) => `${k} ${v}`).join(', ');
+
+  const totalRisco = (dr.baixo||0) + (dr.moderado||0) + (dr.alto||0) + (dr.critico||0) + semScore;
+  const rBaixo = Math.round((dr.baixo||0)/totalRisco*200), rMod = Math.round((dr.moderado||0)/totalRisco*200);
+  const rAlto = Math.round((dr.alto||0)/totalRisco*200), rCrit = Math.round((dr.critico||0)/totalRisco*200);
+  const rSem = 200 - rBaixo - rMod - rAlto - rCrit;
+
+  document.getElementById('eixosCards').innerHTML = `
+    <div class="eixo-card" style="border-left: 3px solid #4a7ab8">
+      <div class="eixo-left"><div class="eixo-top-row"><div class="eixo-titulo tempo">Tempo</div><div class="eixo-num">${p.idade_media}<span class="unit">dias</span></div></div>
+      <div class="eixo-desc">Media geral do portfolio. ${faixaDesc}. Mediana ${p.idade_mediana}d.</div></div>
+      <div class="eixo-chart"><div class="eixo-bars" id="tempoChart"></div><div class="eixo-chart-label">media por faixa</div></div>
+    </div>
+    <div class="eixo-card" style="border-left: 3px solid #3d8a5a">
+      <div class="eixo-left"><div class="eixo-top-row"><div class="eixo-titulo fluxo">Fluxo</div><div class="eixo-num">${r.fluxo.pct}<span class="unit">%</span></div></div>
+      <div class="eixo-desc"><em>${r.fluxo.pct}% tiveram movimentacao</em> recente. ${al.total} obras com alerta de parada. ${alertDesc}.</div></div>
+      <div class="eixo-chart"><svg viewBox="0 0 200 60"><text x="0" y="10" font-family="var(--mono)" font-size="7" fill="#8a7e72">ALERTAS ATIVOS (${al.total})</text>${
+        Object.entries(al.por_tipo || {}).slice(0,3).map(([k,v], i) => {
+          const w = Math.max(8, Math.round(v / (al.total||1) * 180));
+          const colors = ['var(--red)','var(--amber)','var(--blue)'];
+          const y = 16 + i * 14;
+          return `<rect x="0" y="${y}" width="${w}" height="10" rx="2" fill="${colors[i]||'var(--muted)'}" opacity="0.5"/><text x="${w+4}" y="${y+8}" font-family="var(--mono)" font-size="8" fill="${colors[i]||'var(--muted)'}">${v} ${k.replace(/_/g,' ')}</text>`;
+        }).join('')
+      }</svg><div class="eixo-chart-label">tipo de alerta</div></div>
+    </div>
+    <div class="eixo-card" style="border-left: 3px solid #b89a4a">
+      <div class="eixo-left"><div class="eixo-top-row"><div class="eixo-titulo qualidade">Qualidade</div><div class="eixo-num">${rt.total}<span class="unit">obras</span></div></div>
+      <div class="eixo-desc"><em>${rt.pct}% do portfolio</em> em retrabalho (${nReparo} reparos + ${nMarcas} marcas cera). ${retrabDesc}.</div></div>
+      <div class="eixo-chart"><svg viewBox="0 0 200 60"><text x="0" y="10" font-family="var(--mono)" font-size="7" fill="#8a7e72">TIPO DE PROBLEMA</text>
+        <rect x="0" y="16" width="${Math.round(nReparo/rt.total*160)||4}" height="10" rx="2" fill="var(--red)" opacity="0.5"/><text x="${Math.round(nReparo/rt.total*160)+4}" y="24" font-family="var(--mono)" font-size="8" fill="#c45a5a">${nReparo} reparo</text>
+        <rect x="0" y="30" width="${Math.max(4,Math.round(nMarcas/rt.total*160))}" height="10" rx="2" fill="var(--amber)" opacity="0.6"/><text x="${Math.max(4,Math.round(nMarcas/rt.total*160))+4}" y="38" font-family="var(--mono)" font-size="8" fill="#b89a4a">${nMarcas} marcas</text>
+      </svg><div class="eixo-chart-label">categorias</div></div>
+    </div>
+    <div class="eixo-card" style="border-left: 3px solid #c45a5a">
+      <div class="eixo-left"><div class="eixo-top-row"><div class="eixo-titulo risco-t">Risco</div><div class="eixo-num">${critAlto}<span class="unit">obras</span></div></div>
+      <div class="eixo-desc"><em>${pct(critAlto,total)}% em alto ou critico</em> (${dr.critico||0} criticos + ${dr.alto||0} altos). ${pct(dr.baixo||0,total)}% em risco baixo. ${semScore} sem score.</div></div>
+      <div class="eixo-chart"><svg viewBox="0 0 200 60"><text x="0" y="10" font-family="var(--mono)" font-size="7" fill="#8a7e72">DISTRIBUICAO</text>
+        <rect x="0" y="18" width="200" height="20" rx="4" fill="#e8e0d4"/>
+        <rect x="0" y="18" width="${rBaixo}" height="20" rx="4" fill="rgba(61,138,90,.5)"/>
+        <rect x="${rBaixo}" y="18" width="${rMod}" height="20" fill="rgba(184,154,74,.5)"/>
+        <rect x="${rBaixo+rMod}" y="18" width="${rAlto}" height="20" fill="rgba(196,90,90,.5)"/>
+        <rect x="${rBaixo+rMod+rAlto}" y="18" width="${rCrit}" height="20" fill="rgba(184,58,58,.7)"/>
+        ${rBaixo > 30 ? `<text x="${rBaixo/2}" y="31" text-anchor="middle" font-family="var(--mono)" font-size="8" fill="#fff" font-weight="700">${dr.baixo||0}</text>` : ''}
+        ${rMod > 20 ? `<text x="${rBaixo+rMod/2}" y="31" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#fff" font-weight="700">${dr.moderado||0}</text>` : ''}
+        ${rAlto > 14 ? `<text x="${rBaixo+rMod+rAlto/2}" y="31" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#fff" font-weight="700">${dr.alto||0}</text>` : ''}
+        ${rCrit > 10 ? `<text x="${rBaixo+rMod+rAlto+rCrit/2}" y="31" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#fff" font-weight="700">${dr.critico||0}</text>` : ''}
+        <text x="${rBaixo/2}" y="50" text-anchor="middle" font-family="var(--mono)" font-size="7" fill="#3d8a5a">${pct(dr.baixo||0,total)}%</text>
+      </svg><div class="eixo-chart-label">baixo → critico (proporcional)</div></div>
+    </div>`;
+}
+
+function renderAtencao(D) {
+  const top = D.obras.filter(o => o.risco_valor && o.risco_valor >= 50)
+    .sort((a, b) => (b.risco_valor||0) - (a.risco_valor||0)).slice(0, 10);
+  const tbody = document.getElementById('atencaoBody');
+  tbody.innerHTML = top.map(o => {
+    const orig = o.classificacao_origem || '';
+    const pillCls = orig === 'retorno' ? 'retorno' : 'nova';
+    const pillLabel = orig === 'retorno' ? 'ret' : (orig || '?').substring(0,4);
+    const nivel = o.risco_nivel || 'sem';
+    const badgeCls = nivel === 'critico' ? 'critico' : nivel === 'alto' ? 'alto' : 'medio';
+    return `<tr>
+      <td><span class="cli">${o.cliente}</span></td>
+      <td><span class="pill ${pillCls}">${pillLabel}</span></td>
+      <td style="font-family:var(--mono);text-align:right;color:${idadeCor(o.idade)};${o.idade>180?'font-weight:600':''}">${o.idade}</td>
+      <td><span class="score-badge ${badgeCls}">${nivel.substring(0,4)} ${o.risco_valor}</span></td>
+      <td style="font-size:11px;color:#6b6156">${o.status}</td>
+      <td style="font-size:11px;color:var(--muted)">${o.consultor || '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderRisco(D) {
+  const dr = D.indicadores.distribuicao_risco, total = D.indicadores.portfolio.total;
+  const semScore = dr.sem_score || 0;
+  document.getElementById('riscoGrid').innerHTML = RISCO_LEVELS.map(lv => {
+    const n = dr[lv.key] || 0;
+    const sub = lv.key === 'baixo' ? `${lv.range} · ${semScore} sem score` : lv.range;
+    return `<div class="risco-card ${lv.cls}"><div class="risco-tag">${lv.label}</div>
+      <div style="display:flex;align-items:flex-end;gap:8px"><div class="risco-num">${n}</div><div class="risco-pct">${pct(n,total)}%</div></div>
+      <div class="risco-sub">${sub}</div></div>`;
+  }).join('');
+}
+
+function renderCross(D) {
+  const cons = D.indicadores.consultor, rt = D.indicadores.retrabalho, g = D.indicadores.gargalo;
+  const dist = D.indicadores.distribuicao_fase, bf = D.indicadores.benchmark_faixa;
+  const total = D.indicadores.portfolio.total;
+
+  const topRetrab = Object.entries(rt.por_consultor || {}).sort((a,b) => b[1]-a[1]);
+  const nome1 = topRetrab[0] ? topRetrab[0][0] : '-', val1 = topRetrab[0] ? topRetrab[0][1] : 0;
+  const nome2 = topRetrab[1] ? topRetrab[1][0] : '-', val2 = topRetrab[1] ? topRetrab[1][1] : 0;
+  const info1 = cons[nome1] || {}, info2 = cons[nome2] || {};
+  const retPct = rt.total > 0 ? Math.round(val1 / rt.total * 100) : 0;
+  const circ = 175.93;
+
+  const sc = cons['sem_consultor'] || cons[''] || { n_obras: 0, idade_media: 0 };
+  const comCons = Object.entries(cons).filter(([k]) => k && k !== 'sem_consultor').reduce((acc, [,v]) => ({ n: acc.n + v.n_obras, sum: acc.sum + v.n_obras * v.idade_media }), { n: 0, sum: 0 });
+  const idadeComCons = comCons.n > 0 ? Math.round(comCons.sum / comCons.n) : 0;
+  const maxIdade = Math.max(idadeComCons, sc.idade_media || 0, 1);
+
+  const nPlan = dist.planejamento || 0, nExec = dist.em_execucao || 0;
+  const ratio = nExec > 0 ? (nPlan / nExec).toFixed(1) : 'N/A';
+
+  document.getElementById('crossDiscoveries').innerHTML = `
+    <div class="discovery" style="border-top: 3px solid var(--red);">
+      <div class="discovery-tag"><span class="dtag crit">Risco</span> Concentracao de retrabalho</div>
+      <div class="discovery-visual">
+        <div class="disc-ring"><svg viewBox="0 0 72 72"><circle class="disc-ring-bg" cx="36" cy="36" r="28"/>
+          <circle class="disc-ring-fill" cx="36" cy="36" r="28" stroke="var(--red)" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-target="${(circ * (1 - retPct/100)).toFixed(1)}" id="ringWesley"/></svg>
+          <div class="disc-ring-center"><span class="disc-ring-num" style="color:var(--red)">${retPct}</span><span class="disc-ring-unit">% retrabalho</span></div></div>
+        <div><div style="font-size:22px;font-weight:700;color:var(--text-2);font-family:var(--mono);line-height:1">${nome1.split(' ')[0]}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${info1.n_obras||0} obras &middot; ${val1} em retrabalho</div></div>
+      </div>
+      <div class="discovery-text">Concentra <span class="neg">${retPct}% de todo retrabalho</span> (${val1} de ${rt.total}) com ${pct(info1.n_obras||0, total)}% das obras. ${nome2} tem ${info2.n_obras||0} obras mas <strong>${val2} retrabalhos</strong> (${pct(val2,rt.total)}%).</div>
+    </div>
+    <div class="discovery" style="border-top: 3px solid var(--amber);">
+      <div class="discovery-tag"><span class="dtag warn">Atencao</span> Obras sem consultor</div>
+      <div class="discovery-visual" style="flex-direction:column;gap:10px"><div class="disc-compare" style="width:100%">
+        <div class="disc-compare-row"><div class="disc-compare-label">Com consultor</div><div class="disc-compare-bar-wrap"><div class="disc-compare-bar" style="width:0%;background:var(--accent)" data-target="${Math.round(idadeComCons/maxIdade*80)}">${idadeComCons}d</div></div><div class="disc-compare-delta" style="color:var(--muted)">${comCons.n} obras</div></div>
+        <div class="disc-compare-row"><div class="disc-compare-label" style="color:var(--amber);font-weight:600">Sem consultor</div><div class="disc-compare-bar-wrap"><div class="disc-compare-bar" style="width:0%;background:var(--amber)" data-target="${Math.round((sc.idade_media||0)/maxIdade*80)}">${Math.round(sc.idade_media||0)}d</div></div><div class="disc-compare-delta" style="color:var(--amber)">${sc.n_obras} obras</div></div>
+      </div></div>
+      <div class="discovery-text" style="margin-top:4px"><strong>${sc.n_obras} obras</strong> (${pct(sc.n_obras,total)}%) sem consultor. Sao as mais <strong>novas</strong> (${Math.round(sc.idade_media||0)}d vs ${idadeComCons}d) — provavelmente entraram recentemente e nao foram atribuidas.</div>
+    </div>
+    <div class="discovery" style="border-top: 3px solid var(--scarlet);">
+      <div class="discovery-tag"><span class="dtag crit">Critico</span> Gargalo de fluxo</div>
+      <div class="discovery-visual" style="justify-content:center;gap:20px;padding:6px 0"><div class="disc-bubbles">
+        <div style="text-align:center"><div class="disc-bubble" style="width:80px;height:80px;background:rgba(184,58,58,.1);border:2px solid rgba(184,58,58,.3)" data-scale="1"><span class="disc-bubble-num" style="font-size:22px;color:var(--scarlet)">${nPlan}</span><span class="disc-bubble-label" style="color:var(--red)">OBRAS</span></div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--red);margin-top:6px;font-weight:600">${pct(nPlan,total)}%</div><div style="font-size:8px;color:var(--red);letter-spacing:.06em;font-weight:600">EM PLANEJAMENTO</div></div>
+        <div style="font-size:18px;color:var(--muted-3);align-self:center;margin-bottom:20px">vs</div>
+        <div style="text-align:center"><div class="disc-bubble" style="width:52px;height:52px;background:rgba(184,154,74,.1);border:2px solid rgba(184,154,74,.3)" data-scale="1"><span class="disc-bubble-num" style="font-size:15px;color:var(--amber)">${nExec}</span><span class="disc-bubble-label" style="color:var(--amber)">OBRAS</span></div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--amber);margin-top:6px">${pct(nExec,total)}%</div><div style="font-size:8px;color:var(--amber);letter-spacing:.06em">EM EXECUCAO</div></div>
+      </div></div>
+      <div class="discovery-text">Para cada obra em execucao, <span class="neg">${ratio} obras esperam em planejamento</span>. Pipeline congestionado: entrada nao acompanha a saida.</div>
+    </div>`;
+
+  const statusColors = { planejamento:'var(--red)', aguardando_execucao:'var(--amber)', em_execucao:'var(--green)', reparo:'#c47a4a', contrato:'var(--blue)', pausado:'var(--muted)', marcas_rolo_cera:'var(--amber)', aguardando_clima:'var(--blue)' };
+  const topStatus = Object.entries(dist).sort((a,b) => b[1]-a[1]).slice(0, 6);
+  const maxStatus = topStatus[0] ? topStatus[0][1] : 1;
+
+  const faixas = FAIXA_ORDER.filter(f => bf[f] && bf[f].n_obras > 0);
+  const maxFaixa = Math.max(...faixas.map(f => bf[f].idade_media));
+
+  document.getElementById('crossDetails').innerHTML = `
+    <div class="cross-block"><div class="cross-block-head">Distribuicao por status</div>${
+      topStatus.map(([k,v]) => `<div class="hbar-row"><div class="hbar-label">${k.replace(/_/g,' ')}</div><div class="hbar-track"><div class="hbar-fill" style="width:0%;background:${statusColors[k]||'var(--muted)'}" data-target="${Math.round(v/maxStatus*100)}">${v}</div></div><div class="hbar-value">${v}</div></div>`).join('')
+    }</div>
+    <div class="cross-block"><div class="cross-block-head">Benchmark tempo por faixa</div>${
+      faixas.map(f => {
+        const info = bf[f];
+        const dev = info.desvio_pct_vs_PP;
+        const devStr = f === 'PP' ? 'ref' : (dev >= 0 ? '+' : '') + dev.toFixed(0) + '%';
+        const devColor = f === 'PP' ? 'var(--green)' : dev > 10 ? 'var(--red)' : dev > 0 ? 'var(--amber)' : 'var(--green)';
+        return `<div class="bench-row"><div class="bench-faixa" style="background:${FAIXA_COLORS[f]||'var(--muted)'}">${f}</div><div class="bench-bar-wrap"><div class="bench-bar" style="width:0%;background:${FAIXA_COLORS[f]||'var(--muted)'}55" data-target="${Math.round(info.idade_media/maxFaixa*100)}"></div></div><div class="bench-val">${Math.round(info.idade_media)}d</div><div class="bench-dev" style="color:${devColor}">${devStr}</div></div>`;
+      }).join('')
+    }</div>`;
+
+  document.getElementById('insightBlock').innerHTML = `<div class="insight-title">Conclusao da analise cruzada</div>
+    Tres padroes que a analise individual nao revela:
+    <strong>${nome1.split(' ')[0]}</strong> concentra ${retPct}% dos retrabalhos (${val1}/${rt.total}) com ${pct(info1.n_obras||0,total)}% das obras — desproporcao operacional.
+    <strong>${sc.n_obras} obras sem consultor</strong> sao as mais novas (${Math.round(sc.idade_media||0)}d) — precisam de atribuicao.
+    <strong>Planejamento</strong> acumula ${nPlan} obras (${pct(nPlan,total)}%) — para cada em execucao, ${ratio} esperam na fila.`;
+}
+
+function renderAside(D) {
+  const r = D.indicadores.radar, p = D.indicadores.portfolio, rt = D.indicadores.retrabalho;
+  const al = D.indicadores.alertas, dr = D.indicadores.distribuicao_risco, bf = D.indicadores.benchmark_faixa;
+  const semScore = dr.sem_score || 0;
+  const topRetrab = Object.entries(rt.por_consultor||{}).sort((a,b)=>b[1]-a[1]);
+  const nome1 = topRetrab[0]?topRetrab[0][0]:'-', val1 = topRetrab[0]?topRetrab[0][1]:0;
+  const alertDesc = Object.entries(al.por_tipo||{}).map(([k,v])=>`${k.replace(/_/g,' ')} (${v})`).join(', ');
+  const faixaStr = FAIXA_ORDER.filter(f=>bf[f]&&bf[f].n_obras>0).map(f=>`${f}: ${bf[f].n_obras} obras, ${Math.round(bf[f].idade_media)}d`).join('<br>');
+
+  document.getElementById('asideCol').innerHTML = `
+    <div class="aside-panel active" data-for="visao-geral">
+      <div class="aside-label"><span class="dot-ctx"></span> Contexto · Visao geral</div>
+      <div class="aside-card"><div class="aside-card-title">O que voce esta olhando</div>Ferramenta de analise agregada que cruza <em>3 fontes</em> pra revelar padroes entre obras — risco, fluxo, gargalos e descobertas cross-obra.
+        <div class="aside-formula">dashboard-data.json (${D.fontes.dashboard.n_obras} obras)<br>timeline_obras.json (score risco)<br>jornadas.json (classificacao, m2)</div></div>
+      <div class="aside-card"><div class="aside-card-title">Pipeline de fases</div>Mostra onde cada obra esta <em>agora</em> no fluxo. Segmentos maiores = mais obras naquela fase. Se uma fase acumula, e gargalo.
+        <div class="aside-formula">Planej. → Contrato → Ag.Exec. →<br>Execucao → Retrabalho<br>Parado (separado)</div></div>
+      <div class="aside-verdict warn"><strong>Por que nao tem "total de obras" aqui?</strong> Esse dado ja esta na Central de Qualidade. A Timeline mostra o que a Central nao mostra: como as obras se movem, onde travam e quais padroes emergem.</div>
+    </div>
+    <div class="aside-panel" data-for="eixos">
+      <div class="aside-label"><span class="dot-ctx"></span> Contexto · Eixos estrategicos</div>
+      <div class="aside-card"><div class="aside-card-title">Por que 4 eixos?</div>A diretoria pensa em 5 perguntas: tempo, volume, problemas, capacidade, saude. Os eixos cobrem 4 delas — volume ja esta na visao geral (${p.total} obras).
+        <div class="aside-formula">Tempo  = ${r.tempo.formula} = ${r.tempo.numerador}/${r.tempo.denominador}<br>Fluxo  = ${r.fluxo.formula} = ${r.fluxo.numerador}/${r.fluxo.denominador}<br>Qualid = ${r.qualidade.formula} = ${r.qualidade.numerador}/${r.qualidade.denominador}<br>Risco  = ${r.risco.formula} = ${r.risco.numerador}/${r.risco.denominador}</div></div>
+      <div class="aside-card"><div class="aside-card-title">Tempo: o que "${p.idade_media} dias" significa</div>Dias corridos desde a criacao do card no Painel ate hoje. Mediana ${p.idade_mediana}d.<br><br><strong style="color:var(--text-2);font-size:11px">Nao confundir com prazo de execucao.</strong><br>Obra de 200 dias pode estar no prazo — se o contrato demorou 5 meses, a execucao nem comecou.</div>
+      <div class="aside-card"><div class="aside-card-title">Fluxo: como e medido</div>Obras com <em>alerta_parada</em> no timeline_obras.json. ${alertDesc}. Total: ${al.total} obras = ${pct(al.total,p.total)}%.</div>
+      <div class="aside-verdict warn"><strong>Calibracao:</strong> Benchmarks por faixa sao medias reais das ${bf._acima_media.denominador} obras com metragem.</div>
+    </div>
+    <div class="aside-panel" data-for="atencao">
+      <div class="aside-label"><span class="dot-ctx"></span> Contexto · Demanda de atencao</div>
+      <div class="aside-card"><div class="aside-card-title">Criterio de entrada na lista</div>Obras com score de risco >= 50 (alto ou critico), ordenadas pelo score.</div>
+      <div class="aside-card"><div class="aside-card-title">Natureza importa</div><span class="pill retorno" style="font-size:8px">ret</span> = retorno (2a passagem, reparo). Cronograma original ja foi cumprido. <em>Nao contar como atraso</em> em metricas de prazo.
+        <div class="aside-quote">"Retrabalho = dias de aplicacao fisica. Tratativas = visitas, relatorios, definicoes."</div></div>
+    </div>
+    <div class="aside-panel" data-for="risco">
+      <div class="aside-label"><span class="dot-ctx"></span> Contexto · Distribuicao de risco</div>
+      <div class="aside-card"><div class="aside-card-title">Faixas de corte</div>
+        <div class="aside-stat-row"><span><span class="aside-flag crit">Critico</span></span><span class="vl">70-100</span></div>
+        <div class="aside-stat-row"><span><span class="aside-flag warn">Alto</span></span><span class="vl">60-69</span></div>
+        <div class="aside-stat-row"><span>Medio</span><span class="vl">30-59</span></div>
+        <div class="aside-stat-row"><span><span class="aside-flag ok">Baixo</span></span><span class="vl">0-29</span></div></div>
+      <div class="aside-verdict"><strong>Score e v1</strong> (mai/2026). ${semScore} obras (${pct(semScore,p.total)}%) sem score — obras novas sem dados suficientes.</div>
+    </div>
+    <div class="aside-panel" data-for="cross">
+      <div class="aside-label"><span class="dot-ctx"></span> Contexto · Analise cross-obra</div>
+      <div class="aside-card"><div class="aside-card-title">Faixas de metragem</div>
+        <div class="aside-stat-row"><span>PP</span><span class="vl">&lt;60 m2</span></div>
+        <div class="aside-stat-row"><span>P</span><span class="vl">60-100</span></div>
+        <div class="aside-stat-row"><span>M</span><span class="vl">100-150</span></div>
+        <div class="aside-stat-row"><span>G</span><span class="vl">150-220</span></div>
+        <div class="aside-stat-row"><span>GG</span><span class="vl">220-300</span></div>
+        <div class="aside-stat-row"><span>XG</span><span class="vl">&gt;300</span></div></div>
+      <div class="aside-card"><div class="aside-card-title">Benchmark por faixa</div><div style="font-size:11px;line-height:1.8">${faixaStr}</div></div>
+      <div class="aside-verdict crit"><strong>3 achados principais:</strong><br>1. ${nome1} concentra ${Math.round(val1/rt.total*100)}% dos retrabalhos (${val1}/${rt.total})<br>2. ${(D.indicadores.consultor['sem_consultor']||{}).n_obras||0} obras sem consultor — as mais novas<br>3. Planejamento acumula ${D.indicadores.gargalo.n_obras} obras (${D.indicadores.gargalo.pct}%)</div>
+    </div>`;
+}
+
+function renderFooter(D) {
+  document.getElementById('footer').textContent = `Qualidade Monofloor · Timeline v2 · ${fmt(D.gerado_em)} · 3 fontes (dashboard-data, timeline_obras, jornadas)`;
+}
+
+function initScrollSync() {
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.top-nav a');
+  const panels = document.querySelectorAll('.aside-panel');
+  let currentPanel = 'visao-geral';
+  function update() {
+    let active = 'visao-geral';
+    const y = window.scrollY + 120;
+    sections.forEach(s => { if (s.offsetTop <= y) active = s.id; });
+    if (active !== currentPanel) {
+      currentPanel = active;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + active));
+      panels.forEach(p => p.classList.toggle('active', p.dataset.for === active));
+      document.querySelector('.aside-col').scrollTop = 0;
     }
   }
+  window.addEventListener('scroll', update);
+  update();
+  navLinks.forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); }));
+}
 
-  // Phase 2: continuous breathing — points oscillate subtly
+function initAnimations(D) {
+  const r = D.indicadores.radar;
+  const shape = document.getElementById('radarShape');
+  const cx = 110, cy = 110;
+  const axes = [
+    { pct: r.tempo.valor,     vx: 110, vy: 30,  dot: 'rDot0', freq: 0.7, amp: 4 },
+    { pct: r.fluxo.valor,     vx: 186, vy: 70,  dot: 'rDot1', freq: 0.9, amp: 3.5 },
+    { pct: r.qualidade.valor, vx: 186, vy: 150, dot: 'rDot2', freq: 0.6, amp: 3 },
+    { pct: r.risco.valor,     vx: 34,  vy: 150, dot: 'rDot3', freq: 1.1, amp: 4.5 }
+  ];
+  const targets = axes.map(a => ({ x: cx + a.pct * (a.vx - cx), y: cy + a.pct * (a.vy - cy), dot: a.dot, freq: a.freq, amp: a.amp, dx: a.vx - cx, dy: a.vy - cy }));
+
+  let radarStart = null, expanded = false;
+  function radarExpand(ts) {
+    if (!radarStart) radarStart = ts;
+    const t = Math.min((ts - radarStart) / 900, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const pts = targets.map(p => (cx + ease * (p.x - cx)).toFixed(1) + ',' + (cy + ease * (p.y - cy)).toFixed(1));
+    shape.setAttribute('points', pts.join(' '));
+    targets.forEach(p => { const d = document.getElementById(p.dot); d.setAttribute('cx', (cx + ease * (p.x - cx)).toFixed(1)); d.setAttribute('cy', (cy + ease * (p.y - cy)).toFixed(1)); });
+    if (t < 1) requestAnimationFrame(radarExpand); else { expanded = true; requestAnimationFrame(radarBreathe); }
+  }
   function radarBreathe(ts) {
     const sec = ts / 1000;
-    const pts = targets.map(p => {
-      const osc = Math.sin(sec * p.freq * Math.PI * 2) * p.amp;
-      const len = Math.sqrt(p.dx * p.dx + p.dy * p.dy);
-      const nx = p.dx / len, ny = p.dy / len;
-      const x = p.x + nx * osc;
-      const y = p.y + ny * osc;
-      return { x, y, dot: p.dot };
-    });
+    const pts = targets.map(p => { const osc = Math.sin(sec * p.freq * Math.PI * 2) * p.amp; const len = Math.sqrt(p.dx*p.dx+p.dy*p.dy); return { x: p.x + p.dx/len*osc, y: p.y + p.dy/len*osc, dot: p.dot }; });
     shape.setAttribute('points', pts.map(p => p.x.toFixed(1)+','+p.y.toFixed(1)).join(' '));
-    pts.forEach(p => {
-      const dot = document.getElementById(p.dot);
-      dot.setAttribute('cx', p.x.toFixed(1));
-      dot.setAttribute('cy', p.y.toFixed(1));
-    });
+    pts.forEach(p => { const d = document.getElementById(p.dot); d.setAttribute('cx', p.x.toFixed(1)); d.setAttribute('cy', p.y.toFixed(1)); });
     requestAnimationFrame(radarBreathe);
   }
 
-  // Eixo cards: reveal one by one (3s interval) when section enters viewport
   const eixoCards = document.querySelectorAll('.eixo-card');
   const eixoDots = ['rDot0','rDot1','rDot2','rDot3'];
   const eixoColors = ['#4a7ab8','#3d8a5a','#b89a4a','#c45a5a'];
-
   let eixosAnimated = false;
-  const eixosObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting && !eixosAnimated) {
-        eixosAnimated = true;
-        eixosObs.disconnect();
-        requestAnimationFrame(radarExpand);
-        revealEixoCards();
-      }
-    });
-  }, { threshold: 0.05 });
+  const eixosObs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting && !eixosAnimated) { eixosAnimated = true; eixosObs.disconnect(); requestAnimationFrame(radarExpand); eixoCards.forEach((card, i) => { setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; const dot = document.getElementById(eixoDots[i]); if (dot) { dot.setAttribute('r', '9'); dot.style.filter = 'drop-shadow(0 0 10px ' + eixoColors[i] + ')'; dot.setAttribute('fill', eixoColors[i]); setTimeout(() => { dot.setAttribute('r', '4'); dot.style.filter = ''; dot.setAttribute('fill', ''); }, 800); } }, 800 + i * 3000); }); } }); }, { threshold: 0.05 });
   eixosObs.observe(document.getElementById('eixos'));
 
-  function revealEixoCards() {
-    eixoCards.forEach((card, i) => {
-      setTimeout(() => {
-        card.style.opacity = '1';
-        card.style.transform = 'translateY(0)';
-        // Pulse the corresponding radar dot
-        const dot = document.getElementById(eixoDots[i]);
-        if (dot) {
-          const origFill = dot.getAttribute('fill') || '';
-          dot.setAttribute('r', '9');
-          dot.style.filter = 'drop-shadow(0 0 10px ' + eixoColors[i] + ')';
-          dot.setAttribute('fill', eixoColors[i]);
-          setTimeout(() => {
-            dot.setAttribute('r', '4');
-            dot.style.filter = '';
-            dot.setAttribute('fill', '');
-          }, 800);
-        }
-      }, 800 + i * 3000);
-    });
-  }
-
-  // Tempo bar chart
-  const bars = [
-    { label: 'PP', val: 179,  color: '#3d8a5a' },
-    { label: 'P',  val: 180,  color: '#6a9a5a' },
-    { label: 'M',  val: 213,  color: '#b89a4a' }
-  ];
-  const maxVal = 213;
+  const bf = D.indicadores.benchmark_faixa;
+  const faixas = FAIXA_ORDER.filter(f => bf[f] && bf[f].n_obras > 0);
+  const maxVal = Math.max(...faixas.map(f => bf[f].idade_media));
   const container = document.getElementById('tempoChart');
   if (container) {
-    bars.forEach((b, i) => {
+    faixas.forEach((f, i) => {
       const el = document.createElement('div');
       el.className = 'eixo-bar';
-      el.setAttribute('data-label', b.label);
-      el.style.background = b.color;
+      el.setAttribute('data-label', f);
+      el.style.background = FAIXA_COLORS[f] || '#999';
       el.style.height = '0px';
-      el.title = b.label + ': ' + b.val + 'd';
+      el.title = f + ': ' + Math.round(bf[f].idade_media) + 'd';
       container.appendChild(el);
-      setTimeout(() => {
-        el.style.height = (b.val / maxVal * 50) + 'px';
-      }, 200 + i * 80);
+      setTimeout(() => { el.style.height = (bf[f].idade_media / maxVal * 50) + 'px'; }, 200 + i * 80);
     });
   }
 
-  // Trail SVG: draw paths progressively + fade in nodes
+  // Trail reveal
   const trailPaths = document.querySelectorAll('#trailSvg .trail-path, #trailSvg .trail-path-red');
-  const trailNodes = document.querySelectorAll('#trailSvg .trail-node-circle');
   const trailAll = document.querySelectorAll('#trailSvg circle:not(.trail-gargalo-ring), #trailSvg text, #trailSvg rect, #trailSvg line.trail-tag-stem');
-
-  // Hide everything initially
   trailAll.forEach(el => { el.style.opacity = '0'; el.style.transition = 'opacity .4s ease'; });
-  trailPaths.forEach(p => {
-    const len = p.getTotalLength();
-    p.style.strokeDasharray = len;
-    p.style.strokeDashoffset = len;
-    p.style.transition = 'stroke-dashoffset .6s ease';
-  });
-
-  // Node center positions for sequencing (7 nodes)
-  const nodeSequence = [
-    { cx: 75, delay: 0 },
-    { cx: 195, delay: 400 },
-    { cx: 340, delay: 800 },
-    { cx: 480, delay: 1200 },
-    { cx: 620, delay: 1600 },
-    { cx: 740, delay: 2000 }
-  ];
-
+  trailPaths.forEach(p => { const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.transition = 'stroke-dashoffset .6s ease'; });
+  const nodeSeq = TRAIL_NODES.map((n, i) => ({ cx: n.cx, delay: i * 400 }));
   function revealTrail() {
-    // Draw paths one by one
-    trailPaths.forEach((p, i) => {
-      setTimeout(() => { p.style.strokeDashoffset = '0'; }, 200 + i * 400);
-    });
-    // Reveal nodes and their labels by proximity to cx
-    nodeSequence.forEach((ns, i) => {
-      setTimeout(() => {
-        trailAll.forEach(el => {
-          const x = parseFloat(el.getAttribute('cx') || el.getAttribute('x') || el.getAttribute('x1') || '0');
-          if (Math.abs(x - ns.cx) < 50) el.style.opacity = '1';
-        });
-      }, ns.delay + 300);
-    });
-    // Gargalo ring last
-    const gRings = document.querySelectorAll('.trail-gargalo-ring');
-    gRings.forEach(r => {
-      if (parseFloat(r.getAttribute('r')) > 0) {
-        r.style.opacity = '0'; r.style.transition = 'opacity .5s ease';
-        setTimeout(() => { r.style.opacity = '1'; }, 1200);
-      }
-    });
+    trailPaths.forEach((p, i) => { setTimeout(() => { p.style.strokeDashoffset = '0'; }, 200 + i * 400); });
+    nodeSeq.forEach(ns => { setTimeout(() => { trailAll.forEach(el => { const x = parseFloat(el.getAttribute('cx') || el.getAttribute('x') || el.getAttribute('x1') || '0'); if (Math.abs(x - ns.cx) < 50) el.style.opacity = '1'; }); }, ns.delay + 300); });
+    document.querySelectorAll('.trail-gargalo-ring').forEach(r => { r.style.opacity = '0'; r.style.transition = 'opacity .5s ease'; setTimeout(() => { r.style.opacity = '1'; }, 1200); });
   }
-
-  // Trigger on load (top of page is visible)
   setTimeout(revealTrail, 300);
 
-  // Cross-obra: animate when section scrolls into view
+  // Cross animations
   const crossSection = document.getElementById('cross');
   let crossAnimated = false;
-  const crossObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting && !crossAnimated) {
-        crossAnimated = true;
-        crossObs.disconnect();
-        animateCross();
-      }
-    });
-  }, { threshold: 0.15 });
+  const crossObs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting && !crossAnimated) { crossAnimated = true; crossObs.disconnect(); animateCross(); } }); }, { threshold: 0.15 });
   crossObs.observe(crossSection);
 
   function animateCross() {
-    // 1. Wesley ring — stroke-dashoffset from 175.9 to target (43%)
     const ring = document.getElementById('ringWesley');
-    if (ring) {
-      const pct = 43 / 100;
-      const offset = 175.9 * (1 - pct);
-      setTimeout(() => { ring.style.strokeDashoffset = offset.toFixed(1); }, 100);
-    }
-
-    // 2. Compare bars (sem consultor vs com)
-    document.querySelectorAll('.disc-compare-bar').forEach((bar, i) => {
-      const target = bar.getAttribute('data-target');
-      setTimeout(() => { bar.style.width = target + '%'; }, 200 + i * 150);
-    });
-
-    // 3. Bubbles scale animation
-    document.querySelectorAll('.disc-bubble[data-scale]').forEach((b, i) => {
-      b.style.transform = 'scale(0)';
-      b.style.transition = 'transform .5s cubic-bezier(.22,.61,.36,1)';
-      setTimeout(() => { b.style.transform = 'scale(1)'; }, 300 + i * 200);
-    });
-
-    // 4. Horizontal bars (top problemas)
-    document.querySelectorAll('.hbar-fill').forEach((bar, i) => {
-      const target = bar.getAttribute('data-target');
-      setTimeout(() => { bar.style.width = target + '%'; }, 150 + i * 80);
-    });
-
-    // 5. Benchmark bars
-    document.querySelectorAll('.bench-bar').forEach((bar, i) => {
-      const target = bar.getAttribute('data-target');
-      setTimeout(() => { bar.style.width = target + '%'; }, 200 + i * 100);
-    });
-
-    // 6. Discovery cards entrance
-    document.querySelectorAll('.discovery').forEach((card, i) => {
-      card.style.opacity = '0'; card.style.transform = 'translateY(16px)';
-      card.style.transition = 'opacity .4s ease, transform .4s ease';
-      setTimeout(() => {
-        card.style.opacity = '1'; card.style.transform = 'translateY(0)';
-      }, i * 120);
-    });
+    if (ring) { const target = ring.getAttribute('data-target'); setTimeout(() => { ring.style.strokeDashoffset = target; }, 100); }
+    document.querySelectorAll('.disc-compare-bar').forEach((bar, i) => { const target = bar.getAttribute('data-target'); setTimeout(() => { bar.style.width = target + '%'; }, 200 + i * 150); });
+    document.querySelectorAll('.disc-bubble[data-scale]').forEach((b, i) => { b.style.transform = 'scale(0)'; b.style.transition = 'transform .5s cubic-bezier(.22,.61,.36,1)'; setTimeout(() => { b.style.transform = 'scale(1)'; }, 300 + i * 200); });
+    document.querySelectorAll('.hbar-fill').forEach((bar, i) => { const target = bar.getAttribute('data-target'); setTimeout(() => { bar.style.width = target + '%'; }, 150 + i * 80); });
+    document.querySelectorAll('.bench-bar').forEach((bar, i) => { const target = bar.getAttribute('data-target'); setTimeout(() => { bar.style.width = target + '%'; }, 200 + i * 100); });
+    document.querySelectorAll('.discovery').forEach((card, i) => { card.style.opacity = '0'; card.style.transform = 'translateY(16px)'; card.style.transition = 'opacity .5s ease, transform .5s ease'; setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 100 + i * 150); });
   }
-});
+}
+
+async function init() {
+  try {
+    const resp = await fetch('dados/analise-unificada.json');
+    if (!resp.ok) throw new Error(resp.status);
+    const D = await resp.json();
+    renderHeader(D);
+    renderManchete(D);
+    renderTrail(D);
+    renderSignals(D);
+    renderRadar(D);
+    renderEixos(D);
+    renderAtencao(D);
+    renderRisco(D);
+    renderCross(D);
+    renderAside(D);
+    renderFooter(D);
+    initScrollSync();
+    initAnimations(D);
+  } catch (e) {
+    document.querySelector('.main-col').innerHTML = '<div class="load-error">Dados indisponiveis — rode <code>python analise/dados/pipeline_unificado.py</code> primeiro.<br><br><small>' + e.message + '</small></div>';
+  }
+}
+init();
 </script>
 </body>
 </html>

@@ -1,10 +1,58 @@
 # 🎯 RETOMAR TIMELINE · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-19 · Timeline v2 mockup 100% dados reais + radar auditável + arquitetura 4 camadas + 10 ideias estratégicas
+> **Última atualização:** 2026-05-20 · Pipeline unificado + snapshot semanal + Timeline virou ferramenta viva (fetch dinâmico)
 
 ---
 
-## 🆕 SESSÃO 2026-05-19 · O QUE FECHAMOS HOJE
+## 🆕 SESSÃO 2026-05-20 · O QUE FECHAMOS HOJE
+
+### Pipeline unificado — ENTREGUE
+- ✅ `analise/dados/pipeline_unificado.py` — lê 3 fontes (dashboard-data, timeline_obras, jornadas), cruza por obra_id
+- ✅ CONSULTOR_ALIAS normaliza variantes → nomes canônicos (Wesley, Luana, Pedro, etc.)
+- ✅ Calcula faixa metragem, todos indicadores com fórmula auditável (numerador/denominador)
+- ✅ Output: `analise/dados/analise-unificada.json` (205KB, 216 obras, 204 com 3 fontes)
+- ✅ `validar_sanidade()` no final — guardrail automático
+
+### Snapshot semanal — ENTREGUE
+- ✅ `analise/dados/snapshot_semanal.py` — salva cópia datada em `snapshots-unificados/YYYY-MM-DD.json`
+- ✅ Delta vs snapshot anterior (radar, portfolio, retrabalho por consultor)
+- ✅ Primeiro snapshot salvo: `2026-05-20.json`
+
+### Timeline como ferramenta viva — ENTREGUE
+- ✅ `analise/mockup-timeline-v2.html` reescrito: fetch de `dados/analise-unificada.json`
+- ✅ Todas seções renderizadas dinamicamente (trail, signals, radar, eixos, atenção, risco, cross-obra, aside)
+- ✅ Animações preservadas (trail reveal, radar expand+breathe, eixo entrance, cross scroll-triggered)
+- ✅ Zero hardcode — tudo vem do JSON
+- ✅ Pendente: verificação visual completa pelo Vitor
+
+### Dados evoluíram vs sessão anterior
+- Total: 214→216 obras, retrabalho: 21→24, Wesley retrab: 9→14 (43%→58%)
+- Sem consultor: 41→15 (normalização CONSULTOR_ALIAS absorveu variantes)
+- Faixas agora incluem G/GG/XG (m2 atualizado pelo dashboard)
+
+### Memórias atualizadas
+- `project_arquitetura_4_camadas.md` — pipeline e snapshot marcados como ENTREGUE
+
+### Pendências pra próxima sessão
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Verificação visual completa da Timeline live | ~30min |
+| 2 | Panorama mensal (evolução carteira mês a mês) | ~1h |
+| 3 | Camada 2 — Triângulo de consistência material | ~2h |
+| 4 | Camada 3 — Score preditivo de risco (obras ativas) | ~2h |
+| 5 | Cross-obra: padrões por consultor × tipo problema | ~1h |
+| 6 | Relatório narrativo automático (ideia #6 do brainstorm) | ~2h |
+
+### Comando pra retomar (cole no Claude Code)
+
+```
+Lê analise/lab-hermeneuta/RETOMAR_TIMELINE.md primeiro · seção topo "SESSÃO 2026-05-20". Pipeline unificado entregue (analise/dados/pipeline_unificado.py → analise-unificada.json). Snapshot semanal entregue. Timeline HTML reescrita como ferramenta viva (fetch dinâmico). Memória: project_arquitetura_4_camadas.md. 216 obras, radar auditável. Próximo passo: verificação visual + panorama mensal (~1h).
+```
+
+---
+
+## 📜 SESSÃO 2026-05-19 · O QUE FECHAMOS
 
 ### Timeline v2 — mockup alimentado com dados 100% reais
 - ✅ `analise/mockup-timeline-v2.html` — 30+ pontos de dados substituídos, auditoria 30/30
