@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-22T20:00:49Z",
+  "atualizado_em": "2026-05-22T21:43:47Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1061,
@@ -10,13 +10,13 @@
     "m2_em_execucao": 3145
   },
   "por_status": {
-    "planejamento": 97,
     "contrato": 29,
+    "em_execucao": 24,
+    "planejamento": 97,
     "pausado": 2,
     "finalizado": 578,
     "aguardando_execucao": 44,
     "concluido": 227,
-    "em_execucao": 24,
     "aguardando_clima": 4,
     "reparo": 19,
     "cancelado": 35,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2151,
+    "pending_tasks": 2152,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2067,7 +2067,7 @@
     "fb8b0ed7-c47a-4ae6-ad0f-ec20cd4e8c7c": {
       "dataVisita": "",
       "dataEntrada": "",
-      "dataExec": "2026-04-28"
+      "dataExec": "2026-05-29"
     },
     "8fa22cd4-28fa-4d79-938c-1bad6bfee50e": {
       "dataVisita": "30/03/2026 13:00",
@@ -3024,17 +3024,17 @@
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-22T12:01:06.359000+00:00",
     "total_fluxo": 200,
-    "com_kira": 121,
+    "com_kira": 120,
     "saudavel": 69,
-    "saudavel_pct_no_monitorado": 57.0,
-    "atencao": 52,
-    "sem_kira": 79,
+    "saudavel_pct_no_monitorado": 57.5,
+    "atencao": 51,
+    "sem_kira": 80,
     "clima_dist": {
       "Positivo": 24,
       "Neutro": 46,
-      "Tenso": 56,
+      "Tenso": 55,
       "Crítico": 3,
-      "?": 91
+      "?": 92
     },
     "obras_atencao": [
       {
@@ -7395,126 +7395,6 @@
         ]
       },
       {
-        "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
-        "cliente": "JULIANA KOMEL DE OLIVEIRA",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "RIO DE JANEIRO / RJ",
-        "fase": "CLIENTE FINALIZADO",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 37,
-        "alertas": [
-          "Cliente em estado de insatisfação declarada (08/04): afirmou que não está feliz na própria casa e que não está pedindo um favor — risco de deterioração do relacionamento e possível impacto reputacional",
-          "Reunião cancelada sem aviso prévio no dia 08/04: falha grave de atendimento que abalou a confiança da cliente; exige postura proativa de recuperação na reunião de 15/04",
-          "Prazo de 27/04 para reaplicação está próximo e o alinhamento técnico completo (cronograma, equipes, prazo de secagem) ainda não foi consolidado"
-        ],
-        "pendencias": [
-          "Cronograma detalhado de trabalho: cliente solicitou em 09/04 e Mayara disse que verificaria o escopo — não há confirmação de envio até 13/04",
-          "Reunião com Rodrigo (portas, louças, limpeza): confirmada para 15/04, mas cliente ainda aguarda alinhamento completo com todas as equipes conforme solicitado em 09/04",
-          "Confirmação do prazo de secagem da massa/regularização: em 27/03 a Monofloor pediu que a cliente consultasse o engenheiro da obra e retornasse — não há resposta registrada sobre esse prazo na conversa"
-        ],
-        "resumo_exec": "A cliente Juliana Oliveira passou por um processo desgastante de obra emergencial causado por vazamento de responsabilidade de um vizinho, o que exigiu quebra do piso e adiou a reaplicação do revestimento Monofloor para 27/04/2026. O atendimento acumulou falhas de comunicação — especialmente o cancelamento sem aviso da reunião técnica em 08/04 — que geraram insatisfação explícita e abalo na confiança. A cliente demonstra engajamento e organização, tendo solicitado cronograma, lista de equipes e reunião estruturada, mas ainda não recebeu todas as respostas. A reunião confirmada para 15/04 com R",
-        "clima_desc": "Cliente demonstra frustração acumulada com os problemas da obra e com a falta de proatividade no atendimento. O cancelamento da reunião sem aviso prévio gerou insatisfação explícita e queda na confiança.",
-        "periodo": "20/02 a 13/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 51,
-        "eventos": [
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Agendamento da reaplicação para 27/04 (feriados de 21 e 23/04 no Rio)",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Cliente pergunta sobre vazamento no teto do prédio; equipe adia resposta para segunda-feira",
-            "classe": "critico"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Cliente informa início dos reparos do vazamento no banheiro na sexta-feira",
-            "classe": "critico"
-          },
-          {
-            "data": "26/03",
-            "iso": "2026-03-26",
-            "texto": "Cliente relata que o grosso da obra deve ser finalizado na semana seguinte; confirma que foi necessário quebrar o piso devido ao vazamento causado por negligência do vizinho em 2024",
-            "classe": "critico"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Monofloor alerta sobre necessidade de regularização com massa antes da aplicação (não aplicar direto na impermeabilização) e confirma organização do material em estoque no Rio",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "Cliente envia fotos do andamento da obra; Monofloor reforça orientação técnica sobre regularização prévia à aplicação",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Cliente informa conclusão da segunda mão e que realizará teste de água no dia seguinte; solicita reunião de alinhamento às 12h30",
-            "classe": "bom"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Monofloor informa que o horário de 12h30 não é possível e envia link de agendamento; reunião marcada para 08/04 às 14h",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Reunião não ocorre — Juliana (Monofloor) adoece e cliente é avisado apenas no horário da reunião (17h16), gerando reclamação formal do cliente",
-            "classe": "critico"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Cliente expressa insatisfação explícita com o estado da casa e com a condução do atendimento",
-            "classe": "critico"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Cliente solicita reunião com todas as equipes responsáveis (portas, louças, limpeza) e cronograma detalhado de trabalho",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Monofloor redireciona alinhamento de portas, louças e limpeza para o Rodrigo; cliente indisponível até sábado",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/04",
-            "iso": "2026-04-10",
-            "texto": "Monofloor envia link de agendamento com Rodrigo",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/04",
-            "iso": "2026-04-11",
-            "texto": "Cliente confirma disponibilidade apenas na quarta-feira 15/04 às 13h",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Monofloor confirma reunião para quarta 15/04 às 13h",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
         "id": "861a3d98-d181-4631-a943-c3dffb479af4",
         "cliente": "ADIL CHENAF",
         "consultor": "LUANA",
@@ -7685,7 +7565,7 @@
       },
       {
         "id": "d115fc6b-854d-455b-ac91-87dfdd0e183f",
-        "cliente": "ANDRÉ CAMPOS",
+        "cliente": "ANDRE MARCOS DIAS CAMPOS",
         "consultor": "—",
         "cidade": "São Paulo, capital",
         "fase": "CONTRATO",
@@ -8129,6 +8009,14 @@
         "consultor": "Pedro",
         "cidade": "SÃO PAULO",
         "fase": "EM CONTRATO",
+        "tem_grupo": false
+      },
+      {
+        "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
+        "cliente": "JULIANA KOMEL DE OLIVEIRA",
+        "consultor": "LUANA",
+        "cidade": "RIO DE JANEIRO / RJ",
+        "fase": "CLIENTE FINALIZADO",
         "tem_grupo": false
       },
       {
