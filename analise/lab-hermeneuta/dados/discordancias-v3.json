@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-05-20T21:10:34Z",
+  "gerado_em": "2026-05-22T13:59:34Z",
   "total_obras": 230,
   "resumo_executivo": "Das 230 obras analisadas (228 ativas), 216 coerentes (94%), 1 com status desatualizado e 11 em silêncio prolongado (abandono detectado · ≥30d sem msg em obra ativa). 51 obras com urgência alta · ação imediata recomendada. Detecção via cruzar_kira · 4 regras determinísticas · trilha auditável em cada obra (campo `analise_kira_trilha`). 2 obras sem análise (resíduo · finalizadas ou erro de fetch).",
   "obras": [
@@ -1611,14 +1611,14 @@
           "positivos": 1
         }
       },
-      "veredicto": "coerente",
+      "veredicto": "abandono",
       "status_sugerido": null,
       "tipo_demanda": null,
       "flags": [],
-      "acao_consultor": null,
-      "prazo_acao": "2026-05-18",
-      "urgencia": "baixa",
-      "confianca": 0.92,
+      "acao_consultor": "Reavaliar a situação da obra e contatar o cliente.",
+      "prazo_acao": "2026-05-29",
+      "urgencia": "alta",
+      "confianca": 0.85,
       "timeline_recente": {
         "janela_dias": 28,
         "limite_de": "2026-04-22",
@@ -1752,7 +1752,7 @@
         "ultima_varredura": "2026-05-20T21:09:24Z",
         "msgs_novas_desde_veredicto": 0,
         "msgs_novas_ultima_varredura": 0,
-        "veredicto_em": "2026-05-20T21:09:23Z",
+        "veredicto_em": "2026-05-22T13:59:14Z",
         "horas_desde_veredicto": 0.0,
         "stale": false
       },
@@ -5808,21 +5808,19 @@
           "positivos": 2
         }
       },
-      "veredicto": "coerente",
-      "status_sugerido": null,
+      "veredicto": "status_desatualizado",
+      "status_sugerido": "aguardando_execucao",
       "tipo_demanda": null,
-      "flags": [
-        "atrasado"
-      ],
-      "acao_consultor": "Validar prazo · sinal de atraso",
-      "prazo_acao": "2026-05-10",
-      "urgencia": "baixa",
+      "flags": [],
+      "acao_consultor": "Verificar status com a equipe e atualizar o painel.",
+      "prazo_acao": "2026-05-23",
+      "urgencia": "media",
       "confianca": 0.8,
       "refresh_status": {
         "ultima_varredura": "2026-05-20T21:09:24Z",
-        "msgs_novas_desde_veredicto": 7,
+        "msgs_novas_desde_veredicto": 0,
         "msgs_novas_ultima_varredura": 7,
-        "veredicto_em": "2026-05-20T21:09:23Z",
+        "veredicto_em": "2026-05-22T13:59:19Z",
         "horas_desde_veredicto": 0.0,
         "stale": false
       },
@@ -16369,18 +16367,16 @@
       "veredicto": "abandono",
       "status_sugerido": null,
       "tipo_demanda": "pausa",
-      "flags": [
-        "projeto_pendente"
-      ],
-      "acao_consultor": "Verificar com cliente · obra silenciada há mais de 30 dias",
-      "prazo_acao": null,
+      "flags": [],
+      "acao_consultor": "Verificar situação jurídica com o advogado.",
+      "prazo_acao": "2026-05-29",
       "urgencia": "alta",
-      "confianca": 0.0,
+      "confianca": 0.9,
       "refresh_status": {
         "ultima_varredura": "2026-05-20T21:09:24Z",
         "msgs_novas_desde_veredicto": 0,
         "msgs_novas_ultima_varredura": 0,
-        "veredicto_em": "2026-05-20T21:09:23Z",
+        "veredicto_em": "2026-05-22T13:59:24Z",
         "horas_desde_veredicto": 0.0,
         "stale": false
       },
@@ -50625,19 +50621,19 @@
           "positivos": 0
         }
       },
-      "veredicto": "coerente",
+      "veredicto": "abandono",
       "status_sugerido": null,
       "tipo_demanda": null,
       "flags": [],
-      "acao_consultor": null,
-      "prazo_acao": null,
-      "urgencia": "baixa",
-      "confianca": 0.0,
+      "acao_consultor": "Reavaliar a situação da obra com o cliente.",
+      "prazo_acao": "2026-05-29",
+      "urgencia": "alta",
+      "confianca": 0.85,
       "refresh_status": {
         "ultima_varredura": "2026-05-20T21:09:24Z",
         "msgs_novas_desde_veredicto": 0,
         "msgs_novas_ultima_varredura": 0,
-        "veredicto_em": "2026-05-20T21:09:23Z",
+        "veredicto_em": "2026-05-22T13:59:29Z",
         "horas_desde_veredicto": 0.0,
         "stale": false
       },
@@ -50813,19 +50809,19 @@
           "positivos": 0
         }
       },
-      "veredicto": "coerente",
+      "veredicto": "abandono",
       "status_sugerido": null,
-      "tipo_demanda": null,
+      "tipo_demanda": "retorno_servico",
       "flags": [],
-      "acao_consultor": null,
-      "prazo_acao": null,
-      "urgencia": "baixa",
-      "confianca": 0.0,
+      "acao_consultor": "Retornar ao cliente para atualização sobre a obra.",
+      "prazo_acao": "2026-05-29",
+      "urgencia": "alta",
+      "confianca": 0.8,
       "refresh_status": {
         "ultima_varredura": "2026-05-20T21:09:24Z",
         "msgs_novas_desde_veredicto": 0,
         "msgs_novas_ultima_varredura": 0,
-        "veredicto_em": "2026-05-20T21:09:23Z",
+        "veredicto_em": "2026-05-22T13:59:34Z",
         "horas_desde_veredicto": 0.0,
         "stale": false
       },
@@ -62727,7 +62723,7 @@
       "Três obras estão sem consultor formal atribuído no painel (Repullo '[]', Paula Correa '[]', Maria Heydi '') apesar de equipe Monofloor (Luana, Kettlyn, Pedro, Vinícius) estar tocando o operacional. Em duas obras de Wesley Matheus (Mayara e Maria Heydi) o consultor não posta no Telegram — todas as ações são feitas por Pedro/Jonathan/Vinícius/Luana. Padrão de descolamento entre consultor de painel e quem efetivamente conduz a obra."
     ]
   },
-  "ultima_varredura": "2026-05-20T21:10:34Z",
+  "ultima_varredura": "2026-05-22T13:59:34Z",
   "cores_agregado": {
     "calculado_em": "2026-05-20T21:09:22Z",
     "top_atual": [
