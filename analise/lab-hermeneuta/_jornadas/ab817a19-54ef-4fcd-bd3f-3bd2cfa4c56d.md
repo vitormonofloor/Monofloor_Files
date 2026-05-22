@@ -1,6 +1,6 @@
 # 🎬 JORNADA · CALLEBE ARAUJO DE MEDEIROS MENDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-19
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-21
 
 ## 📋 Ficha técnica
 
@@ -15,7 +15,7 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | 1ª msg Telegram | 2025-12-16 |
 | Execução prevista | None |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **147 dias** |
+| **Tempo total contrato → entrega** | **155 dias** |
 | **Tempo de execução real** | **0 dias** |
 | **Tempo em hibernação** | **68 dias** |
 | **Classificação** | **Pré-obra** |
@@ -66,7 +66,7 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | **Hibernação #1** | 2025-12-20 | 2026-01-18 | 30d | 0 |
 | **Atividade retomada** | 2026-01-19 | 2026-02-27 | 40d | 8 |
 | **Hibernação #2** | 2026-03-01 | 2026-04-07 | 38d | 0 |
-| **Atividade retomada** | 2026-04-08 | 2026-05-11 | 34d | 10 |
+| **Atividade retomada** | 2026-04-08 | 2026-05-19 | 42d | 12 |
 
 ## 📍 Marcos detectados nas mensagens
 

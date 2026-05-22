@@ -1,6 +1,6 @@
 # 🎬 JORNADA · MISCI BRASIL COMERCIO DE MODA LTDA 
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-19
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
 
 ## 📋 Ficha técnica
 
@@ -74,19 +74,18 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 | Ambientes | 1 |
 | Itens (linhas) | 1 |
 
-**Solicitações durante execução (3):**
+**Solicitações durante execução (2):**
 
 - **2026-01-26** · _aplicador | Michael Marinho_: "Preciso do material"
 - **2026-01-26** · _Equipe | Juliana Agenda_: "o material da Misci que precisa é apenas dois baldes de Stelion? Mais nada? Verniz, nada?"
-- **2026-01-26** · _aplicador | Michael Marinho_: "Preciso que eles fechem isso para eu poder fazer o retoque"
 
 **Consumo registrado em msgs (5):**
 
 - 2026-01-15 · 2 kit · _aplicador | Michael Marinho_
 - 2026-01-15 · 2 kit · _aplicador | Michael Marinho_
 - 2026-01-22 · 2 kit · _aplicador | Michael Marinho_
-- 2026-01-27 · 2 kits · _michael_
 - 2026-01-27 · 2 kits · _aplicador | Michael Marinho_
+- 2026-01-27 · 2 kits · _michael_
 
 **Sobras mencionadas (1):**
 

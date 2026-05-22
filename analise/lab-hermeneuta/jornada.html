@@ -343,6 +343,7 @@
     border-radius: 3px; line-height: 1.4; white-space: nowrap;
   }
   .classif-entrega_limpa { background: #d8f0e0; color: #1e5e36; }
+  .classif-entrega_com_ressalvas { background: #fdf0d5; color: #8a6d2b; }
   .classif-entrega_com_retrabalho { background: #fbe8d0; color: #7a4a10; }
   .classif-retrabalho_ativo { background: #f7e0e0; color: #8b2a2a; }
   .badge-origem-retrab {
@@ -571,9 +572,56 @@
   .mat-sobra_provavel { background: #fff3cd; color: #856404; }
   .mat-sem_registro_consumo { background: #e8e0d4; color: #6b6156; }
   .mat-sem_os_industria { background: #e6edf3; color: #335a76; }
+  .mat-envio_insuficiente { background: #f8d7da; color: #8b1a1a; }
+  .mat-envio_excedente { background: #fff3cd; color: #856404; }
+  .rep-mat-detalhe {
+    font-size: 9px; color: var(--ink-faint); margin-top: 3px; line-height: 1.4;
+  }
   .rep-mat-alertas {
     margin-top: 8px; font-size: 10px; color: #8b1a1a;
   }
+
+  .det-alerta-telegram {
+    background: #3a2a10; color: #f0c040; border: 1px solid #705820;
+    border-radius: 6px; padding: 8px 12px; margin-bottom: 10px;
+    font-size: 11px; line-height: 1.5;
+  }
+  .det-alerta-telegram strong { color: #ffd866; }
+  .det-alerta-metragem {
+    background: #2a1a10; color: #e0a060; border: 1px solid #604020;
+    border-radius: 6px; padding: 8px 12px; margin-bottom: 10px;
+    font-size: 11px; line-height: 1.5;
+  }
+
+  .rep-prazo {
+    border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;
+    background: var(--bg-inset, #1a1816); border: 1px solid var(--borda);
+  }
+  .rep-prazo-titulo {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px;
+  }
+  .rep-prazo-corpo { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 11px; }
+  .rep-prazo-item { color: #b0a898; }
+  .rep-prazo-item strong { color: #e8e0d4; }
+  .rep-prazo-desvio { font-size: 12px; font-weight: 800; }
+  .prazo-ok .rep-prazo-titulo { color: #6fcf6f; }
+  .prazo-ok .rep-prazo-desvio { color: #6fcf6f; }
+  .prazo-adiantado .rep-prazo-titulo { color: #6fcf6f; }
+  .prazo-adiantado .rep-prazo-desvio { color: #6fcf6f; }
+  .prazo-atrasado .rep-prazo-titulo { color: #e0b040; }
+  .prazo-atrasado .rep-prazo-desvio { color: #e0b040; }
+  .prazo-critico .rep-prazo-titulo { color: #e86050; }
+  .prazo-critico .rep-prazo-desvio { color: #e86050; }
+  .badge-prazo {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; font-weight: 700; letter-spacing: .04em;
+    padding: 2px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle;
+  }
+  .badge-prazo-adiantado { background: #1e3a1e; color: #6fcf6f; }
+  .badge-prazo-ok { background: #1e3a1e; color: #6fcf6f; }
+  .badge-prazo-atrasado { background: #3a2a10; color: #f0c040; }
+  .badge-prazo-critico { background: #3a1010; color: #e84040; }
 
   /* Panorama mensal */
   .panorama-mensal {
@@ -3239,6 +3287,86 @@
     .detalhes-header h2 { font-size: 20px; }
     .andamento-grid { grid-template-columns: 1fr; }
   }
+
+  /* ═══ TAB BAR ═══ */
+  .tab-bar{display:flex;justify-content:center;gap:6px;background:var(--surface-2);border-bottom:1px solid var(--line);padding:10px 40px 0;position:sticky;top:57px;z-index:99}
+  .tab-btn{padding:12px 36px;font-family:inherit;font-size:14px;font-weight:700;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;transition:all .15s;letter-spacing:.03em;position:relative;top:1px}
+  .tab-btn:hover{color:var(--ink);background:var(--gold-bg)}
+  .tab-btn.active{color:var(--gold);background:var(--surface);border-color:var(--line) var(--line) var(--surface);box-shadow:0 -2px 0 var(--gold) inset}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+
+  /* ═══ COMPILADOS ═══ */
+  .comp-filtros{display:flex;gap:14px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+  .comp-filtros label{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:6px}
+  .comp-filtros select{padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);font-family:inherit;font-size:12px}
+  .comp-btn-pdf{background:var(--gold);color:#fff;border:none;padding:7px 16px;border-radius:5px;font-weight:600;font-size:12px;cursor:pointer;font-family:inherit;margin-left:auto}
+  .comp-btn-pdf:hover{opacity:.85}
+  .comp-resumo{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+  .comp-resumo strong{color:var(--ink)}
+  .comp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+  .comp-kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+  .comp-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .comp-kpi.k-mat::before{background:#5090b0}
+  .comp-kpi.k-praz::before{background:var(--gold)}
+  .comp-kpi.k-qual::before{background:#5fa073}
+  .comp-kpi-titulo{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-faint);margin-bottom:8px;font-weight:600}
+  .comp-kpi-valor{font-size:30px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
+  .comp-kpi-sub{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--ink-soft)}
+  .comp-kpi-sub b{font-weight:600;color:var(--ink)}
+  .comp-secao{margin-top:28px}
+  .comp-secao h3{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.5px}
+  .comp-grid{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start}
+  .comp-chart-wrap{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;height:300px}
+  .comp-chart-wrap canvas{width:100%!important;height:100%!important}
+  .comp-tw{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .comp-tw-titulo{font-size:11px;font-weight:600;color:var(--ink-faint);padding:8px 12px;border-bottom:1px solid var(--line-soft);text-transform:uppercase;letter-spacing:.5px}
+  .comp-tab{width:100%;border-collapse:collapse;font-size:12px}
+  .comp-tab th{text-align:left;padding:7px 10px;color:var(--ink-faint);font-weight:600;border-bottom:1px solid var(--line);font-size:10px;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;white-space:nowrap}
+  .comp-tab th:hover{color:var(--gold)}
+  .comp-tab td{padding:6px 10px;border-bottom:1px solid var(--line-soft);color:var(--ink-soft)}
+  .comp-tab tr:hover td{background:rgba(184,136,74,.04)}
+  .comp-tab .cn{color:var(--ink);font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .comp-tab .cv{font-family:'JetBrains Mono',monospace;text-align:right;font-size:11px}
+  .cb{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+  .cb-v{background:rgba(95,160,115,.12);color:#3d7a50}
+  .cb-a{background:rgba(200,160,60,.12);color:#9a7a20}
+  .cb-r{background:rgba(200,80,60,.12);color:#c04030}
+  .cb-c{background:rgba(107,97,86,.08);color:var(--ink-faint)}
+  .cb-b{background:rgba(80,120,180,.12);color:#406090}
+  .comp-vm{display:block;text-align:center;padding:7px;font-size:12px;color:var(--gold);cursor:pointer;border-top:1px solid var(--line-soft)}
+  .comp-vm:hover{background:var(--surface-2)}
+  /* ═══ RADAR DE MATERIAL ═══ */
+  .radar-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .radar-periodo{display:flex;gap:4px}
+  .radar-btn{padding:6px 14px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:5px;cursor:pointer;transition:all .15s}
+  .radar-btn:hover{border-color:var(--gold);color:var(--ink)}
+  .radar-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+  .radar-legenda{font-size:11px;color:var(--ink-faint)}
+  .radar-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .radar-kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;text-align:center}
+  .radar-kpi-val{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--ink)}
+  .radar-kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-faint);margin-top:4px}
+  .radar-grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .radar-ctx{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--ink-faint)}
+  .radar-resolvido{font-size:10px;font-weight:600}
+  .radar-resolvido.sim{color:#3d7a50}
+  .radar-resolvido.nao{color:#c04030}
+  .radar-dia{padding:8px 12px;border-bottom:1px solid var(--line-soft)}
+  .radar-dia-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .radar-dia-data{font-weight:700;font-size:13px;color:var(--ink);font-family:'JetBrains Mono',monospace}
+  .radar-dia-count{font-size:11px;color:var(--ink-faint)}
+  .radar-dia-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--ink-soft)}
+  .radar-dia-item+.radar-dia-item{border-top:1px solid var(--line-soft)}
+  .radar-cat{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;min-width:52px;text-align:center}
+  .radar-cat-material{background:rgba(184,136,74,.15);color:var(--gold)}
+  .radar-cat-insumo{background:rgba(80,144,176,.12);color:#406080}
+  .radar-produto{font-weight:600;color:var(--ink);min-width:70px}
+  .radar-obra{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .radar-autor{color:var(--ink-faint);font-size:11px;min-width:80px}
+  .radar-vazio{padding:20px;text-align:center;color:var(--ink-faint);font-size:13px}
+  @media(max-width:900px){.comp-kpis{grid-template-columns:1fr}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}}
+  @media print{.tab-bar,.comp-filtros,.comp-btn-pdf,.comp-vm{display:none!important}.tab-panel{display:block!important}}
 </style>
 </head>
 <body>
@@ -3249,7 +3377,13 @@
   <div class="top-stamp" id="stamp">—</div>
 </header>
 
+<nav class="tab-bar">
+  <button class="tab-btn active" data-tab="jornada" onclick="trocarAba('jornada')">Jornada</button>
+  <button class="tab-btn" data-tab="compilados" onclick="trocarAba('compilados')">Compilados</button>
+</nav>
+
 <main>
+  <div id="painel-jornada" class="tab-panel active">
   <div class="page-intro">
     <p class="page-intro-frase">Análise retrospectiva de cada obra finalizada · reconstruída a partir das mensagens do Telegram do grupo · fases, marcos, ocorrências e materiais ao longo do tempo.</p>
     <details class="glossario">
@@ -3374,6 +3508,101 @@
   </div>
     </section>
   </div>
+  </div><!-- /painel-jornada -->
+
+  <div id="painel-compilados" class="tab-panel">
+    <div class="comp-filtros">
+      <label>Status <select id="comp-filtro-status" onchange="compFiltrar()">
+        <option value="todas">Todas</option>
+        <option value="ativas" selected>Ativas</option>
+        <option value="finalizadas">Finalizadas</option>
+      </select></label>
+      <label>Consultor <select id="comp-filtro-consultor" onchange="compFiltrar()"><option value="">Todos</option></select></label>
+      <label>Execução a partir de <select id="comp-filtro-periodo" onchange="compFiltrar()">
+        <option value="2026-01" selected>Jan/2026</option>
+        <option value="2025-07">Jul/2025</option>
+        <option value="">Tudo</option>
+      </select></label>
+      <label>Faixa <select id="comp-filtro-faixa" onchange="compFiltrar()">
+        <option value="">Todas</option>
+        <option value="PP">PP</option><option value="P">P</option><option value="M">M</option>
+        <option value="G">G</option><option value="GG">GG</option><option value="XG">XG</option>
+      </select></label>
+      <button class="comp-btn-pdf" onclick="window.print()">Exportar PDF</button>
+    </div>
+    <div id="comp-resumo" class="comp-resumo">Carregando...</div>
+    <div class="comp-kpis">
+      <div class="comp-kpi k-mat" id="comp-kpi-mat"></div>
+      <div class="comp-kpi k-praz" id="comp-kpi-prazo"></div>
+      <div class="comp-kpi k-qual" id="comp-kpi-qual"></div>
+    </div>
+    <div class="comp-secao">
+      <h3>Radar de Material</h3>
+      <div class="radar-bar">
+        <div class="radar-periodo">
+          <button class="radar-btn active" onclick="radarPeriodo(7)">7 dias</button>
+          <button class="radar-btn" onclick="radarPeriodo(15)">15 dias</button>
+          <button class="radar-btn" onclick="radarPeriodo(30)">30 dias</button>
+          <button class="radar-btn" onclick="radarPeriodo(0)">Tudo</button>
+        </div>
+        <div class="radar-legenda" id="radar-legenda"></div>
+      </div>
+      <div class="radar-kpis">
+        <div class="radar-kpi" id="radar-kpi-os"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">OS enviadas</div></div>
+        <div class="radar-kpi" id="radar-kpi-consumo"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Consumos registrados</div></div>
+        <div class="radar-kpi" id="radar-kpi-extra"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Solicitações extra</div></div>
+        <div class="radar-kpi" id="radar-kpi-anomalia"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Anomalias</div></div>
+      </div>
+      <div class="radar-grid-2col">
+        <div class="comp-tw">
+          <div class="comp-tw-titulo">OS Indústria enviadas</div>
+          <table class="comp-tab" id="radar-tab-os"><thead><tr><th>Data</th><th>Obra</th><th>Produtos</th><th>Qtd</th></tr></thead><tbody></tbody></table>
+          <div class="comp-vm" id="radar-vm-os" onclick="radarExpandir('os')">Ver todas</div>
+        </div>
+        <div class="comp-tw">
+          <div class="comp-tw-titulo">Consumo registrado (Telegram)</div>
+          <table class="comp-tab" id="radar-tab-consumo"><thead><tr><th>Data</th><th>Obra</th><th>Produto</th><th>Qtd</th><th>Autor</th></tr></thead><tbody></tbody></table>
+          <div class="comp-vm" id="radar-vm-consumo" onclick="radarExpandir('consumo')">Ver todas</div>
+        </div>
+      </div>
+      <div class="comp-tw" style="margin-top:12px">
+        <div class="comp-tw-titulo">Solicitações de material extra</div>
+        <div id="radar-extra-diario"></div>
+        <div class="comp-vm" id="radar-vm-extra" onclick="radarExpandir('extra')">Ver todas</div>
+      </div>
+    </div>
+    <div class="comp-secao">
+      <h3>Prazo de Execução</h3>
+      <div class="comp-grid">
+        <div class="comp-chart-wrap"><canvas id="comp-chart-prazo"></canvas></div>
+        <div class="comp-tw">
+          <div class="comp-tw-titulo">Obras com maior atraso</div>
+          <table class="comp-tab" id="comp-tab-prazo"><thead><tr><th>Obra</th><th>Prom.</th><th>Desvio</th><th>Status</th></tr></thead><tbody></tbody></table>
+          <div class="comp-vm" id="comp-vm-prazo" onclick="compExpandir('prazo')">Ver todas</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-secao">
+      <h3>Qualidade da Entrega</h3>
+      <div class="comp-grid">
+        <div class="comp-chart-wrap"><canvas id="comp-chart-qual"></canvas></div>
+        <div class="comp-tw">
+          <div class="comp-tw-titulo">Obras com retrabalho ou ressalvas</div>
+          <table class="comp-tab" id="comp-tab-qual"><thead><tr><th>Obra</th><th>Classif.</th><th>Occ.</th><th>Score</th></tr></thead><tbody></tbody></table>
+          <div class="comp-vm" id="comp-vm-qual" onclick="compExpandir('qual')">Ver todas</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-secao">
+      <h3>Visão por Consultor</h3>
+      <div class="comp-tw">
+        <div class="comp-tw-titulo">Comparativo dos 3 pilares</div>
+        <table class="comp-tab" id="comp-tab-consult"><thead><tr>
+          <th>Consultor</th><th>Obras</th><th>Material</th><th>% Prazo</th><th>Desvio</th><th>% Limpa</th><th>Retrab.</th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+  </div><!-- /painel-compilados -->
 </main>
 
 <!-- DRAWER · Relatório da obra (slide-in direita · imprimível) -->
@@ -3395,6 +3624,7 @@
 
 <div class="timeline-tooltip" id="tooltip"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 let DADOS = null;
 let OBRA_SEL = null;
@@ -3757,6 +3987,31 @@ function montarAcoesPendentes(j){
   return `<div class="det-acoes"><div class="det-acoes-titulo">O que fazer agora</div>${items}</div>`;
 }
 
+function montarPrazo(j){
+  const p = j.prazo;
+  if (!p || !p.dias_prometidos) return '';
+  const desvio = p.desvio_dias;
+  const temDesvio = desvio != null;
+  let cls = 'prazo-ok';
+  let label = '';
+  if (temDesvio) {
+    if (desvio > 15) { cls = 'prazo-critico'; label = `+${desvio}d atraso`; }
+    else if (desvio > 0) { cls = 'prazo-atrasado'; label = `+${desvio}d atraso`; }
+    else if (desvio === 0) { cls = 'prazo-ok'; label = 'No prazo'; }
+    else { cls = 'prazo-adiantado'; label = `${Math.abs(desvio)}d adiantada`; }
+  }
+  return `<div class="rep-prazo ${cls}">
+    <div class="rep-prazo-titulo">Prazo prometido</div>
+    <div class="rep-prazo-corpo">
+      <span class="rep-prazo-item">Prometido: <strong>${p.dias_prometidos} dias</strong></span>
+      ${p.data_entrada ? `<span class="rep-prazo-item">Entrada: <strong>${fmtData(p.data_entrada)}</strong></span>` : ''}
+      ${p.data_termino_prometida ? `<span class="rep-prazo-item">Termino prometido: <strong>${fmtData(p.data_termino_prometida)}</strong></span>` : ''}
+      ${p.data_finalizacao_real ? `<span class="rep-prazo-item">Finalizacao real: <strong>${fmtData(p.data_finalizacao_real)}</strong></span>` : ''}
+      ${temDesvio ? `<span class="rep-prazo-desvio ${cls}"><strong>${label}</strong></span>` : '<span class="rep-prazo-item" style="opacity:.5">Aguardando finalizacao</span>'}
+    </div>
+  </div>`;
+}
+
 function montarScoreRisco(j){
   const r = j.score_risco;
   if (!r) return '';
@@ -3775,6 +4030,8 @@ const LABEL_VEREDITO_MAT = {
   compativel: 'Compativel',
   consumo_acima: 'Consumo acima',
   sobra_provavel: 'Sobra provavel',
+  envio_insuficiente: 'Envio insuficiente',
+  envio_excedente: 'Envio excedente',
   sem_registro_consumo: 'Sem registro',
   sem_os_industria: 'Sem OS',
 };
@@ -3790,20 +4047,24 @@ function montarConsistenciaMaterial(j){
   if (cm.tem_os) fontes.push('OS Industria');
   if (cm.tem_consumo_telegram) fontes.push('Telegram');
   if (cm.tem_metragem) fontes.push('Metragem');
+  const scoreLabel = cm.score != null ? ` · score ${cm.score}/100` : '';
 
   return `<div class="rep-material mat-${nv}">
-    <div class="rep-material-titulo">Consistencia de material · fontes: ${fontes.join(' + ') || 'parcial'}</div>
+    <div class="rep-material-titulo">Consistencia de material · fontes: ${fontes.join(' + ') || 'parcial'}${scoreLabel}</div>
     <div class="rep-mat-grid">
       ${prods.map(p => `
         <div class="rep-mat-item">
           <div class="rep-mat-item-fam">${esc(p.familia)}</div>
           <div class="rep-mat-item-nums">
-            ${p.enviado ? `Enviado <strong>${p.enviado}</strong><br>` : ''}
-            ${p.consumido ? `Consumido <strong>${p.consumido}</strong><br>` : ''}
-            ${p.sobra_declarada ? `Sobra decl. <strong>${p.sobra_declarada}</strong><br>` : ''}
-            ${p.esperado_m2 ? `Esperado (m²) <strong>~${p.esperado_m2}</strong>` : ''}
+            ${p.enviado ? `Enviado <strong>${p.enviado}</strong>` : ''}
+            ${p.consumido ? ` · Consumido <strong>${p.consumido}</strong>` : ''}
+            ${p.esperado_m2 ? ` · Esperado <strong>~${p.esperado_m2}</strong>` : ''}
+            ${p.sobra_declarada ? ` · Sobra <strong>${p.sobra_declarada}</strong>` : ''}
+            ${p.cobertura_pct != null ? `<br>Cobertura <strong>${p.cobertura_pct}%</strong>` : ''}
+            ${p.eficiencia_pct != null ? ` · Eficiencia <strong>${p.eficiencia_pct}%</strong>` : ''}
           </div>
           ${p.veredito ? `<div class="mat-veredito mat-${p.veredito}">${LABEL_VEREDITO_MAT[p.veredito] || p.veredito}</div>` : ''}
+          ${p.detalhe ? `<div class="rep-mat-detalhe">${esc(p.detalhe)}</div>` : ''}
         </div>
       `).join('')}
     </div>
@@ -4048,6 +4309,7 @@ const LABEL_PADRAO_GLOBAL = {
 
 const LABELS_CLASSIF = {
   entrega_limpa: 'Entrega limpa',
+  entrega_com_ressalvas: 'Com ressalvas',
   entrega_com_retrabalho: 'Com retrabalho',
   retrabalho_ativo: 'Retrabalho ativo',
   em_execucao: 'Em execucao',
@@ -4493,9 +4755,19 @@ function renderListaSidebar(){
     const nPosterg = (o.marcos || []).filter(m => m.tipo === 'obra_postergada').length;
     const postgCls = nPosterg >= 3 ? 'badge-posterg-3' : nPosterg >= 2 ? 'badge-posterg-2' : 'badge-posterg-1';
     const postgHtml = nPosterg > 0 ? `<span class="badge-posterg ${postgCls}" title="${nPosterg} remarcação(ões) detectada(s) no Telegram">${nPosterg}x remarc.</span>` : '';
+    const pz = o.prazo || {};
+    const pzDesvio = pz.desvio_dias;
+    let pzHtml = '';
+    if (pzDesvio != null) {
+      const pzCls = pzDesvio > 15 ? 'critico' : pzDesvio > 0 ? 'atrasado' : pzDesvio === 0 ? 'ok' : 'adiantado';
+      const pzLabel = pzDesvio > 0 ? `+${pzDesvio}d` : pzDesvio === 0 ? 'OK' : `${pzDesvio}d`;
+      pzHtml = `<span class="badge-prazo badge-prazo-${pzCls}" title="Desvio do prazo prometido (${pz.dias_prometidos}d)">${pzLabel}</span>`;
+    } else if (pz.dias_prometidos) {
+      pzHtml = `<span class="badge-prazo badge-prazo-ok" title="Prazo prometido: ${pz.dias_prometidos}d · aguardando finalizacao">${pz.dias_prometidos}d</span>`;
+    }
 
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
-      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${postgHtml}${fricHtml}${alertHtml}</div>
+      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${postgHtml}${pzHtml}${fricHtml}${alertHtml}</div>
       <div class="sidebar-item-meta">
         <span class="sidebar-item-status s-${esc(st)}">${esc(formatarStatus(st))}</span>
         ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}
@@ -5721,10 +5993,17 @@ function renderDetalhes(){
   const bFx = (j.benchmark_faixa||{}).faixa;
   const benchWrap = benchHTML ? `<details><summary>Benchmark ${bFx ? bFx.label + ' · ' + bFx.n_obras + ' obras' : ''}</summary>${benchHTML}</details>` : '';
   const cm = j.consistencia_material;
-  const matLabel = cm ? `Material · ${(cm.produtos||[]).length} produtos${cm.alertas && cm.alertas.length ? ' · ' + cm.alertas.length + ' alerta(s)' : ''}` : '';
+  const matLabel = cm ? `Material · ${(cm.produtos||[]).length} produtos${cm.score != null ? ' · score ' + cm.score + '/100' : ''}${cm.n_anomalias ? ' · ' + cm.n_anomalias + ' anomalia(s)' : ''}` : '';
   const matWrap = matHTML ? `<details><summary>${matLabel}</summary>${matHTML}</details>` : '';
   const acoesHTML = montarAcoesPendentes(j);
-  elMacro.innerHTML = acoesHTML + vereHTML + montarScoreRisco(j) + benchWrap + matWrap;
+  const telComp = j.telegram_compartilhado || [];
+  const telCompHTML = telComp.length ? `<div class="det-alerta-telegram">Telegram compartilhado com: ${telComp.map(p => `<strong>${esc(p.cliente)}</strong>`).join(', ')}. Marcos e ocorrencias podem estar duplicados.</div>` : '';
+  const alertas = j.alertas || [];
+  const m2val = j.metragem || 0;
+  const metHTML = alertas.includes('metragem_zero') ? `<div class="det-alerta-metragem">Metragem nao preenchida no Painel de Obras. Benchmark e faixa indisponiveis.</div>`
+    : alertas.includes('metragem_suspeita') ? `<div class="det-alerta-metragem">Metragem suspeita: ${m2val} m². Valor implausivel para obra Monofloor — possivel erro de preenchimento.</div>`
+    : '';
+  elMacro.innerHTML = acoesHTML + telCompHTML + metHTML + vereHTML + montarPrazo(j) + montarScoreRisco(j) + benchWrap + matWrap;
 
   renderTimelineCiclos(j);
   renderMacroEtapas(j);
@@ -6192,6 +6471,320 @@ function moverTooltip(e){
   if (y + rect.height > window.innerHeight) y = e.clientY - rect.height - 14;
   tt.style.left = x + 'px';
   tt.style.top = y + 'px';
+}
+
+/* ═══════════════════════════════════════════════
+   TAB BAR + COMPILADOS
+   ═══════════════════════════════════════════════ */
+let compRendered = false;
+const compCharts = {};
+const compExpanded = { mat: false, prazo: false, qual: false };
+const COMP_LIMIT = 10;
+const COMP_FIN = ['finalizado','concluido'];
+const COMP_NOMES = { 'Luana': 'Luana Patrícia', 'Wesley': 'Wesley Matheus' };
+let radarDias = 7;
+let radarF = [];
+const radarExpanded = { os: false, consumo: false, extra: false };
+
+function radarDentro(dataStr, dias) {
+  if (!dias || !dataStr) return true;
+  const d = new Date(dataStr);
+  const limite = new Date();
+  limite.setDate(limite.getDate() - dias);
+  return d >= limite;
+}
+
+function radarFmtData(s) {
+  if (!s) return '—';
+  const p = s.split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] : s;
+}
+
+function trocarAba(aba) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === aba));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const painel = document.getElementById('painel-' + aba);
+  if (painel) painel.classList.add('active');
+  if (aba === 'compilados' && !compRendered && DADOS) {
+    compInit();
+    compRendered = true;
+  }
+}
+
+function compGetConsultor(o) {
+  const raw = (o.equipe?.monofloor?.operacoes || '').trim();
+  return COMP_NOMES[raw] || raw || 'Sem consultor';
+}
+
+function compInit() {
+  const sel = document.getElementById('comp-filtro-consultor');
+  const nomes = [...new Set((DADOS.obras||[]).map(compGetConsultor))].sort();
+  nomes.forEach(n => { const op = document.createElement('option'); op.value = n; op.textContent = n; sel.appendChild(op); });
+  Chart.register({
+    id:'centerText',
+    afterDraw(chart){
+      if(chart.config.type!=='doughnut')return;
+      const txt=chart.config.options?.plugins?.centerText?.text;
+      if(!txt)return;
+      const{ctx}=chart;const{top,bottom,left,right}=chart.chartArea;
+      ctx.save();ctx.font="600 16px 'JetBrains Mono'";ctx.fillStyle='#6b6156';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(txt,(left+right)/2,(top+bottom)/2);ctx.restore();
+    }
+  });
+  compFiltrar();
+}
+
+function compFiltrar() {
+  const st = document.getElementById('comp-filtro-status').value;
+  const co = document.getElementById('comp-filtro-consultor').value;
+  const fx = document.getElementById('comp-filtro-faixa').value;
+  const pe = document.getElementById('comp-filtro-periodo').value;
+  const F = (DADOS.obras||[]).filter(o => {
+    if (st==='ativas' && COMP_FIN.includes(o.status)) return false;
+    if (st==='finalizadas' && !COMP_FIN.includes(o.status)) return false;
+    if (co && compGetConsultor(o)!==co) return false;
+    if (fx && o.faixa_metragem!==fx) return false;
+    if (pe) {
+      const dExec = o.data_exec_confirmada || o.data_exec_prevista || '';
+      if (dExec < pe) return false;
+    }
+    return true;
+  });
+  compRenderAll(F);
+}
+
+function compRenderAll(F) {
+  compResumo(F); compKPIs(F); compMaterial(F); compPrazo(F); compQualidade(F); compConsultores(F);
+}
+
+function compEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function compResumo(F) {
+  const n=F.length;
+  const comMat=F.filter(o=>o.consistencia_material&&(o.consistencia_material.tem_os||o.consistencia_material.tem_consumo_telegram));
+  const sm=comMat.filter(o=>o.consistencia_material.score!=null);
+  const avg=sm.length?Math.round(sm.reduce((s,o)=>s+o.consistencia_material.score,0)/sm.length):null;
+  const crit=sm.filter(o=>o.consistencia_material.score<40).length;
+  const cp=F.filter(o=>o.prazo?.desvio_dias!=null);
+  const np=cp.filter(o=>o.prazo.desvio_dias<=0).length;
+  const pct=cp.length?Math.round(np/cp.length*100):null;
+  const dArr=cp.map(o=>o.prazo.desvio_dias).sort((a,b)=>a-b);
+  const dMed=dArr.length?dArr[Math.floor(dArr.length/2)]:null;
+  const fin=F.filter(o=>COMP_FIN.includes(o.status));
+  const lmp=fin.filter(o=>o.classificacao==='entrega_limpa').length;
+  const pL=fin.length?Math.round(lmp/fin.length*100):null;
+  const ret=fin.filter(o=>o.classificacao==='entrega_com_retrabalho').length;
+  let t=`Das <strong>${n}</strong> obras: `;
+  t+=avg!=null?`<strong>${comMat.length}</strong> com dados de material (score médio <strong>${avg}</strong>, ${crit} críticas). `:'sem dados de material. ';
+  t+=pct!=null?`<strong>${cp.length}</strong> com prazo (<strong>${pct}%</strong> no prazo, mediana ${dMed>0?'+':''}${dMed}d). `:'sem prazo. ';
+  t+=pL!=null?`<strong>${pL}%</strong> das ${fin.length} finalizadas com entrega limpa, ${ret} retrabalho.`:'sem finalizadas no recorte.';
+  document.getElementById('comp-resumo').innerHTML=t;
+}
+
+function compKPIs(F) {
+  const comMat=F.filter(o=>o.consistencia_material&&(o.consistencia_material.tem_os||o.consistencia_material.tem_consumo_telegram));
+  const sm=comMat.filter(o=>o.consistencia_material.score!=null);
+  const avg=sm.length?Math.round(sm.reduce((s,o)=>s+o.consistencia_material.score,0)/sm.length):'—';
+  const crit=sm.filter(o=>o.consistencia_material.score<40).length;
+  const nExtra = F.reduce((s,o) => s + (o.solicitacoes_material||[]).filter(e => radarDentro(e.data, radarDias)).length, 0);
+  const corExtra = nExtra > 0 ? '#c04030' : '#3d7a50';
+  document.getElementById('comp-kpi-mat').innerHTML=`<div class="comp-kpi-titulo">Radar de Material</div><div class="comp-kpi-valor" style="color:${corExtra}">${nExtra}<span style="font-size:13px;color:var(--ink-faint)"> extras</span></div><div class="comp-kpi-sub"><div><b>${comMat.length}</b> com dados</div><div><b style="color:#c04030">${crit}</b> score critico</div></div>`;
+
+  const cp=F.filter(o=>o.prazo?.desvio_dias!=null);
+  const np=cp.filter(o=>o.prazo.desvio_dias<=0).length;
+  const pct=cp.length?Math.round(np/cp.length*100):null;
+  const dArr=cp.map(o=>o.prazo.desvio_dias).sort((a,b)=>a-b);
+  const dMed=dArr.length?dArr[Math.floor(dArr.length/2)]:null;
+  const cP=pct!=null?(pct>=70?'#3d7a50':pct>=40?'#9a7a20':'#c04030'):'var(--ink-faint)';
+  document.getElementById('comp-kpi-prazo').innerHTML=`<div class="comp-kpi-titulo">Prazo de Execução</div><div class="comp-kpi-valor" style="color:${cP}">${pct!=null?pct+'%':'—'}<span style="font-size:13px;color:var(--ink-faint)"> no prazo</span></div><div class="comp-kpi-sub"><div><b>${cp.length}</b> com prazo</div><div>mediana <b>${dMed!=null?(dMed>0?'+':'')+dMed+'d':'—'}</b></div></div>`;
+
+  const fin=F.filter(o=>COMP_FIN.includes(o.status));
+  const lmp=fin.filter(o=>o.classificacao==='entrega_limpa').length;
+  const pL=fin.length?Math.round(lmp/fin.length*100):null;
+  const ret=fin.filter(o=>o.classificacao==='entrega_com_retrabalho').length;
+  const res=fin.filter(o=>o.classificacao==='entrega_com_ressalvas').length;
+  const cQ=pL!=null?(pL>=70?'#3d7a50':pL>=50?'#9a7a20':'#c04030'):'var(--ink-faint)';
+  document.getElementById('comp-kpi-qual').innerHTML=`<div class="comp-kpi-titulo">Qualidade da Entrega</div><div class="comp-kpi-valor" style="color:${cQ}">${pL!=null?pL+'%':'—'}<span style="font-size:13px;color:var(--ink-faint)"> limpa</span></div><div class="comp-kpi-sub"><div><b>${res}</b> ressalvas</div><div><b style="color:#c04030">${ret}</b> retrabalho</div></div>`;
+}
+
+function compChart(id,type,data,center,extra){
+  if(compCharts[id])compCharts[id].destroy();
+  const isDoughnut=type==='doughnut';
+  const opts=isDoughnut?{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'bottom',labels:{color:'#6b6156',padding:10,font:{size:11}}},centerText:{text:center}}}:{responsive:true,maintainAspectRatio:false,...(extra||{}),plugins:{legend:{display:false},...(extra?.plugins||{})},scales:extra?.scales||{x:{grid:{display:false},ticks:{color:'#6b6156'}},y:{grid:{color:'rgba(214,205,189,.4)'},ticks:{color:'#6b6156'}}}};
+  compCharts[id]=new Chart(document.getElementById(id),{type,data,options:opts});
+}
+
+function compTabRows(id,rows,limit,fn){
+  document.querySelector('#'+id+' tbody').innerHTML=rows.slice(0,limit).map(r=>'<tr>'+fn(r)+'</tr>').join('');
+  const vm=document.getElementById(id.replace('comp-tab-','comp-vm-'));
+  if(vm)vm.style.display=rows.length>COMP_LIMIT?'':'none';
+}
+
+function compExpandir(sec){
+  compExpanded[sec]=!compExpanded[sec];
+  const vm=document.getElementById('comp-vm-'+sec);
+  vm.textContent=compExpanded[sec]?'Mostrar menos':'Ver todas';
+  compFiltrar();
+}
+
+function compCorNivel(n){return n==='saudavel'||n==='consistente'?'v':n==='atencao'?'a':n==='critico'?'r':'c'}
+const COMP_LBL_NIVEL={'saudavel':'Saudável','atencao':'Atenção','critico':'Crítico','sem_dados':'Sem dados'};
+const COMP_LBL_CLS={'entrega_limpa':'Limpa','entrega_com_ressalvas':'Ressalvas','entrega_com_retrabalho':'Retrabalho'};
+
+function radarPeriodo(d) {
+  radarDias = d;
+  document.querySelectorAll('.radar-btn').forEach(b => b.classList.toggle('active', parseInt(b.textContent) === d || (d === 0 && b.textContent === 'Tudo')));
+  compMaterial(radarF);
+}
+
+function radarExpandir(sec) {
+  radarExpanded[sec] = !radarExpanded[sec];
+  const vm = document.getElementById('radar-vm-' + sec);
+  vm.textContent = radarExpanded[sec] ? 'Mostrar menos' : 'Ver todas';
+  compMaterial(radarF);
+}
+
+function compMaterial(F) {
+  radarF = F;
+  const dias = radarDias;
+  const hoje = new Date();
+  const limiteDate = dias ? new Date(hoje.getTime() - dias * 86400000) : null;
+  const limiteISO = limiteDate ? limiteDate.toISOString().slice(0, 10) : null;
+  const label = dias ? `Últimos ${dias} dias` : 'Todo o período';
+  document.getElementById('radar-legenda').textContent = label;
+
+  const osEvts = [], consumoEvts = [], extraEvts = [];
+
+  F.forEach(o => {
+    const nome = o.cliente || '—';
+    (o.materiais_enviados || []).forEach(os => {
+      if (!radarDentro(os.os_data, dias)) return;
+      const prods = (os.materiais || []).map(m => m.material).filter(Boolean);
+      const qtdTotal = (os.materiais || []).reduce((s, m) => s + (parseFloat((m.quantidade || '0').replace(',', '.')) || 0), 0);
+      osEvts.push({ data: os.os_data, nome, prods: prods.join(', '), qtd: Math.round(qtdTotal * 10) / 10 });
+    });
+    (o.consumos || []).forEach(c => {
+      if (!radarDentro(c.data, dias)) return;
+      consumoEvts.push({ data: c.data, nome, produto: c.produto_familia || c.produto || '—', qtd: c.qtd || '—', unidade: c.unidade || '', autor: c.autor || '—' });
+    });
+    (o.solicitacoes_material || []).forEach(s => {
+      if (!radarDentro(s.data, dias)) return;
+      const resolvido = s.resolucao ? 'sim' : 'nao';
+      const resTxt = s.resolucao ? s.resolucao.delta_min + ' min' : 'Pendente';
+      const ctx = (s.trecho || '').slice(0, 80);
+      const cat = s.categoria || 'material';
+      const prod = s.produto || '—';
+      extraEvts.push({ data: s.data, hora: s.hora || '', nome, autor: s.autor || '—', resolvido, resTxt, ctx, cat, prod });
+    });
+  });
+
+  osEvts.sort((a, b) => b.data.localeCompare(a.data));
+  consumoEvts.sort((a, b) => b.data.localeCompare(a.data));
+  extraEvts.sort((a, b) => b.data.localeCompare(a.data));
+
+  const obrasOS = new Set(osEvts.map(e => e.nome)).size;
+  const obrasConsumo = new Set(consumoEvts.map(e => e.nome)).size;
+  const obrasExtra = new Set(extraEvts.map(e => e.nome)).size;
+
+  document.getElementById('radar-kpi-os').innerHTML = `<div class="radar-kpi-val">${osEvts.length}</div><div class="radar-kpi-label">OS enviadas (${obrasOS} obras)</div>`;
+  document.getElementById('radar-kpi-consumo').innerHTML = `<div class="radar-kpi-val">${consumoEvts.length}</div><div class="radar-kpi-label">Consumos (${obrasConsumo} obras)</div>`;
+  document.getElementById('radar-kpi-extra').innerHTML = `<div class="radar-kpi-val" style="color:${extraEvts.length > 0 ? '#c04030' : 'var(--ink)'}">${extraEvts.length}</div><div class="radar-kpi-label">Extras (${obrasExtra} obras)</div>`;
+
+  const anomalias = F.filter(o => {
+    const cm = o.consistencia_material;
+    if (!cm || cm.score == null) return false;
+    const temEvento = (o.materiais_enviados || []).some(os => radarDentro(os.os_data, dias))
+      || (o.consumos || []).some(c => radarDentro(c.data, dias))
+      || (o.solicitacoes_material || []).some(s => radarDentro(s.data, dias));
+    return temEvento && cm.score < 40;
+  });
+  document.getElementById('radar-kpi-anomalia').innerHTML = `<div class="radar-kpi-val" style="color:${anomalias.length > 0 ? '#c04030' : 'var(--ink)'}">${anomalias.length}</div><div class="radar-kpi-label">Score critico c/ atividade</div>`;
+
+  const limOS = radarExpanded.os ? osEvts.length : COMP_LIMIT;
+  document.querySelector('#radar-tab-os tbody').innerHTML = osEvts.slice(0, limOS).map(e =>
+    `<tr><td class="cv">${radarFmtData(e.data)}</td><td class="cn" title="${compEsc(e.nome)}">${compEsc(e.nome)}</td><td class="radar-ctx" title="${compEsc(e.prods)}">${compEsc(e.prods)}</td><td class="cv">${e.qtd}</td></tr>`
+  ).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma OS no período</td></tr>';
+  document.getElementById('radar-vm-os').style.display = osEvts.length > COMP_LIMIT ? '' : 'none';
+
+  const limC = radarExpanded.consumo ? consumoEvts.length : COMP_LIMIT;
+  document.querySelector('#radar-tab-consumo tbody').innerHTML = consumoEvts.slice(0, limC).map(e =>
+    `<tr><td class="cv">${radarFmtData(e.data)}</td><td class="cn" title="${compEsc(e.nome)}">${compEsc(e.nome)}</td><td>${compEsc(e.produto)}</td><td class="cv">${e.qtd} ${e.unidade}</td><td>${compEsc(e.autor)}</td></tr>`
+  ).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhum consumo no período</td></tr>';
+  document.getElementById('radar-vm-consumo').style.display = consumoEvts.length > COMP_LIMIT ? '' : 'none';
+
+  // Agrupar extras por dia
+  const porDia = {};
+  extraEvts.forEach(e => { if (!porDia[e.data]) porDia[e.data] = []; porDia[e.data].push(e); });
+  const diasOrdenados = Object.keys(porDia).sort().reverse();
+  const limDias = radarExpanded.extra ? diasOrdenados.length : Math.min(diasOrdenados.length, 5);
+  const hojeStr = new Date().toISOString().slice(0, 10);
+  const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+
+  const container = document.getElementById('radar-extra-diario');
+  if (!diasOrdenados.length) {
+    container.innerHTML = '<div class="radar-vazio">Nenhuma solicitação no período</div>';
+  } else {
+    container.innerHTML = diasOrdenados.slice(0, limDias).map(dia => {
+      const evts = porDia[dia];
+      const label = dia === hojeStr ? 'Hoje' : dia === ontem ? 'Ontem' : radarFmtData(dia);
+      const nMat = evts.filter(e => e.cat === 'material').length;
+      const nIns = evts.filter(e => e.cat === 'insumo').length;
+      const resumo = [nMat ? nMat + ' material' : '', nIns ? nIns + ' insumo' : ''].filter(Boolean).join(' · ');
+      return `<div class="radar-dia">
+        <div class="radar-dia-header"><span class="radar-dia-data">${label}</span><span class="radar-dia-count">${evts.length} solicit. · ${resumo}</span></div>
+        ${evts.map(e => `<div class="radar-dia-item">
+          <span class="radar-cat radar-cat-${e.cat}">${e.cat}</span>
+          <span class="radar-produto">${compEsc(e.prod)}</span>
+          <span class="radar-obra" title="${compEsc(e.nome)}">${compEsc(e.nome)}</span>
+          <span class="radar-autor">${compEsc(e.autor)}</span>
+          <span class="radar-resolvido ${e.resolvido}">${e.resTxt}</span>
+        </div>`).join('')}
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('radar-vm-extra').style.display = diasOrdenados.length > 5 ? '' : 'none';
+}
+
+function compPrazo(F){
+  const cd=F.filter(o=>o.prazo?.desvio_dias!=null);
+  const ant=cd.filter(o=>o.prazo.desvio_dias<=0).length;
+  const mar=cd.filter(o=>o.prazo.desvio_dias>0&&o.prazo.desvio_dias<=5).length;
+  const mod=cd.filter(o=>o.prazo.desvio_dias>5&&o.prazo.desvio_dias<=15).length;
+  const cri=cd.filter(o=>o.prazo.desvio_dias>15).length;
+  const sp=F.filter(o=>!o.prazo||o.prazo.desvio_dias==null).length;
+  compChart('comp-chart-prazo','bar',{labels:['No prazo','Marginal (1–5d)','Moderado (6–15d)','Crítico (>15d)','Sem prazo'],datasets:[{data:[ant,mar,mod,cri,sp],backgroundColor:['#5fa073','#8fb870','#c4a040','#c04030','#d6cdbd'],borderWidth:0,borderRadius:3}]},null,{indexAxis:'y',scales:{x:{grid:{color:'rgba(214,205,189,.3)'},ticks:{color:'#6b6156'}},y:{grid:{display:false},ticks:{color:'#6b6156',font:{size:11}}}}});
+  const rows=cd.map(o=>({n:o.cliente||'—',p:o.prazo.dias_prometidos?o.prazo.dias_prometidos+'d':'—',d:o.prazo.desvio_dias,st:COMP_FIN.includes(o.status)?'Fin.':'Ativa'})).sort((a,b)=>b.d-a.d);
+  compTabRows('comp-tab-prazo',rows,compExpanded.prazo?rows.length:COMP_LIMIT,r=>{const c=r.d<=0?'v':r.d<=5?'a':'r';return`<td class="cn" title="${compEsc(r.n)}">${compEsc(r.n)}</td><td class="cv">${r.p}</td><td class="cv"><span class="cb cb-${c}">${r.d>0?'+':''}${r.d}d</span></td><td><span class="cb cb-${r.st==='Ativa'?'b':'c'}">${r.st}</span></td>`});
+}
+
+function compQualidade(F){
+  const fin=F.filter(o=>COMP_FIN.includes(o.status));
+  const lm=fin.filter(o=>o.classificacao==='entrega_limpa').length;
+  const rs=fin.filter(o=>o.classificacao==='entrega_com_ressalvas').length;
+  const rt=fin.filter(o=>o.classificacao==='entrega_com_retrabalho').length;
+  const ou=fin.length-lm-rs-rt;
+  compChart('comp-chart-qual','doughnut',{labels:['Limpa','Ressalvas','Retrabalho','Outros'],datasets:[{data:[lm,rs,rt,ou],backgroundColor:['#5fa073','#c4a040','#c04030','#d6cdbd'],borderWidth:0}]},fin.length+' fin.');
+  const rows=fin.filter(o=>o.classificacao!=='entrega_limpa').map(o=>({n:o.cliente||'—',cl:o.classificacao,oc:o.friccao?.ocorrencias_formais?.length||0,sc:o.score_risco??'—'})).sort((a,b)=>{const o={entrega_com_retrabalho:0,entrega_com_ressalvas:1};return(o[a.cl]??2)-(o[b.cl]??2)||(typeof b.sc==='number'?b.sc:0)-(typeof a.sc==='number'?a.sc:0)});
+  compTabRows('comp-tab-qual',rows,compExpanded.qual?rows.length:COMP_LIMIT,r=>{const c=r.cl==='entrega_com_retrabalho'?'r':'a';return`<td class="cn" title="${compEsc(r.n)}">${compEsc(r.n)}</td><td><span class="cb cb-${c}">${COMP_LBL_CLS[r.cl]||r.cl}</span></td><td class="cv">${r.oc}</td><td class="cv">${r.sc}</td>`});
+}
+
+function compConsultores(F){
+  const map={};
+  F.forEach(o=>{const c=compGetConsultor(o);if(!map[c])map[c]={obras:[],ms:[],ds:[],fin:[],ret:0,lmp:0};map[c].obras.push(o);if(o.consistencia_material?.score!=null)map[c].ms.push(o.consistencia_material.score);if(o.prazo?.desvio_dias!=null)map[c].ds.push(o.prazo.desvio_dias);if(COMP_FIN.includes(o.status)){map[c].fin.push(o);if(o.classificacao==='entrega_limpa')map[c].lmp++;if(o.classificacao==='entrega_com_retrabalho')map[c].ret++}});
+  const rows=Object.entries(map).map(([nm,d])=>{
+    const am=d.ms.length?Math.round(d.ms.reduce((a,b)=>a+b,0)/d.ms.length):null;
+    const np=d.ds.filter(v=>v<=0).length;const pp=d.ds.length?Math.round(np/d.ds.length*100):null;
+    const da=[...d.ds].sort((a,b)=>a-b);const dm=da.length?da[Math.floor(da.length/2)]:null;
+    const pl=d.fin.length?Math.round(d.lmp/d.fin.length*100):null;
+    return{nm,n:d.obras.length,am,pp,dm,pl,ret:d.ret};
+  }).sort((a,b)=>b.n-a.n);
+  document.querySelector('#comp-tab-consult tbody').innerHTML=rows.map(r=>{
+    const cm=r.am!=null?(r.am>=70?'v':r.am>=40?'a':'r'):'c';
+    const cp=r.pp!=null?(r.pp>=70?'v':r.pp>=40?'a':'r'):'c';
+    const cq=r.pl!=null?(r.pl>=70?'v':r.pl>=50?'a':'r'):'c';
+    return`<tr><td class="cn">${compEsc(r.nm)}</td><td class="cv">${r.n}</td><td class="cv"><span class="cb cb-${cm}">${r.am!=null?r.am:'—'}</span></td><td class="cv"><span class="cb cb-${cp}">${r.pp!=null?r.pp+'%':'—'}</span></td><td class="cv">${r.dm!=null?(r.dm>0?'+':'')+r.dm+'d':'—'}</td><td class="cv"><span class="cb cb-${cq}">${r.pl!=null?r.pl+'%':'—'}</span></td><td class="cv" style="color:${r.ret>0?'#c04030':'var(--ink-faint)'}">${r.ret}</td></tr>`;
+  }).join('');
 }
 
 carregar();

@@ -97,7 +97,7 @@ FAIXAS_METRAGEM = [
 ]
 
 def classificar_faixa_metragem(m2):
-    if not isinstance(m2, (int, float)) or m2 <= 0:
+    if not isinstance(m2, (int, float)) or m2 < 10:
         return None
     for cod, nome, lo, hi in FAIXAS_METRAGEM:
         if lo <= m2 < hi:
@@ -191,6 +191,19 @@ def parse_data_simples(s):
         return datetime.strptime(s[:10], "%Y-%m-%d").date()
     except (ValueError, TypeError):
         return None
+
+
+def _parse_data_br(s):
+    """Parseia 'DD/MM/YYYY HH:MM' ou 'DD/MM/YYYY' → date. Retorna None se falhar."""
+    if not s or not isinstance(s, str):
+        return None
+    txt = s.strip()
+    for fmt in ("%d/%m/%Y %H:%M", "%d/%m/%Y"):
+        try:
+            return datetime.strptime(txt, fmt).date()
+        except (ValueError, TypeError):
+            continue
+    return None
 
 
 def diff_dias(d1, d2):
@@ -545,8 +558,65 @@ def is_card_bot(texto):
     return False
 
 # Solicitação de material durante execução
-PAD_MAT_SOLIC = re.compile(r"\b(precis[ao]|preciso|preciso\s+de|manda\s+(a|o|mais)|envia(r)?\s+(mais|outro|outra)|fal(ta|tou)|comprar|preciso\s+comprar|sair\s+para\s+comprar)\b", re.IGNORECASE)
+PAD_MAT_SOLIC = re.compile(
+    r"\b("
+    r"precis[ao]|preciso|preciso\s+de|"
+    r"vamos\s+precisar|vai\s+precisar|iremos\s+precisar|precisaremos|"
+    r"manda\s+(a|o|mais)|envia(r)?\s+(mais|outro|outra)|"
+    r"fal(ta|tou|tando)|est[aá]\s+faltando|"
+    r"acabou\s+(o|a|os|as)\b|quase\s+acabando|"
+    r"n[aã]o\s+tem\s+mais|"
+    r"comprar|preciso\s+comprar|sair\s+para\s+comprar"
+    r")\b",
+    re.IGNORECASE,
+)
 PAD_TELA_TOTAL = re.compile(r"\btela\s+(total|por\s+completo|no\s+piso\s+total|inteir[ao])\b", re.IGNORECASE)
+
+# Classificação: MATERIAL (produtos Monofloor) vs INSUMO (consumíveis genéricos)
+PAD_CLS_MATERIAL = re.compile(
+    r"\b(stelion|stellion|lilit|lilith|lilite|leona|steleona|teron|lumina|lamina|"
+    r"verniz|hiper\s*500|hiper|selador|resina|parte\s*[ab]|primer|prime|"
+    r"pu\b)",
+    re.IGNORECASE,
+)
+PAD_CLS_INSUMO = re.compile(
+    r"\b(tela|lixa|pincel|lona|pl[aá]stico|fita|esp[aá]tula|rolo|"
+    r"desempenadeira|disco|perfil|massa\s*hard|massa|papel[ãa]o|"
+    r"prego|parafuso|silicone|cera|estopa|trena|n[ií]vel)",
+    re.IGNORECASE,
+)
+PAD_CLS_GENERICO = re.compile(r"\b(material|produto|balde|kit|gal[ãa]o)\b", re.IGNORECASE)
+
+_CANON_MATERIAL = {
+    "stellion": "STELION", "stelion": "STELION",
+    "lilit": "LILIT", "lilith": "LILIT", "lilite": "LILIT",
+    "leona": "LEONA", "steleona": "LEONA",
+    "teron": "TERON", "lumina": "LUMINA", "lamina": "LUMINA",
+    "verniz": "VERNIZ", "hiper 500": "HIPER 500", "hiper500": "HIPER 500",
+    "hiper": "HIPER", "selador": "SELADOR", "resina": "RESINA",
+    "parte a": "PARTE A", "parte b": "PARTE B",
+    "primer": "PRIMER", "prime": "PRIMER", "pu": "PU",
+}
+
+def _classificar_produto_solic(texto):
+    """Retorna (categoria, produto) ou (None, None) se não tem contexto de material."""
+    m_mat = PAD_CLS_MATERIAL.search(texto)
+    if m_mat:
+        raw = m_mat.group(0).lower().strip()
+        return "material", _CANON_MATERIAL.get(raw, raw.upper())
+    m_ins = PAD_CLS_INSUMO.search(texto)
+    if m_ins:
+        return "insumo", m_ins.group(0).lower().strip()
+    m_gen = PAD_CLS_GENERICO.search(texto)
+    if m_gen:
+        pos_gen = m_gen.start()
+        for m_verb in PAD_MAT_SOLIC.finditer(texto):
+            if abs(m_verb.start() - pos_gen) < 50:
+                return "material", m_gen.group(0).lower().strip()
+        for m_verb in re.finditer(r"\b(solicit[eo]|solicite[mn]|solicitar)\b", texto, re.IGNORECASE):
+            if abs(m_verb.start() - pos_gen) < 50:
+                return "material", m_gen.group(0).lower().strip()
+    return None, None
 PAD_QTD_KIT = re.compile(r"(\d+)\s*(kits?|baldes?|latas?|sacos?)\b", re.IGNORECASE)
 PAD_SOBROU = re.compile(r"\bsobr(ou|ar[ao])\s+(\d+)?\s*(\w+)?", re.IGNORECASE)
 
@@ -577,7 +647,13 @@ PAD_SOBROU_PRODUTO = re.compile(
 PAD_VERBO_ENTRADA = re.compile(r"\b(chegou|chegaram|entreg(?:a|ou|aram|amos)|recebi|recebido|envia(?:do|r|ndo|mos)|mandar|mandei|veio|vieram|sa[ií]ram|saiu)\b", re.IGNORECASE)
 PAD_VERBO_ESTOQUE = re.compile(r"\b(temos|tem|tinha|tenho|estamos\s+com|ainda\s+(?:tem|temos)|dispon[ií]ve|material\s+em\s+obra)\b", re.IGNORECASE)
 PAD_VERBO_SOBRA   = re.compile(r"\bsobr(?:ou|aram?|a)\b", re.IGNORECASE)
-PAD_VERBO_SOLIC   = re.compile(r"\b(precis[ao]\b|preciso\b|(?:vamos|iremos)\s+precisar|manda(?:r)?\s+(?:mais|outr))", re.IGNORECASE)
+PAD_VERBO_SOLIC   = re.compile(
+    r"\b(precis[ao]\b|preciso\b|precisaremos|"
+    r"(?:vamos|vai|iremos)\s+precisar|"
+    r"manda(?:r)?\s+(?:mais|outr)|"
+    r"faltando|acabou\s+[oa]\b|n[aã]o\s+tem\s+mais)",
+    re.IGNORECASE,
+)
 PAD_VERBO_CONSUMO = re.compile(
     r"\b("
     r"consum[oeiu]"  # consumo, consumiu, consumindo, consumimos
@@ -1040,6 +1116,12 @@ def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_
             continue  # "precisa acessar/buscar" · ação de fluxo, não material
         if not (PAD_MAT_SOLIC.search(texto) or PAD_TELA_TOTAL.search(texto)):
             continue
+        # Classificar produto — sem contexto de material/insumo = falso positivo
+        categoria, produto = _classificar_produto_solic(texto)
+        if PAD_TELA_TOTAL.search(texto):
+            categoria, produto = "insumo", "tela"
+        if categoria is None:
+            continue
         ts_iso = m.get("timestamp") or ""
         ts_dt = parse_iso(ts_iso)
         sender = (m.get("sender") or "?")[:30]
@@ -1090,6 +1172,8 @@ def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_
             "ts_iso": ts_iso,
             "autor": sender,
             "trecho": texto[:200].replace("\n", " ").strip(),
+            "categoria": categoria,
+            "produto": produto,
             "tela_total": bool(PAD_TELA_TOTAL.search(texto)),
             "resolucao": resolucao,
             "_kws": kws_atual,
@@ -1753,6 +1837,14 @@ def calcular_friccao_nivel(ocorrencias):
     return "baixo"
 
 
+def _entrega_tem_ressalvas(jornada):
+    """Obra finalizou sem retrabalho formal, mas teve ocorrências significativas?"""
+    friccao = jornada.get("friccao") or {}
+    nivel = (friccao.get("nivel") or "").lower()
+    n_occ = len(friccao.get("ocorrencias_formais", []))
+    return nivel in ("critico", "alto") or n_occ >= 3
+
+
 def classificar_obra(jornada):
     """Selo de como a obra terminou/está. Usado pra filtrar e comparar cross-obra."""
     status = (jornada.get("status") or "").lower()
@@ -1769,13 +1861,17 @@ def classificar_obra(jornada):
     if status in ("reparo", "marcas_rolo_cera"):
         return "retrabalho_ativo"
     if status in ("finalizado", "concluido"):
-        return "entrega_com_retrabalho" if (n_ciclos >= 2 or tem_reprovacao) else "entrega_limpa"
+        if n_ciclos >= 2 or tem_reprovacao:
+            return "entrega_com_retrabalho"
+        return "entrega_com_ressalvas" if _entrega_tem_ressalvas(jornada) else "entrega_limpa"
 
     # Fase do painel diz finalizada mas status ficou stale
     if ("FINALIZADO" in fase or "CONCLU" in fase) and status in (
         "em_execucao", "aguardando_execucao", "aguardando_clima", "planejamento", "contrato",
     ):
-        return "entrega_com_retrabalho" if (n_ciclos >= 2 or tem_reprovacao) else "entrega_limpa"
+        if n_ciclos >= 2 or tem_reprovacao:
+            return "entrega_com_retrabalho"
+        return "entrega_com_ressalvas" if _entrega_tem_ressalvas(jornada) else "entrega_limpa"
 
     if status == "em_execucao":
         return "em_execucao_com_retrabalho" if tem_reprovacao else "em_execucao"
@@ -1788,6 +1884,7 @@ def classificar_obra(jornada):
 
 LABELS_CLASSIFICACAO = {
     "entrega_limpa":              "Entrega limpa",
+    "entrega_com_ressalvas":      "Entrega com ressalvas",
     "entrega_com_retrabalho":     "Entrega com retrabalho",
     "retrabalho_ativo":           "Retrabalho ativo",
     "em_execucao":                "Em execução",
@@ -2216,6 +2313,8 @@ def calcular_consistencia_material(jornada):
 
     produtos = []
     alertas = []
+    score_penalidades = 0
+
     for fam in todas_familias:
         env = enviado.get(fam, 0)
         cons = round(consumido.get(fam, 0))
@@ -2223,20 +2322,43 @@ def calcular_consistencia_material(jornada):
         rend = RENDIMENTO_ESPERADO.get(fam)
         esperado = round(metragem / rend) if (metragem and rend) else None
 
+        cobertura_pct = round(env * rend / metragem * 100) if (env and rend and metragem) else None
+        eficiencia_pct = round(cons / esperado * 100) if (cons and esperado) else None
+
         veredito = None
+        detalhe = None
+
         if env > 0 and cons > 0:
             ratio = cons / env
             if ratio > 1.2:
                 veredito = "consumo_acima"
-                alertas.append(f"{fam}: consumiu {cons} vs enviou {env}")
+                detalhe = f"consumiu {cons} vs enviou {env} ({round(ratio*100)}%)"
+                alertas.append(f"{fam}: {detalhe}")
+                score_penalidades += 15
             elif ratio < 0.6:
                 veredito = "sobra_provavel"
+                detalhe = f"consumiu {cons} de {env} enviados ({round(ratio*100)}%)"
+                score_penalidades += 10
             else:
                 veredito = "compativel"
         elif env > 0 and cons == 0:
             veredito = "sem_registro_consumo"
+            score_penalidades += 5
         elif env == 0 and cons > 0:
             veredito = "sem_os_industria"
+            score_penalidades += 5
+
+        if esperado and env > 0:
+            env_ratio = env / esperado
+            if env_ratio < 0.25 and veredito not in ("consumo_acima",):
+                veredito = "envio_insuficiente"
+                detalhe = f"enviou {env}, esperado ~{esperado} p/ {metragem:.0f}m² ({round(env_ratio*100)}%)"
+                alertas.append(f"{fam}: {detalhe}")
+                score_penalidades += 8
+            elif env_ratio > 1.8 and veredito == "compativel":
+                veredito = "envio_excedente"
+                detalhe = f"enviou {env}, esperado ~{esperado} ({round(env_ratio*100)}%)"
+                score_penalidades += 5
 
         produtos.append({
             "familia": fam,
@@ -2244,17 +2366,27 @@ def calcular_consistencia_material(jornada):
             "consumido": cons,
             "sobra_declarada": sob,
             "esperado_m2": esperado,
+            "cobertura_pct": cobertura_pct,
+            "eficiencia_pct": eficiencia_pct,
             "veredito": veredito,
+            "detalhe": detalhe,
         })
 
-    n_compat = sum(1 for p in produtos if p["veredito"] == "compativel")
-    n_alerta = sum(1 for p in produtos if p["veredito"] in ("consumo_acima", "sobra_provavel"))
+    n_alerta = sum(1 for p in produtos if p["veredito"] in (
+        "consumo_acima", "sobra_provavel", "envio_insuficiente", "envio_excedente"))
+    n_sem_dados = sum(1 for p in produtos if p["veredito"] in (
+        "sem_registro_consumo", "sem_os_industria"))
     nivel = "ok" if n_alerta == 0 else "atencao" if n_alerta <= 1 else "critico"
+
+    score_mat = max(0, 100 - score_penalidades)
 
     return {
         "produtos": produtos,
         "alertas": alertas,
         "nivel": nivel,
+        "score": score_mat,
+        "n_anomalias": n_alerta,
+        "n_sem_dados": n_sem_dados,
         "tem_os": bool(enviado),
         "tem_consumo_telegram": bool(consumido),
         "tem_metragem": bool(metragem),
@@ -2481,7 +2613,7 @@ def gerar_veredito(jornada):
     partes = []
 
     # Frase 1: resumo temporal + classificação
-    if classif in ("entrega_limpa", "entrega_com_retrabalho"):
+    if classif in ("entrega_limpa", "entrega_com_ressalvas", "entrega_com_retrabalho"):
         if total_d:
             partes.append(f"Obra finalizada em {total_d} dias")
         else:
@@ -2729,13 +2861,43 @@ def baixar_pdf(url_local: str) -> bytes | None:
         return None
 
 
-def extrair_materiais_enviados(pdf_bytes: bytes) -> list:
+PAD_DATA_OS = re.compile(
+    r"(?:data|emiss[ãa]o|emitid[ao]|cria[çc][ãa]o)[:\s]*(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{2,4})",
+    re.IGNORECASE,
+)
+PAD_DATA_SOLTA = re.compile(
+    r"\b(\d{1,2})[/.](\d{1,2})[/.](\d{4})\b",
+)
+
+def _extrair_data_os_pdf(pdf_bytes: bytes) -> str | None:
+    """Tenta extrair a data de emissão do PDF da OS. Retorna 'YYYY-MM-DD' ou None."""
+    try:
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+            texto = (pdf.pages[0].extract_text() or "") if pdf.pages else ""
+        m = PAD_DATA_OS.search(texto)
+        if m:
+            d, mo, a = m.group(1), m.group(2), m.group(3)
+            if len(a) == 2:
+                a = "20" + a
+            return f"{a}-{mo.zfill(2)}-{d.zfill(2)}"
+        m2 = PAD_DATA_SOLTA.search(texto)
+        if m2:
+            d, mo, a = m2.group(1), m2.group(2), m2.group(3)
+            if 2020 <= int(a) <= 2030 and 1 <= int(mo) <= 12 and 1 <= int(d) <= 31:
+                return f"{a}-{mo.zfill(2)}-{d.zfill(2)}"
+    except Exception:
+        pass
+    return None
+
+
+def extrair_materiais_enviados(pdf_bytes: bytes) -> tuple[list, str | None]:
     """Extrai a tabela 'Descrição dos materiais enviados' de uma OS Indústria.
     Schema esperado da tabela: Código | Quantidade | Material | Lote | Cor | Valor.
-    Retorna lista de dicts (1 por linha de material). Vazio se não achar."""
+    Retorna (lista de dicts, data_iso ou None)."""
     if not PDF_OK or not pdf_bytes:
-        return []
+        return [], None
     materiais = []
+    data_pdf = _extrair_data_os_pdf(pdf_bytes)
     try:
         with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
             for page in pdf.pages:
@@ -2849,10 +3011,10 @@ def extrair_materiais_enviados(pdf_bytes: bytes) -> list:
                                 "valor": valor,
                             })
                     if materiais:
-                        return materiais
+                        return materiais, data_pdf
     except Exception as e:
         print(f"     ⚠ erro extraindo materiais do PDF: {e}")
-    return materiais
+    return materiais, data_pdf
 
 
 def coletar_materiais_enviados(docs: list) -> list:
@@ -2878,11 +3040,12 @@ def coletar_materiais_enviados(docs: list) -> list:
         pdf_bytes = baixar_pdf(url_local)
         if not pdf_bytes:
             continue
-        materiais = extrair_materiais_enviados(pdf_bytes)
+        materiais, data_pdf = extrair_materiais_enviados(pdf_bytes)
         if materiais:
+            data_fallback = (d.get("createdAt") or "")[:10]
             envios.append({
                 "os_nome": nome,
-                "os_data": (d.get("createdAt") or "")[:10],
+                "os_data": data_pdf or data_fallback,
                 "materiais": materiais,
             })
     return envios
@@ -3082,7 +3245,8 @@ def construir_jornada(obra_id):
     envios_materiais = coletar_materiais_enviados(documentos)
     n_envios = len(envios_materiais)
     n_itens_enviados = sum(len(e["materiais"]) for e in envios_materiais)
-    print(f"     · {n_envios} OS · {n_itens_enviados} itens enviados")
+    datas_unicas = set(e["os_data"] for e in envios_materiais if e.get("os_data"))
+    print(f"     · {n_envios} OS · {n_itens_enviados} itens enviados · datas distintas: {len(datas_unicas)}")
 
     # Endereço completo
     endereco = detail.get("projetoEndereco") or "—"
@@ -3090,6 +3254,33 @@ def construir_jornada(obra_id):
     # Data de término prevista + metragem pendente
     data_termino_prevista = parse_data_simples(detail.get("dataTerminoPrevista"))
     metragem_pendente = detail.get("metragemPendente")
+
+    # Prazo prometido ao cliente (campos do Pipefy migrado)
+    _af = (detail.get("acessoDetalhes") or {}).get("allFields") or {}
+    _prazo_dias_raw = _af.get("prazo")
+    _data_entrada_raw = _af.get("data_de_entrada")
+    _data_finalizacao_raw = _af.get("data_de_finaliza_o_da_obra")
+    prazo_dias = None
+    if _prazo_dias_raw is not None:
+        try:
+            prazo_dias = int(float(str(_prazo_dias_raw)))
+        except (ValueError, TypeError):
+            pass
+    data_entrada_obra = _parse_data_br(_data_entrada_raw)
+    data_finalizacao_obra = _parse_data_br(_data_finalizacao_raw)
+    if data_finalizacao_obra and (data_finalizacao_obra.year < 2020 or data_finalizacao_obra.year > 2030):
+        data_finalizacao_obra = None
+    data_termino_prometida = None
+    if data_entrada_obra and prazo_dias and prazo_dias > 0:
+        data_termino_prometida = data_entrada_obra + timedelta(days=prazo_dias)
+    # Data real de fim: finalizacao manual > ultima msg > hoje (se encerrada)
+    _status_lower = (detail.get("status") or "").lower()
+    data_real_fim = data_finalizacao_obra
+    if not data_real_fim and _status_lower in ("finalizado", "concluido"):
+        data_real_fim = ultima_msg.date() if ultima_msg else None
+    desvio_prazo_dias = None
+    if data_termino_prometida and data_real_fim:
+        desvio_prazo_dias = (data_real_fim - data_termino_prometida).days
 
     # Monta jornada
     # FIX bug #2 · status ausente · fallback pra fase_atual_painel ou "desconhecido"
@@ -3129,6 +3320,13 @@ def construir_jornada(obra_id):
         "data_exec_prevista": data_exec_prevista.isoformat() if data_exec_prevista else None,
         "data_exec_confirmada": data_exec_confirmada.isoformat() if data_exec_confirmada else None,
         "data_termino_prevista": data_termino_prevista.isoformat() if data_termino_prevista else None,
+        "prazo": {
+            "dias_prometidos": prazo_dias,
+            "data_entrada": data_entrada_obra.isoformat() if data_entrada_obra else None,
+            "data_termino_prometida": data_termino_prometida.isoformat() if data_termino_prometida else None,
+            "data_finalizacao_real": data_real_fim.isoformat() if data_real_fim else None,
+            "desvio_dias": desvio_prazo_dias,
+        } if prazo_dias else None,
         "tempo_total_dias": tempo_total,
         "tempo_execucao_dias": tempo_execucao,
         "tempo_hibernacao_dias": tempo_hibernacao,
@@ -3177,6 +3375,11 @@ def construir_jornada(obra_id):
         alertas.append("status_fase_discrepante")
     if jornada.get("n_msgs_telegram_total", 0) >= 2000:
         alertas.append("teto_api_msgs")
+    m2 = jornada.get("metragem") or 0
+    if not isinstance(m2, (int, float)) or m2 <= 0:
+        alertas.append("metragem_zero")
+    elif m2 < 10:
+        alertas.append("metragem_suspeita")
     jornada["alertas"] = alertas
     jornada["acoes_pendentes"] = gerar_acoes_pendentes(jornada)
 
@@ -3475,6 +3678,60 @@ def _calcular_capacidade(obras):
     }
 
 
+def _detectar_telegram_compartilhado(obras):
+    """Marca obras que leem o mesmo grupo Telegram (msg_ids sobrepostos).
+
+    Critério: >= 80% dos marcos compartilhados E n_msgs_telegram_total dentro de 5%.
+    Adiciona campo 'telegram_compartilhado' com lista de parceiros.
+    NÃO altera dados originais — só sinaliza.
+    """
+    idx = {}
+    for o in obras:
+        if not o:
+            continue
+        marcos = o.get("marcos") or []
+        msg_ids = frozenset(m.get("msg_id") for m in marcos if m and m.get("msg_id"))
+        if msg_ids:
+            idx[o["obra_id"]] = {
+                "nome": o.get("cliente", "?"),
+                "msg_ids": msg_ids,
+                "n_msgs": o.get("n_msgs_telegram_total", 0),
+            }
+
+    pares = set()
+    ids_list = list(idx.keys())
+    for i in range(len(ids_list)):
+        for j in range(i + 1, len(ids_list)):
+            a_id, b_id = ids_list[i], ids_list[j]
+            a, b = idx[a_id], idx[b_id]
+            max_msgs = max(a["n_msgs"], b["n_msgs"], 1)
+            if abs(a["n_msgs"] - b["n_msgs"]) / max_msgs > 0.05:
+                continue
+            overlap = a["msg_ids"] & b["msg_ids"]
+            min_len = min(len(a["msg_ids"]), len(b["msg_ids"]))
+            if min_len and len(overlap) / min_len >= 0.8:
+                pares.add((a_id, b_id))
+
+    parceiros = {}
+    for a_id, b_id in pares:
+        parceiros.setdefault(a_id, []).append({"obra_id": b_id, "cliente": idx[b_id]["nome"]})
+        parceiros.setdefault(b_id, []).append({"obra_id": a_id, "cliente": idx[a_id]["nome"]})
+
+    n_marcadas = 0
+    for o in obras:
+        if not o:
+            continue
+        oid = o["obra_id"]
+        if oid in parceiros:
+            o["telegram_compartilhado"] = parceiros[oid]
+            if "telegram_duplicado" not in (o.get("alertas") or []):
+                o.setdefault("alertas", []).append("telegram_duplicado")
+            n_marcadas += 1
+
+    if n_marcadas:
+        print(f"  Telegram compartilhado: {n_marcadas} obras em {len(pares)} pares")
+
+
 # ============================================================
 # Main
 # ============================================================
@@ -3538,6 +3795,9 @@ def main():
     # Camada 2: consistência material (enviado x consumido x metragem)
     for o in out["obras"]:
         o["consistencia_material"] = calcular_consistencia_material(o)
+
+    # Detectar obras que compartilham o mesmo grupo Telegram
+    _detectar_telegram_compartilhado(out["obras"])
 
     # Tendência mensal (evolução mês a mês)
     out["tendencia_mensal"] = _calcular_tendencia_mensal(out["obras"])

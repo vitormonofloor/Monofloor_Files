@@ -1,6 +1,6 @@
 # 🎬 JORNADA · APARTAMENTO 805 - JOAO GALLUCCI RODRIGUES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-19
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
 
 ## 📋 Ficha técnica
 
