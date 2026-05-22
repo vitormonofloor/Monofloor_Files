@@ -56,7 +56,7 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 | **Hibernação** | 2025-06-05 | 2025-10-20 | 138d | 0 |
 | **Despertar e pré-execução** | 2025-10-21 | 2025-12-11 | 52d | 30 |
 | **Execução** | 2025-12-12 | 2025-12-19 | 8d | 83 |
-| **Pós-execução** | 2025-12-20 | 2026-05-22 | 154d | 221 |
+| **Pós-execução** | 2025-12-20 | 2026-05-22 | 154d | 222 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -82,8 +82,8 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 
 **Consumo registrado em msgs (3):**
 
-- 2026-02-11 · 29 kit · _Julio_
 - 2026-02-11 · 29 kit · _aplicador | Julio_
+- 2026-02-11 · 29 kit · _Julio_
 - 2026-03-12 · 1 balde · _Julio_
 
 ## ⚠ Pontos de fricção
@@ -101,11 +101,12 @@ Avenida Washington Luiz, nº 465, Boqueirão, Santos/SP, CEP 11055-001 |
 - **2025-12-30** [baixa] relatorio_diario · _Relatório diário 30/12 - Obra aprovada pelo cliente, início verniz_
 - **2025-12-31** [baixa] marco_operacional · _Verniz aplicado - 2 camadas finalizadas_
 
-**Sinais de problema nas mensagens (3):**
+**Sinais de problema nas mensagens (4):**
 
 - **2026-03-10** · _🎬 Transcrição_: "🎬 Transcrição de Vídeo:  "Wesley, nesse momento eu estou aqui na clínica, tá? Não tem ninguém trabalhando, ó. Aqui não foi aplicado nada ain"
 - **2026-05-08** · _🎙️ Transcrição_: "🎙️ Transcrição de Áudio:  "Oi, Rafael, boa tarde, tudo bom? Deixa eu fazer uma pergunta, quem faz a parte de manutenção do monoflora? Porque"
 - **2026-05-08** · _Pedro | Monofloor_: "[Foto] Cliente menciona surgimento de trincas em áreas já finalizadas Descrição: Parede com revestimento monolítico apresentando trinca visí"
+- **2026-05-22** · _Nathan_: "[Vídeo transcrito]: aí aqui é a parte externa né eles fizeram aqui essa parte que aqui vai ser uma área de resíduo lixo químico né então pre"
 
 ## 🔍 Padrões observados
 

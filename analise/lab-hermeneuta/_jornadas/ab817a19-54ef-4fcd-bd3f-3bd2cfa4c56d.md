@@ -1,6 +1,6 @@
 # 🎬 JORNADA · CALLEBE ARAUJO DE MEDEIROS MENDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-21
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
 
 ## 📋 Ficha técnica
 

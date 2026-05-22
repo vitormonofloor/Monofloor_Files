@@ -585,7 +585,7 @@ PAD_CLS_INSUMO = re.compile(
     r"prego|parafuso|silicone|cera|estopa|trena|n[ií]vel)",
     re.IGNORECASE,
 )
-PAD_CLS_GENERICO = re.compile(r"\b(material|produto|balde|kit|gal[ãa]o)\b", re.IGNORECASE)
+PAD_CLS_GENERICO = re.compile(r"\b(materi(?:al|ais)|produtos?|baldes?|kits?|gal(?:[ãa]o|[oõ]es))\b", re.IGNORECASE)
 
 _CANON_MATERIAL = {
     "stellion": "STELION", "stelion": "STELION",
@@ -611,10 +611,10 @@ def _classificar_produto_solic(texto):
     if m_gen:
         pos_gen = m_gen.start()
         for m_verb in PAD_MAT_SOLIC.finditer(texto):
-            if abs(m_verb.start() - pos_gen) < 50:
+            if abs(m_verb.start() - pos_gen) < 100:
                 return "material", m_gen.group(0).lower().strip()
         for m_verb in re.finditer(r"\b(solicit[eo]|solicite[mn]|solicitar)\b", texto, re.IGNORECASE):
-            if abs(m_verb.start() - pos_gen) < 50:
+            if abs(m_verb.start() - pos_gen) < 100:
                 return "material", m_gen.group(0).lower().strip()
     return None, None
 PAD_QTD_KIT = re.compile(r"(\d+)\s*(kits?|baldes?|latas?|sacos?)\b", re.IGNORECASE)
