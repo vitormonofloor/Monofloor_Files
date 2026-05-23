@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-23T01:23:33Z",
+  "atualizado_em": "2026-05-23T05:06:33Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1061,
@@ -42,15 +42,15 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2153,
+    "pending_tasks": 2152,
     "executing_tasks": 2
   },
   "capacidade": {
-    "utilization_percent": 19,
+    "utilization_percent": 22,
     "status": "healthy",
     "aplicadores_total": 95,
-    "aplicadores_necessarios": 18,
-    "aplicadores_por_obra": 15.8,
+    "aplicadores_necessarios": 21,
+    "aplicadores_por_obra": 13.6,
     "capacidade_diaria_m2": 418,
     "capacidade_semanal_m2_puro": 9000,
     "capacidade_semanal_m2_misto": 6300,
@@ -61,16 +61,16 @@
     "max_obras_minimo": 47
   },
   "alertas": {
-    "total": 4,
+    "total": 6,
     "por_tipo": {
-      "stageDelay": 2,
+      "stageDelay": 3,
       "noTeam": 2,
-      "capacityRisk": 0
+      "capacityRisk": 1
     },
     "por_severidade": {
       "high": 3,
-      "medium": 1,
-      "low": 0
+      "medium": 2,
+      "low": 1
     },
     "detalhes": [
       {
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 3,
+        "daysUntilEntry": 2,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "CEP 23970",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 3 dias do início",
-        "daysUntilEntry": 3,
+        "message": "Projeto sem equipe definida a 2 dias do início",
+        "daysUntilEntry": 2,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 10,
+        "daysUntilEntry": 9,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -112,10 +112,32 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "MEDIUM",
-        "message": "Projeto sem equipe definida a 10 dias do início",
-        "daysUntilEntry": 10,
+        "message": "Projeto sem equipe definida a 9 dias do início",
+        "daysUntilEntry": 9,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
+      },
+      {
+        "projectId": "pf-mklv83tx-875790",
+        "clienteNome": "JOSEMAR RICARDO BALABAN",
+        "cidade": "CEP 81210",
+        "type": "STAGE_DELAY",
+        "severity": "MEDIUM",
+        "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
+        "daysUntilEntry": 30,
+        "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "expectedStage": "REVISÃO FINAL OP"
+      },
+      {
+        "projectId": "pf-mklv83tx-875790",
+        "clienteNome": "JOSEMAR RICARDO BALABAN",
+        "cidade": "CEP 81210",
+        "type": "CAPACITY_RISK",
+        "severity": "LOW",
+        "message": "Projeto exige ~11 aplicadores (1008.65m² em 20 dias)",
+        "daysUntilEntry": 30,
+        "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "expectedStage": "Prazo adequado para 1008.65m²"
       }
     ]
   },
@@ -5738,7 +5760,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 39,
+        "dias_desde_resumo": 40,
         "alertas": [
           "CRÍTICO: Cliente ficou sem resposta de 13/03 a 07/04 (25 dias) com cobranças explícitas em 01/04 e 02/04 ignoradas",
           "CRÍTICO: Canal de atendimento desativado sem aviso prévio ao cliente, gerando confusão e tentativa de contato em massa",
@@ -6058,7 +6080,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 39,
+        "dias_desde_resumo": 40,
         "alertas": [
           "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
           "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
@@ -8356,7 +8378,7 @@
   "lw": {
     "luana": {
       "n": 82,
-      "mediana": 263,
+      "mediana": 264,
       "n180": 53,
       "n270": 38,
       "zumbi": 8,
@@ -8365,17 +8387,17 @@
     },
     "wesley": {
       "n": 79,
-      "mediana": 214,
-      "n180": 48,
-      "n270": 24,
+      "mediana": 215,
+      "n180": 49,
+      "n270": 25,
       "zumbi": 17,
       "reparo": 9,
       "pausadas": 0
     },
     "total_ativas": 221,
-    "n_180_total": 113,
+    "n_180_total": 114,
     "concentracao_pct": 72.9,
-    "concentracao_180_pct": 89.4,
+    "concentracao_180_pct": 89.5,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
