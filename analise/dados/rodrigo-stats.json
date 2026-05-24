@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-24T12:42:12Z",
+  "atualizado_em": "2026-05-24T14:26:24Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1061,
@@ -3042,6 +3042,112 @@
     },
     "obras_atencao": [
       {
+        "id": "a8b20644-b006-431a-99bf-da2d4397afa8",
+        "cliente": "AMANDA NEGRELLI HANNUD 2º fase",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "CLIENTE FINALIZADO",
+        "status": "aguardando_execucao",
+        "clima": "Crítico",
+        "n_alertas": 6,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 50,
+        "alertas": [
+          "RISCO JURÍDICO: Amanda enviou notificação formal em 24/02 com prazo fatal de entrega para 26/02 — prazo já descumprido, obra ainda em andamento em 04/03",
+          "MULTA CONTRATUAL: Cliente contabiliza R$300/dia desde 05/01/2026 — potencial passivo acumulado superior a R$17.400 até 04/03",
+          "PREJUÍZO DE TERCEIROS: Marceneiro de Curitiba para instalação de móveis planejados pode ter sido prejudicado pelo atraso — cliente sinalizou cobrança de danos",
+          "VISITA NÃO AUTORIZADA: Consultor Nathan entrou na obra em 19/02 sem presença nem aviso à cliente — violação de protocolo que gerou crise de confiança grave",
+          "REINCIDÊNCIA DE DEFEITO: Após retrabalho de lixamento e reaplicação de verniz (19-20/02), acabamento ainda não estava fosco conforme contrato em 24/02 — terceira ocorrência do mesmo problema"
+        ],
+        "pendencias": [
+          "Finalização da última camada de verniz com acabamento fosco conforme amostra aprovada — obra ainda em andamento em 04/03",
+          "Cronograma de conclusão não foi compartilhado com Amanda (prometido em 04/03, não entregue na conversa)",
+          "Remoção urgente do entulho/materiais no local de instalação dos armários",
+          "Resposta formal da direção à notificação jurídica enviada por Amanda em 24/02",
+          "Definição sobre a multa contratual de R$300/dia desde 05/01/2026 — direcionada à direção em 18/02 sem resolução registrada"
+        ],
+        "resumo_exec": "O atendimento à cliente Amanda Negrelli está em situação crítica, com atraso contratual superior a 57 dias em relação ao prazo original de 05/01/2026, serviço 100% pago e ainda não concluído corretamente. Após retrabalho realizado entre 19 e 20/02 para correção do verniz, a inspeção de 24/02 revelou que o acabamento continuava em desacordo com a amostra aprovada (brilhante ao invés de fosco), resultando no envio de notificação formal por parte da cliente com prazo fatal de 26/02 — já descumprido. A visita do Diretor Geral em 24/02 agravou a situação ao ocorrer com aproximadamente 1 hora de atr",
+        "clima_desc": "Atendimento marcado por atrasos reiterados, falhas de comunicação e descumprimento contratual. A cliente emitiu notificação formal por escrito exigindo prazo fatal de entrega, demonstrando alto nível de insatisfação e risco jurídico real para a Monofloor.",
+        "periodo": "18/02 a 04/03/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 150,
+        "eventos": [
+          {
+            "data": "18/02",
+            "iso": "2026-02-18",
+            "texto": "Agendada visita do consultor de qualidade Nathan Janjão para 19/02 às 09h, após cliente reclamar de atraso superior a 45 dias (prazo contratual era 05/01/2026)",
+            "classe": "critico"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Consultor Nathan realizou visita às 09h sem aguardar Amanda, que estava no prédio esperando — cliente não foi avisada, gerou conflito grave",
+            "classe": "critico"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Equipe de aplicadores (Julio Cesar Miranda, André Lopes de Oliveira, Henrique Souza Cardoso) enviada para correções no mesmo dia — lixamento fino e reaplicação de verniz",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Novo aplicador Charles Henrique da Silva liberado para obra; Monofloor previu finalização do piso para o dia 20/02",
+            "classe": "bom"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Piso finalizado com última camada de verniz aplicada — início do prazo de cura de 72h",
+            "classe": "bom"
+          },
+          {
+            "data": "21/02",
+            "iso": "2026-02-21",
+            "texto": "Monofloor confirma finalização da obra do piso em 20/02",
+            "classe": "bom"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Amanda visita obra e constata que o verniz não está fosco conforme amostra aprovada e que marcas do rolo permanecem visíveis",
+            "classe": "neutro"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Amanda envia notificação formal via WhatsApp relatando atraso superior a 50 dias, pagamento integral já realizado, acabamento em desacordo com amostra e fixando prazo fatal de conclusão para 26/02/2026",
+            "classe": "critico"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Agendada visita do Diretor Geral Rodrigo Conte para 13h30 — diretor chegou aproximadamente 1 hora atrasado, Amanda já havia saído da obra",
+            "classe": "critico"
+          },
+          {
+            "data": "27/02",
+            "iso": "2026-02-27",
+            "texto": "Monofloor envia novos aplicadores (Jaime Pires, Igor Costa, Filipe Lucena, Tiago Júnior, Josias Conceição, Rodolfo Martins, Gilmar Gomes) para regularizações alinhadas com diretor",
+            "classe": "neutro"
+          },
+          {
+            "data": "03/03",
+            "iso": "2026-03-03",
+            "texto": "Confirmada necessidade de nova camada de verniz; Amanda questiona sobre remoção de respingos (bolinhas), equipe confirma que foram retiradas",
+            "classe": "critico"
+          },
+          {
+            "data": "04/03",
+            "iso": "2026-03-04",
+            "texto": "Nova camada ainda não finalizada; entulho de materiais presente no local onde serão instalados armários",
+            "classe": "bom"
+          }
+        ]
+      },
+      {
         "id": "d7aa6f08-e73c-4dce-aa59-0ed1c9aa3f33",
         "cliente": "FABIO FEDERICI DE CARVALHO",
         "consultor": "Wesley",
@@ -3052,7 +3158,7 @@
         "clima": "Crítico",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
+        "dias_desde_resumo": 31,
         "alertas": [
           "RISCO DE RUPTURA CONTRATUAL: Fábio ameaçou explicitamente suspender pagamentos em 16/03 alegando descumprimento contratual da Monofloor. Ambos os contratos mencionados (1º quitado, 2º em fase final) — relação financeira em risco.",
           "FALHA TÉCNICA SISTÊMICA NÃO RESOLVIDA: Após mais de 40 dias, a Monofloor ainda não conseguiu reproduzir uma cor de amostra produzida pela própria empresa. Isso representa falha técnica grave com potencial impacto em reputação e responsabilidade contratual.",
@@ -3187,112 +3293,6 @@
         ]
       },
       {
-        "id": "a8b20644-b006-431a-99bf-da2d4397afa8",
-        "cliente": "AMANDA NEGRELLI HANNUD 2º fase",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "CLIENTE FINALIZADO",
-        "status": "aguardando_execucao",
-        "clima": "Crítico",
-        "n_alertas": 6,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 50,
-        "alertas": [
-          "RISCO JURÍDICO: Amanda enviou notificação formal em 24/02 com prazo fatal de entrega para 26/02 — prazo já descumprido, obra ainda em andamento em 04/03",
-          "MULTA CONTRATUAL: Cliente contabiliza R$300/dia desde 05/01/2026 — potencial passivo acumulado superior a R$17.400 até 04/03",
-          "PREJUÍZO DE TERCEIROS: Marceneiro de Curitiba para instalação de móveis planejados pode ter sido prejudicado pelo atraso — cliente sinalizou cobrança de danos",
-          "VISITA NÃO AUTORIZADA: Consultor Nathan entrou na obra em 19/02 sem presença nem aviso à cliente — violação de protocolo que gerou crise de confiança grave",
-          "REINCIDÊNCIA DE DEFEITO: Após retrabalho de lixamento e reaplicação de verniz (19-20/02), acabamento ainda não estava fosco conforme contrato em 24/02 — terceira ocorrência do mesmo problema"
-        ],
-        "pendencias": [
-          "Finalização da última camada de verniz com acabamento fosco conforme amostra aprovada — obra ainda em andamento em 04/03",
-          "Cronograma de conclusão não foi compartilhado com Amanda (prometido em 04/03, não entregue na conversa)",
-          "Remoção urgente do entulho/materiais no local de instalação dos armários",
-          "Resposta formal da direção à notificação jurídica enviada por Amanda em 24/02",
-          "Definição sobre a multa contratual de R$300/dia desde 05/01/2026 — direcionada à direção em 18/02 sem resolução registrada"
-        ],
-        "resumo_exec": "O atendimento à cliente Amanda Negrelli está em situação crítica, com atraso contratual superior a 57 dias em relação ao prazo original de 05/01/2026, serviço 100% pago e ainda não concluído corretamente. Após retrabalho realizado entre 19 e 20/02 para correção do verniz, a inspeção de 24/02 revelou que o acabamento continuava em desacordo com a amostra aprovada (brilhante ao invés de fosco), resultando no envio de notificação formal por parte da cliente com prazo fatal de 26/02 — já descumprido. A visita do Diretor Geral em 24/02 agravou a situação ao ocorrer com aproximadamente 1 hora de atr",
-        "clima_desc": "Atendimento marcado por atrasos reiterados, falhas de comunicação e descumprimento contratual. A cliente emitiu notificação formal por escrito exigindo prazo fatal de entrega, demonstrando alto nível de insatisfação e risco jurídico real para a Monofloor.",
-        "periodo": "18/02 a 04/03/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 150,
-        "eventos": [
-          {
-            "data": "18/02",
-            "iso": "2026-02-18",
-            "texto": "Agendada visita do consultor de qualidade Nathan Janjão para 19/02 às 09h, após cliente reclamar de atraso superior a 45 dias (prazo contratual era 05/01/2026)",
-            "classe": "critico"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Consultor Nathan realizou visita às 09h sem aguardar Amanda, que estava no prédio esperando — cliente não foi avisada, gerou conflito grave",
-            "classe": "critico"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Equipe de aplicadores (Julio Cesar Miranda, André Lopes de Oliveira, Henrique Souza Cardoso) enviada para correções no mesmo dia — lixamento fino e reaplicação de verniz",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Novo aplicador Charles Henrique da Silva liberado para obra; Monofloor previu finalização do piso para o dia 20/02",
-            "classe": "bom"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Piso finalizado com última camada de verniz aplicada — início do prazo de cura de 72h",
-            "classe": "bom"
-          },
-          {
-            "data": "21/02",
-            "iso": "2026-02-21",
-            "texto": "Monofloor confirma finalização da obra do piso em 20/02",
-            "classe": "bom"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Amanda visita obra e constata que o verniz não está fosco conforme amostra aprovada e que marcas do rolo permanecem visíveis",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Amanda envia notificação formal via WhatsApp relatando atraso superior a 50 dias, pagamento integral já realizado, acabamento em desacordo com amostra e fixando prazo fatal de conclusão para 26/02/2026",
-            "classe": "critico"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Agendada visita do Diretor Geral Rodrigo Conte para 13h30 — diretor chegou aproximadamente 1 hora atrasado, Amanda já havia saído da obra",
-            "classe": "critico"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Monofloor envia novos aplicadores (Jaime Pires, Igor Costa, Filipe Lucena, Tiago Júnior, Josias Conceição, Rodolfo Martins, Gilmar Gomes) para regularizações alinhadas com diretor",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Confirmada necessidade de nova camada de verniz; Amanda questiona sobre remoção de respingos (bolinhas), equipe confirma que foram retiradas",
-            "classe": "critico"
-          },
-          {
-            "data": "04/03",
-            "iso": "2026-03-04",
-            "texto": "Nova camada ainda não finalizada; entulho de materiais presente no local onde serão instalados armários",
-            "classe": "bom"
-          }
-        ]
-      },
-      {
         "id": "4f12eabf-1c93-4944-9726-fee3c9f12820",
         "cliente": "CONAM CONSULTORIA EM ADMINISTRAÇÃO MUNICIPAL LTDA",
         "consultor": "—",
@@ -3366,7 +3366,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 3,
+        "dias_desde_resumo": 4,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto de substituição de piso (dala e lava) está **parado aguardando confirmação de data** da cliente (16/06), com a equipe realizando múltiplas tentativas de contato sem resposta ágil. A cliente demonstra interesse em retomar, mas expressa **forte preocupação com os riscos** de danos a móveis e marcenaria durante a execução da obra.\n\n---\n\n**🟡 Clima: Tenso**\n\n*(Cliente ansiosa/receosa; comunicação assíncrona gerando atrasos)*\n\n---\n\n**📋 Principais Pendências:**\n\n- ✅ Confirmação da data de visita/execução (16/06 em aberto)\n- ✅ Responder dúvida técnica da clien",
@@ -3375,162 +3375,6 @@
         "tempo_resp": "",
         "total_msgs": 11,
         "eventos": []
-      },
-      {
-        "id": "fb8b0ed7-c47a-4ae6-ad0f-ec20cd4e8c7c",
-        "cliente": "TÂMARA NEWMAN LOBATO SOUZA",
-        "consultor": "—",
-        "consultor_full": "",
-        "cidade": "São Paulo/São Paulo",
-        "fase": "OECT",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 4,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "CRÍTICO — Serviço agendado para 23/04 sem confirmação da equipe: em 22/04 às 20h13 o cliente reporta que não obteve resposta por nenhum canal. Risco real de no-show amanhã.",
-          "QUALIDADE — Aplicação de fevereiro apresentou múltiplos defeitos documentados: manchas de suor, marcas de rolo, efeito esbranquiçado, bolhas e pelos. Cliente deixou registrado formalmente o descontentamento e condicionou continuidade do trabalho à resolução total.",
-          "CRONOGRAMA — Atraso acumulado de aproximadamente 2 meses na obra do cliente, diretamente atribuído por ele aos problemas de aplicação da Monofloor. Menção explícita de impacto na mudança da cliente final.",
-          "RELACIONAMENTO — Cliente menciona que 'os profissionais infelizmente não sabem trabalhar bem com o Leona', sinalizando perda de confiança técnica na equipe de aplicação."
-        ],
-        "pendencias": [
-          "22/04 — Giuliano aguarda confirmação da equipe para o retorno em 23/04, sem resposta até o final do dia após contato por WhatsApp, privado e telefone. CRÍTICO: serviço marcado para amanhã sem confirmação de equipe.",
-          "10/03 — Cliente perguntou sobre a proposta da Monofloor para resolução do piso (retrabalho ou troca de material). Nunca houve resposta formal com proposta estruturada — a discussão evoluiu, mas a proposta comercial documentada permanece indefinida."
-        ],
-        "resumo_exec": "A obra passou por uma aplicação de Leona em fevereiro/2026 que resultou em múltiplos problemas de acabamento (manchas, bolhas, marcas de rolo), gerando insatisfação formal da cliente e atraso significativo no cronograma geral. Após visita de vistoria em março, a cliente optou por manter o Leona com reparos corretivos, aceitando o retorno da equipe em 23/04 para 2 dias de trabalho. O principal risco imediato é a ausência de confirmação da equipe para o serviço de amanhã (23/04), com o cliente relatando falha de comunicação em todos os canais no dia 22/04. O padrão de atendimento apresenta garga",
-        "clima_desc": "Cliente demonstra insatisfação acumulada com problemas de qualidade na aplicação e atrasos recorrentes no cronograma. O tom é controlado, mas há cobrança direta e registros formais de descontentamento.",
-        "periodo": "12/02 a 22/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 73,
-        "eventos": [
-          {
-            "data": "12/02",
-            "iso": "2026-02-12",
-            "texto": "Alinhamento de finalização do piso até sexta-feira (14/02) para cura durante o Carnaval e entrada da marcenaria",
-            "classe": "bom"
-          },
-          {
-            "data": "13/02",
-            "iso": "2026-02-13",
-            "texto": "Lixamento iniciado manualmente — divergência com o combinado (lixadeira bambolê); problema resolvido após chegada de Felipe Lucena com lixadeiras",
-            "classe": "critico"
-          },
-          {
-            "data": "13/02",
-            "iso": "2026-02-13",
-            "texto": "Duas demãos de selador aplicadas no mesmo dia",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/02",
-            "iso": "2026-02-14",
-            "texto": "estimado): Aplicação do verniz realizada",
-            "classe": "neutro"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Cliente registra formalmente problemas no acabamento — manchas de suor, marcas de rolo, efeito esbranquiçado, bolhas e pelos na superfície",
-            "classe": "critico"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Monofloor acusa recebimento e promete retorno após conclusão das etapas dos demais prestadores",
-            "classe": "bom"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Cliente solicita agendamento de visita de vistoria e pergunta sobre proposta de solução para o piso",
-            "classe": "neutro"
-          },
-          {
-            "data": "",
-            "iso": null,
-            "texto": "11-13/03: Troca de mensagens para agendamento; visita marcada para 18/03 às 15h",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Rodrigo cancela visita do dia por imprevisto; reagendado para 19/03 às 13h",
-            "classe": "critico"
-          },
-          {
-            "data": "19/03",
-            "iso": "2026-03-19",
-            "texto": "Visita realizada pelo Giuliano presencialmente; fotos/registros enviados à Monofloor",
-            "classe": "neutro"
-          },
-          {
-            "data": "19/03",
-            "iso": "2026-03-19",
-            "texto": "Cliente solicita urgência na definição do prazo de retorno e questiona viabilidade das opções Leona (retrabalho) ou Lilith (troca de material)",
-            "classe": "critico"
-          },
-          {
-            "data": "20/03",
-            "iso": "2026-03-20",
-            "texto": "Monofloor propõe retorno somente em 22/04 — cliente reage negativamente, alertando sobre atraso de 1 mês na mudança",
-            "classe": "critico"
-          },
-          {
-            "data": "23/03",
-            "iso": "2026-03-23",
-            "texto": "Cliente reitera necessidade de entrada mais rápida",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Monofloor apresenta orçamento para troca para Lilith com possível início em 06/04; cliente questiona viabilidade de produção de cor sob medida nesse prazo",
-            "classe": "critico"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Reunião com a cliente no apartamento; cliente opta por manter o Leona com reparos corretivos, aceitando retorno em 20/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "30/03",
-            "iso": "2026-03-30",
-            "texto": "Cliente pergunta se pode iniciar pintura das paredes; Monofloor confirma que sim, pois os reparos serão pontuais",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Monofloor confirma formalmente retorno em 20/04 para reparos pontuais",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Giuliano solicita informações sobre duração do serviço e possibilidade de início após feriado",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Monofloor informa novo retorno para 23/04 (pós-feriado), estimando 2 dias de trabalho — confirmado pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Monofloor entra em contato informando que está alinhando equipe, sem dar resposta concreta",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Giuliano cobra posicionamento após tentativas sem retorno por WhatsApp, mensagem privada e telefone",
-            "classe": "critico"
-          }
-        ]
       },
       {
         "id": "ad2c9413-d9e2-47cb-93c2-cf396ca17db4",
@@ -3680,144 +3524,6 @@
             "iso": "2026-04-23",
             "texto": "Cliente pergunta se é possível remarcar para segunda e terça (28–29/04)",
             "classe": "critico"
-          }
-        ]
-      },
-      {
-        "id": "b825a98d-42e7-4844-97fe-8b6578a4c2f0",
-        "cliente": "DARIO DA SILVA GARCIA",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "SÃO PAULO",
-        "fase": "EQUIPE DE EXECUÇÃO",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 4,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Remoção total do contrapiso em 12/03 pelo cliente sem supervisão técnica da Monofloor: decisão autônoma do cliente que impactou diretamente o cronograma e empurrou a entrada para 11/05.",
-          "Falha de comparecimento do consultor Nathan na visita de 09/03 às 09h30 sem aviso prévio: gerou constrangimento com cliente já sensibilizado por remarcações anteriores.",
-          "Cliente demonstrou insatisfação explícita com gestão de datas ('Começamos bem'): histórico de expectativa frustrada com data 06/03 que foi confirmada verbalmente mas não honrada. Risco de relacionamento elevado para próximo agendamento em 11/05.",
-          "Desalinhamento interno entre equipes (atendimento x projetos x indústria): escopo não estava confirmado quando visitas e datas foram comunicadas ao cliente, gerando contradições que prejudicaram a credibilidade da Monofloor."
-        ],
-        "pendencias": [
-          "E-mails para cadastro: Pedro solicitou em 18/03 os endereços de e-mail das pessoas que precisam receber atualizações do projeto. Cliente disse que salvaria o número mas não forneceu os e-mails ainda.",
-          "Antecipação da data 11/05: Monofloor comprometeu-se a informar prontamente caso surja possibilidade de antecipar a entrada antes de 11/05. Deve ser monitorado proativamente conforme o contrapiso cure."
-        ],
-        "resumo_exec": "O projeto do cliente Dario passou por múltiplas remarcações de data de entrada entre fevereiro e março de 2026, gerando insatisfação visível por parte do cliente. A principal causa foi um desalinhamento interno entre as equipes de atendimento, projetos e indústria da Monofloor, que resultou na comunicação de datas antes da confirmação do escopo e das aferições técnicas. O episódio mais crítico ocorreu em 12/03, quando o cliente optou por remover e refazer todo o contrapiso de forma autônoma, inviabilizando o início previsto para 18/03 e postergando a entrada para 11/05. A obra encontra-se atua",
-        "clima_desc": "O cliente Dario demonstrou insatisfação clara com remarcações de data e falta de alinhamento interno da equipe Monofloor. Apesar de cooperativo, sinalizou frustração com a frase 'Começamos bem' após a primeira remarcação.",
-        "periodo": "18/02 a 18/03/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 75,
-        "eventos": [
-          {
-            "data": "18/02",
-            "iso": "2026-02-18",
-            "texto": "Monofloor propõe visita técnica para 25/02 às 10h",
-            "classe": "neutro"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Data da visita confirmada pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Horário da visita antecipado para 09h30 e reconfirmado",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/02",
-            "iso": "2026-02-25",
-            "texto": "Visita realizada; relatório técnico enviado com lista de adequações necessárias (lixamento do contrapiso, regularizações, restrições de tabica, remoção de móveis)",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Cliente informa que lixamento do contrapiso será feito em 27/02 e que tudo estará pronto até 06/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Monofloor informa que data 06/03 não é viável pois aferições só foram feitas na visita de 25/02 e há pendência de confirmação de escopo (prazo de 12 dias úteis de indústria)",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente Dario adicionado ao grupo; questiona data de início e demonstra insatisfação com remarcação",
-            "classe": "critico"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Data de entrada acordada para 18/03, condicionada à confirmação de escopo",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente reage com ironia: 'Começamos bem'",
-            "classe": "neutro"
-          },
-          {
-            "data": "05/03",
-            "iso": "2026-03-05",
-            "texto": "Monofloor agenda nova visita técnica pré-entrada para 09/03 às 09h30",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "Consultor Nathan não comparece no horário agendado; visita remarcada para 16h45 do mesmo dia",
-            "classe": "critico"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Monofloor informa que imagens da visita estão sendo analisadas pela área técnica",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "Monofloor confirma que aplicação não pode ser parcial e que a entrada precisa ser postergada devido a regularizações com prazo de ~21 dias informadas pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Luana (equipe operacional) envia briefing de início para 18/03, cor Sasha, 18 dias úteis de execução",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Dario informa que todo o contrapiso foi removido e será refeito no dia seguinte; início em 18/03 cancelado",
-            "classe": "critico"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Monofloor informa que agenda está comprometida e próximo encaixe disponível é 11/05",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Dario confirma novo contrapiso com 3 cm de espessura (cura de 3 a 4 semanas) e aceita data de 11/05 com esperança de antecipação",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Pedro assume comunicação direta com o cliente, encerrando comunicação pelo grupo; solicita e-mails para cadastro",
-            "classe": "neutro"
           }
         ]
       },
@@ -4002,1297 +3708,6 @@
         ]
       },
       {
-        "id": "c26eecec-2e3a-4411-8bd1-060c34f605af",
-        "cliente": "ALEXANDRE BUSS VAN DEN MOSSELAAR",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "BRAGANÇA PAULISTA",
-        "fase": "REVISÃO FINAL OP",
-        "status": "aguardando_execucao",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Promessa não cumprida: retorno com novo cronograma prometido por Anelise para 26-27/02 nunca foi entregue — cliente cobrou repetidamente por semanas sem resposta objetiva, indicando falha grave de follow-up interno",
-          "Instabilidade no canal de atendimento: em menos de 2 semanas houve mudança de canal (grupo → Pedro direto → retorno ao grupo), o que pode gerar desconfiança e confusão no cliente",
-          "Risco de perda de data: a data de 01/07 foi confirmada verbalmente no WhatsApp, mas não há registro de contrato, proposta assinada ou confirmação formal — encaixe de agenda prometido também precisa ser monitorado"
-        ],
-        "pendencias": [
-          "E-mails dos participantes solicitados em 18/03 por Pedro para cadastro no sistema — não há confirmação de que foram enviados ou cadastrados",
-          "Cliente perguntou em 22/04 se há datas anteriores a 01/07 — Monofloor respondeu que não há, mas prometeu contato caso surja encaixe de agenda, o que configura compromisso a ser monitorado"
-        ],
-        "resumo_exec": "O projeto encontra-se em fase de agendamento, com data de início de aplicação confirmada para 01/07/2026, após um longo período de indefinição que gerou cobranças recorrentes do cliente entre fevereiro e abril. A obra enfrentou atraso externo por problemas nas esquadrias, mas a principal fragilidade identificada foi a falha de comunicação interna da Monofloor: uma promessa de retorno com cronograma não foi cumprida, e houve troca de responsáveis de atendimento sem transição adequada. A visita técnica de 10/03 foi realizada e o relatório entregue, indicando avanço no escopo. O cliente demonstro",
-        "clima_desc": "O cliente demonstrou insatisfação recorrente pela falta de retorno sobre o cronograma de entrada em obra, realizando múltiplas cobranças ao longo de quase dois meses. A tensão foi parcialmente amenizada ao final com a confirmação de uma data de início.",
-        "periodo": "23/02 a 22/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 19,
-        "eventos": [
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Cliente solicita previsão de entrada em obra e relata dificuldade de contato com Ulisses",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Equipe interna aciona o responsável e informa atraso nas esquadrias como causa do atraso no cronograma",
-            "classe": "critico"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Prometido retorno com novo cronograma entre quinta e sexta (26-27/02) pela Anelise",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Cliente cobra o novo cronograma prometido — sem resposta anterior da equipe",
-            "classe": "critico"
-          },
-          {
-            "data": "04/03",
-            "iso": "2026-03-04",
-            "texto": "Monofloor solicita visita in loco para 10/03 às 10h para confirmação de escopo",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Visita in loco realizada pela equipe Monofloor",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Monofloor envia relatório da visita de 10/03 e reitera necessidade de previsão com 60 dias de antecedência",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Pedro assume o atendimento e comunica que a partir de então o contato seria feito diretamente com ele, fora do grupo",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Solicitação de e-mails dos participantes para cadastro e envio de atualizações",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "Juliana (Monofloor) comunica reversão do formato de atendimento — retorno ao grupo de WhatsApp",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Atendimento Monofloor responde dúvidas técnicas sobre aderência em mármore e aplicação por camadas",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/04",
-            "iso": "2026-04-10",
-            "texto": "Monofloor reforça necessidade de alinhamento de data com 60 dias de antecedência",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Monofloor oferece data de 01/07 para início das atividades de aplicação",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Cliente confirma a data de 01/07 e questiona se há datas anteriores disponíveis",
-            "classe": "critico"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Monofloor confirma agenda comprometida e mantém 01/07 como data mais próxima, com possibilidade de encaixe caso surja abertura",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
-        "id": "31e1c618-04bc-411c-89bc-55fca2b773b7",
-        "cliente": "CAROLINA RACHE GUIMARÃES",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "BELO HORIZONTE",
-        "fase": "CONFIRMAÇÕES OP 1",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Obra do piso do 2º pavimento (~110m²) completamente parada há mais de 6 semanas aguardando solução técnica para umidade — risco de impacto significativo no cronograma e na satisfação do cliente.",
-          "Cliente demonstrou insatisfação explícita com tempo de resposta da Monofloor em 27/03 (🆘), sinalizando risco de deterioração do relacionamento comercial.",
-          "Amostras aplicadas no piso descolaram completamente por umidade — problema técnico confirmado que impede avanço da aplicação e pode gerar discussões sobre responsabilidade e garantia."
-        ],
-        "pendencias": [
-          "Confirmação da área técnica sobre compatibilidade do Monofloor com base epóxi (Sikafloor 252 Primer ou similar) para o piso do 2º pavimento: cliente aguarda resposta definitiva desde 25/03, reunião realizada em 31/03 mas não há registro de conclusão técnica formal na conversa.",
-          "Custo de retorno da equipe para aplicação em abril (pós-chuvas) nunca foi formalmente respondido: em 20/02 a equipe prometeu verificar com a gestão, mas não há confirmação registrada na conversa.",
-          "Definição de data para retorno da equipe para finalização do piso do 2º pavimento e retoques (nichos de ar-condicionado): aguarda resultado dos testes de umidade da Engecity, sem prazo definido."
-        ],
-        "resumo_exec": "O projeto encontra-se com a aplicação do piso do 2º pavimento (~110m²) completamente paralisada desde fevereiro/2026 devido a problemas persistentes de umidade, aguardando testes e laudos técnicos conduzidos pela Engecity e pela perita Priscila. A relação com o cliente está sob pressão, com episódios claros de insatisfação com a lentidão nas respostas técnicas da Monofloor, culminando em alerta explícito em 27/03. As paredes, teto e o ofurô do 2º pavimento estão em estágio avançado, mas retoques nos nichos de ar-condicionado também estão pendentes para o retorno da equipe. A ficha técnica do M",
-        "clima_desc": "O cliente demonstrou frustração crescente com a lentidão nas respostas técnicas da Monofloor, chegando a enviar mensagem de alerta explícito (🆘) cobrando resposta urgente. Apesar de avanços pontuais, a obra está parada aguardando definições técnicas sobre umidade há semanas.",
-        "periodo": "13/02 a 06/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 109,
-        "eventos": [
-          {
-            "data": "13/02",
-            "iso": "2026-02-13",
-            "texto": "Cliente solicita retorno da equipe na segunda-feira aproveitando previsão de sol em BH. Monofloor alerta sobre riscos de umidade e necessidade de solucionar a origem antes da aplicação.",
-            "classe": "critico"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Amostras de piso descolaram completamente devido à umidade. Monofloor solicita decisão do cliente sobre como seguir nas áreas afetadas.",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "Confirmado que retrabalho inicial será sem custo. Questão sobre possível custo de retorno em abril (após período de chuva) fica pendente de confirmação pela gestão.",
-            "classe": "critico"
-          },
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Cliente informa retirada do drywall e continuidade com pintura. Ofurô com umidade por entrada de água devido à remoção de porta — lona de proteção insuficiente.",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Cliente informa que aguarda laudo de perito, previsto para o dia seguinte.",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Laudo da perita recebido pelo cliente. Reunião com perita e Engecity agendada para terça-feira (03/03).",
-            "classe": "neutro"
-          },
-          {
-            "data": "05/03",
-            "iso": "2026-03-05",
-            "texto": "Cliente aponta que nichos de ar-condicionado no teto não foram pintados. Monofloor informa que o ajuste ficará para o retorno da equipe e solicita agendamento com 60 dias de antecedência.",
-            "classe": "neutro"
-          },
-          {
-            "data": "05/03",
-            "iso": "2026-03-05",
-            "texto": "Cliente sinaliza que pode dar pré-aviso imediato caso testes de umidade no piso sejam aprovados.",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Monofloor solicita atualização sobre progresso do projeto. Sem resposta imediata do cliente.",
-            "classe": "critico"
-          },
-          {
-            "data": "20/03",
-            "iso": "2026-03-20",
-            "texto": "Cliente informa que aguarda a Engecity realizar testes indicados pela perita para conter a umidade.",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Cliente consulta viabilidade técnica de aplicar Monofloor sobre base epóxi para barreira de umidade no piso do 2º pavimento (~110m²).",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/03",
-            "iso": "2026-03-26",
-            "texto": "a 27/03: Monofloor demora mais de 24h para responder consulta técnica sobre epóxi. Cliente envia alerta (🆘) às 19h34 de 27/03 exigindo resposta no dia.",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Monofloor menciona produto similar da NS Brazil (NS Resin RU) e aguarda avaliação técnica do Sikafloor 252 Primer enviado pelo cliente.",
-            "classe": "neutro"
-          },
-          {
-            "data": "30/03",
-            "iso": "2026-03-30",
-            "texto": "Reunião online confirmada para 31/03 às 11:45, com participação da perita Priscila às 12:45.",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Reunião realizada com link via Google Meet. Confusão de horário resolvida.",
-            "classe": "bom"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Cliente solicita ficha técnica do Monofloor a ser utilizado no piso.",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "Cliente reiterou solicitação da ficha técnica.",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Monofloor envia ficha técnica solicitada. Cliente confirma recebimento.",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
-        "id": "40e39aac-9ab5-4fb1-8d48-05899984a0f2",
-        "cliente": "ALINIE MENDES PEIGO",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "BERTIOGA",
-        "fase": "INFORMAÇÕES PROJETOS",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Reembolso ao cliente Marcos Peigo atrasou mais de 3 semanas após o prazo combinado (10/02), gerando cobranças diárias e desgaste evidente com a intermediária Fernanda — risco reputacional e de relacionamento comercial",
-          "Fernanda não sabia que o processo de acabamento incluía lixamento (não apenas verniz) — falha de alinhamento técnico que gerou surpresa e preocupação com impacto nos móveis já instalados; pode gerar conflito ou revisão do escopo em 28/04",
-          "Agenda da Monofloor muito concorrida: próximas datas disponíveis após 28/04 somente em maio/junho — qualquer imprevisto na data agendada coloca o projeto em risco de longo atraso"
-        ],
-        "pendencias": [
-          "Fernanda solicitou em 01/04 informações detalhadas sobre o protocolo completo do processo (dias, cuidados, proteção de móveis) — prazo foi prometido para 'logo mais' mas não há confirmação de envio na conversa",
-          "Confirmação formal do agendamento de 28/04 ainda depende de retorno da Fernanda até 15/04 — não há confirmação explícita registrada na conversa até 16/04"
-        ],
-        "resumo_exec": "O projeto na cobertura passou por uma fase crítica em fevereiro, marcada pelo atraso de mais de três semanas no reembolso ao cliente Marcos Peigo, situação que gerou cobranças repetidas da intermediária Fernanda e evidenciou falha de comunicação interna da Monofloor após a saída da colaboradora Gabriele. A visita técnica de 20/02 identificou irregularidades no verniz e sujidades, com lixamento fino e possível reaplicação de verniz programados para após a liberação da obra. O reembolso foi confirmado em 06/03 e a situação financeira está resolvida. O retorno técnico está pré-agendado para 28/04",
-        "clima_desc": "O atendimento apresentou tensão significativa no início devido ao atraso no reembolso ao cliente Marcos Peigo, com a intermediária Fernanda cobrando respostas repetidamente. A partir de março, o clima normalizou com foco no agendamento do retorno técnico.",
-        "periodo": "19/02 a 16/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 80,
-        "eventos": [
-          {
-            "data": "10/02",
-            "iso": "2026-02-10",
-            "texto": "– Serviço concluído na cobertura; reembolso ao cliente Marcos Peigo deveria ter sido feito nesta data",
-            "classe": "bom"
-          },
-          {
-            "data": "12/02",
-            "iso": "2026-02-12",
-            "texto": "– Fernanda enviou primeira mensagem cobrando o reembolso, sem retorno",
-            "classe": "critico"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "– Fernanda retoma cobrança do reembolso; equipe aciona a direção sem dar prazo",
-            "classe": "critico"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "– Visita técnica confirmada para 20/02 às 10h (pedido de mudança para 14h recusado)",
-            "classe": "critico"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "– Visita técnica realizada na cobertura por técnico identificado como Nathan",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "– Identificados produtos da Monofloor deixados na cobertura; coleta agendada para 23/02",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/02",
-            "iso": "2026-02-20",
-            "texto": "– Fernanda solicita relatório da visita técnica e cobra novamente o reembolso",
-            "classe": "critico"
-          },
-          {
-            "data": "25/02",
-            "iso": "2026-02-25",
-            "texto": "– Monofloor envia relatório técnico: identificadas irregularidades no verniz, sujidades e variação de tonalidade; lixamento fino e possível reaplicação de verniz agendados para após liberação da obra",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "– Fernanda confirma entendimento do relatório e cobra reembolso com urgência pela segunda vez na semana",
-            "classe": "critico"
-          },
-          {
-            "data": "06/03",
-            "iso": "2026-03-06",
-            "texto": "– Monofloor informa que financeiro irá contatar Fernanda; ela confirma recebimento do comprovante de reembolso",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "– Monofloor retoma contato oferecendo suporte para retorno ao projeto",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "– Fernanda informa que marcenaria finaliza até 15/04 e estima disponibilidade a partir de 20/04",
-            "classe": "bom"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "– Monofloor informa indisponibilidade para 20/04 e propõe retorno em 28/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Data de 28/04 pré-agendada por Juliana (Monofloor) com alerta de agenda concorrida e próximas datas apenas em maio/junho",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Fernanda fica surpresa ao saber que o processo inclui lixamento e não apenas verniz, expressa preocupação com pó nos móveis já montados",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Monofloor solicita prazo para enviar protocolo detalhado do processo",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "– Monofloor informa duração do processo: 1 a 2 dias de lixamento + 1 dia de verniz + 72h de cura; confirma que lixamento será fino e com pó praticamente nulo",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "– Fernanda questiona se o apartamento precisa estar limpo antes da intervenção; Monofloor confirma que não é necessário",
-            "classe": "critico"
-          }
-        ]
-      },
-      {
-        "id": "ddb7768a-521e-4164-9714-120250376edd",
-        "cliente": "RICARDO GUIMARAES VIEIRA",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "CLIENTE FINALIZADO",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Cliente Ricardo se mudou para o apartamento antes da conclusão dos reparos devido ao atraso de ~19 dias sem resposta da Monofloor, o que tornará a execução mais complexa e impactante para o morador",
-          "Insatisfação explícita do cliente Ricardo registrada pelo Eng. Leandro em 07/04: 'o cliente está extremamente insatisfeito com a tratativa'",
-          "Execução aprovada para 18/05 ainda está sem cronograma detalhado, equipe definida ou confirmação formal enviada ao cliente — risco de novo desgaste se não houver comunicação proativa até lá"
-        ],
-        "pendencias": [
-          "Confirmação da data 25/03 para visita com arquitetura: Monofloor prometeu verificar disponibilidade em 13/03 e não há registro de confirmação na conversa",
-          "Próximos passos pós-aprovação de data 18/05: Leandro confirmou aprovação do Ricardo em 17/04 às 16h27 e aguarda próximos passos; Monofloor respondeu que retornaria, mas sem detalhamento de cronograma, equipe ou logística"
-        ],
-        "resumo_exec": "O atendimento referente à obra do cliente Ricardo foi marcado por um período crítico de aproximadamente 19 dias sem resposta da Monofloor (18/03 a 06/04), gerando insatisfação explícita do proprietário e agravando a situação pela mudança do cliente para o apartamento antes da conclusão dos reparos. Após retomada do contato em 07/04, foram enviados relatório técnico e orçamento, aprovados pelo cliente. As negociações de data resultaram na aprovação do início dos serviços para 18/05, com estimativa de conclusão até o final da semana seguinte. A conversa encerra com a Monofloor comprometida a ali",
-        "clima_desc": "Atendimento marcado por longos períodos sem resposta da Monofloor, gerando insatisfação explícita do cliente Ricardo e cobranças frequentes do Eng. Leandro. A situação foi parcialmente resolvida ao final, mas o atraso na tratativa e a mudança do cliente para o apartamento antes da conclusão dos repa",
-        "periodo": "11/03 a 17/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 44,
-        "eventos": [
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "Monofloor propõe visita do consultor de qualidade para 18/03 às 10h45",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Arquitetura (Joana) solicita reagendamento para 25/03, pois estará em SP nessa data",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Monofloor confirma que verificará disponibilidade para o dia 25/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Equipe de campo (Pedro) relata problema urgente em banheiro do cliente Ricardo e dificuldade de contato com a Monofloor",
-            "classe": "critico"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Leandro confirma que entrou em contato com representante da Monofloor, que levaria a questão à diretoria",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Eng. Leandro retoma contato após ~19 dias sem resposta, pedindo definição dos próximos passos",
-            "classe": "critico"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Leandro alerta que cliente Ricardo está extremamente insatisfeito e já se mudando para o apartamento sem resolução",
-            "classe": "critico"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Atendimento Monofloor envia relatório de visita técnica realizada pelo consultor Natan",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Leandro informa que Natan já havia indicado a solução na visita: reparo no piso da cozinha e reaplicação total da parede do banheiro afetado",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Leandro solicita orçamento e cronograma com urgência",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Atendimento Monofloor envia orçamento referente às tratativas",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/04",
-            "iso": "2026-04-10",
-            "texto": "Atendimento Monofloor cobra devolutiva sobre o orçamento",
-            "classe": "critico"
-          },
-          {
-            "data": "10/04",
-            "iso": "2026-04-10",
-            "texto": "Leandro informa que orçamento está em validação com seus gestores",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Atendimento Monofloor cobra novamente devolutiva do orçamento",
-            "classe": "critico"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Ricardo aprova o orçamento e solicita execução nos dias 27, 28 e 29 de abril",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Monofloor informa que não consegue iniciar em 27/04, que a data disponível é 28/04 e que o prazo mínimo é 5 dias mais tempo de cura",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Leandro encaminha áudio do proprietário",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "Atendimento Monofloor verifica possibilidade de alteração de data de início",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "Monofloor informa disponibilidade para início em 13/05 (alternativa) ou manutenção do início em 28/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "Leandro solicita execução em uma semana; Monofloor estima conclusão até 16/05 (sábado)",
-            "classe": "bom"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Monofloor propõe início em 18/05 (segunda-feira) como encaixe mais próximo disponível",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Ricardo aprova início em 18/05 via Leandro; Monofloor confirma e informa que alinhará próximos passos",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
-        "id": "2d17b8ae-fef0-43b0-996e-accba3c3b709",
-        "cliente": "DIOGO CANTERAS SANTOS",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Insatisfação com cobrança por metro linear dos trilhos: cliente considerou o valor absurdo (~20% do contrato) e mencionou que a metodologia 'não foi informada em nenhum momento', mesmo constando em contrato — risco de contestação futura",
-          "Reunião de 10/03 com falha de atendimento: Pedro não entrou na reunião emergencial por estar em outra ligação, enquanto o cliente aguardava retorno urgente sobre cronograma — episódio gerou desgaste de confiança",
-          "Prazo de aplicação em aberto: obra pode estar avançando sem data confirmada para o Monofloor, podendo gerar conflito de agenda ou perda da janela de aplicação"
-        ],
-        "pendencias": [
-          "Foto da bancada do lavabo: Thaísa (Monofloor) solicitou em 15/04 e não houve retorno do cliente até o fim da conversa — necessário para finalizar orçamento dos complementos",
-          "Orçamento dos complementos pendente de envio: Thaísa recebeu todas as medidas em 15/04 mas o orçamento (escada, bancada lavabo, degrau, trilhos sala/cozinha) ainda não foi enviado ao cliente",
-          "Previsão de entrada em obra: Monofloor solicitou em 03/03 e reforçou em 27/03 e 13/03 — cliente nunca forneceu data, impactando a agenda de aplicação"
-        ],
-        "resumo_exec": "O projeto na Rua Arq. Jaime Fonseca Rodrigues avança, mas acumulou tensões por falhas de comunicação — especialmente a reunião de 10/03 onde o responsável Pedro não esteve disponível e a cobrança por metro linear dos trilhos, que surpreendeu negativamente o cliente. O aditivo contratual foi assinado e pago, e a visita técnica de 23/03 gerou um relatório de regularizações pendentes que ainda aguarda resposta da obra. Em abril, o escopo se ampliou com novos itens (escada, lavabo, degrau, trilhos sala/cozinha), mas o orçamento ainda não foi enviado e falta foto da bancada do lavabo para finalizá-",
-        "clima_desc": "Cliente demonstrou insatisfação pontual com a metodologia de cobrança dos trilhos (metro linear vs m²), questionando a lógica e o valor. Apesar da resolução formal via aditivo, o tom revela desconfiança acumulada, especialmente sobre comunicação e clareza contratual.",
-        "periodo": "02/03 a 15/04/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 150,
-        "eventos": [
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Confirmação de que aplicação em áreas externas não gera custo adicional",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Cliente solicita previsão de entrada com 60 dias de antecedência",
-            "classe": "neutro"
-          },
-          {
-            "data": "04/03",
-            "iso": "2026-03-04",
-            "texto": "Dúvida sobre aparência do verniz antiderrapante levantada pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/03",
-            "iso": "2026-03-06",
-            "texto": "Discussão sobre acabamento nos trilhos de porta de correr e espaçamento inferior ao recomendado (7cm)",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Cliente expressa insegurança sobre ajuste de altura do produto e instalação do guia; reunião emergencial convocada",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Reunião realizada com dificuldades técnicas (troca de plataformas, participante Pedro não entrou por estar em outra ligação)",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Solicitação de visita in loco agendada para 18/03; reprogramada para 23/03 às 13h",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Monofloor anuncia mudança no canal de comunicação (centralização via Pedro); cliente resiste e mantém grupo",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/03",
-            "iso": "2026-03-23",
-            "texto": "Visita técnica realizada na Rua Arq. Jaime Fonseca Rodrigues, 755 — cliente participou por vídeo por problema pessoal",
-            "classe": "critico"
-          },
-          {
-            "data": "24/03",
-            "iso": "2026-03-24",
-            "texto": "Questionamento sobre cobrança por metro linear dos trilhos; cliente considera valor desproporcional (~20% do contrato)",
-            "classe": "critico"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Esclarecimento sobre número de entre-trilhos (2 portas de 2 folhas + 1 porta de 3 folhas); escopo atualizado",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Adicional de trilhos aprovado por Diogo; aditivo contratual enviado e assinado no mesmo dia",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Diogo menciona possível porta adicional entre sala e cozinha com trilho — aguarda serralheiro",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Monofloor envia relatório técnico pós-visita com regularizações necessárias antes da aplicação; reforça necessidade de previsão de entrada com 60 dias",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Boleto do aditivo pago por Diogo",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Diogo solicita estimativa de custo para escada em monofloor (comparação com pedra)",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Arquiteta Thábata assume comunicação; envia medidas para orçamento de escada, bancada de lavabo e degrau",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "Confirmação de 4 trilhos (3 entre-trilhos) para porta sala/cozinha com vão de 4,53m",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "Thaísa solicita foto da bancada do lavabo para finalizar orçamento",
-            "classe": "bom"
-          }
-        ]
-      },
-      {
-        "id": "e9cfed37-fe20-42c0-877a-3a55b1476fbc",
-        "cliente": "ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "SÃO PAULO / SP",
-        "fase": "INFORMAÇÕES PROJETOS",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "DANO MATERIAL NÃO RESOLVIDO: Fita de móvel danificada pelo consultor Braiam durante visita em fevereiro — custo enviado pela cliente em 11/03, encaminhado à direção, mas sem confirmação de ressarcimento até 22/04 (mais de 40 dias sem resolução)",
-          "RISCO DE CONFLITO DE AGENDA: Aplicação externa agendada para 12/05, mas cliente estará de férias de 17 a 22/05 — parte interna ainda sem data definida, criando risco de sobreposição e novo cancelamento",
-          "COBRANÇAS SEM RESPOSTA EM 22/04: Lorrayne enviou três mensagens cobrando retorno sobre agendamento da parte interna sem obter resposta — risco de deterioração do relacionamento com a intermediária"
-        ],
-        "pendencias": [
-          "Lorrayne perguntou em 17/04 se é necessária vistoria prévia antes do dia 12/05 — sem resposta da equipe Monofloor",
-          "Em 22/04, Lorrayne solicitou agendamento da parte interna considerando as férias da cliente (17-22/05) — Monofloor prometeu retorno mas não respondeu até o fim do dia, com três cobranças sem resposta",
-          "Ressarcimento do dano na fita do móvel causado pela visita do Braiam (11/03) — encaminhado à direção, sem confirmação de resolução ou valor aprovado registrado na conversa"
-        ],
-        "resumo_exec": "O atendimento ao apartamento da cliente Andressa acumula pendências desde fevereiro de 2026, com a área externa ainda não executada devido a restrições climáticas e agenda sobrecarregada da equipe Monofloor. A aplicação externa está agendada para 12/05, porém a parte interna ainda não tem data definida, e a cliente estará de férias de 17 a 22 de maio, exigindo alinhamento urgente. Um dano em móvel causado durante visita do consultor Braiam está sem resolução há mais de 40 dias, representando risco financeiro e de imagem. A intermediária Lorrayne demonstra frustração crescente com respostas len",
-        "clima_desc": "A intermediária Lorrayne demonstra crescente frustração com a falta de retornos ágeis e dificuldade para fechar datas. A cliente final está pressionando por definições e a equipe Monofloor tem respondido com atrasos e respostas genéricas.",
-        "periodo": "12/02 a 22/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 45,
-        "eventos": [
-          {
-            "data": "12/02",
-            "iso": "2026-02-12",
-            "texto": "Visita do consultor de qualidade Braiam Gomes Pacheco agendada para 18/02 às 10h, confirmada pela cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/02",
-            "iso": "2026-02-13",
-            "texto": "Dados do consultor Braiam enviados para liberação na portaria",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "Cliente relata dano em fita de móvel ocorrido durante visita do Braiam; encaminha custo da marcenaria para ressarcimento",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "Monofloor recebe o custo e encaminha à direção, sem retorno definitivo registrado",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente solicita retorno para aplicação na área externa; Monofloor alega instabilidade climática",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Lorrayne solicita agendamento de retorno ao apartamento da Andressa",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Monofloor informa possível data de 14/04, mas descarta por previsão de chuva",
-            "classe": "neutro"
-          },
-          {
-            "data": "07/04",
-            "iso": "2026-04-07",
-            "texto": "Cliente informa que não viajará em abril; solicita pré-agendamento para 16-23 de maio",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Monofloor encaminha solicitação internamente, sem retorno no mesmo dia",
-            "classe": "neutro"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Lorrayne cobra retorno no mesmo dia; Monofloor mantém posição de aguardar melhora climática",
-            "classe": "critico"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "Cliente informa semana sem chuva e solicita execução da área externa",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "Monofloor promete retorno sobre agendamento, sem confirmar data",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Lorrayne cobra retorno novamente; Monofloor agenda aplicação da área externa para 12/05",
-            "classe": "critico"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Lorrayne questiona se é necessária vistoria prévia ao dia 12/05; sem resposta registrada",
-            "classe": "critico"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Cliente informa férias entre 17 e 22 de maio (retorno dia 23) e solicita agendamento da parte interna",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Monofloor promete retorno em breve; Lorrayne cobra três vezes sem resposta até o fim do dia",
-            "classe": "critico"
-          }
-        ]
-      },
-      {
-        "id": "f0fc12b3-562c-48ac-85a7-420609299b16",
-        "cliente": "THALES MATZKEIT LEYTON",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "CURITIBA",
-        "fase": "CONFIRMAÇÕES OP 1",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "Data de entrada 30/03 provavelmente perdida: aprovação do escopo não foi realizada no prazo mínimo de 12 dias úteis exigido pela Monofloor — nova data precisa ser negociada",
-          "Cliente sem responsável único definido: Thales foi citado em 27/02 como ponto de contato, mas nunca se manifestou na conversa, gerando lacuna de comunicação crítica",
-          "Regularizações pré-aplicação identificadas em 13/02 sem confirmação de execução — risco de entrada da equipe em obra não preparada"
-        ],
-        "pendencias": [
-          "Escolha de cor NÃO confirmada pelo cliente até o final da conversa — amostras enviadas mas sem retorno registrado (solicitado em 23/02 e cobrado em 09/03)",
-          "Aprovação formal do escopo (cores, metragens, material) NÃO realizada — data de entrada 30/03 possivelmente vencida sem confirmação",
-          "Indicação de responsável único pelo projeto e e-mail para comunicações formais NÃO fornecidos pelo cliente (solicitado em 10/03, sem resposta registrada)",
-          "Vídeo do estágio atual da obra solicitado em 02/03 — sem resposta registrada na conversa",
-          "Regularizações pré-aplicação identificadas em 13/02 — cliente não confirmou execução nem forneceu data prevista de conclusão"
-        ],
-        "resumo_exec": "O projeto encontra-se em estágio pré-aplicação com múltiplos bloqueios não resolvidos pelo cliente. Após a visita técnica de 13/02, a Monofloor identificou regularizações necessárias e aguarda confirmação de execução, escolha de cor e aprovação de escopo — itens que não foram formalizados até o encerramento da conversa. A data de entrada prevista para 30/03 muito provavelmente não foi cumprida, dado que os 12 dias úteis de antecedência para confecção de material não foram respeitados. A ausência de um responsável único e ativo do lado do cliente é o principal fator de risco do atendimento. Com",
-        "clima_desc": "A equipe Monofloor demonstrou dificuldade em obter respostas do cliente sobre escolha de cores, aprovação de escopo e acesso à obra. Houve múltiplas cobranças sem retorno adequado, gerando risco de atraso na data de entrada prevista.",
-        "periodo": "12/02 a 06/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 20,
-        "eventos": [
-          {
-            "data": "12/02",
-            "iso": "2026-02-12",
-            "texto": "Agendamento de visita de aferição para 13/02 às 16h — cliente solicita mudança para manhã",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/02",
-            "iso": "2026-02-12",
-            "texto": "Visita reagendada para 13/02 às 10h, confirmada pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/02",
-            "iso": "2026-02-13",
-            "texto": "Técnica adianta agenda e solicita entrada ainda pela manhã do dia 13/02",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Monofloor envia relatório pós-visita com regularizações necessárias antes da aplicação e solicita data de entrada",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/02",
-            "iso": "2026-02-23",
-            "texto": "Monofloor solicita escolha de cor e informa envio de kit de amostras",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/02",
-            "iso": "2026-02-27",
-            "texto": "Monofloor cobra retorno sobre mensagens anteriores sem resposta; cliente responde brevemente dizendo que Thales entrará em contato",
-            "classe": "critico"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Nova cobrança de retorno e solicitação de vídeo do estágio atual da obra",
-            "classe": "critico"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Monofloor alerta que aprovação do escopo com pelo menos 12 dias úteis de antecedência é necessária para manter a data de entrada 30/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "Nova cobrança sobre confirmação de recebimento das amostras e escolha de cores",
-            "classe": "critico"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Monofloor solicita indicação de responsável único pelo projeto e e-mail para comunicações formais",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Comunicado de migração para novo canal de atendimento (número 41 98822-1783)",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/04",
-            "iso": "2026-04-06",
-            "texto": "Monofloor comunica retorno ao grupo de WhatsApp como canal oficial de atendimento",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
-        "id": "6bb762a4-303e-484c-a9f6-33068cabafee",
-        "cliente": "MARIO KONDO JUNIOR",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "CONFIRMAÇÕES OP 1",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 2,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "RISCO TÉCNICO/CONTRATUAL: Monofloor nunca alertou o cliente sobre a contraindicação do autonivelante durante o processo comercial. O instalador comunicou isso apenas na visita presencial (09/03), após o escopo já estar definido. O autonivelante foi aplicado mesmo assim (confirmado em 08/04). A Monofloor se isenta contratualmente, mas há risco de conflito se surgirem fissuras — cliente pode alegar omissão de informação relevante no pré-contrato",
-          "RISCO DE PRAZO: Data ideal do cliente (última semana de maio) não pôde ser atendida. Data confirmada é 02/06, que segundo Julia Favoretto 'já ultrapassa o limite de prazo' da obra. Isso pode gerar insatisfação ou pressão sobre a equipe de execução"
-        ],
-        "pendencias": [
-          "Proposta em papel timbrado da tela de poliéster: solicitada por Giovanna em 22/04, Monofloor confirmou que iria providenciar mas ainda não enviou — item com prazo em aberto",
-          "Possibilidade de encaixe na última semana de maio: Camila reiterou preferência em 20/04, Monofloor disse que manteria em radar mas não há confirmação ou negativa definitiva",
-          "Devolutiva sobre trabalho aos sábados: Vitor sugeriu em 17/04 para comprimir cronograma, Monofloor condicionou à liberação mas não deu retorno concreto"
-        ],
-        "resumo_exec": "O projeto encontra-se reagendado para 02/06/2026 após sucessivas alterações de data (original 14/04, depois 27/04, agora 02/06). O principal ponto de tensão foi a descoberta tardia — apenas na visita do instalador em março — de que o autonivelante não é recomendado pela Monofloor, informação que nunca havia sido comunicada ao cliente durante o processo comercial. O autonivelante já foi aplicado e está em cura, e a Monofloor adotou como solução a recomendação da tela de poliéster, eximindo-se contratualmente de responsabilidade por patologias de substrato. O cliente demonstra pressão de cronogr",
-        "clima_desc": "O atendimento começou de forma organizada, mas gerou tensão significativa após o instalador informar em obra que o autonivelante não é recomendado — informação que nunca havia sido comunicada ao cliente. A situação foi parcialmente contornada, porém o reagendamento forçado para 02/06 e a pressão por",
-        "periodo": "19/02 a 22/04/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 72,
-        "eventos": [
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Contrato assinado; cor definida como Mirage; data de entrada confirmada para 14/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Cliente envia vídeo do estágio atual da obra conforme solicitado",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/02",
-            "iso": "2026-02-25",
-            "texto": "Confirmado que todas as áreas estão construídas (apartamento); Monofloor promete agendar visita de aferição",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente pergunta sobre impacto de estrutura metálica (ilha) no lixamento; Monofloor esclarece que pode ser feito manualmente",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "Visita in loco realizada com acompanhamento de Giovanna; relatório enviado em 11/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Cliente relata surpresa: instalador informou em obra que autonivelante não é recomendado sob o Monofloor, o que nunca havia sido alertado antes",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "Monofloor responde que descontinuou a recomendação de autonivelante após casos de fissuras, mas isenta-se de responsabilidade alegando que a garantia não cobre patologias de substrato",
-            "classe": "critico"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Grupo original encerrado; comunicação migrada para novo canal (41 98822-1783)",
-            "classe": "critico"
-          },
-          {
-            "data": "08/04",
-            "iso": "2026-04-08",
-            "texto": "Monofloor retoma contato; cliente informa que data foi alterada para 27/04 e que autonivelante já foi aplicado e está em cura; Giovanna envia vídeo",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Monofloor recomenda uso de tela de poliéster devido ao autonivelante; orienta isolamento total da área durante execução",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Cliente solicita cronograma detalhado de execução para conciliar com demais serviços da obra",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Monofloor envia cronograma de 13 dias de execução",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Cliente solicita reagendamento para última semana de maio; Monofloor informa que data mais próxima disponível é 02/06",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "Vitor sugere trabalho aos sábados para comprimir cronograma; Monofloor aceita considerar se liberado",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/04",
-            "iso": "2026-04-20",
-            "texto": "Camila confirma data 02/06 e reitera preferência pela última semana de maio se houver encaixe",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Monofloor confirma 02/06 e mantém última semana de maio em radar para antecipação",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Giovanna solicita proposta em papel timbrado referente à tela de poliéster para apresentar ao cliente final; Monofloor confirma que irá providenciar",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
-        "id": "d15ee100-e3a2-4ca5-a838-8c9e9c7af2f8",
-        "cliente": "RICARDO XAVIER DE OLIVEIRA NETO",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO / SP",
-        "fase": "RESULTADO VT - ENTRADA",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 2,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "HISTÓRICO DE ABANDONO DE ATENDIMENTO: O cliente ficou sem retorno por mais de 18 dias no início da conversa (19/02 a 09/03), o que gerou ameaça formal de reatualização de data e risco de ruptura comercial — padrão que deve ser monitorado para não se repetir",
-          "PROMESSA DE RETORNO NÃO CUMPRIDA NO PRAZO: Em 01/04, Juliana comprometeu resposta até 02/04 sobre a prorrogação; o retorno só veio em 15/04, configurando quebra de confiança com o cliente"
-        ],
-        "pendencias": [
-          "Confirmação formal da prorrogação solicitada em 01/04: Juliana prometeu retornar até 02/04 com a resposta sobre a nova data, mas o próximo contato só ocorreu em 15/04 sem mencionar essa promessa — a solicitação foi indiretamente atendida, porém sem o retorno dentro do prazo comprometido",
-          "Fotos e vídeos da regularização prometidos em 09/03: a equipe prometeu enviar as imagens do andamento da regularização, mas não há registro de envio — o vídeo enviado em 25/03 aparenta ser do cliente, não da equipe"
-        ],
-        "resumo_exec": "O atendimento foi marcado por uma fase crítica inicial (fev–início de mar/2026) em que o cliente ficou sem retorno por aproximadamente 18 dias, resultando em cobrança formal e ameaça de reatualização de prazo. Após a retomada do contato em março, os agendamentos foram progressivamente alinhados: visita técnica realizada em 30/03, relatório enviado em 01/04 e nova data de início confirmada para 12/05/2026. A visita pré-obra foi agendada para 04/05 com o colaborador Nathan, e o cliente demonstra postura colaborativa e confirmações ágeis. O principal risco identificado é o padrão de demora nas re",
-        "clima_desc": "O início da conversa foi marcado por cobrança explícita do cliente após múltiplas mensagens sem retorno da equipe, gerando ameaça de reatualização de data. O clima foi se normalizando ao longo do período conforme os agendamentos foram sendo alinhados.",
-        "periodo": "19/02 a 17/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 37,
-        "eventos": [
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "e 25/02 – Cliente envia mensagens cobrando retorno sobre contatos anteriores, sem resposta da equipe",
-            "classe": "critico"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "– Cliente formaliza ameaça de atualização automática da data de entrada em obra por falta de posicionamento",
-            "classe": "critico"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "– Equipe responde informando que a regularização está em andamento e que enviará fotos/vídeos em breve",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "– Cliente informa que a data pré-agendada de 23/03 não é mais viável e que a visita final precisa ocorrer com 10 dias de antecedência",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "– Cliente solicita disponibilidade para início de abril; equipe pré-agenda entrada para 06/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "– Cliente confirma agendamento para 06/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/03",
-            "iso": "2026-03-20",
-            "texto": "– Cliente informa que os pisos estão preparados para receber revestimento",
-            "classe": "neutro"
-          },
-          {
-            "data": "20/03",
-            "iso": "2026-03-20",
-            "texto": "– Equipe solicita vídeo do estágio atual da obra",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "– Cliente envia vídeo; equipe confirma recebimento",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/03",
-            "iso": "2026-03-26",
-            "texto": "– Equipe agenda visita pré-obra para 30/03 às 13h; cliente confirma",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/03",
-            "iso": "2026-03-26",
-            "texto": "– Equipe envia dados do colaborador Nathan para liberação de acesso",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Cliente confirma que recebeu Nathan na obra (visita realizada em 30/03)",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Equipe envia relatório de visita",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Cliente solicita prorrogação de 15 dias no início previsto para 06/04",
-            "classe": "neutro"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "– Juliana (Monofloor) responde que verificará disponibilidade e retornará até o dia seguinte (02/04)",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "– Equipe propõe nova data de início para 12/05 devido à agenda comprometida",
-            "classe": "neutro"
-          },
-          {
-            "data": "16/04",
-            "iso": "2026-04-16",
-            "texto": "– Cliente confirma agendamento para 12/05",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "– Equipe agenda visita pré-obra para 04/05 às 11h; cliente confirma",
-            "classe": "neutro"
-          },
-          {
-            "data": "17/04",
-            "iso": "2026-04-17",
-            "texto": "– Equipe envia novamente dados do colaborador Nathan para a visita de 04/05",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
-        "id": "8beb35b1-722e-4084-9fb7-405dc72c4b2a",
-        "cliente": "BA CLA ARQUITETURA INFANTIL LTDA",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "1º CONTATO OP.",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 2,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 30,
-        "alertas": [
-          "CRÍTICO: Cliente enviou 2 mensagens em 22/04 (14h15 e 18h55) confirmando reunião online das 17h sem obter qualquer resposta da Monofloor — risco real de insatisfação e perda de credibilidade com o cliente",
-          "Reunião técnica já foi remarcada uma vez e a nova data demorou 13 dias para ser definida — padrão de reagendamento pode comprometer a confiança do cliente antes mesmo do início da obra em 08/06"
-        ],
-        "pendencias": [
-          "Reunião online de 22/04 às 17h: cliente perguntou às 14h15 e cobrou novamente às 18h55 sem receber confirmação ou resposta da equipe Monofloor",
-          "Definição da cor do revestimento: consta como 'a definir' desde 31/03, sem encaminhamento registrado na conversa",
-          "Visita ao showroom em SP para escolha dos 2 tons de cor: cliente solicitou em 09/04, equipe não confirmou disponibilidade nem alternativa concreta"
-        ],
-        "resumo_exec": "O projeto Ba Cla está na fase de pré-obra, com contrato assinado e início previsto para 08/06/2026. O atendimento apresentou falhas relevantes de comunicação: a reunião técnica de alinhamento, originalmente marcada para 10/04, foi remarcada com confusão de datas e prometeu-se nova data sem retorno por 13 dias. O episódio mais crítico ocorreu em 22/04, quando o cliente tentou confirmar uma reunião agendada para as 17h e não recebeu nenhuma resposta, enviando nova cobrança após o horário da reunião. Dois itens estruturais seguem sem definição: a cor do revestimento e a visita ao showroom para es",
-        "clima_desc": "O atendimento começou de forma organizada, mas acumulou atritos com remarcações e falta de resposta a confirmações do cliente. No final da conversa, o cliente ficou sem retorno sobre a reunião confirmada para o dia, gerando tensão.",
-        "periodo": "31/03 a 22/04/2026",
-        "tempo_resp": "Lento",
-        "total_msgs": 26,
-        "eventos": [
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Contrato assinado; data de início definida para 08/06/2026; cor ainda a definir",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Cliente solicitou envio de boletos para sabrina@bacla.com.br",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Equipe Monofloor confirmou encaminhamento da solicitação ao financeiro",
-            "classe": "bom"
-          },
-          {
-            "data": "01/04",
-            "iso": "2026-04-01",
-            "texto": "Juliana (Monofloor) apresentou-se como ponto focal do projeto e propôs videoconferência de alinhamento",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/04",
-            "iso": "2026-04-02",
-            "texto": "Reunião técnica agendada para 10/04 às 14h via Google Meet; invite enviado por e-mail",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Monofloor tentou remarcar a reunião com data errada (citou 'hoje' sendo que era para amanhã, 10/04)",
-            "classe": "critico"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Cliente concordou em remarcar e sugeriu visita presencial ao showroom em SP para escolha de 2 tons de cor",
-            "classe": "critico"
-          },
-          {
-            "data": "09/04",
-            "iso": "2026-04-09",
-            "texto": "Monofloor explicou impossibilidade de visita presencial (técnica em Curitiba) e prometeu enviar nova data para videoconferência",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Cliente perguntou às 14h15 sobre confirmação de reunião online agendada para as 17h do mesmo dia",
-            "classe": "neutro"
-          },
-          {
-            "data": "22/04",
-            "iso": "2026-04-22",
-            "texto": "Às 18h55, cliente cobrou novamente confirmação da reunião, sem resposta registrada na conversa",
-            "classe": "critico"
-          }
-        ]
-      },
-      {
         "id": "89c99f6b-1eb9-4cae-9b1b-37e742bfe644",
         "cliente": "MARCUS VINICIUS RODRIGUES ELTSCHEMINOV",
         "consultor": "Wesley",
@@ -5408,7 +3823,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 25,
+        "dias_desde_resumo": 26,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase de **agendamento e alinhamento inicial**, com execução prevista para iniciar em **15/05** (cor Arábia), visita de aferição confirmada para **15/04** e visita de entrada proposta para **05/05**. A comunicação entre equipe e cliente (Aline) está fluindo, porém com algumas lacunas de informação entre os envolvidos.\n\n---\n\n**🟡 Clima: Neutro**\n\n---\n\n### Principais Pendências:\n- ✅ ~~Confirmação da cor~~ (Arábia — definida)\n- ⏳ **Confirmação da visita de entrada** (05/05 às 14h45 — sem resposta definitiva)\n- ⏳ **Previsão de término** não comunicad",
@@ -5513,7 +3928,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 19,
+        "dias_desde_resumo": 20,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto apresenta uma discussão em andamento sobre reparos, com orçamento já enviado pela equipe, mas ainda pendente de alinhamento e aprovação por parte do cliente. A cliente (Taty) aguarda respostas sobre pontos específicos do orçamento para conseguir repassar o cronograma ao seu cliente final.\n\n---\n\n**🟡 Clima: Neutro/Tenso**\n*(Cordial, porém com sinais de cobrança e urgência)*\n\n---\n\n**⚠️ Principais Pendências:**\n- ✅ Orçamento de reparos enviado\n- 🔲 Alinhamento dos **pontos pendentes do orçamento**\n- 🔲 Definição do **cronograma oficial**\n- 🔲 Retorno de **May",
@@ -5534,7 +3949,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 26,
+        "dias_desde_resumo": 27,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\n**Status:** O projeto está em fase de regularizações/retrabalho, com aplicação de camada adicional em andamento, enfrentando pequenos problemas operacionais como respingos, entulho no local e necessidade de liberação de novos aplicadores.\n\n**Principais pendências:** Conclusão da camada adicional (sem cronograma definido), remoção urgente de entulho na área dos armários, liberação formal de dois novos aplicadores (Filipe e outro) e dúvida sobre a continuidade de uma colaboradora da equipe.\n\n---\n\n| Indicador | Status |\n|-----------|--------|\n| 🌡️ **Clima** | **Neu",
@@ -5555,7 +3970,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 16,
+        "dias_desde_resumo": 17,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se em fase de pré-execução, com amostras em produção e agendamento de visita técnica em negociação, após a cliente recusar a data proposta de 14/05, o que pode impactar a data de início da aplicação do revestimento.\n\n**Clima:** 🟡 **Neutro** *(com leve tensão pontual pela urgência da cliente durante a visita do eletricista e dificuldade de alinhamento de agenda)*\n\n---\n\n### Principais Pendências\n\n| # | Pendência | Status |\n|---|-----------|--------|\n| 1 | Entrega das amostras (formato aquarela tamanho normal) | ⏳ Em produção |\n| 2 | Confirmação ",
@@ -6686,6 +5101,162 @@
         ]
       },
       {
+        "id": "fb8b0ed7-c47a-4ae6-ad0f-ec20cd4e8c7c",
+        "cliente": "TÂMARA NEWMAN LOBATO SOUZA",
+        "consultor": "—",
+        "consultor_full": "",
+        "cidade": "São Paulo/São Paulo",
+        "fase": "OECT",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 4,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "CRÍTICO — Serviço agendado para 23/04 sem confirmação da equipe: em 22/04 às 20h13 o cliente reporta que não obteve resposta por nenhum canal. Risco real de no-show amanhã.",
+          "QUALIDADE — Aplicação de fevereiro apresentou múltiplos defeitos documentados: manchas de suor, marcas de rolo, efeito esbranquiçado, bolhas e pelos. Cliente deixou registrado formalmente o descontentamento e condicionou continuidade do trabalho à resolução total.",
+          "CRONOGRAMA — Atraso acumulado de aproximadamente 2 meses na obra do cliente, diretamente atribuído por ele aos problemas de aplicação da Monofloor. Menção explícita de impacto na mudança da cliente final.",
+          "RELACIONAMENTO — Cliente menciona que 'os profissionais infelizmente não sabem trabalhar bem com o Leona', sinalizando perda de confiança técnica na equipe de aplicação."
+        ],
+        "pendencias": [
+          "22/04 — Giuliano aguarda confirmação da equipe para o retorno em 23/04, sem resposta até o final do dia após contato por WhatsApp, privado e telefone. CRÍTICO: serviço marcado para amanhã sem confirmação de equipe.",
+          "10/03 — Cliente perguntou sobre a proposta da Monofloor para resolução do piso (retrabalho ou troca de material). Nunca houve resposta formal com proposta estruturada — a discussão evoluiu, mas a proposta comercial documentada permanece indefinida."
+        ],
+        "resumo_exec": "A obra passou por uma aplicação de Leona em fevereiro/2026 que resultou em múltiplos problemas de acabamento (manchas, bolhas, marcas de rolo), gerando insatisfação formal da cliente e atraso significativo no cronograma geral. Após visita de vistoria em março, a cliente optou por manter o Leona com reparos corretivos, aceitando o retorno da equipe em 23/04 para 2 dias de trabalho. O principal risco imediato é a ausência de confirmação da equipe para o serviço de amanhã (23/04), com o cliente relatando falha de comunicação em todos os canais no dia 22/04. O padrão de atendimento apresenta garga",
+        "clima_desc": "Cliente demonstra insatisfação acumulada com problemas de qualidade na aplicação e atrasos recorrentes no cronograma. O tom é controlado, mas há cobrança direta e registros formais de descontentamento.",
+        "periodo": "12/02 a 22/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 73,
+        "eventos": [
+          {
+            "data": "12/02",
+            "iso": "2026-02-12",
+            "texto": "Alinhamento de finalização do piso até sexta-feira (14/02) para cura durante o Carnaval e entrada da marcenaria",
+            "classe": "bom"
+          },
+          {
+            "data": "13/02",
+            "iso": "2026-02-13",
+            "texto": "Lixamento iniciado manualmente — divergência com o combinado (lixadeira bambolê); problema resolvido após chegada de Felipe Lucena com lixadeiras",
+            "classe": "critico"
+          },
+          {
+            "data": "13/02",
+            "iso": "2026-02-13",
+            "texto": "Duas demãos de selador aplicadas no mesmo dia",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/02",
+            "iso": "2026-02-14",
+            "texto": "estimado): Aplicação do verniz realizada",
+            "classe": "neutro"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Cliente registra formalmente problemas no acabamento — manchas de suor, marcas de rolo, efeito esbranquiçado, bolhas e pelos na superfície",
+            "classe": "critico"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Monofloor acusa recebimento e promete retorno após conclusão das etapas dos demais prestadores",
+            "classe": "bom"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Cliente solicita agendamento de visita de vistoria e pergunta sobre proposta de solução para o piso",
+            "classe": "neutro"
+          },
+          {
+            "data": "",
+            "iso": null,
+            "texto": "11-13/03: Troca de mensagens para agendamento; visita marcada para 18/03 às 15h",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Rodrigo cancela visita do dia por imprevisto; reagendado para 19/03 às 13h",
+            "classe": "critico"
+          },
+          {
+            "data": "19/03",
+            "iso": "2026-03-19",
+            "texto": "Visita realizada pelo Giuliano presencialmente; fotos/registros enviados à Monofloor",
+            "classe": "neutro"
+          },
+          {
+            "data": "19/03",
+            "iso": "2026-03-19",
+            "texto": "Cliente solicita urgência na definição do prazo de retorno e questiona viabilidade das opções Leona (retrabalho) ou Lilith (troca de material)",
+            "classe": "critico"
+          },
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "Monofloor propõe retorno somente em 22/04 — cliente reage negativamente, alertando sobre atraso de 1 mês na mudança",
+            "classe": "critico"
+          },
+          {
+            "data": "23/03",
+            "iso": "2026-03-23",
+            "texto": "Cliente reitera necessidade de entrada mais rápida",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Monofloor apresenta orçamento para troca para Lilith com possível início em 06/04; cliente questiona viabilidade de produção de cor sob medida nesse prazo",
+            "classe": "critico"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Reunião com a cliente no apartamento; cliente opta por manter o Leona com reparos corretivos, aceitando retorno em 20/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "30/03",
+            "iso": "2026-03-30",
+            "texto": "Cliente pergunta se pode iniciar pintura das paredes; Monofloor confirma que sim, pois os reparos serão pontuais",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Monofloor confirma formalmente retorno em 20/04 para reparos pontuais",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/04",
+            "iso": "2026-04-14",
+            "texto": "Giuliano solicita informações sobre duração do serviço e possibilidade de início após feriado",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/04",
+            "iso": "2026-04-14",
+            "texto": "Monofloor informa novo retorno para 23/04 (pós-feriado), estimando 2 dias de trabalho — confirmado pelo cliente",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Monofloor entra em contato informando que está alinhando equipe, sem dar resposta concreta",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Giuliano cobra posicionamento após tentativas sem retorno por WhatsApp, mensagem privada e telefone",
+            "classe": "critico"
+          }
+        ]
+      },
+      {
         "id": "3f8df331-a86c-4563-bd18-33a2da9d6c48",
         "cliente": "RICARDO MARQUES MENDES",
         "consultor": "LUANA",
@@ -6738,6 +5309,538 @@
             "iso": null,
             "texto": "02/04/2026 17:14 - Equipe Monofloor (ou responsável) informa que Rodrigo está se conectando",
             "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "b825a98d-42e7-4844-97fe-8b6578a4c2f0",
+        "cliente": "DARIO DA SILVA GARCIA",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "SÃO PAULO",
+        "fase": "EQUIPE DE EXECUÇÃO",
+        "status": "em_execucao",
+        "clima": "Tenso",
+        "n_alertas": 4,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Remoção total do contrapiso em 12/03 pelo cliente sem supervisão técnica da Monofloor: decisão autônoma do cliente que impactou diretamente o cronograma e empurrou a entrada para 11/05.",
+          "Falha de comparecimento do consultor Nathan na visita de 09/03 às 09h30 sem aviso prévio: gerou constrangimento com cliente já sensibilizado por remarcações anteriores.",
+          "Cliente demonstrou insatisfação explícita com gestão de datas ('Começamos bem'): histórico de expectativa frustrada com data 06/03 que foi confirmada verbalmente mas não honrada. Risco de relacionamento elevado para próximo agendamento em 11/05.",
+          "Desalinhamento interno entre equipes (atendimento x projetos x indústria): escopo não estava confirmado quando visitas e datas foram comunicadas ao cliente, gerando contradições que prejudicaram a credibilidade da Monofloor."
+        ],
+        "pendencias": [
+          "E-mails para cadastro: Pedro solicitou em 18/03 os endereços de e-mail das pessoas que precisam receber atualizações do projeto. Cliente disse que salvaria o número mas não forneceu os e-mails ainda.",
+          "Antecipação da data 11/05: Monofloor comprometeu-se a informar prontamente caso surja possibilidade de antecipar a entrada antes de 11/05. Deve ser monitorado proativamente conforme o contrapiso cure."
+        ],
+        "resumo_exec": "O projeto do cliente Dario passou por múltiplas remarcações de data de entrada entre fevereiro e março de 2026, gerando insatisfação visível por parte do cliente. A principal causa foi um desalinhamento interno entre as equipes de atendimento, projetos e indústria da Monofloor, que resultou na comunicação de datas antes da confirmação do escopo e das aferições técnicas. O episódio mais crítico ocorreu em 12/03, quando o cliente optou por remover e refazer todo o contrapiso de forma autônoma, inviabilizando o início previsto para 18/03 e postergando a entrada para 11/05. A obra encontra-se atua",
+        "clima_desc": "O cliente Dario demonstrou insatisfação clara com remarcações de data e falta de alinhamento interno da equipe Monofloor. Apesar de cooperativo, sinalizou frustração com a frase 'Começamos bem' após a primeira remarcação.",
+        "periodo": "18/02 a 18/03/2026",
+        "tempo_resp": "Normal",
+        "total_msgs": 75,
+        "eventos": [
+          {
+            "data": "18/02",
+            "iso": "2026-02-18",
+            "texto": "Monofloor propõe visita técnica para 25/02 às 10h",
+            "classe": "neutro"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Data da visita confirmada pelo cliente",
+            "classe": "neutro"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Horário da visita antecipado para 09h30 e reconfirmado",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/02",
+            "iso": "2026-02-25",
+            "texto": "Visita realizada; relatório técnico enviado com lista de adequações necessárias (lixamento do contrapiso, regularizações, restrições de tabica, remoção de móveis)",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/02",
+            "iso": "2026-02-26",
+            "texto": "Cliente informa que lixamento do contrapiso será feito em 27/02 e que tudo estará pronto até 06/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/02",
+            "iso": "2026-02-26",
+            "texto": "Monofloor informa que data 06/03 não é viável pois aferições só foram feitas na visita de 25/02 e há pendência de confirmação de escopo (prazo de 12 dias úteis de indústria)",
+            "classe": "neutro"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Cliente Dario adicionado ao grupo; questiona data de início e demonstra insatisfação com remarcação",
+            "classe": "critico"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Data de entrada acordada para 18/03, condicionada à confirmação de escopo",
+            "classe": "neutro"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Cliente reage com ironia: 'Começamos bem'",
+            "classe": "neutro"
+          },
+          {
+            "data": "05/03",
+            "iso": "2026-03-05",
+            "texto": "Monofloor agenda nova visita técnica pré-entrada para 09/03 às 09h30",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "Consultor Nathan não comparece no horário agendado; visita remarcada para 16h45 do mesmo dia",
+            "classe": "critico"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Monofloor informa que imagens da visita estão sendo analisadas pela área técnica",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/03",
+            "iso": "2026-03-11",
+            "texto": "Monofloor confirma que aplicação não pode ser parcial e que a entrada precisa ser postergada devido a regularizações com prazo de ~21 dias informadas pelo cliente",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Luana (equipe operacional) envia briefing de início para 18/03, cor Sasha, 18 dias úteis de execução",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Dario informa que todo o contrapiso foi removido e será refeito no dia seguinte; início em 18/03 cancelado",
+            "classe": "critico"
+          },
+          {
+            "data": "13/03",
+            "iso": "2026-03-13",
+            "texto": "Monofloor informa que agenda está comprometida e próximo encaixe disponível é 11/05",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/03",
+            "iso": "2026-03-13",
+            "texto": "Dario confirma novo contrapiso com 3 cm de espessura (cura de 3 a 4 semanas) e aceita data de 11/05 com esperança de antecipação",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Pedro assume comunicação direta com o cliente, encerrando comunicação pelo grupo; solicita e-mails para cadastro",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "c26eecec-2e3a-4411-8bd1-060c34f605af",
+        "cliente": "ALEXANDRE BUSS VAN DEN MOSSELAAR",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "BRAGANÇA PAULISTA",
+        "fase": "REVISÃO FINAL OP",
+        "status": "aguardando_execucao",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Promessa não cumprida: retorno com novo cronograma prometido por Anelise para 26-27/02 nunca foi entregue — cliente cobrou repetidamente por semanas sem resposta objetiva, indicando falha grave de follow-up interno",
+          "Instabilidade no canal de atendimento: em menos de 2 semanas houve mudança de canal (grupo → Pedro direto → retorno ao grupo), o que pode gerar desconfiança e confusão no cliente",
+          "Risco de perda de data: a data de 01/07 foi confirmada verbalmente no WhatsApp, mas não há registro de contrato, proposta assinada ou confirmação formal — encaixe de agenda prometido também precisa ser monitorado"
+        ],
+        "pendencias": [
+          "E-mails dos participantes solicitados em 18/03 por Pedro para cadastro no sistema — não há confirmação de que foram enviados ou cadastrados",
+          "Cliente perguntou em 22/04 se há datas anteriores a 01/07 — Monofloor respondeu que não há, mas prometeu contato caso surja encaixe de agenda, o que configura compromisso a ser monitorado"
+        ],
+        "resumo_exec": "O projeto encontra-se em fase de agendamento, com data de início de aplicação confirmada para 01/07/2026, após um longo período de indefinição que gerou cobranças recorrentes do cliente entre fevereiro e abril. A obra enfrentou atraso externo por problemas nas esquadrias, mas a principal fragilidade identificada foi a falha de comunicação interna da Monofloor: uma promessa de retorno com cronograma não foi cumprida, e houve troca de responsáveis de atendimento sem transição adequada. A visita técnica de 10/03 foi realizada e o relatório entregue, indicando avanço no escopo. O cliente demonstro",
+        "clima_desc": "O cliente demonstrou insatisfação recorrente pela falta de retorno sobre o cronograma de entrada em obra, realizando múltiplas cobranças ao longo de quase dois meses. A tensão foi parcialmente amenizada ao final com a confirmação de uma data de início.",
+        "periodo": "23/02 a 22/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 19,
+        "eventos": [
+          {
+            "data": "23/02",
+            "iso": "2026-02-23",
+            "texto": "Cliente solicita previsão de entrada em obra e relata dificuldade de contato com Ulisses",
+            "classe": "neutro"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Equipe interna aciona o responsável e informa atraso nas esquadrias como causa do atraso no cronograma",
+            "classe": "critico"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Prometido retorno com novo cronograma entre quinta e sexta (26-27/02) pela Anelise",
+            "classe": "neutro"
+          },
+          {
+            "data": "03/03",
+            "iso": "2026-03-03",
+            "texto": "Cliente cobra o novo cronograma prometido — sem resposta anterior da equipe",
+            "classe": "critico"
+          },
+          {
+            "data": "04/03",
+            "iso": "2026-03-04",
+            "texto": "Monofloor solicita visita in loco para 10/03 às 10h para confirmação de escopo",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Visita in loco realizada pela equipe Monofloor",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Monofloor envia relatório da visita de 10/03 e reitera necessidade de previsão com 60 dias de antecedência",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Pedro assume o atendimento e comunica que a partir de então o contato seria feito diretamente com ele, fora do grupo",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Solicitação de e-mails dos participantes para cadastro e envio de atualizações",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Juliana (Monofloor) comunica reversão do formato de atendimento — retorno ao grupo de WhatsApp",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/04",
+            "iso": "2026-04-09",
+            "texto": "Atendimento Monofloor responde dúvidas técnicas sobre aderência em mármore e aplicação por camadas",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Monofloor reforça necessidade de alinhamento de data com 60 dias de antecedência",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/04",
+            "iso": "2026-04-14",
+            "texto": "Monofloor oferece data de 01/07 para início das atividades de aplicação",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Cliente confirma a data de 01/07 e questiona se há datas anteriores disponíveis",
+            "classe": "critico"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Monofloor confirma agenda comprometida e mantém 01/07 como data mais próxima, com possibilidade de encaixe caso surja abertura",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "31e1c618-04bc-411c-89bc-55fca2b773b7",
+        "cliente": "CAROLINA RACHE GUIMARÃES",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "BELO HORIZONTE",
+        "fase": "CONFIRMAÇÕES OP 1",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Obra do piso do 2º pavimento (~110m²) completamente parada há mais de 6 semanas aguardando solução técnica para umidade — risco de impacto significativo no cronograma e na satisfação do cliente.",
+          "Cliente demonstrou insatisfação explícita com tempo de resposta da Monofloor em 27/03 (🆘), sinalizando risco de deterioração do relacionamento comercial.",
+          "Amostras aplicadas no piso descolaram completamente por umidade — problema técnico confirmado que impede avanço da aplicação e pode gerar discussões sobre responsabilidade e garantia."
+        ],
+        "pendencias": [
+          "Confirmação da área técnica sobre compatibilidade do Monofloor com base epóxi (Sikafloor 252 Primer ou similar) para o piso do 2º pavimento: cliente aguarda resposta definitiva desde 25/03, reunião realizada em 31/03 mas não há registro de conclusão técnica formal na conversa.",
+          "Custo de retorno da equipe para aplicação em abril (pós-chuvas) nunca foi formalmente respondido: em 20/02 a equipe prometeu verificar com a gestão, mas não há confirmação registrada na conversa.",
+          "Definição de data para retorno da equipe para finalização do piso do 2º pavimento e retoques (nichos de ar-condicionado): aguarda resultado dos testes de umidade da Engecity, sem prazo definido."
+        ],
+        "resumo_exec": "O projeto encontra-se com a aplicação do piso do 2º pavimento (~110m²) completamente paralisada desde fevereiro/2026 devido a problemas persistentes de umidade, aguardando testes e laudos técnicos conduzidos pela Engecity e pela perita Priscila. A relação com o cliente está sob pressão, com episódios claros de insatisfação com a lentidão nas respostas técnicas da Monofloor, culminando em alerta explícito em 27/03. As paredes, teto e o ofurô do 2º pavimento estão em estágio avançado, mas retoques nos nichos de ar-condicionado também estão pendentes para o retorno da equipe. A ficha técnica do M",
+        "clima_desc": "O cliente demonstrou frustração crescente com a lentidão nas respostas técnicas da Monofloor, chegando a enviar mensagem de alerta explícito (🆘) cobrando resposta urgente. Apesar de avanços pontuais, a obra está parada aguardando definições técnicas sobre umidade há semanas.",
+        "periodo": "13/02 a 06/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 109,
+        "eventos": [
+          {
+            "data": "13/02",
+            "iso": "2026-02-13",
+            "texto": "Cliente solicita retorno da equipe na segunda-feira aproveitando previsão de sol em BH. Monofloor alerta sobre riscos de umidade e necessidade de solucionar a origem antes da aplicação.",
+            "classe": "critico"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Amostras de piso descolaram completamente devido à umidade. Monofloor solicita decisão do cliente sobre como seguir nas áreas afetadas.",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "Confirmado que retrabalho inicial será sem custo. Questão sobre possível custo de retorno em abril (após período de chuva) fica pendente de confirmação pela gestão.",
+            "classe": "critico"
+          },
+          {
+            "data": "23/02",
+            "iso": "2026-02-23",
+            "texto": "Cliente informa retirada do drywall e continuidade com pintura. Ofurô com umidade por entrada de água devido à remoção de porta — lona de proteção insuficiente.",
+            "classe": "neutro"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Cliente informa que aguarda laudo de perito, previsto para o dia seguinte.",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/02",
+            "iso": "2026-02-27",
+            "texto": "Laudo da perita recebido pelo cliente. Reunião com perita e Engecity agendada para terça-feira (03/03).",
+            "classe": "neutro"
+          },
+          {
+            "data": "05/03",
+            "iso": "2026-03-05",
+            "texto": "Cliente aponta que nichos de ar-condicionado no teto não foram pintados. Monofloor informa que o ajuste ficará para o retorno da equipe e solicita agendamento com 60 dias de antecedência.",
+            "classe": "neutro"
+          },
+          {
+            "data": "05/03",
+            "iso": "2026-03-05",
+            "texto": "Cliente sinaliza que pode dar pré-aviso imediato caso testes de umidade no piso sejam aprovados.",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Monofloor solicita atualização sobre progresso do projeto. Sem resposta imediata do cliente.",
+            "classe": "critico"
+          },
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "Cliente informa que aguarda a Engecity realizar testes indicados pela perita para conter a umidade.",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Cliente consulta viabilidade técnica de aplicar Monofloor sobre base epóxi para barreira de umidade no piso do 2º pavimento (~110m²).",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/03",
+            "iso": "2026-03-26",
+            "texto": "a 27/03: Monofloor demora mais de 24h para responder consulta técnica sobre epóxi. Cliente envia alerta (🆘) às 19h34 de 27/03 exigindo resposta no dia.",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Monofloor menciona produto similar da NS Brazil (NS Resin RU) e aguarda avaliação técnica do Sikafloor 252 Primer enviado pelo cliente.",
+            "classe": "neutro"
+          },
+          {
+            "data": "30/03",
+            "iso": "2026-03-30",
+            "texto": "Reunião online confirmada para 31/03 às 11:45, com participação da perita Priscila às 12:45.",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Reunião realizada com link via Google Meet. Confusão de horário resolvida.",
+            "classe": "bom"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Cliente solicita ficha técnica do Monofloor a ser utilizado no piso.",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Cliente reiterou solicitação da ficha técnica.",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Monofloor envia ficha técnica solicitada. Cliente confirma recebimento.",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "40e39aac-9ab5-4fb1-8d48-05899984a0f2",
+        "cliente": "ALINIE MENDES PEIGO",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "BERTIOGA",
+        "fase": "INFORMAÇÕES PROJETOS",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Reembolso ao cliente Marcos Peigo atrasou mais de 3 semanas após o prazo combinado (10/02), gerando cobranças diárias e desgaste evidente com a intermediária Fernanda — risco reputacional e de relacionamento comercial",
+          "Fernanda não sabia que o processo de acabamento incluía lixamento (não apenas verniz) — falha de alinhamento técnico que gerou surpresa e preocupação com impacto nos móveis já instalados; pode gerar conflito ou revisão do escopo em 28/04",
+          "Agenda da Monofloor muito concorrida: próximas datas disponíveis após 28/04 somente em maio/junho — qualquer imprevisto na data agendada coloca o projeto em risco de longo atraso"
+        ],
+        "pendencias": [
+          "Fernanda solicitou em 01/04 informações detalhadas sobre o protocolo completo do processo (dias, cuidados, proteção de móveis) — prazo foi prometido para 'logo mais' mas não há confirmação de envio na conversa",
+          "Confirmação formal do agendamento de 28/04 ainda depende de retorno da Fernanda até 15/04 — não há confirmação explícita registrada na conversa até 16/04"
+        ],
+        "resumo_exec": "O projeto na cobertura passou por uma fase crítica em fevereiro, marcada pelo atraso de mais de três semanas no reembolso ao cliente Marcos Peigo, situação que gerou cobranças repetidas da intermediária Fernanda e evidenciou falha de comunicação interna da Monofloor após a saída da colaboradora Gabriele. A visita técnica de 20/02 identificou irregularidades no verniz e sujidades, com lixamento fino e possível reaplicação de verniz programados para após a liberação da obra. O reembolso foi confirmado em 06/03 e a situação financeira está resolvida. O retorno técnico está pré-agendado para 28/04",
+        "clima_desc": "O atendimento apresentou tensão significativa no início devido ao atraso no reembolso ao cliente Marcos Peigo, com a intermediária Fernanda cobrando respostas repetidamente. A partir de março, o clima normalizou com foco no agendamento do retorno técnico.",
+        "periodo": "19/02 a 16/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 80,
+        "eventos": [
+          {
+            "data": "10/02",
+            "iso": "2026-02-10",
+            "texto": "– Serviço concluído na cobertura; reembolso ao cliente Marcos Peigo deveria ter sido feito nesta data",
+            "classe": "bom"
+          },
+          {
+            "data": "12/02",
+            "iso": "2026-02-12",
+            "texto": "– Fernanda enviou primeira mensagem cobrando o reembolso, sem retorno",
+            "classe": "critico"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "– Fernanda retoma cobrança do reembolso; equipe aciona a direção sem dar prazo",
+            "classe": "critico"
+          },
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "– Visita técnica confirmada para 20/02 às 10h (pedido de mudança para 14h recusado)",
+            "classe": "critico"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "– Visita técnica realizada na cobertura por técnico identificado como Nathan",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "– Identificados produtos da Monofloor deixados na cobertura; coleta agendada para 23/02",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/02",
+            "iso": "2026-02-20",
+            "texto": "– Fernanda solicita relatório da visita técnica e cobra novamente o reembolso",
+            "classe": "critico"
+          },
+          {
+            "data": "25/02",
+            "iso": "2026-02-25",
+            "texto": "– Monofloor envia relatório técnico: identificadas irregularidades no verniz, sujidades e variação de tonalidade; lixamento fino e possível reaplicação de verniz agendados para após liberação da obra",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/02",
+            "iso": "2026-02-26",
+            "texto": "– Fernanda confirma entendimento do relatório e cobra reembolso com urgência pela segunda vez na semana",
+            "classe": "critico"
+          },
+          {
+            "data": "06/03",
+            "iso": "2026-03-06",
+            "texto": "– Monofloor informa que financeiro irá contatar Fernanda; ela confirma recebimento do comprovante de reembolso",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "– Monofloor retoma contato oferecendo suporte para retorno ao projeto",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "– Fernanda informa que marcenaria finaliza até 15/04 e estima disponibilidade a partir de 20/04",
+            "classe": "bom"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "– Monofloor informa indisponibilidade para 20/04 e propõe retorno em 28/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Data de 28/04 pré-agendada por Juliana (Monofloor) com alerta de agenda concorrida e próximas datas apenas em maio/junho",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Fernanda fica surpresa ao saber que o processo inclui lixamento e não apenas verniz, expressa preocupação com pó nos móveis já montados",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Monofloor solicita prazo para enviar protocolo detalhado do processo",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/04",
+            "iso": "2026-04-09",
+            "texto": "– Monofloor informa duração do processo: 1 a 2 dias de lixamento + 1 dia de verniz + 72h de cura; confirma que lixamento será fino e com pó praticamente nulo",
+            "classe": "neutro"
+          },
+          {
+            "data": "16/04",
+            "iso": "2026-04-16",
+            "texto": "– Fernanda questiona se o apartamento precisa estar limpo antes da intervenção; Monofloor confirma que não é necessário",
+            "classe": "critico"
           }
         ]
       },
@@ -7087,6 +6190,903 @@
             "iso": "2026-04-09",
             "texto": "Mayara solicita agendamento de visita técnica para aferições, condicionada à instalação prévia de todas as estruturas",
             "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "ddb7768a-521e-4164-9714-120250376edd",
+        "cliente": "RICARDO GUIMARAES VIEIRA",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "CLIENTE FINALIZADO",
+        "status": "em_execucao",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Cliente Ricardo se mudou para o apartamento antes da conclusão dos reparos devido ao atraso de ~19 dias sem resposta da Monofloor, o que tornará a execução mais complexa e impactante para o morador",
+          "Insatisfação explícita do cliente Ricardo registrada pelo Eng. Leandro em 07/04: 'o cliente está extremamente insatisfeito com a tratativa'",
+          "Execução aprovada para 18/05 ainda está sem cronograma detalhado, equipe definida ou confirmação formal enviada ao cliente — risco de novo desgaste se não houver comunicação proativa até lá"
+        ],
+        "pendencias": [
+          "Confirmação da data 25/03 para visita com arquitetura: Monofloor prometeu verificar disponibilidade em 13/03 e não há registro de confirmação na conversa",
+          "Próximos passos pós-aprovação de data 18/05: Leandro confirmou aprovação do Ricardo em 17/04 às 16h27 e aguarda próximos passos; Monofloor respondeu que retornaria, mas sem detalhamento de cronograma, equipe ou logística"
+        ],
+        "resumo_exec": "O atendimento referente à obra do cliente Ricardo foi marcado por um período crítico de aproximadamente 19 dias sem resposta da Monofloor (18/03 a 06/04), gerando insatisfação explícita do proprietário e agravando a situação pela mudança do cliente para o apartamento antes da conclusão dos reparos. Após retomada do contato em 07/04, foram enviados relatório técnico e orçamento, aprovados pelo cliente. As negociações de data resultaram na aprovação do início dos serviços para 18/05, com estimativa de conclusão até o final da semana seguinte. A conversa encerra com a Monofloor comprometida a ali",
+        "clima_desc": "Atendimento marcado por longos períodos sem resposta da Monofloor, gerando insatisfação explícita do cliente Ricardo e cobranças frequentes do Eng. Leandro. A situação foi parcialmente resolvida ao final, mas o atraso na tratativa e a mudança do cliente para o apartamento antes da conclusão dos repa",
+        "periodo": "11/03 a 17/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 44,
+        "eventos": [
+          {
+            "data": "11/03",
+            "iso": "2026-03-11",
+            "texto": "Monofloor propõe visita do consultor de qualidade para 18/03 às 10h45",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Arquitetura (Joana) solicita reagendamento para 25/03, pois estará em SP nessa data",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/03",
+            "iso": "2026-03-13",
+            "texto": "Monofloor confirma que verificará disponibilidade para o dia 25/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Equipe de campo (Pedro) relata problema urgente em banheiro do cliente Ricardo e dificuldade de contato com a Monofloor",
+            "classe": "critico"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Leandro confirma que entrou em contato com representante da Monofloor, que levaria a questão à diretoria",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Eng. Leandro retoma contato após ~19 dias sem resposta, pedindo definição dos próximos passos",
+            "classe": "critico"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Leandro alerta que cliente Ricardo está extremamente insatisfeito e já se mudando para o apartamento sem resolução",
+            "classe": "critico"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Atendimento Monofloor envia relatório de visita técnica realizada pelo consultor Natan",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Leandro informa que Natan já havia indicado a solução na visita: reparo no piso da cozinha e reaplicação total da parede do banheiro afetado",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Leandro solicita orçamento e cronograma com urgência",
+            "classe": "neutro"
+          },
+          {
+            "data": "08/04",
+            "iso": "2026-04-08",
+            "texto": "Atendimento Monofloor envia orçamento referente às tratativas",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Atendimento Monofloor cobra devolutiva sobre o orçamento",
+            "classe": "critico"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Leandro informa que orçamento está em validação com seus gestores",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/04",
+            "iso": "2026-04-13",
+            "texto": "Atendimento Monofloor cobra novamente devolutiva do orçamento",
+            "classe": "critico"
+          },
+          {
+            "data": "13/04",
+            "iso": "2026-04-13",
+            "texto": "Ricardo aprova o orçamento e solicita execução nos dias 27, 28 e 29 de abril",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/04",
+            "iso": "2026-04-14",
+            "texto": "Monofloor informa que não consegue iniciar em 27/04, que a data disponível é 28/04 e que o prazo mínimo é 5 dias mais tempo de cura",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/04",
+            "iso": "2026-04-14",
+            "texto": "Leandro encaminha áudio do proprietário",
+            "classe": "neutro"
+          },
+          {
+            "data": "15/04",
+            "iso": "2026-04-15",
+            "texto": "Atendimento Monofloor verifica possibilidade de alteração de data de início",
+            "classe": "neutro"
+          },
+          {
+            "data": "16/04",
+            "iso": "2026-04-16",
+            "texto": "Monofloor informa disponibilidade para início em 13/05 (alternativa) ou manutenção do início em 28/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "16/04",
+            "iso": "2026-04-16",
+            "texto": "Leandro solicita execução em uma semana; Monofloor estima conclusão até 16/05 (sábado)",
+            "classe": "bom"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Monofloor propõe início em 18/05 (segunda-feira) como encaixe mais próximo disponível",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Ricardo aprova início em 18/05 via Leandro; Monofloor confirma e informa que alinhará próximos passos",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "2d17b8ae-fef0-43b0-996e-accba3c3b709",
+        "cliente": "DIOGO CANTERAS SANTOS",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Insatisfação com cobrança por metro linear dos trilhos: cliente considerou o valor absurdo (~20% do contrato) e mencionou que a metodologia 'não foi informada em nenhum momento', mesmo constando em contrato — risco de contestação futura",
+          "Reunião de 10/03 com falha de atendimento: Pedro não entrou na reunião emergencial por estar em outra ligação, enquanto o cliente aguardava retorno urgente sobre cronograma — episódio gerou desgaste de confiança",
+          "Prazo de aplicação em aberto: obra pode estar avançando sem data confirmada para o Monofloor, podendo gerar conflito de agenda ou perda da janela de aplicação"
+        ],
+        "pendencias": [
+          "Foto da bancada do lavabo: Thaísa (Monofloor) solicitou em 15/04 e não houve retorno do cliente até o fim da conversa — necessário para finalizar orçamento dos complementos",
+          "Orçamento dos complementos pendente de envio: Thaísa recebeu todas as medidas em 15/04 mas o orçamento (escada, bancada lavabo, degrau, trilhos sala/cozinha) ainda não foi enviado ao cliente",
+          "Previsão de entrada em obra: Monofloor solicitou em 03/03 e reforçou em 27/03 e 13/03 — cliente nunca forneceu data, impactando a agenda de aplicação"
+        ],
+        "resumo_exec": "O projeto na Rua Arq. Jaime Fonseca Rodrigues avança, mas acumulou tensões por falhas de comunicação — especialmente a reunião de 10/03 onde o responsável Pedro não esteve disponível e a cobrança por metro linear dos trilhos, que surpreendeu negativamente o cliente. O aditivo contratual foi assinado e pago, e a visita técnica de 23/03 gerou um relatório de regularizações pendentes que ainda aguarda resposta da obra. Em abril, o escopo se ampliou com novos itens (escada, lavabo, degrau, trilhos sala/cozinha), mas o orçamento ainda não foi enviado e falta foto da bancada do lavabo para finalizá-",
+        "clima_desc": "Cliente demonstrou insatisfação pontual com a metodologia de cobrança dos trilhos (metro linear vs m²), questionando a lógica e o valor. Apesar da resolução formal via aditivo, o tom revela desconfiança acumulada, especialmente sobre comunicação e clareza contratual.",
+        "periodo": "02/03 a 15/04/2026",
+        "tempo_resp": "Normal",
+        "total_msgs": 150,
+        "eventos": [
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Confirmação de que aplicação em áreas externas não gera custo adicional",
+            "classe": "neutro"
+          },
+          {
+            "data": "03/03",
+            "iso": "2026-03-03",
+            "texto": "Cliente solicita previsão de entrada com 60 dias de antecedência",
+            "classe": "neutro"
+          },
+          {
+            "data": "04/03",
+            "iso": "2026-03-04",
+            "texto": "Dúvida sobre aparência do verniz antiderrapante levantada pelo cliente",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/03",
+            "iso": "2026-03-06",
+            "texto": "Discussão sobre acabamento nos trilhos de porta de correr e espaçamento inferior ao recomendado (7cm)",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Cliente expressa insegurança sobre ajuste de altura do produto e instalação do guia; reunião emergencial convocada",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Reunião realizada com dificuldades técnicas (troca de plataformas, participante Pedro não entrou por estar em outra ligação)",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Solicitação de visita in loco agendada para 18/03; reprogramada para 23/03 às 13h",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Monofloor anuncia mudança no canal de comunicação (centralização via Pedro); cliente resiste e mantém grupo",
+            "classe": "neutro"
+          },
+          {
+            "data": "23/03",
+            "iso": "2026-03-23",
+            "texto": "Visita técnica realizada na Rua Arq. Jaime Fonseca Rodrigues, 755 — cliente participou por vídeo por problema pessoal",
+            "classe": "critico"
+          },
+          {
+            "data": "24/03",
+            "iso": "2026-03-24",
+            "texto": "Questionamento sobre cobrança por metro linear dos trilhos; cliente considera valor desproporcional (~20% do contrato)",
+            "classe": "critico"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Esclarecimento sobre número de entre-trilhos (2 portas de 2 folhas + 1 porta de 3 folhas); escopo atualizado",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Adicional de trilhos aprovado por Diogo; aditivo contratual enviado e assinado no mesmo dia",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Diogo menciona possível porta adicional entre sala e cozinha com trilho — aguarda serralheiro",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Monofloor envia relatório técnico pós-visita com regularizações necessárias antes da aplicação; reforça necessidade de previsão de entrada com 60 dias",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Boleto do aditivo pago por Diogo",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/04",
+            "iso": "2026-04-13",
+            "texto": "Diogo solicita estimativa de custo para escada em monofloor (comparação com pedra)",
+            "classe": "neutro"
+          },
+          {
+            "data": "14/04",
+            "iso": "2026-04-14",
+            "texto": "Arquiteta Thábata assume comunicação; envia medidas para orçamento de escada, bancada de lavabo e degrau",
+            "classe": "neutro"
+          },
+          {
+            "data": "15/04",
+            "iso": "2026-04-15",
+            "texto": "Confirmação de 4 trilhos (3 entre-trilhos) para porta sala/cozinha com vão de 4,53m",
+            "classe": "neutro"
+          },
+          {
+            "data": "15/04",
+            "iso": "2026-04-15",
+            "texto": "Thaísa solicita foto da bancada do lavabo para finalizar orçamento",
+            "classe": "bom"
+          }
+        ]
+      },
+      {
+        "id": "e9cfed37-fe20-42c0-877a-3a55b1476fbc",
+        "cliente": "ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO",
+        "consultor": "LUANA",
+        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
+        "cidade": "SÃO PAULO / SP",
+        "fase": "INFORMAÇÕES PROJETOS",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "DANO MATERIAL NÃO RESOLVIDO: Fita de móvel danificada pelo consultor Braiam durante visita em fevereiro — custo enviado pela cliente em 11/03, encaminhado à direção, mas sem confirmação de ressarcimento até 22/04 (mais de 40 dias sem resolução)",
+          "RISCO DE CONFLITO DE AGENDA: Aplicação externa agendada para 12/05, mas cliente estará de férias de 17 a 22/05 — parte interna ainda sem data definida, criando risco de sobreposição e novo cancelamento",
+          "COBRANÇAS SEM RESPOSTA EM 22/04: Lorrayne enviou três mensagens cobrando retorno sobre agendamento da parte interna sem obter resposta — risco de deterioração do relacionamento com a intermediária"
+        ],
+        "pendencias": [
+          "Lorrayne perguntou em 17/04 se é necessária vistoria prévia antes do dia 12/05 — sem resposta da equipe Monofloor",
+          "Em 22/04, Lorrayne solicitou agendamento da parte interna considerando as férias da cliente (17-22/05) — Monofloor prometeu retorno mas não respondeu até o fim do dia, com três cobranças sem resposta",
+          "Ressarcimento do dano na fita do móvel causado pela visita do Braiam (11/03) — encaminhado à direção, sem confirmação de resolução ou valor aprovado registrado na conversa"
+        ],
+        "resumo_exec": "O atendimento ao apartamento da cliente Andressa acumula pendências desde fevereiro de 2026, com a área externa ainda não executada devido a restrições climáticas e agenda sobrecarregada da equipe Monofloor. A aplicação externa está agendada para 12/05, porém a parte interna ainda não tem data definida, e a cliente estará de férias de 17 a 22 de maio, exigindo alinhamento urgente. Um dano em móvel causado durante visita do consultor Braiam está sem resolução há mais de 40 dias, representando risco financeiro e de imagem. A intermediária Lorrayne demonstra frustração crescente com respostas len",
+        "clima_desc": "A intermediária Lorrayne demonstra crescente frustração com a falta de retornos ágeis e dificuldade para fechar datas. A cliente final está pressionando por definições e a equipe Monofloor tem respondido com atrasos e respostas genéricas.",
+        "periodo": "12/02 a 22/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 45,
+        "eventos": [
+          {
+            "data": "12/02",
+            "iso": "2026-02-12",
+            "texto": "Visita do consultor de qualidade Braiam Gomes Pacheco agendada para 18/02 às 10h, confirmada pela cliente",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/02",
+            "iso": "2026-02-13",
+            "texto": "Dados do consultor Braiam enviados para liberação na portaria",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/03",
+            "iso": "2026-03-11",
+            "texto": "Cliente relata dano em fita de móvel ocorrido durante visita do Braiam; encaminha custo da marcenaria para ressarcimento",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/03",
+            "iso": "2026-03-11",
+            "texto": "Monofloor recebe o custo e encaminha à direção, sem retorno definitivo registrado",
+            "classe": "neutro"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Cliente solicita retorno para aplicação na área externa; Monofloor alega instabilidade climática",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Lorrayne solicita agendamento de retorno ao apartamento da Andressa",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Monofloor informa possível data de 14/04, mas descarta por previsão de chuva",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Cliente informa que não viajará em abril; solicita pré-agendamento para 16-23 de maio",
+            "classe": "neutro"
+          },
+          {
+            "data": "08/04",
+            "iso": "2026-04-08",
+            "texto": "Monofloor encaminha solicitação internamente, sem retorno no mesmo dia",
+            "classe": "neutro"
+          },
+          {
+            "data": "08/04",
+            "iso": "2026-04-08",
+            "texto": "Lorrayne cobra retorno no mesmo dia; Monofloor mantém posição de aguardar melhora climática",
+            "classe": "critico"
+          },
+          {
+            "data": "16/04",
+            "iso": "2026-04-16",
+            "texto": "Cliente informa semana sem chuva e solicita execução da área externa",
+            "classe": "neutro"
+          },
+          {
+            "data": "16/04",
+            "iso": "2026-04-16",
+            "texto": "Monofloor promete retorno sobre agendamento, sem confirmar data",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Lorrayne cobra retorno novamente; Monofloor agenda aplicação da área externa para 12/05",
+            "classe": "critico"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Lorrayne questiona se é necessária vistoria prévia ao dia 12/05; sem resposta registrada",
+            "classe": "critico"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Cliente informa férias entre 17 e 22 de maio (retorno dia 23) e solicita agendamento da parte interna",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Monofloor promete retorno em breve; Lorrayne cobra três vezes sem resposta até o fim do dia",
+            "classe": "critico"
+          }
+        ]
+      },
+      {
+        "id": "f0fc12b3-562c-48ac-85a7-420609299b16",
+        "cliente": "THALES MATZKEIT LEYTON",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "CURITIBA",
+        "fase": "CONFIRMAÇÕES OP 1",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "Data de entrada 30/03 provavelmente perdida: aprovação do escopo não foi realizada no prazo mínimo de 12 dias úteis exigido pela Monofloor — nova data precisa ser negociada",
+          "Cliente sem responsável único definido: Thales foi citado em 27/02 como ponto de contato, mas nunca se manifestou na conversa, gerando lacuna de comunicação crítica",
+          "Regularizações pré-aplicação identificadas em 13/02 sem confirmação de execução — risco de entrada da equipe em obra não preparada"
+        ],
+        "pendencias": [
+          "Escolha de cor NÃO confirmada pelo cliente até o final da conversa — amostras enviadas mas sem retorno registrado (solicitado em 23/02 e cobrado em 09/03)",
+          "Aprovação formal do escopo (cores, metragens, material) NÃO realizada — data de entrada 30/03 possivelmente vencida sem confirmação",
+          "Indicação de responsável único pelo projeto e e-mail para comunicações formais NÃO fornecidos pelo cliente (solicitado em 10/03, sem resposta registrada)",
+          "Vídeo do estágio atual da obra solicitado em 02/03 — sem resposta registrada na conversa",
+          "Regularizações pré-aplicação identificadas em 13/02 — cliente não confirmou execução nem forneceu data prevista de conclusão"
+        ],
+        "resumo_exec": "O projeto encontra-se em estágio pré-aplicação com múltiplos bloqueios não resolvidos pelo cliente. Após a visita técnica de 13/02, a Monofloor identificou regularizações necessárias e aguarda confirmação de execução, escolha de cor e aprovação de escopo — itens que não foram formalizados até o encerramento da conversa. A data de entrada prevista para 30/03 muito provavelmente não foi cumprida, dado que os 12 dias úteis de antecedência para confecção de material não foram respeitados. A ausência de um responsável único e ativo do lado do cliente é o principal fator de risco do atendimento. Com",
+        "clima_desc": "A equipe Monofloor demonstrou dificuldade em obter respostas do cliente sobre escolha de cores, aprovação de escopo e acesso à obra. Houve múltiplas cobranças sem retorno adequado, gerando risco de atraso na data de entrada prevista.",
+        "periodo": "12/02 a 06/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 20,
+        "eventos": [
+          {
+            "data": "12/02",
+            "iso": "2026-02-12",
+            "texto": "Agendamento de visita de aferição para 13/02 às 16h — cliente solicita mudança para manhã",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/02",
+            "iso": "2026-02-12",
+            "texto": "Visita reagendada para 13/02 às 10h, confirmada pelo cliente",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/02",
+            "iso": "2026-02-13",
+            "texto": "Técnica adianta agenda e solicita entrada ainda pela manhã do dia 13/02",
+            "classe": "neutro"
+          },
+          {
+            "data": "23/02",
+            "iso": "2026-02-23",
+            "texto": "Monofloor envia relatório pós-visita com regularizações necessárias antes da aplicação e solicita data de entrada",
+            "classe": "neutro"
+          },
+          {
+            "data": "23/02",
+            "iso": "2026-02-23",
+            "texto": "Monofloor solicita escolha de cor e informa envio de kit de amostras",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/02",
+            "iso": "2026-02-27",
+            "texto": "Monofloor cobra retorno sobre mensagens anteriores sem resposta; cliente responde brevemente dizendo que Thales entrará em contato",
+            "classe": "critico"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Nova cobrança de retorno e solicitação de vídeo do estágio atual da obra",
+            "classe": "critico"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Monofloor alerta que aprovação do escopo com pelo menos 12 dias úteis de antecedência é necessária para manter a data de entrada 30/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "Nova cobrança sobre confirmação de recebimento das amostras e escolha de cores",
+            "classe": "critico"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Monofloor solicita indicação de responsável único pelo projeto e e-mail para comunicações formais",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Comunicado de migração para novo canal de atendimento (número 41 98822-1783)",
+            "classe": "neutro"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Monofloor comunica retorno ao grupo de WhatsApp como canal oficial de atendimento",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "6bb762a4-303e-484c-a9f6-33068cabafee",
+        "cliente": "MARIO KONDO JUNIOR",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "CONFIRMAÇÕES OP 1",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 2,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "RISCO TÉCNICO/CONTRATUAL: Monofloor nunca alertou o cliente sobre a contraindicação do autonivelante durante o processo comercial. O instalador comunicou isso apenas na visita presencial (09/03), após o escopo já estar definido. O autonivelante foi aplicado mesmo assim (confirmado em 08/04). A Monofloor se isenta contratualmente, mas há risco de conflito se surgirem fissuras — cliente pode alegar omissão de informação relevante no pré-contrato",
+          "RISCO DE PRAZO: Data ideal do cliente (última semana de maio) não pôde ser atendida. Data confirmada é 02/06, que segundo Julia Favoretto 'já ultrapassa o limite de prazo' da obra. Isso pode gerar insatisfação ou pressão sobre a equipe de execução"
+        ],
+        "pendencias": [
+          "Proposta em papel timbrado da tela de poliéster: solicitada por Giovanna em 22/04, Monofloor confirmou que iria providenciar mas ainda não enviou — item com prazo em aberto",
+          "Possibilidade de encaixe na última semana de maio: Camila reiterou preferência em 20/04, Monofloor disse que manteria em radar mas não há confirmação ou negativa definitiva",
+          "Devolutiva sobre trabalho aos sábados: Vitor sugeriu em 17/04 para comprimir cronograma, Monofloor condicionou à liberação mas não deu retorno concreto"
+        ],
+        "resumo_exec": "O projeto encontra-se reagendado para 02/06/2026 após sucessivas alterações de data (original 14/04, depois 27/04, agora 02/06). O principal ponto de tensão foi a descoberta tardia — apenas na visita do instalador em março — de que o autonivelante não é recomendado pela Monofloor, informação que nunca havia sido comunicada ao cliente durante o processo comercial. O autonivelante já foi aplicado e está em cura, e a Monofloor adotou como solução a recomendação da tela de poliéster, eximindo-se contratualmente de responsabilidade por patologias de substrato. O cliente demonstra pressão de cronogr",
+        "clima_desc": "O atendimento começou de forma organizada, mas gerou tensão significativa após o instalador informar em obra que o autonivelante não é recomendado — informação que nunca havia sido comunicada ao cliente. A situação foi parcialmente contornada, porém o reagendamento forçado para 02/06 e a pressão por",
+        "periodo": "19/02 a 22/04/2026",
+        "tempo_resp": "Normal",
+        "total_msgs": 72,
+        "eventos": [
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "Contrato assinado; cor definida como Mirage; data de entrada confirmada para 14/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "24/02",
+            "iso": "2026-02-24",
+            "texto": "Cliente envia vídeo do estágio atual da obra conforme solicitado",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/02",
+            "iso": "2026-02-25",
+            "texto": "Confirmado que todas as áreas estão construídas (apartamento); Monofloor promete agendar visita de aferição",
+            "classe": "neutro"
+          },
+          {
+            "data": "02/03",
+            "iso": "2026-03-02",
+            "texto": "Cliente pergunta sobre impacto de estrutura metálica (ilha) no lixamento; Monofloor esclarece que pode ser feito manualmente",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "Visita in loco realizada com acompanhamento de Giovanna; relatório enviado em 11/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Cliente relata surpresa: instalador informou em obra que autonivelante não é recomendado sob o Monofloor, o que nunca havia sido alertado antes",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/03",
+            "iso": "2026-03-11",
+            "texto": "Monofloor responde que descontinuou a recomendação de autonivelante após casos de fissuras, mas isenta-se de responsabilidade alegando que a garantia não cobre patologias de substrato",
+            "classe": "critico"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Grupo original encerrado; comunicação migrada para novo canal (41 98822-1783)",
+            "classe": "critico"
+          },
+          {
+            "data": "08/04",
+            "iso": "2026-04-08",
+            "texto": "Monofloor retoma contato; cliente informa que data foi alterada para 27/04 e que autonivelante já foi aplicado e está em cura; Giovanna envia vídeo",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Monofloor recomenda uso de tela de poliéster devido ao autonivelante; orienta isolamento total da área durante execução",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Cliente solicita cronograma detalhado de execução para conciliar com demais serviços da obra",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Monofloor envia cronograma de 13 dias de execução",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Cliente solicita reagendamento para última semana de maio; Monofloor informa que data mais próxima disponível é 02/06",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "Vitor sugere trabalho aos sábados para comprimir cronograma; Monofloor aceita considerar se liberado",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/04",
+            "iso": "2026-04-20",
+            "texto": "Camila confirma data 02/06 e reitera preferência pela última semana de maio se houver encaixe",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Monofloor confirma 02/06 e mantém última semana de maio em radar para antecipação",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Giovanna solicita proposta em papel timbrado referente à tela de poliéster para apresentar ao cliente final; Monofloor confirma que irá providenciar",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "d15ee100-e3a2-4ca5-a838-8c9e9c7af2f8",
+        "cliente": "RICARDO XAVIER DE OLIVEIRA NETO",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO / SP",
+        "fase": "RESULTADO VT - ENTRADA",
+        "status": "em_execucao",
+        "clima": "Tenso",
+        "n_alertas": 2,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "HISTÓRICO DE ABANDONO DE ATENDIMENTO: O cliente ficou sem retorno por mais de 18 dias no início da conversa (19/02 a 09/03), o que gerou ameaça formal de reatualização de data e risco de ruptura comercial — padrão que deve ser monitorado para não se repetir",
+          "PROMESSA DE RETORNO NÃO CUMPRIDA NO PRAZO: Em 01/04, Juliana comprometeu resposta até 02/04 sobre a prorrogação; o retorno só veio em 15/04, configurando quebra de confiança com o cliente"
+        ],
+        "pendencias": [
+          "Confirmação formal da prorrogação solicitada em 01/04: Juliana prometeu retornar até 02/04 com a resposta sobre a nova data, mas o próximo contato só ocorreu em 15/04 sem mencionar essa promessa — a solicitação foi indiretamente atendida, porém sem o retorno dentro do prazo comprometido",
+          "Fotos e vídeos da regularização prometidos em 09/03: a equipe prometeu enviar as imagens do andamento da regularização, mas não há registro de envio — o vídeo enviado em 25/03 aparenta ser do cliente, não da equipe"
+        ],
+        "resumo_exec": "O atendimento foi marcado por uma fase crítica inicial (fev–início de mar/2026) em que o cliente ficou sem retorno por aproximadamente 18 dias, resultando em cobrança formal e ameaça de reatualização de prazo. Após a retomada do contato em março, os agendamentos foram progressivamente alinhados: visita técnica realizada em 30/03, relatório enviado em 01/04 e nova data de início confirmada para 12/05/2026. A visita pré-obra foi agendada para 04/05 com o colaborador Nathan, e o cliente demonstra postura colaborativa e confirmações ágeis. O principal risco identificado é o padrão de demora nas re",
+        "clima_desc": "O início da conversa foi marcado por cobrança explícita do cliente após múltiplas mensagens sem retorno da equipe, gerando ameaça de reatualização de data. O clima foi se normalizando ao longo do período conforme os agendamentos foram sendo alinhados.",
+        "periodo": "19/02 a 17/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 37,
+        "eventos": [
+          {
+            "data": "19/02",
+            "iso": "2026-02-19",
+            "texto": "e 25/02 – Cliente envia mensagens cobrando retorno sobre contatos anteriores, sem resposta da equipe",
+            "classe": "critico"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "– Cliente formaliza ameaça de atualização automática da data de entrada em obra por falta de posicionamento",
+            "classe": "critico"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "– Equipe responde informando que a regularização está em andamento e que enviará fotos/vídeos em breve",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/03",
+            "iso": "2026-03-09",
+            "texto": "– Cliente informa que a data pré-agendada de 23/03 não é mais viável e que a visita final precisa ocorrer com 10 dias de antecedência",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "– Cliente solicita disponibilidade para início de abril; equipe pré-agenda entrada para 06/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/03",
+            "iso": "2026-03-11",
+            "texto": "– Cliente confirma agendamento para 06/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "– Cliente informa que os pisos estão preparados para receber revestimento",
+            "classe": "neutro"
+          },
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "– Equipe solicita vídeo do estágio atual da obra",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "– Cliente envia vídeo; equipe confirma recebimento",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/03",
+            "iso": "2026-03-26",
+            "texto": "– Equipe agenda visita pré-obra para 30/03 às 13h; cliente confirma",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/03",
+            "iso": "2026-03-26",
+            "texto": "– Equipe envia dados do colaborador Nathan para liberação de acesso",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Cliente confirma que recebeu Nathan na obra (visita realizada em 30/03)",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Equipe envia relatório de visita",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Cliente solicita prorrogação de 15 dias no início previsto para 06/04",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "– Juliana (Monofloor) responde que verificará disponibilidade e retornará até o dia seguinte (02/04)",
+            "classe": "neutro"
+          },
+          {
+            "data": "15/04",
+            "iso": "2026-04-15",
+            "texto": "– Equipe propõe nova data de início para 12/05 devido à agenda comprometida",
+            "classe": "neutro"
+          },
+          {
+            "data": "16/04",
+            "iso": "2026-04-16",
+            "texto": "– Cliente confirma agendamento para 12/05",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "– Equipe agenda visita pré-obra para 04/05 às 11h; cliente confirma",
+            "classe": "neutro"
+          },
+          {
+            "data": "17/04",
+            "iso": "2026-04-17",
+            "texto": "– Equipe envia novamente dados do colaborador Nathan para a visita de 04/05",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "8beb35b1-722e-4084-9fb7-405dc72c4b2a",
+        "cliente": "BA CLA ARQUITETURA INFANTIL LTDA",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "1º CONTATO OP.",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 2,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 31,
+        "alertas": [
+          "CRÍTICO: Cliente enviou 2 mensagens em 22/04 (14h15 e 18h55) confirmando reunião online das 17h sem obter qualquer resposta da Monofloor — risco real de insatisfação e perda de credibilidade com o cliente",
+          "Reunião técnica já foi remarcada uma vez e a nova data demorou 13 dias para ser definida — padrão de reagendamento pode comprometer a confiança do cliente antes mesmo do início da obra em 08/06"
+        ],
+        "pendencias": [
+          "Reunião online de 22/04 às 17h: cliente perguntou às 14h15 e cobrou novamente às 18h55 sem receber confirmação ou resposta da equipe Monofloor",
+          "Definição da cor do revestimento: consta como 'a definir' desde 31/03, sem encaminhamento registrado na conversa",
+          "Visita ao showroom em SP para escolha dos 2 tons de cor: cliente solicitou em 09/04, equipe não confirmou disponibilidade nem alternativa concreta"
+        ],
+        "resumo_exec": "O projeto Ba Cla está na fase de pré-obra, com contrato assinado e início previsto para 08/06/2026. O atendimento apresentou falhas relevantes de comunicação: a reunião técnica de alinhamento, originalmente marcada para 10/04, foi remarcada com confusão de datas e prometeu-se nova data sem retorno por 13 dias. O episódio mais crítico ocorreu em 22/04, quando o cliente tentou confirmar uma reunião agendada para as 17h e não recebeu nenhuma resposta, enviando nova cobrança após o horário da reunião. Dois itens estruturais seguem sem definição: a cor do revestimento e a visita ao showroom para es",
+        "clima_desc": "O atendimento começou de forma organizada, mas acumulou atritos com remarcações e falta de resposta a confirmações do cliente. No final da conversa, o cliente ficou sem retorno sobre a reunião confirmada para o dia, gerando tensão.",
+        "periodo": "31/03 a 22/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 26,
+        "eventos": [
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Contrato assinado; data de início definida para 08/06/2026; cor ainda a definir",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Cliente solicitou envio de boletos para sabrina@bacla.com.br",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Equipe Monofloor confirmou encaminhamento da solicitação ao financeiro",
+            "classe": "bom"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Juliana (Monofloor) apresentou-se como ponto focal do projeto e propôs videoconferência de alinhamento",
+            "classe": "neutro"
+          },
+          {
+            "data": "02/04",
+            "iso": "2026-04-02",
+            "texto": "Reunião técnica agendada para 10/04 às 14h via Google Meet; invite enviado por e-mail",
+            "classe": "neutro"
+          },
+          {
+            "data": "09/04",
+            "iso": "2026-04-09",
+            "texto": "Monofloor tentou remarcar a reunião com data errada (citou 'hoje' sendo que era para amanhã, 10/04)",
+            "classe": "critico"
+          },
+          {
+            "data": "09/04",
+            "iso": "2026-04-09",
+            "texto": "Cliente concordou em remarcar e sugeriu visita presencial ao showroom em SP para escolha de 2 tons de cor",
+            "classe": "critico"
+          },
+          {
+            "data": "09/04",
+            "iso": "2026-04-09",
+            "texto": "Monofloor explicou impossibilidade de visita presencial (técnica em Curitiba) e prometeu enviar nova data para videoconferência",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Cliente perguntou às 14h15 sobre confirmação de reunião online agendada para as 17h do mesmo dia",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/04",
+            "iso": "2026-04-22",
+            "texto": "Às 18h55, cliente cobrou novamente confirmação da reunião, sem resposta registrada na conversa",
+            "classe": "critico"
           }
         ]
       },
