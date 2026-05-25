@@ -1,22 +1,22 @@
 {
-  "atualizado_em": "2026-05-25T14:21:02Z",
+  "atualizado_em": "2026-05-25T16:37:58Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1061,
-    "ativas": 252,
+    "total": 1062,
+    "ativas": 253,
     "finalizados": 809,
     "em_execucao": 26,
     "pausados": 2,
     "m2_em_execucao": 3415
   },
   "por_status": {
-    "em_execucao": 26,
+    "aguardando_execucao": 41,
     "planejamento": 94,
+    "contrato": 30,
+    "em_execucao": 26,
     "aguardando_clima": 4,
     "finalizado": 582,
-    "aguardando_execucao": 41,
     "reparo": 19,
-    "contrato": 29,
     "pausado": 2,
     "concluido": 227,
     "cancelado": 35,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2172,
+    "pending_tasks": 2173,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1787,6 +1787,11 @@
     }
   ],
   "q4_datas_fresh": {
+    "59200360-fb49-4f8d-83ff-0161d770444e": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2026-01-01"
+    },
     "30ec7ea2-cca6-4246-9695-4747617e0a9f": {
       "dataVisita": "",
       "dataEntrada": "",
@@ -2921,6 +2926,7 @@
       "501b5b94",
       "5707d3b0",
       "58129f10",
+      "59200360",
       "5a400f00",
       "5ebc1fc4",
       "654f2a37",
@@ -2951,23 +2957,23 @@
       "fb8b0ed7",
       "fd444f0c"
     ],
-    "orfas_n": 46,
+    "orfas_n": 47,
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-25T12:01:04.767000+00:00",
-    "total_fluxo": 196,
-    "com_kira": 117,
-    "saudavel": 69,
-    "saudavel_pct_no_monitorado": 59.0,
-    "atencao": 48,
-    "sem_kira": 79,
+    "total_fluxo": 197,
+    "com_kira": 115,
+    "saudavel": 68,
+    "saudavel_pct_no_monitorado": 59.1,
+    "atencao": 47,
+    "sem_kira": 82,
     "clima_dist": {
-      "Positivo": 24,
+      "Positivo": 23,
       "Neutro": 46,
-      "Tenso": 52,
+      "Tenso": 51,
       "Crítico": 3,
-      "?": 91
+      "?": 94
     },
     "obras_atencao": [
       {
@@ -3232,7 +3238,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 2,
+        "dias_desde_resumo": 3,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase **inicial**, com contrato recém-assinado e equipe de atendimento apresentada ao cliente. A conversa indica um começo estruturado, porém ainda sem definições operacionais concretas estabelecidas.\n\n---\n\n**🟡 Clima: Neutro**\n\n---\n\n**📋 Principais Pendências:**\n- Agendamento da **visita técnica** (solicitada pelo cliente sem resposta registrada)\n- Inclusão da **arquiteta** no grupo\n- Definição dos **próximos passos** pós-assinatura de contrato",
@@ -3261,27 +3267,6 @@
         "periodo": "",
         "tempo_resp": "",
         "total_msgs": 13,
-        "eventos": []
-      },
-      {
-        "id": "77d6dbcf-893b-41f6-b2bd-8b43b58e03b0",
-        "cliente": "MARINA PEPE RIBEIRO BARBOSA",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "EXTERNA",
-        "fase": "CLIENTE FINALIZADO",
-        "status": "aguardando_execucao",
-        "clima": "Tenso",
-        "n_alertas": 0,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 2,
-        "alertas": [],
-        "pendencias": [],
-        "resumo_exec": "## Resumo - Projeto Monofloor\n\n**Situação:** A manutenção precisou ser reagendada a pedido da cliente, que propôs o início em **25/05**, porém a equipe confirmou disponibilidade apenas para **10/08**. O cliente está aguardando confirmação da cliente final sobre a nova data.\n\n**Clima:** 🟡 **Neutro** — comunicação cordial, porém com instabilidade no cronograma.\n\n**Principais Pendências:**\n- ⏳ Confirmação da cliente final sobre a data **10/08**\n- 📅 Formalização do novo agendamento da manutenção",
-        "clima_desc": "",
-        "periodo": "",
-        "tempo_resp": "",
-        "total_msgs": 4,
         "eventos": []
       },
       {
@@ -3316,7 +3301,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 20,
+        "dias_desde_resumo": 21,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO cliente (Suli) recebeu orientações técnicas da equipe sobre o uso de massa/revestimento (NS Aquablock) e confirmou que verificaria internamente antes de prosseguir. Posteriormente, o cliente informou que realizou os serviços de regularização dos pontos apontados em visita e enviou diversas fotos/registros aguardando confirmação da equipe.\n\n---\n\n**🟡 Clima: Neutro**\n*(Cliente proativo, mas aguardando resposta da equipe)*\n\n---\n\n**⚠️ Principais Pendências:**\n\n- [ ] **Confirmação da equipe** sobre os serviços de regularização executados pelo cliente\n- [ ] **Análise",
@@ -3337,7 +3322,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 22,
+        "dias_desde_resumo": 23,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase de definição de materiais/cores, com o cliente Gustavo avaliando amostras do revestimento Lilit para paredes e Stelion para piso, após visita ao showroom e recebimento de kit de amostras em seu endereço. A equipe está responsiva e coordenando com novos integrantes (Marcos, executor da obra), mantendo fluxo ativo de comunicação.\n\n---\n\n**🟡 Clima: Neutro/Positivo**\n\n---\n\n**📋 Principais Pendências:**\n- ⏳ Envio de novas amostras nas cores **Mirage** e **Kalahari** solicitadas pelo cliente\n- ⏳ Definição final de cor pelo cliente (Gustavo/Luisa)\n",
@@ -3400,7 +3385,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 12,
+        "dias_desde_resumo": 13,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está na fase de pré-instalação, com contrato assinado, visita de aferição realizada em 07/04 e kit de amostras já recebido pelo cliente. O cliente (Ramon) está aguardando resposta sobre a **antecipação da data de início**, sem retorno conclusivo da equipe até o momento.\n\n---\n\n**🟡 Clima: Neutro/Tenso**\n\n---\n\n**📌 Principais Pendências:**\n\n- ✅ ~~Contrato assinado~~\n- ✅ ~~Visita de aferição realizada~~\n- ⏳ **Definição da cor** (Kalahari em análise)\n- ⏳ **Antecipação da data de início** — solicitada 2x sem resposta definitiva\n- ⏳ **Agendamento da instalação",
@@ -3442,7 +3427,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 10,
+        "dias_desde_resumo": 11,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto está em fase de conclusão da instalação dos pisos, com a maioria já executada, pendendo apenas banheiros e acabamentos finais. A equipe realizou visita técnica in loco e mantém comunicação ativa com o cliente para alinhamento de escopo e próximas etapas.\n\n---\n\n**🟡 Clima: Neutro**\n\n---\n\n**📋 Principais Pendências:**\n\n- ⬜ Execução dos pisos dos **banheiros** (em aberto)\n- ⬜ Solicitação do cliente sobre **tom de cor especial** (referência Felipe Hess) — aguarda resposta da equipe\n- ⬜ **Confirmação de escopo** pós-visita técnica (resultado não registrado na",
@@ -3463,7 +3448,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 22,
+        "dias_desde_resumo": 23,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "Parece que a conversa do WhatsApp foi **cortada** e não contém informações suficientes para análise — apenas a mensagem de boas-vindas da Emanuele foi compartilhada, sem o restante do histórico.\n\n---\n\n**Por favor, cole o conteúdo completo da conversa** para que eu possa:\n\n- 📋 **Resumir** o estado do projeto\n- 🌡️ **Identificar o clima** (Positivo/Neutro/Tenso/Crítico)\n- ⚠️ **Listar as principais pendências**",
@@ -3484,7 +3469,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 17,
+        "dias_desde_resumo": 18,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO prestador Júlio visitou a obra e realizou uma vistoria completa junto à cliente Amanda, identificando pontos de reparo no piso, incluindo riscos na cozinha (frente ao fogão), área de lavanderia e trilhos. A cliente solicitou que os reparos sejam agendados a partir de segunda-feira, considerando a disponibilidade do proprietário Claudio.\n\n---\n\n**🟡 Clima: Neutro**\n\n**📋 Principais Pendências:**\n- ✅ Vistoria realizada — pontos mapeados\n- 🔧 Execução dos reparos aguardando agendamento (a partir de segunda-feira)\n- 📅 Confirmação de data de retorno do Júlio em aberto\n",
@@ -3505,7 +3490,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 16,
+        "dias_desde_resumo": 17,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO projeto encontra-se em fase de acompanhamento, com a equipe buscando atualizações de andamento junto ao cliente, que por sua vez reportou uma solicitação de modificação nos pontos hidráulicos da lavanderia. A comunicação está ativa, porém as mensagens aparecem incompletas, dificultando uma visão clara do progresso real.\n\n---\n\n**🟡 Clima: Neutro**\n\n**📋 Principais Pendências:**\n- Definição sobre a modificação dos pontos hidráulicos na lavanderia\n- Atualização formal do status/andamento do projeto\n- Respostas pendentes da equipe às solicitações do cliente\n\n> ⚠️ *N",
@@ -4844,7 +4829,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 31,
+        "dias_desde_resumo": 32,
         "alertas": [
           "QUALIDADE — Acabamento final do Leona apresentou múltiplos defeitos documentados pelo cliente: manchas de suor, marcas de rolo quadriculadas, esbranquiçados, bolhas e pelos. Retrabalho agendado para 23/04 ainda não confirmado operacionalmente",
           "CRONOGRAMA — Retorno da equipe foi prometido para 20/04, depois deslocado para 23/04 e, em 23/04, ainda sem confirmação de execução. Cliente está organizando limpeza do apartamento especificamente para viabilizar a entrada da Monofloor",
@@ -7009,7 +6994,7 @@
         "clima": "Tenso",
         "n_alertas": 0,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 37,
+        "dias_desde_resumo": 38,
         "alertas": [],
         "pendencias": [],
         "resumo_exec": "## Resumo do Projeto Monofloor\n\nO cliente reportou problemas de limpeza nas esquadrias com pintura eletrostática, enviando vídeos como evidência, e está aguardando uma solução por parte da equipe. A situação está em fase de agendamento de visita técnica com a prestadora Tais, porém sem data confirmada.\n\n---\n\n**🟡 Clima: Tenso**\n\n**📋 Principais Pendências:**\n- ⏳ Confirmação de data para visita da prestadora Tais\n- 🔍 Análise dos vídeos enviados pelo cliente Adil\n- 📅 Alinhamento de horário entre todas as partes para a visita técnica",
@@ -7063,6 +7048,14 @@
       }
     ],
     "obras_sem_kira": [
+      {
+        "id": "59200360-fb49-4f8d-83ff-0161d770444e",
+        "cliente": "ANA",
+        "consultor": "—",
+        "cidade": "SP_CAPITAL",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
       {
         "id": "30ec7ea2-cca6-4246-9695-4747617e0a9f",
         "cliente": "AGATHA CERQUEIRA PEREIRA MOREIRA",
@@ -7205,6 +7198,14 @@
         "consultor": "—",
         "cidade": "Paraty",
         "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
+        "id": "77d6dbcf-893b-41f6-b2bd-8b43b58e03b0",
+        "cliente": "MARINA PEPE RIBEIRO BARBOSA",
+        "consultor": "Wesley",
+        "cidade": "EXTERNA",
+        "fase": "CLIENTE FINALIZADO",
         "tem_grupo": false
       },
       {
@@ -7608,6 +7609,14 @@
         "tem_grupo": false
       },
       {
+        "id": "f4bc18f9-4955-456f-ade5-8c0c75dadb9f",
+        "cliente": "LUIZ FELIPE THOME AZEVEDO MARQUES",
+        "consultor": "LUANA",
+        "cidade": "SÃO JOSÉ DO RIO PRETO",
+        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "tem_grupo": false
+      },
+      {
         "id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
         "cliente": "JULIANA KOMEL DE OLIVEIRA",
         "consultor": "LUANA",
@@ -7968,9 +7977,9 @@
       "reparo": 9,
       "pausadas": 0
     },
-    "total_ativas": 217,
+    "total_ativas": 218,
     "n_180_total": 110,
-    "concentracao_pct": 73.3,
+    "concentracao_pct": 72.9,
     "concentracao_180_pct": 90.9,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
