@@ -1,21 +1,21 @@
 {
-  "atualizado_em": "2026-05-25T20:12:05Z",
+  "atualizado_em": "2026-05-25T21:45:57Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1065,
     "ativas": 255,
     "finalizados": 810,
-    "em_execucao": 25,
+    "em_execucao": 28,
     "pausados": 2,
-    "m2_em_execucao": 3294
+    "m2_em_execucao": 4528
   },
   "por_status": {
-    "reparo": 19,
+    "planejamento": 93,
+    "em_execucao": 28,
+    "aguardando_execucao": 39,
     "contrato": 33,
+    "reparo": 19,
     "finalizado": 583,
-    "em_execucao": 25,
-    "aguardando_execucao": 41,
-    "planejamento": 94,
     "aguardando_clima": 4,
     "pausado": 2,
     "concluido": 227,
@@ -35,14 +35,14 @@
       "obras": 13,
       "m2": 3106
     },
-    "funil_total": 139,
+    "funil_total": 136,
     "com_data_firmada": 77,
-    "sem_data_firmada": 62,
+    "sem_data_firmada": 59,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2172,
+    "pending_tasks": 2170,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2211,11 +2211,6 @@
     }
   ],
   "q4_datas_fresh": {
-    "59200360-fb49-4f8d-83ff-0161d770444e": {
-      "dataVisita": "",
-      "dataEntrada": "",
-      "dataExec": "2026-01-01"
-    },
     "30ec7ea2-cca6-4246-9695-4747617e0a9f": {
       "dataVisita": "",
       "dataEntrada": "",
@@ -2446,6 +2441,11 @@
       "dataEntrada": "",
       "dataExec": "2026-06-08"
     },
+    "49e831e2-ac1f-4f53-9268-149844c47464": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": ""
+    },
     "7f45fa66-7d73-417e-ac22-1894e7bfc30d": {
       "dataVisita": "",
       "dataEntrada": "",
@@ -2484,7 +2484,7 @@
     "b011df53-8d64-44ec-b131-ed35fa4c2532": {
       "dataVisita": "04/08/2025 12:00",
       "dataEntrada": "",
-      "dataExec": "2026-05-25"
+      "dataExec": "2026-06-01"
     },
     "4f79b468-f013-4da9-9eed-594bf150f89a": {
       "dataVisita": "",
@@ -2754,7 +2754,7 @@
     "5afbb2c8-13a7-4d72-94a8-08fdff81835a": {
       "dataVisita": "30/09/2025 17:30",
       "dataEntrada": "",
-      "dataExec": "2026-05-11"
+      "dataExec": "2026-05-08"
     },
     "c6908776-f200-4b20-87eb-0e9d9a80eda7": {
       "dataVisita": "",
@@ -3274,7 +3274,7 @@
     "cc270e7d-3323-4115-8024-ab107a3f79f2": {
       "dataVisita": "",
       "dataEntrada": "",
-      "dataExec": "2026-01-01"
+      "dataExec": "2026-06-15"
     },
     "3992a42f-62d6-4384-b5fe-6fa8755d978b": {
       "dataVisita": "11/12/2025 11:00",
@@ -3353,13 +3353,13 @@
       "33b743cf",
       "3c9c3ed5",
       "40a09aae",
+      "49e831e2",
       "4b46265d",
       "4cdeb3df",
       "4f12eabf",
       "501b5b94",
       "5707d3b0",
       "58129f10",
-      "59200360",
       "5a400f00",
       "5ebc1fc4",
       "654f2a37",
@@ -4767,7 +4767,7 @@
         "consultor_full": "",
         "cidade": "São Paulo/São Paulo",
         "fase": "OECT",
-        "status": "aguardando_execucao",
+        "status": "em_execucao",
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
@@ -7387,14 +7387,6 @@
     ],
     "obras_sem_kira": [
       {
-        "id": "59200360-fb49-4f8d-83ff-0161d770444e",
-        "cliente": "ANA",
-        "consultor": "—",
-        "cidade": "SP_CAPITAL",
-        "fase": "CONTRATO",
-        "tem_grupo": false
-      },
-      {
         "id": "30ec7ea2-cca6-4246-9695-4747617e0a9f",
         "cliente": "AGATHA CERQUEIRA PEREIRA MOREIRA",
         "consultor": "Wesley",
@@ -7535,6 +7527,14 @@
         "cliente": "WERNER GUARISSE NEUGEBAUER",
         "consultor": "—",
         "cidade": "Paraty",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
+        "id": "49e831e2-ac1f-4f53-9268-149844c47464",
+        "cliente": "CASA35",
+        "consultor": "—",
+        "cidade": "São Paulo, capital",
         "fase": "CONTRATO",
         "tem_grupo": false
       },
