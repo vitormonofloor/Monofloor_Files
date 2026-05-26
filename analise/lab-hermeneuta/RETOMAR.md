@@ -1,10 +1,52 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-25 · Pipeline diario automatizado + universo expandido 252→301 obras + 4a camada data_inicio
+> **Última atualização:** 2026-05-26 · Compilador reestruturado (sidebar+conteudo) + pilar PRAZO construido + filtro Consultor removido
 
 ---
 
-## 🆕 SESSAO 2026-05-25 · O QUE FECHAMOS HOJE
+## 🆕 SESSAO 2026-05-26 · O QUE FECHAMOS HOJE
+
+### Compilador reestruturado (sidebar + conteudo)
+- ✅ Layout migrado de secoes empilhadas para sidebar minimal (180px) + painel de conteudo (blog-style)
+- ✅ 3 pilares: Material, Prazo, Qualidade — cada um com resumo em cards + secao de detalhe
+- ✅ Sidebar: icone SVG + nome curto, sticky, click alterna pilar ativo
+- ✅ Chart.js resize automatico ao alternar pilar (canvas em display:none)
+
+### Pilar PRAZO construido do zero
+- ✅ Narrativa conectando metricas-chave (% no prazo, mediana desvio, obras sem prazo)
+- ✅ Grafico distribuicao horizontal (4 faixas: no prazo, leve, medio, grave)
+- ✅ Grafico tendencia mensal dual-axis (% no prazo + mediana desvio)
+- ✅ Decomposicao temporal (planejamento/hibernacao/execucao — barra empilhada)
+- ✅ Tabela detalhada com Obra, Prometido, Executado, Desvio, Status
+- ✅ Insight: hibernacao (74d mediana) e o real consumidor de tempo, nao execucao (8d)
+
+### Filtro Consultor removido do Compilador
+- ✅ Select e variavel `co` removidos de compFiltrar/compInit
+
+### Deploy Cloudflare
+- ✅ publicar.py executado via varredura automatica (versao 5164b499)
+
+### Memorias novas
+- `feedback_layout_sidebar_conteudo.md`
+
+### Pendencias pra proxima sessao
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Panorama mensal (evolucao carteira mes a mes) | ~1h |
+| 2 | Camada 2 — Triangulo de consistencia material | ~2h |
+| 3 | Camada 3 — Score preditivo de risco (obras ativas) | ~2h |
+| 4 | Pilar Qualidade — detalhar com graficos/narrativa (mesma profundidade do Prazo) | ~1h |
+
+### Comando pra retomar (cole no Claude Code)
+
+```
+Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-26". Compilador com sidebar+conteudo. Pilar PRAZO completo. Pendente: panorama mensal + Camada 2 material + Camada 3 score.
+```
+
+---
+
+## 📜 SESSAO 2026-05-25 · HISTORICO
 
 ### Universo expandido (252 → 301 obras)
 - ✅ Cruzamento Painel × Telegram revelou 49 obras invisiveis (em fases de execucao mas fora do pipeline)

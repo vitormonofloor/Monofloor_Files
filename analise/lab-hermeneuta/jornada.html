@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lab Orion · Jornada do Projeto</title>
+<title>Lab Orion · Jornada de Obras</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -61,19 +61,6 @@
     align-items: center;
     gap: 24px;
   }
-  .top-back {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 8px 14px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--surface);
-    transition: all 0.2s ease;
-  }
-  .top-back:hover { background: var(--bg); color: var(--ink); border-color: var(--gold); }
   .top-title {
     font-weight: 800;
     font-size: 16px;
@@ -750,6 +737,26 @@
     color: #e67e22;
     border-color: #e67e2240;
   }
+  .sidebar-item-alerta.alerta-discordancia {
+    background: #8e44ad18;
+    color: #8e44ad;
+    border-color: #8e44ad40;
+  }
+  .det-alerta-discordancia {
+    background: #8e44ad12;
+    border-left: 3px solid #8e44ad;
+    padding: 10px 14px;
+    margin: 8px 0;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #3a3530;
+    line-height: 1.5;
+  }
+  .det-alerta-discordancia strong { color: #8e44ad; }
+  .det-alerta-discordancia .disc-sev { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; padding: 2px 6px; border-radius: 3px; margin-right: 6px; }
+  .disc-sev-alta { background: #c0392b20; color: #c0392b; }
+  .disc-sev-media { background: #e67e2220; color: #e67e22; }
+  .disc-sev-baixa { background: #f39c1220; color: #f39c12; }
   .sidebar-vazio {
     padding: 24px 12px;
     text-align: center;
@@ -3373,16 +3380,23 @@
   .narr-pilar .narr-eq-chip-rank{font-size:15px}
   @media(max-width:1100px){.narr-colunas{grid-template-columns:1fr}.narr-pilar .narr-cards{grid-template-columns:repeat(3,1fr)}.narr-pilar .narr-entrega{grid-template-columns:repeat(3,1fr)}}
   .comp-resumo strong{color:var(--ink)}
-  .comp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
-  .comp-kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
-  .comp-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-  .comp-kpi.k-mat::before{background:#5090b0}
-  .comp-kpi.k-praz::before{background:var(--gold)}
-  .comp-kpi.k-qual::before{background:#5fa073}
-  .comp-kpi-titulo{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-faint);margin-bottom:8px;font-weight:600}
-  .comp-kpi-valor{font-size:30px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
-  .comp-kpi-sub{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--ink-soft)}
-  .comp-kpi-sub b{font-weight:600;color:var(--ink)}
+  .comp-layout{display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:start;margin-top:20px}
+  .comp-sidebar{position:sticky;top:16px;display:flex;flex-direction:column;gap:6px}
+  .comp-conteudo{min-width:0}
+  .comp-sidebar-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border:2px solid transparent;border-radius:10px;cursor:pointer;transition:all .2s;opacity:.55}
+  .comp-sidebar-item:hover{opacity:.8;border-color:rgba(196,167,125,.25)}
+  .comp-sidebar-item.pilar-ativo{opacity:1;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .comp-sidebar-tag{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .comp-sidebar-tag svg{display:block}
+  .comp-sidebar-nome{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink)}
+  .pilar-resumo{margin-bottom:16px}
+  .pilar-resumo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+  .pilar-resumo-card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:8px;padding:12px 14px}
+  .pilar-resumo-val{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
+  .pilar-resumo-label{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-faint);margin-top:5px;font-weight:600}
+  .pilar-resumo-sub{font-size:11px;color:var(--ink-soft);margin-top:3px}
+  .pilar-secao{display:none}
+  .pilar-secao.ativo{display:block}
   .comp-secao{margin-top:28px}
   .comp-secao h3{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--line);text-transform:uppercase;letter-spacing:.5px}
   .comp-grid{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start}
@@ -3461,25 +3475,210 @@
   .solic-pse-chip{font-size:10px;padding:3px 8px;background:#c0403018;color:#c04030;border:1px solid #c0403030;border-radius:4px;cursor:pointer;font-weight:600}
   .solic-pse-chip:hover{background:#c0403028}
   .solic-vazio{padding:24px;text-align:center;color:var(--ink-faint);font-size:13px}
-  @media(max-width:900px){.comp-kpis{grid-template-columns:1fr}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}.solic-kpis{grid-template-columns:repeat(2,1fr)}.solic-grid{grid-template-columns:1fr}}
+  /* ═══ PRAZO DE EXECUÇÃO ═══ */
+  .prazo-narrativa{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:18px 22px;margin-bottom:18px;font-size:14px;color:var(--ink);line-height:1.75}
+  .prazo-narrativa .pn-num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px}
+  .prazo-narrativa .pn-ok{color:#3d7a50;font-weight:600}
+  .prazo-narrativa .pn-warn{color:#9a7a20;font-weight:600}
+  .prazo-narrativa .pn-crit{color:#c04030;font-weight:600}
+  .prazo-narrativa .pn-muted{color:var(--ink-faint);font-size:12px}
+  .prazo-narrativa .pn-sep{display:block;height:8px}
+  .prazo-grid-evidencia{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .prazo-chart-dist{height:220px!important}
+  .prazo-chart-trend{height:240px!important}
+  .prazo-decomp{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-top:12px}
+  .prazo-decomp-titulo{font-size:10px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+  .prazo-decomp-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-soft)}
+  .prazo-decomp-label{flex:0 0 80px;text-align:right;font-weight:500;font-size:11px}
+  .prazo-decomp-bar{flex:1;height:22px;background:var(--surface-2);border-radius:4px;overflow:hidden;display:flex}
+  .prazo-decomp-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;min-width:1px;transition:width .4s}
+  .prazo-decomp-val{font-family:'JetBrains Mono',monospace;font-weight:600;min-width:40px;font-size:11px;color:var(--ink)}
+  .prazo-decomp-leg{display:flex;gap:14px;margin-top:8px;justify-content:center}
+  .prazo-decomp-leg span{font-size:10px;color:var(--ink-faint);display:flex;align-items:center;gap:5px}
+  .prazo-decomp-leg span::before{content:'';width:10px;height:10px;border-radius:2px}
+  .prazo-decomp-leg .leg-plan::before{background:#b3ccd0}
+  .prazo-decomp-leg .leg-hib::before{background:#d6cdbd}
+  .prazo-decomp-leg .leg-exec::before{background:#5fa073}
+  @media(max-width:900px){.comp-layout{grid-template-columns:1fr}.comp-sidebar{position:static;flex-direction:row;overflow-x:auto}.comp-sidebar-item{min-width:120px;white-space:nowrap}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}.solic-kpis{grid-template-columns:repeat(2,1fr)}.solic-grid{grid-template-columns:1fr}.prazo-grid-evidencia{grid-template-columns:1fr}}
   @media print{.tab-bar,.comp-filtros,.comp-btn-pdf,.comp-vm{display:none!important}.tab-panel{display:block!important}}
+
+  /* ═══ HERO ORION · compacto ═══ */
+  .hero-orion{position:relative;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--line);transition:height .35s,opacity .25s}
+  .hero-orion.oculto{height:0;opacity:0;border:none;pointer-events:none;overflow:hidden}
+  .hero-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .hero-particle{position:absolute;width:2px;height:2px;background:#c4b5a0;border-radius:50%;opacity:0;animation:heroFloat linear infinite}
+  @keyframes heroFloat{0%{transform:translateY(120%);opacity:0}10%{opacity:.18}90%{opacity:.1}100%{transform:translateY(-30%);opacity:0}}
+  .hero-tag{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;z-index:2}
+  .hero-orion h1{font-size:38px;font-weight:200;letter-spacing:16px;text-transform:uppercase;color:var(--ink);margin:0;text-indent:16px;z-index:2;line-height:1}
+  .hero-sub{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-faint);margin-top:8px;z-index:2}
+  .hero-sub .sep{margin:0 10px;opacity:.5;color:var(--gold)}
+
+  /* ═══ PANORAMA V2 · narrativa ═══ */
+  .pano-narrativa{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:22px 26px;margin-top:20px;margin-bottom:24px}
+  .pano-narrativa-titulo{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .pano-narrativa-titulo::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .pano-narrativa-texto{font-size:14px;color:var(--ink);line-height:1.7}
+  .pano-narrativa-texto strong{font-weight:700;color:var(--ink)}
+  .pano-narrativa-texto .crit{color:#c45a5a;font-weight:600}
+  .pano-narrativa-texto .warn{color:#d4943a;font-weight:600}
+  .pano-narrativa-texto .ok{color:#3d8a5a;font-weight:600}
+  .pano-narrativa-texto .purple{color:#8e44ad;font-weight:600}
+  .pano-narrativa-texto .muted{color:var(--ink-faint)}
+
+  /* ═══ PANORAMA V2 · atenção imediata ═══ */
+  .pano-atencao{margin-bottom:28px}
+  .pano-atencao-titulo{font-family:'JetBrains Mono',monospace;font-size:10px;color:#c45a5a;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .pano-atencao-titulo::before{content:"";width:8px;height:8px;border-radius:50%;background:#c45a5a;animation:panoPulse 2s ease-in-out infinite}
+  @keyframes panoPulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+  .pano-atencao-item{background:#fff;border:1px solid var(--line);border-left:3px solid #c45a5a;border-radius:6px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:14px;cursor:pointer;transition:all .15s}
+  .pano-atencao-item:hover{border-color:#c45a5a;box-shadow:0 2px 8px rgba(196,90,90,.1);transform:translateX(2px)}
+  .pano-atencao-item.warn{border-left-color:#d4943a}
+  .pano-atencao-nome{font-size:13px;font-weight:600;color:var(--ink)}
+  .pano-atencao-detalhe{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint);margin-top:2px}
+  .pano-atencao-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+  .pano-atencao-badge.crit{background:#fbeaea;color:#9a3a3a}
+  .pano-atencao-badge.alto{background:#fdf0e0;color:#8a5a20}
+
+  .pano-section{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  /* ═══ PANORAMA V2 · grid 2 colunas ═══ */
+  .pano-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+  .pano-bloco{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+  .pano-bloco-titulo{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:14px}
+
+  /* ═══ PANORAMA V2 · tendência mensal ═══ */
+  .pano-tend-grid{display:grid;grid-template-columns:52px 1fr;gap:4px 10px;align-items:center}
+  .pano-tend-mes{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint);text-align:right}
+  .pano-tend-row{display:flex;align-items:center;gap:5px;height:20px}
+  .pano-tend-bar{height:16px;border-radius:3px;min-width:2px}
+  .pano-tend-nums{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-soft);white-space:nowrap}
+  .pano-tend-legenda{display:flex;gap:16px;margin-top:10px;font-size:10px;color:var(--ink-faint)}
+  .pano-tend-legenda span::before{content:'';display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+  .pano-tend-legenda .l-ini::before{background:var(--gold)}
+  .pano-tend-legenda .l-fin::before{background:#3d8a5a}
+  .pano-tend-legenda .l-ret::before{background:#c45a5a}
+  .pano-tend-frase{font-size:12px;color:var(--ink-soft);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);line-height:1.5}
+  .pano-tend-frase .up{color:#c45a5a;font-weight:600}
+  .pano-tend-frase .down{color:#3d8a5a;font-weight:600}
+
+  /* ═══ PANORAMA V2 · cores com retrabalho ═══ */
+  .pano-cor-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0ebe3}
+  .pano-cor-item:last-child{border:none}
+  .pano-cor-swatch{width:22px;height:22px;border-radius:4px;flex-shrink:0;border:1px solid rgba(0,0,0,.06)}
+  .pano-cor-nome{font-size:12px;font-weight:600;color:var(--ink);flex:1;min-width:0}
+  .pano-cor-stats{display:flex;gap:8px;align-items:center;flex-shrink:0}
+  .pano-cor-n{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--ink);min-width:20px;text-align:right}
+  .pano-cor-bar-wrap{flex:1;height:6px;background:#f0ebe3;border-radius:99px;overflow:hidden;min-width:40px;max-width:80px}
+  .pano-cor-bar{height:100%;border-radius:99px;background:var(--gold)}
+  .pano-cor-ret{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 5px;border-radius:3px;white-space:nowrap}
+  .pano-cor-ret.limpo{background:#e8f2ec;color:#2d5a3a}
+  .pano-cor-ret.com-ret{background:#fbeaea;color:#9a3a3a}
+
+  /* ═══ PANORAMA · flags ═══ */
+  .pano-flags{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .pano-flag{background:var(--surface);border:1px solid var(--line);border-left:3px solid #c45a5a;border-radius:6px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+  .pano-flag.warn{border-left-color:#d4943a}
+  .pano-flag.info{border-left-color:var(--ink-faint)}
+  .pano-flag-nome{font-size:12px;font-weight:600;color:var(--ink)}
+  .pano-flag-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-faint);margin-top:2px}
+  .pano-flag-num{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700}
+  .pano-flag-num.crit{color:#c45a5a}
+  .pano-flag-num.warn{color:#d4943a}
+  .pano-flag-num.info{color:var(--ink-faint)}
+
+  /* ═══ SENTINELA · balde fixo ═══ */
+  .sentinela-btn{position:fixed;bottom:22px;left:22px;width:26px;height:26px;background:transparent;border:none;cursor:pointer;z-index:50;padding:0;transition:transform .2s,filter .3s;color:#3d8a5a;line-height:0}
+  .sentinela-btn svg{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.22))}
+  .sentinela-btn:hover{transform:scale(1.35)}
+  .sentinela-btn .balde-massa{fill:currentColor;transition:fill .3s}
+  .sentinela-btn.ok{color:#3d8a5a}
+  .sentinela-btn.warn{color:#d4943a;filter:drop-shadow(0 0 7px rgba(212,148,58,.55))}
+  .sentinela-btn.crit{color:#c45a5a;filter:drop-shadow(0 0 7px rgba(196,90,90,.65))}
+  @keyframes baldePulse{0%,100%{opacity:.7}50%{opacity:1}}
+  .sentinela-btn.warn .balde-massa{animation:baldePulse 2.5s ease-in-out infinite}
+  .sentinela-btn.crit .balde-massa{animation:baldePulse 1.4s ease-in-out infinite}
+  .sentinela-overlay{display:none;position:fixed;inset:0;background:rgba(58,53,48,.7);z-index:101;align-items:center;justify-content:center;padding:30px}
+  .sentinela-overlay.aberta{display:flex}
+  .sentinela-modal{max-width:600px;width:100%;background:var(--gold-bg);border-radius:12px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:80vh;overflow-y:auto;position:relative}
+  .sentinela-titulo{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  .sentinela-geral{font-size:20px;font-weight:600;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .sentinela-geral .ponto{width:14px;height:14px;border-radius:50%}
+  .sentinela-geral .ponto.ok{background:#3d8a5a}.sentinela-geral .ponto.warn{background:#d4943a}.sentinela-geral .ponto.crit{background:#c45a5a}
+  .sentinela-check{display:grid;grid-template-columns:18px 1fr;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:12.5px;line-height:1.45}
+  .sentinela-check:last-child{border-bottom:none}
+  .sentinela-ico{font-size:14px;line-height:1;text-align:center}
+  .sentinela-ico.ok{color:#3d8a5a}.sentinela-ico.warn{color:#d4943a}.sentinela-ico.crit{color:#c45a5a}
+  .sentinela-nome{font-weight:600;color:var(--ink)}
+  .sentinela-detalhe{font-size:11px;color:var(--ink-soft);margin-top:2px}
+  .sentinela-sugestao{font-size:11px;color:#9a3a3a;margin-top:3px;font-style:italic}
+  .sentinela-fechar{position:absolute;top:18px;right:22px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink-faint)}
+  .sentinela-fechar:hover{color:var(--ink)}
+
+  /* ═══ DOCK · navegação cruzada ═══ */
+  .dock{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:500;display:flex;flex-direction:column;gap:12px}
+  .dock-item{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;color:#c8bfb4;text-decoration:none;transition:all .25s;position:relative}
+  .dock-item svg{width:18px;height:18px}
+  .dock-item:hover{color:#b8a080;background:rgba(184,160,128,0.08);text-decoration:none}
+  .dock-item.active{color:#b8a080}
+  .dock-item::after{content:attr(data-label);position:absolute;left:38px;padding:4px 8px;border-radius:4px;border:1px solid transparent;background:transparent;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:transparent;transition:all .2s;white-space:nowrap;pointer-events:none}
+  .dock-item:hover::after{color:#8a7e72;background:#ffffff;border-color:#e0d8cc;box-shadow:0 2px 8px rgba(42,37,32,0.08)}
+
+  @media(max-width:900px){.pano-grid-2{grid-template-columns:1fr}.pano-flags{grid-template-columns:1fr}.dock{flex-direction:row;top:auto;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border:1px solid #e0d8cc;border-radius:99px;padding:5px 6px;gap:4px;backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(42,37,32,0.08)}.dock-item{width:30px;height:30px}.dock-item::after{display:none}.sentinela-btn{bottom:62px}}
 </style>
 </head>
 <body>
 
+<!-- Dock vertical · navegação cruzada com Central + Dashboard -->
+<nav class="dock" id="dock">
+  <a href="https://vitormonofloor.github.io/Monofloor_Files/hub.html" target="_blank" rel="noopener" class="dock-item" data-label="Central">
+    <svg viewBox="0 0 20 20"><path d="M10 2L2 8v10h6v-6h4v6h6V8z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+  </a>
+  <a href="https://vitormonofloor.github.io/Monofloor_Files/analise/dashboard.html" target="_blank" rel="noopener" class="dock-item" data-label="Dashboard">
+    <svg viewBox="0 0 20 20"><path d="M4 16A8 8 0 0 1 16 16" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="16" x2="13" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </a>
+</nav>
+
+<!-- HERO ORION · compacto -->
+<section class="hero-orion" id="hero-orion">
+  <div class="hero-particles">
+    <div class="hero-particle" style="left:10%;top:80%;animation-duration:8s"></div>
+    <div class="hero-particle" style="left:30%;top:90%;animation-duration:11s;animation-delay:2s"></div>
+    <div class="hero-particle" style="left:55%;top:85%;animation-duration:9s;animation-delay:4s"></div>
+    <div class="hero-particle" style="left:75%;top:75%;animation-duration:10s;animation-delay:1s"></div>
+    <div class="hero-particle" style="left:45%;top:95%;animation-duration:12s;animation-delay:3s"></div>
+  </div>
+  <div class="hero-tag">divergencia antes do problema</div>
+  <h1>ORION</h1>
+  <div class="hero-sub">painel de obras <span class="sep">|</span> comunicacao telegram</div>
+</section>
+
 <header class="top">
-  <a href="index.html" class="top-back">← Lab Orion</a>
-  <div class="top-title">Jornada do Projeto<small>análise retrospectiva · TELEGRAM</small></div>
+  <div class="top-title">Lab Orion<small>Jornada de Obras</small></div>
   <div class="top-stamp" id="stamp">—</div>
 </header>
 
 <nav class="tab-bar">
-  <button class="tab-btn active" data-tab="jornada" onclick="trocarAba('jornada')">Jornada</button>
+  <button class="tab-btn active" data-tab="panorama" onclick="trocarAba('panorama')">Panorama</button>
+  <button class="tab-btn" data-tab="jornada" onclick="trocarAba('jornada')">Jornada</button>
   <button class="tab-btn" data-tab="compilados" onclick="trocarAba('compilados')">Compilador</button>
 </nav>
 
 <main>
-  <div id="painel-jornada" class="tab-panel active">
+
+  <!-- ═══ ABA PANORAMA ═══ -->
+  <div id="painel-panorama" class="tab-panel active" style="max-width:1280px;margin:0 auto;padding:0 24px 40px">
+    <div class="pano-narrativa" id="pano-narrativa"></div>
+    <div class="pano-atencao" id="pano-atencao"></div>
+    <div class="pano-grid-2">
+      <div class="pano-bloco" id="pano-tendencia"></div>
+      <div class="pano-bloco" id="pano-cores"></div>
+    </div>
+    <div class="pano-section">Alertas recorrentes</div>
+    <div class="pano-flags" id="pano-flags"></div>
+  </div>
+
+  <!-- ═══ ABA JORNADA ═══ -->
+  <div id="painel-jornada" class="tab-panel">
   <div class="page-intro">
     <p class="page-intro-frase">Análise retrospectiva de cada obra finalizada · reconstruída a partir das mensagens do Telegram do grupo · fases, marcos, ocorrências e materiais ao longo do tempo.</p>
     <details class="glossario">
@@ -3615,7 +3814,6 @@
         <option value="ativas" selected>Ativas</option>
         <option value="finalizadas">Finalizadas</option>
       </select></label>
-      <label>Consultor <select id="comp-filtro-consultor" onchange="compFiltrar()"><option value="">Todos</option></select></label>
       <label>Execução a partir de <select id="comp-filtro-periodo" onchange="compFiltrar()">
         <option value="2026-01" selected>Jan/2026</option>
         <option value="2025-07">Jul/2025</option>
@@ -3630,11 +3828,11 @@
     </div>
     <div id="comp-meses" class="comp-meses"></div>
     <div id="comp-narrativa" class="comp-narrativa">Carregando...</div>
-    <div class="comp-kpis">
-      <div class="comp-kpi k-mat" id="comp-kpi-mat"></div>
-      <div class="comp-kpi k-praz" id="comp-kpi-prazo"></div>
-      <div class="comp-kpi k-qual" id="comp-kpi-qual"></div>
-    </div>
+    <div class="comp-layout">
+    <aside class="comp-sidebar" id="comp-sidebar"></aside>
+    <div class="comp-conteudo">
+    <div class="pilar-secao ativo" id="pilar-mat">
+    <div class="pilar-resumo" id="pilar-resumo-mat"></div>
     <div class="comp-secao">
       <h3>Radar de Material</h3>
       <div class="radar-bar">
@@ -3671,17 +3869,30 @@
         <div class="comp-vm" id="radar-vm-extra" onclick="radarExpandir('extra')">Ver todas</div>
       </div>
     </div>
+    </div><!-- /pilar-mat -->
+    <div class="pilar-secao" id="pilar-prazo">
+    <div class="pilar-resumo" id="pilar-resumo-prazo"></div>
     <div class="comp-secao">
       <h3>Prazo de Execução</h3>
-      <div class="comp-grid">
-        <div class="comp-chart-wrap"><canvas id="comp-chart-prazo"></canvas></div>
-        <div class="comp-tw">
-          <div class="comp-tw-titulo">Obras com maior atraso</div>
-          <table class="comp-tab" id="comp-tab-prazo"><thead><tr><th>Obra</th><th>Prom.</th><th>Desvio</th><th>Status</th></tr></thead><tbody></tbody></table>
-          <div class="comp-vm" id="comp-vm-prazo" onclick="compExpandir('prazo')">Ver todas</div>
+      <div class="prazo-narrativa" id="prazo-narrativa"></div>
+      <div class="prazo-grid-evidencia">
+        <div>
+          <div class="comp-chart-wrap prazo-chart-dist"><canvas id="comp-chart-prazo"></canvas></div>
+          <div class="prazo-decomp" id="prazo-decomp"></div>
+        </div>
+        <div>
+          <div class="comp-chart-wrap prazo-chart-trend"><canvas id="prazo-chart-trend"></canvas></div>
+          <div class="comp-tw" style="margin-top:12px">
+            <div class="comp-tw-titulo">Obras com maior desvio</div>
+            <table class="comp-tab" id="comp-tab-prazo"><thead><tr><th>Obra</th><th>Prom.</th><th>Exec.</th><th>Desvio</th><th>Status</th></tr></thead><tbody></tbody></table>
+            <div class="comp-vm" id="comp-vm-prazo" onclick="compExpandir('prazo')">Ver todas</div>
+          </div>
         </div>
       </div>
     </div>
+    </div><!-- /pilar-prazo -->
+    <div class="pilar-secao" id="pilar-qual">
+    <div class="pilar-resumo" id="pilar-resumo-qual"></div>
     <div class="comp-secao">
       <h3>Qualidade da Entrega</h3>
       <div class="comp-grid">
@@ -3693,6 +3904,7 @@
         </div>
       </div>
     </div>
+    </div><!-- /pilar-qual -->
     <div class="comp-secao">
       <h3>Visão por Consultor</h3>
       <div class="comp-tw">
@@ -3702,8 +3914,30 @@
         </tr></thead><tbody></tbody></table>
       </div>
     </div>
+    </div><!-- /comp-conteudo -->
+    </div><!-- /comp-layout -->
   </div><!-- /painel-compilados -->
 </main>
+
+<!-- SENTINELA · balde fixo bottom-left -->
+<button class="sentinela-btn ok" id="sentinela-btn" title="Sentinela · saude do sistema">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 7 5 Q 12 1.5 17 5" fill="none" stroke="#1a1a1a" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M 3.5 6.8 L 20.5 6.8 L 19 22 L 5 22 Z" fill="#1a1a1a"/>
+    <ellipse cx="12" cy="6.8" rx="8.5" ry="1.5" fill="#080808"/>
+    <path class="balde-massa" d="M 4.55 12 L 19.45 12 L 18.55 21.2 L 5.45 21.2 Z"/>
+    <ellipse class="balde-massa" cx="12" cy="12" rx="7.45" ry="0.6"/>
+  </svg>
+</button>
+<div class="sentinela-overlay" id="sentinela-overlay">
+  <div class="sentinela-modal">
+    <button class="sentinela-fechar" id="sentinela-fechar">x</button>
+    <div class="sentinela-titulo">Sentinela · saude do sistema</div>
+    <div class="sentinela-geral" id="sentinela-geral"></div>
+    <div id="sentinela-checks"></div>
+  </div>
+</div>
+
 
 <!-- DRAWER · Relatório da obra (slide-in direita · imprimível) -->
 <div id="relatorio-backdrop" class="relatorio-backdrop oculto" onclick="fecharRelatorio()"></div>
@@ -4513,6 +4747,7 @@ async function carregar(){
   popularFiltroPeriodo();
   renderListaSidebar();
   renderPanoramaGeral();
+  renderPanorama();
   // Listeners de busca/filtro
   document.getElementById('search-obra').addEventListener('input', renderListaSidebar);
   document.getElementById('filtro-status').addEventListener('change', renderListaSidebar);
@@ -4860,10 +5095,12 @@ function renderListaSidebar(){
     const fricNivel = (o.friccao && o.friccao.nivel && o.friccao.nivel !== 'nenhum') ? o.friccao.nivel : '';
     const fricHtml = fricNivel ? `<span class="sidebar-item-friccao fric-${esc(fricNivel)}">${esc(fricNivel)}</span>` : '';
     const alertas = o.alertas || [];
-    const alertHtml = alertas.map(a => {
+    const alertHtml = alertas.filter(a => a !== 'discordancia_painel_telegram').map(a => {
       const cls = a.startsWith('metragem') ? ' alerta-metragem' : a.startsWith('telegram') ? ' alerta-telegram' : '';
       return `<span class="sidebar-item-alerta${cls}">${esc(a.replace(/_/g,' '))}</span>`;
     }).join('');
+    const disc = o.discordancia_painel_telegram;
+    const discHtml = disc && disc.tipo ? `<span class="sidebar-item-alerta alerta-discordancia" title="${esc(disc.descricao||'')}">${esc(disc.tipo.replace(/_/g,' '))}</span>` : '';
     const origemHtml = o.origem_retrabalho === 'heranca' ? '<span class="badge-origem-retrab badge-origem-heranca" title="Retrabalho de aplicacao feita antes de 2026">retrab. antigo</span>' : o.origem_retrabalho === 'recente' ? '<span class="badge-origem-retrab badge-origem-recente" title="Retrabalho de aplicacao feita em 2026">retrab. 2026</span>' : '';
     const riscoNv = o.score_risco && o.score_risco.nivel && o.score_risco.nivel !== 'baixo' ? o.score_risco.nivel : '';
     const riscoHtml = riscoNv ? `<span class="badge-risco badge-risco-${esc(riscoNv)}" title="Score: ${o.score_risco.score}/100 · ${(o.score_risco.sinais||[]).map(s => labelSinal(s)).join(', ')}">${esc(LABEL_NIVEL_RISCO[riscoNv] || riscoNv)}</span>` : '';
@@ -4882,7 +5119,7 @@ function renderListaSidebar(){
     }
 
     return `<div class="sidebar-item${ativo}${cls_vista}" data-idx="${idx}">
-      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${postgHtml}${pzHtml}${fricHtml}${alertHtml}</div>
+      <div class="sidebar-item-cli">${esc(o.cliente)}${origemHtml}${riscoHtml}${postgHtml}${pzHtml}${fricHtml}${discHtml}${alertHtml}</div>
       <div class="sidebar-item-meta">
         <span class="sidebar-item-status s-${esc(st)}">${esc(formatarStatus(st))}</span>
         ${classifLabel ? `<span class="sidebar-item-classif classif-${esc(classif)}">${esc(classifLabel)}</span>` : ''}
@@ -6119,7 +6356,9 @@ function renderDetalhes(){
   const metHTML = alertas.includes('metragem_zero') ? `<div class="det-alerta-metragem">Metragem nao preenchida no Painel de Obras. Benchmark e faixa indisponiveis.</div>`
     : alertas.includes('metragem_suspeita') ? `<div class="det-alerta-metragem">Metragem suspeita: ${m2val} m². Valor implausivel para obra Monofloor — possivel erro de preenchimento.</div>`
     : '';
-  elMacro.innerHTML = acoesHTML + telCompHTML + metHTML + vereHTML + montarPrazo(j) + montarScoreRisco(j) + benchWrap + matWrap;
+  const discD = j.discordancia_painel_telegram;
+  const discHTML = discD && discD.tipo ? `<div class="det-alerta-discordancia"><span class="disc-sev disc-sev-${esc(discD.severidade||'baixa')}">${esc(discD.severidade||'')}</span><strong>Discordancia Painel x Telegram</strong> — ${esc(discD.descricao||'')}</div>` : '';
+  elMacro.innerHTML = discHTML + acoesHTML + telCompHTML + metHTML + vereHTML + montarPrazo(j) + montarScoreRisco(j) + benchWrap + matWrap;
 
   renderTimelineCiclos(j);
   renderMacroEtapas(j);
@@ -6622,11 +6861,25 @@ function trocarAba(aba) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   const painel = document.getElementById('painel-' + aba);
   if (painel) painel.classList.add('active');
+  const hero = document.getElementById('hero-orion');
+  if (hero && aba !== 'panorama') hero.classList.add('oculto');
   if (aba === 'compilados' && !compRendered && DADOS) {
     compInit();
     compRendered = true;
   }
 }
+
+(function heroCollapse(){
+  const hero = document.getElementById('hero-orion');
+  if (!hero) return;
+  if (localStorage.getItem('orion-hero-seen')) {
+    hero.classList.add('oculto');
+  } else {
+    localStorage.setItem('orion-hero-seen', '1');
+    setTimeout(() => hero.classList.add('oculto'), 4000);
+  }
+  hero.addEventListener('click', () => hero.classList.toggle('oculto'));
+})();
 
 function compGetConsultor(o) {
   const raw = (o.equipe?.monofloor?.operacoes || '').trim();
@@ -6634,9 +6887,6 @@ function compGetConsultor(o) {
 }
 
 function compInit() {
-  const sel = document.getElementById('comp-filtro-consultor');
-  const nomes = [...new Set((DADOS.obras||[]).map(compGetConsultor))].sort();
-  nomes.forEach(n => { const op = document.createElement('option'); op.value = n; op.textContent = n; sel.appendChild(op); });
   Chart.register({
     id:'centerText',
     afterDraw(chart){
@@ -6654,13 +6904,11 @@ function compInit() {
 
 function compFiltrar() {
   const st = document.getElementById('comp-filtro-status').value;
-  const co = document.getElementById('comp-filtro-consultor').value;
   const fx = document.getElementById('comp-filtro-faixa').value;
   const pe = document.getElementById('comp-filtro-periodo').value;
   const F = (DADOS.obras||[]).filter(o => {
     if (st==='ativas' && COMP_FIN.includes(o.status)) return false;
     if (st==='finalizadas' && !COMP_FIN.includes(o.status)) return false;
-    if (co && compGetConsultor(o)!==co) return false;
     if (fx && o.faixa_metragem!==fx) return false;
     if (pe) {
       const dExec = o.data_inicio_real || '';
@@ -6672,9 +6920,18 @@ function compFiltrar() {
 }
 
 let compMesSel = null;
+let compPilarAtivo = 'mat';
+
+function compPilar(nome) {
+  compPilarAtivo = nome;
+  document.querySelectorAll('.comp-sidebar-item[data-pilar]').forEach(el => el.classList.toggle('pilar-ativo', el.dataset.pilar === nome));
+  document.querySelectorAll('.pilar-secao').forEach(el => el.classList.toggle('ativo', el.id === 'pilar-' + nome));
+  setTimeout(() => Object.values(compCharts).forEach(c => { try { c.resize(); } catch(e) {} }), 50);
+}
 
 function compRenderAll(F) {
-  compNarrativa(F); compKPIs(F); compMaterial(F); compPrazo(F); compQualidade(F); compConsultores(F);
+  compNarrativa(F); compMaterial(F); compPrazo(F); compQualidade(F); compConsultores(F);
+  compPilar(compPilarAtivo);
 }
 
 function compEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -6768,116 +7025,40 @@ function compNarrativa(F) {
     <div class="narr-header-sub">${n} obras iniciadas · ${m2Total > 0 ? Math.round(m2Total).toLocaleString('pt-BR') + ' m²' : ''} · ${comExec} com execucao registrada</div>
   </div>`;
 
-  // ── 3 COLUNAS: MATERIAL | PRAZO | QUALIDADE ──
-  html += `<div class="narr-colunas">`;
+  let sideHtml = '';
 
-  // ── COLUNA 1: MATERIAL ──
-  html += `<div class="narr-pilar">
-    <div class="narr-pilar-titulo"><span class="narr-pilar-tag" style="background:#7ea0b7"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M4 18v-1a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1"/><path d="M12 3C8 3 5 7 5 11h14c0-4-3-8-7-8z" fill="#fff" stroke="#fff"/><line x1="12" y1="1" x2="12" y2="3"/></svg></span> Material</div>
-    <div class="narr-cards">
-      <div class="narr-card narr-card-accent" style="border-left-color:#7ea0b7">
-        <div class="narr-card-val" style="color:#7ea0b7">${nOS}</div>
-        <div class="narr-card-label">Obras com OS enviada</div>
-        <div class="narr-card-sub">${totalItensOS} itens no total</div>
-      </div>
-      <div class="narr-card narr-card-accent" style="border-left-color:${corSolic}">
-        <div class="narr-card-val" style="color:${corSolic}">${nSolic}</div>
-        <div class="narr-card-label">Pediram material extra</div>
-        <div class="narr-card-sub">${totalSolic} solicitacoes no Telegram</div>
-      </div>
-      <div class="narr-card narr-card-accent" style="border-left-color:#c04030">
-        <div class="narr-card-val" style="color:${multiSolic > 0 ? '#c04030' : 'var(--ink-faint)'}">${multiSolic}</div>
-        <div class="narr-card-label">Pediram 2+ vezes</div>
-        <div class="narr-card-sub">${n > 0 ? Math.round(multiSolic / n * 100) : 0}% das obras</div>
-      </div>
-    </div>`;
+  // ── SIDEBAR: 3 items limpos ──
+  sideHtml += `<div class="comp-sidebar-item${compPilarAtivo==='mat'?' pilar-ativo':''}" data-pilar="mat" onclick="compPilar('mat')"><span class="comp-sidebar-tag" style="background:#7ea0b7"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M4 18v-1a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1"/><path d="M12 3C8 3 5 7 5 11h14c0-4-3-8-7-8z" fill="#fff" stroke="#fff"/></svg></span><span class="comp-sidebar-nome">Material</span></div>`;
+  sideHtml += `<div class="comp-sidebar-item${compPilarAtivo==='prazo'?' pilar-ativo':''}" data-pilar="prazo" onclick="compPilar('prazo')"><span class="comp-sidebar-tag" style="background:${pctPrazo!=null?corPrazo:'#a89e92'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></span><span class="comp-sidebar-nome">Prazo</span></div>`;
+  sideHtml += `<div class="comp-sidebar-item${compPilarAtivo==='qual'?' pilar-ativo':''}" data-pilar="qual" onclick="compPilar('qual')"><span class="comp-sidebar-tag" style="background:${nFin>0&&lmp/nFin>=0.5?'#3d7a50':nFin>0?'#c04030':'#a89e92'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6h6l-5 4 2 7-6-4-6 4 2-7-5-4h6z"/></svg></span><span class="comp-sidebar-nome">Qualidade</span></div>`;
 
-  if (n > 0 && nSolic > 0) {
-    const segSemSolic = n - nSolic;
-    const segSolic1 = nSolic - multiSolic;
-    const segMulti = multiSolic;
-    const pSem = Math.round(segSemSolic / n * 100);
-    const p1 = Math.round(segSolic1 / n * 100);
-    const pM = 100 - pSem - p1;
-    html += `<div class="narr-funil">
-      <div class="narr-funil-titulo">Das ${n} obras iniciadas</div>
-      <div class="narr-funil-bar">
-        ${segSemSolic > 0 ? `<div class="narr-funil-seg" style="width:${pSem}%;background:#5fa073">${segSemSolic}</div>` : ''}
-        ${segSolic1 > 0 ? `<div class="narr-funil-seg" style="width:${p1}%;background:#c4a040">${segSolic1}</div>` : ''}
-        ${segMulti > 0 ? `<div class="narr-funil-seg" style="width:${pM}%;background:#c04030">${segMulti}</div>` : ''}
-      </div>
-      <div class="narr-funil-leg">
-        <div class="narr-funil-leg-item"><div class="narr-funil-dot" style="background:#5fa073"></div>Sem extra (${segSemSolic})</div>
-        <div class="narr-funil-leg-item"><div class="narr-funil-dot" style="background:#c4a040"></div>1x (${segSolic1})</div>
-        <div class="narr-funil-leg-item"><div class="narr-funil-dot" style="background:#c04030"></div>2+ vezes (${segMulti})</div>
-      </div>
-    </div>`;
-    if (topEquipes.length > 0) {
-      html += `<div class="narr-equipes">
-        ${topEquipes.map((e, i) => `<div class="narr-eq-chip">
-          <div class="narr-eq-chip-rank">#${i + 1}</div>
-          <div>
-            <div class="narr-eq-chip-nome">${compEsc(e[0])}</div>
-            <div class="narr-eq-chip-count">${e[1]} solic.</div>
-          </div>
-        </div>`).join('')}
-      </div>`;
-    }
-  }
-  html += `</div>`;
-
-  // ── COLUNA 2: PRAZO ──
-  html += `<div class="narr-pilar">
-    <div class="narr-pilar-titulo"><span class="narr-pilar-tag" style="background:${pctPrazo != null ? corPrazo : '#a89e92'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><circle cx="15" cy="15" r="2" fill="#fff" stroke="#fff" stroke-width="1.5"/></svg></span> Prazo</div>
-    <div class="narr-cards">
-      <div class="narr-card narr-card-accent" style="border-left-color:${pctPrazo != null ? corPrazo : 'var(--line)'}">
-        <div class="narr-card-val" style="color:${pctPrazo != null ? corPrazo : 'var(--ink-faint)'}">${pctPrazo != null ? pctPrazo + '%' : '—'}</div>
-        <div class="narr-card-label">No prazo</div>
-        <div class="narr-card-sub">${noPrazo} de ${cp.length} obras</div>
-      </div>
-      <div class="narr-card narr-card-accent" style="border-left-color:var(--line)">
-        <div class="narr-card-val" style="color:var(--ink)">${dMed != null ? (dMed > 0 ? '+' : '') + dMed + 'd' : '—'}</div>
-        <div class="narr-card-label">Mediana de desvio</div>
-        <div class="narr-card-sub">${cp.length} com prazo calculado</div>
-      </div>
-      <div class="narr-card narr-card-accent" style="border-left-color:var(--line)">
-        <div class="narr-card-val" style="color:var(--ink-faint)">${n - cp.length}</div>
-        <div class="narr-card-label">Sem prazo definido</div>
-        <div class="narr-card-sub">${n > 0 ? Math.round((n - cp.length) / n * 100) : 0}% das obras</div>
-      </div>
-    </div>
+  // ── RESUMOS DO MES: injetados no topo de cada painel ──
+  const rMat = `<div class="pilar-resumo-grid">
+    <div class="pilar-resumo-card" style="border-left-color:#7ea0b7"><div class="pilar-resumo-val" style="color:#7ea0b7">${nOS}</div><div class="pilar-resumo-label">OS enviadas</div><div class="pilar-resumo-sub">${totalItensOS} itens</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:${corSolic}"><div class="pilar-resumo-val" style="color:${corSolic}">${nSolic}</div><div class="pilar-resumo-label">Material extra</div><div class="pilar-resumo-sub">${totalSolic} solicitacoes</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:#c04030"><div class="pilar-resumo-val" style="color:${multiSolic>0?'#c04030':'var(--ink-faint)'}">${multiSolic}</div><div class="pilar-resumo-label">Pediram 2+ vezes</div><div class="pilar-resumo-sub">${n>0?Math.round(multiSolic/n*100):0}% das obras</div></div>
   </div>`;
+  document.getElementById('pilar-resumo-mat').innerHTML = rMat;
 
-  // ── COLUNA 3: QUALIDADE ──
-  html += `<div class="narr-pilar">
-    <div class="narr-pilar-titulo"><span class="narr-pilar-tag" style="background:${nFin > 0 && lmp / nFin >= 0.5 ? '#3d7a50' : nFin > 0 ? '#c04030' : '#a89e92'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6h6l-5 4 2 7-6-4-6 4 2-7-5-4h6z"/></svg></span> Qualidade</div>`;
+  const rPrazo = `<div class="pilar-resumo-grid">
+    <div class="pilar-resumo-card" style="border-left-color:${pctPrazo!=null?corPrazo:'var(--line)'}"><div class="pilar-resumo-val" style="color:${pctPrazo!=null?corPrazo:'var(--ink-faint)'}">${pctPrazo!=null?pctPrazo+'%':'—'}</div><div class="pilar-resumo-label">No prazo</div><div class="pilar-resumo-sub">${noPrazo} de ${cp.length} obras</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:var(--line)"><div class="pilar-resumo-val">${dMed!=null?(dMed>0?'+':'')+dMed+'d':'—'}</div><div class="pilar-resumo-label">Mediana desvio</div><div class="pilar-resumo-sub">${cp.length} com prazo</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:var(--line)"><div class="pilar-resumo-val" style="color:var(--ink-faint)">${n-cp.length}</div><div class="pilar-resumo-label">Sem prazo</div><div class="pilar-resumo-sub">${n>0?Math.round((n-cp.length)/n*100):0}%</div></div>
+  </div>`;
+  document.getElementById('pilar-resumo-prazo').innerHTML = rPrazo;
+
+  let rQual = '';
   if (nFin > 0) {
-    const pLmp = Math.round(lmp / nFin * 100);
-    const pRess = Math.round(ress / nFin * 100);
-    const pRet = Math.round(retrab / nFin * 100);
-    html += `<div class="narr-entrega">
-      <div class="narr-ent-card" style="border-bottom:3px solid #3d7a50">
-        <div class="narr-ent-val" style="color:#3d7a50">${lmp}</div>
-        <div class="narr-ent-label" style="color:#3d7a50">Entrega limpa</div>
-        <div class="narr-ent-pct" style="color:#3d7a50">${pLmp}% de ${nFin}</div>
-      </div>
-      <div class="narr-ent-card" style="border-bottom:3px solid #9a7a20">
-        <div class="narr-ent-val" style="color:#9a7a20">${ress}</div>
-        <div class="narr-ent-label" style="color:#9a7a20">Ressalvas</div>
-        <div class="narr-ent-pct" style="color:#9a7a20">${pRess}%</div>
-      </div>
-      <div class="narr-ent-card" style="border-bottom:3px solid #c04030">
-        <div class="narr-ent-val" style="color:#c04030">${retrab}</div>
-        <div class="narr-ent-label" style="color:#c04030">Retrabalho</div>
-        <div class="narr-ent-pct" style="color:#c04030">${pRet}%</div>
-      </div>
+    const pLmp = Math.round(lmp/nFin*100);
+    rQual = `<div class="pilar-resumo-grid">
+      <div class="pilar-resumo-card" style="border-left-color:#3d7a50"><div class="pilar-resumo-val" style="color:#3d7a50">${lmp}</div><div class="pilar-resumo-label">Limpa</div><div class="pilar-resumo-sub">${pLmp}% de ${nFin}</div></div>
+      <div class="pilar-resumo-card" style="border-left-color:#9a7a20"><div class="pilar-resumo-val" style="color:#9a7a20">${ress}</div><div class="pilar-resumo-label">Ressalvas</div></div>
+      <div class="pilar-resumo-card" style="border-left-color:#c04030"><div class="pilar-resumo-val" style="color:#c04030">${retrab}</div><div class="pilar-resumo-label">Retrabalho</div></div>
     </div>`;
   } else {
-    html += `<div style="padding:12px;color:var(--ink-faint);font-size:13px">Nenhuma obra finalizada neste mes.</div>`;
+    rQual = `<div style="padding:10px;color:var(--ink-faint);font-size:12px">Nenhuma finalizada neste mes.</div>`;
   }
-  html += `</div>`;
-
-  html += `</div>`; // fecha narr-colunas
+  document.getElementById('pilar-resumo-qual').innerHTML = rQual;
 
   const faixas = {};
   obras.forEach(o => { const f = o.faixa_metragem || '?'; faixas[f] = (faixas[f] || 0) + 1; });
@@ -6888,33 +7069,9 @@ function compNarrativa(F) {
   </div>`;
 
   el.innerHTML = html;
+  document.getElementById('comp-sidebar').innerHTML = sideHtml;
 }
 
-function compKPIs(F) {
-  const comMat=F.filter(o=>o.consistencia_material&&(o.consistencia_material.tem_os||o.consistencia_material.tem_consumo_telegram||o.consistencia_material.tem_solicitacoes));
-  const sm=comMat.filter(o=>o.consistencia_material.score!=null);
-  const avg=sm.length?Math.round(sm.reduce((s,o)=>s+o.consistencia_material.score,0)/sm.length):'—';
-  const crit=sm.filter(o=>o.consistencia_material.score<40).length;
-  const nExtra = F.reduce((s,o) => s + (o.solicitacoes_material||[]).filter(e => radarDentro(e.data, radarDias)).length, 0);
-  const corExtra = nExtra > 0 ? '#c04030' : '#3d7a50';
-  document.getElementById('comp-kpi-mat').innerHTML=`<div class="comp-kpi-titulo">Radar de Material</div><div class="comp-kpi-valor" style="color:${corExtra}">${nExtra}<span style="font-size:13px;color:var(--ink-faint)"> extras</span></div><div class="comp-kpi-sub"><div><b>${comMat.length}</b> com dados</div><div><b style="color:#c04030">${crit}</b> score critico</div></div>`;
-
-  const cp=F.filter(o=>o.prazo?.desvio_dias!=null);
-  const np=cp.filter(o=>o.prazo.desvio_dias<=0).length;
-  const pct=cp.length?Math.round(np/cp.length*100):null;
-  const dArr=cp.map(o=>o.prazo.desvio_dias).sort((a,b)=>a-b);
-  const dMed=dArr.length?dArr[Math.floor(dArr.length/2)]:null;
-  const cP=pct!=null?(pct>=70?'#3d7a50':pct>=40?'#9a7a20':'#c04030'):'var(--ink-faint)';
-  document.getElementById('comp-kpi-prazo').innerHTML=`<div class="comp-kpi-titulo">Prazo de Execução</div><div class="comp-kpi-valor" style="color:${cP}">${pct!=null?pct+'%':'—'}<span style="font-size:13px;color:var(--ink-faint)"> no prazo</span></div><div class="comp-kpi-sub"><div><b>${cp.length}</b> com prazo</div><div>mediana <b>${dMed!=null?(dMed>0?'+':'')+dMed+'d':'—'}</b></div></div>`;
-
-  const fin=F.filter(o=>COMP_FIN.includes(o.status));
-  const lmp=fin.filter(o=>o.classificacao==='entrega_limpa').length;
-  const pL=fin.length?Math.round(lmp/fin.length*100):null;
-  const ret=fin.filter(o=>o.classificacao==='entrega_com_retrabalho').length;
-  const res=fin.filter(o=>o.classificacao==='entrega_com_ressalvas').length;
-  const cQ=pL!=null?(pL>=70?'#3d7a50':pL>=50?'#9a7a20':'#c04030'):'var(--ink-faint)';
-  document.getElementById('comp-kpi-qual').innerHTML=`<div class="comp-kpi-titulo">Qualidade da Entrega</div><div class="comp-kpi-valor" style="color:${cQ}">${pL!=null?pL+'%':'—'}<span style="font-size:13px;color:var(--ink-faint)"> limpa</span></div><div class="comp-kpi-sub"><div><b>${res}</b> ressalvas</div><div><b style="color:#c04030">${ret}</b> retrabalho</div></div>`;
-}
 
 function compChart(id,type,data,center,extra){
   if(compCharts[id])compCharts[id].destroy();
@@ -7159,10 +7316,84 @@ function compPrazo(F){
   const mar=cd.filter(o=>o.prazo.desvio_dias>0&&o.prazo.desvio_dias<=5).length;
   const mod=cd.filter(o=>o.prazo.desvio_dias>5&&o.prazo.desvio_dias<=15).length;
   const cri=cd.filter(o=>o.prazo.desvio_dias>15).length;
-  const sp=F.filter(o=>!o.prazo||o.prazo.desvio_dias==null).length;
-  compChart('comp-chart-prazo','bar',{labels:['No prazo','Marginal (1–5d)','Moderado (6–15d)','Crítico (>15d)','Sem prazo'],datasets:[{data:[ant,mar,mod,cri,sp],backgroundColor:['#5fa073','#8fb870','#c4a040','#c04030','#d6cdbd'],borderWidth:0,borderRadius:3}]},null,{indexAxis:'y',scales:{x:{grid:{color:'rgba(214,205,189,.3)'},ticks:{color:'#6b6156'}},y:{grid:{display:false},ticks:{color:'#6b6156',font:{size:11}}}}});
-  const rows=cd.map(o=>({n:o.cliente||'—',p:o.prazo.dias_prometidos?o.prazo.dias_prometidos+'d':'—',d:o.prazo.desvio_dias,st:COMP_FIN.includes(o.status)?'Fin.':'Ativa'})).sort((a,b)=>b.d-a.d);
-  compTabRows('comp-tab-prazo',rows,compExpanded.prazo?rows.length:COMP_LIMIT,r=>{const c=r.d<=0?'v':r.d<=5?'a':'r';return`<td class="cn" title="${compEsc(r.n)}">${compEsc(r.n)}</td><td class="cv">${r.p}</td><td class="cv"><span class="cb cb-${c}">${r.d>0?'+':''}${r.d}d</span></td><td><span class="cb cb-${r.st==='Ativa'?'b':'c'}">${r.st}</span></td>`});
+  const execSemPrazo=F.filter(o=>(!o.prazo||o.prazo.desvio_dias==null)&&['em_execucao','aguardando_clima','pausado'].includes(o.status)).length;
+
+  const pct=cd.length?Math.round(ant/cd.length*100):null;
+  const dArr=cd.map(o=>o.prazo.desvio_dias).sort((a,b)=>a-b);
+  const dMed=dArr.length?dArr[Math.floor(dArr.length/2)]:null;
+  const texec=cd.filter(o=>o.tempo_execucao_dias>0).map(o=>o.tempo_execucao_dias).sort((a,b)=>a-b);
+  const medExec=texec.length?texec[Math.floor(texec.length/2)]:null;
+
+  const temTempo=cd.filter(o=>o.tempo_total_dias>0);
+  const avgExec=temTempo.filter(o=>o.tempo_execucao_dias>0).length?Math.round(temTempo.filter(o=>o.tempo_execucao_dias>0).reduce((s,o)=>s+o.tempo_execucao_dias,0)/temTempo.filter(o=>o.tempo_execucao_dias>0).length):0;
+  const avgHib=temTempo.filter(o=>o.tempo_hibernacao_dias>0).length?Math.round(temTempo.filter(o=>o.tempo_hibernacao_dias>0).reduce((s,o)=>s+o.tempo_hibernacao_dias,0)/temTempo.filter(o=>o.tempo_hibernacao_dias>0).length):0;
+
+  const cTaxa=pct!=null?(pct>=60?'pn-ok':pct>=30?'pn-warn':'pn-crit'):'';
+  const cMed=dMed!=null?(dMed<=0?'pn-ok':dMed<=5?'pn-warn':'pn-crit'):'';
+
+  let narr=`Das <span class="pn-num">${cd.length}</span> obras com prazo definido, <span class="pn-num ${cTaxa}">${pct!=null?pct+'%':'—'}</span> entregaram no prazo`;
+  if(dMed!=null) narr+=` — desvio mediano de <span class="pn-num ${cMed}">${dMed>0?'+':''}${dMed} dias</span>`;
+  narr+='.';
+
+  if(avgExec>0||avgHib>0){
+    narr+=`<span class="pn-sep"></span>O gargalo não é a execução (<span class="pn-num">${avgExec}d</span> em média) — é o tempo parado antes dela: <span class="pn-num pn-warn">${avgHib}d</span> de hibernação.`;
+  }
+
+  if(execSemPrazo>5){
+    narr+=`<span class="pn-sep"></span><span class="pn-crit">Ponto cego: <span class="pn-num">${execSemPrazo}</span> obras em execução sem prazo registrado.</span> <span class="pn-muted">Sem data prometida, não há como medir desvio nem gerar alerta.</span>`;
+  } else if(execSemPrazo>0){
+    narr+=`<span class="pn-sep"></span><span class="pn-warn">${execSemPrazo}</span> obras ativas sem prazo definido.`;
+  }
+
+  document.getElementById('prazo-narrativa').innerHTML=narr;
+
+  compChart('comp-chart-prazo','bar',{labels:['No prazo','Marginal (1–5d)','Moderado (6–15d)','Crítico (>15d)'],datasets:[{data:[ant,mar,mod,cri],backgroundColor:['#5fa073','#8fb870','#c4a040','#c04030'],borderWidth:0,borderRadius:3}]},null,{indexAxis:'y',scales:{x:{grid:{color:'rgba(214,205,189,.2)'},ticks:{color:'#6b6156'}},y:{grid:{display:false},ticks:{color:'#6b6156',font:{size:11}}}},plugins:{title:{display:true,text:`Distribuição (${cd.length} obras)`,color:'#6b6156',font:{size:11,weight:'normal'},align:'start',padding:{bottom:8}}}});
+
+  const hoje=new Date().toISOString().slice(0,7);
+  const porMes={};
+  cd.forEach(o=>{
+    const m=(o.data_inicio_real||'').slice(0,7);
+    if(m&&m>='2025-07'&&m<=hoje){
+      if(!porMes[m])porMes[m]={n:0,ok:0,ds:[]};
+      porMes[m].n++;
+      porMes[m].ds.push(o.prazo.desvio_dias);
+      if(o.prazo.desvio_dias<=0)porMes[m].ok++;
+    }
+  });
+  const meses=Object.keys(porMes).sort().slice(-10);
+  const lblMes=meses.map(m=>{const p=m.split('-');const nm=['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return nm[+p[1]]+'/'+p[0].slice(2)});
+  const dataPct=meses.map(m=>porMes[m].n?Math.round(porMes[m].ok/porMes[m].n*100):null);
+  const dataMed=meses.map(m=>{const d=porMes[m].ds.sort((a,b)=>a-b);return d.length?d[Math.floor(d.length/2)]:null});
+  compChart('prazo-chart-trend','line',{labels:lblMes,datasets:[{label:'% No prazo',data:dataPct,borderColor:'#5fa073',backgroundColor:'rgba(95,160,115,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#5fa073',yAxisID:'y'},{label:'Mediana desvio (d)',data:dataMed,borderColor:'#c4a040',backgroundColor:'transparent',borderDash:[5,3],tension:.3,pointRadius:4,pointBackgroundColor:'#c4a040',yAxisID:'y1'}]},null,{plugins:{legend:{display:true,position:'bottom',labels:{color:'#6b6156',padding:10,font:{size:11},usePointStyle:true}},title:{display:true,text:'Tendência mensal',color:'#6b6156',font:{size:11,weight:'normal'},align:'start',padding:{bottom:8}}},scales:{x:{grid:{display:false},ticks:{color:'#6b6156',font:{size:10}}},y:{position:'left',min:0,max:100,grid:{color:'rgba(95,160,115,.12)'},ticks:{color:'#5fa073',callback:v=>v+'%',font:{size:10}}},y1:{position:'right',grid:{display:false},ticks:{color:'#c4a040',callback:v=>(v>0?'+':'')+v+'d',font:{size:10}}}}});
+
+  if(temTempo.length>0){
+    const avgTotal=Math.round(temTempo.reduce((s,o)=>s+o.tempo_total_dias,0)/temTempo.length);
+    const avgPlan=Math.max(0,avgTotal-avgExec-avgHib);
+    const pNorm=avgPlan+avgHib+avgExec||1;
+    document.getElementById('prazo-decomp').innerHTML=`
+      <div class="prazo-decomp-titulo">Onde o tempo vai (${temTempo.length} obras)</div>
+      <div class="prazo-decomp-row">
+        <div class="prazo-decomp-label">${avgTotal}d total</div>
+        <div class="prazo-decomp-bar">
+          <div class="prazo-decomp-seg" style="width:${avgPlan/pNorm*100}%;background:#b3ccd0">${avgPlan>5?avgPlan+'d':''}</div>
+          <div class="prazo-decomp-seg" style="width:${avgHib/pNorm*100}%;background:#d6cdbd">${avgHib>5?avgHib+'d':''}</div>
+          <div class="prazo-decomp-seg" style="width:${avgExec/pNorm*100}%;background:#5fa073">${avgExec>3?avgExec+'d':''}</div>
+        </div>
+      </div>
+      <div class="prazo-decomp-leg">
+        <span class="leg-plan">Planejamento ${avgPlan}d</span>
+        <span class="leg-hib">Hibernação ${avgHib}d</span>
+        <span class="leg-exec">Execução ${avgExec}d</span>
+      </div>`;
+  } else {
+    document.getElementById('prazo-decomp').innerHTML='';
+  }
+
+  const rows=cd.map(o=>({n:o.cliente||'—',p:o.prazo.dias_prometidos?o.prazo.dias_prometidos+'d':'—',ex:o.tempo_execucao_dias?o.tempo_execucao_dias+'d':'—',d:o.prazo.desvio_dias,st:COMP_FIN.includes(o.status)?'Fin.':'Ativa'})).sort((a,b)=>b.d-a.d);
+  compTabRows('comp-tab-prazo',rows,compExpanded.prazo?rows.length:COMP_LIMIT,r=>{
+    const c=r.d<=0?'v':r.d<=5?'a':'r';
+    return`<td class="cn" title="${compEsc(r.n)}">${compEsc(r.n)}</td><td class="cv">${r.p}</td><td class="cv">${r.ex}</td><td class="cv"><span class="cb cb-${c}">${r.d>0?'+':''}${r.d}d</span></td><td><span class="cb cb-${r.st==='Ativa'?'b':'c'}">${r.st}</span></td>`;
+  });
 }
 
 function compQualidade(F){
@@ -7194,7 +7425,204 @@ function compConsultores(F){
   }).join('');
 }
 
+/* ═══════════════════════════════════════════════
+   PANORAMA · derivado de jornadas.json
+   ═══════════════════════════════════════════════ */
+const COR_MAP = {
+  'Mirage':'#4a4a4a','Everest':'#d8d8d8','Saara':'#d4c4a8','Sasha':'#a08870','Ghost':'#e8e0d8',
+  'Ash':'#b0a898','Kalahari':'#8b7355','Arabia':'#c8a878','Flamingo':'#d4948a','Atena':'#c0b8a8',
+  'Terracota':'#c07050','Hassan':'#a89878','Concreto':'#808080','Bianco':'#f5f0e8','Grafite':'#2f2f2f',
+  'Argento':'#c0c0c0','Sahara':'#d4c4a8','Rustic':'#987050','Limestone':'#d0c8b8'
+};
+
+function renderPanorama(){
+  if (!DADOS) return;
+  const obras = DADOS.obras || [];
+  const n = obras.length;
+
+  let nRiscoCrit = 0, nRiscoAlto = 0, nDisc = 0, nDiscAtrasado = 0, nRetAtivo = 0, nLimpa = 0, nRessalva = 0, nRetTotal = 0, nFin = 0;
+  const corCount = {};
+  const corRetCount = {};
+  const alertCount = {};
+  const retConsultor = {};
+  const criticas = [];
+
+  for (const o of obras) {
+    const sr = (o.score_risco || {}).nivel;
+    if (sr === 'critico') { nRiscoCrit++; criticas.push(o); }
+    if (sr === 'alto') nRiscoAlto++;
+    const disc = (o.alertas || []).includes('discordancia_painel_telegram');
+    if (disc) { nDisc++; if ((o.discordancia_painel_telegram||{}).tipo === 'painel_atrasado') nDiscAtrasado++; }
+    const cl = o.classificacao || '';
+    if (cl.includes('retrabalho')) nRetAtivo++;
+    if (cl === 'entrega_limpa') nLimpa++;
+    if (cl === 'entrega_com_ressalvas') nRessalva++;
+    if (cl === 'entrega_com_retrabalho') nRetTotal++;
+    if (cl.startsWith('entrega')) nFin++;
+    for (const c of (o.cores || [])) {
+      corCount[c] = (corCount[c]||0) + 1;
+      if (cl.includes('retrabalho')) corRetCount[c] = (corRetCount[c]||0) + 1;
+    }
+    for (const a of (o.alertas || [])) alertCount[a] = (alertCount[a]||0) + 1;
+    if (cl.includes('retrabalho')) {
+      const cons = (o.equipe?.monofloor?.operacoes || '').trim() || 'Sem consultor';
+      retConsultor[cons] = (retConsultor[cons]||0) + 1;
+    }
+  }
+
+  const nRiscoTotal = nRiscoCrit + nRiscoAlto;
+  const pctRisco = n > 0 ? Math.round(nRiscoTotal/n*100) : 0;
+  const pctDisc = n > 0 ? Math.round(nDisc/n*100) : 0;
+  const topRetCons = Object.entries(retConsultor).sort((a,b)=>b[1]-a[1]).slice(0,2);
+  const retConsStr = topRetCons.map(([nm,qt])=>nm+' ('+qt+')').join(' e ');
+  const pctLimpa = nFin > 0 ? Math.round(nLimpa/nFin*100) : 0;
+
+  const dataStr = fmtData((DADOS.gerado_em||'').slice(0,10));
+  const tm = DADOS.tendencia_mensal || [];
+  let tendFrase = '';
+  if (tm.length >= 2) {
+    const ult = tm[tm.length-1];
+    const pen = tm[tm.length-2];
+    const meses = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+    const mesNome = meses[parseInt((ult.mes||'').split('-')[1],10)-1] || '';
+    const penNome = meses[parseInt((pen.mes||'').split('-')[1],10)-1] || '';
+    const iniUlt = ult.iniciadas||0, iniPen = pen.iniciadas||0;
+    if (iniPen > 0) {
+      const var_ = Math.round((iniUlt-iniPen)/iniPen*100);
+      if (var_ > 0) tendFrase = `${mesNome} com <span class="up">+${var_}% de iniciadas</span> vs ${penNome} (${iniUlt} vs ${iniPen}).`;
+      else if (var_ < 0) tendFrase = `${mesNome} com <span class="down">${var_}% de iniciadas</span> vs ${penNome} (${iniUlt} vs ${iniPen}).`;
+    }
+  }
+
+  // NARRATIVA
+  document.getElementById('pano-narrativa').innerHTML = `
+    <div class="pano-narrativa-titulo">Estado da operacao · ${dataStr}</div>
+    <div class="pano-narrativa-texto">
+      <strong>${n} obras ativas.</strong>
+      <span class="crit">${nRiscoCrit} em risco critico</span> e <span class="warn">${nRiscoAlto} em risco alto</span> — juntas, ${pctRisco}% da carteira.
+      Discordancia Painel x Telegram em <span class="purple">${nDisc} obras</span> (${pctDisc}%)${nDiscAtrasado ? ', sendo '+nDiscAtrasado+' com painel atrasado' : ''}.
+      Retrabalho ativo em <span class="crit">${nRetAtivo} obras</span>${retConsStr ? ', concentrado em '+retConsStr : ''}.
+      ${nFin > 0 ? `Das ${nFin} finalizadas, apenas <span class="crit">${nLimpa} entregaram limpo (${pctLimpa}%)</span> — ${nRessalva} com ressalvas, ${nRetTotal} com retrabalho.` : ''}
+      ${tendFrase ? `<span class="muted">Tendencia: ${tendFrase}</span>` : ''}
+    </div>`;
+
+  // ATENÇÃO IMEDIATA
+  if (criticas.length > 0 || nRiscoAlto > 0) {
+    let atHtml = `<div class="pano-atencao-titulo">Atencao imediata · ${criticas.length} obra${criticas.length!==1?'s':''} critica${criticas.length!==1?'s':''}</div>`;
+    criticas.sort((a,b)=>(b.score_risco?.score||0)-(a.score_risco?.score||0));
+    for (const o of criticas) {
+      const s = o.score_risco||{};
+      const sinais = [];
+      if ((o.classificacao||'').includes('retrabalho')) sinais.push('retrabalho ativo');
+      if ((o.alertas||[]).includes('discordancia_painel_telegram')) sinais.push('discordancia painel');
+      if (s.friccao === 'alta') sinais.push('friccao alta');
+      if ((o.alertas||[]).includes('telegram_silencioso')) sinais.push('telegram silencioso');
+      atHtml += `<div class="pano-atencao-item"><div><div class="pano-atencao-nome">${o.cliente||'—'}</div><div class="pano-atencao-detalhe">score ${s.score||0} · ${sinais.join(' · ')||'multiplos sinais'}</div></div><span class="pano-atencao-badge crit">CRITICO</span></div>`;
+    }
+    if (nRiscoAlto > 0) {
+      atHtml += `<div class="pano-atencao-item warn"><div><div class="pano-atencao-nome">+ ${nRiscoAlto} obras em risco alto</div><div class="pano-atencao-detalhe">veja na aba Jornada filtrada por risco</div></div><span class="pano-atencao-badge alto">ALTO</span></div>`;
+    }
+    document.getElementById('pano-atencao').innerHTML = atHtml;
+  }
+
+  // TENDÊNCIA MENSAL
+  if (tm.length) {
+    const maxIni = Math.max(...tm.map(m=>m.iniciadas||0), 1);
+    const mesesAbr = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    let html = '<div class="pano-bloco-titulo">Tendencia mensal</div><div class="pano-tend-grid">';
+    for (const m of tm) {
+      const [a,mm] = (m.mes||'').split('-');
+      const label = mesesAbr[parseInt(mm,10)-1] + '/' + (a||'').slice(2);
+      const wIni = Math.round(((m.iniciadas||0)/maxIni)*100);
+      const wFin = Math.round(((m.finalizadas||0)/maxIni)*100);
+      const wRet = Math.round(((m.com_retrabalho||0)/maxIni)*100);
+      html += `<span class="pano-tend-mes">${label}</span>
+        <div class="pano-tend-row">
+          <div class="pano-tend-bar" style="width:${wIni}%;background:var(--gold)"></div>
+          <div class="pano-tend-bar" style="width:${wFin}%;background:#3d8a5a"></div>
+          ${wRet ? `<div class="pano-tend-bar" style="width:${Math.max(wRet,4)}%;background:#c45a5a"></div>` : ''}
+          <span class="pano-tend-nums">${m.iniciadas||0} ini · ${m.finalizadas||0} fin${m.com_retrabalho ? ' · '+m.com_retrabalho+' ret' : ''}</span>
+        </div>`;
+    }
+    html += '</div><div class="pano-tend-legenda"><span class="l-ini">Iniciadas</span><span class="l-fin">Finalizadas</span><span class="l-ret">Retrabalho</span></div>';
+    if (tendFrase) html += `<div class="pano-tend-frase">${tendFrase}</div>`;
+    document.getElementById('pano-tendencia').innerHTML = html;
+  }
+
+  // CORES com retrabalho
+  const topCores = Object.entries(corCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxCor = topCores.length ? topCores[0][1] : 1;
+  let coresHtml = '<div class="pano-bloco-titulo">Cores mais solicitadas</div>';
+  coresHtml += topCores.map(([nome,qtd]) => {
+    const hex = COR_MAP[nome] || '#b8a080';
+    const pctBar = Math.round(qtd/maxCor*100);
+    const ret = corRetCount[nome] || 0;
+    const pctRet = qtd > 0 ? Math.round(ret/qtd*100) : 0;
+    const retCls = ret > 0 ? 'com-ret' : 'limpo';
+    const retLabel = ret > 0 ? `${ret} ret (${pctRet}%)` : 'limpo';
+    return `<div class="pano-cor-item"><div class="pano-cor-swatch" style="background:${hex}"></div><div class="pano-cor-nome">${nome}</div><div class="pano-cor-stats"><div class="pano-cor-bar-wrap"><div class="pano-cor-bar" style="width:${pctBar}%"></div></div><span class="pano-cor-n">${qtd}</span><span class="pano-cor-ret ${retCls}">${retLabel}</span></div></div>`;
+  }).join('');
+  document.getElementById('pano-cores').innerHTML = coresHtml;
+
+  // ALERTAS
+  const alertLabels = {
+    'discordancia_painel_telegram': ['Discordancia Painel x Telegram', 'status diverge do Telegram', 'crit'],
+    'status_fase_discrepante': ['Status x Fase divergente', 'fase nao bate com status', 'warn'],
+    'telegram_duplicado': ['Telegram duplicado', 'grupo duplicado detectado', 'warn'],
+    'metragem_zero': ['Metragem zero', 'sem m2 cadastrado', 'info'],
+    'metragem_suspeita': ['Metragem suspeita', 'valor fora do esperado', 'info'],
+    'teto_api_msgs': ['Teto API msgs', 'limite de mensagens atingido', 'info']
+  };
+  const topAlerts = Object.entries(alertCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  document.getElementById('pano-flags').innerHTML = topAlerts.map(([key,qtd]) => {
+    const [nome,sub,sev] = alertLabels[key] || [key, '', 'info'];
+    const cls = sev === 'crit' ? '' : sev === 'warn' ? ' warn' : ' info';
+    const numCls = sev === 'crit' ? 'crit' : sev === 'warn' ? 'warn' : 'info';
+    return `<div class="pano-flag${cls}"><div><div class="pano-flag-nome">${nome}</div><div class="pano-flag-sub">${sub}</div></div><div class="pano-flag-num ${numCls}">${qtd}</div></div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   SENTINELA · fetch status.json
+   ═══════════════════════════════════════════════ */
+async function carregarSentinela(){
+  try {
+    const r = await fetch('dados/status.json?t='+Date.now(), {cache:'no-store'});
+    if (!r.ok) return;
+    const st = await r.json();
+    const btn = document.getElementById('sentinela-btn');
+    if (!btn) return;
+    btn.className = 'sentinela-btn ' + (st.geral || 'ok');
+    btn.title = 'Sentinela · ' + (st.geral || 'ok');
+
+    btn.addEventListener('click', () => {
+      const ov = document.getElementById('sentinela-overlay');
+      ov.classList.add('aberta');
+      const checks = st.checks || [];
+      document.getElementById('sentinela-geral').innerHTML =
+        `<span class="ponto ${st.geral||'ok'}"></span> ${st.geral==='ok'?'Tudo limpo':st.geral==='warn'?'Atencao necessaria':'Problemas detectados'} <span class="mono" style="margin-left:auto;color:var(--ink-faint)">${checks.length} checks</span>`;
+      document.getElementById('sentinela-checks').innerHTML = checks.map(ch => {
+        const ico = ch.status==='ok' ? '✓' : ch.status==='warn' ? '⚠' : '✕';
+        return `<div class="sentinela-check"><div class="sentinela-ico ${ch.status}">${ico}</div><div><div class="sentinela-nome">${ch.nome||''}</div>${ch.detalhe?'<div class="sentinela-detalhe">'+ch.detalhe+'</div>':''}${ch.sugestao&&ch.status!=='ok'?'<div class="sentinela-sugestao">→ '+ch.sugestao+'</div>':''}</div></div>`;
+      }).join('');
+    });
+    document.getElementById('sentinela-fechar').addEventListener('click', () => {
+      document.getElementById('sentinela-overlay').classList.remove('aberta');
+    });
+    document.getElementById('sentinela-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) e.currentTarget.classList.remove('aberta');
+    });
+  } catch(e) {}
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.getElementById('sentinela-overlay').classList.remove('aberta');
+  }
+});
+
 carregar();
+carregarSentinela();
 </script>
 
 </body>
