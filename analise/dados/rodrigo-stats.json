@@ -1,23 +1,23 @@
 {
-  "atualizado_em": "2026-05-26T21:11:59Z",
+  "atualizado_em": "2026-05-26T22:50:04Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1078,
     "ativas": 269,
     "finalizados": 809,
-    "em_execucao": 27,
-    "pausados": 2,
-    "m2_em_execucao": 4379
+    "em_execucao": 30,
+    "pausados": 1,
+    "m2_em_execucao": 5208
   },
   "por_status": {
+    "em_execucao": 30,
+    "finalizado": 584,
     "aguardando_execucao": 38,
     "reparo": 20,
-    "planejamento": 94,
+    "planejamento": 92,
     "contrato": 47,
-    "finalizado": 584,
-    "em_execucao": 27,
     "aguardando_clima": 4,
-    "pausado": 2,
+    "pausado": 1,
     "concluido": 225,
     "cancelado": 35,
     "marcas_rolo_cera": 2
@@ -35,14 +35,14 @@
       "obras": 12,
       "m2": 3106
     },
-    "funil_total": 136,
-    "com_data_firmada": 76,
+    "funil_total": 134,
+    "com_data_firmada": 74,
     "sem_data_firmada": 60,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2182,
+    "pending_tasks": 2183,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2174,8 +2174,8 @@
           "id": "b825a98d-42e7-4844-97fe-8b6578a4c2f0",
           "cliente": "DARIO DA SILVA GARCIA ",
           "cidade": "SÃO PAULO",
-          "fase": "EQUIPE DE EXECUÇÃO",
-          "status": "em_execucao"
+          "fase": "OBRA CONCLUÍDA",
+          "status": "finalizado"
         },
         {
           "id": "8dd1d92a-7736-483c-8540-16196aadebf0",
@@ -2278,6 +2278,11 @@
       "dataVisita": "07/04/2025 14:00",
       "dataEntrada": "04/05/2026 13:01",
       "dataExec": "2026-07-27"
+    },
+    "aa24b7ea-9622-488f-92ef-49c0a6c14b2c": {
+      "dataVisita": "31/10/2025 13:00",
+      "dataEntrada": "04/03/2026 16:00",
+      "dataExec": ""
     },
     "44b98557-d6ea-4e69-b5bd-2967956ea21d": {
       "dataVisita": "",
@@ -3144,11 +3149,6 @@
       "dataEntrada": "",
       "dataExec": "2026-12-19"
     },
-    "b825a98d-42e7-4844-97fe-8b6578a4c2f0": {
-      "dataVisita": "05/02/2026 19:00",
-      "dataEntrada": "11/05/2026 10:00",
-      "dataExec": "2026-05-11"
-    },
     "041e3ee4-489c-458d-bed9-54186c8d4150": {
       "dataVisita": "",
       "dataEntrada": "",
@@ -3463,17 +3463,17 @@
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-26T12:01:16.279000+00:00",
     "total_fluxo": 212,
-    "com_kira": 118,
+    "com_kira": 117,
     "saudavel": 67,
-    "saudavel_pct_no_monitorado": 56.8,
-    "atencao": 51,
-    "sem_kira": 94,
+    "saudavel_pct_no_monitorado": 57.3,
+    "atencao": 50,
+    "sem_kira": 95,
     "clima_dist": {
       "Positivo": 23,
       "Neutro": 45,
-      "Tenso": 57,
+      "Tenso": 56,
       "Crítico": 2,
-      "?": 106
+      "?": 107
     },
     "obras_atencao": [
       {
@@ -5008,7 +5008,7 @@
         "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
         "cidade": "CEP 33400",
         "fase": "OBRA PAUSADA",
-        "status": "pausado",
+        "status": "em_execucao",
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
@@ -5883,144 +5883,6 @@
         ]
       },
       {
-        "id": "b825a98d-42e7-4844-97fe-8b6578a4c2f0",
-        "cliente": "DARIO DA SILVA GARCIA",
-        "consultor": "LUANA",
-        "consultor_full": "LUANA PATRICIA DE ANDRADE LIMA",
-        "cidade": "SÃO PAULO",
-        "fase": "EQUIPE DE EXECUÇÃO",
-        "status": "em_execucao",
-        "clima": "Tenso",
-        "n_alertas": 4,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 33,
-        "alertas": [
-          "Remoção total do contrapiso em 12/03 pelo cliente sem supervisão técnica da Monofloor: decisão autônoma do cliente que impactou diretamente o cronograma e empurrou a entrada para 11/05.",
-          "Falha de comparecimento do consultor Nathan na visita de 09/03 às 09h30 sem aviso prévio: gerou constrangimento com cliente já sensibilizado por remarcações anteriores.",
-          "Cliente demonstrou insatisfação explícita com gestão de datas ('Começamos bem'): histórico de expectativa frustrada com data 06/03 que foi confirmada verbalmente mas não honrada. Risco de relacionamento elevado para próximo agendamento em 11/05.",
-          "Desalinhamento interno entre equipes (atendimento x projetos x indústria): escopo não estava confirmado quando visitas e datas foram comunicadas ao cliente, gerando contradições que prejudicaram a credibilidade da Monofloor."
-        ],
-        "pendencias": [
-          "E-mails para cadastro: Pedro solicitou em 18/03 os endereços de e-mail das pessoas que precisam receber atualizações do projeto. Cliente disse que salvaria o número mas não forneceu os e-mails ainda.",
-          "Antecipação da data 11/05: Monofloor comprometeu-se a informar prontamente caso surja possibilidade de antecipar a entrada antes de 11/05. Deve ser monitorado proativamente conforme o contrapiso cure."
-        ],
-        "resumo_exec": "O projeto do cliente Dario passou por múltiplas remarcações de data de entrada entre fevereiro e março de 2026, gerando insatisfação visível por parte do cliente. A principal causa foi um desalinhamento interno entre as equipes de atendimento, projetos e indústria da Monofloor, que resultou na comunicação de datas antes da confirmação do escopo e das aferições técnicas. O episódio mais crítico ocorreu em 12/03, quando o cliente optou por remover e refazer todo o contrapiso de forma autônoma, inviabilizando o início previsto para 18/03 e postergando a entrada para 11/05. A obra encontra-se atua",
-        "clima_desc": "O cliente Dario demonstrou insatisfação clara com remarcações de data e falta de alinhamento interno da equipe Monofloor. Apesar de cooperativo, sinalizou frustração com a frase 'Começamos bem' após a primeira remarcação.",
-        "periodo": "18/02 a 18/03/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 75,
-        "eventos": [
-          {
-            "data": "18/02",
-            "iso": "2026-02-18",
-            "texto": "Monofloor propõe visita técnica para 25/02 às 10h",
-            "classe": "neutro"
-          },
-          {
-            "data": "19/02",
-            "iso": "2026-02-19",
-            "texto": "Data da visita confirmada pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "24/02",
-            "iso": "2026-02-24",
-            "texto": "Horário da visita antecipado para 09h30 e reconfirmado",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/02",
-            "iso": "2026-02-25",
-            "texto": "Visita realizada; relatório técnico enviado com lista de adequações necessárias (lixamento do contrapiso, regularizações, restrições de tabica, remoção de móveis)",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Cliente informa que lixamento do contrapiso será feito em 27/02 e que tudo estará pronto até 06/03",
-            "classe": "neutro"
-          },
-          {
-            "data": "26/02",
-            "iso": "2026-02-26",
-            "texto": "Monofloor informa que data 06/03 não é viável pois aferições só foram feitas na visita de 25/02 e há pendência de confirmação de escopo (prazo de 12 dias úteis de indústria)",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente Dario adicionado ao grupo; questiona data de início e demonstra insatisfação com remarcação",
-            "classe": "critico"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Data de entrada acordada para 18/03, condicionada à confirmação de escopo",
-            "classe": "neutro"
-          },
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Cliente reage com ironia: 'Começamos bem'",
-            "classe": "neutro"
-          },
-          {
-            "data": "05/03",
-            "iso": "2026-03-05",
-            "texto": "Monofloor agenda nova visita técnica pré-entrada para 09/03 às 09h30",
-            "classe": "neutro"
-          },
-          {
-            "data": "09/03",
-            "iso": "2026-03-09",
-            "texto": "Consultor Nathan não comparece no horário agendado; visita remarcada para 16h45 do mesmo dia",
-            "classe": "critico"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Monofloor informa que imagens da visita estão sendo analisadas pela área técnica",
-            "classe": "neutro"
-          },
-          {
-            "data": "11/03",
-            "iso": "2026-03-11",
-            "texto": "Monofloor confirma que aplicação não pode ser parcial e que a entrada precisa ser postergada devido a regularizações com prazo de ~21 dias informadas pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Luana (equipe operacional) envia briefing de início para 18/03, cor Sasha, 18 dias úteis de execução",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Dario informa que todo o contrapiso foi removido e será refeito no dia seguinte; início em 18/03 cancelado",
-            "classe": "critico"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Monofloor informa que agenda está comprometida e próximo encaixe disponível é 11/05",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/03",
-            "iso": "2026-03-13",
-            "texto": "Dario confirma novo contrapiso com 3 cm de espessura (cura de 3 a 4 semanas) e aceita data de 11/05 com esperança de antecipação",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Pedro assume comunicação direta com o cliente, encerrando comunicação pelo grupo; solicita e-mails para cadastro",
-            "classe": "neutro"
-          }
-        ]
-      },
-      {
         "id": "0eb042d7-e02e-48b6-92a2-72f9a9157c92",
         "cliente": "APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA",
         "consultor": "LUANA",
@@ -6605,7 +6467,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 41,
+        "dias_desde_resumo": 42,
         "alertas": [
           "RISCO DE TONALIDADE: Cliente expressou preocupação com diferença visual significativa entre o Goiabada no balde (Stelion) e a referência anterior (Lilit/obra Giulia Cabral). Aplicação já iniciada. Divergência de tonalidade pós-aplicação pode gerar retrabalho ou contestação.",
           "HISTÓRICO DE DESPLACAMENTO (obra Amílcar): Cliente mencionou diretamente caso anterior de desplacamento total em obra da Monofloor (Amílcar), criando expectativa elevada de fiscalização e risco de contestação caso ocorra qualquer patologia semelhante nesta obra.",
@@ -6803,7 +6665,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 41,
+        "dias_desde_resumo": 42,
         "alertas": [
           "Cor do projeto indefinida operacionalmente: cliente diz ter respondido pelo canal novo, mas não há confirmação da equipe — com prazo de produção de 12 dias úteis e entrada em 18/05, o prazo limite para confirmação está se aproximando",
           "Mudança de canal gerou ruído e insatisfação explícita do cliente ('Está confuso… ????') — risco de deterioração do relacionamento se a comunicação não for estabilizada imediatamente",
@@ -7646,6 +7508,14 @@
         "consultor": "LUANA",
         "cidade": "Quadra RH2 Lote 11)",
         "fase": "LOGÍSTICA - MATERIAL ENTREGUE",
+        "tem_grupo": false
+      },
+      {
+        "id": "aa24b7ea-9622-488f-92ef-49c0a6c14b2c",
+        "cliente": "JOAO PAULO VERIDIANO PICCOLO",
+        "consultor": "Wesley",
+        "cidade": "SÃO PAULO",
+        "fase": "OBRA CONCLUÍDA",
         "tem_grupo": false
       },
       {
@@ -8608,16 +8478,16 @@
   },
   "lw": {
     "luana": {
-      "n": 81,
+      "n": 80,
       "mediana": 267,
       "n180": 52,
       "n270": 38,
       "zumbi": 8,
       "reparo": 7,
-      "pausadas": 1
+      "pausadas": 0
     },
     "wesley": {
-      "n": 75,
+      "n": 76,
       "mediana": 218,
       "n180": 46,
       "n270": 26,
