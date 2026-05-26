@@ -146,7 +146,14 @@ def main():
     else:
         print(f"\n  [DRY] Passo 2 pulado (pipeline nao roda em dry run)")
 
-    # Passo 3: Relatorio
+    # Passo 3: Publicar no Cloudflare
+    if not dry:
+        rodar(
+            [str(AGENTE / "publicar.py")],
+            "PASSO 3: Publicar no Cloudflare (wrangler deploy)"
+        )
+
+    # Passo 4: Relatorio
     if not dry:
         relatorio_cobertura()
 
