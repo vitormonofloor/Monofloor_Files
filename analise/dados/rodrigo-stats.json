@@ -1,18 +1,18 @@
 {
-  "atualizado_em": "2026-05-26T16:57:16Z",
+  "atualizado_em": "2026-05-26T19:24:42Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
-    "total": 1078,
-    "ativas": 267,
+    "total": 1079,
+    "ativas": 268,
     "finalizados": 811,
     "em_execucao": 27,
     "pausados": 2,
     "m2_em_execucao": 4379
   },
   "por_status": {
-    "contrato": 47,
-    "planejamento": 93,
+    "contrato": 48,
     "aguardando_execucao": 38,
+    "planejamento": 93,
     "finalizado": 584,
     "em_execucao": 27,
     "reparo": 19,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2182,
+    "pending_tasks": 2180,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -1035,9 +1035,13 @@
     }
   ],
   "tempo": {
-    "obras_base": 0,
+    "ciclo_total_mediana": 172,
+    "pre_execucao_mediana": 107,
+    "execucao_mediana": 26,
+    "meta_dias": 150,
+    "obras_base": 102,
     "periodo": "2026",
-    "fonte": "Painel de Obras — snapshot indisponível"
+    "fonte": "Painel de Obras (snapshot 2026-05-25T11:51:40.899153)"
   },
   "aplicadores": {
     "total_cadastrados": 186,
@@ -2303,7 +2307,7 @@
     "08b0d9bd-50d3-414e-a62a-e852259c4997": {
       "dataVisita": "09/01/2026 16:00",
       "dataEntrada": "20/04/2026 12:00",
-      "dataExec": "2026-06-15"
+      "dataExec": "2026-06-24"
     },
     "920dcacc-ed7e-4715-bc7e-a071c4b4a528": {
       "dataVisita": "",
@@ -2444,6 +2448,11 @@
       "dataVisita": "30/03/2026 13:00",
       "dataEntrada": "11/05/2026 11:00",
       "dataExec": "2026-06-22"
+    },
+    "2ed9ba45-f23d-47cc-9096-56d6ea8815f5": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2027-01-01"
     },
     "43002c92-53dc-4e3a-a291-432b0b2a87f2": {
       "dataVisita": "13/08/2025 10:30",
@@ -2628,7 +2637,7 @@
     "b4e7296c-1393-4eaf-aef8-3097b0e0c46b": {
       "dataVisita": "30/10/2025 15:00",
       "dataEntrada": "13/04/2026 09:00",
-      "dataExec": "2026-06-04"
+      "dataExec": "2026-04-13"
     },
     "60bbb228-b6fe-4b58-9fa9-8ce14982cd7a": {
       "dataVisita": "",
@@ -2643,7 +2652,7 @@
     "8ad097b9-766a-4959-8bef-b23c9cdd182b": {
       "dataVisita": "21/05/2025 15:30",
       "dataEntrada": "02/02/2026 09:00",
-      "dataExec": "2026-06-10"
+      "dataExec": "2026-06-25"
     },
     "a680acb2-1808-43b8-9d91-1c2226cb1122": {
       "dataVisita": "05/06/2025 11:00",
@@ -2798,7 +2807,7 @@
     "c29fc4b3-f8e3-4c07-ade0-cb0351adca2b": {
       "dataVisita": "17/09/2025 13:00",
       "dataEntrada": "06/04/2026 09:00",
-      "dataExec": "2026-06-08"
+      "dataExec": "2026-06-25"
     },
     "02e37e72-46fc-445d-ad95-b50dc5ed2c49": {
       "dataVisita": "",
@@ -2818,7 +2827,7 @@
     "bbedc8ae-7665-47ba-83ca-49e6ca0431d3": {
       "dataVisita": "30/01/2026 17:00",
       "dataEntrada": "15/06/2026 03:00",
-      "dataExec": "2026-07-10"
+      "dataExec": "2026-07-22"
     },
     "6c0eb41d-8af5-4d80-8505-c8a46404f295": {
       "dataVisita": "",
@@ -3383,6 +3392,7 @@
       "2369c899",
       "2498f5be",
       "25671021",
+      "2ed9ba45",
       "30fd6233",
       "316cd248",
       "33b743cf",
@@ -3440,23 +3450,23 @@
       "fbe92420",
       "fd444f0c"
     ],
-    "orfas_n": 64,
+    "orfas_n": 65,
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
     "kira_atualizado_em": "2026-05-26T12:01:16.279000+00:00",
-    "total_fluxo": 211,
+    "total_fluxo": 212,
     "com_kira": 115,
     "saudavel": 67,
     "saudavel_pct_no_monitorado": 58.3,
     "atencao": 48,
-    "sem_kira": 96,
+    "sem_kira": 97,
     "clima_dist": {
       "Positivo": 23,
       "Neutro": 45,
       "Tenso": 53,
       "Crítico": 2,
-      "?": 108
+      "?": 109
     },
     "obras_atencao": [
       {
@@ -3600,6 +3610,157 @@
             "data": "22/04",
             "iso": "2026-04-22",
             "texto": "Atendimento confirma entrega das amostras para a tarde do dia 22/04",
+            "classe": "neutro"
+          }
+        ]
+      },
+      {
+        "id": "2d17b8ae-fef0-43b0-996e-accba3c3b709",
+        "cliente": "DIOGO CANTERAS SANTOS",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
+        "status": "planejamento",
+        "clima": "Tenso",
+        "n_alertas": 3,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 0,
+        "alertas": [
+          "RISCO DE RESCISÃO: Em 22/05 Diogo afirmou que 'a venda de vocês não foi adequada para a casa' e mencionou explicitamente a possibilidade de reversão do contrato — exige posição técnica e comercial resolutiva no call de 26/05",
+          "CONFLITO TÉCNICO SOBRE GARANTIA: Cliente entende que a Monofloor pediu a retirada da junta de dilatação; Monofloor afirma que não aplica sobre juntas ativas mas não recomenda a retirada — ambiguidade que precisa ser resolvida formalmente antes da aplicação",
+          "INSATISFAÇÃO COMERCIAL ACUMULADA: Cliente já questionou cobrança de trilhos (24/03), medição do escopo e agora adequação técnica do produto — padrão de desconfiança que pode comprometer a continuidade do projeto"
+        ],
+        "pendencias": [
+          "Orçamento dos complementos (escada, bancada lavabo, degrau e trilhos porta sala-cozinha) solicitado em 15/04 pela arquiteta Thábata — proposta formal nunca foi enviada na conversa",
+          "Foto da bancada do lavabo solicitada pela Thaísa (Monofloor) em 15/04 para finalizar orçamento — cliente não enviou e equipe não fez novo follow-up",
+          "Resolução técnica definitiva sobre as juntas de dilatação: cliente aguarda posição formal da Monofloor que garanta cobertura de garantia, conforme solicitado em 22/05",
+          "Resultado e encaminhamentos do call iniciado em 26/05 — conversa encerra sem registro de conclusão"
+        ],
+        "resumo_exec": "O projeto Diogo e Julia Canteras encontra-se em fase de pré-aplicação, com a superfície ainda em preparo e pendências técnicas críticas não resolvidas. O cliente acumulou insatisfações ao longo dos dois meses: primeiro com a forma de cobrança dos trilhos (resolvida via aditivo), depois com dúvidas sobre juntas de dilatação que evoluíram para um questionamento formal sobre a adequação da venda. Em 22/05, Diogo sinalizou possível reversão do contrato, tornando o call de 26/05 um momento decisivo para a manutenção do cliente. Há também um orçamento de complementos (escada, bancada, degrau e trilh",
+        "clima_desc": "O cliente iniciou o período de forma colaborativa, mas ao longo das semanas acumulou insatisfações técnicas e comerciais relevantes. O ponto crítico foi atingido quando o cliente questionou a adequação da venda ao seu projeto e sinalizou possibilidade de reversão do contrato.",
+        "periodo": "10/03 a 26/05/2026",
+        "tempo_resp": "Normal",
+        "total_msgs": 150,
+        "eventos": [
+          {
+            "data": "10/03",
+            "iso": "2026-03-10",
+            "texto": "Tentativa de reunião via Zoom/Meet com problemas técnicos de acesso entre as partes",
+            "classe": "critico"
+          },
+          {
+            "data": "12/03",
+            "iso": "2026-03-12",
+            "texto": "Monofloor agenda visita in loco com consultor para 18/03; cliente solicita reagendamento para 23/03",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/03",
+            "iso": "2026-03-13",
+            "texto": "Visita confirmada para 23/03 às 13h; dados do consultor Nathan Janjão enviados para liberação",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/03",
+            "iso": "2026-03-18",
+            "texto": "Pedro (atendimento) comunica mudança de canal de comunicação para atendimento individualizado; cliente resiste à mudança",
+            "classe": "neutro"
+          },
+          {
+            "data": "23/03",
+            "iso": "2026-03-23",
+            "texto": "Visita do consultor realizada; cliente Julia não pôde comparecer presencialmente por problema pessoal, participou por vídeo",
+            "classe": "critico"
+          },
+          {
+            "data": "24/03",
+            "iso": "2026-03-24",
+            "texto": "Cliente Diogo questiona medição e cobrança dos trilhos por metro linear, considerando o valor desproporcional (~25% do contrato)",
+            "classe": "critico"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Escopo dos trilhos corrigido após Diogo detalhar configuração das portas (2 de 2 folhas + 1 de 3 folhas); aditivo contratual gerado e assinado",
+            "classe": "neutro"
+          },
+          {
+            "data": "25/03",
+            "iso": "2026-03-25",
+            "texto": "Diogo sinaliza possível porta adicional com trilho entre sala e cozinha",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Monofloor envia documento de regularizações necessárias antes da aplicação e solicita previsão de entrada em obra com 60 dias de antecedência",
+            "classe": "neutro"
+          },
+          {
+            "data": "31/03",
+            "iso": "2026-03-31",
+            "texto": "Cliente confirma pagamento do boleto",
+            "classe": "neutro"
+          },
+          {
+            "data": "13/04",
+            "iso": "2026-04-13",
+            "texto": "Diogo solicita orçamento para escada em monofloor para comparar com pedra",
+            "classe": "neutro"
+          },
+          {
+            "data": "",
+            "iso": null,
+            "texto": "14-15/04: Arquiteta Thábata (time da obra) solicita orçamento de complementos: escada, bancada de lavabo, degrau e trilhos da porta sala-cozinha (4 trilhos, 4.53m de vão)",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/05",
+            "iso": "2026-05-07",
+            "texto": "Julia solicita reunião técnica online sobre uso sem junta de dilatação no contrapiso e implicações de garantia",
+            "classe": "neutro"
+          },
+          {
+            "data": "12/05",
+            "iso": "2026-05-12",
+            "texto": "Julia solicita reunião presencial para a semana seguinte",
+            "classe": "neutro"
+          },
+          {
+            "data": "18/05",
+            "iso": "2026-05-18",
+            "texto": "Visita presencial confirmada",
+            "classe": "neutro"
+          },
+          {
+            "data": "21/05",
+            "iso": "2026-05-21",
+            "texto": "Diogo questiona diretamente a garantia em relação à ausência de junta de dilatação, indicando que sua engenharia discorda da orientação da Monofloor",
+            "classe": "critico"
+          },
+          {
+            "data": "",
+            "iso": null,
+            "texto": "21-22/05: Troca técnica sobre juntas de dilatação; Monofloor esclarece posição técnica, mas cliente interpreta como contradição à venda realizada",
+            "classe": "neutro"
+          },
+          {
+            "data": "22/05",
+            "iso": "2026-05-22",
+            "texto": "Diogo sinaliza que 'a venda não foi adequada para a casa' e solicita call urgente, mencionando possível reversão do contrato",
+            "classe": "critico"
+          },
+          {
+            "data": "22/05",
+            "iso": "2026-05-22",
+            "texto": "Call agendado via link de calendário com diretora técnica",
+            "classe": "neutro"
+          },
+          {
+            "data": "26/05",
+            "iso": "2026-05-26",
+            "texto": "Diogo entra no call agendado; Julia confirma presença no grupo",
             "classe": "neutro"
           }
         ]
@@ -4035,7 +4196,7 @@
         "clima": "Tenso",
         "n_alertas": 7,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "CRÍTICO: Consultor compareceu à obra 1h15 antes do horário agendado (10h em vez de 11h15) sem comunicação prévia, causando falha grave na visita e escalação à diretoria",
           "CRÍTICO: Cliente Paola relatou ter sido informada verbalmente que o serviço só seria concluído em maio, informação não alinhada com o grupo e que gerou forte insatisfação",
@@ -4159,7 +4320,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "CRÍTICO: Equipe chegou em 20/03 sem briefing adequado e sem alinhamento com as orientações técnicas do Francisco — risco de execução incorreta do reparo nas trincas",
           "CRÍTICO: Monofloor comunicou ao cliente que o reparo é 'paliativo' e que os pontos podem permanecer aparentes — expectativa do cliente provavelmente divergente; risco de insatisfação pós-reparo",
@@ -4313,7 +4474,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "QUALIDADE: Diferença de tonalidade (mancha grande) identificada no salão de jogos — cliente afirma que próprio funcionário da Monofloor reconheceu o erro; pontos de correção ainda pendentes de avaliação formal pelo consultor",
           "CONFLITO RESOLVIDO PARCIALMENTE: Cliente acusou Monofloor de má-fé em 13/03 ao tentar cobrar R$ 80/m² por dano causado por animal em área já com problema de tonalidade; custo foi absorvido pela direção mas a insatisfação com a qualidade permanece latente",
@@ -4466,7 +4627,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "Tampa do ralo da varanda estufada: novo problema identificado em 24/03, encaminhado à área técnica mas sem retorno ou solução registrados até 31/03",
           "Reparos do banheiro pendentes há mais de 5 semanas sem data de execução confirmada",
@@ -4595,7 +4756,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "Relatório técnico da visita de 27/03 ainda não foi entregue ao cliente (31/03) - risco de nova cobrança e insatisfação",
           "Obra permanece sem data confirmada de retomada desde 24/02 - mais de 35 dias de paralisação parcial",
@@ -4712,7 +4873,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "URGENTE: Piso desplacando progressivamente desde pelo menos 02/03 — problema ativo sem solução imediata",
           "CRÍTICO: Estudo de impermeabilização pendente desde final de 2025 sem resultado entregue ao cliente, bloqueando definição dos próximos passos técnicos",
@@ -4848,7 +5009,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "Cliente sem resposta há 6 dias (26/03 a 01/04) após nova promessa de retorno da Monofloor",
           "Michelle expressou insatisfação explícita com o ritmo de comunicação em 16/03: 'sem ficar nessa troca de mensagens 1 a cada semana'",
@@ -4972,7 +5133,7 @@
         "clima": "Tenso",
         "n_alertas": 5,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "URGENTE: Proposta e orçamento para solução definitiva prometidos há mais de 2 semanas sem entrega — cliente cobra formalmente em 02/04",
           "NOVO PROBLEMA RELATADO: Em 13/03 a cliente informou nova reação no piso, indicando piora do problema durante o período de espera",
@@ -5420,7 +5581,7 @@
         "clima": "Tenso",
         "n_alertas": 4,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 52,
+        "dias_desde_resumo": 53,
         "alertas": [
           "Reunião agendada para 14:00h não foi cumprida no horário — atraso superior a 1 hora sem comunicação prévia ao grupo",
           "Participante utilizou '@todos' demonstrando necessidade de atenção coletiva, indicando possível urgência",
@@ -5614,7 +5775,7 @@
         "clima": "Tenso",
         "n_alertas": 3,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 32,
+        "dias_desde_resumo": 33,
         "alertas": [
           "Cliente e gestor de obra (Gustavo) explicitaram em 22/04 que há 'pontos críticos' pendentes que estão bloqueando outras frentes de serviço necessárias para a mudança — risco real de atraso em cadeia e insatisfação do cliente",
           "Monofloor ficou sem resposta por mais de 5 dias (17 a 22/04) durante fase de encerramento de obra, gerando cobranças múltiplas e mensagem de pressão coletiva de Gustavo — risco de deterioração do relacionamento",
@@ -6527,150 +6688,6 @@
         ]
       },
       {
-        "id": "2d17b8ae-fef0-43b0-996e-accba3c3b709",
-        "cliente": "DIOGO CANTERAS SANTOS",
-        "consultor": "Wesley",
-        "consultor_full": "Wesley Matheus de Carvalho",
-        "cidade": "SÃO PAULO",
-        "fase": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "status": "planejamento",
-        "clima": "Tenso",
-        "n_alertas": 3,
-        "dias_sem_evento": null,
-        "dias_desde_resumo": 33,
-        "alertas": [
-          "Insatisfação com cobrança por metro linear dos trilhos: cliente considerou o valor absurdo (~20% do contrato) e mencionou que a metodologia 'não foi informada em nenhum momento', mesmo constando em contrato — risco de contestação futura",
-          "Reunião de 10/03 com falha de atendimento: Pedro não entrou na reunião emergencial por estar em outra ligação, enquanto o cliente aguardava retorno urgente sobre cronograma — episódio gerou desgaste de confiança",
-          "Prazo de aplicação em aberto: obra pode estar avançando sem data confirmada para o Monofloor, podendo gerar conflito de agenda ou perda da janela de aplicação"
-        ],
-        "pendencias": [
-          "Foto da bancada do lavabo: Thaísa (Monofloor) solicitou em 15/04 e não houve retorno do cliente até o fim da conversa — necessário para finalizar orçamento dos complementos",
-          "Orçamento dos complementos pendente de envio: Thaísa recebeu todas as medidas em 15/04 mas o orçamento (escada, bancada lavabo, degrau, trilhos sala/cozinha) ainda não foi enviado ao cliente",
-          "Previsão de entrada em obra: Monofloor solicitou em 03/03 e reforçou em 27/03 e 13/03 — cliente nunca forneceu data, impactando a agenda de aplicação"
-        ],
-        "resumo_exec": "O projeto na Rua Arq. Jaime Fonseca Rodrigues avança, mas acumulou tensões por falhas de comunicação — especialmente a reunião de 10/03 onde o responsável Pedro não esteve disponível e a cobrança por metro linear dos trilhos, que surpreendeu negativamente o cliente. O aditivo contratual foi assinado e pago, e a visita técnica de 23/03 gerou um relatório de regularizações pendentes que ainda aguarda resposta da obra. Em abril, o escopo se ampliou com novos itens (escada, lavabo, degrau, trilhos sala/cozinha), mas o orçamento ainda não foi enviado e falta foto da bancada do lavabo para finalizá-",
-        "clima_desc": "Cliente demonstrou insatisfação pontual com a metodologia de cobrança dos trilhos (metro linear vs m²), questionando a lógica e o valor. Apesar da resolução formal via aditivo, o tom revela desconfiança acumulada, especialmente sobre comunicação e clareza contratual.",
-        "periodo": "02/03 a 15/04/2026",
-        "tempo_resp": "Normal",
-        "total_msgs": 150,
-        "eventos": [
-          {
-            "data": "02/03",
-            "iso": "2026-03-02",
-            "texto": "Confirmação de que aplicação em áreas externas não gera custo adicional",
-            "classe": "neutro"
-          },
-          {
-            "data": "03/03",
-            "iso": "2026-03-03",
-            "texto": "Cliente solicita previsão de entrada com 60 dias de antecedência",
-            "classe": "neutro"
-          },
-          {
-            "data": "04/03",
-            "iso": "2026-03-04",
-            "texto": "Dúvida sobre aparência do verniz antiderrapante levantada pelo cliente",
-            "classe": "neutro"
-          },
-          {
-            "data": "06/03",
-            "iso": "2026-03-06",
-            "texto": "Discussão sobre acabamento nos trilhos de porta de correr e espaçamento inferior ao recomendado (7cm)",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Cliente expressa insegurança sobre ajuste de altura do produto e instalação do guia; reunião emergencial convocada",
-            "classe": "neutro"
-          },
-          {
-            "data": "10/03",
-            "iso": "2026-03-10",
-            "texto": "Reunião realizada com dificuldades técnicas (troca de plataformas, participante Pedro não entrou por estar em outra ligação)",
-            "classe": "neutro"
-          },
-          {
-            "data": "12/03",
-            "iso": "2026-03-12",
-            "texto": "Solicitação de visita in loco agendada para 18/03; reprogramada para 23/03 às 13h",
-            "classe": "neutro"
-          },
-          {
-            "data": "18/03",
-            "iso": "2026-03-18",
-            "texto": "Monofloor anuncia mudança no canal de comunicação (centralização via Pedro); cliente resiste e mantém grupo",
-            "classe": "neutro"
-          },
-          {
-            "data": "23/03",
-            "iso": "2026-03-23",
-            "texto": "Visita técnica realizada na Rua Arq. Jaime Fonseca Rodrigues, 755 — cliente participou por vídeo por problema pessoal",
-            "classe": "critico"
-          },
-          {
-            "data": "24/03",
-            "iso": "2026-03-24",
-            "texto": "Questionamento sobre cobrança por metro linear dos trilhos; cliente considera valor desproporcional (~20% do contrato)",
-            "classe": "critico"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Esclarecimento sobre número de entre-trilhos (2 portas de 2 folhas + 1 porta de 3 folhas); escopo atualizado",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Adicional de trilhos aprovado por Diogo; aditivo contratual enviado e assinado no mesmo dia",
-            "classe": "neutro"
-          },
-          {
-            "data": "25/03",
-            "iso": "2026-03-25",
-            "texto": "Diogo menciona possível porta adicional entre sala e cozinha com trilho — aguarda serralheiro",
-            "classe": "neutro"
-          },
-          {
-            "data": "27/03",
-            "iso": "2026-03-27",
-            "texto": "Monofloor envia relatório técnico pós-visita com regularizações necessárias antes da aplicação; reforça necessidade de previsão de entrada com 60 dias",
-            "classe": "neutro"
-          },
-          {
-            "data": "31/03",
-            "iso": "2026-03-31",
-            "texto": "Boleto do aditivo pago por Diogo",
-            "classe": "neutro"
-          },
-          {
-            "data": "13/04",
-            "iso": "2026-04-13",
-            "texto": "Diogo solicita estimativa de custo para escada em monofloor (comparação com pedra)",
-            "classe": "neutro"
-          },
-          {
-            "data": "14/04",
-            "iso": "2026-04-14",
-            "texto": "Arquiteta Thábata assume comunicação; envia medidas para orçamento de escada, bancada de lavabo e degrau",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "Confirmação de 4 trilhos (3 entre-trilhos) para porta sala/cozinha com vão de 4,53m",
-            "classe": "neutro"
-          },
-          {
-            "data": "15/04",
-            "iso": "2026-04-15",
-            "texto": "Thaísa solicita foto da bancada do lavabo para finalizar orçamento",
-            "classe": "bom"
-          }
-        ]
-      },
-      {
         "id": "e9cfed37-fe20-42c0-877a-3a55b1476fbc",
         "cliente": "ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO",
         "consultor": "LUANA",
@@ -7492,6 +7509,14 @@
         "cliente": "CASA35",
         "consultor": "—",
         "cidade": "São Paulo, capital",
+        "fase": "CONTRATO",
+        "tem_grupo": false
+      },
+      {
+        "id": "2ed9ba45-f23d-47cc-9096-56d6ea8815f5",
+        "cliente": "BERNARDO BALBINOT",
+        "consultor": "—",
+        "cidade": "RJ_INTERIOR",
         "fase": "CONTRATO",
         "tem_grupo": false
       },
@@ -8368,9 +8393,9 @@
       "reparo": 9,
       "pausadas": 0
     },
-    "total_ativas": 232,
+    "total_ativas": 233,
     "n_180_total": 108,
-    "concentracao_pct": 67.2,
+    "concentracao_pct": 67.0,
     "concentracao_180_pct": 90.7,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
