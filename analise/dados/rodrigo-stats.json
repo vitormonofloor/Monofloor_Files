@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-26T01:25:55Z",
+  "atualizado_em": "2026-05-26T05:45:00Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1065,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2173,
+    "pending_tasks": 2172,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -61,40 +61,18 @@
     "max_obras_minimo": 47
   },
   "alertas": {
-    "total": 6,
+    "total": 4,
     "por_tipo": {
-      "stageDelay": 3,
-      "noTeam": 2,
+      "stageDelay": 2,
+      "noTeam": 1,
       "capacityRisk": 1
     },
     "por_severidade": {
-      "high": 4,
+      "high": 2,
       "medium": 1,
       "low": 1
     },
     "detalhes": [
-      {
-        "projectId": "pf-mklv83up-708520",
-        "clienteNome": "TITO LIVIO CAPOBIANCO JR 2ª Fase",
-        "cidade": "CEP 23970",
-        "type": "STAGE_DELAY",
-        "severity": "HIGH",
-        "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 0,
-        "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
-      },
-      {
-        "projectId": "pf-mklv83up-708520",
-        "clienteNome": "TITO LIVIO CAPOBIANCO JR 2ª Fase",
-        "cidade": "CEP 23970",
-        "type": "NO_TEAM",
-        "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 0 dias do início",
-        "daysUntilEntry": 0,
-        "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
-        "expectedStage": "Com equipe alocada"
-      },
       {
         "projectId": "pf-mklv83sq-578563",
         "clienteNome": "CAMILA E ROBERTA (INTEGRALUX)",
@@ -102,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 7,
+        "daysUntilEntry": 6,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -112,8 +90,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 7 dias do início",
-        "daysUntilEntry": 7,
+        "message": "Projeto sem equipe definida a 6 dias do início",
+        "daysUntilEntry": 6,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       },
@@ -124,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 28,
+        "daysUntilEntry": 27,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -135,7 +113,7 @@
         "type": "CAPACITY_RISK",
         "severity": "LOW",
         "message": "Projeto exige ~11 aplicadores (1008.65m² em 20 dias)",
-        "daysUntilEntry": 28,
+        "daysUntilEntry": 27,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Prazo adequado para 1008.65m²"
       }
@@ -1057,13 +1035,9 @@
     }
   ],
   "tempo": {
-    "ciclo_total_mediana": 172,
-    "pre_execucao_mediana": 107,
-    "execucao_mediana": 26,
-    "meta_dias": 150,
-    "obras_base": 102,
+    "obras_base": 0,
     "periodo": "2026",
-    "fonte": "Painel de Obras (snapshot 2026-05-25T11:51:40.899153)"
+    "fonte": "Painel de Obras — snapshot indisponível"
   },
   "aplicadores": {
     "total_cadastrados": 186,
@@ -7875,7 +7849,7 @@
   "lw": {
     "luana": {
       "n": 82,
-      "mediana": 266,
+      "mediana": 267,
       "n180": 53,
       "n270": 39,
       "zumbi": 8,
@@ -7884,17 +7858,17 @@
     },
     "wesley": {
       "n": 76,
-      "mediana": 217,
-      "n180": 46,
+      "mediana": 218,
+      "n180": 47,
       "n270": 26,
       "zumbi": 15,
       "reparo": 9,
       "pausadas": 0
     },
     "total_ativas": 220,
-    "n_180_total": 109,
+    "n_180_total": 110,
     "concentracao_pct": 71.8,
-    "concentracao_180_pct": 90.8,
+    "concentracao_180_pct": 90.9,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
