@@ -1,6 +1,6 @@
 # 🎬 JORNADA · VINICIUS MACHADO ARIAS (LUIS GUILHERME ANDRADE DE ALVARENGA)
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-26
 
 ## 📋 Ficha técnica
 
@@ -15,7 +15,7 @@ Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mog
 | 1ª msg Telegram | 2025-07-30 |
 | Execução prevista | 2026-06-08 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **294 dias** |
+| **Tempo total contrato → entrega** | **299 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **102 dias** |
 | **Classificação** | **Aguardando execução** |
@@ -46,6 +46,7 @@ Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mog
 | equipe | kassandra - diretora de operações | 1 | 2026-01-26 | 2026-01-26 |
 | Luana - Monofloor | 1 | 2026-05-05 | 2026-05-05 |
 | Mayara | Monofloor | 1 | 2026-05-20 | 2026-05-20 |
+| Nathan | 1 | 2026-05-25 | 2026-05-25 |
 
 ## 🗺 Linha do tempo
 
@@ -59,7 +60,7 @@ Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mog
 | **Hibernação #3** | 2026-04-02 | 2026-05-04 | 33d | 0 |
 | **Despertar e pré-execução** | 2026-05-05 | 2026-05-05 | 1d | 0 |
 | **Execução** | 2025-09-18 | 2025-09-18 | 1d | 13 |
-| **Pós-execução** | 2025-09-19 | 2026-05-20 | 244d | 33 |
+| **Pós-execução** | 2025-09-19 | 2026-05-25 | 249d | 34 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -89,4 +90,4 @@ Avenida Mariano Souza Mello, nº 580, apartamento 131, torre b, VilaMogilar, Mog
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 102d praticamente parada
-- execucao_concentrada · só 0.3% do tempo total (1d de 294d)
+- execucao_concentrada · só 0.3% do tempo total (1d de 299d)

@@ -574,6 +574,13 @@
   .mat-sem_os_industria { background: #e6edf3; color: #335a76; }
   .mat-envio_insuficiente { background: #f8d7da; color: #8b1a1a; }
   .mat-envio_excedente { background: #fff3cd; color: #856404; }
+  .mat-pedido_sem_envio { background: #d4a5a5; color: #5a1010; }
+  .mat-sem_dados { background: #e8e0d4; color: #999; }
+  .rep-mat-solic-resumo {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #6b6156;
+    margin-bottom: 8px; padding: 4px 0;
+    border-bottom: 1px solid #e8e0d4;
+  }
   .rep-mat-detalhe {
     font-size: 9px; color: var(--ink-faint); margin-top: 3px; line-height: 1.4;
   }
@@ -732,6 +739,16 @@
     color: #8e44ad;
     border: 1px solid #8e44ad30;
     margin-left: 3px;
+  }
+  .sidebar-item-alerta.alerta-metragem {
+    background: #c0392b18;
+    color: #c0392b;
+    border-color: #c0392b40;
+  }
+  .sidebar-item-alerta.alerta-telegram {
+    background: #e67e2218;
+    color: #e67e22;
+    border-color: #e67e2240;
   }
   .sidebar-vazio {
     padding: 24px 12px;
@@ -3303,6 +3320,58 @@
   .comp-btn-pdf{background:var(--gold);color:#fff;border:none;padding:7px 16px;border-radius:5px;font-weight:600;font-size:12px;cursor:pointer;font-family:inherit;margin-left:auto}
   .comp-btn-pdf:hover{opacity:.85}
   .comp-resumo{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px;padding:12px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+  .comp-meses{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+  .comp-mes-btn{padding:8px 16px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:6px;cursor:pointer;transition:all .15s}
+  .comp-mes-btn:hover{border-color:var(--gold);color:var(--ink)}
+  .comp-mes-btn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+  .comp-mes-btn .mes-count{font-size:10px;font-weight:400;opacity:.7;margin-left:4px}
+  .comp-narrativa{margin-bottom:20px}
+  .narr-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+  .narr-header-mes{font-size:22px;font-weight:800;color:var(--ink)}
+  .narr-header-sub{font-size:13px;color:var(--ink-faint)}
+  .narr-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  .narr-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 14px;text-align:center;position:relative;overflow:hidden}
+  .narr-card-val{font-size:36px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1}
+  .narr-card-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);margin-top:8px}
+  .narr-card-sub{font-size:11px;color:var(--ink-soft);margin-top:4px}
+  .narr-card-accent{border-left:4px solid}
+  .narr-funil{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-bottom:14px}
+  .narr-funil-titulo{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);margin-bottom:10px;font-weight:700}
+  .narr-funil-bar{display:flex;align-items:center;height:32px;border-radius:6px;overflow:hidden;background:var(--bg);margin-bottom:6px}
+  .narr-funil-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .4s;min-width:0}
+  .narr-funil-leg{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+  .narr-funil-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-soft)}
+  .narr-funil-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+  .narr-equipes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .narr-eq-chip{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:12px}
+  .narr-eq-chip-rank{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--gold);min-width:20px}
+  .narr-eq-chip-nome{font-weight:600;color:var(--ink)}
+  .narr-eq-chip-count{color:var(--ink-faint);font-size:11px}
+  .narr-entrega{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .narr-ent-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .narr-ent-val{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1}
+  .narr-ent-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-top:6px}
+  .narr-ent-pct{font-size:12px;font-weight:600;margin-top:2px}
+  .narr-rodape{font-size:11px;color:var(--ink-faint);padding:8px 0;display:flex;gap:16px;flex-wrap:wrap}
+  .narr-vazio{padding:32px;text-align:center;color:var(--ink-faint);font-size:14px}
+  .narr-colunas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+  .narr-pilar{padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;gap:12px}
+  .narr-pilar-titulo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;padding-bottom:10px;border-bottom:1px solid var(--line);margin:0}
+  .narr-pilar-tag{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;flex-shrink:0}
+  .narr-pilar-tag svg{display:block}
+  .narr-pilar .narr-cards{grid-template-columns:1fr}
+  .narr-pilar .narr-card{padding:12px 14px}
+  .narr-pilar .narr-card-val{font-size:26px}
+  .narr-pilar .narr-card-label{font-size:11px}
+  .narr-pilar .narr-entrega{grid-template-columns:1fr}
+  .narr-pilar .narr-ent-card{padding:12px}
+  .narr-pilar .narr-ent-val{font-size:26px}
+  .narr-pilar .narr-funil{margin-top:4px}
+  .narr-pilar .narr-funil-leg{flex-direction:column;gap:4px}
+  .narr-pilar .narr-equipes{margin-top:8px}
+  .narr-pilar .narr-eq-chip{padding:6px 10px}
+  .narr-pilar .narr-eq-chip-rank{font-size:15px}
+  @media(max-width:1100px){.narr-colunas{grid-template-columns:1fr}.narr-pilar .narr-cards{grid-template-columns:repeat(3,1fr)}.narr-pilar .narr-entrega{grid-template-columns:repeat(3,1fr)}}
   .comp-resumo strong{color:var(--ink)}
   .comp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
   .comp-kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
@@ -3365,7 +3434,34 @@
   .radar-obra{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .radar-autor{color:var(--ink-faint);font-size:11px;min-width:80px}
   .radar-vazio{padding:20px;text-align:center;color:var(--ink-faint);font-size:13px}
-  @media(max-width:900px){.comp-kpis{grid-template-columns:1fr}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}}
+
+  /* Dashboard de Solicitações */
+  .solic-dash{margin-bottom:20px;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--bg)}
+  .solic-titulo{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .solic-titulo-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace}
+  .solic-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .solic-kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 10px;text-align:center}
+  .solic-kpi-val{font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1}
+  .solic-kpi-label{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-faint);margin-top:6px}
+  .solic-kpi-sub{font-size:11px;color:var(--ink-soft);margin-top:4px}
+  .solic-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  .solic-bar-wrap{display:flex;flex-direction:column;gap:4px}
+  .solic-bar-row{display:flex;align-items:center;gap:8px;font-size:11px}
+  .solic-bar-label{flex:0 0 140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-soft);text-align:right;cursor:pointer}
+  .solic-bar-label:hover{color:var(--ink);text-decoration:underline}
+  .solic-bar-track{flex:1;height:18px;background:var(--surface);border-radius:4px;overflow:hidden;position:relative}
+  .solic-bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff;min-width:20px;transition:width .3s}
+  .solic-bar-fill.resolvido{background:linear-gradient(90deg,#5fa073,#7ab88a)}
+  .solic-bar-fill.pendente{background:linear-gradient(90deg,#c04030,#d06050)}
+  .solic-bar-fill.parcial{background:linear-gradient(90deg,#c4a040,#d4b860)}
+  .solic-bar-count{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;min-width:24px;color:var(--ink)}
+  .solic-pse{margin-top:10px}
+  .solic-pse-titulo{font-size:11px;font-weight:700;color:#c04030;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  .solic-pse-list{display:flex;flex-wrap:wrap;gap:4px}
+  .solic-pse-chip{font-size:10px;padding:3px 8px;background:#c0403018;color:#c04030;border:1px solid #c0403030;border-radius:4px;cursor:pointer;font-weight:600}
+  .solic-pse-chip:hover{background:#c0403028}
+  .solic-vazio{padding:24px;text-align:center;color:var(--ink-faint);font-size:13px}
+  @media(max-width:900px){.comp-kpis{grid-template-columns:1fr}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}.solic-kpis{grid-template-columns:repeat(2,1fr)}.solic-grid{grid-template-columns:1fr}}
   @media print{.tab-bar,.comp-filtros,.comp-btn-pdf,.comp-vm{display:none!important}.tab-panel{display:block!important}}
 </style>
 </head>
@@ -3379,7 +3475,7 @@
 
 <nav class="tab-bar">
   <button class="tab-btn active" data-tab="jornada" onclick="trocarAba('jornada')">Jornada</button>
-  <button class="tab-btn" data-tab="compilados" onclick="trocarAba('compilados')">Compilados</button>
+  <button class="tab-btn" data-tab="compilados" onclick="trocarAba('compilados')">Compilador</button>
 </nav>
 
 <main>
@@ -3451,6 +3547,8 @@
     <div class="timeline-wrap" style="margin-top:18px">
       <div id="macro-etapas" class="macro-etapas-wrap"></div>
     </div>
+
+    <div id="tempo-pills" class="tempo-pills"></div>
 
     <div class="secoes">
       <div class="card">
@@ -3530,7 +3628,8 @@
       </select></label>
       <button class="comp-btn-pdf" onclick="window.print()">Exportar PDF</button>
     </div>
-    <div id="comp-resumo" class="comp-resumo">Carregando...</div>
+    <div id="comp-meses" class="comp-meses"></div>
+    <div id="comp-narrativa" class="comp-narrativa">Carregando...</div>
     <div class="comp-kpis">
       <div class="comp-kpi k-mat" id="comp-kpi-mat"></div>
       <div class="comp-kpi k-praz" id="comp-kpi-prazo"></div>
@@ -3553,6 +3652,7 @@
         <div class="radar-kpi" id="radar-kpi-extra"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Solicitações extra</div></div>
         <div class="radar-kpi" id="radar-kpi-anomalia"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Anomalias</div></div>
       </div>
+      <div id="solic-dash" class="solic-dash"></div>
       <div class="radar-grid-2col">
         <div class="comp-tw">
           <div class="comp-tw-titulo">OS Indústria enviadas</div>
@@ -4034,6 +4134,8 @@ const LABEL_VEREDITO_MAT = {
   envio_excedente: 'Envio excedente',
   sem_registro_consumo: 'Sem registro',
   sem_os_industria: 'Sem OS',
+  pedido_sem_envio: 'Pedido sem envio',
+  sem_dados: 'Sem dados',
 };
 
 function montarConsistenciaMaterial(j){
@@ -4044,19 +4146,29 @@ function montarConsistenciaMaterial(j){
   const nv = cm.nivel || 'ok';
 
   const fontes = [];
+  if (cm.tem_solicitacoes) fontes.push('Solicitacoes');
   if (cm.tem_os) fontes.push('OS Industria');
-  if (cm.tem_consumo_telegram) fontes.push('Telegram');
+  if (cm.tem_consumo_telegram) fontes.push('Consumo Telegram');
   if (cm.tem_metragem) fontes.push('Metragem');
   const scoreLabel = cm.score != null ? ` · score ${cm.score}/100` : '';
 
+  const solicResumo = cm.solicitacoes_total > 0
+    ? `<div class="rep-mat-solic-resumo">${cm.solicitacoes_total} solicitacao(oes) no Telegram</div>`
+    : '';
+
   return `<div class="rep-material mat-${nv}">
-    <div class="rep-material-titulo">Consistencia de material · fontes: ${fontes.join(' + ') || 'parcial'}${scoreLabel}</div>
+    <div class="rep-material-titulo">Triangulo de material · fontes: ${fontes.join(' + ') || 'parcial'}${scoreLabel}</div>
+    ${solicResumo}
     <div class="rep-mat-grid">
-      ${prods.map(p => `
+      ${prods.map(p => {
+        const solicLine = p.solicitado > 0
+          ? `Solicitado <strong>${p.solicitado}x</strong> · `
+          : '';
+        return `
         <div class="rep-mat-item">
           <div class="rep-mat-item-fam">${esc(p.familia)}</div>
           <div class="rep-mat-item-nums">
-            ${p.enviado ? `Enviado <strong>${p.enviado}</strong>` : ''}
+            ${solicLine}${p.enviado ? `Enviado <strong>${p.enviado}</strong>` : ''}
             ${p.consumido ? ` · Consumido <strong>${p.consumido}</strong>` : ''}
             ${p.esperado_m2 ? ` · Esperado <strong>~${p.esperado_m2}</strong>` : ''}
             ${p.sobra_declarada ? ` · Sobra <strong>${p.sobra_declarada}</strong>` : ''}
@@ -4065,8 +4177,8 @@ function montarConsistenciaMaterial(j){
           </div>
           ${p.veredito ? `<div class="mat-veredito mat-${p.veredito}">${LABEL_VEREDITO_MAT[p.veredito] || p.veredito}</div>` : ''}
           ${p.detalhe ? `<div class="rep-mat-detalhe">${esc(p.detalhe)}</div>` : ''}
-        </div>
-      `).join('')}
+        </div>`;
+      }).join('')}
     </div>
     ${cm.alertas && cm.alertas.length ? `<div class="rep-mat-alertas">${cm.alertas.map(a => esc(a)).join(' · ')}</div>` : ''}
   </div>`;
@@ -4748,7 +4860,10 @@ function renderListaSidebar(){
     const fricNivel = (o.friccao && o.friccao.nivel && o.friccao.nivel !== 'nenhum') ? o.friccao.nivel : '';
     const fricHtml = fricNivel ? `<span class="sidebar-item-friccao fric-${esc(fricNivel)}">${esc(fricNivel)}</span>` : '';
     const alertas = o.alertas || [];
-    const alertHtml = alertas.map(a => `<span class="sidebar-item-alerta">${esc(a.replace(/_/g,' '))}</span>`).join('');
+    const alertHtml = alertas.map(a => {
+      const cls = a.startsWith('metragem') ? ' alerta-metragem' : a.startsWith('telegram') ? ' alerta-telegram' : '';
+      return `<span class="sidebar-item-alerta${cls}">${esc(a.replace(/_/g,' '))}</span>`;
+    }).join('');
     const origemHtml = o.origem_retrabalho === 'heranca' ? '<span class="badge-origem-retrab badge-origem-heranca" title="Retrabalho de aplicacao feita antes de 2026">retrab. antigo</span>' : o.origem_retrabalho === 'recente' ? '<span class="badge-origem-retrab badge-origem-recente" title="Retrabalho de aplicacao feita em 2026">retrab. 2026</span>' : '';
     const riscoNv = o.score_risco && o.score_risco.nivel && o.score_risco.nivel !== 'baixo' ? o.score_risco.nivel : '';
     const riscoHtml = riscoNv ? `<span class="badge-risco badge-risco-${esc(riscoNv)}" title="Score: ${o.score_risco.score}/100 · ${(o.score_risco.sinais||[]).map(s => labelSinal(s)).join(', ')}">${esc(LABEL_NIVEL_RISCO[riscoNv] || riscoNv)}</span>` : '';
@@ -5887,6 +6002,7 @@ function mostrarMarcosDaMacro(macro, marcos){
 
 function renderTempoPills(j){
   const cont = document.getElementById('tempo-pills');
+  if (!cont) return;
   const ini = j.data_1a_msg;
   const fim = j.data_exec_confirmada || j.data_ultima_msg;
   const total = j.tempo_total_dias;
@@ -5993,7 +6109,7 @@ function renderDetalhes(){
   const bFx = (j.benchmark_faixa||{}).faixa;
   const benchWrap = benchHTML ? `<details><summary>Benchmark ${bFx ? bFx.label + ' · ' + bFx.n_obras + ' obras' : ''}</summary>${benchHTML}</details>` : '';
   const cm = j.consistencia_material;
-  const matLabel = cm ? `Material · ${(cm.produtos||[]).length} produtos${cm.score != null ? ' · score ' + cm.score + '/100' : ''}${cm.n_anomalias ? ' · ' + cm.n_anomalias + ' anomalia(s)' : ''}` : '';
+  const matLabel = cm ? `Triangulo Material · ${(cm.produtos||[]).length} produtos${cm.score != null ? ' · score ' + cm.score + '/100' : ''}${cm.n_anomalias ? ' · ' + cm.n_anomalias + ' anomalia(s)' : ''}${cm.solicitacoes_total ? ' · ' + cm.solicitacoes_total + ' solic.' : ''}` : '';
   const matWrap = matHTML ? `<details><summary>${matLabel}</summary>${matHTML}</details>` : '';
   const acoesHTML = montarAcoesPendentes(j);
   const telComp = j.telegram_compartilhado || [];
@@ -6007,6 +6123,7 @@ function renderDetalhes(){
 
   renderTimelineCiclos(j);
   renderMacroEtapas(j);
+  renderTempoPills(j);
 
   const m = j.equipe.monofloor;
   document.getElementById('tab-monofloor').innerHTML = `
@@ -6546,44 +6663,235 @@ function compFiltrar() {
     if (co && compGetConsultor(o)!==co) return false;
     if (fx && o.faixa_metragem!==fx) return false;
     if (pe) {
-      const dExec = o.data_exec_confirmada || o.data_exec_prevista || '';
-      if (dExec < pe) return false;
+      const dExec = o.data_inicio_real || '';
+      if (!dExec || dExec < pe) return false;
     }
     return true;
   });
   compRenderAll(F);
 }
 
+let compMesSel = null;
+
 function compRenderAll(F) {
-  compResumo(F); compKPIs(F); compMaterial(F); compPrazo(F); compQualidade(F); compConsultores(F);
+  compNarrativa(F); compKPIs(F); compMaterial(F); compPrazo(F); compQualidade(F); compConsultores(F);
 }
 
 function compEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
-function compResumo(F) {
-  const n=F.length;
-  const comMat=F.filter(o=>o.consistencia_material&&(o.consistencia_material.tem_os||o.consistencia_material.tem_consumo_telegram));
-  const sm=comMat.filter(o=>o.consistencia_material.score!=null);
-  const avg=sm.length?Math.round(sm.reduce((s,o)=>s+o.consistencia_material.score,0)/sm.length):null;
-  const crit=sm.filter(o=>o.consistencia_material.score<40).length;
-  const cp=F.filter(o=>o.prazo?.desvio_dias!=null);
-  const np=cp.filter(o=>o.prazo.desvio_dias<=0).length;
-  const pct=cp.length?Math.round(np/cp.length*100):null;
-  const dArr=cp.map(o=>o.prazo.desvio_dias).sort((a,b)=>a-b);
-  const dMed=dArr.length?dArr[Math.floor(dArr.length/2)]:null;
-  const fin=F.filter(o=>COMP_FIN.includes(o.status));
-  const lmp=fin.filter(o=>o.classificacao==='entrega_limpa').length;
-  const pL=fin.length?Math.round(lmp/fin.length*100):null;
-  const ret=fin.filter(o=>o.classificacao==='entrega_com_retrabalho').length;
-  let t=`Das <strong>${n}</strong> obras: `;
-  t+=avg!=null?`<strong>${comMat.length}</strong> com dados de material (score médio <strong>${avg}</strong>, ${crit} críticas). `:'sem dados de material. ';
-  t+=pct!=null?`<strong>${cp.length}</strong> com prazo (<strong>${pct}%</strong> no prazo, mediana ${dMed>0?'+':''}${dMed}d). `:'sem prazo. ';
-  t+=pL!=null?`<strong>${pL}%</strong> das ${fin.length} finalizadas com entrega limpa, ${ret} retrabalho.`:'sem finalizadas no recorte.';
-  document.getElementById('comp-resumo').innerHTML=t;
+function compGetMesExec(o) {
+  const d = o.data_inicio_real || '';
+  return d.slice(0, 7);
+}
+
+function compSelecionarMes(mes) {
+  compMesSel = mes;
+  document.querySelectorAll('.comp-mes-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.mes === mes)
+  );
+  compFiltrar();
+}
+
+function compNarrativa(F) {
+  const hoje = new Date().toISOString().slice(0, 7);
+  const porMes = {};
+  F.forEach(o => {
+    const m = compGetMesExec(o);
+    if (m && m <= hoje) { if (!porMes[m]) porMes[m] = []; porMes[m].push(o); }
+  });
+  const meses = Object.keys(porMes).sort().slice(-8);
+  if (!compMesSel || !porMes[compMesSel]) compMesSel = meses[meses.length - 1] || null;
+
+  const elMeses = document.getElementById('comp-meses');
+  elMeses.innerHTML = meses.map(m => {
+    const label = MESES_LABEL[m.slice(5)] + '/' + m.slice(2, 4);
+    return `<button class="comp-mes-btn${m === compMesSel ? ' active' : ''}" data-mes="${m}" onclick="compSelecionarMes('${m}')">${label}<span class="mes-count">(${porMes[m].length})</span></button>`;
+  }).join('');
+
+  const el = document.getElementById('comp-narrativa');
+  if (!compMesSel || !porMes[compMesSel]) {
+    el.innerHTML = '<div class="narr-vazio">Sem obras no periodo selecionado.</div>';
+    return;
+  }
+
+  const obras = porMes[compMesSel];
+  const mesNome = MESES_LABEL[compMesSel.slice(5)];
+  const mesAno = compMesSel.slice(0, 4);
+  const n = obras.length;
+  const m2Total = obras.reduce((s, o) => s + (o.metragem || 0), 0);
+
+  const comExec = obras.filter(o =>
+    (o.marcos_execucao || []).some(mk => mk.tipo === 'inicio_dia' || mk.tipo === 'aplicacao')
+  ).length;
+
+  const comOS = obras.filter(o => (o.materiais_enviados || []).length > 0);
+  const nOS = comOS.length;
+  const totalItensOS = comOS.reduce((s, o) =>
+    s + (o.materiais_enviados || []).reduce((s2, os2) => s2 + (os2.materiais || []).length, 0), 0);
+
+  const comSolic = obras.filter(o => (o.solicitacoes_material || []).length > 0);
+  const nSolic = comSolic.length;
+  const totalSolic = comSolic.reduce((s, o) => s + (o.solicitacoes_material || []).length, 0);
+  const multiSolic = comSolic.filter(o => (o.solicitacoes_material || []).length > 1).length;
+
+  const liderCount = {};
+  comSolic.forEach(o => {
+    const eq = o.equipe || {};
+    const lider = (eq.aplicadores_telegram || []).find(a => a.nome)?.nome
+      || (eq.prestadores_oficiais || []).find(p => p.funcao === 'lider')?.nome
+      || null;
+    if (lider) {
+      liderCount[lider] = (liderCount[lider] || 0) + (o.solicitacoes_material || []).length;
+    }
+  });
+  const topEquipes = Object.entries(liderCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+  const fin = obras.filter(o => COMP_FIN.includes(o.status));
+  const nFin = fin.length;
+  const lmp = fin.filter(o => o.classificacao === 'entrega_limpa').length;
+  const ress = fin.filter(o => o.classificacao === 'entrega_com_ressalvas').length;
+  const retrab = fin.filter(o => o.classificacao === 'entrega_com_retrabalho').length;
+
+  const cp = obras.filter(o => o.prazo?.desvio_dias != null);
+  const noPrazo = cp.filter(o => o.prazo.desvio_dias <= 0).length;
+  const pctPrazo = cp.length ? Math.round(noPrazo / cp.length * 100) : null;
+  const dArr = cp.map(o => o.prazo.desvio_dias).sort((a, b) => a - b);
+  const dMed = dArr.length ? dArr[Math.floor(dArr.length / 2)] : null;
+
+  const corPrazo = pctPrazo >= 70 ? '#3d7a50' : pctPrazo >= 40 ? '#9a7a20' : '#c04030';
+  const corSolic = nSolic === 0 ? '#3d7a50' : nSolic > n * 0.4 ? '#c04030' : '#9a7a20';
+
+  let html = '';
+
+  html += `<div class="narr-header">
+    <div class="narr-header-mes">${mesNome} ${mesAno}</div>
+    <div class="narr-header-sub">${n} obras iniciadas · ${m2Total > 0 ? Math.round(m2Total).toLocaleString('pt-BR') + ' m²' : ''} · ${comExec} com execucao registrada</div>
+  </div>`;
+
+  // ── 3 COLUNAS: MATERIAL | PRAZO | QUALIDADE ──
+  html += `<div class="narr-colunas">`;
+
+  // ── COLUNA 1: MATERIAL ──
+  html += `<div class="narr-pilar">
+    <div class="narr-pilar-titulo"><span class="narr-pilar-tag" style="background:#7ea0b7"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M4 18v-1a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1"/><path d="M12 3C8 3 5 7 5 11h14c0-4-3-8-7-8z" fill="#fff" stroke="#fff"/><line x1="12" y1="1" x2="12" y2="3"/></svg></span> Material</div>
+    <div class="narr-cards">
+      <div class="narr-card narr-card-accent" style="border-left-color:#7ea0b7">
+        <div class="narr-card-val" style="color:#7ea0b7">${nOS}</div>
+        <div class="narr-card-label">Obras com OS enviada</div>
+        <div class="narr-card-sub">${totalItensOS} itens no total</div>
+      </div>
+      <div class="narr-card narr-card-accent" style="border-left-color:${corSolic}">
+        <div class="narr-card-val" style="color:${corSolic}">${nSolic}</div>
+        <div class="narr-card-label">Pediram material extra</div>
+        <div class="narr-card-sub">${totalSolic} solicitacoes no Telegram</div>
+      </div>
+      <div class="narr-card narr-card-accent" style="border-left-color:#c04030">
+        <div class="narr-card-val" style="color:${multiSolic > 0 ? '#c04030' : 'var(--ink-faint)'}">${multiSolic}</div>
+        <div class="narr-card-label">Pediram 2+ vezes</div>
+        <div class="narr-card-sub">${n > 0 ? Math.round(multiSolic / n * 100) : 0}% das obras</div>
+      </div>
+    </div>`;
+
+  if (n > 0 && nSolic > 0) {
+    const segSemSolic = n - nSolic;
+    const segSolic1 = nSolic - multiSolic;
+    const segMulti = multiSolic;
+    const pSem = Math.round(segSemSolic / n * 100);
+    const p1 = Math.round(segSolic1 / n * 100);
+    const pM = 100 - pSem - p1;
+    html += `<div class="narr-funil">
+      <div class="narr-funil-titulo">Das ${n} obras iniciadas</div>
+      <div class="narr-funil-bar">
+        ${segSemSolic > 0 ? `<div class="narr-funil-seg" style="width:${pSem}%;background:#5fa073">${segSemSolic}</div>` : ''}
+        ${segSolic1 > 0 ? `<div class="narr-funil-seg" style="width:${p1}%;background:#c4a040">${segSolic1}</div>` : ''}
+        ${segMulti > 0 ? `<div class="narr-funil-seg" style="width:${pM}%;background:#c04030">${segMulti}</div>` : ''}
+      </div>
+      <div class="narr-funil-leg">
+        <div class="narr-funil-leg-item"><div class="narr-funil-dot" style="background:#5fa073"></div>Sem extra (${segSemSolic})</div>
+        <div class="narr-funil-leg-item"><div class="narr-funil-dot" style="background:#c4a040"></div>1x (${segSolic1})</div>
+        <div class="narr-funil-leg-item"><div class="narr-funil-dot" style="background:#c04030"></div>2+ vezes (${segMulti})</div>
+      </div>
+    </div>`;
+    if (topEquipes.length > 0) {
+      html += `<div class="narr-equipes">
+        ${topEquipes.map((e, i) => `<div class="narr-eq-chip">
+          <div class="narr-eq-chip-rank">#${i + 1}</div>
+          <div>
+            <div class="narr-eq-chip-nome">${compEsc(e[0])}</div>
+            <div class="narr-eq-chip-count">${e[1]} solic.</div>
+          </div>
+        </div>`).join('')}
+      </div>`;
+    }
+  }
+  html += `</div>`;
+
+  // ── COLUNA 2: PRAZO ──
+  html += `<div class="narr-pilar">
+    <div class="narr-pilar-titulo"><span class="narr-pilar-tag" style="background:${pctPrazo != null ? corPrazo : '#a89e92'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><circle cx="15" cy="15" r="2" fill="#fff" stroke="#fff" stroke-width="1.5"/></svg></span> Prazo</div>
+    <div class="narr-cards">
+      <div class="narr-card narr-card-accent" style="border-left-color:${pctPrazo != null ? corPrazo : 'var(--line)'}">
+        <div class="narr-card-val" style="color:${pctPrazo != null ? corPrazo : 'var(--ink-faint)'}">${pctPrazo != null ? pctPrazo + '%' : '—'}</div>
+        <div class="narr-card-label">No prazo</div>
+        <div class="narr-card-sub">${noPrazo} de ${cp.length} obras</div>
+      </div>
+      <div class="narr-card narr-card-accent" style="border-left-color:var(--line)">
+        <div class="narr-card-val" style="color:var(--ink)">${dMed != null ? (dMed > 0 ? '+' : '') + dMed + 'd' : '—'}</div>
+        <div class="narr-card-label">Mediana de desvio</div>
+        <div class="narr-card-sub">${cp.length} com prazo calculado</div>
+      </div>
+      <div class="narr-card narr-card-accent" style="border-left-color:var(--line)">
+        <div class="narr-card-val" style="color:var(--ink-faint)">${n - cp.length}</div>
+        <div class="narr-card-label">Sem prazo definido</div>
+        <div class="narr-card-sub">${n > 0 ? Math.round((n - cp.length) / n * 100) : 0}% das obras</div>
+      </div>
+    </div>
+  </div>`;
+
+  // ── COLUNA 3: QUALIDADE ──
+  html += `<div class="narr-pilar">
+    <div class="narr-pilar-titulo"><span class="narr-pilar-tag" style="background:${nFin > 0 && lmp / nFin >= 0.5 ? '#3d7a50' : nFin > 0 ? '#c04030' : '#a89e92'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6h6l-5 4 2 7-6-4-6 4 2-7-5-4h6z"/></svg></span> Qualidade</div>`;
+  if (nFin > 0) {
+    const pLmp = Math.round(lmp / nFin * 100);
+    const pRess = Math.round(ress / nFin * 100);
+    const pRet = Math.round(retrab / nFin * 100);
+    html += `<div class="narr-entrega">
+      <div class="narr-ent-card" style="border-bottom:3px solid #3d7a50">
+        <div class="narr-ent-val" style="color:#3d7a50">${lmp}</div>
+        <div class="narr-ent-label" style="color:#3d7a50">Entrega limpa</div>
+        <div class="narr-ent-pct" style="color:#3d7a50">${pLmp}% de ${nFin}</div>
+      </div>
+      <div class="narr-ent-card" style="border-bottom:3px solid #9a7a20">
+        <div class="narr-ent-val" style="color:#9a7a20">${ress}</div>
+        <div class="narr-ent-label" style="color:#9a7a20">Ressalvas</div>
+        <div class="narr-ent-pct" style="color:#9a7a20">${pRess}%</div>
+      </div>
+      <div class="narr-ent-card" style="border-bottom:3px solid #c04030">
+        <div class="narr-ent-val" style="color:#c04030">${retrab}</div>
+        <div class="narr-ent-label" style="color:#c04030">Retrabalho</div>
+        <div class="narr-ent-pct" style="color:#c04030">${pRet}%</div>
+      </div>
+    </div>`;
+  } else {
+    html += `<div style="padding:12px;color:var(--ink-faint);font-size:13px">Nenhuma obra finalizada neste mes.</div>`;
+  }
+  html += `</div>`;
+
+  html += `</div>`; // fecha narr-colunas
+
+  const faixas = {};
+  obras.forEach(o => { const f = o.faixa_metragem || '?'; faixas[f] = (faixas[f] || 0) + 1; });
+  const fxStr = Object.entries(faixas).sort((a, b) => b[1] - a[1]).map(e => `${e[0]}: ${e[1]}`).join(' · ');
+  html += `<div class="narr-rodape">
+    <span>Faixas: ${fxStr}</span>
+    ${nFin > 0 ? `<span>Finalizadas: ${nFin} de ${n}</span>` : ''}
+  </div>`;
+
+  el.innerHTML = html;
 }
 
 function compKPIs(F) {
-  const comMat=F.filter(o=>o.consistencia_material&&(o.consistencia_material.tem_os||o.consistencia_material.tem_consumo_telegram));
+  const comMat=F.filter(o=>o.consistencia_material&&(o.consistencia_material.tem_os||o.consistencia_material.tem_consumo_telegram||o.consistencia_material.tem_solicitacoes));
   const sm=comMat.filter(o=>o.consistencia_material.score!=null);
   const avg=sm.length?Math.round(sm.reduce((s,o)=>s+o.consistencia_material.score,0)/sm.length):'—';
   const crit=sm.filter(o=>o.consistencia_material.score<40).length;
@@ -6643,6 +6951,103 @@ function radarExpandir(sec) {
   const vm = document.getElementById('radar-vm-' + sec);
   vm.textContent = radarExpanded[sec] ? 'Mostrar menos' : 'Ver todas';
   compMaterial(radarF);
+}
+
+let solicChartFam = null;
+function renderSolicDash(F, dias) {
+  const el = document.getElementById('solic-dash');
+  if (!el) return;
+
+  const obrasSolic = [];
+  const famCount = {};
+  let totalSolic = 0;
+  const pseList = [];
+
+  F.forEach(o => {
+    const cm = o.consistencia_material;
+    if (!cm || !cm.tem_solicitacoes) return;
+    const solics = (o.solicitacoes_material || []).filter(s => radarDentro(s.data, dias));
+    if (!solics.length) return;
+    obrasSolic.push({ nome: o.cliente || '—', total: solics.length, id: o.id });
+    totalSolic += solics.length;
+    solics.forEach(s => {
+      const prod = s.produto || '?';
+      famCount[prod] = (famCount[prod] || 0) + 1;
+    });
+    (cm.produtos || []).forEach(p => {
+      if (p.veredito === 'pedido_sem_envio') {
+        pseList.push({ nome: o.cliente || '—', familia: p.familia, solic: p.solicitado, id: o.id });
+      }
+    });
+  });
+
+  if (!totalSolic) {
+    el.innerHTML = '<div class="solic-vazio">Nenhuma solicitacao de material no periodo</div>';
+    return;
+  }
+
+  const multi = obrasSolic.filter(o => o.total > 1).length;
+
+  obrasSolic.sort((a, b) => b.total - a.total);
+  const maxSolic = obrasSolic[0]?.total || 1;
+  const top = obrasSolic.slice(0, 10);
+
+  const barsHtml = top.map(o => {
+    const pctTotal = Math.round(o.total / maxSolic * 100);
+    return `<div class="solic-bar-row">
+      <div class="solic-bar-label" title="${compEsc(o.nome)}" onclick="buscarObraPorNome('${compEsc(o.nome)}')">${compEsc(o.nome)}</div>
+      <div class="solic-bar-track"><div class="solic-bar-fill parcial" style="width:${pctTotal}%">${o.total}</div></div>
+    </div>`;
+  }).join('');
+
+  const famEntries = Object.entries(famCount).sort((a, b) => b[1] - a[1]);
+  const famLabels = famEntries.map(e => e[0]);
+  const famData = famEntries.map(e => e[1]);
+  const famCores = ['#b8884a','#7ea0b7','#c45a5a','#5fa073','#e8c078','#9a7ab0','#6b9aa0','#d4a5a5','#8fb870','#a89e92'];
+
+  const pseHtml = pseList.length
+    ? `<div class="solic-pse">
+        <div class="solic-pse-titulo">${pseList.length} pedido(s) sem envio registrado</div>
+        <div class="solic-pse-list">${pseList.map(p => `<span class="solic-pse-chip" title="${compEsc(p.nome)}: ${p.solic}x ${p.familia}" onclick="buscarObraPorNome('${compEsc(p.nome)}')">${compEsc(p.nome)} · ${p.familia}</span>`).join('')}</div>
+      </div>`
+    : '';
+
+  el.innerHTML = `
+    <div class="solic-titulo">Solicitacoes extra de material</div>
+    <div class="solic-kpis">
+      <div class="solic-kpi"><div class="solic-kpi-val" style="color:var(--ink)">${totalSolic}</div><div class="solic-kpi-label">Solicitacoes</div><div class="solic-kpi-sub">${obrasSolic.length} obras</div></div>
+      <div class="solic-kpi"><div class="solic-kpi-val" style="color:#9a7a20">${multi}</div><div class="solic-kpi-label">Pediram 2+ vezes</div><div class="solic-kpi-sub">${obrasSolic.length ? Math.round(multi/obrasSolic.length*100) : 0}% das obras</div></div>
+      <div class="solic-kpi"><div class="solic-kpi-val" style="color:#c04030">${pseList.length}</div><div class="solic-kpi-label">Sem envio registrado</div><div class="solic-kpi-sub">pedido sem OS</div></div>
+    </div>
+    <div class="solic-grid">
+      <div>
+        <div class="comp-tw-titulo">Top obras por volume</div>
+        <div class="solic-bar-wrap">${barsHtml}</div>
+        ${obrasSolic.length > 10 ? `<div style="font-size:10px;color:var(--ink-faint);margin-top:4px;text-align:right">+${obrasSolic.length - 10} obras</div>` : ''}
+      </div>
+      <div>
+        <div class="comp-tw-titulo">Por produto solicitado</div>
+        <div class="comp-chart-wrap" style="height:200px"><canvas id="solic-chart-familia"></canvas></div>
+      </div>
+    </div>
+    ${pseHtml}
+  `;
+
+  if (solicChartFam) solicChartFam.destroy();
+  const ctx = document.getElementById('solic-chart-familia');
+  if (ctx && famLabels.length) {
+    solicChartFam = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels: famLabels, datasets: [{ data: famData, backgroundColor: famCores.slice(0, famLabels.length), borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { color: '#6b6156', padding: 8, font: { size: 10 } } } } }
+    });
+  }
+}
+
+function buscarObraPorNome(nome) {
+  const input = document.getElementById('busca-obra');
+  if (input) { input.value = nome; input.dispatchEvent(new Event('input')); }
+  document.querySelectorAll('.tab-btn').forEach(b => { if (b.textContent.includes('Jornada')) b.click(); });
 }
 
 function compMaterial(F) {
@@ -6744,6 +7149,8 @@ function compMaterial(F) {
     }).join('');
   }
   document.getElementById('radar-vm-extra').style.display = diasOrdenados.length > 5 ? '' : 'none';
+
+  renderSolicDash(F, dias);
 }
 
 function compPrazo(F){

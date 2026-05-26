@@ -1,6 +1,6 @@
 # 🎬 JORNADA · MISCI BRASIL COMERCIO DE MODA LTDA 
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-26
 
 ## 📋 Ficha técnica
 
@@ -13,7 +13,7 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 | Produto | STELION |
 | Cor | Personalizada - Terracor Misci 2 |
 | 1ª msg Telegram | 2025-10-30 |
-| Execução prevista | 2026-05-25 |
+| Execução prevista | 2026-06-04 |
 | Execução confirmada | None |
 | **Tempo total contrato → entrega** | **196 dias** |
 | **Tempo de execução real** | **8 dias** |
@@ -84,8 +84,8 @@ Rua Garcia D'Avila, 77, Loja, Ipanema, Rio de Janeiro/RJ, CEP 22421-010 |
 - 2026-01-15 · 2 kit · _aplicador | Michael Marinho_
 - 2026-01-15 · 2 kit · _aplicador | Michael Marinho_
 - 2026-01-22 · 2 kit · _aplicador | Michael Marinho_
-- 2026-01-27 · 2 kits · _aplicador | Michael Marinho_
 - 2026-01-27 · 2 kits · _michael_
+- 2026-01-27 · 2 kits · _aplicador | Michael Marinho_
 
 **Sobras mencionadas (1):**
 

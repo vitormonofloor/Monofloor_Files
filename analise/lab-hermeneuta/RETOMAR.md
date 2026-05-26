@@ -1,10 +1,106 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-21 · fix Compilados + auditoria profunda solicitacoes material
+> **Última atualização:** 2026-05-25 · Pipeline diario automatizado + universo expandido 252→301 obras + 4a camada data_inicio
 
 ---
 
-## 🆕 SESSAO 2026-05-21 · O QUE FECHAMOS HOJE
+## 🆕 SESSAO 2026-05-25 · O QUE FECHAMOS HOJE
+
+### Universo expandido (252 → 301 obras)
+- ✅ Cruzamento Painel × Telegram revelou 49 obras invisiveis (em fases de execucao mas fora do pipeline)
+- ✅ `_obras_2026_ids.json` expandido de 236 para 287 IDs
+- ✅ Cobertura efetiva: 97.2% (212/218 obras que executaram)
+- ✅ 6 gaps residuais = reparos antigos sem Telegram (limite aceito do sistema)
+
+### 4a camada data_inicio_real: previsao_painel
+- ✅ Fallback em `gerar_jornada.py`: se dataExecucaoPrevista ja venceu e nao tem outra fonte → usa como data_inicio_real
+- ✅ Cobertura por origem: card_operacional 70% | marco_telegram 19% | painel 9% | previsao_painel 2%
+
+### Pipeline diario automatizado
+- ✅ `agente/atualizar_universo.py` — busca TODAS obras da API, detecta novas em fases de execucao, expande IDs
+- ✅ `agente/pipeline_diario.py` — orquestrador (universo + jornada + relatorio cobertura)
+- ✅ `agente/pipeline_diario.bat` — wrapper para Windows Task Scheduler
+- ✅ Windows Task Scheduler: tarefa "Orion Pipeline Diario" rodando diario as 7:00 AM
+- ✅ Log em `dados/pipeline-diario.log` + `dados/universo-log.json` (rolling 90d)
+
+### Painel desatualizado (descoberta)
+- 59 obras com Telegram ativo mas Painel em planejamento/contrato
+- Telegram confirmado como fonte de verdade para execucao
+- Pipeline contorna isso via 4 camadas de fallback
+
+### Material validado mes a mes
+- ✅ Jan-Mai 2026: 91-100% cobertura de dados de material
+- ✅ Campos corretos: `materiais_enviados`, `solicitacoes_material`, `consumos`
+
+### Memorias novas
+- `feedback_painel_desatualizado_telegram_verdade.md`
+- `reference_pipeline_diario_compilador.md`
+
+### Pendencias pra proxima sessao
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Verificacao visual completa (abrir localhost:8765/jornada.html) | ~15min |
+| 2 | Deploy Cloudflare (wrangler deploy apos validacao) | ~5min |
+| 3 | Panorama mensal (evolucao carteira mes a mes) | ~1h |
+| 4 | Camada 2 — Triangulo de consistencia material | ~2h |
+| 5 | Camada 3 — Score preditivo de risco (obras ativas) | ~2h |
+
+### Comando pra retomar (cole no Claude Code)
+
+```
+Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-25". Pipeline diario automatizado (Task Scheduler 7h). Universo 301 obras, cobertura 97.2%. Pendente: validacao visual + deploy CF + panorama mensal.
+```
+
+---
+
+## 📜 SESSAO 2026-05-22 · HISTORICO
+
+### Fix #4: tempo-pills crash (JS)
+- ✅ `jornada.html`: adicionado `<div id="tempo-pills">` no HTML do detalhe de obra
+- ✅ `renderTempoPills(j)` chamada dentro de `renderDetalhes()` (antes era orfã — existia mas nunca era chamada)
+- ✅ Guard `if (!cont) return` pra evitar crash se container nao existir
+
+### Fix #1: classificacao entrega_limpa mais rigorosa
+- ✅ `_entrega_tem_ressalvas()` expandida: 1 ocorrencia media+ ou 2+ de qualquer severidade = com_ressalvas
+- ✅ Antes: so nivel critico/alto ou >= 3 ocorrencias
+- ✅ Impacto: UNKE reclassificada (2 occ media) · entrega_limpa 9→8 · 8 restantes genuinamente limpas (0 occ)
+- ✅ Pipeline regenerado: 252 obras OK, 283s
+
+### Fix #3: metragem anomala — visual aprimorado
+- ✅ Alertas ja existiam no pipeline (metragem_zero + metragem_suspeita)
+- ✅ Badge na sidebar agora vermelho (`.alerta-metragem`) em vez de roxo genérico — grita mais
+- ✅ 10 obras metragem_zero + 12 metragem_suspeita detectadas
+
+### Fix #2: duplicacao Telegram — ja implementado + visual aprimorado
+- ✅ `_detectar_telegram_compartilhado()` ja existia e funciona: 17 obras em 10 pares
+- ✅ Badge na sidebar agora laranja (`.alerta-telegram`) — distingue de alertas genericos
+- ✅ Detalhe da obra ja mostra parceiros + aviso de marcos duplicados
+
+### Dados regenerados (2026-05-22T13:03:10Z)
+- 252 obras OK (1 erro HTTP 404 — obra deletada)
+- Classificacao: pre_obra 100 | entrega_com_retrabalho 44 | entrega_com_ressalvas 30 | aguardando_execucao 30 | retrabalho_ativo 19 | em_execucao 12 | entrega_limpa 8 | em_execucao_com_retrabalho 5 | cancelada 2 | pausada 2
+
+### Pendencias pra proxima sessao
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | Verificacao visual completa (abrir localhost:8765/jornada.html e validar os 4 fixes) | ~15min |
+| 2 | Deploy Cloudflare (wrangler deploy apos validacao visual) | ~5min |
+| 3 | Panorama mensal (evolucao carteira mes a mes) | ~1h |
+| 4 | Camada 2 — Triangulo de consistencia material | ~2h |
+| 5 | Camada 3 — Score preditivo de risco (obras ativas) | ~2h |
+| 6 | Cross-obra: padroes por consultor x tipo problema | ~1h |
+
+### Comando pra retomar (cole no Claude Code)
+
+```
+Le analise/lab-hermeneuta/RETOMAR.md primeiro · secao topo "SESSAO 2026-05-22". 4 fixes aplicados (tempo-pills, entrega_limpa, metragem visual, telegram visual). Pipeline regenerado 252 obras. Pendente: validacao visual + deploy CF + panorama mensal.
+```
+
+---
+
+## 📜 SESSAO 2026-05-21 · HISTORICO
 
 ### Fix Compilados (JS quebrado)
 - ✅ SyntaxError `const hoje` duplicado em `compMaterial()` — impedia parse do script inteiro
@@ -14,33 +110,12 @@
 
 ### Auditoria profunda solicitacoes de material
 - ✅ 21.407 msgs brutas do Telegram varridas com rede ampliada
-- ✅ PAD_MAT_SOLIC expandido: verbos futuro (vamos/vai/iremos precisar), progressivo (faltando), acabou o/a, nao tem mais
-- ✅ PAD_CLS_GENERICO: plurais (kits, baldes, materiais) nao casavam — fix
-- ✅ Proximidade 50→100 chars (aplicadores ramble antes do ponto)
+- ✅ PAD_MAT_SOLIC expandido: verbos futuro, progressivo, acabou/nao tem mais
 - ✅ Resultado: 115→169 solicitacoes (+47%), 51→65 obras (+27%)
-
-### Memorias novas
-- `feedback_deploy_cf_workers.md` — git push ≠ deploy CF Workers
-
-### Pendencias pra proxima sessao
-
-| Ordem | Item | Custo est. |
-|---|---|---|
-| 1 | Classificacao entrega_limpa: incluir ocorrencias (13/17 questionaveis) | ~30min |
-| 2 | Duplicacao Telegram: detectar/alertar pares (7 confirmados no universo) | ~1h |
-| 3 | Metragem anomala: 3 obras 0m2 finalizadas, 7 com <10m2 | ~30min |
-| 4 | tempo-pills ID faltando no HTML (crash ao clicar detalhe de obra) | ~15min |
-| 5 | Camada 2 — Triangulo de consistencia material | ~2h |
-
-### Comando pra retomar amanha (cole no Claude Code)
-
-```
-Le analise/lab-hermeneuta/RETOMAR.md primeiro · secao topo "SESSAO 2026-05-21". Regex de solicitacao ja expandido. Proximo passo: fix classificacao entrega_limpa (~30min) e duplicacao telegram (~1h).
-```
 
 ---
 
-## 🆕 SESSAO 2026-05-19 · O QUE FECHAMOS HOJE
+## 📜 SESSAO 2026-05-19 · HISTORICO
 
 ### 3 refinamentos prescritivos encerrados
 - ✅ Postergacoes: badge "Nx remarc." sidebar + mencao veredito (184 deteccoes, 83 obras)

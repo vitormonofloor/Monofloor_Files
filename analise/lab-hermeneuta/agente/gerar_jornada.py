@@ -544,7 +544,48 @@ PAD_TROCA_APLICADOR = re.compile(
 
 # Detector de "card de bot" · msgs com separators longos `------` ou padrão APLICADOR:/SUPERVISOR:/CLIENTE: juntos
 PAD_CARD_BOT_SEPARATOR = re.compile(r"-{10,}")
-PAD_CARD_BOT_CAMPOS = re.compile(r"APLICADOR\s*:.*SUPERVISOR\s*:.*CLIENTE\s*:", re.DOTALL | re.IGNORECASE)
+PAD_CARD_BOT_CAMPOS = re.compile(r"APLICADOR\s*:.*SUPERVIS\w*\s*:.*CLIENTE\s*:", re.DOTALL | re.IGNORECASE)
+
+# Detector de data de início no card do Operacional Monofloor
+# Formato: "INÍCIO: DD/MM/YYYY" ou "Início: DD/MM/YYYY"
+PAD_INICIO_CARD = re.compile(r"IN[ÍI]CIO\s*:\s*(\d{1,2})[/\-](\d{1,2})[/\-](\d{4})", re.IGNORECASE)
+
+
+PAD_CLIENTE_CARD = re.compile(r"CLIENTE\s*:\s*(.+?)(?:\n|$)", re.IGNORECASE)
+
+
+def extrair_data_inicio_card(msgs_ordenadas, cliente_nome=None):
+    """Extrai datas de início dos cards do Operacional Monofloor.
+    Filtra por cliente_nome se fornecido (grupos compartilhados).
+    Retorna lista de dicts {data_inicio, data_msg, trecho, reagendado}
+    ordenada cronologicamente."""
+    resultados = []
+    for m in msgs_ordenadas:
+        texto = m.get("content") or ""
+        match = PAD_INICIO_CARD.search(texto)
+        if not match:
+            continue
+        if cliente_nome:
+            match_cli = PAD_CLIENTE_CARD.search(texto)
+            if match_cli:
+                cli_card = match_cli.group(1).strip().upper()
+                cli_obra = cliente_nome.strip().upper()
+                if cli_card[:20] != cli_obra[:20]:
+                    continue
+        dia, mes, ano = match.group(1), match.group(2), match.group(3)
+        try:
+            dt = date(int(ano), int(mes), int(dia))
+        except ValueError:
+            continue
+        data_msg = (m.get("timestamp") or "")[:10]
+        reagendado = bool(re.search(r"reagend|remarcad|alter(ado|a[çc][aã]o)", texto, re.IGNORECASE))
+        resultados.append({
+            "data_inicio": dt.isoformat(),
+            "data_msg": data_msg,
+            "reagendado": reagendado,
+            "trecho": texto[:200].replace("\n", " ").strip(),
+        })
+    return resultados
 
 
 def is_card_bot(texto):
@@ -1838,11 +1879,24 @@ def calcular_friccao_nivel(ocorrencias):
 
 
 def _entrega_tem_ressalvas(jornada):
-    """Obra finalizou sem retrabalho formal, mas teve ocorrências significativas?"""
+    """Obra finalizou sem retrabalho formal, mas teve ocorrências significativas?
+    Regra: se alguém registrou ocorrência formal no Painel, não foi entrega limpa.
+    - 1 ocorrência com severidade media/alta/critica → ressalvas
+    - 2+ ocorrências de qualquer severidade → ressalvas
+    - nivel geral critico/alto → ressalvas
+    """
     friccao = jornada.get("friccao") or {}
     nivel = (friccao.get("nivel") or "").lower()
-    n_occ = len(friccao.get("ocorrencias_formais", []))
-    return nivel in ("critico", "alto") or n_occ >= 3
+    occ = friccao.get("ocorrencias_formais", [])
+    if nivel in ("critico", "alto"):
+        return True
+    if len(occ) >= 2:
+        return True
+    for o in occ:
+        sev = (o.get("severidade") or "").lower()
+        if sev in ("critica", "alta", "media"):
+            return True
+    return False
 
 
 def classificar_obra(jornada):
@@ -2251,15 +2305,45 @@ def _familia_do_material_os(nome_material):
     return PRODUTO_FAMILIA.get(lit, lit)
 
 
+def _familia_do_produto_solic(produto):
+    """Mapeia produto de solicitação pra família canônica (mesmo namespace da OS)."""
+    if not produto:
+        return None
+    lit = produto.strip().upper()
+    fam = PRODUTO_FAMILIA.get(lit, lit)
+    if fam in RENDIMENTO_ESPERADO:
+        return fam
+    return None
+
+
 def calcular_consistencia_material(jornada):
-    """Camada 2: cruza material enviado (OS Industria) x consumo (Telegram) x metragem.
-    Retorna dict com resumo por familia de produto + veredito de consistencia."""
+    """Camada 2: cruza Solicitado (Telegram) x Enviado (OS Industria) x Consumido (Telegram) x metragem.
+    Triângulo completo: pediu → chegou → usou. Retorna dict com resumo por família + veredito."""
     metragem = jornada.get("metragem")
     envios = jornada.get("materiais_enviados") or []
     consumos = jornada.get("consumos") or []
     snapshots = jornada.get("snapshots_material") or []
     sobras = jornada.get("sobras") or []
+    solics = jornada.get("solicitacoes_material") or []
 
+    # --- Perna 1: Solicitado (Telegram) ---
+    solicitado = {}
+    solicitado_resolvido = {}
+    lead_times = {}
+    for s in solics:
+        if s.get("categoria") == "insumo":
+            continue
+        fam = _familia_do_produto_solic(s.get("produto"))
+        if not fam:
+            continue
+        solicitado[fam] = solicitado.get(fam, 0) + 1
+        if s.get("resolucao"):
+            solicitado_resolvido[fam] = solicitado_resolvido.get(fam, 0) + 1
+            delta = s["resolucao"].get("delta_min")
+            if delta is not None:
+                lead_times.setdefault(fam, []).append(delta)
+
+    # --- Perna 2: Enviado (OS Indústria) ---
     enviado = {}
     for envio in envios:
         for mat in envio.get("materiais") or []:
@@ -2271,6 +2355,7 @@ def calcular_consistencia_material(jornada):
                 continue
             enviado[fam] = enviado.get(fam, 0) + qtd
 
+    # --- Perna 3: Consumido (Telegram) ---
     consumido = {}
     for c in consumos:
         fam = c.get("produto_familia")
@@ -2295,6 +2380,7 @@ def calcular_consistencia_material(jornada):
         for p in prods:
             consumido[p] = consumido.get(p, 0) + por_prod
 
+    # --- Sobras ---
     sobra_total = {}
     for s in sobras:
         fam = s.get("produto_familia")
@@ -2307,7 +2393,10 @@ def calcular_consistencia_material(jornada):
         if 1 <= qtd <= 100:
             sobra_total[fam] = sobra_total.get(fam, 0) + qtd
 
-    todas_familias = sorted(set(list(enviado.keys()) + list(consumido.keys())))
+    # --- Triângulo: cruzar as 3 pontas por família ---
+    todas_familias = sorted(set(
+        list(enviado.keys()) + list(consumido.keys()) + list(solicitado.keys())
+    ))
     if not todas_familias:
         return None
 
@@ -2319,11 +2408,16 @@ def calcular_consistencia_material(jornada):
         env = enviado.get(fam, 0)
         cons = round(consumido.get(fam, 0))
         sob = sobra_total.get(fam, 0)
+        sol = solicitado.get(fam, 0)
+        sol_ok = solicitado_resolvido.get(fam, 0)
+        lts = lead_times.get(fam, [])
+        lt_medio = round(sum(lts) / len(lts)) if lts else None
         rend = RENDIMENTO_ESPERADO.get(fam)
         esperado = round(metragem / rend) if (metragem and rend) else None
 
         cobertura_pct = round(env * rend / metragem * 100) if (env and rend and metragem) else None
         eficiencia_pct = round(cons / esperado * 100) if (cons and esperado) else None
+        atendimento_pct = round(sol_ok / sol * 100) if sol > 0 else None
 
         veredito = None
         detalhe = None
@@ -2360,8 +2454,26 @@ def calcular_consistencia_material(jornada):
                 detalhe = f"enviou {env}, esperado ~{esperado} ({round(env_ratio*100)}%)"
                 score_penalidades += 5
 
+        if sol > 0 and env == 0 and cons == 0:
+            veredito = "pedido_sem_envio"
+            detalhe = f"{sol} solicitação(ões) sem registro de envio ou consumo"
+            alertas.append(f"{fam}: {detalhe}")
+            score_penalidades += 12
+
+        if sol > 0 and sol_ok == 0:
+            score_penalidades += 5
+
+        if veredito is None:
+            if env == 0 and cons == 0 and sol == 0:
+                continue
+            veredito = "sem_dados"
+
         produtos.append({
             "familia": fam,
+            "solicitado": sol,
+            "solicitado_resolvido": sol_ok,
+            "atendimento_pct": atendimento_pct,
+            "lead_time_medio_min": lt_medio,
             "enviado": env,
             "consumido": cons,
             "sobra_declarada": sob,
@@ -2373,12 +2485,16 @@ def calcular_consistencia_material(jornada):
         })
 
     n_alerta = sum(1 for p in produtos if p["veredito"] in (
-        "consumo_acima", "sobra_provavel", "envio_insuficiente", "envio_excedente"))
+        "consumo_acima", "sobra_provavel", "envio_insuficiente", "envio_excedente", "pedido_sem_envio"))
     n_sem_dados = sum(1 for p in produtos if p["veredito"] in (
         "sem_registro_consumo", "sem_os_industria"))
     nivel = "ok" if n_alerta == 0 else "atencao" if n_alerta <= 1 else "critico"
 
     score_mat = max(0, 100 - score_penalidades)
+
+    total_solic = sum(solicitado.values())
+    total_solic_ok = sum(solicitado_resolvido.values())
+    all_lts = [lt for lts in lead_times.values() for lt in lts]
 
     return {
         "produtos": produtos,
@@ -2389,7 +2505,12 @@ def calcular_consistencia_material(jornada):
         "n_sem_dados": n_sem_dados,
         "tem_os": bool(enviado),
         "tem_consumo_telegram": bool(consumido),
+        "tem_solicitacoes": bool(solicitado),
         "tem_metragem": bool(metragem),
+        "solicitacoes_total": total_solic,
+        "solicitacoes_resolvidas": total_solic_ok,
+        "taxa_atendimento_pct": round(total_solic_ok / total_solic * 100) if total_solic else None,
+        "lead_time_medio_min": round(sum(all_lts) / len(all_lts)) if all_lts else None,
     }
 
 
@@ -3106,6 +3227,22 @@ def construir_jornada(obra_id):
     data_exec_prevista = parse_data_simples(detail.get("dataExecucaoPrevista"))
     data_exec_confirmada = parse_data_simples(detail.get("dataExecucaoConfirmada"))
 
+    # Extrai data de início dos cards do Operacional Monofloor (ANTES do filtro is_card_bot)
+    cards_inicio = extrair_data_inicio_card(msgs_ordenadas, cliente_nome=detail.get("clienteNome"))
+    data_inicio_telegram = None
+    if cards_inicio:
+        # Pega a data mais recente que já passou (não futura)
+        datas_validas = []
+        for c in cards_inicio:
+            try:
+                dt = date.fromisoformat(c["data_inicio"])
+                if dt <= HOJE_DATE:
+                    datas_validas.append(dt)
+            except (ValueError, KeyError):
+                pass
+        if datas_validas:
+            data_inicio_telegram = max(datas_validas)
+
     primeira_msg = parse_iso(msgs_ordenadas[0].get("timestamp")) if msgs_ordenadas else None
     ultima_msg = parse_iso(msgs_ordenadas[-1].get("timestamp")) if msgs_ordenadas else None
 
@@ -3214,6 +3351,34 @@ def construir_jornada(obra_id):
                     aplicadores_set.add(t)
     marcos_execucao = detectar_marcos_execucao(msgs_ordenadas, cluster_exec_inicio, cluster_exec_fim, aplicadores_set)
 
+    # Data de início REAL — 3 camadas: card Operacional > 1o marco execução > Painel
+    MARCOS_EXEC_TIPOS = {
+        'inicio_dia', 'lixamento', 'preparacao', 'aplicacao_stelion', 'aplicacao_lilit',
+        'aplicacao_teron', 'aplicacao_primer', 'aplicacao_tela', 'camada_1', 'camada_2',
+        'camada_3', 'diario_obra', 'verniz_iniciado', 'verniz_finalizado',
+        'obra_finalizada', 'cura', 'reparo', 'fim_dia',
+    }
+    data_inicio_real = None
+    data_inicio_real_origem = None
+    if data_inicio_telegram:
+        data_inicio_real = data_inicio_telegram
+        data_inicio_real_origem = "card_operacional"
+    else:
+        marcos_exec_datas = [
+            date.fromisoformat(mk["data"])
+            for mk in marcos_execucao
+            if mk.get("tipo") in MARCOS_EXEC_TIPOS and mk.get("data")
+        ]
+        if marcos_exec_datas:
+            data_inicio_real = min(marcos_exec_datas)
+            data_inicio_real_origem = "marco_telegram"
+        elif data_exec_confirmada:
+            data_inicio_real = data_exec_confirmada
+            data_inicio_real_origem = "painel"
+        elif data_exec_prevista and data_exec_prevista <= HOJE_DATE:
+            data_inicio_real = data_exec_prevista
+            data_inicio_real_origem = "previsao_painel"
+
     # Camadas aplicadas detectadas no Telegram (só msgs de aplicadores oficiais)
     camadas_aplicadas = detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set)
 
@@ -3319,6 +3484,10 @@ def construir_jornada(obra_id):
         "data_criacao_painel": data_criacao_iso[:10] if data_criacao_iso else None,
         "data_exec_prevista": data_exec_prevista.isoformat() if data_exec_prevista else None,
         "data_exec_confirmada": data_exec_confirmada.isoformat() if data_exec_confirmada else None,
+        "data_inicio_telegram": data_inicio_telegram.isoformat() if data_inicio_telegram else None,
+        "data_inicio_real": data_inicio_real.isoformat() if data_inicio_real else None,
+        "data_inicio_real_origem": data_inicio_real_origem,
+        "cards_inicio_operacional": cards_inicio if cards_inicio else None,
         "data_termino_prevista": data_termino_prevista.isoformat() if data_termino_prevista else None,
         "prazo": {
             "dias_prometidos": prazo_dias,

@@ -1,6 +1,6 @@
 # 🎬 JORNADA · FABIO FEDERICI DE CARVALHO
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-26
 
 ## 📋 Ficha técnica
 
@@ -16,7 +16,7 @@ Rua João Amaro, 324, casa 1, Vila Cordeiro, São Paulo/SP, CEP 04583-
 | 1ª msg Telegram | 2025-09-24 |
 | Execução prevista | 2026-06-15 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **239 dias** |
+| **Tempo total contrato → entrega** | **243 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **91 dias** |
 | **Classificação** | **Pré-obra** |
@@ -46,8 +46,8 @@ Rua João Amaro, 324, casa 1, Vila Cordeiro, São Paulo/SP, CEP 04583-
 | atendimento | Pedro | 6 | 2025-12-04 | 2026-02-28 |
 | Wesley | Juliana. | 5 | 2026-03-03 | 2026-03-30 |
 | Gilmar Taquinho | 5 | 2026-03-30 | 2026-03-30 |
+| Thaísa | Monofloor | 5 | 2026-04-13 | 2026-05-25 |
 | Gabi | Monofloor | 4 | 2025-09-24 | 2026-02-05 |
-| Luana, Mayara, Pedro | Monofloor | 4 | 2026-03-03 | 2026-04-01 |
 
 ## 🗺 Linha do tempo
 
@@ -59,7 +59,7 @@ Rua João Amaro, 324, casa 1, Vila Cordeiro, São Paulo/SP, CEP 04583-
 | **Hibernação #2** | 2025-12-05 | 2026-01-22 | 49d | 0 |
 | **Despertar e pré-execução** | 2026-01-23 | 2026-03-29 | 66d | 45 |
 | **Execução** | 2026-03-30 | 2026-03-30 | 1d | 19 |
-| **Pós-execução** | 2026-03-31 | 2026-05-21 | 52d | 18 |
+| **Pós-execução** | 2026-03-31 | 2026-05-25 | 56d | 21 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -90,4 +90,4 @@ Rua João Amaro, 324, casa 1, Vila Cordeiro, São Paulo/SP, CEP 04583-
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 91d praticamente parada
-- execucao_concentrada · só 0.4% do tempo total (1d de 239d)
+- execucao_concentrada · só 0.4% do tempo total (1d de 243d)

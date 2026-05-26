@@ -1,6 +1,6 @@
 # 🎬 JORNADA · CALLEBE ARAUJO DE MEDEIROS MENDES
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-26
 
 ## 📋 Ficha técnica
 
@@ -13,9 +13,9 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | Produto | — |
 | Cor | — |
 | 1ª msg Telegram | 2025-12-16 |
-| Execução prevista | None |
+| Execução prevista | 2026-09-14 |
 | Execução confirmada | None |
-| **Tempo total contrato → entrega** | **155 dias** |
+| **Tempo total contrato → entrega** | **160 dias** |
 | **Tempo de execução real** | **0 dias** |
 | **Tempo em hibernação** | **68 dias** |
 | **Classificação** | **Pré-obra** |
@@ -50,9 +50,9 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | atendimento | Pedro | 6 | 2025-12-19 | 2026-01-26 |
 | equipe | Jonathan | 4 | 2025-12-16 | 2025-12-19 |
 | Equipe | Juliana Agenda | 3 | 2026-02-05 | 2026-02-28 |
+| Pedro | Monofloor | 3 | 2026-04-24 | 2026-05-25 |
 | Isabella | 3 | 2026-05-05 | 2026-05-12 |
 | equipe projetos | Mariana | monofloor | 2 | 2026-01-26 | 2026-02-28 |
-| Pedro | Monofloor | 2 | 2026-04-24 | 2026-04-24 |
 | Nathan | 2 | 2026-05-06 | 2026-05-06 |
 | Thaísa | Monofloor | 2 | 2026-05-06 | 2026-05-11 |
 | Ketlyn Monofloor | 1 | 2025-12-19 | 2025-12-19 |
@@ -66,7 +66,7 @@ SQSW 500, 503, Bloco A, Parque monumental, Sudoeste, Brasilia/DF, CEP 70674-013 
 | **Hibernação #1** | 2025-12-20 | 2026-01-18 | 30d | 0 |
 | **Atividade retomada** | 2026-01-19 | 2026-02-27 | 40d | 8 |
 | **Hibernação #2** | 2026-03-01 | 2026-04-07 | 38d | 0 |
-| **Atividade retomada** | 2026-04-08 | 2026-05-19 | 42d | 12 |
+| **Atividade retomada** | 2026-04-08 | 2026-05-24 | 47d | 13 |
 
 ## 📍 Marcos detectados nas mensagens
 

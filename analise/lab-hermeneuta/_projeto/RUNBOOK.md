@@ -57,6 +57,31 @@ Aceita múltiplos IDs separados por vírgula:
 python agente/analisar_recorte.py --obra-ids "id1,id2,id3" --recorte "Em execução"
 ```
 
+## Pipeline diario do Compilador (~6 min · RECOMENDADO)
+
+```powershell
+cd C:\Users\vitor\Monofloor_Files\analise\lab-hermeneuta
+python agente/pipeline_diario.py
+```
+
+Faz tudo na ordem certa:
+1. **atualizar_universo.py** — busca TODAS obras da API, atualiza `painel-snapshot.json`, detecta obras novas em fases de execucao e adiciona ao `_obras_2026_ids.json`
+2. **gerar_jornada.py** — processa todas as obras com 4 camadas de data inicio (card_operacional > marco_telegram > painel > previsao_painel)
+3. Relatorio de cobertura
+
+Opcoes:
+- `--dry` — mostra o que faria sem salvar
+- `--skip-fetch` — pula API, so roda pipeline com IDs existentes
+
+Tambem pode rodar cada passo separado:
+```powershell
+python agente/atualizar_universo.py          # so atualiza universo
+python agente/atualizar_universo.py --dry    # preview
+python agente/gerar_jornada.py               # so pipeline
+```
+
+Log de execucoes em `dados/universo-log.json` (ultimos 90 dias).
+
 ## Publicar manualmente (sem rodar pipeline)
 
 ```powershell

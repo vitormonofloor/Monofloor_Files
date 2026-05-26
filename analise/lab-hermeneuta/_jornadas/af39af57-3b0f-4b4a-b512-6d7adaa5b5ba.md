@@ -1,6 +1,6 @@
 # 🎬 JORNADA · HENRIQUE AFFONSO ORCESI DA COSTA
 
-> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-22
+> Reconstrução retrospectiva · só Telegram + endpoints estruturais do Painel · gerado em 2026-05-26
 
 ## 📋 Ficha técnica
 
@@ -15,12 +15,12 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | 1ª msg Telegram | 2025-03-06 |
 | Execução prevista | 2026-05-13 |
 | Execução confirmada | 2026-04-30 |
-| **Tempo total contrato → entrega** | **440 dias** |
+| **Tempo total contrato → entrega** | **445 dias** |
 | **Tempo de execução real** | **1 dias** |
 | **Tempo em hibernação** | **203 dias** |
 | **Classificação** | **Entrega com ressalvas** |
 
-> **Obra finalizada em 440 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado. 1 remarcação de data detectada (desde 2025-08-12).**
+> **Obra finalizada em 445 dias com 1 dias de execução real. 1 ocorrência(s) crítica(s): Infiltração/vazamento detectado. 1 remarcação de data detectada (desde 2025-08-12).**
 
 ## 👥 Elenco
 
@@ -60,7 +60,7 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 | **Hibernação #3** | 2025-11-15 | 2026-03-28 | 134d | 0 |
 | **Despertar e pré-execução** | 2026-03-29 | 2026-05-06 | 39d | 9 |
 | **Execução** | 2026-05-07 | 2026-05-07 | 1d | 6 |
-| **Pós-execução** | 2026-05-08 | 2026-05-20 | 13d | 56 |
+| **Pós-execução** | 2026-05-08 | 2026-05-25 | 18d | 58 |
 
 ## 📍 Marcos detectados nas mensagens
 
@@ -96,13 +96,15 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 
 ## ⚠ Pontos de fricção
 
-**Ocorrências formais (Painel `/ocorrencias` · 5):**
+**Ocorrências formais (Painel `/ocorrencias` · 7):**
 
 - **2026-05-14** [critica] incidente_obra · _Infiltração/vazamento detectado_
 - **2026-05-15** [alta] incidente_obra · _Infiltração/vazamento pendente crítico — prestador aguardando horário_
 - **2026-05-17** [alta] problema_logistico · _Infiltração não resolvida bloqueia obra_
 - **2026-05-18** [media] problema_logistico · _Chuva molhou piso proteção falhou aplicação pausada_
 - **2026-05-19** [media] falha_comunicacao · _Cliente não avisado da chegada_
+- **2026-05-23** [alta] outro · _Infiltração/vazamento pendente 9d+ sem tratamento_
+- **2026-05-25** [alta] incidente_obra · _Infiltração crítica plano tratamento pendente antes 27/05_
 
 **Sinais de problema nas mensagens (2):**
 
@@ -112,4 +114,4 @@ Rua França Pinto, nº 954, apartamento 31, Vila Mariana, São Paulo/SP, CEP 040
 ## 🔍 Padrões observados
 
 - hibernacao_longa · obra ficou 203d praticamente parada
-- execucao_concentrada · só 0.2% do tempo total (1d de 440d)
+- execucao_concentrada · só 0.2% do tempo total (1d de 445d)
