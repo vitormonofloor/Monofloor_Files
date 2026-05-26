@@ -1,10 +1,10 @@
 {
-  "geral": "warn",
-  "checked_at": "2026-05-20T21:10:34Z",
+  "geral": "crit",
+  "checked_at": "2026-05-25T21:10:41Z",
   "contagem": {
     "ok": 8,
-    "warn": 2,
-    "crit": 0
+    "warn": 1,
+    "crit": 1
   },
   "checks": [
     {
@@ -30,18 +30,18 @@
     {
       "nome": "KIRA WhatsApp",
       "status": "ok",
-      "detalhe": "tag KIRA mais recente há 1d"
+      "detalhe": "tag KIRA mais recente há 0d"
     },
     {
       "nome": "Lock de execução",
       "status": "warn",
-      "detalhe": "lock fantasma · PID 18860 morto",
+      "detalhe": "lock fantasma · PID 14932 morto",
       "sugestao": "Próxima varredura limpa automaticamente"
     },
     {
       "nome": "Backups disponíveis",
       "status": "ok",
-      "detalhe": "14 backups · mais recente 6.0h"
+      "detalhe": "14 backups · mais recente 3.5h"
     },
     {
       "nome": "Drift de quantidade de obras",
@@ -55,9 +55,9 @@
     },
     {
       "nome": "Saúde do pipeline",
-      "status": "warn",
-      "detalhe": "2 falha(s) no log recente",
-      "sugestao": "Conferir varredura.log"
+      "status": "crit",
+      "detalhe": "6 falhas no log recente",
+      "sugestao": "Pipeline degradado · ver log"
     }
   ]
 }
