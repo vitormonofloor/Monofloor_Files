@@ -662,21 +662,43 @@ PAD_QTD_KIT = re.compile(r"(\d+)\s*(kits?|baldes?|latas?|sacos?)\b", re.IGNORECA
 PAD_SOBROU = re.compile(r"\bsobr(ou|ar[ao])\s+(\d+)?\s*(\w+)?", re.IGNORECASE)
 
 # Camada/demão + produto · ditas pelo aplicador (com ordinal explícito)
-# Ex: "Segunda camada de stelion" · "Primeira demão de lumina aplicado" · "Aplicação primeira camada stelion"
+# Ex: "Segunda camada de stelion" · "Primeira demão de lumina" · "primeira de mao de lilit"
+# · "2° de teron" · "última de mão de stelion"
 PAD_CAMADA_PRODUTO = re.compile(
-    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta)\s+(camada|aplica[çc][ãa]o|dem[ãa]o)\b[^\n]{0,80}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
+    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta|[úu]ltima)"
+    r"\s+(?:de\s+)?"
+    r"(m[ãa]os?|camada|aplica[çc][ãa]o|dem[ãa]o)"
+    r"(?:\s+de)?\b[^\n]{0,80}?\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
+    re.IGNORECASE
+)
+# Variante curta: "2° de teron" · "primeira de stelion" (ordinal + de + produto, sem camada/demão)
+PAD_CAMADA_CURTA = re.compile(
+    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta|[úu]ltima)"
+    r"\s+(?:de\s+)"
+    r"(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
     re.IGNORECASE
 )
 # Aplicação "simples" sem ordinal · vira camada 1 inferida
-# Ex: "Aplicação de primer" · "aplicando verniz" · "Programação aplicação verniz lumina"
+# Ex: "Aplicação de primer" · "aplicando verniz" · "foi aplicado stelion" · "aplicamos primer"
 PAD_APLICACAO_SIMPLES = re.compile(
-    r"\baplica(?:ndo|[çc][ãa]o)\b(?:[^\n]{0,40}?)\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
+    r"\baplica(?:ndo|mos|do|da|ram|[çc][ãa]o)\b(?:[^\n]{0,40}?)\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\b",
     re.IGNORECASE
 )
 # Produto + finalizado/aplicado/concluído (sem ordinal)
 # Ex: "Verniz finalizado" · "primer aplicado" · "Stelion concluído"
 PAD_PRODUTO_FINALIZADO = re.compile(
     r"\b(stelion|lilit|leona|lumina|teron|kalahari|argento|primer|verniz|pu)\s+(?:foi\s+)?(?:finaliz|conclu|aplicad)",
+    re.IGNORECASE
+)
+# Ordinal + camada SEM produto · "segunda camada agora" · "última camada aplicada"
+# Usado so no fallback (qualquer sender), gera camada com produto="GENERICO"
+PAD_CAMADA_SEM_PRODUTO = re.compile(
+    r"\b(1[ªa°]|2[ªa°]|3[ªa°]|4[ªa°]|primeira|segunda|terceira|quarta|[úu]ltima)\s+(?:de\s+)?(?:m[ãa]os?|camada|dem[ãa]o)\b",
+    re.IGNORECASE
+)
+# "aplicando/aplicamos" sem produto · indica atividade de campo
+PAD_APLICANDO_GENERICO = re.compile(
+    r"\b(?:est[aã]o?\s+)?aplica(?:ndo|mos|ram)\b",
     re.IGNORECASE
 )
 # Sobra com produto · "Sobrou 3 teron fechado" · "sobraram 2 baldes de stelion"
@@ -1367,6 +1389,7 @@ def _ordinal_pra_int(s):
     if s.startswith("2") or s == "segunda":  return 2
     if s.startswith("3") or s == "terceira": return 3
     if s.startswith("4") or s == "quarta":   return 4
+    if s in ("última", "ultima"):            return 99
     return None
 
 
@@ -1384,14 +1407,8 @@ def is_aplicador_telegram(sender, aplicadores_set):
     return False
 
 
-def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
-    """Detecta menções de aplicação de camada/demão de produto, ditas por aplicadores.
-    Suporta 2 modos:
-      - 'ordinal': ordinal explícito ('Segunda camada de stelion') · camada=N
-      - 'inferida': aplicação sem ordinal ('Aplicação de primer', 'Verniz finalizado') · camada=1
-    Filtra cards de bot, transcrições, admin pedindo foto.
-    Dedup: pra cada (data + produto_familia), prefere ordinal sobre inferida.
-    Inferida só entra se NÃO houver ordinal pro mesmo (data + produto_familia)."""
+def _extrair_camadas_passada(msgs_ordenadas, aplicadores_set, filtrar_aplicador):
+    """Passada de deteccao de camadas. Se filtrar_aplicador=True, so processa msgs de aplicadores."""
     ordinais = []
     inferidas = []
     for m in msgs_ordenadas:
@@ -1403,13 +1420,12 @@ def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
         if "🎬" in texto or "🎙️" in texto:
             continue
         sender = m.get("sender") or ""
-        if not is_aplicador_telegram(sender, aplicadores_set):
+        if filtrar_aplicador and not is_aplicador_telegram(sender, aplicadores_set):
             continue
         data_msg = (m.get("timestamp") or "")[:10]
         autor = (m.get("sender") or "?")[:30]
         trecho = texto[:200].replace("\n", " ").strip()
 
-        # Ordinal explícito
         for hit in PAD_CAMADA_PRODUTO.finditer(texto):
             cam_n = _ordinal_pra_int(hit.group(1))
             if not cam_n:
@@ -1422,26 +1438,54 @@ def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
                 "camada": cam_n, "tipo": "ordinal", "trecho": trecho,
             })
 
-        # Aplicação simples (sem ordinal) → camada 1 inferida
-        for hit in PAD_APLICACAO_SIMPLES.finditer(texto):
-            produto_lit = hit.group(1).upper()
+        for hit in PAD_CAMADA_CURTA.finditer(texto):
+            cam_n = _ordinal_pra_int(hit.group(1))
+            if not cam_n:
+                continue
+            produto_lit = hit.group(2).upper()
             produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
-            inferidas.append({
+            ordinais.append({
                 "data": data_msg, "autor": autor,
                 "produto": produto_lit, "produto_familia": produto_fam,
-                "camada": 1, "tipo": "inferida", "trecho": trecho,
-            })
-        # Produto + finalizado/aplicado
-        for hit in PAD_PRODUTO_FINALIZADO.finditer(texto):
-            produto_lit = hit.group(1).upper()
-            produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
-            inferidas.append({
-                "data": data_msg, "autor": autor,
-                "produto": produto_lit, "produto_familia": produto_fam,
-                "camada": 1, "tipo": "inferida", "trecho": trecho,
+                "camada": cam_n, "tipo": "ordinal", "trecho": trecho,
             })
 
-    # Dedup ordinais: 1 por (data + produto_familia + camada)
+        is_apl = is_aplicador_telegram(sender, aplicadores_set)
+        if is_apl or not filtrar_aplicador:
+            for hit in PAD_APLICACAO_SIMPLES.finditer(texto):
+                produto_lit = hit.group(1).upper()
+                produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
+                inferidas.append({
+                    "data": data_msg, "autor": autor,
+                    "produto": produto_lit, "produto_familia": produto_fam,
+                    "camada": 1, "tipo": "inferida", "trecho": trecho,
+                })
+            for hit in PAD_PRODUTO_FINALIZADO.finditer(texto):
+                produto_lit = hit.group(1).upper()
+                produto_fam = PRODUTO_FAMILIA.get(produto_lit, produto_lit)
+                inferidas.append({
+                    "data": data_msg, "autor": autor,
+                    "produto": produto_lit, "produto_familia": produto_fam,
+                    "camada": 1, "tipo": "inferida", "trecho": trecho,
+                })
+
+        if not filtrar_aplicador:
+            for hit in PAD_CAMADA_SEM_PRODUTO.finditer(texto):
+                cam_n = _ordinal_pra_int(hit.group(1))
+                if not cam_n:
+                    continue
+                ordinais.append({
+                    "data": data_msg, "autor": autor,
+                    "produto": "GENERICO", "produto_familia": "GENERICO",
+                    "camada": cam_n, "tipo": "ordinal_generico", "trecho": trecho,
+                })
+            if PAD_APLICANDO_GENERICO.search(texto):
+                inferidas.append({
+                    "data": data_msg, "autor": autor,
+                    "produto": "GENERICO", "produto_familia": "GENERICO",
+                    "camada": 1, "tipo": "inferida_generica", "trecho": trecho,
+                })
+
     seen_ord = set()
     out_ord = []
     familias_com_ordinal = set()
@@ -1452,13 +1496,12 @@ def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
         out_ord.append(a)
         familias_com_ordinal.add(a["produto_familia"])
 
-    # Inferidas só entram se família NÃO tem ordinal (evita ruído)
     seen_inf = set()
     out_inf = []
     for a in inferidas:
         if a["produto_familia"] in familias_com_ordinal:
             continue
-        k = (a["produto_familia"],)  # 1 inferida por família é suficiente
+        k = (a["produto_familia"],)
         if k in seen_inf: continue
         seen_inf.add(k)
         out_inf.append(a)
@@ -1466,6 +1509,16 @@ def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
     out = out_ord + out_inf
     out.sort(key=lambda x: (x["data"], x["produto_familia"], x["camada"]))
     return out
+
+
+def detectar_camadas_aplicadas(msgs_ordenadas, aplicadores_set):
+    """Detecta camadas/demaos de produto. 2 passadas:
+    1. Estrita: so msgs de aplicadores (ordinal + inferida)
+    2. Fallback: se 0 na estrita, aceita qualquer sender mas so ordinais explicitos"""
+    result = _extrair_camadas_passada(msgs_ordenadas, aplicadores_set, filtrar_aplicador=True)
+    if not result and msgs_ordenadas:
+        result = _extrair_camadas_passada(msgs_ordenadas, aplicadores_set, filtrar_aplicador=False)
+    return result
 
 
 def get_aplicadores_set(equipe_endpoint):
@@ -1952,22 +2005,21 @@ LABELS_CLASSIFICACAO = {
 
 
 def classificar_origem_retrabalho(jornada):
-    """Se obra tem retrabalho, classifica se a aplicacao original foi no ano corrente ou anterior."""
+    """Se obra tem retrabalho, classifica se a APLICACAO FISICA original foi no ano corrente
+    (recente) ou anterior (heranca).
+
+    Usa data_inicio_real (aplicacao consolidada · 4 camadas), NAO a data da primeira fase do
+    ciclo. A fase[0] do ciclo 1 e "Planejamento inicial" — o lead-time comercial (contrato pode
+    ser de 2023-2025 mesmo com aplicacao em 2026), o que jogava 100% das obras em "heranca"
+    erroneamente. Bug corrigido em 2026-05-27."""
     classif = jornada.get("classificacao", "")
-    eh_retrab = "retrabalho" in classif
-    if not eh_retrab:
+    if "retrabalho" not in classif:
         return None
-    ciclos = jornada.get("ciclos", [])
-    if not ciclos:
-        return "incerto"
-    fases_c1 = ciclos[0].get("fases", [])
-    if not fases_c1:
-        return "incerto"
-    c1_inicio = fases_c1[0].get("inicio")
-    if not c1_inicio:
+    dt = jornada.get("data_inicio_real")
+    if not dt:
         return "incerto"
     ano_atual = str(HOJE_DATE.year)
-    return "recente" if c1_inicio[:4] == ano_atual else "heranca"
+    return "recente" if dt[:4] == ano_atual else "heranca"
 
 
 def extrair_severidade_max(ocorrencias):

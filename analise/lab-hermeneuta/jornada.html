@@ -7463,6 +7463,16 @@ function compQualidade(F){
   const cLm=pctLm>=30?'pn-ok':pctLm>=15?'pn-warn':'pn-crit';
   let narr=`Das <span class="pn-num">${n}</span> obras finalizadas, <span class="pn-num ${cLm}">${pctLm}%</span> saíram sem nenhuma ressalva. <span class="pn-num pn-warn">${pctRs}%</span> entregaram com ressalvas e <span class="pn-num pn-crit">${pctRt}%</span> exigiram retrabalho físico.`;
   narr+=`<span class="pn-sep"></span><span class="pn-muted">Ressalva = ocorrência registrada sem reaplicação · retrabalho = reaplicação física do piso. São coisas diferentes.</span>`;
+  // Origem do retrabalho · recente (aplicada no ano corrente) vs herança (anos anteriores) · via data_inicio_real
+  const anoQual=String(new Date().getFullYear());
+  const retL=fin.filter(o=>o.classificacao==='entrega_com_retrabalho'&&o.data_inicio_real);
+  const retRec=retL.filter(o=>o.data_inicio_real.slice(0,4)===anoQual).length;
+  const retHer=retL.length-retRec;
+  if(retL.length){
+    const pctRec=Math.round(retRec/retL.length*100);
+    narr+=`<span class="pn-sep"></span>Dos <span class="pn-num">${retL.length}</span> retrabalhos, <span class="pn-num pn-crit">${pctRec}%</span> são de obras aplicadas em ${anoQual} — falha recente, não herança de obra antiga`;
+    narr+=retHer>0?`; só <span class="pn-num">${retHer}</span> vêm de aplicação de anos anteriores.`:`.`;
+  }
   if(occTot>0){
     narr+=`<span class="pn-sep"></span><span class="pn-num">${occTot}</span> ocorrências formais em <span class="pn-num">${comOcc}</span> obras`;
     narr+=fGrave>0?` — <span class="pn-num pn-crit">${fGrave}</span> chegaram a fricção alta ou crítica.`:'.';
