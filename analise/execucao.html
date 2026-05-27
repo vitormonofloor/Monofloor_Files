@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Execucao · Qualidade Monofloor</title>
+<title>Fases e Desempenho por Faixa · Qualidade Monofloor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+
 :root {
   --bg: #ddd7cd; --card: #ffffff; --card-2: #f7f4ef; --card-3: #f0ebe3;
   --border: #e0d8cc; --text: #3a3530; --text-2: #2a2520; --muted: #8a7e72;
@@ -58,6 +59,18 @@ header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
+.stacked-chart { background: var(--card); border-radius: 12px; padding: 20px 24px; border: 1px solid var(--border); margin-bottom: 24px; }
+.stack-legend { display: flex; gap: 16px; margin-bottom: 16px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.stack-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.stack-label { min-width: 170px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.stack-range { font-size: 10px; color: var(--muted); }
+.stack-n { font-size: 10px; color: var(--muted-2); font-family: var(--mono); }
+.stack-bar { flex: 1; display: flex; height: 28px; border-radius: 6px; overflow: hidden; background: var(--card-3); }
+.stack-seg { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; color: #fff; font-weight: 600; min-width: 0; overflow: hidden; }
+.stack-total { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text-2); min-width: 45px; text-align: right; }
+
 .faixas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .faixa-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
 .faixa-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
@@ -68,8 +81,8 @@ header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92
 .faixa-metric-label { font-size: 10px; text-transform: uppercase; color: var(--muted); letter-spacing: .04em; }
 .faixa-metric-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text-2); }
 .faixa-metric-value small { font-size: 11px; font-weight: 400; color: var(--muted); }
-.faixa-bar { height: 8px; border-radius: 4px; background: var(--card-3); margin: 12px 0 8px; overflow: hidden; display: flex; }
-.faixa-bar-seg { height: 100%; transition: width .6s ease; }
+.faixa-bar { height: 8px; border-radius: 4px; background: var(--card-3); margin: 8px 0; overflow: hidden; display: flex; }
+.faixa-bar-seg { height: 100%; }
 .faixa-detail { font-size: 11px; color: var(--muted); line-height: 1.7; }
 .faixa-detail strong { color: var(--text); }
 
@@ -90,8 +103,31 @@ tr:hover { background: var(--card-2); }
 .badge.ok { background: rgba(61,138,90,.1); color: var(--green); }
 .status-cell { font-size: 11px; color: var(--muted); white-space: nowrap; }
 
+.score-panel { background: var(--card); border-radius: 12px; padding: 28px; border: 1px solid var(--border); }
+.score-main { text-align: center; margin-bottom: 28px; }
+.score-number { font-family: var(--mono); font-size: 56px; font-weight: 700; line-height: 1; }
+.score-level { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-top: 6px; }
+.score-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.score-components { display: flex; flex-direction: column; gap: 16px; }
+.comp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.comp-label { font-size: 11px; color: var(--text); }
+.comp-pts { font-family: var(--mono); font-size: 12px; font-weight: 700; }
+.comp-bar { height: 8px; border-radius: 4px; background: var(--card-3); overflow: hidden; }
+.comp-fill { height: 100%; border-radius: 4px; }
+.comp-detail { font-size: 10px; color: var(--muted-2); margin-top: 3px; font-family: var(--mono); }
+.score-flags { padding-top: 16px; border-top: 1px solid var(--border); margin-top: 20px; }
+.flag-item { font-size: 12px; color: var(--text); padding: 8px 0; border-bottom: 1px solid rgba(224,216,204,.3); display: flex; align-items: center; }
+.flag-count { font-family: var(--mono); font-weight: 700; color: var(--amber); margin-right: 10px; min-width: 24px; }
+
 footer { text-align: center; padding: 40px 0 20px; font-size: 10px; color: var(--muted-2); }
-@media(max-width:800px) { .kpis { grid-template-columns: repeat(2, 1fr); } .faixas-grid { grid-template-columns: 1fr; } .container { padding: 16px; } }
+@media(max-width:800px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .faixas-grid { grid-template-columns: 1fr; }
+  .container { padding: 16px; }
+  .stack-label { min-width: 100px; }
+  .tabs { flex-wrap: wrap; }
+}
+
 </style>
 </head>
 <body>
@@ -99,764 +135,284 @@ footer { text-align: center; padding: 40px 0 20px; font-size: 10px; color: var(-
   <div class="top-row">
     <div class="brand"><div class="brand-mark">M</div><div class="brand-text">monofloor</div></div>
     <div class="top-sep"></div>
-    <div class="top-title">Execucao por Faixa</div>
-    <div class="top-stamp">2026-05-21</div>
+    <div class="top-title">Fases e Desempenho por Faixa</div>
+    <div class="top-stamp">2026-05-27 · score 97/100</div>
   </div>
 </header>
 
 <div class="container">
-  <div class="headline" id="headline"></div>
+  <div class="headline">
+    <h2>Quanto tempo leva cada fase de uma obra?</h2>
+    <div class="manchete">Ciclo total mediana: <strong>308d</strong>.
+      Execução real: <strong>7d</strong> (2.2% do ciclo).
+      Hibernação: <strong>116d</strong>.
+      Das 98 finalizadas:
+      <span style="color:var(--green);font-weight:600">34 limpas</span> +
+      <span style="color:var(--red);font-weight:600">64 com retorno</span>
+      (65.3%).</div>
+    <p>125 obras analisadas. 98 finalizadas, 27 em campo. Corte: início execução a partir de 2026-01-01.</p>
+  </div>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('fin')">Finalizadas<span class="tab-count">25</span></div>
-    <div class="tab" onclick="switchTab('exec')">Em execucao<span class="tab-count">16</span></div>
-    <div class="tab" onclick="switchTab('retrab')">Retrabalho<span class="tab-count">6</span></div>
+    <div class="tab active" onclick="switchTab('fases')">Visão de Fases<span class="tab-count">125</span></div>
+    <div class="tab" onclick="switchTab('fin')">Finalizadas<span class="tab-count">98</span></div>
+    <div class="tab" onclick="switchTab('campo')">Em Campo<span class="tab-count">27</span></div>
+    <div class="tab" onclick="switchTab('score')">Confiança<span class="tab-count">97</span></div>
+  </div>
+
+  <!-- VISÃO DE FASES -->
+  <div id="panel-fases" class="tab-panel active">
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-label">Ciclo total (mediana)</div><div class="kpi-value">308<small>dias</small></div><div class="kpi-sub">Do planejamento à pós-execução</div></div>
+      <div class="kpi"><div class="kpi-label">Execução (mediana)</div><div class="kpi-value" style="color:var(--green)">7<small>dias</small></div><div class="kpi-sub">Fase de aplicação real</div></div>
+      <div class="kpi"><div class="kpi-label">Hibernação (mediana)</div><div class="kpi-value" style="color:var(--amber)">116<small>dias</small></div><div class="kpi-sub">Tempo parado</div></div>
+      <div class="kpi"><div class="kpi-label">Eficiência</div><div class="kpi-value">2.2<small>%</small></div><div class="kpi-sub">% do ciclo em execução</div></div>
+    </div>
+
+    <div class="section-title">Composição por faixa de metragem</div>
+    <div class="stacked-chart">
+<div class="stack-legend"><span class="legend-item"><span class="legend-dot" style="background:#4a7ab8"></span>Planejamento</span><span class="legend-item"><span class="legend-dot" style="background:#8a5cb0"></span>Pré-execução</span><span class="legend-item"><span class="legend-dot" style="background:#b89a4a"></span>Hibernação</span><span class="legend-item"><span class="legend-dot" style="background:#3d8a5a"></span>Execução</span><span class="legend-item"><span class="legend-dot" style="background:#c47a4a"></span>Pós-execução</span></div>
+<div class="stack-row"><div class="stack-label"><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span> <span class="stack-range"><60 m²</span> <span class="stack-n">14x</span></div><div class="stack-bar"><div class="stack-seg" style="width:14.3%;background:#4a7ab8" title="Planejamento: 82d (14.3%)">82d</div><div class="stack-seg" style="width:26.2%;background:#8a5cb0" title="Pré-execução: 150d (26.2%)">150d</div><div class="stack-seg" style="width:27.6%;background:#b89a4a" title="Hibernação: 158d (27.6%)">158d</div><div class="stack-seg" style="width:0.9%;background:#3d8a5a" title="Execução: 5d (0.9%)"></div><div class="stack-seg" style="width:3.8%;background:#c47a4a" title="Pós-execução: 22d (3.8%)"></div></div><div class="stack-total">572d</div></div>
+<div class="stack-row"><div class="stack-label"><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span> <span class="stack-range">60-100 m²</span> <span class="stack-n">29x</span></div><div class="stack-bar"><div class="stack-seg" style="width:21.6%;background:#4a7ab8" title="Planejamento: 58d (21.6%)">58d</div><div class="stack-seg" style="width:32.1%;background:#8a5cb0" title="Pré-execução: 86d (32.1%)">86d</div><div class="stack-seg" style="width:22.4%;background:#b89a4a" title="Hibernação: 60d (22.4%)">60d</div><div class="stack-seg" style="width:2.6%;background:#3d8a5a" title="Execução: 7d (2.6%)"></div><div class="stack-seg" style="width:11.2%;background:#c47a4a" title="Pós-execução: 30d (11.2%)">30d</div></div><div class="stack-total">268d</div></div>
+<div class="stack-row"><div class="stack-label"><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span> <span class="stack-range">100-150 m²</span> <span class="stack-n">32x</span></div><div class="stack-bar"><div class="stack-seg" style="width:4.0%;background:#4a7ab8" title="Planejamento: 10d (4.0%)"></div><div class="stack-seg" style="width:37.3%;background:#8a5cb0" title="Pré-execução: 94d (37.3%)">94d</div><div class="stack-seg" style="width:36.5%;background:#b89a4a" title="Hibernação: 92d (36.5%)">92d</div><div class="stack-seg" style="width:3.2%;background:#3d8a5a" title="Execução: 8d (3.2%)"></div><div class="stack-seg" style="width:7.9%;background:#c47a4a" title="Pós-execução: 20d (7.9%)"></div></div><div class="stack-total">252d</div></div>
+<div class="stack-row"><div class="stack-label"><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span> <span class="stack-range">150-220 m²</span> <span class="stack-n">21x</span></div><div class="stack-bar"><div class="stack-seg" style="width:6.4%;background:#4a7ab8" title="Planejamento: 19d (6.4%)"></div><div class="stack-seg" style="width:40.2%;background:#8a5cb0" title="Pré-execução: 119d (40.2%)">119d</div><div class="stack-seg" style="width:47.3%;background:#b89a4a" title="Hibernação: 140d (47.3%)">140d</div><div class="stack-seg" style="width:2.0%;background:#3d8a5a" title="Execução: 6d (2.0%)"></div><div class="stack-seg" style="width:6.8%;background:#c47a4a" title="Pós-execução: 20d (6.8%)"></div></div><div class="stack-total">296d</div></div>
+<div class="stack-row"><div class="stack-label"><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span> <span class="stack-range">220-300 m²</span> <span class="stack-n">8x</span></div><div class="stack-bar"><div class="stack-seg" style="width:5.7%;background:#4a7ab8" title="Planejamento: 14d (5.7%)"></div><div class="stack-seg" style="width:34.8%;background:#8a5cb0" title="Pré-execução: 86d (34.8%)">86d</div><div class="stack-seg" style="width:28.3%;background:#b89a4a" title="Hibernação: 70d (28.3%)">70d</div><div class="stack-seg" style="width:3.6%;background:#3d8a5a" title="Execução: 9d (3.6%)"></div><div class="stack-seg" style="width:7.7%;background:#c47a4a" title="Pós-execução: 19d (7.7%)"></div></div><div class="stack-total">247d</div></div>
+<div class="stack-row"><div class="stack-label"><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span> <span class="stack-range">>300 m²</span> <span class="stack-n">10x</span></div><div class="stack-bar"><div class="stack-seg" style="width:2.2%;background:#4a7ab8" title="Planejamento: 10d (2.2%)"></div><div class="stack-seg" style="width:57.0%;background:#8a5cb0" title="Pré-execução: 254d (57.0%)">254d</div><div class="stack-seg" style="width:30.9%;background:#b89a4a" title="Hibernação: 138d (30.9%)">138d</div><div class="stack-seg" style="width:1.8%;background:#3d8a5a" title="Execução: 8d (1.8%)"></div><div class="stack-seg" style="width:2.0%;background:#c47a4a" title="Pós-execução: 9d (2.0%)"></div></div><div class="stack-total">446d</div></div>
+</div>
+
+
+    <div class="section-title">Tabela de composição</div>
+    <div class="table-wrap"><table>
+<thead><tr><th>Faixa</th><th class="num">Planejamento</th><th class="num">Pré-execução</th><th class="num">Hibernação</th><th class="num">Execução</th><th class="num">Pós-execução</th><th class="num">Total</th><th class="num">Eficiência</th></tr></thead>
+<tbody>
+<tr><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">82d <small style="color:var(--muted)">(14%)</small></td><td class="num">150d <small style="color:var(--muted)">(26%)</small></td><td class="num">158d <small style="color:var(--muted)">(28%)</small></td><td class="num">5d <small style="color:var(--muted)">(1%)</small></td><td class="num">22d <small style="color:var(--muted)">(4%)</small></td><td class="num bold">572d</td><td class="num">1.1%</td></tr>
+<tr><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">58d <small style="color:var(--muted)">(22%)</small></td><td class="num">86d <small style="color:var(--muted)">(32%)</small></td><td class="num">60d <small style="color:var(--muted)">(22%)</small></td><td class="num">7d <small style="color:var(--muted)">(3%)</small></td><td class="num">30d <small style="color:var(--muted)">(11%)</small></td><td class="num bold">268d</td><td class="num">2.4%</td></tr>
+<tr><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">10d <small style="color:var(--muted)">(4%)</small></td><td class="num">94d <small style="color:var(--muted)">(37%)</small></td><td class="num">92d <small style="color:var(--muted)">(37%)</small></td><td class="num">8d <small style="color:var(--muted)">(3%)</small></td><td class="num">20d <small style="color:var(--muted)">(8%)</small></td><td class="num bold">252d</td><td class="num">3.5%</td></tr>
+<tr><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">19d <small style="color:var(--muted)">(6%)</small></td><td class="num">119d <small style="color:var(--muted)">(40%)</small></td><td class="num">140d <small style="color:var(--muted)">(47%)</small></td><td class="num">6d <small style="color:var(--muted)">(2%)</small></td><td class="num">20d <small style="color:var(--muted)">(7%)</small></td><td class="num bold">296d</td><td class="num">2.1%</td></tr>
+<tr><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">14d <small style="color:var(--muted)">(6%)</small></td><td class="num">86d <small style="color:var(--muted)">(35%)</small></td><td class="num">70d <small style="color:var(--muted)">(28%)</small></td><td class="num">9d <small style="color:var(--muted)">(4%)</small></td><td class="num">19d <small style="color:var(--muted)">(8%)</small></td><td class="num bold">247d</td><td class="num">3.7%</td></tr>
+<tr><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">10d <small style="color:var(--muted)">(2%)</small></td><td class="num">254d <small style="color:var(--muted)">(57%)</small></td><td class="num">138d <small style="color:var(--muted)">(31%)</small></td><td class="num">8d <small style="color:var(--muted)">(2%)</small></td><td class="num">9d <small style="color:var(--muted)">(2%)</small></td><td class="num bold">446d</td><td class="num">1.7%</td></tr>
+</tbody></table></div>
+
+
+    <div class="section-title">Insights</div>
+    <div class="insight"><strong>Hibernação domina o ciclo:</strong> 116d mediana (<span class="neg">39%</span> do ciclo total) vs execução 7d (<span class="pos">2%</span>). Obras ficam mais tempo paradas do que em aplicação.</div><div class="insight"><strong>Composição global:</strong> planejamento 43d (14%), hibernação 116d (39%), execução 7d (2%). Eficiência global: <span class="pos">2.2%</span>.</div><div class="insight"><strong>Eficiência por faixa:</strong> GG (220-300 m²) é a mais eficiente com <span class="pos">3.7%</span> do ciclo em execução. PP (<60 m²) tem <span class="neg">1.1%</span>.</div>
   </div>
 
   <!-- FINALIZADAS -->
-  <div id="panel-fin" class="tab-panel active">
-    <div class="kpis" id="kpis-fin"></div>
-    <div class="section-title">Por faixa de metragem (finalizadas)</div>
-    <div class="faixas-grid" id="faixasGrid-fin"></div>
+  <div id="panel-fin" class="tab-panel">
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-label">Finalizadas</div><div class="kpi-value">98<small>obras</small></div><div class="kpi-sub">1ª camada até finalização</div>
+        <div class="kpi-compare"><span class="limpa">34 limpas</span><span class="retorno">64 com retorno</span></div></div>
+      <div class="kpi"><div class="kpi-label">Exec. total (mediana)</div><div class="kpi-value">40<small>dias</small></div><div class="kpi-sub">Mediana geral</div>
+        <div class="kpi-compare"><span class="limpa">13d limpa</span><span class="retorno">131d c/ retorno</span></div></div>
+      <div class="kpi"><div class="kpi-label">Taxa de retorno</div><div class="kpi-value" style="color:var(--red)">65.3<small>%</small></div><div class="kpi-sub">64 de 98 finalizadas</div></div>
+      <div class="kpi"><div class="kpi-label">Custo do retorno</div><div class="kpi-value" style="color:var(--red)">+173.4<small>dias</small></div><div class="kpi-sub">Média adicional vs entrega limpa</div></div>
+    </div>
+
+    <div class="section-title">Por faixa de metragem</div>
+    <div class="faixas-grid">
+<div class="faixa-card" style="border-top:3px solid #8a5cb0"><div class="faixa-header"><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span><span class="faixa-range"><60 m²</span><span class="faixa-n">11 fin</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">38<small>d</small></div></div><div><div class="faixa-metric-label">Aplicação (med)</div><div class="faixa-metric-value">7<small>d</small></div></div><div><div class="faixa-metric-label">Composição</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">2 limpas</span> + <span style="color:var(--red)">9 ret</span></div></div><div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">82<small>%</small></div></div></div><div class="faixa-bar" style="height:6px;margin:4px 0"><div class="faixa-bar-seg" style="width:14.3%;background:#4a7ab8" title="Planejamento: 82d"></div><div class="faixa-bar-seg" style="width:26.2%;background:#8a5cb0" title="Pré-execução: 150d"></div><div class="faixa-bar-seg" style="width:27.6%;background:#b89a4a" title="Hibernação: 158d"></div><div class="faixa-bar-seg" style="width:0.9%;background:#3d8a5a" title="Execução: 5d"></div><div class="faixa-bar-seg" style="width:3.8%;background:#c47a4a" title="Pós-execução: 22d"></div></div><div class="faixa-bar"><div class="faixa-bar-seg" style="width:18%;background:#8a5cb088"></div><div class="faixa-bar-seg" style="width:82%;background:var(--red)"></div></div><div class="faixa-detail"><strong>Limpa:</strong> 14d mediana (2 obras). <strong>Com retorno:</strong> 185d mediana (9 obras). <br>Mais longas: LEONARDO KAWANO  (844d ret), ANA PAULA JACINTHO JUNQUE (553d ret), ELLEN DIOSLEY DE MELO (363d ret)</div></div>
+<div class="faixa-card" style="border-top:3px solid #4a7ab8"><div class="faixa-header"><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span><span class="faixa-range">60-100 m²</span><span class="faixa-n">25 fin</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">36<small>d</small></div></div><div><div class="faixa-metric-label">Aplicação (med)</div><div class="faixa-metric-value">6<small>d</small></div></div><div><div class="faixa-metric-label">Composição</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">10 limpas</span> + <span style="color:var(--red)">15 ret</span></div></div><div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">60<small>%</small></div></div></div><div class="faixa-bar" style="height:6px;margin:4px 0"><div class="faixa-bar-seg" style="width:21.6%;background:#4a7ab8" title="Planejamento: 58d"></div><div class="faixa-bar-seg" style="width:32.1%;background:#8a5cb0" title="Pré-execução: 86d"></div><div class="faixa-bar-seg" style="width:22.4%;background:#b89a4a" title="Hibernação: 60d"></div><div class="faixa-bar-seg" style="width:2.6%;background:#3d8a5a" title="Execução: 7d"></div><div class="faixa-bar-seg" style="width:11.2%;background:#c47a4a" title="Pós-execução: 30d"></div></div><div class="faixa-bar"><div class="faixa-bar-seg" style="width:40%;background:#4a7ab888"></div><div class="faixa-bar-seg" style="width:60%;background:var(--red)"></div></div><div class="faixa-detail"><strong>Limpa:</strong> 16d mediana (10 obras). <strong>Com retorno:</strong> 120d mediana (15 obras). <br>Mais longas: ANA CAROLINA PLACCO FERRE (1009d ret), LEANDRO JOHANN (207d ret),  MANUELA VILLAS BOAS SOUZ (184d ret)</div></div>
+<div class="faixa-card" style="border-top:3px solid #3d8a5a"><div class="faixa-header"><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span><span class="faixa-range">100-150 m²</span><span class="faixa-n">24 fin</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">28<small>d</small></div></div><div><div class="faixa-metric-label">Aplicação (med)</div><div class="faixa-metric-value">9<small>d</small></div></div><div><div class="faixa-metric-label">Composição</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">11 limpas</span> + <span style="color:var(--red)">13 ret</span></div></div><div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">54<small>%</small></div></div></div><div class="faixa-bar" style="height:6px;margin:4px 0"><div class="faixa-bar-seg" style="width:4.0%;background:#4a7ab8" title="Planejamento: 10d"></div><div class="faixa-bar-seg" style="width:37.3%;background:#8a5cb0" title="Pré-execução: 94d"></div><div class="faixa-bar-seg" style="width:36.5%;background:#b89a4a" title="Hibernação: 92d"></div><div class="faixa-bar-seg" style="width:3.2%;background:#3d8a5a" title="Execução: 8d"></div><div class="faixa-bar-seg" style="width:7.9%;background:#c47a4a" title="Pós-execução: 20d"></div></div><div class="faixa-bar"><div class="faixa-bar-seg" style="width:46%;background:#3d8a5a88"></div><div class="faixa-bar-seg" style="width:54%;background:var(--red)"></div></div><div class="faixa-detail"><strong>Limpa:</strong> 13d mediana (11 obras). <strong>Com retorno:</strong> 75d mediana (13 obras). <br>Mais longas: KRYSTAL LURI NUMA (415d ret), CLÁUDIA RESENDE SOARES DE (263d ret), NATHALIA DE FIGUEIREDO NU (189d ret)</div></div>
+<div class="faixa-card" style="border-top:3px solid #b89a4a"><div class="faixa-header"><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span><span class="faixa-range">150-220 m²</span><span class="faixa-n">18 fin</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">24<small>d</small></div></div><div><div class="faixa-metric-label">Aplicação (med)</div><div class="faixa-metric-value">12<small>d</small></div></div><div><div class="faixa-metric-label">Composição</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">9 limpas</span> + <span style="color:var(--red)">9 ret</span></div></div><div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">50<small>%</small></div></div></div><div class="faixa-bar" style="height:6px;margin:4px 0"><div class="faixa-bar-seg" style="width:6.4%;background:#4a7ab8" title="Planejamento: 19d"></div><div class="faixa-bar-seg" style="width:40.2%;background:#8a5cb0" title="Pré-execução: 119d"></div><div class="faixa-bar-seg" style="width:47.3%;background:#b89a4a" title="Hibernação: 140d"></div><div class="faixa-bar-seg" style="width:2.0%;background:#3d8a5a" title="Execução: 6d"></div><div class="faixa-bar-seg" style="width:6.8%;background:#c47a4a" title="Pós-execução: 20d"></div></div><div class="faixa-bar"><div class="faixa-bar-seg" style="width:50%;background:#b89a4a88"></div><div class="faixa-bar-seg" style="width:50%;background:var(--red)"></div></div><div class="faixa-detail"><strong>Limpa:</strong> 0d mediana (9 obras). <strong>Com retorno:</strong> 53d mediana (9 obras). <br>Mais longas: ANDRE KEUNECKE SALERNO (282d ret), BENY MAJTLIS (217d ret), CONDOMINIO EDIFICIO DONA  (89d ret)</div></div>
+<div class="faixa-card" style="border-top:3px solid #c47a4a"><div class="faixa-header"><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span><span class="faixa-range">220-300 m²</span><span class="faixa-n">5 fin</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">15<small>d</small></div></div><div><div class="faixa-metric-label">Aplicação (med)</div><div class="faixa-metric-value">8<small>d</small></div></div><div><div class="faixa-metric-label">Composição</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">2 limpas</span> + <span style="color:var(--red)">3 ret</span></div></div><div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">60<small>%</small></div></div></div><div class="faixa-bar" style="height:6px;margin:4px 0"><div class="faixa-bar-seg" style="width:5.7%;background:#4a7ab8" title="Planejamento: 14d"></div><div class="faixa-bar-seg" style="width:34.8%;background:#8a5cb0" title="Pré-execução: 86d"></div><div class="faixa-bar-seg" style="width:28.3%;background:#b89a4a" title="Hibernação: 70d"></div><div class="faixa-bar-seg" style="width:3.6%;background:#3d8a5a" title="Execução: 9d"></div><div class="faixa-bar-seg" style="width:7.7%;background:#c47a4a" title="Pós-execução: 19d"></div></div><div class="faixa-bar"><div class="faixa-bar-seg" style="width:40%;background:#c47a4a88"></div><div class="faixa-bar-seg" style="width:60%;background:var(--red)"></div></div><div class="faixa-detail"><strong>Limpa:</strong> 8d mediana (2 obras). <strong>Com retorno:</strong> 42d mediana (3 obras). <br>Mais longas: ÁUREO EUSTÁQUIO BRANDÃO (152d ret), YAHYA EL HASSAN (42d ret), VINICIUS LULUSKI DE SOUZA (15d)</div></div>
+<div class="faixa-card" style="border-top:3px solid #c45a5a"><div class="faixa-header"><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span><span class="faixa-range">>300 m²</span><span class="faixa-n">6 fin</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">166<small>d</small></div></div><div><div class="faixa-metric-label">Aplicação (med)</div><div class="faixa-metric-value">16<small>d</small></div></div><div><div class="faixa-metric-label">Composição</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">0 limpas</span> + <span style="color:var(--red)">6 ret</span></div></div><div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">100<small>%</small></div></div></div><div class="faixa-bar" style="height:6px;margin:4px 0"><div class="faixa-bar-seg" style="width:2.2%;background:#4a7ab8" title="Planejamento: 10d"></div><div class="faixa-bar-seg" style="width:57.0%;background:#8a5cb0" title="Pré-execução: 254d"></div><div class="faixa-bar-seg" style="width:30.9%;background:#b89a4a" title="Hibernação: 138d"></div><div class="faixa-bar-seg" style="width:1.8%;background:#3d8a5a" title="Execução: 8d"></div><div class="faixa-bar-seg" style="width:2.0%;background:#c47a4a" title="Pós-execução: 9d"></div></div><div class="faixa-bar"><div class="faixa-bar-seg" style="width:0%;background:#c45a5a88"></div><div class="faixa-bar-seg" style="width:100%;background:var(--red)"></div></div><div class="faixa-detail"><strong>Com retorno:</strong> 166d mediana (6 obras). <br>Mais longas: CASA VIK ADMINISTRADORA D (740d ret), MANOELA LATINI GAVASSI FR (213d ret), JOÃO EDUARDO MARTINS KUHL (178d ret)</div></div>
+</div>
+
+
     <div class="section-title">Insights</div>
-    <div id="insights"></div>
+    <div class="insight"><strong>Faixa com mais retorno:</strong> XG (>300 m²) com <span class="neg">100.0% de retorno</span>. Menor taxa: G com <span class="pos">57.1%</span>.</div><div class="insight"><strong>Impacto do retorno no prazo:</strong> obras com retorno levam em média <span class="neg">+173.4 dias</span> que entregas limpas (131d vs 13d mediana).</div><div class="insight"><strong>Faixa mais rápida:</strong> GG (220-300 m²) com mediana de <span class="pos">15 dias</span> da 1ª camada até finalização.</div>
 
-    <div class="section-title" style="color:var(--red)">Obras com retorno (7)</div>
+    <div class="section-title" style="color:var(--red)">Obras com retorno (64)</div>
     <div class="table-wrap" style="border-left:3px solid var(--red)">
-      <table>
-        <thead><tr>
-          <th>Cliente</th><th>Faixa</th><th>m2</th><th>Aplic.</th><th>Total exec</th><th>Tipo</th><th>Ciclos</th><th>Status</th>
-        </tr></thead>
-        <tbody><tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">157.68</td>
-              <td class="num">23</td>
-              <td class="num bold">89</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">YAHYA EL HASSAN</td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">258.28</td>
-              <td class="num">19</td>
-              <td class="num bold">39</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RODRIGO DE ALMEIDA SCHMIDT</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">110.54</td>
-              <td class="num">11</td>
-              <td class="num bold">33</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">2</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RODRIGO DE FARIA JARDIM</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">105.63</td>
-              <td class="num">11</td>
-              <td class="num bold">33</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">2</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GABRIELA AZEVEDO FORLIN</td>
-              <td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td>
-              <td class="num">4.21</td>
-              <td class="num">-</td>
-              <td class="num bold">26</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ARIANE RIBEIRO DOS SANTOS CUNHA</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">143.65</td>
-              <td class="num">19</td>
-              <td class="num bold">19</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CAROLINA TREMEL PEZUTTO</td>
-              <td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td>
-              <td class="num">53.26</td>
-              <td class="num">0</td>
-              <td class="num bold">0</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-</tbody>
-      </table>
+      <table><thead><tr><th>Cliente</th><th>Faixa</th><th>m²</th><th>Aplic.</th><th>Total exec</th><th>Tipo</th><th>Ciclos</th><th>Status</th></tr></thead>
+      <tbody><tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANA CAROLINA PLACCO FERREIRA - AREA EXTERNA</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">84.23</td><td class="num">68</td><td class="num bold">1009</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">planejamento</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LEONARDO KAWANO </td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">19.9</td><td class="num">20</td><td class="num bold">844</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA </td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">503.65</td><td class="num">86</td><td class="num bold">740</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARINA PEPE RIBEIRO BARBOSA</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">-</td><td class="num">18</td><td class="num bold">690</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANA PAULA JACINTHO JUNQUEIRA APARTAMENTO STUDIO</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">44.08</td><td class="num">24</td><td class="num bold">553</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANIBAL BRAGA JORGE NETO</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">2.28</td><td class="num">5</td><td class="num bold">466</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCOS ANTONIO TADEU EXPOSTO JUNIOR</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">-</td><td class="num">11</td><td class="num bold">435</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">concluido</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FILIPE AUGUSTO MARINI LOPES</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">-</td><td class="num">6</td><td class="num bold">431</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">KRYSTAL LURI NUMA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">108.49</td><td class="num">0</td><td class="num bold">415</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GABRIELA AZEVEDO FORLIN</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">4.21</td><td class="num">16</td><td class="num bold">407</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ELLEN DIOSLEY DE MELO</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">54.09</td><td class="num">0</td><td class="num bold">363</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANDRE KEUNECKE SALERNO</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">182.75</td><td class="num">12</td><td class="num bold">282</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CLÁUDIA RESENDE SOARES DE OLIVEIRA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">148.28</td><td class="num">42</td><td class="num bold">263</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARIA AUGUSTA</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">-</td><td class="num">9</td><td class="num bold">246</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BENY MAJTLIS</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">186.78</td><td class="num">23</td><td class="num bold">217</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MANOELA LATINI GAVASSI FRANCISCO 2ª FASE</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">484.95</td><td class="num">16</td><td class="num bold">213</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LEANDRO JOHANN</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">81.06</td><td class="num">0</td><td class="num bold">207</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCIA MALUF AZEM</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">15.45</td><td class="num">0</td><td class="num bold">206</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NATHALIA DE FIGUEIREDO NUNES RABELO</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">108.79</td><td class="num">50</td><td class="num bold">189</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ADIL CHENAF</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">12.65</td><td class="num">23</td><td class="num bold">185</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"> MANUELA VILLAS BOAS SOUZA MARTIN</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">83.66</td><td class="num">23</td><td class="num bold">184</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">concluido</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOÃO EDUARDO MARTINS KUHLMANN</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">305.16</td><td class="num">21</td><td class="num bold">178</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MONICA ESMERALDA BRUCKMANN MAYNETTO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">84.26</td><td class="num">5</td><td class="num bold">168</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">THIAGO DORIA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">120.43</td><td class="num">0</td><td class="num bold">168</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"> LEONARDO FERIANI HERNANDEZ PLANA</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">1.07</td><td class="num">25</td><td class="num bold">156</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCOS JOSÉ VEIGA GOMES </td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">441.46</td><td class="num">10</td><td class="num bold">155</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ÁUREO EUSTÁQUIO BRANDÃO</td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">298.79</td><td class="num">17</td><td class="num bold">152</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">AMILCAR ARMANDO OLIVEIRA DA SILVA</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">99.74</td><td class="num">7</td><td class="num bold">152</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">TALLY FELDMAN SINGAL GROSS</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">99.83</td><td class="num">9</td><td class="num bold">147</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">UNKÊ ARQUITETURA E ENGENHARIA LTDA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">104.64</td><td class="num">9</td><td class="num bold">139</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">TAIS DE ALBUQUERQUE ROCHA HOLANDA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">113.38</td><td class="num">3</td><td class="num bold">138</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">planejamento</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">AVVA HOUSE LTDA - MOZART RODRIGUES</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">892.38</td><td class="num">6</td><td class="num bold">137</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">AMANDA NEGRELLI HANNUD</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">78.31</td><td class="num">48</td><td class="num bold">125</td><td><span class="badge ret">retorno</span></td><td class="num">3</td><td class="status-cell">planejamento</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CHRISTIAN KORT CERAVOLO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">93.08</td><td class="num">3</td><td class="num bold">120</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ADRIANA MARTINS ALKMIN</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">81.7</td><td class="num">0</td><td class="num bold">113</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">concluido</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CAROLINA RACHE GUIMARAES</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">616.04</td><td class="num">25</td><td class="num bold">106</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">concluido</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LUCIANNE MURTA HADDAD</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">1.0</td><td class="num">47</td><td class="num bold">93</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LUIZ GUSTAVO MIGUEL REBEIS</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">89.46</td><td class="num">11</td><td class="num bold">90</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">157.68</td><td class="num">23</td><td class="num bold">89</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ARTHUR HADLER FERREIRA MACHADO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">77.01</td><td class="num">6</td><td class="num bold">77</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RICARDO GUIMARAES VIEIRA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">121.2</td><td class="num">30</td><td class="num bold">75</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NEWTON BRIAO MARQUES</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">65.67</td><td class="num">10</td><td class="num bold">67</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CARLOS EDUARDO ERMIRIO DE MORAES PASTORIZA</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">151.92</td><td class="num">27</td><td class="num bold">66</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">aguardando clima</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RODRIGO DE FARIA JARDIM</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">105.63</td><td class="num">21</td><td class="num bold">54</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VICENTE PAULO DAS GRACAS PEREIRA</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">208.03</td><td class="num">13</td><td class="num bold">53</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VILA VERTICAL FRADIQUE EMPREENDIMENTO IMOBILIARIO SPE LTDA</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">197.67</td><td class="num">29</td><td class="num bold">52</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FLÁVIO FAVA DITT</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">186.0</td><td class="num">8</td><td class="num bold">45</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LUIS GUSTAVO ROVARON</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">161.96</td><td class="num">0</td><td class="num bold">43</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">YAHYA EL HASSAN</td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">258.28</td><td class="num">39</td><td class="num bold">42</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RODRIGO DE ALMEIDA SCHMIDT</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">110.54</td><td class="num">21</td><td class="num bold">39</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">KATIA MOTA NOGUEIRA  </td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">6.0</td><td class="num">37</td><td class="num bold">39</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RODRIGO LOTUFO VAZ GUIMARÃES</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">53.73</td><td class="num">33</td><td class="num bold">38</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GETULIO TURATTI OST</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">105.24</td><td class="num">20</td><td class="num bold">37</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LUCA BAZURO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">76.04</td><td class="num">1</td><td class="num bold">29</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PETITE FLEUR PATISSERIE LTDA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">119.68</td><td class="num">11</td><td class="num bold">28</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FELIPE CARLOS ARSLAN </td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">124.65</td><td class="num">27</td><td class="num bold">27</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCIA ANDREA SCHMIDT DA SILVA</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">60.35</td><td class="num">0</td><td class="num bold">21</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ARIANE RIBEIRO DOS SANTOS CUNHA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">143.65</td><td class="num">19</td><td class="num bold">19</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CAROLINA TREMEL PEZUTTO</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">53.26</td><td class="num">14</td><td class="num bold">14</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">EDUARDO JOSE SCOTTI</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">207.73</td><td class="num">0</td><td class="num bold">14</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LUIS FERNANDO BECHTOLD</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">96.98</td><td class="num">13</td><td class="num bold">13</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PAULA CORREA NOGUEIRA </td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">29.32</td><td class="num">1</td><td class="num bold">12</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell">planejamento</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARINA PIRES DE AGUIAR</td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">220.1</td><td class="num">3</td><td class="num bold">3</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">LUIS FERNANDO DE LIMA CARVALHO</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">43.46</td><td class="num">0</td><td class="num bold">2</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell">finalizado</td></tr>
+</tbody></table>
     </div>
 
-    <div class="section-title" style="color:var(--green)">Entregas limpas (18)</div>
+    <div class="section-title" style="color:var(--green)">Entregas limpas (34)</div>
     <div class="table-wrap" style="border-left:3px solid var(--green)">
-      <table>
-        <thead><tr>
-          <th>Cliente</th><th>Faixa</th><th>m2</th><th>Aplic.</th><th>Total exec</th><th>Tipo</th><th>Ciclos</th><th>Status</th>
-        </tr></thead>
-        <tbody><tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">HS ENGENHARIA E CONSULTORIA LTDA (Pedro Henning)</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">158.34</td>
-              <td class="num">-</td>
-              <td class="num bold">110</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CAMILA BERRINI GONTIER</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">120.44</td>
-              <td class="num">-</td>
-              <td class="num bold">95</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CASA VIK ADMINISTRADORA DE SALOES DE BELEZA KUKLIK LTDA </td>
-              <td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td>
-              <td class="num">503.65</td>
-              <td class="num">-</td>
-              <td class="num bold">46</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">EUROPRESTIGIO DISTRIBUIÇÃO E COMÉRCIO DE ARTIGOS DE LUXO LTDA</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">176.64</td>
-              <td class="num">-</td>
-              <td class="num bold">29</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CHRISTIAN KORVER</td>
-              <td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td>
-              <td class="num">21.84</td>
-              <td class="num">0</td>
-              <td class="num bold">26</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOAO PEDRO SCANAGATTA DAMACENO</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">147.22</td>
-              <td class="num">-</td>
-              <td class="num bold">25</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA</td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">65.55</td>
-              <td class="num">6</td>
-              <td class="num bold">21</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOYCE BAHIENSE GOMES </td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">93.24</td>
-              <td class="num">17</td>
-              <td class="num bold">18</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JAQUES AJZENTAL</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">143.66</td>
-              <td class="num">2</td>
-              <td class="num bold">13</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GUSTAVO PARRILO DA NOBREGA</td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">95.5</td>
-              <td class="num">13</td>
-              <td class="num bold">13</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JEAN LUC SENAC</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">153.87</td>
-              <td class="num">13</td>
-              <td class="num bold">13</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANDRE KEUNECKE SALERNO</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">182.75</td>
-              <td class="num">12</td>
-              <td class="num bold">12</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FERNANDO TEMBRA RODRIGUEZ</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">140.04</td>
-              <td class="num">0</td>
-              <td class="num bold">8</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SILVANA PANDOLFI JANETE</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">169.1</td>
-              <td class="num">-</td>
-              <td class="num bold">7</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA</td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">66.28</td>
-              <td class="num">3</td>
-              <td class="num bold">3</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NEWTON BRIAO MARQUES</td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">65.67</td>
-              <td class="num">0</td>
-              <td class="num bold">1</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VINICIUS LULUSKI DE SOUZA</td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">249.1</td>
-              <td class="num">0</td>
-              <td class="num bold">0</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PEDRO RUBENS SILVEIRA MELLO BERLINCK</td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">181.7</td>
-              <td class="num">-</td>
-              <td class="num bold">0</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">finalizado</td>
-            </tr>
-</tbody>
-      </table>
+      <table><thead><tr><th>Cliente</th><th>Faixa</th><th>m²</th><th>Aplic.</th><th>Total exec</th><th>Tipo</th><th>Ciclos</th><th>Status</th></tr></thead>
+      <tbody><tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GABRIEL RODRIGUES MARTINS RAMOS</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">77.14</td><td class="num">0</td><td class="num bold">36</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SUELI HIGA</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">172.73</td><td class="num">13</td><td class="num bold">33</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CHRISTIAN KORVER</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">21.84</td><td class="num">0</td><td class="num bold">29</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FELIPE NAVARRO DE ARAÚJO SANTOS</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">128.3</td><td class="num">9</td><td class="num bold">29</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GABRIEL FIALKOVITZ DA COSTA LEITE</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">108.4</td><td class="num">11</td><td class="num bold">28</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">P2B ENGENHARIA CONSTRUÇÕES E REFORMAS LTDA</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">65.55</td><td class="num">9</td><td class="num bold">25</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOYCE BAHIENSE GOMES </td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">93.24</td><td class="num">17</td><td class="num bold">22</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VINICIUS COTTA SENTIN</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">90.16</td><td class="num">19</td><td class="num bold">19</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">planejamento</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">149.4</td><td class="num">11</td><td class="num bold">18</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOAO PEDRO SCANAGATTA DAMACENO</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">147.22</td><td class="num">7</td><td class="num bold">16</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARIO AMATO NETTO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">71.31</td><td class="num">13</td><td class="num bold">16</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GUSTAVO PARRILO DA NOBREGA</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">95.5</td><td class="num">13</td><td class="num bold">15</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VINICIUS LULUSKI DE SOUZA</td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">249.1</td><td class="num">0</td><td class="num bold">15</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JULIANA GOMES (RICARDO RANAURO)</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">107.97</td><td class="num">15</td><td class="num bold">15</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JAQUES AJZENTAL</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">143.66</td><td class="num">8</td><td class="num bold">13</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JEAN LUC SENAC</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">153.87</td><td class="num">13</td><td class="num bold">13</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CAMILA BERRINI GONTIER</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">120.44</td><td class="num">7</td><td class="num bold">13</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JULIA PAIVA HEYMANN</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">73.61</td><td class="num">0</td><td class="num bold">13</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SILVANA PANDOLFI JANETE</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">169.1</td><td class="num">12</td><td class="num bold">12</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FERNANDO TEMBRA RODRIGUEZ</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">140.04</td><td class="num">0</td><td class="num bold">10</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ADRIANO CARVALHEDO CASTELLO BRANCO GONCALVES</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">136.39</td><td class="num">9</td><td class="num bold">9</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">concluido</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">HS ENGENHARIA E CONSULTORIA LTDA (Pedro Henning)</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">158.34</td><td class="num">6</td><td class="num bold">7</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GURGEL DALFONSO ARQUITETURA E INTERIORES LTDA</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">66.28</td><td class="num">3</td><td class="num bold">3</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARIA APARECIDA ALVES DE CERQUEIRA LUZ</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">89.02</td><td class="num">3</td><td class="num bold">3</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BERNARDO MAGALHÃES</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">148.5</td><td class="num">0</td><td class="num bold">2</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PALLOMA BIANCA RAMIREZ URIZZI</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">200.1</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">EUROPRESTIGIO DISTRIBUIÇÃO E COMÉRCIO DE ARTIGOS DE LUXO LTDA</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">176.64</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SYLVIA DIEDERICHSEN STICKEL</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">151.17</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">DARIO DA SILVA GARCIA </td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">65.97</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ADRIANA FERNANDES PERES</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">150.04</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PEDRO RUBENS SILVEIRA MELLO BERLINCK</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">181.7</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CINTIA TIEMI KITA </td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">37.33</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">aguardando execuca</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FELIPE GUSTAVO LOPES DE OLIVEIRA </td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">291.89</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BILAU ABOU OSMAN (ALEXANDRE OSMAN)</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">147.85</td><td class="num">-</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell">finalizado</td></tr>
+</tbody></table>
     </div>
   </div>
 
-  <!-- EM EXECUCAO -->
-  <div id="panel-exec" class="tab-panel">
-    <div class="kpis" id="kpis-exec"></div>
-    <div class="section-title">Por faixa de metragem (em execucao)</div>
-    <div class="faixas-grid" id="faixasGrid-exec"></div>
-    <div class="section-title" style="color:var(--red)">Com sinal de retorno (8)</div><div class="table-wrap" style="border-left:3px solid var(--red)"><table><thead><tr><th>Cliente</th><th>Faixa</th><th>m2</th><th>Aplic.</th><th>Dias em curso</th><th>Tipo</th><th>Ciclos</th><th>Status</th></tr></thead><tbody><tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MONTRELUX SOLUÇÕES EM VIDRO LTDA</td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">221.34</td>
-              <td class="num">0</td>
-              <td class="num bold">105</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RICARDO GUIMARAES VIEIRA</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">121.2</td>
-              <td class="num">8</td>
-              <td class="num bold">57</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BRUNO FRIGO ZEZZE</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">121.21</td>
-              <td class="num">-</td>
-              <td class="num bold">49</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CLAUDIA CEZAR ALVES </td>
-              <td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td>
-              <td class="num">55.0</td>
-              <td class="num">-</td>
-              <td class="num bold">49</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANIBAL BRAGA JORGE NETO</td>
-              <td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td>
-              <td class="num">2.28</td>
-              <td class="num">-</td>
-              <td class="num bold">22</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">122.2</td>
-              <td class="num">18</td>
-              <td class="num bold">18</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">2</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL</td>
-              <td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td>
-              <td class="num">472.26</td>
-              <td class="num">0</td>
-              <td class="num bold">6</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">2</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-</tbody></table></div>
-    <div class="section-title">Todas em execucao (16)</div>
+  <!-- EM CAMPO -->
+  <div id="panel-campo" class="tab-panel">
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-label">Em campo</div><div class="kpi-value">27<small>obras</small></div><div class="kpi-sub">23 exec + 4 retrab</div></div>
+      <div class="kpi"><div class="kpi-label">Dias em curso (mediana)</div><div class="kpi-value">16<small>dias</small></div><div class="kpi-sub">Desde início da execução</div></div>
+      <div class="kpi"><div class="kpi-label">Benchmark fin.</div><div class="kpi-value" style="color:var(--muted)">40<small>dias</small></div><div class="kpi-sub">Mediana das finalizadas</div></div>
+      <div class="kpi"><div class="kpi-label">Aplicação (mediana)</div><div class="kpi-value">10<small>dias</small></div><div class="kpi-sub">Camadas detectadas</div></div>
+    </div>
+
+    <div class="section-title">Por faixa de metragem</div>
+    <div class="faixas-grid">
+<div class="faixa-card" style="border-top:3px solid #8a5cb0"><div class="faixa-header"><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span><span class="faixa-range"><60 m²</span><span class="faixa-n">3 em campo</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value">21<small>d</small></div></div><div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">38<small>d</small></div></div></div><div class="faixa-detail"><strong style="color:var(--green)">Dentro do benchmark.</strong><br>3 em execução, 0 em retrabalho.</div></div>
+<div class="faixa-card" style="border-top:3px solid #4a7ab8"><div class="faixa-header"><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span><span class="faixa-range">60-100 m²</span><span class="faixa-n">4 em campo</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value">24<small>d</small></div></div><div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">36<small>d</small></div></div></div><div class="faixa-detail"><strong style="color:var(--green)">Dentro do benchmark.</strong><br>3 em execução, 1 em retrabalho.</div></div>
+<div class="faixa-card" style="border-top:3px solid #3d8a5a"><div class="faixa-header"><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span><span class="faixa-range">100-150 m²</span><span class="faixa-n">8 em campo</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value">15<small>d</small></div></div><div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">28<small>d</small></div></div></div><div class="faixa-detail"><strong style="color:var(--green)">Dentro do benchmark.</strong><br>7 em execução, 1 em retrabalho.</div></div>
+<div class="faixa-card" style="border-top:3px solid #b89a4a"><div class="faixa-header"><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span><span class="faixa-range">150-220 m²</span><span class="faixa-n">3 em campo</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value">21<small>d</small></div></div><div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">24<small>d</small></div></div></div><div class="faixa-detail"><strong style="color:var(--green)">Dentro do benchmark.</strong><br>3 em execução, 0 em retrabalho.</div></div>
+<div class="faixa-card" style="border-top:3px solid #c47a4a"><div class="faixa-header"><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span><span class="faixa-range">220-300 m²</span><span class="faixa-n">3 em campo</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value">9<small>d</small></div></div><div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">15<small>d</small></div></div></div><div class="faixa-detail"><strong style="color:var(--green)">Dentro do benchmark.</strong><br>3 em execução, 0 em retrabalho.</div></div>
+<div class="faixa-card" style="border-top:3px solid #c45a5a"><div class="faixa-header"><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span><span class="faixa-range">>300 m²</span><span class="faixa-n">4 em campo</span></div><div class="faixa-main"><div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value">22<small>d</small></div></div><div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">166<small>d</small></div></div></div><div class="faixa-detail"><strong style="color:var(--green)">Dentro do benchmark.</strong><br>3 em execução, 1 em retrabalho.</div></div>
+</div>
+
+
+    <div class="section-title">Todas em campo (27)</div>
     <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>Cliente</th><th>Faixa</th><th>m2</th><th>Aplic.</th><th>Dias em curso</th><th>Tipo</th><th>Ciclos</th><th>Status</th>
-        </tr></thead>
-        <tbody><tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">DARIO DA SILVA GARCIA </td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">65.97</td>
-              <td class="num">-</td>
-              <td class="num bold">139</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">UNKÊ ARQUITETURA E ENGENHARIA LTDA (Rua João Moura)</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">114.39</td>
-              <td class="num">1</td>
-              <td class="num bold">133</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MONTRELUX SOLUÇÕES EM VIDRO LTDA</td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">221.34</td>
-              <td class="num">0</td>
-              <td class="num bold">105</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RICARDO GUIMARAES VIEIRA</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">121.2</td>
-              <td class="num">8</td>
-              <td class="num bold">57</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BRUNO FRIGO ZEZZE</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">121.21</td>
-              <td class="num">-</td>
-              <td class="num bold">49</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CLAUDIA CEZAR ALVES </td>
-              <td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td>
-              <td class="num">55.0</td>
-              <td class="num">-</td>
-              <td class="num bold">49</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">APARTAMENTO 803 - JOAO GALLUCCI RODRIGUES</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">149.4</td>
-              <td class="num">6</td>
-              <td class="num bold">28</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANIBAL BRAGA JORGE NETO</td>
-              <td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td>
-              <td class="num">2.28</td>
-              <td class="num">-</td>
-              <td class="num bold">22</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">122.2</td>
-              <td class="num">18</td>
-              <td class="num bold">18</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">2</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ADRIANO DE FIGUEIREDO MACORIN</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">120.39</td>
-              <td class="num">12</td>
-              <td class="num bold">14</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCUS VINICIUS RODRIGUES ELTSCHEMINOV</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">123.0</td>
-              <td class="num">0</td>
-              <td class="num bold">10</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CEDENIR JOÃO DA SILVEIRA </td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">246.88</td>
-              <td class="num">6</td>
-              <td class="num bold">8</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL</td>
-              <td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td>
-              <td class="num">472.26</td>
-              <td class="num">0</td>
-              <td class="num bold">6</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">2</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">UNKÊ ARQUITETURA E ENGENHARIA LTDA (Alameda Casa Branca)</td>
-              <td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td>
-              <td class="num">71.76</td>
-              <td class="num">2</td>
-              <td class="num bold">2</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RICARDO XAVIER DE OLIVEIRA NETO</td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">232.92</td>
-              <td class="num">0</td>
-              <td class="num bold">2</td>
-              <td><span class="badge ok">limpa</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">em execucao</td>
-            </tr>
-</tbody>
-      </table>
+      <table><thead><tr><th>Cliente</th><th>Faixa</th><th>m²</th><th>Aplic.</th><th>Dias em curso</th><th>Tipo</th><th>Ciclos</th><th>Status</th></tr></thead>
+      <tbody><tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANTONIO CARLOS CANTO PORTO NETO</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">362.65</td><td class="num">-</td><td class="num bold">103</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ret">retrabalho</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GUSTAVO DE SOUZA PEREIRA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">112.01</td><td class="num">9</td><td class="num bold">96</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ret">retrabalho</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">REYNALDO SOUZA QUEIROZ FIGUEIREDO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">76.56</td><td class="num">3</td><td class="num bold">86</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell"><span class="badge ret">retrabalho</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">APTO LE JARDIM ANA PAULA JACINTHO JUNQUEIRA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">122.2</td><td class="num">26</td><td class="num bold">65</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MISCI BRASIL COMERCIO DE MODA LTDA </td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">8.38</td><td class="num">26</td><td class="num bold">63</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell"><span class="badge ret">retrabalho</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"> LOVELY RITA DIAS MENEZES    SEGUNDA FASE </td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">57.66</td><td class="num">44</td><td class="num bold">44</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ADRIANO DE FIGUEIREDO MACORIN</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">120.39</td><td class="num">13</td><td class="num bold">37</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARISA NATALIA PINTO</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">77.98</td><td class="num">35</td><td class="num bold">35</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JULIANA KOMEL DE OLIVEIRA</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">360.94</td><td class="num">27</td><td class="num bold">30</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GUILHERME LANGER</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">214.62</td><td class="num">25</td><td class="num bold">25</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CEDENIR JOÃO DA SILVEIRA </td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">246.88</td><td class="num">14</td><td class="num bold">23</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MICHELLE CRISTINA FREITAS GARDENAL</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">188.29</td><td class="num">20</td><td class="num bold">21</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA</td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">15.19</td><td class="num">13</td><td class="num bold">21</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCUS VINICIUS RODRIGUES ELTSCHEMINOV</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">123.0</td><td class="num">12</td><td class="num bold">16</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VANESSA AUGUSTA DELGADO DE AZEVEDO PIMENTEL</td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">472.26</td><td class="num">11</td><td class="num bold">15</td><td><span class="badge ret">retorno</span></td><td class="num">2</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">HENRIQUE AFFONSO ORCESI DA COSTA</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">109.93</td><td class="num">1</td><td class="num bold">14</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">UNKÊ ARQUITETURA E ENGENHARIA LTDA (Rua João Moura)</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">114.39</td><td class="num">1</td><td class="num bold">12</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">UNKÊ ARQUITETURA E ENGENHARIA LTDA (Alameda Casa Branca)</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">71.76</td><td class="num">2</td><td class="num bold">12</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MONTRELUX SOLUÇÕES EM VIDRO LTDA</td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">221.34</td><td class="num">9</td><td class="num bold">9</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BRUNO FRIGO ZEZZE</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">121.21</td><td class="num">8</td><td class="num bold">9</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">RICARDO XAVIER DE OLIVEIRA NETO</td><td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td><td class="num">232.92</td><td class="num">7</td><td class="num bold">8</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CLAUDIA CEZAR ALVES </td><td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td><td class="num">55.0</td><td class="num">0</td><td class="num bold">7</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">REPULLO ASSESSORIA EM INFORMATICA LTDA</td><td><span class="faixa-badge" style="background:#99922;color:#999;border:1px solid #99944">?</span></td><td class="num">5.2</td><td class="num">0</td><td class="num bold">7</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GUILHERME HAIDAR BERJEAUT</td><td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td><td class="num">194.54</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CLAUDIANE DA SILVA GOMES</td><td><span class="faixa-badge" style="background:#4a7ab822;color:#4a7ab8;border:1px solid #4a7ab844">P</span></td><td class="num">85.05</td><td class="num">-</td><td class="num bold">0</td><td><span class="badge ok">limpa</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA </td><td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td><td class="num">489.89</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ret">retorno</span></td><td class="num">0</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+<tr><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOAO PAULO VERIDIANO PICCOLO</td><td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td><td class="num">125.18</td><td class="num">0</td><td class="num bold">0</td><td><span class="badge ret">retorno</span></td><td class="num">1</td><td class="status-cell"><span class="badge ok">em exec</span></td></tr>
+</tbody></table>
     </div>
   </div>
 
-  <!-- RETRABALHO -->
-  <div id="panel-retrab" class="tab-panel">
-    <div class="kpis" id="kpis-retrab"></div>
-    <div class="section-title">Por faixa de metragem (retrabalho)</div>
-    <div class="faixas-grid" id="faixasGrid-retrab"></div>
-    <div class="section-title">Obras em retrabalho (6 com dados)</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>Cliente</th><th>Faixa</th><th>m2</th><th>Aplic.</th><th>Dias em curso</th><th>Tipo</th><th>Ciclos</th><th>Status</th>
-        </tr></thead>
-        <tbody><tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">JOSE ANTUNES SOBRINHO </td>
-              <td><span class="faixa-badge" style="background:#b89a4a22;color:#b89a4a;border:1px solid #b89a4a44">G</span></td>
-              <td class="num">162.16</td>
-              <td class="num">-</td>
-              <td class="num bold">122</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">reparo</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">ANTONIO CARLOS CANTO PORTO NETO</td>
-              <td><span class="faixa-badge" style="background:#c45a5a22;color:#c45a5a;border:1px solid #c45a5a44">XG</span></td>
-              <td class="num">362.65</td>
-              <td class="num">-</td>
-              <td class="num bold">121</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">reparo</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">GUSTAVO DE SOUZA PEREIRA</td>
-              <td><span class="faixa-badge" style="background:#3d8a5a22;color:#3d8a5a;border:1px solid #3d8a5a44">M</span></td>
-              <td class="num">112.01</td>
-              <td class="num">9</td>
-              <td class="num bold">112</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">1</td>
-              <td class="status-cell">marcas rolo cera</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PIERRE JULIEN CHAPRON</td>
-              <td><span class="faixa-badge" style="background:#c47a4a22;color:#c47a4a;border:1px solid #c47a4a44">GG</span></td>
-              <td class="num">250.99</td>
-              <td class="num">-</td>
-              <td class="num bold">23</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">reparo</td>
-            </tr>
-<tr>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">MARCELO ANDRE STEUER</td>
-              <td><span class="faixa-badge" style="background:#8a5cb022;color:#8a5cb0;border:1px solid #8a5cb044">PP</span></td>
-              <td class="num">14.1</td>
-              <td class="num">-</td>
-              <td class="num bold">22</td>
-              <td><span class="badge ret">retorno</span></td>
-              <td class="num">0</td>
-              <td class="status-cell">reparo</td>
-            </tr>
-</tbody>
-      </table>
-    </div>
-  </div>
+  <!-- CONFIANÇA -->
+  <div id="panel-score" class="tab-panel">
+    <div class="score-panel"><div class="score-main"><div class="score-number" style="color:var(--green)">97</div><div class="score-level" style="color:var(--green)">excelente</div><div class="score-label">Score de Confiança</div></div><div class="score-components"><div><div class="comp-header"><span class="comp-label">Fonte alta qualidade (camadas Telegram)</span><span class="comp-pts" style="color:var(--green)">23/25</span></div><div class="comp-bar"><div class="comp-fill" style="width:92%;background:var(--green)"></div></div><div class="comp-detail">113/125 obras</div></div><div><div class="comp-header"><span class="comp-label">Fonte válida (camadas ou fase)</span><span class="comp-pts" style="color:var(--green)">15/15</span></div><div class="comp-bar"><div class="comp-fill" style="width:100%;background:var(--green)"></div></div><div class="comp-detail">125/125 obras</div></div><div><div class="comp-header"><span class="comp-label">Sem datas invertidas</span><span class="comp-pts" style="color:var(--green)">15/15</span></div><div class="comp-bar"><div class="comp-fill" style="width:100%;background:var(--green)"></div></div><div class="comp-detail">124/125 obras</div></div><div><div class="comp-header"><span class="comp-label">Elegíveis no corte temporal</span><span class="comp-pts" style="color:var(--green)">14/15</span></div><div class="comp-bar"><div class="comp-fill" style="width:93%;background:var(--green)"></div></div><div class="comp-detail">125/137 obras</div></div><div><div class="comp-header"><span class="comp-label">Fase execução identificada</span><span class="comp-pts" style="color:var(--green)">15/15</span></div><div class="comp-bar"><div class="comp-fill" style="width:100%;background:var(--green)"></div></div><div class="comp-detail">121/125 obras</div></div><div><div class="comp-header"><span class="comp-label">Visíveis nas abas (zero fantasma)</span><span class="comp-pts" style="color:var(--green)">15/15</span></div><div class="comp-bar"><div class="comp-fill" style="width:100%;background:var(--green)"></div></div><div class="comp-detail">125/125 obras</div></div></div><div class="score-flags"><div class="section-title" style="margin-top:0">Flags de qualidade</div><div class="flag-item"><span class="flag-count">1</span> datas invertidas</div><div class="flag-item"><span class="flag-count">11</span> sem faixa</div></div></div>
 
-  <div class="section-title" style="margin-top:40px">Metodologia</div>
-  <div class="insight" style="border-left-color:var(--muted-2)">
-    <strong>Corte temporal:</strong> somente obras com inicio de execucao a partir de 2026-01-01.
-    <strong>Fonte primaria:</strong> datas de camadas aplicadas (Telegram). <strong>Fallback:</strong> fase Execucao do Painel.
-    Datas artefato (2026-02-28) filtradas. Camadas agrupadas em blocos de trabalho (gap &le; 14d).
-    Mediana de 25 finalizadas. Em execucao = status em_execucao no Painel (16 com dados). Retrabalho = reparo + marcas_rolo_cera (6 com dados).
+    <div class="section-title" style="margin-top:24px">Metodologia</div>
+    <div class="insight" style="border-left-color:var(--muted-2)">
+      <strong>Corte temporal:</strong> somente obras com início de execução a partir de 2026-01-01.
+      <strong>Classificações elegíveis:</strong> entrega_limpa, entrega_com_ressalvas, entrega_com_retrabalho, em_execucao, em_execucao_com_retrabalho, retrabalho_ativo.
+      <strong>Fonte primária:</strong> datas de camadas aplicadas (Telegram). <strong>Fallback:</strong> fase Execução do Painel.
+      Datas artefato (2026-02-28) filtradas. Camadas agrupadas em blocos de trabalho (gap &le; 14d).
+      <strong>Fases:</strong> extraídas do jornadas.json (gerar_jornada.py), categorizadas em planejamento / pré-execução / hibernação / execução / pós-execução.
+      <strong>Eficiência:</strong> % do ciclo total ocupado por execução real (mediana por obra).
+    </div>
   </div>
 </div>
-<footer>Qualidade Monofloor · Execucao por Faixa · 2026-05-21</footer>
+
+<footer>Qualidade Monofloor · Fases e Desempenho por Faixa · 2026-05-27</footer>
 
 <script>
-const F = [{"faixa": "PP", "range": "<60", "n_obras": 6, "n_finalizadas": 2, "n_com_retorno": 3, "pct_retorno": 50.0, "dias_aplicacao": {"media": 1.0, "mediana": 0, "min": 0, "max": 3}, "dias_total_finalizadas": {"media": 13.0, "mediana": 13, "min": 0, "max": 26, "n": 2, "n_com_retorno": 1, "n_sem_retorno": 1}, "dias_com_retorno": {"media": 0.0, "mediana": 0, "n": 1}, "dias_sem_retorno": {"media": 26.0, "mediana": 26, "n": 1}, "em_exec": {"n": 1, "n_com_retorno": 1, "n_sem_retorno": 0, "dias_mediana": 49, "dias_media": 49.0}, "em_retrab": {"n": 1, "dias_mediana": 22, "dias_media": 22.0}, "obras_destaque": [{"cliente": "MARIA TEREZA DA COSTA AGUIAR LUDERS ", "faixa": "PP", "m2": 59.98, "status": "cancelado", "classificacao": "cancelada", "fonte": "fase", "inicio_exec": "2026-03-25", "fim_exec": "2026-04-27", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 57}, {"cliente": "CLAUDIA CEZAR ALVES ", "faixa": "PP", "m2": 55.0, "status": "em_execucao", "classificacao": "em_execucao_com_retrabalho", "fonte": "fase", "inicio_exec": "2026-04-02", "fim_exec": "2026-05-11", "fim_final": null, "n_ciclos": 1, "n_blocos": 0, "tem_retorno": true, "finalizada": false, "em_campo": true, "em_execucao": true, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 10, "dias_total_exec": 49}, {"cliente": "CHRISTIAN KORVER", "faixa": "PP", "m2": 21.84, "status": "finalizado", "classificacao": "entrega_com_ressalvas", "fonte": "camadas", "inicio_exec": "2026-03-12", "fim_exec": "2026-03-12", "fim_final": "2026-04-07", "n_ciclos": 0, "n_blocos": 1, "tem_retorno": false, "finalizada": true, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 0, "dias_aplicacao_jornadas": 15, "dias_total_exec": 26}, {"cliente": "MARCELO ANDRE STEUER", "faixa": "PP", "m2": 14.1, "status": "reparo", "classificacao": "retrabalho_ativo", "fonte": "fase", "inicio_exec": "2026-04-29", "fim_exec": "2026-05-18", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": true, "finalizada": false, "em_campo": true, "em_execucao": false, "em_retrabalho": true, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 22}, {"cliente": "MARIA APARECIDA GONÇALVES MIRANDA ", "faixa": "PP", "m2": 58.06, "status": "planejamento", "classificacao": "pre_obra", "fonte": "camadas", "inicio_exec": "2026-05-05", "fim_exec": "2026-05-08", "fim_final": null, "n_ciclos": 0, "n_blocos": 1, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 3, "dias_aplicacao_jornadas": 7, "dias_total_exec": 16}]}, {"faixa": "P", "range": "60-100", "n_obras": 22, "n_finalizadas": 5, "n_com_retorno": 1, "pct_retorno": 4.5, "dias_aplicacao": {"media": 5.8, "mediana": 3, "min": 0, "max": 17}, "dias_total_finalizadas": {"media": 11.2, "mediana": 13, "min": 1, "max": 21, "n": 5, "n_com_retorno": 0, "n_sem_retorno": 5}, "dias_com_retorno": {"media": 0, "mediana": 0, "n": 0}, "dias_sem_retorno": {"media": 11.2, "mediana": 13, "n": 5}, "em_exec": {"n": 2, "n_com_retorno": 0, "n_sem_retorno": 2, "dias_mediana": 70, "dias_media": 70.5}, "em_retrab": {"n": 0, "dias_mediana": 0, "dias_media": 0}, "obras_destaque": [{"cliente": "DARIO DA SILVA GARCIA ", "faixa": "P", "m2": 65.97, "status": "em_execucao", "classificacao": "em_execucao", "fonte": "fase", "inicio_exec": "2026-01-02", "fim_exec": "2026-01-02", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": true, "em_execucao": true, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 139}, {"cliente": "DANIELE DE LIMA KRAMM ", "faixa": "P", "m2": 80.0, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-01-02", "fim_exec": "2026-01-02", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 139}, {"cliente": "GUILHERME RECUPERO ", "faixa": "P", "m2": 73.17, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-03-12", "fim_exec": "2026-05-18", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 70}, {"cliente": "ADRIANA RUTH ADLER", "faixa": "P", "m2": 81.15, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-03-25", "fim_exec": "2026-05-20", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 57}, {"cliente": "CRISTIANE TAVARES", "faixa": "P", "m2": 92.3, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-03-25", "fim_exec": "2026-05-05", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 57}]}, {"faixa": "M", "range": "100-150", "n_obras": 26, "n_finalizadas": 7, "n_com_retorno": 9, "pct_retorno": 34.6, "dias_aplicacao": {"media": 6.7, "mediana": 6, "min": 0, "max": 19}, "dias_total_finalizadas": {"media": 32.3, "mediana": 25, "min": 8, "max": 95, "n": 7, "n_com_retorno": 3, "n_sem_retorno": 4}, "dias_com_retorno": {"media": 28.3, "mediana": 33, "n": 3}, "dias_sem_retorno": {"media": 35.2, "mediana": 19, "n": 4}, "em_exec": {"n": 7, "n_com_retorno": 3, "n_sem_retorno": 4, "dias_mediana": 28, "dias_media": 44.1}, "em_retrab": {"n": 1, "dias_mediana": 112, "dias_media": 112.0}, "obras_destaque": [{"cliente": "OTACÍLIO COUTO FARIAS ", "faixa": "M", "m2": 142.0, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-01-02", "fim_exec": "2026-05-12", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 139}, {"cliente": "TÂMARA NEWMAN LOBATO SOUZA", "faixa": "M", "m2": 107.77, "status": "pausado", "classificacao": "pausada", "fonte": "camadas", "inicio_exec": "2026-01-07", "fim_exec": "2026-02-14", "fim_final": null, "n_ciclos": 2, "n_blocos": 2, "tem_retorno": true, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 0, "dias_aplicacao_jornadas": 9, "dias_total_exec": 134}, {"cliente": "UNKÊ ARQUITETURA E ENGENHARIA LTDA (Rua João Moura)", "faixa": "M", "m2": 114.39, "status": "em_execucao", "classificacao": "em_execucao", "fonte": "camadas", "inicio_exec": "2026-01-08", "fim_exec": "2026-01-09", "fim_final": null, "n_ciclos": 0, "n_blocos": 1, "tem_retorno": false, "finalizada": false, "em_campo": true, "em_execucao": true, "em_retrabalho": false, "dias_aplicacao": 1, "dias_aplicacao_jornadas": 15, "dias_total_exec": 133}, {"cliente": "UNKÊ ARQUITETURA E ENGENHARIA LTDA", "faixa": "M", "m2": 104.64, "status": "aguardando_execucao", "classificacao": "entrega_limpa", "fonte": "camadas", "inicio_exec": "2026-01-08", "fim_exec": "2026-05-21", "fim_final": null, "n_ciclos": 0, "n_blocos": 2, "tem_retorno": true, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 3, "dias_aplicacao_jornadas": 5, "dias_total_exec": 133}, {"cliente": "GUSTAVO DE SOUZA PEREIRA", "faixa": "M", "m2": 112.01, "status": "marcas_rolo_cera", "classificacao": "retrabalho_ativo", "fonte": "camadas", "inicio_exec": "2026-01-29", "fim_exec": "2026-02-07", "fim_final": null, "n_ciclos": 1, "n_blocos": 1, "tem_retorno": true, "finalizada": false, "em_campo": true, "em_execucao": false, "em_retrabalho": true, "dias_aplicacao": 9, "dias_aplicacao_jornadas": 7, "dias_total_exec": 112}]}, {"faixa": "G", "range": "150-220", "n_obras": 17, "n_finalizadas": 7, "n_com_retorno": 5, "pct_retorno": 29.4, "dias_aplicacao": {"media": 22.5, "mediana": 18, "min": 12, "max": 42}, "dias_total_finalizadas": {"media": 37.1, "mediana": 13, "min": 0, "max": 110, "n": 7, "n_com_retorno": 1, "n_sem_retorno": 6}, "dias_com_retorno": {"media": 89.0, "mediana": 89, "n": 1}, "dias_sem_retorno": {"media": 28.5, "mediana": 12, "n": 6}, "em_exec": {"n": 0, "n_com_retorno": 0, "n_sem_retorno": 0, "dias_mediana": 0, "dias_media": 0}, "em_retrab": {"n": 2, "dias_mediana": 122, "dias_media": 122.0}, "obras_destaque": [{"cliente": "GUILHERME HAIDAR BERJEAUT", "faixa": "G", "m2": 194.54, "status": "planejamento", "classificacao": "entrega_com_retrabalho", "fonte": "camadas", "inicio_exec": "2026-01-07", "fim_exec": "2026-02-18", "fim_final": null, "n_ciclos": 1, "n_blocos": 1, "tem_retorno": true, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 42, "dias_aplicacao_jornadas": 3, "dias_total_exec": 134}, {"cliente": "JOSE ANTUNES SOBRINHO ", "faixa": "G", "m2": 162.16, "status": "reparo", "classificacao": "retrabalho_ativo", "fonte": "fase", "inicio_exec": "2026-01-19", "fim_exec": "2026-01-19", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": true, "finalizada": false, "em_campo": true, "em_execucao": false, "em_retrabalho": true, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 122}, {"cliente": "HS ENGENHARIA E CONSULTORIA LTDA (Pedro Henning)", "faixa": "G", "m2": 158.34, "status": "finalizado", "classificacao": "entrega_com_ressalvas", "fonte": "fase", "inicio_exec": "2026-01-23", "fim_exec": "2026-05-06", "fim_final": "2026-05-13", "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": true, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 7, "dias_total_exec": 110}, {"cliente": "CONDOMINIO EDIFICIO DONA CORINA (CAIO ARRUDA)", "faixa": "G", "m2": 157.68, "status": "finalizado", "classificacao": "entrega_com_ressalvas", "fonte": "camadas", "inicio_exec": "2026-02-14", "fim_exec": "2026-05-04", "fim_final": "2026-05-14", "n_ciclos": 0, "n_blocos": 2, "tem_retorno": true, "finalizada": true, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 23, "dias_aplicacao_jornadas": 1, "dias_total_exec": 89}, {"cliente": "GAMA EMPREENDIMENTOS E PARTICIPAÇÕES LTDA", "faixa": "G", "m2": 190.57, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-03-26", "fim_exec": "2026-05-12", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 56}]}, {"faixa": "GG", "range": "220-300", "n_obras": 11, "n_finalizadas": 2, "n_com_retorno": 3, "pct_retorno": 27.3, "dias_aplicacao": {"media": 5.0, "mediana": 0, "min": 0, "max": 19}, "dias_total_finalizadas": {"media": 19.5, "mediana": 20, "min": 0, "max": 39, "n": 2, "n_com_retorno": 1, "n_sem_retorno": 1}, "dias_com_retorno": {"media": 39.0, "mediana": 39, "n": 1}, "dias_sem_retorno": {"media": 0.0, "mediana": 0, "n": 1}, "em_exec": {"n": 3, "n_com_retorno": 1, "n_sem_retorno": 2, "dias_mediana": 8, "dias_media": 38.3}, "em_retrab": {"n": 1, "dias_mediana": 23, "dias_media": 23.0}, "obras_destaque": [{"cliente": "MONTRELUX SOLUÇÕES EM VIDRO LTDA", "faixa": "GG", "m2": 221.34, "status": "em_execucao", "classificacao": "em_execucao_com_retrabalho", "fonte": "camadas", "inicio_exec": "2026-02-05", "fim_exec": "2026-05-06", "fim_final": null, "n_ciclos": 1, "n_blocos": 2, "tem_retorno": true, "finalizada": false, "em_campo": true, "em_execucao": true, "em_retrabalho": false, "dias_aplicacao": 0, "dias_aplicacao_jornadas": 2, "dias_total_exec": 105}, {"cliente": "PAULA LOBO FURTADO MACHADO ", "faixa": "GG", "m2": 248.52, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-04-01", "fim_exec": "2026-04-28", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 1, "dias_total_exec": 50}, {"cliente": "CONSULADO-GERAL DA SUÍÇA ", "faixa": "GG", "m2": 296.39, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-04-01", "fim_exec": "2026-05-21", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 50}, {"cliente": "INSTITUTO DE PESQUISA DA COZINHA BRASILEIRA", "faixa": "GG", "m2": 243.97, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-04-02", "fim_exec": "2026-05-05", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 0, "dias_total_exec": 49}, {"cliente": "YAHYA EL HASSAN", "faixa": "GG", "m2": 258.28, "status": "finalizado", "classificacao": "entrega_com_retrabalho", "fonte": "camadas", "inicio_exec": "2026-01-23", "fim_exec": "2026-03-03", "fim_final": "2026-03-03", "n_ciclos": 1, "n_blocos": 2, "tem_retorno": true, "finalizada": true, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 19, "dias_aplicacao_jornadas": 9, "dias_total_exec": 39}]}, {"faixa": "XG", "range": ">300", "n_obras": 13, "n_finalizadas": 1, "n_com_retorno": 3, "pct_retorno": 23.1, "dias_aplicacao": {"media": 0.2, "mediana": 0, "min": 0, "max": 1}, "dias_total_finalizadas": {"media": 46.0, "mediana": 46, "min": 46, "max": 46, "n": 1, "n_com_retorno": 0, "n_sem_retorno": 1}, "dias_com_retorno": {"media": 0, "mediana": 0, "n": 0}, "dias_sem_retorno": {"media": 46.0, "mediana": 46, "n": 1}, "em_exec": {"n": 1, "n_com_retorno": 1, "n_sem_retorno": 0, "dias_mediana": 6, "dias_media": 6.0}, "em_retrab": {"n": 1, "dias_mediana": 121, "dias_media": 121.0}, "obras_destaque": [{"cliente": "AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA ", "faixa": "XG", "m2": 489.89, "status": "pausado", "classificacao": "pausada", "fonte": "camadas", "inicio_exec": "2026-01-12", "fim_exec": "2026-01-28", "fim_final": null, "n_ciclos": 0, "n_blocos": 2, "tem_retorno": true, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 1, "dias_aplicacao_jornadas": 11, "dias_total_exec": 129}, {"cliente": "NINA RODRIGUES FIALDINI", "faixa": "XG", "m2": 765.33, "status": "planejamento", "classificacao": "pre_obra", "fonte": "camadas", "inicio_exec": "2026-01-16", "fim_exec": "2026-01-16", "fim_final": null, "n_ciclos": 0, "n_blocos": 1, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 0, "dias_aplicacao_jornadas": 8, "dias_total_exec": 125}, {"cliente": "ANTONIO CARLOS CANTO PORTO NETO", "faixa": "XG", "m2": 362.65, "status": "reparo", "classificacao": "retrabalho_ativo", "fonte": "fase", "inicio_exec": "2026-01-20", "fim_exec": "2026-02-12", "fim_final": null, "n_ciclos": 1, "n_blocos": 0, "tem_retorno": true, "finalizada": false, "em_campo": true, "em_execucao": false, "em_retrabalho": true, "dias_aplicacao": null, "dias_aplicacao_jornadas": 1, "dias_total_exec": 121}, {"cliente": "FABIO FEDERICI DE CARVALHO", "faixa": "XG", "m2": 333.31, "status": "planejamento", "classificacao": "pre_obra", "fonte": "camadas", "inicio_exec": "2026-03-03", "fim_exec": "2026-03-03", "fim_final": null, "n_ciclos": 0, "n_blocos": 1, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": 0, "dias_aplicacao_jornadas": 1, "dias_total_exec": 79}, {"cliente": "LEONARDO GUERZONI FURTADO DE OLIVEIRA", "faixa": "XG", "m2": 353.67, "status": "planejamento", "classificacao": "pre_obra", "fonte": "fase", "inicio_exec": "2026-03-25", "fim_exec": "2026-04-08", "fim_final": null, "n_ciclos": 0, "n_blocos": 0, "tem_retorno": false, "finalizada": false, "em_campo": false, "em_execucao": false, "em_retrabalho": false, "dias_aplicacao": null, "dias_aplicacao_jornadas": 2, "dias_total_exec": 57}]}];
-const G = {"total_analisadas": 100, "finalizadas": 25, "finalizadas_com_retorno": 7, "finalizadas_sem_retorno": 18, "ativas": 75, "com_retorno": 28, "pct_retorno": 28.0, "pct_retorno_fin": 28.0, "n_com_camadas": 39, "dias_aplicacao_media": 6.8, "dias_aplicacao_mediana": 3, "dias_total_finalizadas_media": 27.2, "dias_total_finalizadas_mediana": 19, "dias_com_retorno_media": 34.1, "dias_com_retorno_mediana": 33, "dias_sem_retorno_media": 24.4, "dias_sem_retorno_mediana": 13, "impacto_retorno_dias": 9.7, "em_campo_total": 22, "em_campo_exec": 16, "em_campo_retrab": 6, "em_campo_dias_mediana": 26, "em_campo_dias_media": 52.1, "em_campo_exec_mediana": 22, "em_campo_retrab_mediana": 112};
-const FAIXA_COLORS = {"PP": "#8a5cb0", "P": "#4a7ab8", "M": "#3d8a5a", "G": "#b89a4a", "GG": "#c47a4a", "XG": "#c45a5a"};
-
 function switchTab(id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('panel-' + id).classList.add('active');
   event.target.closest('.tab').classList.add('active');
 }
-
-function init() {
-  renderHeadline();
-  renderKPIsFin();
-  renderKPIsExec();
-  renderKPIsRetrab();
-  renderFaixasFin();
-  renderFaixasExec();
-  renderFaixasRetrab();
-  renderInsights();
-}
-
-function renderHeadline() {
-  document.getElementById('headline').innerHTML = `
-    <h2>Quanto tempo leva a execucao real?</h2>
-    <div class="manchete">Da primeira camada ate a finalizacao: <strong>${G.dias_total_finalizadas_mediana} dias</strong> (mediana). Das ${G.finalizadas} finalizadas: <span style="color:var(--green);font-weight:600">${G.finalizadas_sem_retorno} limpas</span> + <span style="color:var(--red);font-weight:600">${G.finalizadas_com_retorno} com retorno</span> (${G.pct_retorno_fin}%). O retorno adiciona em media <span style="color:var(--red);font-weight:600">+${G.impacto_retorno_dias} dias</span>.</div>
-    <p>${G.total_analisadas} obras com dados. ${G.finalizadas} finalizadas, ${G.em_campo_exec} em execucao, ${G.em_campo_retrab} em retrabalho.</p>`;
-}
-
-function renderKPIsFin() {
-  document.getElementById('kpis-fin').innerHTML = `
-    <div class="kpi"><div class="kpi-label">Finalizadas</div><div class="kpi-value">${G.finalizadas}<small>obras</small></div><div class="kpi-sub">1a camada ate finalizacao</div>
-      <div class="kpi-compare"><span class="limpa">${G.finalizadas_sem_retorno} limpas</span><span class="retorno">${G.finalizadas_com_retorno} com retorno</span></div></div>
-    <div class="kpi"><div class="kpi-label">Exec. total (mediana)</div><div class="kpi-value">${G.dias_total_finalizadas_mediana}<small>dias</small></div><div class="kpi-sub">Mediana geral</div>
-      <div class="kpi-compare"><span class="limpa">${G.dias_sem_retorno_mediana}d limpa</span><span class="retorno">${G.dias_com_retorno_mediana}d c/ retorno</span></div></div>
-    <div class="kpi"><div class="kpi-label">Taxa de retorno (fin.)</div><div class="kpi-value" style="color:var(--red)">${G.pct_retorno_fin}<small>%</small></div><div class="kpi-sub">${G.finalizadas_com_retorno} de ${G.finalizadas} finalizadas</div></div>
-    <div class="kpi"><div class="kpi-label">Custo do retorno</div><div class="kpi-value" style="color:var(--red)">+${G.impacto_retorno_dias}<small>dias</small></div><div class="kpi-sub">Media adicional vs entrega limpa</div></div>`;
-}
-
-function renderKPIsExec() {
-  document.getElementById('kpis-exec').innerHTML = `
-    <div class="kpi"><div class="kpi-label">Em execucao</div><div class="kpi-value">${G.em_campo_exec}<small>obras</small></div><div class="kpi-sub">Status em_execucao no Painel</div></div>
-    <div class="kpi"><div class="kpi-label">Dias em curso (mediana)</div><div class="kpi-value">${G.em_campo_exec_mediana}<small>dias</small></div><div class="kpi-sub">Desde inicio da execucao</div></div>
-    <div class="kpi"><div class="kpi-label">Benchmark fin.</div><div class="kpi-value" style="color:var(--muted)">${G.dias_total_finalizadas_mediana}<small>dias</small></div><div class="kpi-sub">Mediana das finalizadas</div></div>
-    <div class="kpi"><div class="kpi-label">Aplicacao fisica</div><div class="kpi-value">${G.dias_aplicacao_mediana}<small>dias</small></div><div class="kpi-sub">Mediana geral (camadas)</div></div>`;
-}
-
-function renderKPIsRetrab() {
-  document.getElementById('kpis-retrab').innerHTML = `
-    <div class="kpi"><div class="kpi-label">Em retrabalho</div><div class="kpi-value" style="color:var(--red)">${G.em_campo_retrab}<small>obras</small></div><div class="kpi-sub">Reparo + marcas rolo cera</div></div>
-    <div class="kpi"><div class="kpi-label">Dias em curso (mediana)</div><div class="kpi-value" style="color:var(--red)">${G.em_campo_retrab_mediana}<small>dias</small></div><div class="kpi-sub">Desde inicio da execucao</div></div>
-    <div class="kpi"><div class="kpi-label">Custo do retorno</div><div class="kpi-value" style="color:var(--red)">+${G.impacto_retorno_dias}<small>dias</small></div><div class="kpi-sub">Media adicional vs entrega limpa</div></div>
-    <div class="kpi"><div class="kpi-label">Benchmark fin.</div><div class="kpi-value" style="color:var(--muted)">${G.dias_total_finalizadas_mediana}<small>dias</small></div><div class="kpi-sub">Mediana das finalizadas</div></div>`;
-}
-
-function renderFaixasFin() {
-  const grid = document.getElementById('faixasGrid-fin');
-  F.forEach(f => {
-    if (f.n_finalizadas === 0) return;
-    const color = FAIXA_COLORS[f.faixa] || '#999';
-    const nFin = f.dias_total_finalizadas.n;
-    const nRet = f.dias_total_finalizadas.n_com_retorno;
-    const nLimpa = f.dias_total_finalizadas.n_sem_retorno;
-    const pctRet = nFin > 0 ? Math.round(nRet / nFin * 100) : 0;
-    const pctLimpa = 100 - pctRet;
-    const topObras = f.obras_destaque.filter(o => o.finalizada).slice(0,3).map(o => `${o.cliente.substring(0,25)} (${o.dias_total_exec}d${o.tem_retorno?' ret':''})`).join(', ');
-
-    grid.innerHTML += `
-      <div class="faixa-card" style="border-top:3px solid ${color}">
-        <div class="faixa-header">
-          <span class="faixa-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${f.faixa}</span>
-          <span class="faixa-range">${f.range} m2</span>
-          <span class="faixa-n">${nFin} fin</span>
-        </div>
-        <div class="faixa-main">
-          <div><div class="faixa-metric-label">Exec. total (med)</div><div class="faixa-metric-value">${f.dias_total_finalizadas.mediana}<small>d</small></div></div>
-          <div><div class="faixa-metric-label">Aplicacao (med)</div><div class="faixa-metric-value">${f.dias_aplicacao.mediana}<small>d</small></div></div>
-          <div><div class="faixa-metric-label">Composicao</div><div class="faixa-metric-value" style="font-size:14px"><span style="color:var(--green)">${nLimpa} limpas</span> + <span style="color:var(--red)">${nRet} ret</span></div></div>
-          <div><div class="faixa-metric-label">% retorno</div><div class="faixa-metric-value" style="color:var(--red)">${pctRet}<small>%</small></div></div>
-        </div>
-        <div class="faixa-bar">
-          <div class="faixa-bar-seg" style="width:${pctLimpa}%;background:${color}88"></div>
-          <div class="faixa-bar-seg" style="width:${pctRet}%;background:var(--red)"></div>
-        </div>
-        <div class="faixa-detail">
-          ${f.dias_sem_retorno.n > 0 ? '<strong>Limpa:</strong> ' + f.dias_sem_retorno.mediana + 'd mediana (' + f.dias_sem_retorno.n + ' obras). ' : ''}
-          ${f.dias_com_retorno.n > 0 ? '<strong>Com retorno:</strong> ' + f.dias_com_retorno.mediana + 'd mediana (' + f.dias_com_retorno.n + ' obras). ' : ''}
-          ${topObras ? '<br>Mais longas: ' + topObras : ''}
-        </div>
-      </div>`;
-  });
-}
-
-function renderFaixasGeneric(gridId, dataKey, label) {
-  const grid = document.getElementById(gridId);
-  F.forEach(f => {
-    const c = f[dataKey];
-    if (c.n === 0) return;
-    const color = FAIXA_COLORS[f.faixa] || '#999';
-    const benchFin = f.dias_total_finalizadas.mediana;
-    const excede = c.dias_mediana > benchFin && benchFin > 0;
-
-    grid.innerHTML += `
-      <div class="faixa-card" style="border-top:3px solid ${color}">
-        <div class="faixa-header">
-          <span class="faixa-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">${f.faixa}</span>
-          <span class="faixa-range">${f.range} m2</span>
-          <span class="faixa-n">${c.n} ${label}</span>
-        </div>
-        <div class="faixa-main">
-          <div><div class="faixa-metric-label">Dias em curso (med)</div><div class="faixa-metric-value" ${excede ? 'style="color:var(--red)"' : ''}>${c.dias_mediana}<small>d</small></div></div>
-          <div><div class="faixa-metric-label">Benchmark fin.</div><div class="faixa-metric-value" style="color:var(--muted)">${benchFin}<small>d</small></div></div>
-        </div>
-        <div class="faixa-detail">
-          ${excede ? '<strong style="color:var(--red)">Mediana ja excede benchmark das finalizadas.</strong>' : '<strong style="color:var(--green)">Dentro do benchmark.</strong>'}
-        </div>
-      </div>`;
-  });
-}
-
-function renderFaixasExec() { renderFaixasGeneric('faixasGrid-exec', 'em_exec', 'em exec'); }
-function renderFaixasRetrab() { renderFaixasGeneric('faixasGrid-retrab', 'em_retrab', 'retrab'); }
-
-function renderInsights() {
-  const el = document.getElementById('insights');
-  let html = '';
-
-  const worstRet = F.reduce((a,b) => a.pct_retorno > b.pct_retorno ? a : b);
-  const bestRet = F.filter(f=>f.n_obras>=3).reduce((a,b) => a.pct_retorno < b.pct_retorno ? a : b, F[0]);
-  html += '<div class="insight"><strong>Faixa com mais retorno:</strong> ' + worstRet.faixa + ' (' + worstRet.range + ' m2) com <span class="neg">' + worstRet.pct_retorno + '% de retorno</span>. ';
-  if (bestRet.faixa !== worstRet.faixa) html += 'Menor taxa: ' + bestRet.faixa + ' com <span class="pos">' + bestRet.pct_retorno + '%</span>.';
-  html += '</div>';
-
-  if (G.impacto_retorno_dias > 0) {
-    html += '<div class="insight"><strong>Impacto do retorno no prazo:</strong> obras com retorno levam em media <span class="neg">+' + G.impacto_retorno_dias + ' dias</span> que entregas limpas (' + G.dias_com_retorno_mediana + 'd vs ' + G.dias_sem_retorno_mediana + 'd mediana).</div>';
-  }
-
-  const fastest = F.filter(f=>f.dias_total_finalizadas.n>0).reduce((a,b) => a.dias_total_finalizadas.mediana < b.dias_total_finalizadas.mediana ? a : b, F[0]);
-  html += '<div class="insight"><strong>Faixa mais rapida:</strong> ' + fastest.faixa + ' (' + fastest.range + ' m2) com mediana de <span class="pos">' + fastest.dias_total_finalizadas.mediana + ' dias</span> da 1a camada ate finalizacao.</div>';
-
-  const alertasExec = F.filter(f => f.em_exec.n > 0 && f.dias_total_finalizadas.n > 0 && f.em_exec.dias_mediana > f.dias_total_finalizadas.mediana);
-  if (alertasExec.length > 0) {
-    html += '<div class="insight" style="border-left-color:var(--amber)"><strong>Execucao acima do benchmark:</strong> ';
-    html += alertasExec.map(f => f.faixa + ' (' + f.em_exec.dias_mediana + 'd vs ' + f.dias_total_finalizadas.mediana + 'd)').join(', ');
-    html += '.</div>';
-  }
-
-  el.innerHTML = html;
-}
-
-init();
 </script>
 </body>
 </html>
