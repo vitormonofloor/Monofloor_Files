@@ -1143,7 +1143,14 @@ def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_
 
     PAD_NEGACAO = re.compile(r"\b(n[ãa]o\s+precisa|sem\s+necessidade|n[ãa]o\s+precisamos|n[ãa]o\s+precisar[áa]?)\b", re.IGNORECASE)
     PAD_SOBRA_FOTO = re.compile(r"\bsobr[ao]u?\s+(de\s+)?material|sobra\s+de\s+material", re.IGNORECASE)
-    PAD_PRECISA_ACAO = re.compile(r"\bprecis[ao]\s+(acess?ar|buscar|retirar|ir|verificar)\b", re.IGNORECASE)
+    # "precisa/vai precisar + VERBO de ação" = necessidade de fazer algo, não de pedir material
+    PAD_PRECISA_ACAO = re.compile(r"\bprecis[ao]\s+(acess?ar|buscar|retirar|ir|verificar|rolar|aplicar|faz|fixar|dar|passar|lix|refaz|sec|aguard|esper|deix|coloc|us[ao]|repassar|retornar|voltar|remov|ser\s+feito)", re.IGNORECASE)
+    # Filtros de falso positivo calibrados 2026-05-27 (FP medido: 18% · maioria posse/relato)
+    PAD_ACAO_CONCLUIDA = re.compile(r"\b(foi\s+preciso|foi\s+feito|foi\s+aplicad|j[áa]\s+(foi\s+)?aplicad)", re.IGNORECASE)
+    PAD_POSSE = re.compile(r"\b(tenho\s+\d|temos\s+\d|tem\s+\d+\s+balde|recebi|recebemos|chegou\s+o|chegaram\s+os|ficou\s+respons|n[ãa]o\s+tinha\s+mais\s+o\s+que)\b", re.IGNORECASE)
+    PAD_ORCAMENTO = re.compile(r"\bor[çc]amento\b", re.IGNORECASE)
+    # Sinal FORTE de pedido · se presente, NÃO exclui (protege de falso negativo)
+    PAD_PEDIDO_FORTE = re.compile(r"\b(acabou|falt(a|ou|ando)|manda\s+(mais|o|a)|envi\w*\s+mais|n[ãa]o\s+tem\s+mais|preciso\s+de\s+mais|quase\s+acabando)\b", re.IGNORECASE)
 
     def palavras_chave(texto):
         """Extrai palavras-chave do tópico (tela, massa, primer, etc) pra dedup."""
@@ -1176,7 +1183,11 @@ def detectar_solicitacoes_material(msgs_ordenadas, cluster_exec_inicio, cluster_
         if PAD_SOBRA_FOTO.search(texto):
             continue  # informe de sobra · já capturado em sobras
         if PAD_PRECISA_ACAO.search(texto):
-            continue  # "precisa acessar/buscar" · ação de fluxo, não material
+            continue  # "precisa acessar/aplicar/rolar..." · ação, não material
+        # FP calibrados: posse ("tenho 5 baldes"), orçamento, ação concluída ("foi preciso fazer"),
+        # relato do Kira ("recebemos as imagens") · só exclui se NÃO houver sinal forte de pedido
+        if (PAD_POSSE.search(texto) or PAD_ORCAMENTO.search(texto) or PAD_ACAO_CONCLUIDA.search(texto)) and not PAD_PEDIDO_FORTE.search(texto):
+            continue
         if not (PAD_MAT_SOLIC.search(texto) or PAD_TELA_TOTAL.search(texto)):
             continue
         # Classificar produto — sem contexto de material/insumo = falso positivo
