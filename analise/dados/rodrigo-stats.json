@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-27T00:12:11Z",
+  "atualizado_em": "2026-05-27T04:56:58Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1078,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 6,
+        "daysUntilEntry": 5,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 6 dias do início",
-        "daysUntilEntry": 6,
+        "message": "Projeto sem equipe definida a 5 dias do início",
+        "daysUntilEntry": 5,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 27,
+        "daysUntilEntry": 26,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -113,7 +113,7 @@
         "type": "CAPACITY_RISK",
         "severity": "LOW",
         "message": "Projeto exige ~11 aplicadores (1008.65m² em 20 dias)",
-        "daysUntilEntry": 27,
+        "daysUntilEntry": 26,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Prazo adequado para 1008.65m²"
       }
@@ -8055,26 +8055,26 @@
   "lw": {
     "luana": {
       "n": 80,
-      "mediana": 267,
+      "mediana": 268,
       "n180": 52,
-      "n270": 38,
+      "n270": 39,
       "zumbi": 8,
       "reparo": 7,
       "pausadas": 0
     },
     "wesley": {
       "n": 76,
-      "mediana": 218,
-      "n180": 46,
+      "mediana": 219,
+      "n180": 48,
       "n270": 26,
       "zumbi": 14,
       "reparo": 9,
       "pausadas": 0
     },
     "total_ativas": 234,
-    "n_180_total": 108,
+    "n_180_total": 112,
     "concentracao_pct": 66.7,
-    "concentracao_180_pct": 90.7,
+    "concentracao_180_pct": 89.3,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
