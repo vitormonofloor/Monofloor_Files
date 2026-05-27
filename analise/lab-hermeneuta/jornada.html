@@ -3896,12 +3896,19 @@
     <div class="pilar-resumo" id="pilar-resumo-qual"></div>
     <div class="comp-secao">
       <h3>Qualidade da Entrega</h3>
-      <div class="comp-grid">
-        <div class="comp-chart-wrap"><canvas id="comp-chart-qual"></canvas></div>
-        <div class="comp-tw">
-          <div class="comp-tw-titulo">Obras com retrabalho ou ressalvas</div>
-          <table class="comp-tab" id="comp-tab-qual"><thead><tr><th>Obra</th><th>Classif.</th><th>Occ.</th><th>Score</th></tr></thead><tbody></tbody></table>
-          <div class="comp-vm" id="comp-vm-qual" onclick="compExpandir('qual')">Ver todas</div>
+      <div class="prazo-narrativa" id="qual-narrativa"></div>
+      <div class="prazo-grid-evidencia">
+        <div>
+          <div class="comp-chart-wrap prazo-chart-dist"><canvas id="comp-chart-qual"></canvas></div>
+          <div class="prazo-decomp" id="qual-decomp"></div>
+        </div>
+        <div>
+          <div class="comp-chart-wrap prazo-chart-trend"><canvas id="qual-chart-trend"></canvas></div>
+          <div class="comp-tw" style="margin-top:12px">
+            <div class="comp-tw-titulo">Obras com retrabalho ou ressalvas</div>
+            <table class="comp-tab" id="comp-tab-qual"><thead><tr><th>Obra</th><th>Classif.</th><th>Occ.</th><th>Fricção</th></tr></thead><tbody></tbody></table>
+            <div class="comp-vm" id="comp-vm-qual" onclick="compExpandir('qual')">Ver todas</div>
+          </div>
         </div>
       </div>
     </div>
@@ -7399,13 +7406,59 @@ function compPrazo(F){
 
 function compQualidade(F){
   const fin=F.filter(o=>COMP_FIN.includes(o.status));
+  const n=fin.length;
   const lm=fin.filter(o=>o.classificacao==='entrega_limpa').length;
   const rs=fin.filter(o=>o.classificacao==='entrega_com_ressalvas').length;
   const rt=fin.filter(o=>o.classificacao==='entrega_com_retrabalho').length;
-  const ou=fin.length-lm-rs-rt;
-  compChart('comp-chart-qual','doughnut',{labels:['Limpa','Ressalvas','Retrabalho','Outros'],datasets:[{data:[lm,rs,rt,ou],backgroundColor:['#5fa073','#c4a040','#c04030','#d6cdbd'],borderWidth:0}]},fin.length+' fin.');
-  const rows=fin.filter(o=>o.classificacao!=='entrega_limpa').map(o=>({n:o.cliente||'—',cl:o.classificacao,oc:o.friccao?.ocorrencias_formais?.length||0,sc:o.score_risco??'—'})).sort((a,b)=>{const o={entrega_com_retrabalho:0,entrega_com_ressalvas:1};return(o[a.cl]??2)-(o[b.cl]??2)||(typeof b.sc==='number'?b.sc:0)-(typeof a.sc==='number'?a.sc:0)});
-  compTabRows('comp-tab-qual',rows,compExpanded.qual?rows.length:COMP_LIMIT,r=>{const c=r.cl==='entrega_com_retrabalho'?'r':'a';return`<td class="cn" title="${compEsc(r.n)}">${compEsc(r.n)}</td><td><span class="cb cb-${c}">${COMP_LBL_CLS[r.cl]||r.cl}</span></td><td class="cv">${r.oc}</td><td class="cv">${r.sc}</td>`});
+  const ou=n-lm-rs-rt;
+  const pctLm=n?Math.round(lm/n*100):0, pctRs=n?Math.round(rs/n*100):0, pctRt=n?Math.round(rt/n*100):0;
+
+  compChart('comp-chart-qual','doughnut',{labels:['Limpa','Ressalvas','Retrabalho','Outros'],datasets:[{data:[lm,rs,rt,ou],backgroundColor:['#5fa073','#c4a040','#c04030','#d6cdbd'],borderWidth:0}]},n+' fin.');
+
+  // Ocorrências formais + severidade de fricção
+  let occTot=0, comOcc=0; const fr={critico:0,alto:0,medio:0,baixo:0,nenhum:0};
+  fin.forEach(o=>{const ff=o.friccao||{};const oc=(ff.ocorrencias_formais||[]).length;occTot+=oc;if(oc)comOcc++;const nv=(ff.nivel||'nenhum');if(fr[nv]!=null)fr[nv]++;});
+  const fGrave=fr.critico+fr.alto;
+
+  // Narrativa
+  const cLm=pctLm>=30?'pn-ok':pctLm>=15?'pn-warn':'pn-crit';
+  let narr=`Das <span class="pn-num">${n}</span> obras finalizadas, <span class="pn-num ${cLm}">${pctLm}%</span> saíram sem nenhuma ressalva. <span class="pn-num pn-warn">${pctRs}%</span> entregaram com ressalvas e <span class="pn-num pn-crit">${pctRt}%</span> exigiram retrabalho físico.`;
+  narr+=`<span class="pn-sep"></span><span class="pn-muted">Ressalva = ocorrência registrada sem reaplicação · retrabalho = reaplicação física do piso. São coisas diferentes.</span>`;
+  if(occTot>0){
+    narr+=`<span class="pn-sep"></span><span class="pn-num">${occTot}</span> ocorrências formais em <span class="pn-num">${comOcc}</span> obras`;
+    narr+=fGrave>0?` — <span class="pn-num pn-crit">${fGrave}</span> chegaram a fricção alta ou crítica.`:'.';
+  }
+  document.getElementById('qual-narrativa').innerHTML=narr;
+
+  // Decomposição: severidade das ocorrências
+  const sev=[['Crítico',fr.critico,'#c04030'],['Alto',fr.alto,'#d07a30'],['Médio',fr.medio,'#c4a040'],['Baixo',fr.baixo,'#8fb870'],['Sem fricção',fr.nenhum,'#5fa073']];
+  const sevTot=sev.reduce((s,x)=>s+x[1],0)||1;
+  const segs=sev.filter(x=>x[1]>0).map(x=>`<div class="prazo-decomp-seg" style="width:${x[1]/sevTot*100}%;background:${x[2]}">${x[1]/sevTot>0.06?x[1]:''}</div>`).join('');
+  const legs=sev.filter(x=>x[1]>0).map(x=>`<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:${x[2]}"></span>${x[0]} ${x[1]}</span>`).join('');
+  document.getElementById('qual-decomp').innerHTML=`
+    <div class="prazo-decomp-titulo">Severidade das ocorrências (${n} obras)</div>
+    <div class="prazo-decomp-row"><div class="prazo-decomp-label">${n} obras</div><div class="prazo-decomp-bar">${segs}</div></div>
+    <div class="prazo-decomp-leg" style="flex-wrap:wrap">${legs}</div>`;
+
+  // Tendência mensal: % retrabalho × % entrega limpa
+  const hoje=new Date().toISOString().slice(0,7);
+  const porMes={};
+  fin.forEach(o=>{const m=(o.data_inicio_real||'').slice(0,7);if(m&&m>='2025-09'&&m<=hoje){if(!porMes[m])porMes[m]={n:0,lm:0,rt:0};porMes[m].n++;if(o.classificacao==='entrega_limpa')porMes[m].lm++;if(o.classificacao==='entrega_com_retrabalho')porMes[m].rt++;}});
+  const meses=Object.keys(porMes).sort().slice(-10);
+  const nmes=['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const lbl=meses.map(m=>{const p=m.split('-');return nmes[+p[1]]+'/'+p[0].slice(2)});
+  const dRt=meses.map(m=>porMes[m].n?Math.round(porMes[m].rt/porMes[m].n*100):null);
+  const dLm=meses.map(m=>porMes[m].n?Math.round(porMes[m].lm/porMes[m].n*100):null);
+  compChart('qual-chart-trend','line',{labels:lbl,datasets:[{label:'% Retrabalho',data:dRt,borderColor:'#c04030',backgroundColor:'rgba(192,64,48,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#c04030',yAxisID:'y'},{label:'% Limpa',data:dLm,borderColor:'#5fa073',backgroundColor:'transparent',borderDash:[5,3],tension:.3,pointRadius:4,pointBackgroundColor:'#5fa073',yAxisID:'y'}]},null,{plugins:{legend:{display:true,position:'bottom',labels:{color:'#6b6156',padding:10,font:{size:11},usePointStyle:true}},title:{display:true,text:'Tendência mensal',color:'#6b6156',font:{size:11,weight:'normal'},align:'start',padding:{bottom:8}}},scales:{x:{grid:{display:false},ticks:{color:'#6b6156',font:{size:10}}},y:{position:'left',min:0,max:100,grid:{color:'rgba(214,205,189,.3)'},ticks:{color:'#6b6156',callback:v=>v+'%',font:{size:10}}}}});
+
+  // Tabela: Obra / Classif / Occ / Fricção (score é null em finalizadas — preditivo só pra ativas)
+  const FRIC_LBL={critico:['Crítica','r'],alto:['Alta','r'],medio:['Média','a'],baixo:['Baixa','v'],nenhum:['—','c']};
+  const rows=fin.filter(o=>o.classificacao!=='entrega_limpa').map(o=>({n:o.cliente||'—',cl:o.classificacao,oc:(o.friccao?.ocorrencias_formais||[]).length,fn:(o.friccao?.nivel||'nenhum')})).sort((a,b)=>{const ord={entrega_com_retrabalho:0,entrega_com_ressalvas:1};return(ord[a.cl]??2)-(ord[b.cl]??2)||b.oc-a.oc});
+  compTabRows('comp-tab-qual',rows,compExpanded.qual?rows.length:COMP_LIMIT,r=>{
+    const c=r.cl==='entrega_com_retrabalho'?'r':'a';
+    const f=FRIC_LBL[r.fn]||['—','c'];
+    return`<td class="cn" title="${compEsc(r.n)}">${compEsc(r.n)}</td><td><span class="cb cb-${c}">${COMP_LBL_CLS[r.cl]||r.cl}</span></td><td class="cv">${r.oc}</td><td class="cv"><span class="cb cb-${f[1]}">${f[0]}</span></td>`;
+  });
 }
 
 function compConsultores(F){
