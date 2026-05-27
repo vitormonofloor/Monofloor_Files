@@ -3500,6 +3500,25 @@
   .prazo-decomp-leg .leg-plan::before{background:#b3ccd0}
   .prazo-decomp-leg .leg-hib::before{background:#d6cdbd}
   .prazo-decomp-leg .leg-exec::before{background:#5fa073}
+  /* Radar de Risco */
+  .radar-filtros{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+  .radar-chip{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .15s}
+  .radar-chip:hover{border-color:var(--gold)}
+  .radar-chip.ativo{background:var(--gold);border-color:var(--gold);color:#fff}
+  .radar-chip-n{font-family:'JetBrains Mono',monospace;opacity:.85;margin-left:4px}
+  .radar-sinal-row{display:flex;align-items:center;gap:10px;margin:7px 0}
+  .radar-sinal-lbl{flex:0 0 170px;font-size:12px;color:var(--ink-soft);text-align:right;font-weight:500}
+  .radar-sinal-track{flex:1;height:18px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+  .radar-sinal-bar{height:100%;border-radius:4px;transition:width .4s}
+  .radar-sinal-n{flex:0 0 30px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;color:var(--ink)}
+  .radar-sinal-chip{display:inline-block;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:2px 6px;font-size:10px;color:var(--ink-soft);margin:2px 3px 2px 0;white-space:nowrap}
+  #radar-tab td{vertical-align:middle}
+  #radar-tab tbody tr{cursor:pointer;transition:background .12s}
+  #radar-tab tbody tr:hover{background:var(--surface)}
+  .radar-score-badge{padding:3px 9px;border-radius:5px;font-weight:700;font-family:'JetBrains Mono',monospace}
+  .badge-risco-baixo{background:#d8f0e0;color:#2d6c46}
+  .radar-flabel{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-faint);align-self:center;margin-right:2px;font-weight:700}
+  @media(max-width:700px){.radar-sinal-lbl{flex:0 0 100px;font-size:11px}}
   @media(max-width:900px){.comp-layout{grid-template-columns:1fr}.comp-sidebar{position:static;flex-direction:row;overflow-x:auto}.comp-sidebar-item{min-width:120px;white-space:nowrap}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}.solic-kpis{grid-template-columns:repeat(2,1fr)}.solic-grid{grid-template-columns:1fr}.prazo-grid-evidencia{grid-template-columns:1fr}}
   @media print{.tab-bar,.comp-filtros,.comp-btn-pdf,.comp-vm{display:none!important}.tab-panel{display:block!important}}
 
@@ -3662,6 +3681,7 @@
   <button class="tab-btn active" data-tab="panorama" onclick="trocarAba('panorama')">Panorama</button>
   <button class="tab-btn" data-tab="jornada" onclick="trocarAba('jornada')">Jornada</button>
   <button class="tab-btn" data-tab="compilados" onclick="trocarAba('compilados')">Compilador</button>
+  <button class="tab-btn" data-tab="radar" onclick="trocarAba('radar')">Radar de Risco</button>
 </nav>
 
 <main>
@@ -3925,6 +3945,21 @@
     </div><!-- /comp-conteudo -->
     </div><!-- /comp-layout -->
   </div><!-- /painel-compilados -->
+
+  <!-- ═══ ABA RADAR DE RISCO ═══ -->
+  <div id="painel-radar" class="tab-panel" style="max-width:1100px;margin:0 auto;padding:24px 24px 48px">
+    <div class="comp-secao">
+      <h3>Radar de Risco · obras ativas</h3>
+      <div class="radar-filtros" id="radar-estagios"></div>
+      <div class="prazo-narrativa" id="radar-narrativa"></div>
+      <div class="radar-filtros" id="radar-filtros"></div>
+      <div class="prazo-decomp" id="radar-decomp-sinais" style="margin-bottom:18px"></div>
+      <div class="comp-tw">
+        <div class="comp-tw-titulo">Obras ativas ordenadas por risco · clique pra abrir a jornada</div>
+        <table class="comp-tab" id="radar-tab"><thead><tr><th>Obra</th><th>Score</th><th>Sinais detectados</th></tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+  </div><!-- /painel-radar -->
 </main>
 
 <!-- SENTINELA · balde fixo bottom-left -->
@@ -6875,6 +6910,10 @@ function trocarAba(aba) {
     compInit();
     compRendered = true;
   }
+  if (aba === 'radar' && !radarRendered && DADOS) {
+    renderRadar();
+    radarRendered = true;
+  }
 }
 
 (function heroCollapse(){
@@ -7477,6 +7516,138 @@ function compConsultores(F){
     const cq=r.pl!=null?(r.pl>=70?'v':r.pl>=50?'a':'r'):'c';
     return`<tr><td class="cn">${compEsc(r.nm)}</td><td class="cv">${r.n}</td><td class="cv"><span class="cb cb-${cm}">${r.am!=null?r.am:'—'}</span></td><td class="cv"><span class="cb cb-${cp}">${r.pp!=null?r.pp+'%':'—'}</span></td><td class="cv">${r.dm!=null?(r.dm>0?'+':'')+r.dm+'d':'—'}</td><td class="cv"><span class="cb cb-${cq}">${r.pl!=null?r.pl+'%':'—'}</span></td><td class="cv" style="color:${r.ret>0?'#c04030':'var(--ink-faint)'}">${r.ret}</td></tr>`;
   }).join('');
+}
+
+/* ═══════════════════════════════════════════════
+   RADAR DE RISCO · obras ativas priorizadas por score
+   ═══════════════════════════════════════════════ */
+let radarRendered = false;
+let radarNivelFiltro = 'todos';
+let radarEstagio = 'todos';
+let RADAR_ATIVAS = [];   // todas as não-encerradas com score
+let RADAR_ESCOPO = [];   // subconjunto do estágio selecionado
+const RADAR_CORES_SINAL = {
+  'Silêncio no Telegram':'#c04030','Postergações':'#d07a30','Reprovação ativa':'#c0392b',
+  'Status defasado':'#c4a040','Sem Telegram':'#8a7a5a','Execução lenta':'#9a6a40'
+};
+const RADAR_ESTAGIOS = [
+  ['preobra','Pré-obra',['planejamento','contrato']],
+  ['iminente','Iminente',['aguardando_execucao']],
+  ['execucao','Execução',['em_execucao','aguardando_clima','pausado']],
+  ['reparo','Reparo',['reparo','marcas_rolo_cera']]
+];
+const RADAR_ESTAGIO_LBL = {todos:'todos os estágios',preobra:'pré-obra',iminente:'iminentes',execucao:'em execução',reparo:'em reparo',outro:'outros'};
+
+function radarEstagioDe(status){
+  const s=(status||'').toLowerCase();
+  for(const [k,,arr] of RADAR_ESTAGIOS){ if(arr.includes(s)) return k; }
+  return 'outro';
+}
+
+function radarSinalFamilia(s){
+  if(s.startsWith('silencio'))return 'Silêncio no Telegram';
+  if(s.startsWith('postergacoes'))return 'Postergações';
+  if(s.startsWith('reprovacao'))return 'Reprovação ativa';
+  if(s.startsWith('status'))return 'Status defasado';
+  if(s.startsWith('sem'))return 'Sem Telegram';
+  if(s.startsWith('exec'))return 'Execução lenta';
+  return s.replace(/_/g,' ');
+}
+function radarSinalLabel(s){
+  if(s.startsWith('silencio_'))return 'Silêncio '+s.slice(9);
+  if(s.startsWith('postergacoes_'))return s.slice(13)+'× postergação';
+  if(s==='reprovacao_ativa')return 'Reprovação ativa';
+  if(s==='status_stale')return 'Status defasado';
+  if(s==='sem_msg_telegram')return 'Sem Telegram';
+  if(s.startsWith('exec_'))return 'Execução '+s.slice(5).replace('x_mediana','× a mediana');
+  return s.replace(/_/g,' ');
+}
+
+function radarAbrirObra(obraId){
+  const idx=(DADOS.obras||[]).findIndex(o=>o.obra_id===obraId);
+  if(idx<0)return;
+  trocarAba('jornada');
+  const item=document.querySelector('.sidebar-item[data-idx="'+idx+'"]');
+  if(item){ item.click(); item.scrollIntoView({block:'center'}); }
+  else { OBRA_SEL=DADOS.obras[idx]; const ph=document.getElementById('placeholder-vazio'); if(ph)ph.classList.add('oculto'); renderDetalhes(); }
+}
+
+function radarFiltrarEstagio(e){
+  radarEstagio=e; radarNivelFiltro='todos';
+  document.querySelectorAll('#radar-estagios .radar-chip').forEach(c=>c.classList.toggle('ativo',c.dataset.es===e));
+  radarRenderEscopo();
+}
+function radarFiltrarNivel(nv){
+  radarNivelFiltro=nv;
+  document.querySelectorAll('#radar-filtros .radar-chip').forEach(c=>c.classList.toggle('ativo',c.dataset.nv===nv));
+  radarRenderTabela();
+}
+
+function renderRadar(){
+  if(!DADOS)return;
+  RADAR_ATIVAS=(DADOS.obras||[]).filter(o=>o.score_risco&&typeof o.score_risco==='object')
+    .sort((a,b)=>b.score_risco.score-a.score_risco.score);
+
+  // Chips de estágio (com contagem própria)
+  const estCnt={};
+  RADAR_ATIVAS.forEach(o=>{const e=radarEstagioDe(o.status);estCnt[e]=(estCnt[e]||0)+1;});
+  let estChips=`<span class="radar-flabel">Estágio</span>`;
+  estChips+=`<button class="radar-chip${radarEstagio==='todos'?' ativo':''}" data-es="todos" onclick="radarFiltrarEstagio('todos')">Todos<span class="radar-chip-n">${RADAR_ATIVAS.length}</span></button>`;
+  RADAR_ESTAGIOS.forEach(([k,lbl])=>{ if(estCnt[k]) estChips+=`<button class="radar-chip${radarEstagio===k?' ativo':''}" data-es="${k}" onclick="radarFiltrarEstagio('${k}')">${lbl}<span class="radar-chip-n">${estCnt[k]}</span></button>`; });
+  document.getElementById('radar-estagios').innerHTML=estChips;
+
+  radarRenderEscopo();
+}
+
+function radarRenderEscopo(){
+  RADAR_ESCOPO = radarEstagio==='todos' ? RADAR_ATIVAS : RADAR_ATIVAS.filter(o=>radarEstagioDe(o.status)===radarEstagio);
+  const esc=RADAR_ESCOPO, n=esc.length;
+  const cnt={critico:0,alto:0,medio:0,baixo:0};
+  esc.forEach(o=>{const nv=o.score_risco.nivel;if(cnt[nv]!=null)cnt[nv]++;});
+  const grave=cnt.critico+cnt.alto;
+
+  // Composição honesta (sempre presente · número nunca aparece nu)
+  const estCntAll={};
+  RADAR_ATIVAS.forEach(o=>{const e=radarEstagioDe(o.status);estCntAll[e]=(estCntAll[e]||0)+1;});
+  const comp=RADAR_ESTAGIOS.filter(([k])=>estCntAll[k]).map(([k,lbl])=>`${estCntAll[k]} ${lbl.toLowerCase()}`).join(' · ');
+  let narr=`<span class="pn-muted"><span class="pn-num">${RADAR_ATIVAS.length}</span> obras não-encerradas — ${comp}. Pré-obra é pipeline comercial; reparo é pós-entrega. Universos diferentes.</span><span class="pn-sep"></span>`;
+  narr+=`Filtro: <strong>${RADAR_ESTAGIO_LBL[radarEstagio]}</strong> (<span class="pn-num">${n}</span> obras). `;
+  narr+=grave>0?`<span class="pn-num pn-crit">${grave}</span> em risco alto ou crítico`:`nenhuma em risco alto ou crítico`;
+  narr+=` — <span class="pn-num pn-crit">${cnt.critico}</span> ${cnt.critico===1?'crítica':'críticas'}, <span class="pn-num pn-warn">${cnt.alto}</span> ${cnt.alto===1?'alta':'altas'}.`;
+
+  // Famílias de sinal no escopo
+  const famCnt={};
+  esc.forEach(o=>{const seen=new Set();(o.score_risco.sinais||[]).forEach(s=>{const f=radarSinalFamilia(s);if(!seen.has(f)){seen.add(f);famCnt[f]=(famCnt[f]||0)+1;}});});
+  const famSorted=Object.entries(famCnt).sort((a,b)=>b[1]-a[1]);
+  if(famSorted.length){
+    narr+=`<span class="pn-sep"></span>O sinal que mais dispara aqui é <strong>${famSorted[0][0]}</strong> em <span class="pn-num">${famSorted[0][1]}</span> obras.`;
+  }
+  document.getElementById('radar-narrativa').innerHTML=narr;
+
+  // Chips de nível (contagem do escopo)
+  const chips=[['todos','Todas',n],['critico','Crítico',cnt.critico],['alto','Alto',cnt.alto],['medio','Médio',cnt.medio],['baixo','Baixo',cnt.baixo]];
+  document.getElementById('radar-filtros').innerHTML=`<span class="radar-flabel">Risco</span>`+chips.map(c=>
+    `<button class="radar-chip${c[0]===radarNivelFiltro?' ativo':''}" data-nv="${c[0]}" onclick="radarFiltrarNivel('${c[0]}')">${c[1]}<span class="radar-chip-n">${c[2]}</span></button>`
+  ).join('');
+
+  // Decomposição: ranking de sinais no escopo
+  const maxFam=famSorted.length?famSorted[0][1]:1;
+  document.getElementById('radar-decomp-sinais').innerHTML=
+    `<div class="prazo-decomp-titulo">Sinais que mais disparam · ${RADAR_ESTAGIO_LBL[radarEstagio]} (nº de obras)</div>`+
+    (famSorted.length?famSorted.map(([f,c])=>`<div class="radar-sinal-row"><div class="radar-sinal-lbl">${f}</div><div class="radar-sinal-track"><div class="radar-sinal-bar" style="width:${Math.round(c/maxFam*100)}%;background:${RADAR_CORES_SINAL[f]||'#999'}"></div></div><div class="radar-sinal-n">${c}</div></div>`).join(''):`<div style="color:var(--ink-faint);font-size:12px">Sem sinais de risco neste recorte.</div>`);
+
+  radarRenderTabela();
+}
+
+function radarRenderTabela(){
+  const rows=RADAR_ESCOPO.filter(o=>radarNivelFiltro==='todos'||o.score_risco.nivel===radarNivelFiltro);
+  const tb=document.querySelector('#radar-tab tbody');
+  if(!tb)return;
+  tb.innerHTML=rows.map(o=>{
+    const r=o.score_risco;
+    const sinais=(r.sinais||[]).map(s=>`<span class="radar-sinal-chip">${compEsc(radarSinalLabel(s))}</span>`).join('');
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv"><span class="radar-score-badge badge-risco-${r.nivel}">${r.score}</span></td><td>${sinais||'<span style="color:var(--ink-faint)">—</span>'}</td></tr>`;
+  }).join('')||`<tr><td colspan="3" style="text-align:center;color:var(--ink-faint);padding:24px">Nenhuma obra neste recorte.</td></tr>`;
 }
 
 /* ═══════════════════════════════════════════════
