@@ -28,19 +28,23 @@
 ### Tropeço da sessão (corrigido)
 - `git reset --hard` no pub repo regrediu o site por 1 deploy. Pub repo é só backup; wrangler é quem publica. Conserto: copiar arquivos do lab pro public/ + wrangler deploy. Registrado em memória.
 
+### Continuação (tarde) · 2 pendências fechadas
+- ✅ **origem_retrabalho corrigido** — usava data de planejamento (lead-time 2023-25), jogava 100% em "herança". Agora usa `data_inicio_real`. Invertido: 85% recente / 15% herança. Insight na narrativa do pilar Qualidade. Commit `67b98d7`
+- ✅ **Deploy wrangler em ambiente não-interativo resolvido** — `publicar.py` agora aponta `XDG_CONFIG_HOME` pro cache OAuth sozinho. Cron 7h não vai mais falhar no PASSO 3 por pedir token. Commit `9f85292`. Memória: [[feedback-deploy-cf-workers]]
+
 ### Pendências pra próxima sessão
 
 | Ordem | Item | Custo est. |
 |---|---|---|
-| 1 | **origem_retrabalho = 100% herança (47/47)** — bug na flag ou aplicação original de 2025? Investigar | ~30min |
-| 2 | Pipeline não re-tenta wrangler em falha transitória (mordeu no PASSO 3 hoje) | ~30min |
-| 3 | Panorama mensal (evolução carteira mês a mês) | ~1h |
-| 4 | Camada 2 — Triângulo de consistência material | ~2h |
+| 1 | Panorama mensal (evolução carteira mês a mês) | ~1h |
+| 2 | Camada 2 — Triângulo de consistência material | ~2h |
+| 3 | Camada 3 refinada — score preditivo com mais sinais / pesos auditáveis | ~2h |
+| 4 | Pipeline não re-tenta wrangler em falha transitória (resiliência, não bloqueante) | ~30min |
 
 ### Comando pra retomar (cole no Claude Code)
 
 ```
-Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-27". P0+P1+P2 fechados e no ar. Memoria: reference_score_risco_radar.md. Proximo: investigar origem_retrabalho 100% herança (~30min) — bug na flag ou aplicação original de 2025?
+Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-27". P0+P1+P2 + fix origem_retrabalho + fix deploy XDG fechados e no ar. Memorias: reference_score_risco_radar.md, feedback_orientar_melhor_escolha.md. Proximo: Panorama mensal (~1h) — evolucao carteira mes a mes.
 ```
 
 ---
