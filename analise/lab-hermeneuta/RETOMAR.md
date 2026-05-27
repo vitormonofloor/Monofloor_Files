@@ -1,10 +1,41 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-27 · P0 discordância + P1 pilar Qualidade + P2 Radar de Risco
+> **Última atualização:** 2026-05-27 (noite) · Pilar Material reformulado (despacho por obra) + fixes
 
 ---
 
-## 🆕 SESSAO 2026-05-27 · O QUE FECHAMOS HOJE
+## 🆕 SESSAO 2026-05-27 (TARDE/NOITE) · PILAR MATERIAL + FIXES
+
+### Pilar Material do Compilador — reformulado (EM REFINO)
+- ✅ Migrado pra **material ENVIADO por obra** (OS, quantidade despachada). Recorte por obra que iniciou no mês. Escopo m² (/materiais) testado e descartado da tela (m² ≠ kg, confundia).
+- ✅ Filtro de mês individual por pilar + ordenação do ranking + canonicalização de produtos (LUMINA/STELION/MICROFINO/LILIT + descarte de lixo) + rótulos curtos.
+- ✅ Material ignora filtro de Status global (conta ativas + finalizadas — toda obra que iniciou consumiu material).
+- ✅ `gerar_jornada.py`: m2_por_produto / m2_por_cor persistidos do `/materiais`.
+- ⚠️ **EM REFINO:** critério de "obra iniciou" trocado de `data_inicio_real` → **1º marco de execução** (data_inicio_real engana: pega retorno + pré-obra). Tela em **modo conferência travado em Jan/2026** (tabela "conferência manual" no pilar) pra validar obra a obra. Ver [[feedback_data_inicio_real_retornos]].
+
+### Fixes do dia (tarde)
+- ✅ `os_data` = data de emissão do PDF (createdAt era upload em massa de abril — não serve). `publicar.py` aponta XDG_CONFIG_HOME pro cache wrangler. Commits `67b98d7` / `9f85292`.
+- ✅ Descoberta do Vitor: a aba `/materiais` resolveu o gap de cobertura (vs força bruta que eu cheguei a cogitar — lição registrada).
+
+### Memórias novas
+- `reference_pilar_material_compilador.md` · `feedback_data_inicio_real_retornos.md` · `feedback_proatividade_fontes_ocultas.md` · `feedback_orientar_melhor_escolha.md` · `reference_score_risco_radar.md`
+
+### Pendências pra AMANHÃ
+| # | Item | Custo |
+|---|---|---|
+| 1 | **Refinar critério "obra iniciou"** validando Jan/2026 obra a obra (tabela conferência na tela) | ~1h |
+| 2 | **Faxina no git do pub repo** — JSON corrompido causou tela branca; detached HEAD / rebase travado crônico | ~30min |
+| 3 | Reverter modo conferência (seletor volta p/ todos os meses + "Tudo") ao fechar o critério | ~5min |
+| 4 | Rastrear outlier de fevereiro (SELADOR 3017 / PRIMER 2028 — provável OS com qtd errada) | ~20min |
+
+### Comando pra retomar amanhã (cole no Claude Code)
+```
+Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-27 (TARDE/NOITE)". Pilar Material EM REFINO. Memorias: reference_pilar_material_compilador, feedback_data_inicio_real_retornos. Proximo: validar Jan/2026 obra a obra (tabela conferencia, tela em modo travado jan). Critério "iniciou" = 1º marco de execução, NAO data_inicio_real.
+```
+
+---
+
+## 🆕 SESSAO 2026-05-27 · O QUE FECHAMOS HOJE (MANHÃ)
 
 ### P0 · Discordância Painel × Telegram — dívida fechada
 - ✅ Função `detectar_discordancia_painel_telegram()` estava só no working tree (jornada.html já consumia, mas gerar_jornada.py não estava commitado). Commit `26eab8f`

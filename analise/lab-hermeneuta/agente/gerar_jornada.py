@@ -3281,6 +3281,8 @@ def coletar_materiais_enviados(docs: list) -> list:
             continue
         materiais, data_pdf = extrair_materiais_enviados(pdf_bytes)
         if materiais:
+            # os_data = data de emissão extraída do PDF. createdAt NÃO serve: é a data do
+            # upload em massa no Painel (todas as OS subiram juntas em abr/2026), não o despacho.
             data_fallback = (d.get("createdAt") or "")[:10]
             envios.append({
                 "os_nome": nome,
@@ -3439,6 +3441,24 @@ def construir_jornada(obra_id):
     # Materiais
     mat_totals = (materiais or {}).get("totals") or {}
     mat_items = (materiais or {}).get("items") or []
+    # m² por produto e por cor · agrega os itens detalhados de /materiais (antes descartados)
+    # pro funil de escopo ranquear TODOS os produtos, não só STELION/LILIT
+    def _m2_item(x):
+        try:
+            return float(str(x.get("metragem") or "0").replace(",", "."))
+        except (ValueError, TypeError):
+            return 0.0
+    m2_por_produto, m2_por_cor = {}, {}
+    for m in mat_items:
+        v = _m2_item(m)
+        if v <= 0:
+            continue
+        p = (m.get("produto") or "").strip().upper()
+        c = (m.get("cor") or "").strip()
+        if p:
+            m2_por_produto[p] = round(m2_por_produto.get(p, 0.0) + v, 2)
+        if c:
+            m2_por_cor[c] = round(m2_por_cor.get(c, 0.0) + v, 2)
     materiais_resumo = {
         "total_m2": mat_totals.get("totalM2"),
         "stelion_m2": mat_totals.get("stelionM2"),
@@ -3448,6 +3468,8 @@ def construir_jornada(obra_id):
         "n_reaplicacao": sum(1 for m in mat_items if "reaplica" in (m.get("tipoSuperficie") or "").lower()),
         "produtos": sorted({(m.get("produto") or "").strip().upper() for m in mat_items if m.get("produto")}),
         "cores": sorted({(m.get("cor") or "").strip() for m in mat_items if m.get("cor")}),
+        "m2_por_produto": m2_por_produto,
+        "m2_por_cor": m2_por_cor,
     }
 
     # Solicitações + consumo + sobras

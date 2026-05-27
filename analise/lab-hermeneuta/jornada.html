@@ -3518,6 +3518,12 @@
   .radar-score-badge{padding:3px 9px;border-radius:5px;font-weight:700;font-family:'JetBrains Mono',monospace}
   .badge-risco-baixo{background:#d8f0e0;color:#2d6c46}
   .radar-flabel{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-faint);align-self:center;margin-right:2px;font-weight:700}
+  /* Pilar Material · funil de consumo */
+  .mat-fonte{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-faint);background:var(--surface-2);border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle;white-space:nowrap}
+  .mat-fonte-tel{color:#9a7a20;background:#f5edd8}
+  .mat-ranking{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .mat-generico{margin-top:10px;font-size:11px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:8px}
+  .mat-ord{float:right;font-size:11px;font-family:inherit;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 6px;cursor:pointer}
   @media(max-width:700px){.radar-sinal-lbl{flex:0 0 100px;font-size:11px}}
   @media(max-width:900px){.comp-layout{grid-template-columns:1fr}.comp-sidebar{position:static;flex-direction:row;overflow-x:auto}.comp-sidebar-item{min-width:120px;white-space:nowrap}.comp-grid{grid-template-columns:1fr}.comp-chart-wrap{height:250px}.radar-kpis{grid-template-columns:repeat(2,1fr)}.radar-grid-2col{grid-template-columns:1fr}.solic-kpis{grid-template-columns:repeat(2,1fr)}.solic-grid{grid-template-columns:1fr}.prazo-grid-evidencia{grid-template-columns:1fr}}
   @media print{.tab-bar,.comp-filtros,.comp-btn-pdf,.comp-vm{display:none!important}.tab-panel{display:block!important}}
@@ -3847,47 +3853,37 @@
       </select></label>
       <button class="comp-btn-pdf" onclick="window.print()">Exportar PDF</button>
     </div>
-    <div id="comp-meses" class="comp-meses"></div>
-    <div id="comp-narrativa" class="comp-narrativa">Carregando...</div>
     <div class="comp-layout">
     <aside class="comp-sidebar" id="comp-sidebar"></aside>
     <div class="comp-conteudo">
     <div class="pilar-secao ativo" id="pilar-mat">
     <div class="pilar-resumo" id="pilar-resumo-mat"></div>
     <div class="comp-secao">
-      <h3>Radar de Material</h3>
-      <div class="radar-bar">
-        <div class="radar-periodo">
-          <button class="radar-btn active" onclick="radarPeriodo(7)">7 dias</button>
-          <button class="radar-btn" onclick="radarPeriodo(15)">15 dias</button>
-          <button class="radar-btn" onclick="radarPeriodo(30)">30 dias</button>
-          <button class="radar-btn" onclick="radarPeriodo(0)">Tudo</button>
+      <h3>Consumo de Material</h3>
+      <div class="comp-meses" id="mat-meses" style="margin-bottom:14px"></div>
+      <div class="prazo-narrativa" id="mat-funil-narrativa"></div>
+      <div class="prazo-grid-evidencia">
+        <div>
+          <div class="comp-tw">
+            <div class="comp-tw-titulo">Material enviado às obras · quantidade <span class="mat-fonte">OS Indústria · despacho</span><select class="mat-ord" id="mat-os-ord" onchange="matOrdenarOS(this.value)"><option value="qtd-desc">Maior → menor</option><option value="qtd-asc">Menor → maior</option><option value="az">A → Z</option><option value="za">Z → A</option></select></div>
+            <div id="mat-os-ranking" class="mat-ranking"></div>
+          </div>
         </div>
-        <div class="radar-legenda" id="radar-legenda"></div>
-      </div>
-      <div class="radar-kpis">
-        <div class="radar-kpi" id="radar-kpi-os"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">OS enviadas</div></div>
-        <div class="radar-kpi" id="radar-kpi-consumo"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Consumos registrados</div></div>
-        <div class="radar-kpi" id="radar-kpi-extra"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Solicitações extra</div></div>
-        <div class="radar-kpi" id="radar-kpi-anomalia"><div class="radar-kpi-val">—</div><div class="radar-kpi-label">Anomalias</div></div>
-      </div>
-      <div id="solic-dash" class="solic-dash"></div>
-      <div class="radar-grid-2col">
-        <div class="comp-tw">
-          <div class="comp-tw-titulo">OS Indústria enviadas</div>
-          <table class="comp-tab" id="radar-tab-os"><thead><tr><th>Data</th><th>Obra</th><th>Produtos</th><th>Qtd</th></tr></thead><tbody></tbody></table>
-          <div class="comp-vm" id="radar-vm-os" onclick="radarExpandir('os')">Ver todas</div>
-        </div>
-        <div class="comp-tw">
-          <div class="comp-tw-titulo">Consumo registrado (Telegram)</div>
-          <table class="comp-tab" id="radar-tab-consumo"><thead><tr><th>Data</th><th>Obra</th><th>Produto</th><th>Qtd</th><th>Autor</th></tr></thead><tbody></tbody></table>
-          <div class="comp-vm" id="radar-vm-consumo" onclick="radarExpandir('consumo')">Ver todas</div>
+        <div>
+          <div class="comp-tw">
+            <div class="comp-tw-titulo">Material extra mais pedido <span class="mat-fonte mat-fonte-tel">leitura Telegram · frequência</span></div>
+            <div id="mat-extra-ranking" class="mat-ranking"></div>
+            <div id="mat-extra-generico" class="mat-generico"></div>
+          </div>
         </div>
       </div>
-      <div class="comp-tw" style="margin-top:12px">
-        <div class="comp-tw-titulo">Solicitações de material extra</div>
-        <div id="radar-extra-diario"></div>
-        <div class="comp-vm" id="radar-vm-extra" onclick="radarExpandir('extra')">Ver todas</div>
+      <div class="comp-tw" style="margin-top:14px">
+        <div class="comp-tw-titulo">Quem mais solicitou material extra <span class="mat-fonte mat-fonte-tel">leitura Telegram</span></div>
+        <table class="comp-tab" id="mat-tab-equipe"><thead><tr><th>Quem</th><th>Pedidos</th><th>O que mais pediu</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="comp-tw" style="margin-top:14px">
+        <div class="comp-tw-titulo">Obras iniciadas no mês · conferência manual <span class="mat-fonte">clique pra abrir a obra</span></div>
+        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>1ª aplicação</th><th>Início (card)</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
     </div><!-- /pilar-mat -->
@@ -6968,6 +6964,9 @@ function compFiltrar() {
 
 let compMesSel = null;
 let compPilarAtivo = 'mat';
+let matMesSel = '2026-01';   // ABRE EM JANEIRO p/ conferência manual (2026-05-27) · trocar p/ 'tudo' depois
+let COMP_F = [];          // F atual · permite re-render isolado do Material
+let matOSord = 'qtd-desc';// ordenação do ranking de OS
 
 function compPilar(nome) {
   compPilarAtivo = nome;
@@ -6977,8 +6976,20 @@ function compPilar(nome) {
 }
 
 function compRenderAll(F) {
+  COMP_F = F;
   compNarrativa(F); compMaterial(F); compPrazo(F); compQualidade(F); compConsultores(F);
   compPilar(compPilarAtivo);
+}
+
+// Filtro de mês individual do Material · re-renderiza SÓ o pilar Material
+function matFiltrarMes(mes) {
+  matMesSel = mes;
+  compMaterial(COMP_F);
+}
+
+function matOrdenarOS(v) {
+  matOSord = v;
+  compMaterial(COMP_F);
 }
 
 function compEsc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -6998,57 +7009,9 @@ function compSelecionarMes(mes) {
 
 function compNarrativa(F) {
   const hoje = new Date().toISOString().slice(0, 7);
-  const porMes = {};
-  F.forEach(o => {
-    const m = compGetMesExec(o);
-    if (m && m <= hoje) { if (!porMes[m]) porMes[m] = []; porMes[m].push(o); }
-  });
-  const meses = Object.keys(porMes).sort().slice(-8);
-  if (!compMesSel || !porMes[compMesSel]) compMesSel = meses[meses.length - 1] || null;
-
-  const elMeses = document.getElementById('comp-meses');
-  elMeses.innerHTML = meses.map(m => {
-    const label = MESES_LABEL[m.slice(5)] + '/' + m.slice(2, 4);
-    return `<button class="comp-mes-btn${m === compMesSel ? ' active' : ''}" data-mes="${m}" onclick="compSelecionarMes('${m}')">${label}<span class="mes-count">(${porMes[m].length})</span></button>`;
-  }).join('');
-
-  const el = document.getElementById('comp-narrativa');
-  if (!compMesSel || !porMes[compMesSel]) {
-    el.innerHTML = '<div class="narr-vazio">Sem obras no periodo selecionado.</div>';
-    return;
-  }
-
-  const obras = porMes[compMesSel];
-  const mesNome = MESES_LABEL[compMesSel.slice(5)];
-  const mesAno = compMesSel.slice(0, 4);
+  // agregado do filtro · o Material tem seletor de mês PRÓPRIO, então aqui é a visão completa
+  const obras = F.filter(o => { const m = compGetMesExec(o); return m && m <= hoje; });
   const n = obras.length;
-  const m2Total = obras.reduce((s, o) => s + (o.metragem || 0), 0);
-
-  const comExec = obras.filter(o =>
-    (o.marcos_execucao || []).some(mk => mk.tipo === 'inicio_dia' || mk.tipo === 'aplicacao')
-  ).length;
-
-  const comOS = obras.filter(o => (o.materiais_enviados || []).length > 0);
-  const nOS = comOS.length;
-  const totalItensOS = comOS.reduce((s, o) =>
-    s + (o.materiais_enviados || []).reduce((s2, os2) => s2 + (os2.materiais || []).length, 0), 0);
-
-  const comSolic = obras.filter(o => (o.solicitacoes_material || []).length > 0);
-  const nSolic = comSolic.length;
-  const totalSolic = comSolic.reduce((s, o) => s + (o.solicitacoes_material || []).length, 0);
-  const multiSolic = comSolic.filter(o => (o.solicitacoes_material || []).length > 1).length;
-
-  const liderCount = {};
-  comSolic.forEach(o => {
-    const eq = o.equipe || {};
-    const lider = (eq.aplicadores_telegram || []).find(a => a.nome)?.nome
-      || (eq.prestadores_oficiais || []).find(p => p.funcao === 'lider')?.nome
-      || null;
-    if (lider) {
-      liderCount[lider] = (liderCount[lider] || 0) + (o.solicitacoes_material || []).length;
-    }
-  });
-  const topEquipes = Object.entries(liderCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
   const fin = obras.filter(o => COMP_FIN.includes(o.status));
   const nFin = fin.length;
@@ -7061,62 +7024,37 @@ function compNarrativa(F) {
   const pctPrazo = cp.length ? Math.round(noPrazo / cp.length * 100) : null;
   const dArr = cp.map(o => o.prazo.desvio_dias).sort((a, b) => a - b);
   const dMed = dArr.length ? dArr[Math.floor(dArr.length / 2)] : null;
-
   const corPrazo = pctPrazo >= 70 ? '#3d7a50' : pctPrazo >= 40 ? '#9a7a20' : '#c04030';
-  const corSolic = nSolic === 0 ? '#3d7a50' : nSolic > n * 0.4 ? '#c04030' : '#9a7a20';
 
-  let html = '';
-
-  html += `<div class="narr-header">
-    <div class="narr-header-mes">${mesNome} ${mesAno}</div>
-    <div class="narr-header-sub">${n} obras iniciadas · ${m2Total > 0 ? Math.round(m2Total).toLocaleString('pt-BR') + ' m²' : ''} · ${comExec} com execucao registrada</div>
-  </div>`;
-
+  // ── SIDEBAR: 3 pilares (cores do agregado) ──
   let sideHtml = '';
-
-  // ── SIDEBAR: 3 items limpos ──
   sideHtml += `<div class="comp-sidebar-item${compPilarAtivo==='mat'?' pilar-ativo':''}" data-pilar="mat" onclick="compPilar('mat')"><span class="comp-sidebar-tag" style="background:#7ea0b7"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M4 18v-1a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1"/><path d="M12 3C8 3 5 7 5 11h14c0-4-3-8-7-8z" fill="#fff" stroke="#fff"/></svg></span><span class="comp-sidebar-nome">Material</span></div>`;
   sideHtml += `<div class="comp-sidebar-item${compPilarAtivo==='prazo'?' pilar-ativo':''}" data-pilar="prazo" onclick="compPilar('prazo')"><span class="comp-sidebar-tag" style="background:${pctPrazo!=null?corPrazo:'#a89e92'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></span><span class="comp-sidebar-nome">Prazo</span></div>`;
   sideHtml += `<div class="comp-sidebar-item${compPilarAtivo==='qual'?' pilar-ativo':''}" data-pilar="qual" onclick="compPilar('qual')"><span class="comp-sidebar-tag" style="background:${nFin>0&&lmp/nFin>=0.5?'#3d7a50':nFin>0?'#c04030':'#a89e92'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6h6l-5 4 2 7-6-4-6 4 2-7-5-4h6z"/></svg></span><span class="comp-sidebar-nome">Qualidade</span></div>`;
+  document.getElementById('comp-sidebar').innerHTML = sideHtml;
 
-  // ── RESUMOS DO MES: injetados no topo de cada painel ──
-  const rMat = `<div class="pilar-resumo-grid">
-    <div class="pilar-resumo-card" style="border-left-color:#7ea0b7"><div class="pilar-resumo-val" style="color:#7ea0b7">${nOS}</div><div class="pilar-resumo-label">OS enviadas</div><div class="pilar-resumo-sub">${totalItensOS} itens</div></div>
-    <div class="pilar-resumo-card" style="border-left-color:${corSolic}"><div class="pilar-resumo-val" style="color:${corSolic}">${nSolic}</div><div class="pilar-resumo-label">Material extra</div><div class="pilar-resumo-sub">${totalSolic} solicitacoes</div></div>
-    <div class="pilar-resumo-card" style="border-left-color:#c04030"><div class="pilar-resumo-val" style="color:${multiSolic>0?'#c04030':'var(--ink-faint)'}">${multiSolic}</div><div class="pilar-resumo-label">Pediram 2+ vezes</div><div class="pilar-resumo-sub">${n>0?Math.round(multiSolic/n*100):0}% das obras</div></div>
-  </div>`;
-  document.getElementById('pilar-resumo-mat').innerHTML = rMat;
-
-  const rPrazo = `<div class="pilar-resumo-grid">
+  // ── RESUMO PRAZO (agregado) ──
+  const elP = document.getElementById('pilar-resumo-prazo');
+  if (elP) elP.innerHTML = `<div class="pilar-resumo-grid">
     <div class="pilar-resumo-card" style="border-left-color:${pctPrazo!=null?corPrazo:'var(--line)'}"><div class="pilar-resumo-val" style="color:${pctPrazo!=null?corPrazo:'var(--ink-faint)'}">${pctPrazo!=null?pctPrazo+'%':'—'}</div><div class="pilar-resumo-label">No prazo</div><div class="pilar-resumo-sub">${noPrazo} de ${cp.length} obras</div></div>
     <div class="pilar-resumo-card" style="border-left-color:var(--line)"><div class="pilar-resumo-val">${dMed!=null?(dMed>0?'+':'')+dMed+'d':'—'}</div><div class="pilar-resumo-label">Mediana desvio</div><div class="pilar-resumo-sub">${cp.length} com prazo</div></div>
     <div class="pilar-resumo-card" style="border-left-color:var(--line)"><div class="pilar-resumo-val" style="color:var(--ink-faint)">${n-cp.length}</div><div class="pilar-resumo-label">Sem prazo</div><div class="pilar-resumo-sub">${n>0?Math.round((n-cp.length)/n*100):0}%</div></div>
   </div>`;
-  document.getElementById('pilar-resumo-prazo').innerHTML = rPrazo;
 
-  let rQual = '';
-  if (nFin > 0) {
-    const pLmp = Math.round(lmp/nFin*100);
-    rQual = `<div class="pilar-resumo-grid">
-      <div class="pilar-resumo-card" style="border-left-color:#3d7a50"><div class="pilar-resumo-val" style="color:#3d7a50">${lmp}</div><div class="pilar-resumo-label">Limpa</div><div class="pilar-resumo-sub">${pLmp}% de ${nFin}</div></div>
-      <div class="pilar-resumo-card" style="border-left-color:#9a7a20"><div class="pilar-resumo-val" style="color:#9a7a20">${ress}</div><div class="pilar-resumo-label">Ressalvas</div></div>
-      <div class="pilar-resumo-card" style="border-left-color:#c04030"><div class="pilar-resumo-val" style="color:#c04030">${retrab}</div><div class="pilar-resumo-label">Retrabalho</div></div>
-    </div>`;
-  } else {
-    rQual = `<div style="padding:10px;color:var(--ink-faint);font-size:12px">Nenhuma finalizada neste mes.</div>`;
+  // ── RESUMO QUALIDADE (agregado) ──
+  const elQ = document.getElementById('pilar-resumo-qual');
+  if (elQ) {
+    if (nFin > 0) {
+      const pLmp = Math.round(lmp/nFin*100);
+      elQ.innerHTML = `<div class="pilar-resumo-grid">
+        <div class="pilar-resumo-card" style="border-left-color:#3d7a50"><div class="pilar-resumo-val" style="color:#3d7a50">${lmp}</div><div class="pilar-resumo-label">Limpa</div><div class="pilar-resumo-sub">${pLmp}% de ${nFin}</div></div>
+        <div class="pilar-resumo-card" style="border-left-color:#9a7a20"><div class="pilar-resumo-val" style="color:#9a7a20">${ress}</div><div class="pilar-resumo-label">Ressalvas</div></div>
+        <div class="pilar-resumo-card" style="border-left-color:#c04030"><div class="pilar-resumo-val" style="color:#c04030">${retrab}</div><div class="pilar-resumo-label">Retrabalho</div></div>
+      </div>`;
+    } else {
+      elQ.innerHTML = `<div style="padding:10px;color:var(--ink-faint);font-size:12px">Nenhuma finalizada no período.</div>`;
+    }
   }
-  document.getElementById('pilar-resumo-qual').innerHTML = rQual;
-
-  const faixas = {};
-  obras.forEach(o => { const f = o.faixa_metragem || '?'; faixas[f] = (faixas[f] || 0) + 1; });
-  const fxStr = Object.entries(faixas).sort((a, b) => b[1] - a[1]).map(e => `${e[0]}: ${e[1]}`).join(' · ');
-  html += `<div class="narr-rodape">
-    <span>Faixas: ${fxStr}</span>
-    ${nFin > 0 ? `<span>Finalizadas: ${nFin} de ${n}</span>` : ''}
-  </div>`;
-
-  el.innerHTML = html;
-  document.getElementById('comp-sidebar').innerHTML = sideHtml;
 }
 
 
@@ -7254,107 +7192,177 @@ function buscarObraPorNome(nome) {
   document.querySelectorAll('.tab-btn').forEach(b => { if (b.textContent.includes('Jornada')) b.click(); });
 }
 
-function compMaterial(F) {
-  radarF = F;
-  const dias = radarDias;
-  const hoje = new Date();
-  const limiteDate = dias ? new Date(hoje.getTime() - dias * 86400000) : null;
-  const limiteISO = limiteDate ? limiteDate.toISOString().slice(0, 10) : null;
-  const label = dias ? `Últimos ${dias} dias` : 'Todo o período';
-  document.getElementById('radar-legenda').textContent = label;
+function matNormAutor(a) {
+  if (!a) return '';
+  return a.replace(/^\s*(aplicador|equipe|adm|consultor|opera[çc][õo]es?|atendimento)\s*\|\s*/i, '')
+          .replace(/\s*\|\s*(opera[çc][õo]es?|atendimento|adm)\s*$/i, '')
+          .trim();
+}
 
-  const osEvts = [], consumoEvts = [], extraEvts = [];
-
-  F.forEach(o => {
-    const nome = o.cliente || '—';
-    (o.materiais_enviados || []).forEach(os => {
-      if (!radarDentro(os.os_data, dias)) return;
-      const prods = (os.materiais || []).map(m => m.material).filter(Boolean);
-      const qtdTotal = (os.materiais || []).reduce((s, m) => s + (parseFloat((m.quantidade || '0').replace(',', '.')) || 0), 0);
-      osEvts.push({ data: os.os_data, nome, prods: prods.join(', '), qtd: Math.round(qtdTotal * 10) / 10 });
-    });
-    (o.consumos || []).forEach(c => {
-      if (!radarDentro(c.data, dias)) return;
-      consumoEvts.push({ data: c.data, nome, produto: c.produto_familia || c.produto || '—', qtd: c.qtd || '—', unidade: c.unidade || '', autor: c.autor || '—' });
-    });
-    (o.solicitacoes_material || []).forEach(s => {
-      if (!radarDentro(s.data, dias)) return;
-      const resolvido = s.resolucao ? 'sim' : 'nao';
-      const resTxt = s.resolucao ? s.resolucao.delta_min + ' min' : 'Pendente';
-      const ctx = (s.trecho || '').slice(0, 80);
-      const cat = s.categoria || 'material';
-      const prod = s.produto || '—';
-      extraEvts.push({ data: s.data, hora: s.hora || '', nome, autor: s.autor || '—', resolvido, resTxt, ctx, cat, prod });
-    });
-  });
-
-  osEvts.sort((a, b) => b.data.localeCompare(a.data));
-  consumoEvts.sort((a, b) => b.data.localeCompare(a.data));
-  extraEvts.sort((a, b) => b.data.localeCompare(a.data));
-
-  const obrasOS = new Set(osEvts.map(e => e.nome)).size;
-  const obrasConsumo = new Set(consumoEvts.map(e => e.nome)).size;
-  const obrasExtra = new Set(extraEvts.map(e => e.nome)).size;
-
-  document.getElementById('radar-kpi-os').innerHTML = `<div class="radar-kpi-val">${osEvts.length}</div><div class="radar-kpi-label">OS enviadas (${obrasOS} obras)</div>`;
-  document.getElementById('radar-kpi-consumo').innerHTML = `<div class="radar-kpi-val">${consumoEvts.length}</div><div class="radar-kpi-label">Consumos (${obrasConsumo} obras)</div>`;
-  document.getElementById('radar-kpi-extra').innerHTML = `<div class="radar-kpi-val" style="color:${extraEvts.length > 0 ? '#c04030' : 'var(--ink)'}">${extraEvts.length}</div><div class="radar-kpi-label">Extras (${obrasExtra} obras)</div>`;
-
-  const anomalias = F.filter(o => {
-    const cm = o.consistencia_material;
-    if (!cm || cm.score == null) return false;
-    const temEvento = (o.materiais_enviados || []).some(os => radarDentro(os.os_data, dias))
-      || (o.consumos || []).some(c => radarDentro(c.data, dias))
-      || (o.solicitacoes_material || []).some(s => radarDentro(s.data, dias));
-    return temEvento && cm.score < 40;
-  });
-  document.getElementById('radar-kpi-anomalia').innerHTML = `<div class="radar-kpi-val" style="color:${anomalias.length > 0 ? '#c04030' : 'var(--ink)'}">${anomalias.length}</div><div class="radar-kpi-label">Score critico c/ atividade</div>`;
-
-  const limOS = radarExpanded.os ? osEvts.length : COMP_LIMIT;
-  document.querySelector('#radar-tab-os tbody').innerHTML = osEvts.slice(0, limOS).map(e =>
-    `<tr><td class="cv">${radarFmtData(e.data)}</td><td class="cn" title="${compEsc(e.nome)}">${compEsc(e.nome)}</td><td class="radar-ctx" title="${compEsc(e.prods)}">${compEsc(e.prods)}</td><td class="cv">${e.qtd}</td></tr>`
-  ).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma OS no período</td></tr>';
-  document.getElementById('radar-vm-os').style.display = osEvts.length > COMP_LIMIT ? '' : 'none';
-
-  const limC = radarExpanded.consumo ? consumoEvts.length : COMP_LIMIT;
-  document.querySelector('#radar-tab-consumo tbody').innerHTML = consumoEvts.slice(0, limC).map(e =>
-    `<tr><td class="cv">${radarFmtData(e.data)}</td><td class="cn" title="${compEsc(e.nome)}">${compEsc(e.nome)}</td><td>${compEsc(e.produto)}</td><td class="cv">${e.qtd} ${e.unidade}</td><td>${compEsc(e.autor)}</td></tr>`
-  ).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhum consumo no período</td></tr>';
-  document.getElementById('radar-vm-consumo').style.display = consumoEvts.length > COMP_LIMIT ? '' : 'none';
-
-  // Agrupar extras por dia
-  const porDia = {};
-  extraEvts.forEach(e => { if (!porDia[e.data]) porDia[e.data] = []; porDia[e.data].push(e); });
-  const diasOrdenados = Object.keys(porDia).sort().reverse();
-  const limDias = radarExpanded.extra ? diasOrdenados.length : Math.min(diasOrdenados.length, 5);
-  const hojeStr = new Date().toISOString().slice(0, 10);
-  const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-
-  const container = document.getElementById('radar-extra-diario');
-  if (!diasOrdenados.length) {
-    container.innerHTML = '<div class="radar-vazio">Nenhuma solicitação no período</div>';
-  } else {
-    container.innerHTML = diasOrdenados.slice(0, limDias).map(dia => {
-      const evts = porDia[dia];
-      const label = dia === hojeStr ? 'Hoje' : dia === ontem ? 'Ontem' : radarFmtData(dia);
-      const nMat = evts.filter(e => e.cat === 'material').length;
-      const nIns = evts.filter(e => e.cat === 'insumo').length;
-      const resumo = [nMat ? nMat + ' material' : '', nIns ? nIns + ' insumo' : ''].filter(Boolean).join(' · ');
-      return `<div class="radar-dia">
-        <div class="radar-dia-header"><span class="radar-dia-data">${label}</span><span class="radar-dia-count">${evts.length} solicit. · ${resumo}</span></div>
-        ${evts.map(e => `<div class="radar-dia-item">
-          <span class="radar-cat radar-cat-${e.cat}">${e.cat}</span>
-          <span class="radar-produto">${compEsc(e.prod)}</span>
-          <span class="radar-obra" title="${compEsc(e.nome)}">${compEsc(e.nome)}</span>
-          <span class="radar-autor">${compEsc(e.autor)}</span>
-          <span class="radar-resolvido ${e.resolvido}">${e.resTxt}</span>
-        </div>`).join('')}
-      </div>`;
-    }).join('');
+// Unifica grafias do MESMO produto · mantém produtos distintos separados (verniz ≠ primer ≠ antiderrapante ≠ 1130)
+function matCanonProduto(raw) {
+  const orig = raw || '';
+  // descarta lixo de extração do PDF: célula multi-linha (vários materiais grudados) ou rodapé
+  if (/[\n\r]/.test(orig)) return '';
+  let s = orig.toUpperCase().replace(/\s+/g, ' ').trim();
+  if (!s) return '';
+  if (/^TOTAL\b/.test(s) || /^MATERIA(L|IS)$/.test(s)) return '';
+  if (/^[\d.,\s]+$/.test(s)) return '';   // lixo: metragem caiu no campo produto (ex: "11.64")
+  if (/^LUMINA\b/.test(s)) {
+    if (/\b1130\b/.test(s)) return /PRIMER/.test(s) ? 'LUMINA 1130 PRIMER - 1 KG' : 'LUMINA 1130 - 1 KG';
+    if (/PRIMER/.test(s)) return 'LUMINA PRIMER - 1 KG';
+    if (/ANTIDERRAP/.test(s)) return 'LUMINA ANTIDERRAPANTE - 1 KG';
+    return 'LUMINA - 1 KG'; // verniz · agrupa fosco/pigmentado/demãos/grafia
   }
-  document.getElementById('radar-vm-extra').style.display = diasOrdenados.length > 5 ? '' : 'none';
+  if (/^STELION\b/.test(s)) {
+    if (/\b3G\b/.test(s)) return 'STELION 3G';      // 3G diluído = 3G
+    if (/\bLEONA\b/.test(s)) return 'STELION LEONA';
+    if (/\b292\b/.test(s)) return 'STELION 292';
+    return 'STELION';                               // "+ espessante" → stelion (espessante é aditivo, sem qtd própria)
+  }
+  if (/^MICROFINO\b/.test(s)) return 'LILIT';       // microfino = LILIT
+  if (/\bSTELION\b/.test(s)) return 'STELION';       // GHOST STELION, STELION ESPESSANTE etc → STELION
+  if (/\bLILIT\b/.test(s)) return 'LILIT';           // LILIT, LILIT BASE, LILIT - BASE
+  return s;
+}
 
-  renderSolicDash(F, dias);
+// Rótulo curto pra exibição (NÃO muda o agrupamento) · tira "- 1 KG" e abrevia nomes longos
+function matLabelCurto(nome) {
+  return (nome || '')
+    .replace(/\s*-?\s*1\s*KG\b/i, '')
+    .replace(/ANTIDERRAPANTE/i, 'ANTID.')
+    .replace(/(\S+\s+)PRIMER\b/i, '$1PRIM.')   // só abrevia PRIMER em nome composto (LUMINA PRIMER), nunca o PRIMER puro
+    .trim();
+}
+
+function compMaterial(F) {
+  const hojeM = new Date().toISOString().slice(0, 7);
+  const NM = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+  // MATERIAL ENVIADO ÀS OBRAS · rastreado POR OBRA. Soma a quantidade despachada (OS) de TODAS as
+  // obras que INICIARAM no mês. Ex: 15 obras em março × 7 STELION cada = 105 STELION no mês.
+  // Conta todo o material das obras do mês (mesmo OS emitida antes). Corte: obras de 2026 (filtro).
+  // Material conta TODAS as obras do período (ativas + finalizadas), ignorando o filtro de Status:
+  // toda obra que iniciou consumiu material, mesmo já finalizada. (Status só vale em Prazo/Qualidade.)
+  const pe = (document.getElementById('comp-filtro-periodo') || {}).value || '';
+  const fx = (document.getElementById('comp-filtro-faixa') || {}).value || '';
+  // mês de INÍCIO = 1ª APLICAÇÃO real (primeiro marco de execução), NÃO data_inicio_real —
+  // que pega a data do RETORNO em obras de retrabalho (contava obra antiga de 2025 como "início em maio").
+  // Obras sem marco de execução (não aplicaram / sem registro) ficam de fora.
+  const matMesInicio = (o) => {
+    const ds = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 7)).filter(Boolean);
+    return ds.length ? ds.sort()[0] : null;
+  };
+  const comMes = [];
+  (DADOS.obras || []).forEach(o => {
+    const m = matMesInicio(o);
+    if (!m || m > hojeM || (pe && m < pe)) return;
+    if (fx && o.faixa_metragem !== fx) return;
+    comMes.push({ o, mes: m });
+  });
+
+  // MODO CONFERÊNCIA (2026-05-27): seletor travado SÓ em Janeiro p/ refinar obra a obra.
+  // Reverter depois: descomentar as 3 linhas "// NORMAL" e remover este bloco.
+  const mesesSet = new Set(comMes.map(x => x.mes));
+  matMesSel = '2026-01';
+  const meses = ['2026-01'];
+  // NORMAL: const meses = [...mesesSet].sort().slice(-12);
+  // NORMAL: if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
+  let btns = '';
+  // NORMAL: btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
+  btns += meses.map(m => `<button class="comp-mes-btn active" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
+  const elMeses = document.getElementById('mat-meses');
+  if (elMeses) elMeses.innerHTML = btns;
+
+  // Obras do mês selecionado (ou Tudo) · soma material despachado (OS) por produto (UNIFICADO)
+  const escObj = matMesSel==='tudo' ? comMes : comMes.filter(x => x.mes===matMesSel);
+  const esc = escObj.map(x => x.o);
+  const qtdMat = {};
+  let nObrasMat = 0, nOS = 0;
+  esc.forEach(o => {
+    const oss = o.materiais_enviados || [];
+    if (oss.length) nObrasMat++;
+    oss.forEach(os => { nOS++; (os.materiais || []).forEach(it => {
+      const cp = matCanonProduto(it.material);
+      if (!cp) return;
+      qtdMat[cp] = (qtdMat[cp]||0) + (parseFloat(String(it.quantidade||'0').replace(',','.'))||0);
+    }); });
+  });
+  const totUnid = Object.values(qtdMat).reduce((s,v)=>s+v,0);
+
+  // Extras (Telegram) das obras do mês
+  const GEN = new Set(['material','materiais','insumo','insumos','produto','produtos','itens']);
+  const exList = [];
+  esc.forEach(o => (o.solicitacoes_material||[]).forEach(s => exList.push({ produto: s.produto||'?', autor: s.autor||'', cli: o.cliente })));
+  const espec = exList.filter(e => !GEN.has((e.produto||'').toLowerCase()));
+  const nGen = exList.length - espec.length;
+  const freqExtra = {};
+  espec.forEach(e => { freqExtra[e.produto] = (freqExtra[e.produto]||0)+1; });
+  const porAutor = {};
+  exList.forEach(e => { const a = matNormAutor(e.autor); if (!a||a.length<2) return; if (!porAutor[a]) porAutor[a]={n:0,itens:{}}; porAutor[a].n++; porAutor[a].itens[e.produto]=(porAutor[a].itens[e.produto]||0)+1; });
+
+  // Resumo (cards do topo)
+  const elRes = document.getElementById('pilar-resumo-mat');
+  if (elRes) elRes.innerHTML = `<div class="pilar-resumo-grid">
+    <div class="pilar-resumo-card" style="border-left-color:#7ea0b7"><div class="pilar-resumo-val" style="color:#7ea0b7">${esc.length}</div><div class="pilar-resumo-label">Obras iniciadas</div><div class="pilar-resumo-sub">${nObrasMat} com material enviado</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:#5fa073"><div class="pilar-resumo-val" style="color:#5fa073">${Math.round(totUnid).toLocaleString('pt-BR')}</div><div class="pilar-resumo-label">Material enviado</div><div class="pilar-resumo-sub">unidades (baldes/kg)</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:${exList.length?'#9a7a20':'#3d7a50'}"><div class="pilar-resumo-val" style="color:${exList.length?'#9a7a20':'var(--ink-faint)'}">${exList.length}</div><div class="pilar-resumo-label">Pedidos de extra</div><div class="pilar-resumo-sub">no Telegram</div></div>
+  </div>`;
+
+  // BLOCO 1 · narrativa
+  const lblMes = matMesSel==='tudo' ? 'todo o período (2026)' : (NM[+matMesSel.slice(5)]+'/'+matMesSel.slice(0,4));
+  const topP = Object.entries(qtdMat).sort((a,b)=>b[1]-a[1])[0];
+  let narr = `Em <strong>${lblMes}</strong>: <span class="pn-num">${esc.length}</span> obras iniciaram, <span class="pn-num">${nObrasMat}</span> já com material enviado — <span class="pn-num">${Math.round(totUnid).toLocaleString('pt-BR')}</span> unidades no total.`;
+  if (topP) narr += ` O mais enviado: <strong>${compEsc(topP[0])}</strong> (${Math.round(topP[1]).toLocaleString('pt-BR')}).`;
+  if (exList.length) {
+    narr += `<span class="pn-sep"></span><span class="pn-num pn-warn">${exList.length}</span> pedidos de material extra durante a execução.`;
+    const topE = Object.entries(freqExtra).sort((a,b)=>b[1]-a[1])[0];
+    if (topE) narr += ` Item mais pedido: <strong>${compEsc(topE[0])}</strong> (${topE[1]}×).`;
+  }
+  document.getElementById('mat-funil-narrativa').innerHTML = narr;
+
+  // BLOCO 2 · ranking OS por material (quantidade real) · ordenável
+  const _osAll = Object.entries(qtdMat);
+  const _maxOS = _osAll.length ? Math.max(..._osAll.map(e => e[1])) : 1;   // barra proporcional ao MAIOR (independe da ordem)
+  const _sortersOS = {
+    'qtd-desc': (a, b) => b[1] - a[1],
+    'qtd-asc':  (a, b) => a[1] - b[1],
+    'az':       (a, b) => String(a[0]).localeCompare(String(b[0]), 'pt'),
+    'za':       (a, b) => String(b[0]).localeCompare(String(a[0]), 'pt'),
+  };
+  const osRank = _osAll.sort(_sortersOS[matOSord] || _sortersOS['qtd-desc']).slice(0, 10);
+  document.getElementById('mat-os-ranking').innerHTML = osRank.map(([m, q]) =>
+    `<div class="radar-sinal-row"><div class="radar-sinal-lbl" title="${compEsc(m)}">${compEsc(matLabelCurto(m))}</div><div class="radar-sinal-track"><div class="radar-sinal-bar" style="width:${Math.round(q / _maxOS * 100)}%;background:#7ea0b7"></div></div><div class="radar-sinal-n">${Math.round(q)}</div></div>`
+  ).join('') || '<div style="color:var(--ink-faint);font-size:12px;padding:8px 0">Sem OS no período.</div>';
+
+  // BLOCO 3 · ranking extras específicos (frequência)
+  const exRank = Object.entries(freqExtra).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const maxEx = exRank.length ? exRank[0][1] : 1;
+  document.getElementById('mat-extra-ranking').innerHTML = exRank.map(([m, c]) =>
+    `<div class="radar-sinal-row"><div class="radar-sinal-lbl">${compEsc(m)}</div><div class="radar-sinal-track"><div class="radar-sinal-bar" style="width:${Math.round(c / maxEx * 100)}%;background:#c4a040"></div></div><div class="radar-sinal-n">${c}</div></div>`
+  ).join('') || '<div style="color:var(--ink-faint);font-size:12px;padding:8px 0">Sem pedidos no período.</div>';
+  document.getElementById('mat-extra-generico').innerHTML = nGen > 0 ? `+ <strong>${nGen}</strong> pedidos genéricos ("material/insumo", sem item especificado na mensagem)` : '';
+
+  // BLOCO 4 · quem pediu (equipe/aplicador, nome normalizado)
+  const eqRank = Object.entries(porAutor).sort((a, b) => b[1].n - a[1].n).slice(0, 8);
+  document.querySelector('#mat-tab-equipe tbody').innerHTML = eqRank.map(([a, d]) => {
+    const top = Object.entries(d.itens).sort((x, y) => y[1] - x[1])[0];
+    return `<tr><td class="cn" title="${compEsc(a)}">${compEsc(a)}</td><td class="cv">${d.n}</td><td>${top ? compEsc(top[0]) + ' (' + top[1] + '×)' : '—'}</td></tr>`;
+  }).join('') || '<tr><td colspan="3" style="text-align:center;color:var(--ink-faint);padding:14px">Sem solicitações no período.</td></tr>';
+
+  // TABELA DE CONFERÊNCIA MANUAL · obras do mês (1ª aplicação vs início do card · vermelho = divergem)
+  const elTabO = document.querySelector('#mat-tab-obras tbody');
+  if (elTabO) elTabO.innerHTML = escObj.sort((a,b)=>(a.o.cliente||'').localeCompare(b.o.cliente||'')).map(({o, mes}) => {
+    const mats = {};
+    (o.materiais_enviados||[]).forEach(os => (os.materiais||[]).forEach(it => {
+      const cp = matCanonProduto(it.material); if (!cp) return;
+      mats[cp] = (mats[cp]||0) + (parseFloat(String(it.quantidade||'0').replace(',','.'))||0);
+    }));
+    const matStr = Object.entries(mats).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([m,q])=>`${compEsc(matLabelCurto(m))} ${Math.round(q)}`).join(' · ') || '<span style="color:var(--ink-faint)">sem OS</span>';
+    const iniCard = (o.data_inicio_real||'').slice(0,10);
+    const diverge = (o.data_inicio_real||'').slice(0,7) !== mes;
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${mes}</td><td class="cv"${diverge?' style="color:#c04030;font-weight:700"':''}>${iniCard}</td><td>${matStr}</td></tr>`;
+  }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra no mês.</td></tr>';
 }
 
 function compPrazo(F){
