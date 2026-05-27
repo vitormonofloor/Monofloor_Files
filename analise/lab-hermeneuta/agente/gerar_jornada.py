@@ -2596,6 +2596,61 @@ def calcular_score_risco(jornada):
     }
 
 
+def detectar_discordancia_painel_telegram(j):
+    """Cruza status/fase do Painel com evidencia Telegram. Retorna dict com tipo e descricao."""
+    status = (j.get("status") or "").lower()
+    fase = (j.get("fase_atual_painel") or "").upper()
+    n_msgs = j.get("n_msgs_telegram_total") or 0
+    marcos = j.get("marcos") or []
+    marcos_exec = j.get("marcos_execucao") or []
+    data_1a = j.get("data_1a_msg")
+    data_ult = j.get("data_ultima_msg")
+
+    STATUS_PRE = {"planejamento", "contrato", "aguardando_execucao", "aguardando_clima"}
+    FASES_PRE = {"COMERCIAL", "CONTRATO", "PLANEJAMENTO", "CONFERÊNCIA", "AGUARDANDO"}
+    tem_telegram_exec = n_msgs >= 5 and (len(marcos_exec) >= 1 or len(marcos) >= 2)
+
+    # Tipo 1: Painel diz pre-obra mas Telegram tem evidencia de execucao
+    if status in STATUS_PRE and tem_telegram_exec:
+        return {
+            "tipo": "painel_atrasado",
+            "severidade": "alta",
+            "descricao": f"Painel mostra '{status}' mas Telegram tem {n_msgs} msgs e {len(marcos_exec)} marcos de execucao",
+            "evidencia": {"n_msgs": n_msgs, "marcos_exec": len(marcos_exec), "marcos": len(marcos)},
+        }
+
+    # Tipo 2: Painel diz em execucao/finalizado mas Telegram esta em silencio (0 msgs)
+    if status in ("em_execucao", "finalizado", "concluido") and n_msgs == 0:
+        return {
+            "tipo": "telegram_silencio",
+            "severidade": "media",
+            "descricao": f"Painel mostra '{status}' mas obra nao tem nenhuma mensagem no Telegram",
+            "evidencia": {"status_painel": status, "n_msgs": 0},
+        }
+
+    # Tipo 3: Fase do Painel diz concluida mas status diz em_execucao
+    if ("CONCLU" in fase or "FINALIZADO" in fase) and status == "em_execucao":
+        return {
+            "tipo": "fase_status_divergente",
+            "severidade": "media",
+            "descricao": f"Fase '{j.get('fase_atual_painel')}' sugere encerrada mas status = em_execucao",
+            "evidencia": {"fase": j.get("fase_atual_painel"), "status": status},
+        }
+
+    # Tipo 4: Telegram tem msgs recentes mas Painel mostra fase pre-industria
+    if data_ult and n_msgs >= 3:
+        eh_fase_pre = any(fp in fase for fp in FASES_PRE)
+        if eh_fase_pre:
+            return {
+                "tipo": "painel_defasado_fase",
+                "severidade": "baixa",
+                "descricao": f"Fase Painel '{j.get('fase_atual_painel')}' parece defasada — Telegram ativo com {n_msgs} msgs",
+                "evidencia": {"fase": j.get("fase_atual_painel"), "n_msgs": n_msgs, "ultima_msg": data_ult},
+            }
+
+    return {"tipo": None}
+
+
 def gerar_acoes_pendentes(jornada):
     """Bloco prescritivo: o que fazer agora com essa obra. Lista priorizada."""
     status = (jornada.get("status") or "").lower()
@@ -3550,6 +3605,13 @@ def construir_jornada(obra_id):
     elif m2 < 10:
         alertas.append("metragem_suspeita")
     jornada["alertas"] = alertas
+
+    # Discordancia Painel x Telegram
+    disc = detectar_discordancia_painel_telegram(jornada)
+    jornada["discordancia_painel_telegram"] = disc
+    if disc and disc.get("tipo"):
+        alertas.append("discordancia_painel_telegram")
+
     jornada["acoes_pendentes"] = gerar_acoes_pendentes(jornada)
 
     return jornada
@@ -3991,6 +4053,16 @@ def main():
     # GUARDRAILS · sanity checks pós-pipeline
     # ============================================================
     validar_sanidade(out["obras"])
+
+    # ============================================================
+    # SENTINELA · atualiza status.json junto com os dados
+    # ============================================================
+    try:
+        from sentinela import main as sentinela_main
+        print("\nRodando sentinela.py...")
+        sentinela_main()
+    except Exception as e:
+        print(f"[WARN] Sentinela falhou (não bloqueia): {e}")
 
 
 def validar_sanidade(obras):
