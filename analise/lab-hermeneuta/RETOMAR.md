@@ -1,6 +1,6 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-26 · Compilador reestruturado (sidebar+conteudo) + pilar PRAZO construido + filtro Consultor removido
+> **Última atualização:** 2026-05-26 · Compilador reestruturado + paleta premium + sidebar sticky
 
 ---
 
@@ -23,11 +23,22 @@
 ### Filtro Consultor removido do Compilador
 - ✅ Select e variavel `co` removidos de compFiltrar/compInit
 
+### Paleta premium Orion (diferenciacao visual da Central)
+- ✅ Fundo areia #e8e1d6 (Central usa #f0ebe3) + cards brancos #ffffff
+- ✅ Sombras refinadas (shadow-sm/md/lg mais presentes)
+- ✅ ~20 cores hardcoded migradas pra CSS vars (--line, --surface, --surface-2)
+- ✅ Header bg alinhado com nova paleta
+
+### Sidebar Compilador sticky
+- ✅ top:16px → top:120px para acompanhar scroll abaixo do header+tab-bar
+- ✅ Menu MATERIAL/PRAZO/QUALIDADE sempre visivel durante leitura do conteudo
+
 ### Deploy Cloudflare
-- ✅ publicar.py executado via varredura automatica (versao 5164b499)
+- ✅ 4 deploys manuais via wrangler (paleta iterada 3x + sidebar sticky)
 
 ### Memorias novas
 - `feedback_layout_sidebar_conteudo.md`
+- `feedback_paleta_premium_contraste.md`
 
 ### Pendencias pra proxima sessao
 
@@ -41,7 +52,7 @@
 ### Comando pra retomar (cole no Claude Code)
 
 ```
-Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-26". Compilador com sidebar+conteudo. Pilar PRAZO completo. Pendente: panorama mensal + Camada 2 material + Camada 3 score.
+Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-26". Compilador com sidebar+conteudo + paleta premium areia/branco. Sidebar sticky. Pendente: panorama mensal + Camada 2 material + Camada 3 score + pilar Qualidade.
 ```
 
 ---
