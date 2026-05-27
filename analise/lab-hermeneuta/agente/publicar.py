@@ -191,6 +191,18 @@ def _wrangler_deploy() -> bool:
             env["PATH"] = p + os.pathsep + path_atual
             path_atual = env["PATH"]
 
+    # CRÍTICO · DESCOBERTO 2026-05-27: em ambiente não-interativo (cron/Task Scheduler)
+    # o XDG_CONFIG_HOME não é herdado, então o wrangler não acha o cache OAuth
+    # (`<APPDATA>/xdg.config/.wrangler/config`) e aborta pedindo CLOUDFLARE_API_TOKEN.
+    # Aponta explicitamente pro cache se ele existir e a var não estiver setada.
+    if not env.get("XDG_CONFIG_HOME"):
+        appdata = env.get("APPDATA") or os.path.expandvars(r"%APPDATA%")
+        if appdata:
+            xdg_candidato = Path(appdata) / "xdg.config"
+            if (xdg_candidato / ".wrangler" / "config").exists():
+                env["XDG_CONFIG_HOME"] = str(xdg_candidato)
+                print(f"XDG_CONFIG_HOME apontado pro cache wrangler: {xdg_candidato}")
+
     # Acha wrangler · prioridade: PATH > C:\Program Files\nodejs\npx.cmd
     cmds_a_testar = [
         ["wrangler", "deploy"],
