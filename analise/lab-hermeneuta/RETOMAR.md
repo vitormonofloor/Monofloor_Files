@@ -1,6 +1,47 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-26 · Compilador reestruturado + paleta premium + sidebar sticky
+> **Última atualização:** 2026-05-27 · P0 discordância + P1 pilar Qualidade + P2 Radar de Risco
+
+---
+
+## 🆕 SESSAO 2026-05-27 · O QUE FECHAMOS HOJE
+
+### P0 · Discordância Painel × Telegram — dívida fechada
+- ✅ Função `detectar_discordancia_painel_telegram()` estava só no working tree (jornada.html já consumia, mas gerar_jornada.py não estava commitado). Commit `26eab8f`
+- ✅ 4 tipos · 107 obras hoje (75 painel atrasado, 11 fase/status, 11 painel defasado, 10 silêncio)
+
+### P1 · Pilar Qualidade no Compilador — na profundidade do PRAZO
+- ✅ Era só 1 donut + tabela. Agora: narrativa dinâmica + decomposição por severidade de ocorrência + tendência mensal (% retrab × % limpa) + tabela. Commit `3fa5312`
+- ✅ Bug corrigido: coluna Score na tabela (sempre null em finalizadas, renderizaria [object Object]) → trocada por Fricção
+- ✅ Números: 99 finalizadas · 6% limpa · 46% ressalvas · 47% retrabalho · 849 ocorrências formais
+
+### P2 · Aba Radar de Risco — obras ativas priorizadas por score
+- ✅ Tela própria (tab "radar"). Score JÁ era calculado no backend; o P2 foi a camada de visão. Commit `9c3caca`
+- ✅ Segmentada por estágio (pré-obra 104 / iminente 38 / execução 34 / reparo 20) — não mistura universos. Filtro de risco + ranking de sinais recalculam por escopo. Tabela clicável → abre a jornada
+- ✅ Achado: estágio **Iminente** concentra mais risco grave (8/38 = 21%) que o agregado escondia
+- ✅ Publicado · wrangler Version `b19569d8`
+
+### Memórias novas/atualizadas
+- `reference_score_risco_radar.md` (nova) — score preditivo + composição por estágio
+- `feedback_deploy_cf_workers.md` (atualizada) — pub repo é SÓ backup, NÃO mexer no git dele
+
+### Tropeço da sessão (corrigido)
+- `git reset --hard` no pub repo regrediu o site por 1 deploy. Pub repo é só backup; wrangler é quem publica. Conserto: copiar arquivos do lab pro public/ + wrangler deploy. Registrado em memória.
+
+### Pendências pra próxima sessão
+
+| Ordem | Item | Custo est. |
+|---|---|---|
+| 1 | **origem_retrabalho = 100% herança (47/47)** — bug na flag ou aplicação original de 2025? Investigar | ~30min |
+| 2 | Pipeline não re-tenta wrangler em falha transitória (mordeu no PASSO 3 hoje) | ~30min |
+| 3 | Panorama mensal (evolução carteira mês a mês) | ~1h |
+| 4 | Camada 2 — Triângulo de consistência material | ~2h |
+
+### Comando pra retomar (cole no Claude Code)
+
+```
+Le analise/lab-hermeneuta/RETOMAR.md · secao topo "SESSAO 2026-05-27". P0+P1+P2 fechados e no ar. Memoria: reference_score_risco_radar.md. Proximo: investigar origem_retrabalho 100% herança (~30min) — bug na flag ou aplicação original de 2025?
+```
 
 ---
 
