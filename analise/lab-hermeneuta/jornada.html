@@ -3840,6 +3840,7 @@
         <option value="todas">Todas</option>
         <option value="ativas" selected>Ativas</option>
         <option value="finalizadas">Finalizadas</option>
+        <option value="canceladas">Canceladas</option>
       </select></label>
       <label>Execução a partir de <select id="comp-filtro-periodo" onchange="compFiltrar()">
         <option value="2026-01" selected>Jan/2026</option>
@@ -6950,8 +6951,10 @@ function compFiltrar() {
   const fx = document.getElementById('comp-filtro-faixa').value;
   const pe = document.getElementById('comp-filtro-periodo').value;
   const F = (DADOS.obras||[]).filter(o => {
-    if (st==='ativas' && COMP_FIN.includes(o.status)) return false;
+    // Ativas = nem finalizada nem cancelada (cancelada é universo à parte)
+    if (st==='ativas' && (COMP_FIN.includes(o.status) || o.status==='cancelado')) return false;
     if (st==='finalizadas' && !COMP_FIN.includes(o.status)) return false;
+    if (st==='canceladas' && o.status!=='cancelado') return false;
     if (fx && o.faixa_metragem!==fx) return false;
     if (pe) {
       const dExec = o.data_inicio_real || '';
@@ -7246,18 +7249,24 @@ function compMaterial(F) {
   // toda obra que iniciou consumiu material, mesmo já finalizada. (Status só vale em Prazo/Qualidade.)
   const pe = (document.getElementById('comp-filtro-periodo') || {}).value || '';
   const fx = (document.getElementById('comp-filtro-faixa') || {}).value || '';
+  const st = (document.getElementById('comp-filtro-status') || {}).value || 'todas';
   // CRITÉRIO "obra iniciou no mês" = data_exec_prevista do Painel de Obras (fonte de verdade · decidido 2026-05-28).
   // Validação no Painel mostrou que "1º marco de execução do Telegram" divergia do que o Vitor vê: jan/26
   // tinha 8 finalizadas no Painel mas só 3 entravam pelo marco (Bernardo e Newton estavam nas 3 mas têm
   // Data Exec. em maio/26 — o marco de jan era amostra/preparação, não a obra). data_exec_prevista alimenta
   // a coluna "Data Exec." do Painel via dataExecucaoPrevista da API cliente.monofloor.cloud.
   // SEM filtros de retorno/ciclos — Painel conta a obra mesmo que tenha tido retrabalho depois.
+  // STATUS: Material normalmente ignora o filtro de status (toda obra que iniciou consumiu material),
+  // EXCETO quando o filtro é "Canceladas" — aí mostra SÓ canceladas (universo à parte, decidido 2026-05-28).
   const matMesInicio = (o) => {
     const d = (o.data_exec_prevista || '').slice(0, 7);
     return d || null;
   };
   const comMes = [];
   (DADOS.obras || []).forEach(o => {
+    // Material ignora status (todas/ativas/finalizadas mostram tudo, inclusive canceladas) EXCETO
+    // quando filtro = "Canceladas" → universo à parte, mostra SÓ canceladas. Decidido 2026-05-28.
+    if (st === 'canceladas' && o.status !== 'cancelado') return;
     const m = matMesInicio(o);
     if (!m || m > hojeM || (pe && m < pe)) return;
     if (fx && o.faixa_metragem !== fx) return;
