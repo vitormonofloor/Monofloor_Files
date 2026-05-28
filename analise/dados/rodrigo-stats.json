@@ -1,19 +1,19 @@
 {
-  "atualizado_em": "2026-05-27T22:57:18Z",
+  "atualizado_em": "2026-05-28T00:07:12Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1071,
-    "ativas": 263,
-    "finalizados": 808,
+    "ativas": 264,
+    "finalizados": 807,
     "em_execucao": 35,
     "pausados": 1,
     "m2_em_execucao": 4483
   },
   "por_status": {
+    "aguardando_execucao": 38,
     "planejamento": 90,
     "aguardando_clima": 4,
-    "aguardando_execucao": 37,
-    "finalizado": 583,
+    "finalizado": 582,
     "em_execucao": 35,
     "reparo": 21,
     "contrato": 38,
@@ -35,14 +35,14 @@
       "obras": 12,
       "m2": 3106
     },
-    "funil_total": 131,
+    "funil_total": 132,
     "com_data_firmada": 72,
-    "sem_data_firmada": 59,
+    "sem_data_firmada": 60,
     "fonte": "Painel de Obras · acessoDetalhes.allFields.data_de_entrada — só obras com data firmada"
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2192,
+    "pending_tasks": 2190,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -2625,6 +2625,11 @@
       "dataEntrada": "",
       "dataExec": ""
     },
+    "0d0c35bd-3b00-4de2-b898-4dfc61e6fdae": {
+      "dataVisita": "",
+      "dataEntrada": "",
+      "dataExec": "2026-06-08"
+    },
     "c5d7a12e-30d0-464d-97f8-74da1aaeae03": {
       "dataVisita": "30/07/2025 14:00",
       "dataEntrada": "",
@@ -3000,17 +3005,17 @@
     "fonte": "Painel de Obras /api/projects fresh — zumbi=fase CLIENTE FINALIZADO + status ativo; orfas=sem consultor"
   },
   "operacional_kira": {
-    "kira_atualizado_em": "2026-05-27T12:01:18.418000+00:00",
-    "total_fluxo": 205,
-    "com_kira": 118,
+    "kira_atualizado_em": "2026-05-27T23:06:46.478000+00:00",
+    "total_fluxo": 206,
+    "com_kira": 119,
     "saudavel": 67,
-    "saudavel_pct_no_monitorado": 56.8,
-    "atencao": 51,
+    "saudavel_pct_no_monitorado": 56.3,
+    "atencao": 52,
     "sem_kira": 87,
     "clima_dist": {
       "Positivo": 22,
       "Neutro": 46,
-      "Tenso": 58,
+      "Tenso": 59,
       "Crítico": 2,
       "?": 99
     },
@@ -4275,6 +4280,148 @@
             "data": "20/03",
             "iso": "2026-03-20",
             "texto": "Monofloor informa que houve divergência de diretrizes na obra; responsabiliza alteração de orientação ocorrida na chegada",
+            "classe": "critico"
+          }
+        ]
+      },
+      {
+        "id": "0d0c35bd-3b00-4de2-b898-4dfc61e6fdae",
+        "cliente": "LEONARDO KAWANO",
+        "consultor": "Wesley",
+        "consultor_full": "Wesley Matheus de Carvalho",
+        "cidade": "SÃO PAULO",
+        "fase": "OBRA CONCLUÍDA",
+        "status": "aguardando_execucao",
+        "clima": "Tenso",
+        "n_alertas": 6,
+        "dias_sem_evento": null,
+        "dias_desde_resumo": 44,
+        "alertas": [
+          "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
+          "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
+          "ATENÇÃO: Múltiplas pendências em aberto na obra em 11/04, com risco real de novo atraso no cronograma (4ª aplicação).",
+          "ATENÇÃO: Obra operando com equipe reduzida em 10/04 (apenas 1 aplicador), gerando atraso já mencionado pelo cliente.",
+          "ATENÇÃO: Ausência do ajuste de queda d'água no banheiro pode causar reincidência de problema futuro, conforme alertado pela Monofloor."
+        ],
+        "pendencias": [
+          "Confirmação de pagamento via Pix de R$ 250 à Lucimara Ferreira de Lima (sem confirmação registrada na conversa)",
+          "Envio urgente de verniz PU fosco em substituição ao acetinado entregue incorretamente",
+          "Verificação e eventual substituição do Lumina (confirmar se é acetinado ou fosco)",
+          "Lixar pontos no chão da cozinha e área de serviço e todo o rodapé",
+          "Aplicação do Lumina (definir quantidade de demãos: 1 ou 2)"
+        ],
+        "resumo_exec": "A obra encontra-se na 4ª fase de aplicação, com execução em andamento desde 07/04/2026, porém enfrenta um problema crítico identificado em 11/04: o verniz PU entregue é acetinado, incompatível com o projeto que prevê acabamento 100% fosco em pisos, bancadas e paredes. Há ainda dúvida sobre o acabamento do Lumina enviado, o que pode ampliar o impacto do problema. Diversas etapas permanecem pendentes — incluindo lixamento do segundo banheiro, aplicação de verniz e Lumina — e o cliente já demonstra receio de novo atraso no cronograma. O tempo de resposta da Monofloor tem sido lento em momentos cr",
+        "clima_desc": "O atendimento começou de forma cordial, mas evoluiu para um clima tenso com a identificação de material incorreto entregue (verniz acetinado em vez de fosco) e atrasos recorrentes na execução. O cliente demonstra preocupação crescente com o cronograma e a qualidade do projeto.",
+        "periodo": "20/03 a 11/04/2026",
+        "tempo_resp": "Lento",
+        "total_msgs": 34,
+        "eventos": [
+          {
+            "data": "20/03",
+            "iso": "2026-03-20",
+            "texto": "Cliente solicita indicação de profissional para ajuste de queda d'água no banheiro",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Pintura realizada conforme combinado; cliente envia dados para pagamento via Pix de R$ 250 à profissional Lucimara Ferreira de Lima",
+            "classe": "neutro"
+          },
+          {
+            "data": "27/03",
+            "iso": "2026-03-27",
+            "texto": "Monofloor direciona pagamento aos responsáveis e aguarda retorno",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Cliente faz follow-up sobre o assunto do ajuste da queda d'água",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Cliente decide não fazer o ajuste de queda d'água por não encontrar profissional de confiança",
+            "classe": "neutro"
+          },
+          {
+            "data": "01/04",
+            "iso": "2026-04-01",
+            "texto": "Cliente confirma agenda de início da aplicação para a semana seguinte",
+            "classe": "neutro"
+          },
+          {
+            "data": "02/04",
+            "iso": "2026-04-02",
+            "texto": "Monofloor confirma agenda e alerta que a ausência do ajuste pode ocasionar reincidência do problema",
+            "classe": "critico"
+          },
+          {
+            "data": "06/04",
+            "iso": "2026-04-06",
+            "texto": "Angela solicita confirmação da equipe e dados para acesso no dia seguinte",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Monofloor confirma equipe para o dia e envia nomes e CPFs de 6 aplicadores (Ademir, Felipe, Paulo Henrique, Gilmar, Jaime e Filipe Lucena)",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Equipe chega ao local e lixam banheiros e cozinha com máquina, aguardando material para primeira demão de Stelion",
+            "classe": "neutro"
+          },
+          {
+            "data": "07/04",
+            "iso": "2026-04-07",
+            "texto": "Material confirmado para entrega no mesmo dia",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Monofloor consulta sobre aprovação do verniz no piso do banheiro da suíte",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Leonardo confirma solicitação de lixamento de pontos com relevo antes do verniz",
+            "classe": "neutro"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Apenas um aplicador presente na obra, causando atraso",
+            "classe": "critico"
+          },
+          {
+            "data": "10/04",
+            "iso": "2026-04-10",
+            "texto": "Aplicador Filipe enviado ao local para reforço",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/04",
+            "iso": "2026-04-11",
+            "texto": "Executados no dia 10: rodapés da cozinha e área de serviço, retoques de Stelion nas bancadas do banheiro e verniz no piso de 1 banheiro",
+            "classe": "neutro"
+          },
+          {
+            "data": "11/04",
+            "iso": "2026-04-11",
+            "texto": "Identificado problema crítico: verniz PU entregue é acetinado, contrariando o projeto que prevê acabamento 100% fosco",
+            "classe": "critico"
+          },
+          {
+            "data": "11/04",
+            "iso": "2026-04-11",
+            "texto": "Cliente solicita envio urgente de verniz PU fosco e questiona se o Lumina enviado também é acetinado",
             "classe": "critico"
           }
         ]
@@ -7722,7 +7869,7 @@
     "fonte": "/api/projects/{id} pendenciaManual.whatsappSummary (cada detail fresh, ~3min coleta)"
   },
   "historico_aplicadores": {
-    "dias_acumulados": 28,
+    "dias_acumulados": 29,
     "janela_dias": 7,
     "top_carga_7d": [
       {
@@ -7730,7 +7877,7 @@
         "nome": "Michael Marinho de Lima",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 8
       },
       {
@@ -7738,7 +7885,7 @@
         "nome": "Gilmar Gomes Rafael",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 6
       },
       {
@@ -7746,7 +7893,7 @@
         "nome": "Júlio Miranda",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 6
       },
       {
@@ -7754,7 +7901,7 @@
         "nome": "Heitor Santos Da Silva Campello",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7762,7 +7909,7 @@
         "nome": "Gabriel dos Santos sena Ribeiro",
         "cargo": "Ajudante",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7770,7 +7917,7 @@
         "nome": "Egberto Sullivan Tavares de Oliveira",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7778,7 +7925,7 @@
         "nome": "Carlos Eduardo da Silva Neves",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7786,7 +7933,7 @@
         "nome": "João Carlos",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7794,7 +7941,7 @@
         "nome": "Vitor Rodrigues de Azevedo",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7802,7 +7949,7 @@
         "nome": "Valter Rodrigues de Azevedo",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       }
     ],
@@ -7812,7 +7959,7 @@
         "nome": "Marcelo Siqueira Boer",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       },
       {
@@ -7820,7 +7967,7 @@
         "nome": "Heitor Santos Da Silva Campello",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 4
       },
       {
@@ -7828,7 +7975,7 @@
         "nome": "Gilmar Gomes Rafael",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 6
       },
       {
@@ -7836,7 +7983,7 @@
         "nome": "Michael Marinho de Lima",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 8
       },
       {
@@ -7844,7 +7991,7 @@
         "nome": "Jansen Roberto Mendes Silva",
         "cargo": "Encarregado",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       },
       {
@@ -7852,7 +7999,7 @@
         "nome": "Jose Manoel Mendes dos Santos",
         "cargo": "Aplicador 1",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       },
       {
@@ -7860,7 +8007,7 @@
         "nome": "Reinaldo Faustino de Camargo",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       },
       {
@@ -7868,7 +8015,7 @@
         "nome": "Jaime Pires de Campos Junior",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       },
       {
@@ -7876,7 +8023,7 @@
         "nome": "Rodolfo Martins da Silva",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       },
       {
@@ -7884,7 +8031,7 @@
         "nome": "Ulisses",
         "cargo": "Líder de Campo",
         "dias_escalado": 2,
-        "dias_ocioso": 3,
+        "dias_ocioso": 4,
         "total_obras": 2
       }
     ],
@@ -7894,7 +8041,7 @@
         "nome": "AJUDANTE EM TESTE",
         "cargo": "Ajudante",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7902,7 +8049,7 @@
         "nome": "Ademir de Jesus Silva",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7910,7 +8057,7 @@
         "nome": "Adilson Junior",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7918,7 +8065,7 @@
         "nome": "Adriano Fernandes da Silva",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7926,7 +8073,7 @@
         "nome": "Alexander Vieira Rangel",
         "cargo": "Aplicador 1",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7934,7 +8081,7 @@
         "nome": "Alexandre Benjamin",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7942,7 +8089,7 @@
         "nome": "Alexandre Henrique Dourado Domiense",
         "cargo": "Preparador",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7950,7 +8097,7 @@
         "nome": "Anderson da Silva Santos",
         "cargo": "Líder de Campo",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7958,7 +8105,7 @@
         "nome": "André Lopes",
         "cargo": "Aplicador 2",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       },
       {
@@ -7966,7 +8113,7 @@
         "nome": "Ariosvaldo Silva Reis",
         "cargo": "Aplicador 2",
         "dias_escalado": 0,
-        "dias_ocioso": 5,
+        "dias_ocioso": 6,
         "total_obras": 0
       }
     ],
@@ -7983,7 +8130,7 @@
       "pausadas": 0
     },
     "wesley": {
-      "n": 78,
+      "n": 79,
       "mediana": 218,
       "n180": 48,
       "n270": 26,
@@ -7991,9 +8138,9 @@
       "reparo": 10,
       "pausadas": 0
     },
-    "total_ativas": 228,
+    "total_ativas": 229,
     "n_180_total": 112,
-    "concentracao_pct": 68.9,
+    "concentracao_pct": 69.0,
     "concentracao_180_pct": 89.3,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
