@@ -35,6 +35,47 @@ ARQUIVOS = [
 ]
 
 
+def _garantir_pub_repo_saudavel() -> bool:
+    """Detecta rebase travado / detached HEAD no pub repo e faz a faxina ANTES de pull/push.
+    Aprendizado 2026-05-28: o pub repo entrava em estado caótico quando o pull --rebase --autostash
+    conflitava em arquivos auto-gerados (jornadas.json, _jornadas/*.md), deixando detached HEAD
+    e rebase travado. Isso quebrava o publicar.py em loop e corrompia o JSON publicado (tela
+    branca no site). Retorna True se fez faxina (caller deve forçar cópia ignorando mtime).
+    Playbook em [[feedback-deploy-cf-workers]]."""
+    def _run(cmd):
+        return subprocess.run(cmd, cwd=str(PUB_REPO), capture_output=True, text=True,
+                              encoding="utf-8", errors="replace")
+
+    # fetch silencioso pra origin/main estar atualizado
+    _run(["git", "fetch", "origin"])
+
+    # detecta sintomas
+    rebase_em_andamento = ((PUB_REPO / ".git" / "rebase-merge").exists() or
+                           (PUB_REPO / ".git" / "rebase-apply").exists())
+    detached = _run(["git", "symbolic-ref", "-q", "HEAD"]).returncode != 0
+
+    if not rebase_em_andamento and not detached:
+        return False  # estado saudável · segue o fluxo normal
+
+    motivos = []
+    if rebase_em_andamento:
+        motivos.append("rebase em andamento")
+    if detached:
+        motivos.append("detached HEAD")
+    print(f"[publicar.py] pub repo em estado inconsistente ({' + '.join(motivos)}) · faxina automática...")
+
+    # 1. aborta rebase, limpa stashes
+    _run(["git", "rebase", "--abort"])
+    _run(["git", "stash", "clear"])
+    # 2. volta pro branch main e sincroniza com origin (descarta commits locais — são "varreduras"
+    #    de dado regenerável, sem trabalho humano)
+    _run(["git", "checkout", "main"])
+    _run(["git", "reset", "--hard", "origin/main"])
+
+    print("[publicar.py] faxina concluída · main resetado pro origin/main · recopia do lab a seguir")
+    return True
+
+
 def main():
     if not PUB_REPO.exists():
         print(f"AVISO: {PUB_REPO} não existe · publicação pulada")
@@ -44,6 +85,9 @@ def main():
     if not (PUB_REPO / ".git").exists():
         print(f"AVISO: {PUB_REPO} não é repo git · `git init` ainda não foi feito · publicação pulada")
         return 0
+
+    # Faxina automática se o pub repo estiver bagunçado (rebase travado/detached HEAD)
+    faxina_feita = _garantir_pub_repo_saudavel()
 
     # Copia arquivos atualizados
     n_copiados = 0
@@ -55,8 +99,9 @@ def main():
             print(f"AVISO: {src_rel} não existe local · pulando")
             continue
         dst.parent.mkdir(parents=True, exist_ok=True)
-        # Compara mtime · evita commits vazios
-        if dst.exists() and src.stat().st_mtime <= dst.stat().st_mtime:
+        # Compara mtime · evita commits vazios. Se houve faxina, o reset reverteu dst pra
+        # versão do origin (pode ser antiga) — FORÇA a recopia do lab pra garantir integridade.
+        if not faxina_feita and dst.exists() and src.stat().st_mtime <= dst.stat().st_mtime:
             n_iguais += 1
             continue
         shutil.copy2(src, dst)
