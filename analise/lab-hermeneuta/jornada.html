@@ -7246,39 +7246,18 @@ function compMaterial(F) {
   // toda obra que iniciou consumiu material, mesmo já finalizada. (Status só vale em Prazo/Qualidade.)
   const pe = (document.getElementById('comp-filtro-periodo') || {}).value || '';
   const fx = (document.getElementById('comp-filtro-faixa') || {}).value || '';
-  // mês de INÍCIO = 1ª APLICAÇÃO real (primeiro marco de execução), NÃO data_inicio_real —
-  // que pega a data do RETORNO em obras de retrabalho (contava obra antiga de 2025 como "início em maio").
-  // Obras sem marco de execução (não aplicaram / sem registro) ficam de fora.
+  // CRITÉRIO "obra iniciou no mês" = data_exec_prevista do Painel de Obras (fonte de verdade · decidido 2026-05-28).
+  // Validação no Painel mostrou que "1º marco de execução do Telegram" divergia do que o Vitor vê: jan/26
+  // tinha 8 finalizadas no Painel mas só 3 entravam pelo marco (Bernardo e Newton estavam nas 3 mas têm
+  // Data Exec. em maio/26 — o marco de jan era amostra/preparação, não a obra). data_exec_prevista alimenta
+  // a coluna "Data Exec." do Painel via dataExecucaoPrevista da API cliente.monofloor.cloud.
+  // SEM filtros de retorno/ciclos — Painel conta a obra mesmo que tenha tido retrabalho depois.
   const matMesInicio = (o) => {
-    const ds = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 7)).filter(Boolean);
-    return ds.length ? ds.sort()[0] : null;
-  };
-  // CRITÉRIO REFINADO (2026-05-28 · validado obra a obra em Jan/2026):
-  // 1º marco em jan caía em 9 obras → 5 eram RETORNO (ciclos≥1 ou status reparo) e 1 era falso marco
-  // solto (texec=1d, status aguardando — material despachado mas obra não aplicou). Sobram 3 reais.
-  // Filtros: (a) sem ciclos, (b) status≠reparo/marcas_rolo_cera, (c) prova de aplicação real:
-  // ≥2 marcos OU texec≥3d (corta marco solto isolado), (d) gap msg→marco ≤90d OU texec≥5d
-  // (cobre obras com lead-time longo de preparação mas aplicação real). Veredito em [[feedback_data_inicio_real_retornos]].
-  const STATUS_RETRAB = new Set(['reparo','marcas_rolo_cera']);
-  const matPassaCriterio = (o) => {
-    const pm = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 10)).filter(Boolean).sort()[0];
-    if (!pm) return false;
-    const cic = (o.ciclos && typeof o.ciclos === 'object') ? (o.ciclos.total || 0) : (o.ciclos || 0);
-    if (cic >= 1) return false;
-    if (STATUS_RETRAB.has(o.status)) return false;
-    const nMarcos = (o.marcos_execucao || []).length;
-    const texec = o.tempo_execucao_dias || 0;
-    if (nMarcos < 2 && texec < 3) return false; // marco solto sem execução = falso positivo
-    const m1 = (o.data_1a_msg || '').slice(0,10);
-    if (m1 && pm) {
-      const gap = (new Date(pm) - new Date(m1)) / 86400000;
-      if (gap > 90 && texec < 5) return false; // lead-time muito longo SEM execução robusta = arrasto/inconsistência
-    }
-    return true;
+    const d = (o.data_exec_prevista || '').slice(0, 7);
+    return d || null;
   };
   const comMes = [];
   (DADOS.obras || []).forEach(o => {
-    if (!matPassaCriterio(o)) return;
     const m = matMesInicio(o);
     if (!m || m > hojeM || (pe && m < pe)) return;
     if (fx && o.faixa_metragem !== fx) return;
