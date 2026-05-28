@@ -3882,7 +3882,7 @@
         <table class="comp-tab" id="mat-tab-equipe"><thead><tr><th>Quem</th><th>Pedidos</th><th>O que mais pediu</th></tr></thead><tbody></tbody></table>
       </div>
       <div class="comp-tw" style="margin-top:14px">
-        <div class="comp-tw-titulo">Obras que iniciaram no mês <span class="mat-fonte">clique pra abrir a obra</span></div>
+        <div class="comp-tw-titulo">Obras de Janeiro · conferência manual <span class="mat-fonte">clique pra abrir a obra</span></div>
         <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>1ª aplicação</th><th>Início (card)</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
@@ -6964,7 +6964,7 @@ function compFiltrar() {
 
 let compMesSel = null;
 let compPilarAtivo = 'mat';
-let matMesSel = 'tudo';   // Critério "obra iniciou no mês" refinado em 2026-05-28 · ver matPassaCriterio
+let matMesSel = '2026-01';   // MODO CONFERÊNCIA · trava em Jan p/ revisar obra a obra · trocar p/ 'tudo' ao fechar
 let COMP_F = [];          // F atual · permite re-render isolado do Material
 let matOSord = 'qtd-desc';// ordenação do ranking de OS
 
@@ -7285,12 +7285,17 @@ function compMaterial(F) {
     comMes.push({ o, mes: m });
   });
 
-  // Seletor de meses · "Tudo" + últimos 12 com obras
-  const mesesSet = new Set(comMes.map(x => x.mes));
-  const meses = [...mesesSet].sort().slice(-12);
-  if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
-  let btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
-  btns += meses.map(m => `<button class="comp-mes-btn${matMesSel===m?' active':''}" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
+  // MODO CONFERÊNCIA (2026-05-28): seletor travado em Jan/2026 pra revisar obra a obra.
+  // Critério já refinado em matPassaCriterio (5 filtros) · 3 obras passam em Jan.
+  // Reverter ao fechar: trocar bloco abaixo pelas 3 linhas "// NORMAL".
+  matMesSel = '2026-01';
+  const meses = ['2026-01'];
+  // NORMAL: const mesesSet = new Set(comMes.map(x => x.mes));
+  // NORMAL: const meses = [...mesesSet].sort().slice(-12);
+  // NORMAL: if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
+  let btns = '';
+  // NORMAL: btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
+  btns += meses.map(m => `<button class="comp-mes-btn active" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
   const elMeses = document.getElementById('mat-meses');
   if (elMeses) elMeses.innerHTML = btns;
 
