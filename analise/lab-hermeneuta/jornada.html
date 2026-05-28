@@ -7264,9 +7264,12 @@ function compMaterial(F) {
   };
   const comMes = [];
   (DADOS.obras || []).forEach(o => {
-    // Material ignora status (todas/ativas/finalizadas mostram tudo, inclusive canceladas) EXCETO
-    // quando filtro = "Canceladas" → universo à parte, mostra SÓ canceladas. Decidido 2026-05-28.
-    if (st === 'canceladas' && o.status !== 'cancelado') return;
+    // Cancelados são UNIVERSO À PARTE: só aparecem no Material quando filtro = "Canceladas".
+    // Em Todas/Ativas/Finalizadas, canceladas ficam fora (não consumiram material físico).
+    // Decisão refinada 2026-05-28 após Vitor apontar que Andrea/Anelise/Josué (canceladas)
+    // apareciam misturadas em Mar/26 com status="Ativas" selecionado.
+    if (st === 'canceladas') { if (o.status !== 'cancelado') return; }
+    else { if (o.status === 'cancelado') return; }
     const m = matMesInicio(o);
     if (!m || m > hojeM || (pe && m < pe)) return;
     if (fx && o.faixa_metragem !== fx) return;
