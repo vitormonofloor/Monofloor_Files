@@ -3864,8 +3864,8 @@
       <div class="comp-meses" id="mat-meses" style="margin-bottom:14px"></div>
       <div class="prazo-narrativa" id="mat-funil-narrativa"></div>
       <div class="comp-tw" style="margin-top:14px">
-        <div class="comp-tw-titulo">Obras do mês <span class="mat-fonte">data exec. = Painel · clique pra abrir a jornada</span></div>
-        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>Data exec.</th><th>1ª aplicação Telegram</th><th>Exec.</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
+        <div class="comp-tw-titulo">Obras do mês <span class="mat-fonte">verde = obra nova · âmbar = continuação/retorno · clique pra abrir</span></div>
+        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Tipo</th><th>Status</th><th>Data exec.</th><th>1ª aplicação Telegram</th><th>Exec.</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
       </div>
       <div class="prazo-grid-evidencia">
         <div>
@@ -7285,9 +7285,32 @@ function compMaterial(F) {
   const elMeses = document.getElementById('mat-meses');
   if (elMeses) elMeses.innerHTML = btns;
 
+  // Heurística "obra nova vs continuação" (validada 100% nas 8 obras de Jan/26 vs auditoria Telegram
+  // por sub-agentes em 2026-05-28). Continuação = obra que já tinha aplicação anterior e voltou
+  // pra reparo/reaplicação/2ª fase. Painel marca "Data Exec" igual a obra fosse nova — Telegram
+  // conta a verdade. Sinais duros: card explícito "RETORNO"/"REAPLICAÇÃO" no bot operacional, OU
+  // gap entre 1ª msg Telegram e Data Exec > 120 dias (lead-time longo indica que aplicação real
+  // foi muito antes). Sinais frágeis NÃO usados aqui: ciclos (pega ciclos pós-1ª aplicação também).
+  const ehContinuacao = (o) => {
+    const cards = o.cards_inicio_operacional || [];
+    for (const c of cards) {
+      const t = (c.trecho || '').toUpperCase();
+      if (t.indexOf('RETORNO') >= 0 || t.indexOf('REAPLICA') >= 0) return true;
+    }
+    const m1 = (o.data_1a_msg || '').slice(0,10);
+    const de = (o.data_exec_prevista || '').slice(0,10);
+    if (m1 && de) {
+      const gap = (new Date(de) - new Date(m1)) / 86400000;
+      if (gap > 120) return true;
+    }
+    return false;
+  };
+
   // Obras do mês selecionado (ou Tudo) · soma material despachado (OS) por produto (UNIFICADO)
   const escObj = matMesSel==='tudo' ? comMes : comMes.filter(x => x.mes===matMesSel);
   const esc = escObj.map(x => x.o);
+  const nNovas = esc.filter(o => !ehContinuacao(o)).length;
+  const nCont = esc.length - nNovas;
   const qtdMat = {};
   let nObrasMat = 0, nOS = 0;
   esc.forEach(o => {
@@ -7315,15 +7338,16 @@ function compMaterial(F) {
   // Resumo (cards do topo)
   const elRes = document.getElementById('pilar-resumo-mat');
   if (elRes) elRes.innerHTML = `<div class="pilar-resumo-grid">
-    <div class="pilar-resumo-card" style="border-left-color:#7ea0b7"><div class="pilar-resumo-val" style="color:#7ea0b7">${esc.length}</div><div class="pilar-resumo-label">Obras iniciadas</div><div class="pilar-resumo-sub">${nObrasMat} com material enviado</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:#7ea0b7"><div class="pilar-resumo-val" style="color:#7ea0b7">${esc.length}</div><div class="pilar-resumo-label">Obras (Painel)</div><div class="pilar-resumo-sub">Data Exec. no mês</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:#3d7a50"><div class="pilar-resumo-val" style="color:#3d7a50">${nNovas}</div><div class="pilar-resumo-label">Novas (puras)</div><div class="pilar-resumo-sub">${nCont} continuações/retornos</div></div>
     <div class="pilar-resumo-card" style="border-left-color:#5fa073"><div class="pilar-resumo-val" style="color:#5fa073">${Math.round(totUnid).toLocaleString('pt-BR')}</div><div class="pilar-resumo-label">Material enviado</div><div class="pilar-resumo-sub">unidades (baldes/kg)</div></div>
-    <div class="pilar-resumo-card" style="border-left-color:${exList.length?'#9a7a20':'#3d7a50'}"><div class="pilar-resumo-val" style="color:${exList.length?'#9a7a20':'var(--ink-faint)'}">${exList.length}</div><div class="pilar-resumo-label">Pedidos de extra</div><div class="pilar-resumo-sub">no Telegram</div></div>
+    <div class="pilar-resumo-card" style="border-left-color:${exList.length?'#9a7a20':'#3d7a50'}"><div class="pilar-resumo-val" style="color:${exList.length?'#9a7a20':'var(--ink-faint)'}">${exList.length}</div><div class="pilar-resumo-label">Pedidos extra</div><div class="pilar-resumo-sub">no Telegram</div></div>
   </div>`;
 
   // BLOCO 1 · narrativa
   const lblMes = matMesSel==='tudo' ? 'todo o período (2026)' : (NM[+matMesSel.slice(5)]+'/'+matMesSel.slice(0,4));
   const topP = Object.entries(qtdMat).sort((a,b)=>b[1]-a[1])[0];
-  let narr = `Em <strong>${lblMes}</strong>: <span class="pn-num">${esc.length}</span> obras iniciaram, <span class="pn-num">${nObrasMat}</span> já com material enviado — <span class="pn-num">${Math.round(totUnid).toLocaleString('pt-BR')}</span> unidades no total.`;
+  let narr = `Em <strong>${lblMes}</strong>: <span class="pn-num">${esc.length}</span> obras com Data Exec. no Painel — <span class="pn-num">${nNovas}</span> novas e <span class="pn-num">${nCont}</span> continuações/retornos. <span class="pn-num">${Math.round(totUnid).toLocaleString('pt-BR')}</span> unidades enviadas no total.`;
   if (topP) narr += ` O mais enviado: <strong>${compEsc(topP[0])}</strong> (${Math.round(topP[1]).toLocaleString('pt-BR')}).`;
   if (exList.length) {
     narr += `<span class="pn-sep"></span><span class="pn-num pn-warn">${exList.length}</span> pedidos de material extra durante a execução.`;
@@ -7376,8 +7400,12 @@ function compMaterial(F) {
     const datasMarcos = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 10)).filter(Boolean).sort();
     const pm = datasMarcos[0] || '<span style="color:var(--ink-faint)">—</span>';
     const texec = o.tempo_execucao_dias || 0;
-    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${dataExec}</td><td class="cv">${pm}</td><td class="cv" style="text-align:center">${texec}d</td><td>${matStr}</td></tr>`;
-  }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra no mês.</td></tr>';
+    const cont = ehContinuacao(o);
+    const tipoBadge = cont
+      ? '<span style="background:#fbe7c4;color:#9a6f10;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">continuação</span>'
+      : '<span style="background:#d5ebd5;color:#2c6b3a;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">nova</span>';
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td>${tipoBadge}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${dataExec}</td><td class="cv">${pm}</td><td class="cv" style="text-align:center">${texec}d</td><td>${matStr}</td></tr>`;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra no mês.</td></tr>';
 }
 
 function compPrazo(F){
