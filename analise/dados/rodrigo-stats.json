@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-28T00:07:12Z",
+  "atualizado_em": "2026-05-28T04:51:13Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1071,
@@ -42,15 +42,15 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2190,
+    "pending_tasks": 2192,
     "executing_tasks": 2
   },
   "capacidade": {
-    "utilization_percent": 19,
+    "utilization_percent": 16,
     "status": "healthy",
     "aplicadores_total": 95,
-    "aplicadores_necessarios": 18,
-    "aplicadores_por_obra": 15.8,
+    "aplicadores_necessarios": 15,
+    "aplicadores_por_obra": 19,
     "capacidade_diaria_m2": 418,
     "capacidade_semanal_m2_puro": 9000,
     "capacidade_semanal_m2_misto": 6300,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 5,
+        "daysUntilEntry": 4,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 5 dias do início",
-        "daysUntilEntry": 5,
+        "message": "Projeto sem equipe definida a 4 dias do início",
+        "daysUntilEntry": 4,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 26,
+        "daysUntilEntry": 25,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -113,7 +113,7 @@
         "type": "CAPACITY_RISK",
         "severity": "LOW",
         "message": "Projeto exige ~11 aplicadores (1008.65m² em 20 dias)",
-        "daysUntilEntry": 26,
+        "daysUntilEntry": 25,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Prazo adequado para 1008.65m²"
       }
@@ -4295,7 +4295,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 44,
+        "dias_desde_resumo": 45,
         "alertas": [
           "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
           "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
@@ -8122,7 +8122,7 @@
   "lw": {
     "luana": {
       "n": 79,
-      "mediana": 268,
+      "mediana": 269,
       "n180": 52,
       "n270": 39,
       "zumbi": 8,
@@ -8131,17 +8131,17 @@
     },
     "wesley": {
       "n": 79,
-      "mediana": 218,
-      "n180": 48,
-      "n270": 26,
+      "mediana": 220,
+      "n180": 51,
+      "n270": 27,
       "zumbi": 14,
       "reparo": 10,
       "pausadas": 0
     },
     "total_ativas": 229,
-    "n_180_total": 112,
+    "n_180_total": 115,
     "concentracao_pct": 69.0,
-    "concentracao_180_pct": 89.3,
+    "concentracao_180_pct": 89.6,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
