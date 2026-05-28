@@ -3862,6 +3862,10 @@
       <h3>Consumo de Material</h3>
       <div class="comp-meses" id="mat-meses" style="margin-bottom:14px"></div>
       <div class="prazo-narrativa" id="mat-funil-narrativa"></div>
+      <div class="comp-tw" style="margin-top:14px">
+        <div class="comp-tw-titulo">Obras do mês · conferência manual <span class="mat-fonte">clique pra abrir a obra</span></div>
+        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>1ª aplicação</th><th>Nº marcos</th><th>Exec.</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
+      </div>
       <div class="prazo-grid-evidencia">
         <div>
           <div class="comp-tw">
@@ -3880,10 +3884,6 @@
       <div class="comp-tw" style="margin-top:14px">
         <div class="comp-tw-titulo">Quem mais solicitou material extra <span class="mat-fonte mat-fonte-tel">leitura Telegram</span></div>
         <table class="comp-tab" id="mat-tab-equipe"><thead><tr><th>Quem</th><th>Pedidos</th><th>O que mais pediu</th></tr></thead><tbody></tbody></table>
-      </div>
-      <div class="comp-tw" style="margin-top:14px">
-        <div class="comp-tw-titulo">Obras de Janeiro · conferência manual <span class="mat-fonte">clique pra abrir a obra</span></div>
-        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>1ª aplicação</th><th>Início (card)</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
     </div><!-- /pilar-mat -->
@@ -7375,7 +7375,8 @@ function compMaterial(F) {
     return `<tr><td class="cn" title="${compEsc(a)}">${compEsc(a)}</td><td class="cv">${d.n}</td><td>${top ? compEsc(top[0]) + ' (' + top[1] + '×)' : '—'}</td></tr>`;
   }).join('') || '<tr><td colspan="3" style="text-align:center;color:var(--ink-faint);padding:14px">Sem solicitações no período.</td></tr>';
 
-  // TABELA DE CONFERÊNCIA MANUAL · obras do mês (1ª aplicação vs início do card · vermelho = divergem)
+  // TABELA DE CONFERÊNCIA MANUAL · obras do mês com sinais que decidem o critério
+  // Colunas: cliente, status, data do 1º marco (1ª aplicação), nº marcos, texec, top materiais
   const elTabO = document.querySelector('#mat-tab-obras tbody');
   if (elTabO) elTabO.innerHTML = escObj.sort((a,b)=>(a.o.cliente||'').localeCompare(b.o.cliente||'')).map(({o, mes}) => {
     const mats = {};
@@ -7384,10 +7385,13 @@ function compMaterial(F) {
       mats[cp] = (mats[cp]||0) + (parseFloat(String(it.quantidade||'0').replace(',','.'))||0);
     }));
     const matStr = Object.entries(mats).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([m,q])=>`${compEsc(matLabelCurto(m))} ${Math.round(q)}`).join(' · ') || '<span style="color:var(--ink-faint)">sem OS</span>';
-    const iniCard = (o.data_inicio_real||'').slice(0,10);
-    const diverge = (o.data_inicio_real||'').slice(0,7) !== mes;
-    return `<tr onclick="radarAbrirObra('${o.obra_id}')"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${mes}</td><td class="cv"${diverge?' style="color:#c04030;font-weight:700"':''}>${iniCard}</td><td>${matStr}</td></tr>`;
-  }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra no mês.</td></tr>';
+    // 1º marco · data completa pra conferência (não só mês)
+    const datasMarcos = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 10)).filter(Boolean).sort();
+    const pm = datasMarcos[0] || '—';
+    const nMarcos = (o.marcos_execucao || []).length;
+    const texec = o.tempo_execucao_dias || 0;
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${pm}</td><td class="cv" style="text-align:center">${nMarcos}</td><td class="cv" style="text-align:center">${texec}d</td><td>${matStr}</td></tr>`;
+  }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra no mês.</td></tr>';
 }
 
 function compPrazo(F){
