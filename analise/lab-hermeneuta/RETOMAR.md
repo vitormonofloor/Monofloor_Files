@@ -1,6 +1,26 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-27 (noite) · Pilar Material reformulado (despacho por obra) + fixes
+> **Última atualização:** 2026-05-28 · critério "iniciou no mês" trocado pra `data_exec_prevista` (Painel) + universo expandido
+
+---
+
+## 📋 PENDÊNCIAS ABERTAS (acumulado)
+
+| # | Item | Custo | Motivo |
+|---|---|---|---|
+| **NEW** | **Fix preventivo pipeline · timeout fetch (15s→30s) + retry com persistência de erros** | ~20min | RAFAEL (e outras 6-8 por rodada) caem em `except` silencioso por timeout em concorrência (4 workers). Bug não-determinístico — cada rodada perde obras diferentes. Salvar IDs com erro em `_obras_retry.json` e priorizar na próxima rodada com timeout 60s |
+| 4 | Investigar outlier fev/26 (SELADOR 3017 / PRIMER 2028) | ~20min | provável OS com qtd errada |
+
+## 🆕 SESSAO 2026-05-28 · CRITÉRIO ALINHADO COM PAINEL
+
+### O que mudou hoje
+- ✅ **Faxina pub repo** + fix preventivo no `publicar.py` (detecta rebase travado/detached HEAD e auto-corrige antes de pull/push). Commits `bb4b296`, `f2b5121e`
+- ✅ **Critério "obra iniciou no mês" trocado** de "1º marco Telegram" → `data_exec_prevista` (Painel). Bate com a coluna Data Exec. que o Vitor vê. Critério antigo + 5 filtros (ciclos, status_retrab, etc) divergia: jan/26 mostrava 3 obras, Painel tinha 8 finalizadas. Bernardo/Newton estavam nas 3 mas Data Exec. é mai/26 — marco de jan era amostra
+- ✅ **Universo expandido** de 287 → 364 IDs (todas obras com Data Exec em 2026). jornadas.json: 300 → 361 obras
+- ✅ **Jan/2026 fechado**: 8 obras batendo com Painel (TAMAR, RICARDO, FLÁVIA, JAQUELINE, YAHYA, CAROLINA, ADRIANO, RAFAEL)
+
+### Memória atualizada
+- `feedback_data_inicio_real_retornos.md` agora documenta a virada pra `data_exec_prevista`
 
 ---
 

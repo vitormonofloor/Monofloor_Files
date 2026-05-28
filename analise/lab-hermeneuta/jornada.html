@@ -3863,8 +3863,8 @@
       <div class="comp-meses" id="mat-meses" style="margin-bottom:14px"></div>
       <div class="prazo-narrativa" id="mat-funil-narrativa"></div>
       <div class="comp-tw" style="margin-top:14px">
-        <div class="comp-tw-titulo">Obras do mês · conferência manual <span class="mat-fonte">clique pra abrir a obra</span></div>
-        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>1ª aplicação</th><th>Nº marcos</th><th>Exec.</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
+        <div class="comp-tw-titulo">Obras do mês <span class="mat-fonte">data exec. = Painel · clique pra abrir a jornada</span></div>
+        <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>Data exec.</th><th>1ª aplicação Telegram</th><th>Exec.</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
       </div>
       <div class="prazo-grid-evidencia">
         <div>
@@ -6964,7 +6964,7 @@ function compFiltrar() {
 
 let compMesSel = null;
 let compPilarAtivo = 'mat';
-let matMesSel = '2026-01';   // MODO CONFERÊNCIA · trava em Jan p/ revisar obra a obra · trocar p/ 'tudo' ao fechar
+let matMesSel = 'tudo';   // Critério data_exec_prevista alinhado com Painel · jan/26 validado em 28-mai
 let COMP_F = [];          // F atual · permite re-render isolado do Material
 let matOSord = 'qtd-desc';// ordenação do ranking de OS
 
@@ -7264,17 +7264,12 @@ function compMaterial(F) {
     comMes.push({ o, mes: m });
   });
 
-  // MODO CONFERÊNCIA (2026-05-28): seletor travado em Jan/2026 pra revisar obra a obra.
-  // Critério já refinado em matPassaCriterio (5 filtros) · 3 obras passam em Jan.
-  // Reverter ao fechar: trocar bloco abaixo pelas 3 linhas "// NORMAL".
-  matMesSel = '2026-01';
-  const meses = ['2026-01'];
-  // NORMAL: const mesesSet = new Set(comMes.map(x => x.mes));
-  // NORMAL: const meses = [...mesesSet].sort().slice(-12);
-  // NORMAL: if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
-  let btns = '';
-  // NORMAL: btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
-  btns += meses.map(m => `<button class="comp-mes-btn active" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
+  // Seletor de meses · "Tudo" + últimos 12 com obras (modo conferência encerrado em 28-mai)
+  const mesesSet = new Set(comMes.map(x => x.mes));
+  const meses = [...mesesSet].sort().slice(-12);
+  if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
+  let btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
+  btns += meses.map(m => `<button class="comp-mes-btn${matMesSel===m?' active':''}" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
   const elMeses = document.getElementById('mat-meses');
   if (elMeses) elMeses.innerHTML = btns;
 
@@ -7364,12 +7359,12 @@ function compMaterial(F) {
       mats[cp] = (mats[cp]||0) + (parseFloat(String(it.quantidade||'0').replace(',','.'))||0);
     }));
     const matStr = Object.entries(mats).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([m,q])=>`${compEsc(matLabelCurto(m))} ${Math.round(q)}`).join(' · ') || '<span style="color:var(--ink-faint)">sem OS</span>';
-    // 1º marco · data completa pra conferência (não só mês)
+    // Data Exec. (Painel) = critério atual · 1ª aplicação Telegram pra cross-check visual
+    const dataExec = (o.data_exec_prevista || '').slice(0,10) || '—';
     const datasMarcos = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 10)).filter(Boolean).sort();
-    const pm = datasMarcos[0] || '—';
-    const nMarcos = (o.marcos_execucao || []).length;
+    const pm = datasMarcos[0] || '<span style="color:var(--ink-faint)">—</span>';
     const texec = o.tempo_execucao_dias || 0;
-    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${pm}</td><td class="cv" style="text-align:center">${nMarcos}</td><td class="cv" style="text-align:center">${texec}d</td><td>${matStr}</td></tr>`;
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cn" title="${compEsc(o.cliente||'')}">${compEsc(o.cliente||'—')}</td><td class="cv">${compEsc(o.status||'')}</td><td class="cv">${dataExec}</td><td class="cv">${pm}</td><td class="cv" style="text-align:center">${texec}d</td><td>${matStr}</td></tr>`;
   }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra no mês.</td></tr>';
 }
 
