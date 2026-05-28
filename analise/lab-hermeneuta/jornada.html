@@ -3882,7 +3882,7 @@
         <table class="comp-tab" id="mat-tab-equipe"><thead><tr><th>Quem</th><th>Pedidos</th><th>O que mais pediu</th></tr></thead><tbody></tbody></table>
       </div>
       <div class="comp-tw" style="margin-top:14px">
-        <div class="comp-tw-titulo">Obras iniciadas no mês · conferência manual <span class="mat-fonte">clique pra abrir a obra</span></div>
+        <div class="comp-tw-titulo">Obras que iniciaram no mês <span class="mat-fonte">clique pra abrir a obra</span></div>
         <table class="comp-tab" id="mat-tab-obras"><thead><tr><th>Obra</th><th>Status</th><th>1ª aplicação</th><th>Início (card)</th><th>Material enviado</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
@@ -6964,7 +6964,7 @@ function compFiltrar() {
 
 let compMesSel = null;
 let compPilarAtivo = 'mat';
-let matMesSel = '2026-01';   // ABRE EM JANEIRO p/ conferência manual (2026-05-27) · trocar p/ 'tudo' depois
+let matMesSel = 'tudo';   // Critério "obra iniciou no mês" refinado em 2026-05-28 · ver matPassaCriterio
 let COMP_F = [];          // F atual · permite re-render isolado do Material
 let matOSord = 'qtd-desc';// ordenação do ranking de OS
 
@@ -7253,24 +7253,44 @@ function compMaterial(F) {
     const ds = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 7)).filter(Boolean);
     return ds.length ? ds.sort()[0] : null;
   };
+  // CRITÉRIO REFINADO (2026-05-28 · validado obra a obra em Jan/2026):
+  // 1º marco em jan caía em 9 obras → 5 eram RETORNO (ciclos≥1 ou status reparo) e 1 era falso marco
+  // solto (texec=1d, status aguardando — material despachado mas obra não aplicou). Sobram 3 reais.
+  // Filtros: (a) sem ciclos, (b) status≠reparo/marcas_rolo_cera, (c) prova de aplicação real:
+  // ≥2 marcos OU texec≥3d (corta marco solto isolado), (d) gap msg→marco ≤90d OU texec≥5d
+  // (cobre obras com lead-time longo de preparação mas aplicação real). Veredito em [[feedback_data_inicio_real_retornos]].
+  const STATUS_RETRAB = new Set(['reparo','marcas_rolo_cera']);
+  const matPassaCriterio = (o) => {
+    const pm = (o.marcos_execucao || []).map(mk => (mk.data || mk.inicio || mk.timestamp || '').slice(0, 10)).filter(Boolean).sort()[0];
+    if (!pm) return false;
+    const cic = (o.ciclos && typeof o.ciclos === 'object') ? (o.ciclos.total || 0) : (o.ciclos || 0);
+    if (cic >= 1) return false;
+    if (STATUS_RETRAB.has(o.status)) return false;
+    const nMarcos = (o.marcos_execucao || []).length;
+    const texec = o.tempo_execucao_dias || 0;
+    if (nMarcos < 2 && texec < 3) return false; // marco solto sem execução = falso positivo
+    const m1 = (o.data_1a_msg || '').slice(0,10);
+    if (m1 && pm) {
+      const gap = (new Date(pm) - new Date(m1)) / 86400000;
+      if (gap > 90 && texec < 5) return false; // lead-time muito longo SEM execução robusta = arrasto/inconsistência
+    }
+    return true;
+  };
   const comMes = [];
   (DADOS.obras || []).forEach(o => {
+    if (!matPassaCriterio(o)) return;
     const m = matMesInicio(o);
     if (!m || m > hojeM || (pe && m < pe)) return;
     if (fx && o.faixa_metragem !== fx) return;
     comMes.push({ o, mes: m });
   });
 
-  // MODO CONFERÊNCIA (2026-05-27): seletor travado SÓ em Janeiro p/ refinar obra a obra.
-  // Reverter depois: descomentar as 3 linhas "// NORMAL" e remover este bloco.
+  // Seletor de meses · "Tudo" + últimos 12 com obras
   const mesesSet = new Set(comMes.map(x => x.mes));
-  matMesSel = '2026-01';
-  const meses = ['2026-01'];
-  // NORMAL: const meses = [...mesesSet].sort().slice(-12);
-  // NORMAL: if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
-  let btns = '';
-  // NORMAL: btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
-  btns += meses.map(m => `<button class="comp-mes-btn active" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
+  const meses = [...mesesSet].sort().slice(-12);
+  if (matMesSel !== 'tudo' && !mesesSet.has(matMesSel)) matMesSel = 'tudo';
+  let btns = `<button class="comp-mes-btn${matMesSel==='tudo'?' active':''}" onclick="matFiltrarMes('tudo')">Tudo<span class="mes-count">(${comMes.length})</span></button>`;
+  btns += meses.map(m => `<button class="comp-mes-btn${matMesSel===m?' active':''}" onclick="matFiltrarMes('${m}')">${NM[+m.slice(5)]}/${m.slice(2,4)}<span class="mes-count">(${comMes.filter(x=>x.mes===m).length})</span></button>`).join('');
   const elMeses = document.getElementById('mat-meses');
   if (elMeses) elMeses.innerHTML = btns;
 
