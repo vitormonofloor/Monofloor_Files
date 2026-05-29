@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-29T01:32:57Z",
+  "atualizado_em": "2026-05-29T06:19:41Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1074,
@@ -42,7 +42,7 @@
   },
   "operacao_viva": {
     "active_journeys": 405,
-    "pending_tasks": 2202,
+    "pending_tasks": 2201,
     "executing_tasks": 2
   },
   "capacidade": {
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 4,
+        "daysUntilEntry": 3,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 4 dias do início",
-        "daysUntilEntry": 4,
+        "message": "Projeto sem equipe definida a 3 dias do início",
+        "daysUntilEntry": 3,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 25,
+        "daysUntilEntry": 24,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -113,7 +113,7 @@
         "type": "CAPACITY_RISK",
         "severity": "LOW",
         "message": "Projeto exige ~11 aplicadores (1008.65m² em 20 dias)",
-        "daysUntilEntry": 25,
+        "daysUntilEntry": 24,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Prazo adequado para 1008.65m²"
       }
@@ -4518,7 +4518,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 45,
+        "dias_desde_resumo": 46,
         "alertas": [
           "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
           "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
@@ -8178,16 +8178,16 @@
   "lw": {
     "luana": {
       "n": 77,
-      "mediana": 269,
+      "mediana": 270,
       "n180": 50,
-      "n270": 38,
+      "n270": 40,
       "zumbi": 8,
       "reparo": 7,
       "pausadas": 0
     },
     "wesley": {
       "n": 80,
-      "mediana": 220,
+      "mediana": 221,
       "n180": 51,
       "n270": 27,
       "zumbi": 14,
@@ -8195,9 +8195,9 @@
       "pausadas": 0
     },
     "total_ativas": 232,
-    "n_180_total": 113,
+    "n_180_total": 114,
     "concentracao_pct": 67.7,
-    "concentracao_180_pct": 89.4,
+    "concentracao_180_pct": 88.6,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
