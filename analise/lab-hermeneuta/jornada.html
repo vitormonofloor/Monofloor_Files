@@ -3688,6 +3688,7 @@
   <button class="tab-btn" data-tab="jornada" onclick="trocarAba('jornada')">Jornada</button>
   <button class="tab-btn" data-tab="compilados" onclick="trocarAba('compilados')">Compilador</button>
   <button class="tab-btn" data-tab="radar" onclick="trocarAba('radar')">Radar de Risco</button>
+  <button class="tab-btn" data-tab="auditoria" onclick="trocarAba('auditoria')">Auditoria</button>
 </nav>
 
 <main>
@@ -3957,6 +3958,35 @@
       </div>
     </div>
   </div><!-- /painel-radar -->
+
+  <!-- ═══ ABA AUDITORIA ═══ -->
+  <div id="painel-auditoria" class="tab-panel" style="max-width:1100px;margin:0 auto;padding:24px 24px 48px">
+    <h2 style="margin:0 0 8px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;color:var(--ink)">Auditoria · Super Planilha</h2>
+    <p style="margin:0 0 18px;color:var(--ink-faint);font-size:13px">Todas as obras do Painel (exceto canceladas). Auditoria em blocos de 20 — classificar cada obra como NOVA ou CONTINUAÇÃO.</p>
+
+    <div class="aud-filtros" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px">
+      <label>Mês exec. <select id="aud-filtro-mes" onchange="audRender()"><option value="">Todos</option></select></label>
+      <label>Status <select id="aud-filtro-status" onchange="audRender()"><option value="">Todos</option></select></label>
+      <input type="text" id="aud-filtro-nome" placeholder="Buscar por nome..." oninput="audRender()" style="padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;min-width:200px">
+      <span id="aud-contador" style="margin-left:auto;color:var(--ink-faint);font-size:12px"></span>
+    </div>
+
+    <table class="comp-tab" id="aud-tab" style="margin-bottom:16px">
+      <thead><tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Status (Painel)</th>
+        <th>Data exec.</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="aud-paginacao" style="display:flex;gap:10px;justify-content:center;align-items:center;font-size:13px">
+      <button onclick="audPag(-1)" id="aud-prev" style="padding:6px 14px;border:1px solid var(--line);background:var(--surface-2);border-radius:6px;cursor:pointer">‹ Anterior</button>
+      <span id="aud-pag-info" style="font-family:'JetBrains Mono',monospace"></span>
+      <button onclick="audPag(1)" id="aud-next" style="padding:6px 14px;border:1px solid var(--line);background:var(--surface-2);border-radius:6px;cursor:pointer">Próximo ›</button>
+    </div>
+  </div><!-- /painel-auditoria -->
 </main>
 
 <!-- SENTINELA · balde fixo bottom-left -->
@@ -6911,6 +6941,88 @@ function trocarAba(aba) {
     renderRadar();
     radarRendered = true;
   }
+  if (aba === 'auditoria' && !audRendered && DADOS) {
+    audInit();
+    audRendered = true;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUDITORIA · super planilha pra classificar obras como nova/continuação
+// ═══════════════════════════════════════════════════════════════
+let audRendered = false;
+let audPagAtual = 0;
+const AUD_POR_PAG = 20;
+
+function audInit() {
+  // Popula filtros mês e status
+  const obras = (DADOS.obras || []).filter(o => o.status !== 'cancelado');
+  const meses = new Set();
+  const statuses = new Set();
+  obras.forEach(o => {
+    const m = (o.data_exec_prevista || '').slice(0,7);
+    if (m) meses.add(m);
+    if (o.status) statuses.add(o.status);
+  });
+  const NM = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const selM = document.getElementById('aud-filtro-mes');
+  [...meses].sort().reverse().forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = `${NM[+m.slice(5)]}/${m.slice(2,4)}`;
+    selM.appendChild(opt);
+  });
+  const selS = document.getElementById('aud-filtro-status');
+  [...statuses].sort().forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    selS.appendChild(opt);
+  });
+  audPagAtual = 0;
+  audRender();
+}
+
+function audPag(delta) {
+  audPagAtual += delta;
+  if (audPagAtual < 0) audPagAtual = 0;
+  audRender();
+}
+
+function audRender() {
+  const obras = (DADOS.obras || []).filter(o => o.status !== 'cancelado');
+  const fMes = document.getElementById('aud-filtro-mes').value;
+  const fStatus = document.getElementById('aud-filtro-status').value;
+  const fNome = (document.getElementById('aud-filtro-nome').value || '').toLowerCase().trim();
+  let filtered = obras.filter(o => {
+    if (fMes && (o.data_exec_prevista || '').slice(0,7) !== fMes) return false;
+    if (fStatus && o.status !== fStatus) return false;
+    if (fNome && !(o.cliente || '').toLowerCase().includes(fNome)) return false;
+    return true;
+  });
+  // Ordem alfabética por cliente
+  filtered.sort((a,b) => (a.cliente || '').localeCompare(b.cliente || '', 'pt'));
+
+  const total = filtered.length;
+  const totalPag = Math.max(1, Math.ceil(total / AUD_POR_PAG));
+  if (audPagAtual >= totalPag) audPagAtual = totalPag - 1;
+  const inicio = audPagAtual * AUD_POR_PAG;
+  const fim = Math.min(inicio + AUD_POR_PAG, total);
+  const pagina = filtered.slice(inicio, fim);
+
+  const tbody = document.querySelector('#aud-tab tbody');
+  tbody.innerHTML = pagina.map((o, i) => {
+    const idx = inicio + i + 1;
+    const cli = compEsc(o.cliente || '—');
+    const st = compEsc(o.status || '—');
+    const de = (o.data_exec_prevista || '—').slice(0,10);
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cv" style="font-family:'JetBrains Mono',monospace;color:var(--ink-faint)">${idx}</td><td class="cn">${cli}</td><td class="cv">${st}</td><td class="cv">${de}</td></tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra com esses filtros.</td></tr>';
+
+  document.getElementById('aud-contador').textContent = `${total} obras · ${totalPag} bloco${totalPag>1?'s':''} de ${AUD_POR_PAG}`;
+  document.getElementById('aud-pag-info').textContent = total>0 ? `Bloco ${audPagAtual+1} de ${totalPag} · obras ${inicio+1}–${fim}` : '—';
+  document.getElementById('aud-prev').disabled = audPagAtual === 0;
+  document.getElementById('aud-next').disabled = audPagAtual >= totalPag - 1;
 }
 
 (function heroCollapse(){
