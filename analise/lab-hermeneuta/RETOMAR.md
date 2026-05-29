@@ -1,6 +1,46 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-28 · critério "iniciou no mês" trocado pra `data_exec_prevista` (Painel) + universo expandido
+> **Última atualização:** 2026-05-28 (noite) · Aba Auditoria + 1039 obras + distinção obra pura vs continuação
+
+---
+
+## 🆕 SESSAO 2026-05-28 (NOITE) · AUDITORIA OBRA POR OBRA
+
+### O que fechamos
+- ✅ **Universo expandido pra 1.039 obras** (todas exceto canceladas). jornadas.json: 378 → 1.057 obras. Cobertura Lab × Painel = 100% set/25 a jul/26
+- ✅ **Filtro "Canceladas" como universo à parte** no Compilador. Em Todas/Ativas/Finalizadas, canceladas ficam fora. Decisão refinada após Vitor apontar que Andrea/Anelise/Josué (canceladas) apareciam misturadas em Mar/26
+- ✅ **Critério "obra iniciou no mês" trocado pra `data_exec_prevista`** (fonte de verdade Painel). Critério antigo + 5 filtros divergia: jan/26 mostrava 3 obras, Painel tinha 8 finalizadas. Bernardo/Newton apareciam mas Data Exec era mai/26
+- ✅ **Auditoria das 8 obras de Jan/2026 com 8 sub-agentes em paralelo** (cada um 1 obra, evidência Telegram literal): **3 puras** (ADRIANO, JAQUELINE, RICARDO) + **5 continuações** (CAROLINA, FLÁVIA, RAFAEL CORDEIRO, TAMAR, YAHYA)
+- ✅ **Heurística automática NOVA vs CONTINUAÇÃO** (validada 8/8 = 100%): cards "RETORNO"/"REAPLICAÇÃO" no bot OR gap (1ª msg Telegram → Data Exec) > 120d
+- ✅ **Aba "Auditoria" no Lab Orion** — 1.039 obras paginadas 20 em 20, ordem alfabética, filtros mês/status/nome. 3 colunas: Nome, Status (Painel), Data exec. Clique abre jornada
+- ✅ **Faxina pub repo + fix preventivo** no `publicar.py` (auto-detecta rebase travado/detached HEAD e recupera antes de pull/push)
+
+### Tropeço da sessão (corrigido + memória)
+- ✗ Apliquei a heurística NOVA vs CONTINUAÇÃO em TODOS os meses quando Vitor pediu SÓ jan. Mostrei mar/26 com 90% continuação como "preview" sem ele pedir. Reação: "EU FALEI QUE ERA PRA RODAR SOMENTE NO MES DE JANEIRO" + "siga à risca os comandos". Lição em [[feedback-nao-extrapolar-escopo]]
+
+### Memórias novas
+- `feedback_nao_extrapolar_escopo.md` (NOVA) — siga à risca, não codar solução universal quando escopo é delimitado
+- `reference_obra_pura_vs_continuacao.md` (NOVA) — definição + heurística 100% acerto + lista das 8 obras jan/26
+- `feedback_data_inicio_real_retornos.md` (atualizada) — pivô pra `data_exec_prevista`
+
+### Pendências pra próxima sessão
+
+| # | Item | Custo |
+|---|---|---|
+| 1 | **Aba Auditoria em modo blocos** — auditar de 20 em 20 obras, classificar cada uma manualmente (próximo passo do Vitor) | iterativo |
+| 2 | Persistência do veredito manual da auditoria (localStorage + export JSON) | ~30min |
+| 3 | Rodar agentes de validação cross-mês pra calibrar threshold 120d em fev/mar/abr/mai | iterativo |
+| 4 | Fix preventivo pipeline · timeout fetch (15s→30s) + retry com persistência | ~20min |
+| 5 | Investigar outlier fev/26 (SELADOR 3017 / PRIMER 2028) | ~20min |
+
+### Comando pra retomar amanhã (cole no Claude Code)
+```
+Le analise/lab-hermeneuta/RETOMAR.md secao topo "SESSAO 2026-05-28 (NOITE)". Aba Auditoria pronta com 1039 obras. Heuristica NOVA vs CONTINUACAO validada SO em jan/26 (3 puras + 5 cont). Vitor quer auditar manual em blocos de 20. Proximo: implementar veredito manual + persistir.
+```
+
+---
+
+## 🆕 SESSAO 2026-05-28 (TARDE) · CRITÉRIO ALINHADO COM PAINEL
 
 ---
 
