@@ -1,6 +1,52 @@
 # 🎯 RETOMAR · contexto rápido pra qualquer agente
 
-> **Última atualização:** 2026-05-28 (noite) · Aba Auditoria + 1039 obras + distinção obra pura vs continuação
+> **Última atualização:** 2026-05-29 (noite) · 100 obras auditadas com força-tarefa Claude + chip stale + data 1a aplicação original
+
+---
+
+## 🆕 SESSÃO 2026-05-29 · AUDITORIA EM MASSA + ABA AUDITORIA ENRIQUECIDA
+
+### O que fechamos
+- ✅ **6 filtros do Painel auditados obra a obra** com Workflow paralelo (cap 16 sub-agentes): aguardando_clima (4), aguardando_execucao (37), em_execucao (35), reparo (21), pausado (1), marcas_rolo_cera (2) = **100 obras com veredito duplo validado**
+- ✅ **3 rodadas de validação** das divergentes (75%/50%/75% de acerto da 1ª rodada · 2ª rodada captura erros)
+- ✅ **Aba Auditoria** ganhou: chip Status real, chip Motivo, chip Início real, chip stale automático, filtro "Só ⚠ stale", botão Exportar JSON, snapshot retroativo do Painel pra detecção de mudanças
+- ✅ **Taxonomia consolidada:** pre_obra · aguardando_inicio_execucao · em_execucao · executada_aguardando_vt · pendente_de_reparo · em_reparo · pendente_de_reaplicacao · em_reaplicacao · finalizada
+- ✅ **Distinção REPARO × REAPLICAÇÃO** estabelecida operacionalmente (memória)
+- ✅ **Backup privado das memórias** criado em `github.com/vitormonofloor/claude-memoria`
+- ✅ **Workflow de descoberta da 1ª aplicação ORIGINAL** das 63 obras pós-execução (alta 28 · média 15 · baixa 13 · não encontrado 7)
+
+### Insight grande
+**56% de divergência média** entre Painel × realidade nos filtros auditados. Pior filtro: `em_execucao` com 74% divergência (apenas 12/35 estão realmente em execução). 49% das obras auditadas estão em algum estado `pendente_de_*` — backlog técnico parado.
+
+### Memórias novas (em `~/.claude/projects/C--Users-vitor/memory/`)
+- `reference_painel_obras_mensagens_direto.md` — caminho UI do Painel pra ver Mensagens
+- `reference_reparo_vs_reaplicacao.md` — REPARO (pontual) ≠ REAPLICAÇÃO (refazer escopo)
+- `feedback_telegram_silencio_nao_e_obra_parada.md` — cruzar com Painel + KIRA antes de concluir
+- `feedback_distincao_em_vs_pendente.md` — equipe ATUANDO ≠ equipe NO CAMPO PARADA
+- `project_auditoria_falsos_positivos_painel.md` — descoberta meta · metodologia consolidada
+- `project_aba_auditoria_lab_orion.md` — referência técnica da aba (versão 12)
+- `project_backup_repo_privado.md` (atualizado · backup criado)
+- `reference_repo_privado_deploy_web.md` — regra: privado quebra deploy web no free
+
+### Audit trail versionado (`analise/lab-hermeneuta/dados/`)
+- `_auditoria_ae_37_vereditos.json` + `_auditoria_ae_validacao.json` (aguardando_execucao)
+- `_auditoria_ex_35_vereditos.json` + `_auditoria_ex_validacao.json` (em_execucao)
+- `_auditoria_rep_21_vereditos.json` + `_auditoria_rep_validacao.json` (reparo)
+- `_data_inicio_real_63.json` (1ª aplicação ORIGINAL)
+
+### Pendências pra próxima sessão
+| # | Item | Custo |
+|---|---|---|
+| 1 | Nível 2 do stale · botão "Re-auditar ⚠ stales" que dispara mini-Workflow | ~1h |
+| 2 | UI de edição inline pra Vitor corrigir vereditos sem força-tarefa | ~1h |
+| 3 | Auditar `planejamento` (91 obras) ou `contrato` (41) — se Vitor quiser ampliar cobertura | ~15 min/filtro + tokens |
+| 4 | Salvar `data_1a_aplicacao_original` direto no veredito (mover de constante separada pro localStorage) | ~30 min |
+| 5 | Aplicar lições nas próximas auditorias: silêncio Telegram ≠ parada · cruzar fase Painel · distinguir em_* vs pendente_* | ongoing |
+
+### Comando pra retomar amanhã (cole no Claude Code)
+```
+Le analise/lab-hermeneuta/RETOMAR.md secao topo "SESSÃO 2026-05-29". 100 obras auditadas. Estado da aba Auditoria (Lab Orion) na versao 12. Memorias novas: reparo_vs_reaplicacao, distincao_em_vs_pendente, telegram_silencio_nao_e_obra_parada, painel_obras_mensagens_direto, auditoria_falsos_positivos_painel, aba_auditoria_lab_orion. Proximo passo natural: Nivel 2 do stale ou auditar mais filtros (planejamento, contrato).
+```
 
 ---
 

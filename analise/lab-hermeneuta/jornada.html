@@ -3968,6 +3968,9 @@
       <label>Mês exec. <select id="aud-filtro-mes" onchange="audRender()"><option value="">Todos</option></select></label>
       <label>Status <select id="aud-filtro-status" onchange="audRender()"><option value="">Todos</option></select></label>
       <input type="text" id="aud-filtro-nome" placeholder="Buscar por nome..." oninput="audRender()" style="padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;min-width:200px">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="aud-filtro-auditadas" onchange="audRender()" style="cursor:pointer"> Só auditadas</label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="aud-filtro-stale" onchange="audRender()" style="cursor:pointer"> Só ⚠ stale</label>
+      <button onclick="audExportarJSON()" style="padding:5px 10px;border:1px solid var(--line);background:var(--surface-2);border-radius:4px;cursor:pointer;font-size:12px">Exportar JSON</button>
       <span id="aud-contador" style="margin-left:auto;color:var(--ink-faint);font-size:12px"></span>
     </div>
 
@@ -3977,6 +3980,9 @@
         <th>Nome</th>
         <th>Status (Painel)</th>
         <th>Data exec.</th>
+        <th>Status real</th>
+        <th>Motivo</th>
+        <th title="Data da 1a aplicacao FISICA ORIGINAL (ignora reparos/reaplicacoes)">Início real</th>
       </tr></thead>
       <tbody></tbody>
     </table>
@@ -6954,7 +6960,317 @@ let audRendered = false;
 let audPagAtual = 0;
 const AUD_POR_PAG = 20;
 
+// Cores das tags (chips) · alinhadas com paleta Orion
+// REPARO = retoque pontual · REAPLICAÇÃO = refazer escopo (resultado anterior falhou)
+const AUD_COR_TAG = {
+  'pre_obra':                   {bg:'#e8e1d6', fg:'#6e6655', label:'pré-obra'},
+  'aguardando_inicio_execucao': {bg:'#fde8c4', fg:'#8a5a1a', label:'aguardando início execução'},
+  'em_execucao':                {bg:'#c8e2cf', fg:'#2e6b40', label:'em execução'},
+  'executada_aguardando_vt':    {bg:'#cfdde9', fg:'#2c536f', label:'executada · aguardando VT'},
+  'pendente_de_reparo':         {bg:'#f5d4b8', fg:'#8a4519', label:'pendente de reparo'},
+  'em_reparo':                  {bg:'#e8b8b8', fg:'#7a2828', label:'em reparo'},
+  'pendente_de_reaplicacao':    {bg:'#ecc6a8', fg:'#6e2f0e', label:'pendente de reaplicação'},
+  'em_reaplicacao':              {bg:'#d89595', fg:'#5e1818', label:'em reaplicação'},
+  'finalizada':                 {bg:'#d8d5cc', fg:'#4a4538', label:'finalizada'}
+};
+
+// Data da 1a aplicacao FISICA ORIGINAL (Workflow wf_83dda374-71f · 63 obras pos-execucao)
+const AUD_DATAS_INICIO = {
+    "861a3d98-d181-4631-a943-c3dffb479af4": {d:"2025-08-20",c:"media",f:"inferida",e:"data_definida Painel=20/08/2025; Geysson 1a msg 2025-08-20; 2025-09-02 relata 'ontem sacada 2a demao Stelion'."},
+    "7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2": {d:"2026-05-07",c:"alta",f:"telegram",e:"Caio 07/05/2026 11:51: 'Sera Aplicado Primeira Camada No Rolo' + foto em cura mesmo dia."},
+    "a680acb2-1808-43b8-9d91-1c2226cb1122": {d:"2025-07-23",c:"media",f:"painel",e:"Painel allFields visita_de_entrada: 23/07/2025 11:00; OS 1260 expedida 15/07/2025; finalizacao 08/08/2025."},
+    "c7962dae-562d-4280-936a-2aae3226dc82": {d:"2025-07-03",c:"alta",f:"telegram",e:"Laercio 03/07/2025: 'Diario de obra dia 03/07 - Hoje foi aplicado a primeira demao' (LILIT+primer)."},
+    "114621cf-2828-406a-993b-03cc6144b048": {d:"2025-08-22",c:"baixa",f:"inferida",e:"Geysson 22/08/2025 1o sinal fisico na area externa pos-autorizacao STELION (16/06/2025)."},
+    "6765e2aa-787f-43f6-9594-de2d56e6caae": {d:"2024-07-10",c:"baixa",f:"inferida",e:"Fase Execucao 2024-07-10 a 18 (65 msgs, 9d); consumos 4 baldes em 15/07; STELION era produto base."},
+    "5809d778-cca2-41ef-a6a4-d544f901b292": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Zero evidencia fisica: 0 Telegram, sem OS, sem marcos. data_exec_confirmada Painel nao confirma aplicado."},
+    "c5d7a12e-30d0-464d-97f8-74da1aaeae03": {d:"2025-09-01",c:"alta",f:"telegram",e:"Gilmar Taquinho 01/09/2025: 'Primeira demao stelion' (Ciclo 1, STELION camada 1)."},
+    "5ebc1fc4-4c57-4075-96a7-53cf46970b61": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Card Pipefy criado/finalizado 12/11/2025 sem t1/t2. Zero Telegram, zero OS, zero marcos."},
+    "e9cfed37-fe20-42c0-877a-3a55b1476fbc": {d:"2025-12-01",c:"baixa",f:"inferida",e:"Card inicio 01/12/2025; 59 msgs Telegram nesse dia; 09/12 Maxi ja reporta '2a demao Lilit'."},
+    "cecc85af-d8bc-4874-969a-e4866c98611d": {d:"2025-12-10",c:"media",f:"painel",e:"Painel data_de_entrada=10/12/2025 13:00 + equipe_enviou_registro_de_entrada=SIM + video_entrada=SIM."},
+    "7acbd385-8ff7-4045-91f8-dc4a24404213": {d:"2025-10-07",c:"baixa",f:"os",e:"OS 1360 expedida 07/10/2025; finalizacao 27/10/2025. Zero Telegram."},
+    "67498789-ad45-4163-a889-58da4c398372": {d:"2025-12-09",c:"alta",f:"telegram",e:"Julio 09/12/2025: 'Boa tarde primeira camada de lilite' (Telegram, Ciclo 1)."},
+    "0b4d6460-270a-47fd-8594-065dd852f6b3": {d:"2025-08-21",c:"baixa",f:"inferida",e:"OS 1341 STELION/LILIT/PRIMER expedida 21/08/2025; obra finalizada 02/10/2025. Telegram silencioso."},
+    "ea04728a-4ce4-4189-8936-236e6c743339": {d:"2026-04-06",c:"baixa",f:"inferida",e:"OS 2254 expedida 31/03/2026; ocorrencia 06/04 'Problema visual cliente' implica aplicacao na janela."},
+    "5f1da635-275f-40f8-962b-d7f6f6b496d9": {d:"2025-09-08",c:"baixa",f:"inferida",e:"Francisco Beats 08/09/2025 [504]: 'aplicamos a primeira camada de Leona' (2a fase Kutnikas)."},
+    "d927f21c-e545-4fb0-ba29-0b158eaa3d3d": {d:"2025-10-15",c:"alta",f:"telegram",e:"Wiguens 15/10/2025: 'Aplicacao de lumina primer no piso + Primeira demao Leona na churrasqueira e piso'."},
+    "d73999fc-43a2-4c9d-9e54-ceb926c04fc0": {d:"2025-07-01",c:"media",f:"telegram",e:"Ricardo 01/07/2025: 'ja estamos aplicando revestimento / casa principal / paredes grande'."},
+    "501b5b94-7185-4c88-a990-da23a069b7d5": {d:"2025-09-15",c:"baixa",f:"telegram",e:"Laercio diario 15/09: primer pontos de reparo; card mar/25 'REAPLICACAO POS PAUSA' (anterior nao capturada)."},
+    "abb93b6f-ef09-4147-b1f2-174c9bc9c80b": {d:"2026-01-06",c:"alta",f:"telegram",e:"Marcelo (Francisco Beats) 06/01/2026: 'APLICADO A PRIMEIRA DEMAO DE LILITH' suite [218]."},
+    "a9cf011c-d305-4cc5-8d04-fe65e00b6c09": {d:"2024-10-23",c:"alta",f:"telegram",e:"Nathan Janjao 23/10/2024: 'Primer aplicado' (Ciclo 1 Original, timeline_historico)."},
+    "192ee017-933d-49ae-970c-89d15981e18b": {d:"2025-11-12",c:"media",f:"detail-snapshot",e:"Painel data_de_entrada=12/11/2025 12:00 + foto logistica + OS 1606 expedida 05/11/2025 (STELION 63kg)."},
+    "687fbc05-b847-4c52-8af1-d7833b3a4590": {d:"2025-09-08",c:"baixa",f:"inferida",e:"OS 1338 expedida 20/08/2025; em 03/10 Vitor confirma '29/09 ja tinha 1a camada verniz'. Inicio inferido entrega 08/09."},
+    "af39af57-3b0f-4b4a-b512-6d7adaa5b5ba": {d:"2025-08-20",c:"alta",f:"inferida",e:"Card 15/08/2025 Gilmar OBRA NOVA INICIO 20/08/2025; 1a msg Gilmar 20/08/2025; OS 1325 expedida 15/08."},
+    "aa24b7ea-9622-488f-92ef-49c0a6c14b2c": {d:"2025-12-17",c:"alta",f:"telegram",e:"F Lucena 17/12/2025: 'hj e aplicacao do primer' (1a aplicacao, antes das camadas LILIT/LEONA/STELION jan/26)."},
+    "e9f43227-bbad-41e5-947f-57c192c83f0f": {d:"2026-03-16",c:"media",f:"detail-snapshot",e:"WA summary: '16/03: Inicio execucao - aplicacao paredes' (equipe Odair, Ronaldo, Kauan)."},
+    "9ffabe58-a7c7-4303-b9fa-9a40faf36af0": {d:"2025-05-08",c:"alta",f:"telegram",e:"Egberto Sullivan 08/05/2025: '1a camada do verniz aplicada' + visita_selador Painel 08/05/2025."},
+    "0d0c35bd-3b00-4de2-b898-4dfc61e6fdae": {d:"2025-11-24",c:"media",f:"inferida",e:"Card Francisco Mutirao inicio 24/11/2025 + data_de_finalizacao Painel = 24/11/2025."},
+    "e306a80c-d465-46e1-8530-54777ef90614": {d:"2025-11-19",c:"alta",f:"telegram",e:"Juninho 19/11/2025: 'lixado e trocado fitas dos rodapes para receber primeira mao de Stelion' (Ciclo 1)."},
+    "4f79b468-f013-4da9-9eed-594bf150f89a": {d:"2024-08-12",c:"alta",f:"telegram",e:"Francisco Beats 12/08/2024: 'Diario 12/08/24 raspagem, limpeza e aplicacao do Primer no piso, paredes, escada e 2 quartos'."},
+    "93d0efc3-f952-434e-9e6b-70793842d504": {d:"2025-08-19",c:"alta",f:"telegram",e:"Juninho Aragao 19/08/2025: 'Primeira demao de Stelion' (Ciclo 1, camadas_aplicadas tipo ordinal camada 1)."},
+    "a3ed951f-616c-449a-b3ca-502615d4ba19": {d:"2025-06-09",c:"baixa",f:"inferida",e:"OS 1204 expedida 05/06/2025; data_do_retorno Painel 09/06/2025 marca ciclo execucao; finalizacao 03/07/2025."},
+    "f6dc0a36-35fc-4128-8860-eeb39337ab56": {d:"2025-08-06",c:"baixa",f:"telegram",e:"Gilmar 06/08/2025: '2a demao lilit parede teto' - 1a inferida anterior."},
+    "89c99f6b-1eb9-4cae-9b1b-37e742bfe644": {d:"2026-05-11",c:"alta",f:"telegram",e:"Carlos neves 11/05/2026: 'Diario 11/05 - Aplicacao de primer + LILIT em BWC social, suite, sala, hall'."},
+    "b011df53-8d64-44ec-b131-ed35fa4c2532": {d:"2025-08-15",c:"baixa",f:"inferida",e:"OS 1326 expedida 15/08/2025 (STELION/LILIT/PRIMER); obra finalizada 21/08/2025; Telegram sem dump."},
+    "9eea6f22-56ac-439b-acf6-28b0a20c4aa7": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Zero rastreamento: sem Telegram, sem OS, sem marcos, dataExecucaoConfirmada=null. Criada 14/03 reaberta 15/05."},
+    "77d6dbcf-893b-41f6-b2bd-8b43b58e03b0": {d:"2024-06-13",c:"alta",f:"telegram",e:"Francisco Beats 14/06/2024: 'Diario 13/06/24 - limpeza, aplicacao do Primer e primeira camada de micro com a tela'."},
+    "dec2480f-fc69-4d44-9dbc-d3820badf218": {d:"2025-12-08",c:"alta",f:"telegram",e:"Gilmar Taquinho 08/12/2025: 'primeira camada total do leona aplicado' + 'piso seramica selado com lumina prime'."},
+    "a8eff05f-a2f9-473e-96b1-5a0cc39e371b": {d:"2025-05-27",c:"alta",f:"telegram",e:"Egberto Sullivan 27/05/2025: 'Parede cozinha com 1a camada Primer aplicado no piso' (Ciclo 1 Original)."},
+    "d51326f8-e34e-45dd-a355-669d10df3182": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Zero msgs Telegram, OS vazia, materiais_enviados=[]. Trinca contrapiso 22/04 mas sem aplicacao rastreavel."},
+    "43002c92-53dc-4e3a-a291-432b0b2a87f2": {d:"2025-10-02",c:"baixa",f:"inferida",e:"Francisco 02/10/2025: 'cheguei por aqui'. Em 13/10 Gilmar registra '2a de lilit'."},
+    "1a869e86-5caa-4b5a-89cb-dbbda0d104eb": {d:"2025-12-15",c:"media",f:"telegram",e:"Otavio 15/12/2025: 'Diario 15/12 - aplicacao do primer' (Telegram, camadas_aplicadas inferida)."},
+    "00b858b3-428e-4318-8e37-ad7f3638cbec": {d:"2026-01-21",c:"alta",f:"telegram",e:"Wellington 21/01/2026: 'Na area gourmet aplicamos uma demao' (1a camada Stelion, obra ec3a4b95)."},
+    "8783b584-ce9e-4632-873f-bb2697b02f4a": {d:"2025-07-29",c:"alta",f:"telegram",e:"Francisco Beats 30/07 (diario 29/07/25): 'aplicacao do Primer, fita telada e primeira camada de Leona'."},
+    "ca4b3047-28d7-44b3-8c39-e0cf4f71bcaf": {d:"2026-02-03",c:"media",f:"telegram",e:"Mendes Jassen 03/02/2026: 'Aplicamos o primer, duas demao do lilit, amanha cedo mais uma demao'."},
+    "e5452602-a71f-42a2-96a7-dea5a4d03f08": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Grupo Telegram 0125-MSC existe (ultima msg 10/07/2025: 'reaplicarmos uma parede') mas nao processado. 0 marcos, 0 OS."},
+    "c6908776-f200-4b20-87eb-0e9d9a80eda7": {d:"2025-02-07",c:"media",f:"telegram",e:"Welington 07/02/2025: 'Estamos em obra'; 18/02 registra 'nossas aplicacoes' ja com marcas."},
+    "a681cf05-aff4-41ae-b47f-6be1b648db98": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Ambos cards Painel sao tipoObra=Reaplicacao (14/03/2026); nenhum card original; zero Telegram; sem OS."},
+    "a869c12c-4f73-4602-89de-2fe639e43b1d": {d:"2025-05-26",c:"media",f:"telegram",e:"Braiam Novo 26/05/2025: recebimento material (19 baldes LILIT Everest + Primers); card INICIO 26/05/2025."},
+    "1ad11198-a062-41a3-86e6-5f5a6cfd699c": {d:"2025-11-03",c:"alta",f:"telegram",e:"Welington 03/11/2025: 'Estamos a caminho da obra' + consumo 4 Stelion Arabia, 33 Atena, 5 Lilit, 15 Lumina."},
+    "920dcacc-ed7e-4715-bc7e-a071c4b4a528": {d:"2025-04-15",c:"alta",f:"telegram",e:"Laercio 15/04/2025: 'Diario 15/04 - Hoje foi aplicado seladora, vistoria e primeira camada verniz pigmentado'."},
+    "aa3bff90-9312-43fc-80f2-c2f56ca52b91": {d:"2025-10-14",c:"alta",f:"telegram",e:"Egberto Sullivan 14/10/2025: 'Piso da cozinha e antesala com 1a camada de leona' (Ciclo 1)."},
+    "2369c899-509f-4deb-a767-03f244854492": {d:"2025-03-24",c:"media",f:"telegram",e:"Joao Rafael 24/03/2025: card OBRA NOVA INICIO 24/03; RETORNO POS PAUSA 4 dias depois (28/03)."},
+    "0d0e33a6-9c6d-44ff-8628-23741612643b": {d:"2025-11-26",c:"alta",f:"telegram",e:"Geysson 26/11/2025: 'Primeira de mao de leona pela parte da manha' (Ciclo 1)."},
+    "c9992b92-87d0-4726-931d-4fc90f93b40a": {d:"2025-10-15",c:"alta",f:"telegram",e:"Welington 15/10/2025: 'Estamos aplicando a tela e a primeira de leona' (camada 1 ordinal, ciclo unico 07/10)."},
+    "559e9123-fbf4-48d2-8570-7edb6031c094": {d:null,c:"nao_encontrado",f:"nao_encontrado",e:"Card Pipefy 22/09/2025 ja eh de reaplicacao (POS VENDAS); aplicacao original nao consta em nenhuma fonte."},
+    "01c521db-b5b1-4dcc-88b8-b0e78894966f": {d:"2026-03-16",c:"alta",f:"painel",e:"data_de_entrada=16/03/2026 13:00; resumo WA confirma 'inicio em 16/03/2026'; OS 2176 (09/03)."},
+    "6213aa79-f0cd-48e1-ae71-57bbb65b65ae": {d:"2025-09-16",c:"alta",f:"telegram",e:"Gilmar Taquinho 16/09/2025: 'Aplicacao primeira camada stelion' (Ciclo 1, tipo ordinal)."},
+    "e6b38375-4075-4f79-9319-f15566722963": {d:"2025-11-14",c:"media",f:"telegram",e:"Ocorrencia inicio_execucao 14/11/2025; Relatorio 17/11 registra Leona copa; 2a demao Leona em 21/11 confirma anterior."},
+    "ad2c9413-d9e2-47cb-93c2-cf396ca17db4": {d:"2026-01-05",c:"media",f:"telegram",e:"F Lucena 05/01/2026: 'Aplicamos o primer em todo o piso' + 'aplicamos o lumina primer'."},
+    "7e12a05d-a837-4599-b8a7-aa84318c39ac": {d:"2025-09-30",c:"alta",f:"telegram",e:"Gilmar Taquinho 30/09/2025: 'Primeira demao lilit e leona' (camada 1, tipo ordinal)."},
+    "3781d6a4-085d-4c19-9168-316ffd68b864": {d:"2025-09-27",c:"media",f:"telegram",e:"Francisco 27/09/2025: 'Equipe em obra'; consumo 06/10 cita 'segunda aplicacao'."},
+    "9e05e9a7-e3a5-4506-991d-9ccbfcc2cd3f": {d:"2025-10-09",c:"alta",f:"telegram",e:"Gabriel Barros Ramiro 09/10/2025 22h: '09/10 DIARIO - aplicado a primeira demao de lumina no piso'."}
+};
+
+function audGetDataInicio(obraId){
+  return AUD_DATAS_INICIO[obraId] || null;
+}
+
+function audChipData(obraId){
+  const d = audGetDataInicio(obraId);
+  if (!d) return '<span style="color:var(--ink-faint)">—</span>';
+  if (!d.d){
+    return `<span title="Sem evidência: ${d.e.replace(/"/g,'&quot;')}" style="display:inline-block;padding:2px 8px;background:#e8e1d6;color:#8a8580;border-radius:10px;font-size:11px;font-style:italic;white-space:nowrap">não encontrado</span>`;
+  }
+  // Formata data DD/MM/AA
+  const dt = d.d;
+  const fmt = dt.slice(8,10)+'/'+dt.slice(5,7)+'/'+dt.slice(2,4);
+  // Indicador de confiança via cor da borda
+  const corBorda = {alta:'#2e6b40', media:'#8a5a1a', baixa:'#8a4519', nao_encontrado:'#8a8580'}[d.c] || '#888';
+  const tipFull = `1ª aplicação ORIGINAL · confiança: ${d.c} · fonte: ${d.f}\n\n${d.e}`;
+  return `<span title="${tipFull.replace(/"/g,'&quot;')}" style="display:inline-block;padding:2px 8px;background:transparent;color:var(--ink);border:1px solid ${corBorda};border-radius:10px;font-size:11px;font-family:'JetBrains Mono',monospace;white-space:nowrap">${fmt}</span>`;
+}
+
+function audGetVeredito(obraId){
+  try { return JSON.parse(localStorage.getItem('audit:' + obraId) || 'null'); }
+  catch(e) { return null; }
+}
+
+function audSaveVeredito(obraId, veredito){
+  localStorage.setItem('audit:' + obraId, JSON.stringify(veredito));
+}
+
+// Captura snapshot do estado da obra no Painel/Telegram (Nível 1 stale detection)
+function audCapturarSnapshot(obra){
+  return {
+    status: obra.status || null,
+    fase_atual_painel: obra.fase_atual_painel || null,
+    data_exec_prevista: obra.data_exec_prevista || null,
+    data_ultima_msg: obra.data_ultima_msg || (obra.telegram && obra.telegram.ultima_msg) || null
+  };
+}
+
+// Compara snapshot do veredito com estado atual da obra
+// Retorna {stale: bool, motivos: [string]}
+function audStale(veredito, obra){
+  if (!veredito || !veredito.snapshot || !obra) return {stale:false, motivos:[]};
+  const snap = veredito.snapshot;
+  const atual = audCapturarSnapshot(obra);
+  const motivos = [];
+  if (snap.status !== atual.status) motivos.push(`status: ${snap.status} → ${atual.status}`);
+  if (snap.fase_atual_painel !== atual.fase_atual_painel) motivos.push(`fase: ${snap.fase_atual_painel} → ${atual.fase_atual_painel}`);
+  if (snap.data_exec_prevista !== atual.data_exec_prevista) motivos.push(`data exec: ${snap.data_exec_prevista || '—'} → ${atual.data_exec_prevista || '—'}`);
+  if (snap.data_ultima_msg && atual.data_ultima_msg && atual.data_ultima_msg > snap.data_ultima_msg){
+    motivos.push(`msgs novas no Telegram desde o veredito`);
+  }
+  return {stale: motivos.length > 0, motivos};
+}
+
+function audChipTag(tag, isStale){
+  if (!tag) return '<span style="color:var(--ink-faint)">—</span>';
+  const c = AUD_COR_TAG[tag] || {bg:'#eee', fg:'#555', label:tag};
+  if (isStale){
+    return `<span style="display:inline-block;padding:2px 8px;background:#e8e1d6;color:#8a5a1a;border:1px dashed #8a5a1a;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;opacity:0.85">⚠ ${c.label}</span>`;
+  }
+  return `<span style="display:inline-block;padding:2px 8px;background:${c.bg};color:${c.fg};border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap">${c.label}</span>`;
+}
+
+function audChipMotivo(m){
+  if (!m) return '<span style="color:var(--ink-faint)">—</span>';
+  return `<span style="display:inline-block;padding:2px 8px;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:10px;font-size:11px;white-space:nowrap">${m}</span>`;
+}
+
+function audExportarJSON(){
+  const tudo = {};
+  for (let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if (k && k.startsWith('audit:')){
+      const obraId = k.slice(6);
+      try { tudo[obraId] = JSON.parse(localStorage.getItem(k)); } catch(e){}
+    }
+  }
+  const total = Object.keys(tudo).length;
+  if (total === 0){
+    alert('Nenhum veredito gravado ainda.');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(tudo, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `vereditos-auditoria-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Pré-popula vereditos das forças-tarefa Claude
+// Bump AUD_VEREDITOS_VERSAO sempre que alterar INICIAIS pra propagar correções
+const AUD_VEREDITOS_VERSAO = 12;
+function audPopularInicial(){
+  const INICIAIS = {
+    // Filtro aguardando_clima (2026-05-29) · 4 obras
+    '67498789-ad45-4163-a889-58da4c398372': {fase_real:'pendente_de_reparo', motivo_espera:'clima', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Aplicação principal em 12/2025. 21/05 retorno pra verniz/parede, dispensado por chuva. Reagendado 01/06.'},
+    '5f1da635-275f-40f8-962b-d7f6f6b496d9': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'VT Braiam 13/05 achou piso com terra e sem material. Sem retorno depois disso.'},
+    'a28bb8e3-07dd-4ece-9f58-cda9de5aa34a': {fase_real:'aguardando_inicio_execucao', motivo_espera:'clima', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'2ª fase nunca começou. 3 reagendamentos por chuva. Última previsão INÍCIO 15/06 (dependendo do clima).'},
+    '559e9123-fbf4-48d2-8570-7edb6031c094': {fase_real:'pendente_de_reaplicacao', motivo_espera:'clima', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO postado 04/05. Tentativa em 14/05 falhou (choveu, formou bolhas). Paralisada aguardando condições pra refazer. VT Juliana 28/05.'},
+    // Filtro aguardando_execucao (2026-05-29) · 37 obras · Workflow wf_03bcc6e2-67a
+    'a1e32eb6-7cde-4f08-a56f-4faac1683a7d': {fase_real:'pre_obra', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'OS 1545 expedida out/2025 (STELION Javier 100m²). 4ª postergação até 16/06. Ocorrência alta severidade: trincas no contrapiso, possível refação total. Aplicador a definir.'},
+    'c26eecec-2e3a-4411-8bd1-060c34f605af': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero aplicação física. 3 postergações por ausência de retorno do cliente. Aditivo aprovado 07/04. Última msg 22/04 (37d silêncio).'},
+    'a680acb2-1808-43b8-9d91-1c2226cb1122': {fase_real:'pendente_de_reaplicacao', motivo_espera:'equipe', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO postado 04/05 (início 18/12, aplicador a definir). Execução original ago/2025. Painel oculta histórico de falha.'},
+    'c7962dae-562d-4280-936a-2aae3226dc82': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Mayara 18/05: "Cliente esqueceu do agendamento e continuou usando os banheiros, vamos postergar para próxima segunda". OBRA POSTERGADA 19/05 + arquiteta Teresa pediu reparos primeiro no Grape. Silêncio depois.'},
+    '6765e2aa-787f-43f6-9594-de2d56e6caae': {fase_real:'em_reaplicacao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Equipe NO CAMPO 27/05: Francisco foto canteiro com materiais, Ragno identificado como líder ativo (Cosme Eduardo Soares Ragno). Pipeline confirma estágio em_execucao, pico 31 msgs no dia. VT entrada 18/05 (Br).'},
+    '3992a42f-62d6-4384-b5fe-6fa8755d978b': {fase_real:'pre_obra', motivo_espera:'equipe', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card 23/03 previa 25/05 com aplicador a definir — equipe nunca confirmada. Zero evidência física. Última msg 05/05 (24d silêncio).'},
+    '4cbde0f6-89fc-46ac-ab5f-b3f933c08ccc': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero aplicação confirmada. Ocorrência crítica 20/04: equipe deslocada sem frente de trabalho. Logística em entrega, execução prevista 15/06.'},
+    '5e450298-c972-4cbd-bd25-820792d10d7c': {fase_real:'aguardando_inicio_execucao', motivo_espera:'material', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'OS 2217 emitida 01/04. Escopo V3 atualizado 26/05. Indústria em produção, prevista 08/06. Braiam fez 9 msgs hoje 00:51 (provável VT entrada).'},
+    'b4e7296c-1393-4eaf-aef8-3097b0e0c46b': {fase_real:'aguardando_inicio_execucao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Execução parcial fev-mar/26 (lixamento confirmado). 22/05 Isabella alertou infiltração/umidade no contrapiso. 2 ocorrências críticas + desvio 27/05. Card 26/05 remarca 04/06.'},
+    '0c5df046-ee4d-4e3e-9b4a-dc991cbb753f': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card 04/05: início 27/07, aplicador a definir. Material entregue (OS 1509). 7 postergações desde nov/24 (arquiteta Eloisa, comunicação falha). VT aferição estourou SLA.'},
+    '8aa16139-44d8-46a7-87b3-1e2ad8451963': {fase_real:'pre_obra', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card 20/05: início 08/06, aplicador a definir. Escopo V2 todos ambientes não concluído. Ocorrência 28/05: trincas pós-tratamento, substrato ainda sem resolução.'},
+    'ea04728a-4ce4-4189-8936-236e6c743339': {fase_real:'finalizada', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Obra finalizada 29/04 (Ramalho confirmou). Painel "OBRA CONCLUIDA". Rolou via WhatsApp/KIRA — Telegram só com 3 msgs enganou a 1ª rodada. 7 ocorrências mar-mai/26. Infiltração 28/05 é pós-entrega.'},
+    '2ec3d2e3-279b-40f0-a443-2d8e855cf855': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'4 cards (31/03, 25/04, 15/05, 25/05) todos início 15/06, aplicador a definir. Escopo V3 aprovado 25/05 (LILIT Everest, 82m²). Zero camada aplicada.'},
+    'e1e81955-d559-4311-a005-a5aeaf801dd7': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card 04/05 prevê início 10/06 sem aplicador (7ª remarcação). Vídeo de campo mostra obra civil do cliente ainda em andamento. Kettlyn: aditivo sem retorno do cliente.'},
+    'd927f21c-e545-4fb0-ba29-0b158eaa3d3d': {fase_real:'finalizada', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Obra-mãe finalizada 23/02/26 (Kira). Card REAPLICAÇÃO RODABASE de 27/01 já concluído (Caio, sobra material 12/02). Card d927f21c criado 14/03 é fantasma pós-conclusão.'},
+    '61bc509c-1a5e-494e-afb2-e63d6a261f05': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'3 cards (12/05 → 09/06 → 06/07/26), 2 postergações. Zero execução física, zero material enviado. Aguarda liberação cliente.'},
+    '7b3aa422-281a-4a83-ae53-a0230d2349bf': {fase_real:'aguardando_inicio_execucao', motivo_espera:'equipe', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'6 postergações desde ago/25, todas por disponibilidade do aplicador Francisco Raylton (equipe Wesley). Material entregue. Próximo início 17/06.'},
+    '06b665b3-591d-4eb7-a63f-53908dc22000': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Marco 28/05: Escopo aprovado, aguardando assinatura do aditivo. 5 remarcações (03/02→30/03→04/05→25/05→06/06). Bloqueio: cliente não assinou aditivo.'},
+    '08d96e8b-f428-41a3-b224-3935b63ef2ca': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero aplicação física, zero ciclos. 22/04 Francisco desfez agendamento (não é essa obra). VT orientativa 21/05. Aditivo de ilha e bancada em negociação.'},
+    '81a6c270-7fde-42dd-841f-120a8005922d': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Escopo aprovado 08/01, OS 2063 expedida 28/01. 21/01: data 02/02 inviável, cliente prometeu informar. Zero execução, silêncio 24d. Nova data 08/07.'},
+    '0d0c35bd-3b00-4de2-b898-4dfc61e6fdae': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'22/05 Juninho aplicou verniz só no banheiro (1a/2a demão). 23/05 Mayara: cliente pediu 08/06 ou 15/06 pro retorno das demais áreas. Sidrony viu marca de rolo. Equipe fora de obra desde.'},
+    '93d0efc3-f952-434e-9e6b-70793842d504': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'28/05 Caroline confirmou: reaplicação do piso completa. Ocorrências KIRA 28-29/04: fissuras progressivas LILIT+Stelion. Cliente ameaça garantia formal. Equipe não no campo.'},
+    '76b4d8a7-5a51-43e1-b8f0-1819310aad75': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero evidência física na obra atual. Ocorrências KIRA 08/05: piso descolando, infiltração (obra anterior jun/25). VT Nathan 18/05, sem decisão formal. Execução nova 09/06.'},
+    'f6dc0a36-35fc-4128-8860-eeb39337ab56': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO ÁREA DE SERVIÇO postado 09/05 (Francisco, início 04/03), mas zero aplicador confirmado. Trincas recorrentes fev e mai/26. Silêncio 20d.'},
+    'b011df53-8d64-44ec-b131-ed35fa4c2532': {fase_real:'pendente_de_reparo', motivo_espera:'equipe', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Cards REPAROS PONTUAIS postados 20/05: Sidney 25/05 + Sidrony 01/06 com aplicadores DEFINIDOS — Stelion já chegou. Sidney não confirmou execução 25/05. Gargalo migrou de material pra equipe/agendamento.'},
+    '77d6dbcf-893b-41f6-b2bd-8b43b58e03b0': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO postado 14/01/26 (início 23/03, piso externo/pergolado Stelion). Último sinal Telegram 13/03 (77d silêncio). Ocorrência 11/05: síndica bloqueou data.'},
+    'bbedc8ae-7665-47ba-83ca-49e6ca0431d3': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero execução, todas 14 etapas pendentes, materiais=[]. Card 26/05 reagendou 22/07 com aplicador a definir. 27/04 cliente enviou novos projetos — revisão em curso.'},
+    '1ea08f00-3aa7-4cf1-b09b-32e69c9e98bc': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero marcos de execução (8 msgs totais). Braiam visitou 13/05 pra avaliar contrapiso (VT pré-aplicação). Execução prevista 08/06, 61m² STELION intacta.'},
+    '8ad097b9-766a-4959-8bef-b23c9cdd182b': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card 26/05: APLICADOR a definir, início 25/06, OBRA NOVA. tagKira: marcenaria termina meio de junho. VT Nathan 01/06. Set/25 só primer paredes banheiro, piso travado.'},
+    'ad1f8e34-3a2b-4dfe-836f-f88a3f9e5dfc': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero aplicação física, 23 itens escopo pendentes. Ocorrência 16/04: entrada adiada por marcenaria. Áudio cliente 18/05 confirmando VT 01/06. 3 postergações.'},
+    'c9992b92-87d0-4726-931d-4fc90f93b40a': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO TOTAL PISO INÍCIO 08/07/26 postado 24/04, reconfirmado 04/05. Escopo V1 (21/03) 148m² Reaplicação. Execução original jul/25 falhou. Equipe não no campo.'},
+    'cba19133-0050-41e0-8161-78e6287d71b5': {fase_real:'pre_obra', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero Telegram, zero marcos, zero material no Lab (inativa 45d). Kira: VT aferição agendada 19/05. Painel CONTRATO, exec 15/06. Score risco alto por inatividade.'},
+    '08b0d9bd-50d3-414e-a62a-e852259c4997': {fase_real:'pre_obra', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Zero Telegram, zero marcos. Kira 26/05: cliente pediu +2 semanas (instalando vidros), nova previsão 15/06. projeto_pendente=true. 3 postergações por cliente.'},
+    '6213aa79-f0cd-48e1-ae71-57bbb65b65ae': {fase_real:'pendente_de_reaplicacao', motivo_espera:'equipe', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO postado 04/05 e reagendado 28/05 (APLICADOR a definir, início 08/06). 3 reprovações VT Nathan (24/11, 02/01, 28/02). Equipe indefinida.'},
+    '7f084908-d129-4a66-a412-7ec370ddfd54': {fase_real:'aguardando_inicio_execucao', motivo_espera:'outro', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card Wesley 05/05: 2ª FASE INÍCIO 03/08, OBRA NOVA. Metragem zero, produtos/equipe indefinidos. Sinais Telegram (Michael nov/25) pertencem à 1ª Fase no grupo compartilhado.'},
+    '9e05e9a7-e3a5-4506-991d-9ccbfcc2cd3f': {fase_real:'em_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO postado 04/05. Equipe no campo desde 15/05 (Reinaldo, F.Silva, Marcelo Boer). TERON+LILIT+STELION aplicados 19-25/05. 27/05 travada por indefinição cor + material insuficiente. Atividade hoje 29/05.'},
+    'c29fc4b3-f8e3-4c07-ade0-cb0351adca2b': {fase_real:'aguardando_inicio_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'2 cards (abr e mai/26), aplicador a definir. Reprogramado 08/06 → 25/06. Kira 26/05: cliente precisa finalizar paredes e lixar piso antes. Todas 14 etapas pendentes.'},
+    // Filtro em_execucao (2026-05-29) · 35 obras · Workflow wf_24ba8afa-8c0
+    '4f79b468-f013-4da9-9eed-594bf150f89a': {fase_real:'em_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Card OBRA: REAPLICAÇÃO 13/04. Equipe ainda em campo finalizando demãos corretivas + selagem paredes (26-27/05). VT Braiam 27/05 com "pequenos detalhes". Trinca/fissura aberta 28/05.'},
+    '920dcacc-ed7e-4715-bc7e-a071c4b4a528': {fase_real:'finalizada', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'2ª finalização 19/07/25 (Mendes: obra finalizada) após reaplicação concluída. Última msg 28/11/25 (182d silêncio). Painel CLIENTE FINALIZADO. Status em_execucao é card desatualizado.'},
+    '861a3d98-d181-4631-a943-c3dffb479af4': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Execução encerrou 24/10/25 (Wiguens). Ocorrências críticas ativas: manchas caixilhos (16/04) + bolhas/manchas risco reputacional (05/05). Sem equipe há 10+ dias.'},
+    '7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2': {fase_real:'em_reaplicacao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'26/05 Caio: diferença tonalidade área externa, reaplica totalmente. 27/05: 8 kit Stelion na obra, soltando por catalisação ruim. 28/05 Francisco vídeo: fissura subindo mesmo com tela.'},
+    '5ad048b1-7d25-4e1c-91c1-96c180e5b272': {fase_real:'em_execucao', motivo_espera:'material', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Julio (líder) postou consumo 29/05 (Lilit 10, Leona 28, Lumina 29, Endurecedor 57) — equipe no campo. Fase Execução iniciada 25/05. Ocorrência alta 29/05: Leona incompatível com novo processo.'},
+    '868bd673-f324-4a40-8b5d-246ab26a7567': {fase_real:'em_execucao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Pipeline 29/05 12:26 UTC: status em_execucao, fase CONTRATO, escopo aprovado mas concluido=false, data_exec_confirmada 20/05. Sem dump Telegram pra confirmar finalização.'},
+    '114621cf-2828-406a-993b-03cc6144b048': {fase_real:'em_reaplicacao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Ragno (aplicador) última msg 28/05 20:02 + Braiam 28/05 21:19 — equipe no campo ontem. Foto canteiro 27/05 (Francisco). Card REAPLICAÇÃO ÁREA EXTERNA desde 16/06/25, início confirmado 25/05.'},
+    '5809d778-cca2-41ef-a6a4-d544f901b292': {fase_real:'pendente_de_reaplicacao', motivo_espera:'material', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Label REAPLICAÇÃO no Painel. OS bloqueada (projetoOk=false). Zero Telegram, zero marcos, zero material enviado. Escopo V4 aprovado 14/05 mas concluído=false. Data 20/05 passou.'},
+    'e9cfed37-fe20-42c0-877a-3a55b1476fbc': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'27/05 Willian finalizou área externa. Painel avançou pra OBRA CONCLUÍDA 29/05. Ocorrência 28/05: bolhas pós-verniz, investigação em andamento. tagKira: "Bolhas verniz investigação". Pendência qualidade pós-entrega.'},
+    'bd36b984-1c5a-4f9c-9050-a4632317d1da': {fase_real:'em_execucao', motivo_espera:'outro', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'89m² de 121m² ainda pendentes (74% do escopo). Equipe saiu 21/05 aguardando reentrada do síndico (tagKira 28/05 sexta confirmada). Caroline filmou lavabo incompleto 26/05. Painel AGEND. VT prematuro.'},
+    '8dd1d92a-7736-483c-8540-16196aadebf0': {fase_real:'em_execucao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Carlos Hugo diário 28/05: 3ª camada Leona sala + 2ª Lilit piso/nicho banheiros. 29/05 10:58 Carlos Hugo+Jotta ativos. Aprovação cliente 26/05 pra verniz. Equipe no campo hoje.'},
+    'd1efa528-a5d8-484a-a211-04d29f66e866': {fase_real:'em_execucao', motivo_espera:'material', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Juninho diário 28/05: TERON suítes 1/2 e sala. Sidney ativo hoje 29/05 12:36. Ocorrência 27/05: falta Stelion Flamingo. Sem REAPLICAÇÃO.'},
+    'abb93b6f-ef09-4147-b1f2-174c9bc9c80b': {fase_real:'em_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO 20/05 (início 27/05). Willian aplicou TERON 27/05, msg 28/05 23:36. Trinca na varanda 27/05 (vídeo) — Luana confirmou abertura. 48m² pendentes de 194m².'},
+    'a9cf011c-d305-4cc5-8d04-fe65e00b6c09': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Reaplicação executada 02-26/05. Painel CLIENTE FINALIZADO + OBRA CONCLUÍDA. Pipeline classifica "entrega_com_retrabalho · finalizada 386d". Ocorrência fissura 11/05 alta severidade ainda aberta sem tratativa.'},
+    'af39af57-3b0f-4b4a-b512-6d7adaa5b5ba': {fase_real:'pendente_de_reparo', motivo_espera:'outro', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Reaplicação varanda concluída 28/05 (Vinícius: última mão Stelion). tagKira 29/05 12h: "Última demão Stelion paredes". Bloqueio agora é infiltração externa pendente 13+ dias sem plano (ocorrência crítica 27/05).'},
+    '88ec8531-cb37-4109-a656-e8d2ec6b5cd8': {fase_real:'em_execucao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Ocorrência 24/05: embarque equipe Gilmar/SP com hotel Araucária/PR pra início 25/05. Ocorrência 27/05: hospedagem equipe SP aberta. Zero Telegram — rastreado via OS. Dia 4 de execução.'},
+    'aa24b7ea-9622-488f-92ef-49c0a6c14b2c': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Reaplicação executada 27-28/05 (equipe saiu 28/05 18h). 29/05 já aparecem manchas/pontos no piso porta entrada + reclamação cliente (desvio_qualidade). Painel OBRA CONCLUÍDA + Telegram silencioso após 28/05.'},
+    '9ffabe58-a7c7-4303-b9fa-9a40faf36af0': {fase_real:'em_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO 24/04 (início 27/04, supervisor Francisco/Egberto), pós-decisão de remoção total fev/26. F. ativo até 28/05, Ademir 29/05. 28/05 Luana: não será possível iniciar reaplicação completa. Cor Lilit errada, piso solto, infiltração suite.'},
+    '89c99f6b-1eb9-4cae-9b1b-37e742bfe644': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Última camada LUMINA 23/05 (Valter Rodrigues). Trinca recorrente desde 18/05, 8 ocorrências formais até 28/05. Braiam coordenando tratamento 29/05 — equipe campo fora, reparo não iniciado.'},
+    '65dc9222-6c55-4c93-b971-3594a552946e': {fase_real:'em_execucao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'tagKira "Stelion 1ª camada início" atualizado 29/05 12:00 — equipe hoje. Ocorrências 26/05 e 27/05: infiltração crítica + nova aplicação RU. Zero Telegram, obra correu via WhatsApp.'},
+    'dec2480f-fc69-4d44-9dbc-d3820badf218': {fase_real:'em_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Cards REAPLICAÇÃO PISO desde 07/04 (Gilmar/Francisco). Verniz reprovado 18/05 (marcas rolo). Francisco solicitou material 28/05 18h pra finalizar 53m² pendentes. Ativo hoje 29/05 12:32. Painel OBRA CONCLUÍDA defasado.'},
+    'a8eff05f-a2f9-473e-96b1-5a0cc39e371b': {fase_real:'em_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Kayky confirmado pra hoje 29/05 entre 15-16h (Luana 11:38). 26/05 cliente ausente. 27/05 Kayky pediu sexta tarde. Reparo pontual (lavanderia, calafete, rodapé) — não reaplicação. Ocorrências críticas abertas.'},
+    '43002c92-53dc-4e3a-a291-432b0b2a87f2': {fase_real:'em_reaplicacao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'28/05 Joao: 1ª mão Stelion no piso (camadas_aplicadas). 11/05 remoção emergencial após Teron sem Primer RU (ocorrência crítica). 4 cards REAPLICAÇÃO em maiúsculas desde 09/04.'},
+    'ca4b3047-28d7-44b3-8c39-e0cf4f71bcaf': {fase_real:'finalizada', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'28/05 Mendes: última demão Stelion. VT Juliana 29/05 10h. Caroline 29/05 16h53: "Só para registrarmos a aprovação." Obra aprovada em VT hoje.'},
+    'c6908776-f200-4b20-87eb-0e9d9a80eda7': {fase_real:'em_reaplicacao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'29/05 (hoje) Michael (líder): lixamento Teron + aplicação 1ª camada STELION 11:18. 28/05 Valter Rodrigues: remoção LILIT + aplicação Teron. 4 cards REAPLICAÇÃO entre 14/04 e 07/05.'},
+    '316cd248-95c7-4fee-a81c-736540d627c3': {fase_real:'em_execucao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Ocorrência 22/05: obra parada aguardando vazamento (Charles aguardando definição, encanador pendente). 25/05-26/05: vazamento ativo atingindo vizinho. Escopo (4 itens Reaplicação) todos concluído=false.'},
+    'a681cf05-aff4-41ae-b47f-6be1b648db98': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Painel: tipoObra=Reaplicação, label REAPLICAÇÃO. Pausada 23/05 aguardando secagem contrapiso após infiltração (evento externo do imóvel do cliente). Ocorrências 27/05 e 28/05 confirmam bloqueio persistente.'},
+    '8be2b2f2-d95e-4fd6-a7e7-ef1d01d3da85': {fase_real:'em_execucao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Ocorrência formal 29/05 (hoje): pingos próx. porta entrada social, severidade alta — prova equipe no campo. Metragem pendente 86m² de 236m² (~150m² executados). Telegram silencioso mas ocorrência ativa.'},
+    '2369c899-509f-4deb-a767-03f244854492': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'27/05 Mayara: cliente pediu ORÇAMENTO de reaplicação lavabo — visita técnica antes de reaplicar. 21/05 banheiro suite com infiltração bloqueada. 28/05 Josias finalizou piso, mas lavabo/suite ainda abertos sem aprovação cliente.'},
+    'd15ee100-e3a2-4ca5-a838-8c9e9c7af2f8': {fase_real:'em_execucao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Heitor (líder) diário 27/05: 2ª camada Stelion ápice nas principais áreas. Heitor ativo hoje 29/05 11:41. Infiltração crítica desde 19/05. VT Braiam não ocorreu (ocorrência 27/05). Sem REAPLICAÇÃO.'},
+    '01c521db-b5b1-4dcc-88b8-b0e78894966f': {fase_real:'em_reparo', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Execução principal finalizada 06/04 (Wesley: Obra finalizada, tagKira). Card REPARO 13/05 (Geysson). Geysson ativo no Telegram 15/05 a 27/05 (23 msgs, última 2d atrás). Sem card REAPLICAÇÃO.'},
+    '7e12a05d-a837-4599-b8a7-aa84318c39ac': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Aplicação encerrou 13/05. LUMINA 22/05 é verniz de acabamento, não reaplicação ativa. Painel CLIENTE FINALIZADO + pipeline "obra finalizada". Ocorrências 19/05 e 22/05 (fundo aparecendo banheiro) sem equipe no campo — pós-entrega.'},
+    '3781d6a4-085d-4c19-9168-316ffd68b864': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'28/05 aplicaram Teron + 1ª Stelion, MANDARAM PARAR 2ª demão (cor divergente). 27/05 Reinaldo "aguardando orientações". Stelion com indústria + NFs pendentes 12d. Equipe no campo mas SEM aplicar — aguardando decisão de cor.'},
+    '88798aa8-a9b7-4864-b695-5257be5204db': {fase_real:'em_execucao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Reinaldo+Marcelo Boer msgs hoje 29/05. 28/05 Marcelo: aplicamos Teron + 1ª demão Stelion, mandaram parar 2ª (cor diferente). 11 ocorrências formais (5 críticas) desde 21/05 por divergência de cor.'},
+    'db4288be-e19e-4f9e-bca6-5023e1ae8e14': {fase_real:'em_execucao', motivo_espera:'', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'28/05 Francisco (supervisor) pediu 48 kits Theron pra regularização. Jaú confirmou + "usado 10 kits TERON". Clayton ativo 28/05 23h35. Regularização base após remoção total piso desplacado 2 andares (ocorrência crítica 20/05).'},
+    // Filtro pausado (2026-05-29) · 1 obra
+    'ad2c9413-d9e2-47cb-93c2-cf396ca17db4': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Paradoxo do Painel: status=pausado + fase=CLIENTE FINALIZADO + dexec=HOJE. Card REPARO 25/05 (Sidrony, início 29/05). Ciclo 2 aberto desde fev por marcas de rolo + Loba errado. Vistoria 18/05 confirma marcas persistentes. Reparo agendado pra hoje mas sem confirmação de chegada.'},
+    // Filtro reparo (2026-05-29) · 21 obras · Workflow wf_09141ca4-0df
+    '9eea6f22-56ac-439b-acf6-28b0a20c4aa7': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Migrou finalizado→reparo em 15/mai. Zero Telegram, sem grupo. KIRA nulo. Painel 14d sem atualização. Aguardando agendamento do retoque.'},
+    'c5d7a12e-30d0-464d-97f8-74da1aaeae03': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Escopo V1 (29/04): vestiário masculino piso STELION (13m²) + paredes LILIT (40m²) escopo_aprovado / concluído=false. Fase 1 (feminino) reaplicada em jan/26, mas FASE 2 (masculino) escopo inteiro por executar. Equipe não agendada.'},
+    '5ebc1fc4-4c57-4075-96a7-53cf46970b61': {fase_real:'pendente_de_reparo', motivo_espera:'outro', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Pipe POS VENDAS. Exec agendada 15/07 (47d). KIRA 21/05: Francisco em obra clientes desde 11h (visita). Zero Telegram, zero WhatsApp. Painel frozen desde 17/04.'},
+    'cecc85af-d8bc-4874-969a-e4866c98611d': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'13/04 Wesley: reaplicação área com troca Leona→Stelion. 15/04 Henrique Bison cobra cronograma. 12/05 última msg (17d silêncio). 28/05 ocorrência: data 06/07 contestada, cliente muda 15/07.'},
+    '7acbd385-8ff7-4045-91f8-dc4a24404213': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'OS 1360 out/25, execução principal concluída 27/10/25 (casa vendida). Mas Painel status=reparo, metragem_pendente=48m² (100%), flag=atrasado, confiança=0. Sem Telegram, sem KIRA — sem evidência de encerramento formal nem reparo em andamento.'},
+    '0b4d6460-270a-47fd-8594-065dd852f6b3': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'KIRA: trinca por umidade/retração — RETOQUE PONTUAL, não refazer escopo. Marcar VT Nathan. Sem nova OS material, sem label REAPLICAÇÃO no painel real. Obra original finalizada 02/10/25. Aguardando VT diagnóstico.'},
+    'd73999fc-43a2-4c9d-9e54-ceb926c04fc0': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO 23/05 (Mayara, aplicador a definir, início 08/06). Causa: infiltração contrapiso forçou retirada. Braiam VT 27/04: fotos piso desplacado+rachaduras. Escopo aprovado 28/04: LILIT Mirage paredes. Equipe fora desde fev/26.'},
+    '501b5b94-7185-4c88-a990-da23a069b7d5': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Reparo 15m² (Banho Suite STELION Kalahari) com escopo V2 aprovado 25/05. Data 10/06. Zero Telegram, zero marcos. Equipe nomeada: Julio Miranda + 3 aplicadores. 74d inativa.'},
+    '192ee017-933d-49ae-970c-89d15981e18b': {fase_real:'pendente_de_reparo', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'29/04 Wesley: aguardando visita com Rodrigo. 118m² concluídos, 130m² pendentes (Salão+BWC contrapiso). tagKira 29/04: Pós-venda pendências abertas. 30d sem atividade.'},
+    'e9f43227-bbad-41e5-947f-57c192c83f0f': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'13/03 KIRA: início 16/03 com Odair/Ronaldo/Kauan. 27/03 Roberto: equipe finalizando. 07/04 e 09/04 KIRA ocorrências: defeito revestimento + rachaduras. tagKira 20/05: sem atividade recente. 45d inativo.'},
+    'e306a80c-d465-46e1-8530-54777ef90614': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'27/01 Caroline: ajustes + reaplicação rodapés. 05/02 cliente áudio: precisam refazer inteiro, manchando. 23/04 Mayara: reaplicar previstas + cera, data 13/07. Última msg aplicador 13/12/25 (167d).'},
+    'a3ed951f-616c-449a-b3ca-502615d4ba19': {fase_real:'pendente_de_reaplicacao', motivo_espera:'equipe', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Card REAPLICAÇÃO aplicador a definir, supervisor Francisco Raylton. 14/05 Escopo V6 aprovado, concluído=false. 18/05 Caroline: indústria ajustando cor Sasha. Silêncio desde.'},
+    'd51326f8-e34e-45dd-a355-669d10df3182': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'22/04 Mayara: avaliar fissura no contrapiso. 07/05 Clayton vídeo: trinca saindo fácil. 19/05 KIRA: fissura reportada cliente. 20/05 tagKira: teste gesso aguarda resultado. Problema estrutural, escopo do reparo indefinido.'},
+    '1a869e86-5caa-4b5a-89cb-dbbda0d104eb': {fase_real:'pendente_de_reparo', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'28/02 Michael última aplicação (91d). 30/04 Kira: cliente Angelo extremamente insatisfeito, tapume por conta própria. 04/05 Kira: sem retorno múltiplas pendências. Equipe Ragno saiu 26/03. Data 04/06 improvável.'},
+    '00b858b3-428e-4318-8e37-ad7f3638cbec': {fase_real:'pendente_de_reaplicacao', motivo_espera:'clima', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude-v2', evidencias_resumo:'Doc 01/04: ESCOPOREPAROS-REAPLICAO.png. Escopo V1 27/04 concluído=false. KIRA EXPLICITA status=aguardando_clima (área gourmet Externo). Painel AGUARDANDO LIBERAÇÃO. 60m² 100% não executado.'},
+    '8783b584-ce9e-4632-873f-bb2697b02f4a': {fase_real:'pendente_de_reparo', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'11/11/25 Luana: VT revelou problemas a reaplicar. 09-11/11 Geysson 45 msgs em campo. 07/09/25 Francisco: OBRA FINALIZADA. 20/05 tagKira: fotos sobras aguardando Thiago. Exec reparo prevista 15/07. 90d+ sem campo.'},
+    'e5452602-a71f-42a2-96a7-dea5a4d03f08': {fase_real:'pendente_de_reparo', motivo_espera:'outro', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'Migrou concluído→reparo entre 10/04 e 07/05. Label OBRA CONCLUÍDA + CLIENTE FINALIZADO. Zero Telegram, KIRA nulo. 22d sem mudança. tipo_de_obra_2=RESERVA CANCELADA, data_finalizacao=2001 (legacy corrompido).'},
+    'a869c12c-4f73-4602-89de-2fe639e43b1d': {fase_real:'pendente_de_reaplicacao', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'06/06/25 Braiam: obra finalizada. 19/09/25 Egberto: 1ª camada verniz aplicada + contaminação vento. 28/01 Maria Clara: orçamento reaplicar Stelion. 28/02 Pedro: postergação por bancadas cliente. 90d inativo. Data 27/07.'},
+    '1ad11198-a062-41a3-86e6-5f5a6cfd699c': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'22/05 Pedro: piso soltando líquido viscoso + desplacamento múltiplos banheiros (CRÍTICO). 23/05 Nathan vídeo vistoriando (fiscal, não aplicador). Welington (aplicador) saiu 05/12/25, sem sinal no campo.'},
+    'aa3bff90-9312-43fc-80f2-c2f56ca52b91': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'26/05 Mayara: card REPAROS Francisco/Sidney INÍCIO 08/06. 08/05 ocorrência crítica: infiltração/vazamento. 04/03 Taquinho: lixamento verniz + cera. 28/02 Caroline: relatório VT reaplicação verniz aprovado. Equipe fora aguardando data.'},
+    'e6b38375-4075-4f79-9319-f15566722963': {fase_real:'pendente_de_reaplicacao', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'27/05 KIRA crítica: material trincou, reaplicação total copa urgente. 25/05 KIRA: copa rachou, cliente diz precisa ser refeita. 28/05 KIRA: cliente contesta valor orçamento. Júlio saiu 16/04 (43d). 21m² pendente. Possível litígio.'},
+    // Filtro marcas_rolo_cera (2026-05-29) · 2 obras
+    '687fbc05-b847-4c52-8af1-d7833b3a4590': {fase_real:'pendente_de_reparo', motivo_espera:'cliente', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'13/03 Francisco: agora é só aguardar cura, finalizar 100%. 13/03 Gustavo (cliente): "Preciso que seja retirado agora o material" (ocorrência ABERTA alta). 14/03 Kira última atividade. 71d silêncio. Painel OBRA PAUSADA mas é abandono silencioso pós-quase-conclusão.'},
+    '0d0e33a6-9c6d-44ff-8628-23741612643b': {fase_real:'pendente_de_reparo', motivo_espera:'qualidade', data_veredito:'2026-05-29', auditor:'forca-tarefa-claude', evidencias_resumo:'13/03 cliente aprovou com ressalva "duas marcas pequenas no verniz". 14/03 imagem enviada técnica sem data reparo. 30/03 visita cancelada mesmo dia (cliente foi à toa). 01/04 reagendada sem registro de realização. 53d silêncio. OS 1579 emitida pra reaplicação completa mas não executada.'}
+  };
+  const versaoSalva = parseInt(localStorage.getItem('audit-versao-iniciais') || '0', 10);
+  const forcarUpdate = versaoSalva < AUD_VEREDITOS_VERSAO;
+  for (const [obraId, ver] of Object.entries(INICIAIS)){
+    if (!audGetVeredito(obraId) || forcarUpdate) audSaveVeredito(obraId, ver);
+  }
+  if (forcarUpdate) localStorage.setItem('audit-versao-iniciais', String(AUD_VEREDITOS_VERSAO));
+
+  // Garante snapshot do estado da obra em TODOS os vereditos (pros 100 atuais, snapshot = estado de hoje)
+  const obrasMap = {};
+  (DADOS.obras || []).forEach(o => { obrasMap[o.obra_id] = o; });
+  for (let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if (!k || !k.startsWith('audit:')) continue;
+    const obraId = k.slice(6);
+    const ver = audGetVeredito(obraId);
+    if (!ver) continue;
+    if (!ver.snapshot && obrasMap[obraId]){
+      ver.snapshot = audCapturarSnapshot(obrasMap[obraId]);
+      audSaveVeredito(obraId, ver);
+    }
+  }
+}
+
 function audInit() {
+  // Pré-popula as 4 obras da força-tarefa inicial (idempotente)
+  audPopularInicial();
+
   // Popula filtros mês e status
   const obras = (DADOS.obras || []).filter(o => o.status !== 'cancelado');
   const meses = new Set();
@@ -6994,10 +7310,16 @@ function audRender() {
   const fMes = document.getElementById('aud-filtro-mes').value;
   const fStatus = document.getElementById('aud-filtro-status').value;
   const fNome = (document.getElementById('aud-filtro-nome').value || '').toLowerCase().trim();
+  const fAuditadas = document.getElementById('aud-filtro-auditadas').checked;
   let filtered = obras.filter(o => {
     if (fMes && (o.data_exec_prevista || '').slice(0,7) !== fMes) return false;
     if (fStatus && o.status !== fStatus) return false;
     if (fNome && !(o.cliente || '').toLowerCase().includes(fNome)) return false;
+    if (fAuditadas && !audGetVeredito(o.obra_id)) return false;
+    if (document.getElementById('aud-filtro-stale').checked){
+      const v = audGetVeredito(o.obra_id);
+      if (!v || !audStale(v, o).stale) return false;
+    }
     return true;
   });
   // Ordem alfabética por cliente
@@ -7016,10 +7338,29 @@ function audRender() {
     const cli = compEsc(o.cliente || '—');
     const st = compEsc(o.status || '—');
     const de = (o.data_exec_prevista || '—').slice(0,10);
-    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"><td class="cv" style="font-family:'JetBrains Mono',monospace;color:var(--ink-faint)">${idx}</td><td class="cn">${cli}</td><td class="cv">${st}</td><td class="cv">${de}</td></tr>`;
-  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra com esses filtros.</td></tr>';
+    const ver = audGetVeredito(o.obra_id);
+    const staleInfo = audStale(ver, o);
+    const tagReal = audChipTag(ver ? ver.fase_real : null, staleInfo.stale);
+    const motivo = audChipMotivo(ver ? ver.motivo_espera : null);
+    // Tooltip: motivos do stale (se houver) + evidências
+    let tipParts = [];
+    if (staleInfo.stale){
+      tipParts.push('⚠ Pode estar desatualizado:');
+      staleInfo.motivos.forEach(m => tipParts.push('  · ' + m));
+      tipParts.push('');
+    }
+    if (ver && ver.evidencias_resumo) tipParts.push('Evidências: ' + ver.evidencias_resumo);
+    const tipTxt = tipParts.join('\n');
+    const tip = tipTxt ? ` title="${compEsc(tipTxt).replace(/"/g,'&quot;')}"` : '';
+    const inicioReal = audChipData(o.obra_id);
+    return `<tr onclick="radarAbrirObra('${o.obra_id}')" style="cursor:pointer"${tip}><td class="cv" style="font-family:'JetBrains Mono',monospace;color:var(--ink-faint)">${idx}</td><td class="cn">${cli}</td><td class="cv">${st}</td><td class="cv">${de}</td><td class="cv">${tagReal}</td><td class="cv">${motivo}</td><td class="cv">${inicioReal}</td></tr>`;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--ink-faint);padding:14px">Nenhuma obra com esses filtros.</td></tr>';
 
-  document.getElementById('aud-contador').textContent = `${total} obras · ${totalPag} bloco${totalPag>1?'s':''} de ${AUD_POR_PAG}`;
+  // Contadores
+  const totalAud = obras.filter(o => audGetVeredito(o.obra_id)).length;
+  const totalStale = obras.filter(o => { const v = audGetVeredito(o.obra_id); return v && audStale(v, o).stale; }).length;
+  const staleTxt = totalStale > 0 ? ` · ⚠ ${totalStale} pode${totalStale>1?'m':''} estar desatualizada${totalStale>1?'s':''}` : '';
+  document.getElementById('aud-contador').textContent = `${total} obras · ${totalPag} bloco${totalPag>1?'s':''} de ${AUD_POR_PAG} · ${totalAud} auditadas${staleTxt}`;
   document.getElementById('aud-pag-info').textContent = total>0 ? `Bloco ${audPagAtual+1} de ${totalPag} · obras ${inicio+1}–${fim}` : '—';
   document.getElementById('aud-prev').disabled = audPagAtual === 0;
   document.getElementById('aud-next').disabled = audPagAtual >= totalPag - 1;

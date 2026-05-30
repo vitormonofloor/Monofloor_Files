@@ -1,0 +1,255 @@
+{
+  "summary": "Validar veredito das 26 obras divergentes do filtro em_execucao lendo ULTIMAS msgs",
+  "agentCount": 26,
+  "logs": [
+    "parallel[1] failed: agent({schema}): subagent completed without calling StructuredOutput (after 2 in-conversation nudges)",
+    "parallel[7] failed: agent({schema}): subagent completed without calling StructuredOutput (after 2 in-conversation nudges)",
+    "24/26 validacoes coletadas"
+  ],
+  "result": {
+    "validacoes": [
+      {
+        "obra_id": "4f79b468-f013-4da9-9eed-594bf150f89a",
+        "nome": "LOVELY RITA DIAS MENEZES SEGUNDA FASE",
+        "veredito_anterior": "em_reaplicacao · motivo vazio · \"Card OBRA: REAPLICAÇÃO 13/04. Maxi e Rayan ativos hoje 29/05. Diário 26/05: última demão corretiva.\"",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "[26/05] Maxi: \"Diário de obra: Última demão corretiva na bancada do banheiro filho. Paredes Branco Everest banheiro master seladas. Paredes Branco Everest sauna banheiro master seladas. Forro teto sauna selado.\" | [27/05] Joao: \"eu cheguei aqui nessa obra e os apontamentos que o Bray apontou aqui são pequenos detalhes\" | [27/05] Ocorrência: \"Cliente em hotel 2 semanas aguardando finalização. Vistoria possível amanhã às 15h.\" | [27/05] B®: \"Bancada aplicada última camada amanhã será selado\" | [28/05] Ocorrência: \"Trinca/fissura detectada\"",
+        "porque": "Msgs batem com em_reaplicacao: equipe ainda em campo finalizando demãos corretivas e selagem de paredes (26-27/05), vistoria do Braiam em 27/05 com \"pequenos detalhes\" pendentes, ocorrência de trinca/fissura aberta em 28/05 e cliente em hotel aguardando — nenhum sinal de \"obra finalizada\" ou aprovação formal emitida."
+      },
+      {
+        "obra_id": "861a3d98-d181-4631-a943-c3dffb479af4",
+        "nome": "ADIL CHENAF",
+        "veredito_anterior": "fase_real: pendente_de_reparo | motivo: qualidade | resumo: Execução encerrou 24/10/25. Ocorrências críticas: manchas caixilhos + bolhas. Sem equipe há 10+ dias.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "2026-04-16 [Sistema] \"Manchas em caixilhos irremovíveis · Cliente contratou limpeza profissional (3 pessoas) e não conseguiu remover manchas nos caixilhos\" | 2026-05-05 [Sistema] \"Bolhas e manchas — risco reputacional alto · Arquitetas Nancy/Natália reclamam que visita era vistoria técnica, não limpeza. Relatório de dez/24 nunca chegou à arquitetura.\" | 2026-05-09 [Sistema] \"Manchas área externa e novas bolhas relatadas\" | 2026-05-19 [KIRA] tagKira: \"Visita qualidade agendada 27/05\" | situacao_atual: \"LIMPEZA AGENDADA COM A TAIS.\"",
+        "porque": "Msgs confirmam: obra entregue (fase CLIENTE FINALIZADO), execução encerrada desde nov/25, sem equipe no campo. Ocorrências críticas abertas (manchas caixilhos + bolhas) e VT de qualidade agendada 27/05 via KIRA — exatamente o perfil de pendente_de_reparo aguardando diagnóstico presencial antes de definir intervenção."
+      },
+      {
+        "obra_id": "7e9d80dc-d0f3-4e8c-9181-691ee5e3f9c2",
+        "nome": "ADRIANO DE FIGUEIREDO MACORIN",
+        "veredito_anterior": "em_reaplicacao · motivo vazio · resumo: 26/05 Caio diferença tonalidade reaplica totalmente; 27/05 8 kit Stelion; 28/05 Francisco fissura subindo",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "26/05 Caio: \"teve diferença de cor com parte de cima com as Lateral... to esperando o Luiz vir pra ele acompanhar\" [match: precisa reaplicar] | 27/05 Caio (vídeo): \"a trinca aparecendo, eu telei e mesmo assim a trinca está subindo\" | 27/05 Francisco (áudio): \"é uma fissura grave\" + material 8kit Stelion em obra | 28/05 Francisco (vídeo): \"tô aqui na obra já... o problema que a gente tem é nessa lateralzinha\" | 28/05 última msg Luana 17:13, Francisco 17:07 (equipe ativa no campo)",
+        "porque": "Msgs batem porque equipe está fisicamente em obra em 28/05 (Caio 16:24, Francisco 17:07, Luana 17:13), material chegou em 27/05 (8 kit Stelion), e o processo de reaplicação está em curso com complicação de fissura grave — a fissura subindo pela tela é incidente dentro da reaplicação, não um estado diferente. Painel \"AGUARDANDO LIBERAÇÃO\" está defasado (alerta registrado no sistema) mas Telegram confirma execução ativa."
+      },
+      {
+        "obra_id": "5ad048b1-7d25-4e1c-91c1-96c180e5b272",
+        "nome": "AMENDOEIRAS SOCIEDADE DE PROPOSITO ESPECIFICO LTDA",
+        "veredito_anterior": "em_execucao / motivo: material — Julio postou consumo 29/05 (Lilit 10, Leona 28). Fase Execução 25/05. Ocorrência alta 29/05: Leona incompatível.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_execucao",
+        "motivo_corrigido": "material",
+        "ultimas_msgs": "25/05 Francisco: \"Chegamos\" (equipe em obra, 9 msgs no dia). 27/05 Julio [video]: \"tem bola em cima do nosso material... cuidado com o nosso produto que aqui foi zero. Vamos precisar de [mais]\". 29/05 Julio: \"Lilit 10 baldes Leona 28 baldes Prime 15 Seladora 3 Lumina 29 Fosco 28 Endurecedor 57 Po engrossante 18\". 29/05 Julio: \"Acredito q o teron comportaria bem... o material em obra nao bate com o novo processo\". 29/05 Luana - Monofloor ativa (ultima msg 12:20).",
+        "porque": "Msgs confirmam equipe no campo 25-29/05 (Julio, Francisco, Luana-Monofloor). Consumo real postado em 29/05 bate exato com o resumo anterior. Ocorrencia formal \"Material Leona incompativel com novo processo\" aberta em 29/05 (severidade alta) sustenta motivo=material. Painel diz OBRA PAUSADA mas Telegram mostra execucao ativa com 32 msgs na fase de execucao — o painel esta defasado, a realidade e em_execucao travada por impasse tecnico de material."
+      },
+      {
+        "obra_id": "868bd673-f324-4a40-8b5d-246ab26a7567",
+        "nome": "AMOSTRAS CLINGER - JOVELINA CRISTINA DE OLIVEIRA",
+        "veredito_anterior": "fase_real: finalizada | resumo: Amostra aplicada 26/05. Main Clinger OBRA CONCLUÍDA 28/05. Card arquivado 29/05.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "em_execucao",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "Obra sem nenhuma mensagem no Telegram (n_msgs_telegram_total=0). Dados do Painel em 2026-05-29T12:26:44Z: status=em_execucao, fase_atual_painel=CONTRATO, escopo_aprovado mas concluido=false, data_exec_confirmada=2026-05-20. Nenhum dump Telegram disponivel para esta obra.",
+        "porque": "O pipeline gerado em 29/05 às 12:26 UTC ainda registra status em_execucao, fase CONTRATO e escopo nao concluido. Nenhum sinal de finalizacao ou arquivamento nos dados — o veredito anterior de finalizada nao tem respaldo nos dados disponiveis."
+      },
+      {
+        "obra_id": "114621cf-2828-406a-993b-03cc6144b048",
+        "nome": "ANA CAROLINA PLACCO FERREIRA - AREA EXTERNA",
+        "veredito_anterior": "em_reaplicacao | motivo vazio | Ragno última msg 28/05 20:02 + Braiam 28/05 + foto canteiro 27/05 + Card REAPLICAÇÃO desde 16/06/25",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "Ragno (2026-05-28 20:02): última msg ativa do aplicador em campo. Braiam Novo (2026-05-28 21:19): fiscal ativo. Francisco (2026-05-27): \"[Foto] Canteiro de obra com caixa contendo materiais de proteção e revestimento, piso preparado, duas pessoas presentes\". Ragno (2026-05-27): \"Diário tá com nome errado Cosme Eduardo Soares Ragno lider\". Card operacional (2026-05-07 para 2026-05-25): \"REAPLICAÇÃO DA AREA EXTERNA SUPERVISÃO: Fran...\"",
+        "porque": "Todos os dados batem: Ragno (aplicador) e Braiam (fiscal) com msgs em 28/05, foto de canteiro ativo em 27/05 com equipe e materiais, card operacional explícito \"REAPLICAÇÃO DA AREA EXTERNA\" com data_inicio 2026-05-25, equipe em campo há 4 dias. Fase \"em_reaplicacao\" confirmada — execução física acontecendo neste momento."
+      },
+      {
+        "obra_id": "e9cfed37-fe20-42c0-877a-3a55b1476fbc",
+        "nome": "ANDRESSA SOUZA CAMPOS MONTEIRO DE CASTRO",
+        "veredito_anterior": "em_reaplicacao",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "27/05 Willian: \"finalizei lá a área externa da cliente Andressa, dei uma lixada lá...\" | 27/05 ocorrência: \"Falta de material em obra\" | 28/05 ocorrência: \"Bolhas apareceram no banheiro pós-verniz\" (severidade média) | tagKira 28/05 23h06: \"Bolhas verniz investigação andamento\" | Painel 29/05: status=finalizado, faseAtual=OBRA CONCLUÍDA",
+        "porque": "O veredito anterior classificou como em_reaplicacao com base no card RETORNO 26/05 (Louis, área externa) — mas esse retorno era finalização de área pendente, não reaplicação de escopo. Willian finalizou a externa em 27/05 e o painel avançou para OBRA CONCLUÍDA em 29/05. Porém a tagKira registrada em 28/05 aponta bolhas pós-verniz com investigação em andamento, configurando pendência de qualidade pós-entrega: fase correta é pendente_de_reparo."
+      },
+      {
+        "obra_id": "bd36b984-1c5a-4f9c-9050-a4632317d1da",
+        "nome": "BRUNO FRIGO ZEZZE",
+        "veredito_anterior": "executada_aguardando_vt · motivo: outro · resumo: 18/05 William iniciou, 26/05 Caroline lavabo 2 mãos + 3ª + verniz, Painel já AGEND. VT",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "em_execucao",
+        "motivo_corrigido": "outro",
+        "ultimas_msgs": "26/05 Caroline: \"aqui é o lavabo, com duas de mão geral, já tá bem adiantadinho, provavelmente eu vou dar a terceira de mão\" + verniz pendente | 21/05 William: última msg no campo, Francisco tb | 22/05 Pedro: última msg Monofloor interno | 28/05 Mayara: 1 msg; tagKira 28/05: \"Síndico confirmou sexta dia útil\"",
+        "porque": "Obra não está executada: 89.56 de 121.21 m² ainda pendentes (74% do escopo). Equipe saiu do campo dia 21/05 e está aguardando reentrada autorizada pelo síndico (tagKira 28/05). Caroline filmou lavabo incompleto em 26/05. Fase painel AGEND. VT reflete antecipação incorreta — VT não pode acontecer com 74% do piso ainda por executar."
+      },
+      {
+        "obra_id": "abb93b6f-ef09-4147-b1f2-174c9bc9c80b",
+        "nome": "GUILHERME HAIDAR BERJEAUT",
+        "veredito_anterior": "fase_real: em_reaplicacao | motivo: qualidade | resumo: Card REAPLICACAO 20/05 (inicio 27/05). Willian aplicou TERON 27/05, msg 28/05. Trinca varanda 27/05.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "1701 27/05 Wiguens: \"ja iniciou as preparacoes, com o tratamento, protecoes aqui\" | 1733 27/05 Willian diario: \"lixamento dos ajustes dos ralos, aplicacao de teron, retirada dos retoques onde o stelion nao foi catalizado direito\" | 1734 27/05 Willian: \"A trinca nao tratamos hoje pois nao tinha tela\" | 1746 28/05 Luana: \"Pode aplicar.\" | 1752 28/05 Willian diario: \"lixamento do piso total e local onde foi aplicado teron aplicacao de stelion\"",
+        "porque": "Msgs de 27-28/05 confirmam equipe no campo (Willian + Wiguens + Francisco) executando retrabalho fisico: lixamento geral, aplicacao de TERON/LEONA em ralos e sacadas, aplicacao de Stelion em 28/05 com fotos de piso em cura. Motivo qualidade confirmado por Stelion sem catalizacao correta (msg 1733) e trinca varanda com tela soltando. Trinca ainda pendente (sem tela no dia 27), mas nao muda a fase macro — execucao de reaplicacao em andamento."
+      },
+      {
+        "obra_id": "a9cf011c-d305-4cc5-8d04-fe65e00b6c09",
+        "nome": "GUILHERME LANGER",
+        "veredito_anterior": "em_reaplicacao / qualidade — Francisco 02/05 pede 5 prestadores; Julio/Leonardo no campo até 26/05; ocorrência fissura 11/05",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "[05-11] Sistema KIRA: \"Fissura/trinca reportada pelo cliente · Cliente: Passei por lá duas vezes na semana passada, conversei com a equipe, e olhei o que t...\" (ocorrência alta severidade, aberta) | [05-25] 29222: \"Bom dia pessoal, a minha equipe só vai viajar hoje pra trabalhar amanhã, ok. Estão resolvendo um problema particular.\" | [05-25] Julio: \"[Áudio] Eu acabei de falar com o Leonardo... tá a caminho daqui da obra, tá? Pra Alphaville\" | [05-26] Julio: última msg registrada (2026-05-26)",
+        "porque": "Painel já carrega label 'OBRA CONCLUÍDA' + fase 'CLIENTE FINALIZADO', e o classificador do jornadas.json marca 'entrega_com_retrabalho' com veredito 'Obra finalizada em 386 dias'. A reaplicação foi executada (05-02 a 05-26), mas sobrou ocorrência formal de fissura aberta (05-11, alta severidade) sem resolução registrada. Julio ainda se deslocava para a obra em 05-25 — possível último ajuste — mas com 'OBRA CONCLUÍDA' no label o estado correto é pendente_de_reparo: reaplicação encerrada, problema de qualidade pendente de tratativa."
+      },
+      {
+        "obra_id": "af39af57-3b0f-4b4a-b512-6d7adaa5b5ba",
+        "nome": "HENRIQUE AFFONSO ORCESI DA COSTA",
+        "veredito_anterior": "em_reaplicacao · motivo: outro · \"Card REAPLICAÇÃO VARANDA 24/04 (início 13/05). Vinícius 29/05: lixamento + última mão Stelion. Infiltração externa pendente.\"",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "outro",
+        "ultimas_msgs": "29/05 Vinícius (tg): \"[Foto] Relatoria dia 28/05 — Feito o lixamento e aplicado a última de mão de stelion. Descrição: Aplicação de revestimento em parede com proteção de papel...\" | 29/05 tagKira (12h): \"Última demão Stelion paredes\" | 27/05 KIRA ocorrência [crítica]: \"Infiltração pendente 13 dias — plano tratamento não definido\" | situacaoAtual KIRA: \"Obra pausada por clima (chuvas). Retorno confirmado para 27/05 para finalização dos serviços. Camada já aplicada está protegida. Equipe: Gilmar/Nathan.\"",
+        "porque": "A reaplicação física foi concluída: Vinícius reportou \"última de mão de Stelion\" em 28/05, confirmado pelo tagKira de 29/05 12h. A fase em_reaplicacao era correta até 28/05, mas em 29/05 o serviço principal já foi entregue. O que bloqueia o fechamento agora é a infiltração externa pendente há 13+ dias sem plano de tratamento definido (ocorrência crítica 27/05), tornando a fase real pendente_de_reparo — não por falha de aplicação, mas por evento externo (infiltração) que precisa de resolução antes do aceite final."
+      },
+      {
+        "obra_id": "aa24b7ea-9622-488f-92ef-49c0a6c14b2c",
+        "nome": "JOAO PAULO VERIDIANO PICCOLO",
+        "veredito_anterior": "em_reaplicacao · motivo vazio · \"Card Reaplicação 04/03 + 2º card 14/05 INÍCIO 27/05. Caroline última 28/05. Ocorrência crítica 28/05: infiltração.\"",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "27/05 (friccao): \"Equipe chega só após almoço\" [ocorrência atraso_entrega] | 28/05 Caroline Monofloor: última msg 18:00:59 — equipe ainda em obra | 28/05 (friccao): \"Infiltração/vazamento detectado\" [ocorrência crítica incidente_obra] | 29/05 (friccao): \"Manchas e pontos no piso porta entrada\" [desvio_qualidade] | 29/05 (friccao): \"Problema visual reportado pelo cliente\" [desvio_qualidade]",
+        "porque": "A reaplicação foi executada em 27-28/05 (equipe no campo, Caroline última msg 28/05 18h, workers de campo sem msgs desde mar/26). Porém em 29/05 já aparecem desvios de qualidade registrados — manchas no piso e reclamação do cliente — com Painel em \"OBRA CONCLUÍDA\" e Telegram silencioso após 28/05. Equipe saiu mas deixou problema aberto: fase real virou pendente_de_reparo, não mais em_reaplicacao. A infiltração 28/05 é evento externo que pode agravar o quadro mas o driver da correção de fase são as manchas/pontos reportados pós-aplicação."
+      },
+      {
+        "obra_id": "9ffabe58-a7c7-4303-b9fa-9a40faf36af0",
+        "nome": "JULIANA KOMEL DE OLIVEIRA",
+        "veredito_anterior": "em_reaplicacao / qualidade — Card REAPLICAÇÃO 24/04. F. ativo até 28/05, Ademir 29/05. 28/05 Luana: não será possível iniciar. Cor Lilit errada.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "28/05 Luana: \"Realizado contato telefônico com a cliente Juliana... não será possível iniciar [a reaplicação do Lilit cor errada]\" | 28/05 F (20:42): última msg ativa — equipe ainda no campo | 29/05 Ademir (10:59): última msg ativa hoje | KIRA tag 29/05 12:00: \"Stelion 2ª camada início\" | 27/05 F: \"Rodapés aplicados com stelion\"",
+        "porque": "Equipe F e Ademir enviaram mensagens em 28/05 e 29/05 respectivamente, confirmando presença em campo. KIRA atualizou tag hoje (29/05) como \"Stelion 2ª camada início\", validando reaplicação ativa. O \"não será possível iniciar\" de Luana 28/05 refere-se especificamente ao Lilit cor errada (12 dias pendente), não à paralisação geral da obra. Motivo qualidade confirmado: Lilit cor errada crítica 12d + infiltrações banheiro suíte + piso solto/fofo."
+      },
+      {
+        "obra_id": "89c99f6b-1eb9-4cae-9b1b-37e742bfe644",
+        "nome": "MARCUS VINICIUS ELTSCHEMINOV",
+        "veredito_anterior": "pendente_de_reparo / qualidade — LUMINA 23/05, trinca recorrente desde 18/05, Braiam coordenando 29/05",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "18/05 Carlos neves: \"o piso ja esta com um 3DMOR e a trinca que tinha aqui foi colocada ate ela e a trinca esta continuando subindo\" | 22/05 Braiam Novo: [Audio] coordenando equipe, explicando situacao da trinca | 25/05 Luana-Monofloor: \"Finalizamos apos nosso retorno em obra\" (tratativa, nao reparo concluido) | 28/05 ocorrencia alta: \"Trinca tratada com barra de ferro pelo empreiteiro\" | 29/05 Braiam Novo: \"A Ju vai ate passar umas informacoes ai no grupo dos meninos, como prosseguir agora em cima do tratamento dessa trinca\"",
+        "porque": "Msgs batem porque em 29/05 Braiam ainda esta organizando instrucoes para o tratamento da trinca — equipe nao esta no campo, apenas coordenacao remota em curso. LUMINA aplicada em 23/05, trinca recorrente com 8+ ocorrencias de desvio_qualidade confirmadas, ultimo incidente em 28/05 (empreiteiro tentou tratar com barra de ferro). Obra aguarda atuacao fisica = pendente_de_reparo."
+      },
+      {
+        "obra_id": "dec2480f-fc69-4d44-9dbc-d3820badf218",
+        "nome": "MARINA PIRES DE AGUIAR",
+        "veredito_anterior": "em_reaplicacao / qualidade — Cards REAPLICAÇÃO PISO desde 07/04. Verniz reprovado 18/05. Francisco solicitou material 28/05 18h. Ativo 29/05 12:32.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "18/05 Taquinho: \"Ligação com Rodrigo devido muitas marcas de rolo estamos lixando e vamos reaplicar o verniz ok\" | 22/05 Taquinho: verniz reaplicado com problemas, arquiteta insatisfeita (lixamento registrado) | 27/05 Luana: \"após reunião com o Rodrigo e conversa com a Marina Pires, seguem direcionamentos para darem andamento\" | 28/05 18:22 Francisco: \"a gente tem um pisinho pequeno pra finalizar...só temos Stelion 292 na obra, vamos precisar de um kit\" | 29/05: ocorrência falha_comunicacao — equipe sem envio de diário de obra",
+        "porque": "Msgs batem porque a sequência verniz reprovado (18/05) → lixamento → reaplicação → insatisfação arquiteta (22/05) → nova rodada com proteções e direcionamentos (27/05) → Francisco em campo lixando e solicitando material em 28/05 18h configura textualmente em_reaplicacao ativa. Equipe física no local em 28/05, data_ultima_msg 29/05, motivo exclusivamente qualidade (marcas de rolo + reprovação formal)."
+      },
+      {
+        "obra_id": "a8eff05f-a2f9-473e-96b1-5a0cc39e371b",
+        "nome": "MARISA NATALIA PINTO",
+        "veredito_anterior": "pendente_de_reparo · motivo: qualidade · resumo: Card REPAROS 15/04 (Michael). Ocorrência crítica 03/04 dano marcenaria. Falta material 14/05. Kayky até 28/05.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "em_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "2026-05-26 12:44 | Kayky | \"Bom dia pessoal cliente não se encontra\" (cancelou sem aviso, Kayky bateu na porta das 9h) | 2026-05-27 20:42 | Kayky | \"Será que conseguimos marcar pra sexta à tarde?\" | 2026-05-28 11:20 | Luana - Monofloor | \"Bom dia, Kayky ! Pode ser sim sexta-feira, que horas posso confirmar sua chegada?\" | 2026-05-28 11:24 | Kayky | \"Entre 15 ou 16\" | 2026-05-29 11:38 | Luana - Monofloor | \"Bom dia, Kayky ! Pode ser sim ok\"",
+        "porque": "As msgs mostram Kayky confirmado para ir à obra hoje (29/05) entre 15-16h, com Luana confirmando às 11:38 — aplicador não apenas agendado mas confirmado para o campo no mesmo dia. O padrão é reparo pontual (lavanderia, calafete, stelion em área específica, rodapé) não reaplicação de escopo. Fase real é em_reparo, não pendente_de_reparo. Motivo permanece qualidade (ocorrência crítica 03/04 dano marcenaria ainda aberta + falta de resina 14/05)."
+      },
+      {
+        "obra_id": "43002c92-53dc-4e3a-a291-432b0b2a87f2",
+        "nome": "MICHELLE CRISTINA FREITAS GARDENAL",
+        "veredito_anterior": "fase_real: em_reaplicacao | motivo: (vazio) | resumo: 28/05 Joao 1a mao Stelion; 11/05 remocao emergencial apos Teron sem Primer RU; 4 cards REAPLICACAO desde 09/04",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "2026-05-28 | Joao: \"[Foto] Boa tarde primeira mão de stelion no piso\" (camada_aplicada jornadas.json) | 2026-05-27 | Rodrigo: \"[Áudio] Eu imagino que isso aqui seja a Lilith... toda essa quebração, arrancou tudo por conta da base ser base d'água, daí o cara me passa um produto...\" | 2026-05-27 [critica] Cliente insatisfeita — saída de coordenador sem aviso | tagKira 28/05T23:06: \"Stelion 1ª demão piso aplicando\" | cards_inicio_operacional: 4 cards \"REAPLICAÇÃO\" desde 09/04",
+        "porque": "Msgs batem porque tagKira atualizada em 28/05T23:06 registra \"Stelion 1ª demão piso aplicando\" e camada_aplicada do mesmo dia confirma Joao em campo com primeira mão de Stelion — equipe fisicamente no local na data do veredito, caracterizando em_reaplicacao sem ambiguidade."
+      },
+      {
+        "obra_id": "ca4b3047-28d7-44b3-8c39-e0cf4f71bcaf",
+        "nome": "MONTRELUX SOLUÇÕES EM VIDRO LTDA",
+        "veredito_anterior": "em_execucao · motivo vazio · \"28/05 Mendes: última de Stelion. 25/05 2ª demão, 21/05 1ª. Marco reprovação 30/04 + escopo reaprovado 07/05 (ciclo reaplicação).\"",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "finalizada",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "[2026-05-27 13:29] Mendes: \"Preparação piso grande para última demão hoje\" | [2026-05-27 18:22] Caroline Monofloor: \"VT com Juliana confirmada para sexta, 29/05 as 10h.\" | [2026-05-28 23:28] Mendes: \"Última de stelion\" | [2026-05-29 16:53] Caroline Monofloor: \"Só para registrarmos a aprovação.\"",
+        "porque": "Aplicação encerrada em 28/05 (última demão Stelion). VT agendada para 29/05 10h ocorreu e Caroline registrou aprovação às 16h53 de 29/05 — obra aprovada em VT, fase real é finalizada. O veredito anterior (em_execucao em 28/05) estava correto naquele momento, mas já está defasado: equipe saiu de campo e VT aprovou."
+      },
+      {
+        "obra_id": "c6908776-f200-4b20-87eb-0e9d9a80eda7",
+        "nome": "PAULA CORREA NOGUEIRA",
+        "veredito_anterior": "em_reaplicacao · motivo vazio · resumo: 29/05 Michael lixamento Teron + 1ª camada STELION, 28/05 Valter remoção LILIT + Teron, 4 cards REAPLICAÇÃO",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "28/05 Valter Rodrigues: \"Diario de obra - Remoção piso LILITI chão - Isolamento paredes - Aplicação Teron chao\" | 29/05 michael: \"Programação hoje - Lixamento teron - Troca de fitas - Aplicação primeira camada stelion\" | TAG_KIRA (29/05 12:00): \"Lixamento Teron 1ª Stelion\" | 27/05 Mayara|Monofloor: última msg equipe interna | 4 cards REAPLICAÇÃO no Telegram (datas_msg: 14/04, 30/04, 30/04, 07/05)",
+        "porque": "Msgs batem porque há equipe física em campo nos últimos 2 dias: Valter (28/05) fez remoção do LILIT e aplicação do TERON (base da reaplicação), e michael (29/05, hoje) executou lixamento do Teron e 1ª camada STELION — exatamente o que o veredito anterior descreveu. TAG_KIRA atualizada hoje às 12h00 confirma o mesmo estágio operacional."
+      },
+      {
+        "obra_id": "a681cf05-aff4-41ae-b47f-6be1b648db98",
+        "nome": "PAULA WALDVOGEL OTERO",
+        "veredito_anterior": "fase_real: pendente_de_reparo | motivo: outro | resumo: 22/05 infiltração interrompeu verniz. 23/05 obra pausada. 28/05 ocorrência: infiltração terraço ativa 6d.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "OC 22/05 (Sistema): \"Infiltração ativa água descendo pelo teto durante verniz. Rafael tratando no momento. Área externa sem verniz por chuvas.\" | OC 23/05 (Sistema): \"Infiltração terraço crítica 2d – obra pausada. Aguardando secagem do contrapiso.\" | OC 27/05 (Sistema): \"Infiltração terraço pendente 6 dias.\" | OC 28/05 (Sistema): \"Infiltração no terraço bolhas com água.\" | KIRA 27/05: \"Obra pausada em 23/05 – aguardando secagem do contrapiso. Retomada depende de condição do substrato.\"",
+        "porque": "O painel registra tipoObra=Reaplicacao e label REAPLICACAO — não é reparo pontual. A obra está pausada desde 23/05 aguardando que o substrato seque após infiltração de terraço (evento externo, infraestrutura do imóvel do cliente). Fase correta é pendente_de_reaplicacao (reaplicação bloqueada), motivo cliente (infiltração alheia à Monofloor impede retomada). Duas ocorrências adicionais em 27/05 e 28/05 confirmam que o bloqueio ainda persiste e não foi resolvido."
+      },
+      {
+        "obra_id": "2369c899-509f-4deb-a767-03f244854492",
+        "nome": "REPULLO ASSESSORIA EM INFORMATICA LTDA",
+        "veredito_anterior": "em_reaplicacao · qualidade · \"20/05 Luana: vamos reaplicar parede serviço. 21/05 banheiro bloqueado infiltração. 28/05 Josias: piso ok, lavabo/suite abertos.\"",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "20/05 Luana: \"Parede da área de serviço que vamos reaplicar por completo\" | 21/05 Juninho: \"banheiro da suíte Master não deu pra lixa o piso pois ainda esta molhando\" | 27/05 Mayara: \"ela pediu um orçamento de reaplicação do lavabo, não me lembro que dia mandei pra vc\" | 27/05 ocorrência: \"Infiltração box — visita técnica antes de reaplicar\" | 28/05 Josias: \"[Foto] piso concluído\" (banheiro suíte)",
+        "porque": "Josias terminou algo em 28/05 (provavelmente área de serviço + suíte master), mas em 27/05 o lavabo ainda estava em negociação de orçamento — cliente pediu orçamento, visita técnica pendente antes de reaplicar. A reaplicação do lavabo não foi executada, está aguardando aprovação. Fase correta é pendente_de_reaplicacao, não em_reaplicacao."
+      },
+      {
+        "obra_id": "01c521db-b5b1-4dcc-88b8-b0e78894966f",
+        "nome": "TAIS DE ALBUQUERQUE ROCHA HOLANDA",
+        "veredito_anterior": "em_reparo / sem motivo_espera / Geysson ativo 15/05-27/05 (23 msgs, última 2d atrás)",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reparo",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "2026-05-13 Kassandra: card REPARO postado — \"REPARO Supervisão: Geysson\" (trecho cards_inicio_operacional) | 2026-05-22 Sistema (KIRA): \"Solvente madeira pode tirar tinta das portas · Alessandra alertou que solvente para madeira tirará tinta das portas ao limpar respingos. Pedro encaminhou ao técnico. Cliente pediu que técnico já limpe\" (ocorrência aberta) | 2026-05-22 Pedro | Monofloor: presente (última msg 22/05) | 2026-05-27 Geysson: 7 msgs no dia, última 14:03 (estagio=equipe_em_obra, dias_inativo=0)",
+        "porque": "Msgs batem porque: card REPARO (13/05, Geysson supervisor), Geysson com 23 msgs entre 15/05-27/05 e ainda ativo ontem (7 msgs em 27/05), ocorrência aberta de 22/05 com cliente pedindo limpeza de respingos — equipe confirmadamente no campo executando o reparo."
+      },
+      {
+        "obra_id": "7e12a05d-a837-4599-b8a7-aa84318c39ac",
+        "nome": "TRESPONTOZERO COMPRA E VENDA DE IMÓVEIS LTDA",
+        "veredito_anterior": "em_reaplicacao / qualidade — execução 06-11/05 (Samuel), LUMINA 22/05, ocorrências 19/05 e 22/05",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "2026-05-13 | Mayara | Monofloor: \"Pessoal, lembrando que aqui também temos uma parede do banheiro para reaplicar e uns reparos pontuais para fazer com stelion.\" | 2026-05-18 | Joao: \"Oi Luana sim o telegran dele deu problema de novo vou manda as foto\" | 2026-05-22 | Joao: [Foto] Dois recipientes de verniz LUMINA com indicador verde em superfície protegida com plástico e papelão em obra. | 2026-05-22 | Ocorrência formal: \"Fundo aparecendo no banheiro\" | tagKira 2026-05-28: \"Resina PU aplicada antiderrapante\"",
+        "porque": "A execução física encerrou em 13/05 (última camada + Joao fazendo vistoria); LUMINA 22/05 é verniz de acabamento final, não reaplicação em curso. Fase Painel = CLIENTE FINALIZADO + veredito do pipeline \"obra finalizada\" confirmam encerramento da aplicação. As ocorrências 19/05 (\"problema visual\") e 22/05 (\"fundo aparecendo no banheiro\") são problemas de qualidade pós-entrega sem equipe declarada no campo — perfil clássico de pendente_de_reparo, não em_reaplicacao."
+      },
+      {
+        "obra_id": "3781d6a4-085d-4c19-9168-316ffd68b864",
+        "nome": "UNKE ARQUITETURA E ENGENHARIA LTDA (Alameda Casa Branca)",
+        "veredito_anterior": "em_reaplicacao · motivo: qualidade · resumo: Card REAPLICAÇÃO 04/05. 28/05 Marcelo: Teron + 1ª Stelion, pararam (cor divergente). 27/05 Reinaldo: aguardando. Ativo 29/05.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "28/05 Marcelo Boer: \"aplicamos o Teron e a primeira de-mão de Stelion em toda a área. Após isso, o Engenheiro e a Arquiteta nos informou pra pararmos a aplicação da segunda de-mão porque a cor estava diferente da contratada.\" | 27/05 Reinaldo (dia 9): \"Aguardando orientações de como proceder. Restaram apenas 3 Kits de Stelion pigmentado e não será possível finalizar.\" | 27/05 KIRA tag: \"Cor Lilit indefinida + Stelion com indústria + NFs pendentes 12 dias\" | 29/05 Reinaldo ultima_msg 12:24 / Marcelo 12:18 (equipe ainda no campo)",
+        "porque": "Os dados mostram equipe parada aguardando definição de cor — não reaplicando ativamente. Aplicaram Teron + 1ª mão Stelion em 28/05 e foram mandados parar pela arquiteta/engenheiro por cor divergente. Em 27/05 Reinaldo já registrava \"aguardando orientações\". A ocorrência formal de 27/05 confirma Stelion com indústria e NFs pendentes — resolução ainda em aberto. Equipe no campo em 29/05 mas sem aplicação em curso: isso é pendente_de_reaplicacao, não em_reaplicacao."
+      }
+    ],
+    "total_pedidos": 26,
+    "total_validas": 24
+  }
+}

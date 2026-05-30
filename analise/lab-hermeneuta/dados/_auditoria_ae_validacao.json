@@ -1,0 +1,173 @@
+{
+  "summary": "Validar veredito das 16 obras divergentes lendo ULTIMAS msgs do Telegram",
+  "agentCount": 16,
+  "logs": [
+    "16/16 validacoes coletadas"
+  ],
+  "result": {
+    "validacoes": [
+      {
+        "obra_id": "a680acb2-1808-43b8-9d91-1c2226cb1122",
+        "nome": "ALEXANDRE EDDE DINIZ DE OLIVEIRA",
+        "veredito_anterior": "pendente_de_reaplicacao | equipe | Card REAPLICAÇÃO postado 04/05 (início 18/12, aplicador a definir). Execução original ago/2025.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "equipe",
+        "ultimas_msgs": "2026-02-21 [Rodrigo]: msg de planejamento inicial (1 msg). | 2026-05-04 [Mayara | Monofloor]: \"REAPLICACAO APLICADOR: a definir SUPERVISAO: a definir INICIO: 18/12\" (card formal postado). | 2026-05-05 [Luana - Monofloor]: msg de retomada de atividade. Total: 3 msgs no grupo.",
+        "porque": "Msgs batem porque o unico card substantivo (05/04, Mayara) e literalmente o lancamento do card REAPLICACAO com aplicador a definir e inicio 18/12 - confirmando fase pendente_de_reaplicacao e motivo equipe. Nenhum marco de execucao registrado, metragem_pendente = 40.07 (tudo pendente), ultimo sinal em 05/05 (24 dias de silencio). Nao ha equipe em campo."
+      },
+      {
+        "obra_id": "c7962dae-562d-4280-936a-2aae3226dc82",
+        "nome": "AMILCAR ARMANDO OLIVEIRA DA SILVA",
+        "veredito_anterior": "pendente_de_reaplicacao · motivo: outro · \"Label REAPLICAÇÃO no Painel. Escopo V3 todos ambientes Reaplicação. Card 18/05 escalou Rodolfotilico, mas Luana postou OBRA POSTERGADA 19/05.\"",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "[616] 2026-05-18 20:02 · Mayara | Monofloor: \"Cliente esqueceu do agendamento e continuou usando os banheiros, vamos postergar para próxima segunda.\" | [620] 2026-05-18 21:28 · Taquinho: \"Mas iremos iniciar amanhã ou não?\" | [621] 2026-05-19 12:36 · Luana - Monofloor: \"OBRA POSTERGADA\" | [623] 2026-05-19 12:37 · Luana - Monofloor: \"🚨Arquiteta Teresa solicitou que façamos primeiro os reparos do banheiro Grape e após a cura retonarmos para fazer a suite.\"",
+        "porque": "Fase pendente_de_reaplicacao confirmada: reaplicação agendada para 19/05 não ocorreu pois o cliente esqueceu do agendamento e continuou usando os banheiros — postergada para \"próxima segunda\" (26/05), sem msg de execução após isso. O motivo correto é \"cliente\" (não \"outro\"): o próprio campo 616 da Mayara nomeia explicitamente que o cliente frustrou o agendamento."
+      },
+      {
+        "obra_id": "6765e2aa-787f-43f6-9594-de2d56e6caae",
+        "nome": "ANA CAROLINA RAWET FAGE",
+        "veredito_anterior": "pendente_de_reaplicacao · motivo cliente · Ciclo 2 ativo há 348d. Foto canteiro 27/05 sem produto aplicado. Card 28/05 remarca 01/06.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "[27/05 · Francisco] Foto canteiro com materiais de proteção e revestimento, piso preparado, duas pessoas presentes. [27/05 · Ragno] \"Diário tá com nome errado. Cosme Eduardo Soares Ragno líder.\" [22/05 · Sistema OC] Obra postergada cliente tem mudança em julho. [26/05 · Sistema OC] Falecimento engenheira Patricia — Pedro PG2 comunicou. Nova residente Bianca adicionada ao grupo. [18/05 · Mayara Monofloor] Visita de entrada reagendada para hoje 18/05 às 11:30hr com o Br.",
+        "porque": "Equipe estava literalmente no campo em 27/05: Francisco registrou foto de canteiro montado com materiais, Ragno se identificou como líder ativo. Pipeline confirma estagio em_execucao, última atividade 27/05, 0 dias inativo, pico de 31 msgs no dia. O veredito anterior leu a foto como ausência de produto aplicado (ainda pendente), mas o conjunto — visita de entrada em 18/05, equipe com líder e materiais em 27/05 — caracteriza reaplicação em andamento, não pendência aguardando entrada."
+      },
+      {
+        "obra_id": "b4e7296c-1393-4eaf-aef8-3097b0e0c46b",
+        "nome": "CAMILA MAGALHAES SILVEIRA",
+        "veredito_anterior": "fase: aguardando_inicio_execucao | motivo: qualidade | resumo: execução parcial fev-mar/26, Isabella alertou infiltração/umidade 22/05, 2 ocorrências críticas, card 26/05 remarca 04/06",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "aguardando_inicio_execucao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "2026-05-22 | Sistema (KIRA): \"Infiltração/vazamento detectado · Isabella: 🚨🚨Eles estão com infiltrações e umidade no contrapiso\" | 2026-05-22 | Sistema: \"Infiltração e umidade no contrapiso detectadas · Isabella alertou sobre infiltrações e umidade no contrapiso de Camila Magalhães\" | 2026-05-27 | KIRA tag atualizada: \"Umidade contrapiso verificando\" | Painel updatedAt: 2026-05-27 | data_exec_prevista: 2026-06-01",
+        "porque": "Msgs batem porque o painel mostra status aguardando_execucao com data prevista 01/06 (não 04/06 como mencionado, diferença menor), as ocorrências críticas de infiltração/umidade de 22/05 confirmam bloqueio por qualidade, e a tag KIRA atualizada em 27/05 (\"Umidade contrapiso verificando\") confirma que o problema segue em aberto sem liberação para execução. O motivo qualidade é correto — a obra está parada aguardando resolução do problema de base antes da aplicação do piso."
+      },
+      {
+        "obra_id": "ea04728a-4ce4-4189-8936-236e6c743339",
+        "nome": "CINTIA TIEMI KITA",
+        "veredito_anterior": "fase_real: aguardando_inicio_execucao | motivo: outro | resumo: Telegram 3 msgs (ultima 02/01, silencio 147d). Ocorrencia critica 28/05: infiltracao/vazamento.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "finalizada",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "04-29 | Sistema (ocorrencia): \"Lilit aplicado em banheiro nao previsto - Equipe aplicou Lilit no banheiro social, o que nao estava no escopo combinado. Arquiteta Teresa notou durante visita.\"\n04-30 | Sistema (ocorrencia): \"Obra finalizada sem relatorio formal - Obra finalizada ontem confirmado por Ramalho, mas sem relatorio formal emitido. Vinicius esta sem celular.\"\n05-05 | Sistema (ocorrencia): \"Defeito no revestimento reportado pelo cliente - Detectado por KIRA via WhatsApp grupo.\"\n05-28 | Sistema (friccao): \"Infiltracao/vazamento detectado\" [severidade critica, tipo incidente_obra]",
+        "porque": "Os dados mostram obra executada e finalizada em 29/04 (\"obra finalizada ontem confirmado por Ramalho\"), com fase no Painel \"OBRA CONCLUIDA\" e 7 ocorrencias formais de execucao entre mar-mai/2026. O veredito anterior classificou como aguardando_inicio_execucao baseado apenas no silencio do Telegram (3 msgs, ultima 02/01), ignorando que a obra correu inteiramente via WhatsApp — o pipeline capturou tudo via KIRA. A infiltracao de 28/05 e evento pos-entrega, nao altera a fase de conclusao."
+      },
+      {
+        "obra_id": "d927f21c-e545-4fb0-ba29-0b158eaa3d3d",
+        "nome": "FLÁVIA AUGUSTA DE ASSIS ROCHA (INTEGRALUX)",
+        "veredito_anterior": "fase_real: finalizada | motivo: vazio | resumo: \"Obra-mãe finalizada 23/02/26 (Kira). Card REAPLICAÇÃO 27/01 já concluído. Card d927f21c criado 14/03 é fantasma.\"",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "finalizada",
+        "motivo_corrigido": "",
+        "ultimas_msgs": "2026-01-23 | Vanessa Monofloor: \"esta parte já estava finalizada, e também já fizemos uma reaplicação que também já estava finalizada.\"\n2026-01-26 | Caroline - Atendimento: \"Recebemos as imagens e informações referentes à nossa visita de qualidade realizada no projeto de vocês.\"\n2026-02-23 | Juliana|: \"obra finalizada Kira\"\n2026-02-28 | Juliana|: \"obra finalizada Kira\" (repetição/confirmação)",
+        "porque": "Msgs batem porque a última atividade real do Telegram é 2026-02-28, com dois registros de \"obra finalizada Kira\" em 23/02 e 28/02. O card d927f21c foi criado em 14/03/2026 — 14 dias após a última mensagem — sem corpus Telegram próprio (discordancias mostra \"sem-corpus\"). A obra-mãe (6c90e793) está em status \"concluido\" / fase \"CLIENTE FINALIZADO\". Não há qualquer sinal de atividade nova após fev/2026."
+      },
+      {
+        "obra_id": "0d0c35bd-3b00-4de2-b898-4dfc61e6fdae",
+        "nome": "LEONARDO KAWANO",
+        "veredito_anterior": "pendente_de_reaplicacao / cliente / \"22/05 Juninho aplicou verniz só no banheiro. 23/05 Mayara: cliente pediu 08/06 ou 15/06. Sidrony viu marca de rolo. Equipe fora desde.\"",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "22/05 Juninho: \"Juninho e Igor ja estamos na obra\" / \"Diario da obra 22/05 - Foi lixado e aplicado verniz no piso e na pia do banheiro\" | 23/05 Mayara Monofloor: \"Estou alinhando com a cliente quando podemos retornar para o verniz das demais areas, ela solicitou por dia 8/6 ou 15/06\" | 23/05 Sidrony: \"Essa marca si foi da primeira demao...o ideal e pega uma estopa com pouquinho de tiner e remover essa linha da marca do rolo...e repassa o verniz\"",
+        "porque": "Msgs batem porque: 22/05 confirmado verniz apenas no banheiro por Juninho, 23/05 Mayara registra explicitamente que a cliente pediu 08/06 ou 15/06 para retorno nas demais areas, e Sidrony orienta reparo de marca de rolo - equipe fora desde entao, sem msg de retorno. Pendencia esta no cliente conforme reportado."
+      },
+      {
+        "obra_id": "93d0efc3-f952-434e-9e6b-70793842d504",
+        "nome": "LUIS FERNANDO BECHTOLD",
+        "veredito_anterior": "fase: pendente_de_reaplicacao | motivo: qualidade | resumo: 28/05 Caroline confirmou reaplicação do piso completa. Fissuras progressivas. Cliente ameaça garantia. Equipe não no campo.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "[2026-05-14] ocorrencia critica: \"Cliente ameaça garantia formal rachaduras recorrentes\"\n[2026-05-15] falha_comunicacao: \"Plano reaplicação atrasado 14+ dias — cliente sem resposta\"\n[2026-05-28] Caroline Monofloor: \"LUIS FERNANDO DE LIMA: Boa tarde pessoal! Cami, recebemos o retorno da nossa equipe técnica após a avaliação da visita realizada no projeto de vocês. Com rel[ação ao banheiro...]\"\n[2026-03-04] ultimo marco_execucao de campo: Wesley/Juliana — verificar limpeza antes do verniz",
+        "porque": "Msgs batem porque o último campo real foi 2026-03-04 (Wesley/Juliana) e a msg de 2026-05-28 é de Caroline (atendimento) comunicando retorno da equipe técnica ao cliente — não equipe aplicando. Mais de 80 dias sem atividade de campo, fissuras recorrentes documentadas, cliente ameaçando garantia em 05/14, plano de reaplicação pendente sem resposta em 05/15. Configura pendente_de_reaplicacao por qualidade sem ambiguidade."
+      },
+      {
+        "obra_id": "f6dc0a36-35fc-4128-8860-eeb39337ab56",
+        "nome": "MARCIA MALUF AZEM",
+        "veredito_anterior": "pendente_de_reaplicacao / qualidade — Card REAPLICAÇÃO ÁREA DE SERVIÇO postado 09/05 (Francisco, início 04/03). Trincas fev e mai/26. Silêncio 20d.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "2026-05-05 | Mayara | Monofloor: \"[Foto] Novamente relatando fissuras na área de serviço. Descrição: Teto em cura com fissura visível abaixo do difusor de ar...\" // 2026-05-09 | Sistema (card): \"REAPLICAÇÃO AREA DE SERVIÇO — SUPERVISOR: Francisco — APLICADOR: [vazio] — INÍCIO: 04/03/\" // 2026-02-13 | Maria Clara Monofloor: \"Surgiu uma nova trinca na área de serviço\" // 2026-02-24 | Maria: \"Nathan, nós já deixamos avisados para ela que esse problema das trincas não é nosso, que voltaria a acontecer por contas das cerâmicas\"",
+        "porque": "Msgs batem porque: card REAPLICAÇÃO AREA DE SERVIÇO foi postado em 09/05 com aplicador em branco e nenhuma msg posterior — equipe não entrou em campo. Silêncio de 20 dias (última msg 09/05, hoje 29/05) confirma que a reaplicação está pendente, não em execução."
+      },
+      {
+        "obra_id": "b011df53-8d64-44ec-b131-ed35fa4c2532",
+        "nome": "MARIA APARECIDA ALVES DE CERQUEIRA LUZ",
+        "veredito_anterior": "fase: pendente_de_reparo | motivo: material | resumo: Execução 05-08/05. Ocorrência 11/05: sem Stelion. Card 20/05: REPAROS PONTUAIS Sidney 25/05 + Sidrony 01/06. Silêncio desde.",
+        "conclusao": "precisa_correcao",
+        "fase_real_corrigida": "pendente_de_reparo",
+        "motivo_corrigido": "equipe",
+        "ultimas_msgs": "20/05 | Sistema (Kira): \"Stelion pendente há 8 dias - reparo adiado 01/06. Material Stelion pendente de envio há 8 dias. Reparo agendado inicialmente para amanhã, depois remarcado para 01/06.\" | 20/05 | Card postado: \"REPAROS PONTUAIS SUPERVISÃO: Francisco APLICADOR: Sidney INÍCIO: 25/05\" | 20/05 | Card postado: \"REPAROS PONTUAIS SUPERVISÃO: Francisco APLICADOR: Sidrony INÍCIO: 01/06\" | 20/05 | Sidrony entra no grupo (4 msgs, 20:35-20:50). Última msg do grupo: 20/05. Silêncio desde.",
+        "porque": "A fase pendente_de_reparo se confirma, mas o motivo precisa_correcao: em 11/05 a trava era material (Stelion esgotado), mas em 20/05 os cards já mostram reparo agendado com aplicadores definidos (Sidney 25/05, Sidrony 01/06) — o gargalo migrou para equipe/agendamento, não mais material. Como hoje é 29/05 e Sidney estava marcado para 25/05 sem nenhuma mensagem de confirmação pós-20/05, a obra pode ter entrado silenciosamente em reparo, mas sem evidência de execução no grupo o status correto permanece pendente_de_reparo com motivo equipe."
+      },
+      {
+        "obra_id": "77d6dbcf-893b-41f6-b2bd-8b43b58e03b0",
+        "nome": "MARINA PEPE RIBEIRO BARBOSA",
+        "veredito_anterior": "pendente_de_reaplicacao · motivo: cliente · resumo: Card REAPLICAÇÃO 14/01/26 (início 23/03). Último sinal 13/03 (77d silêncio). Ocorrência 11/05: síndica bloqueou data.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "[2026-01-14] Maria Clara Monofloor: \"REAPLICAÇÃO / INÍCIO: 23/03/2026 / CLIENTE: MARINA PEPE RIBEIRO BARBOSA\" | [2026-02-24] Maria: \"Visita de qualidade agendada com o B® dia 03/03 as 10:30hrs...\" | [2026-03-03] B®: [6 fotos - VT realizada] | [2026-03-13] Isabella: \"Luana|Mayara|Pedro\" | [2026-03-13] Luana, Mayara, Pedro | Monofloor: \"Relatório enviado no grupo de alinhamento.\" [ÚLTIMA MSG]",
+        "porque": "Msgs batem porque: card REAPLICAÇÃO com início 23/03/26 foi criado em 14/01/26, VT de qualidade (Braiam) visitou em 03/03 e registrou fotos, relatório enviado ao cliente em 13/03, e depois silêncio total. A ocorrência aberta em 11/05/26 confirma que a reaplicação programada para 23/03 não ocorreu por bloqueio da síndica — exatamente o que o veredito anterior apontou."
+      },
+      {
+        "obra_id": "bbedc8ae-7665-47ba-83ca-49e6ca0431d3",
+        "nome": "NATHALIA ROBERTA MACARIO",
+        "veredito_anterior": "pre_obra · cliente · Zero execução, todas 14 etapas pendentes. Card 26/05 reagendou 22/07 com aplicador a definir. 27/04 cliente enviou novos projetos.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pre_obra",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "[2026-04-27 17:12] Thaísa | Monofloor: \"♦️♦️Cliente acabou de enviar novos projetos para atualizações de escopo | Fazendo verificações♦️♦️\" | [2026-05-20 13:55] Thaísa | Monofloor: \"Ok, ela ficou de me confirmar o escopo até hoje.\" | [2026-05-25 13:09] Thaísa | Monofloor: \"♦️Não tive retorno da cliente♦️\" | [2026-05-26 18:18] Mayara | Monofloor: card reagendando INÍCIO: 22/07/2026, APLICADOR: a definir | [2026-05-28 10:34] Thaísa | Monofloor: \"♦️Até o momento sem retorno da cliente♦️\"",
+        "porque": "Msgs batem porque: zero execução confirmada (14 etapas todas pendentes, aplicador \"a definir\" em todos os cards), card de 26/05 reagendou para 22/07 e msgs de 25/05 e 28/05 registram ausência de retorno da cliente sobre confirmação de escopo — bloqueio 100% no lado da cliente."
+      },
+      {
+        "obra_id": "c9992b92-87d0-4726-931d-4fc90f93b40a",
+        "nome": "RICARDO ALVES MARUJO",
+        "veredito_anterior": "pendente_de_reaplicacao / cliente — card REAPLICACAO TOTAL PISO postado 24/04, inicio 08/07/2026, equipe nao no campo",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "2026-04-24 | card operacional: \"REAPLICACAO TOTAL PISO INICIO: 08/07/2026 CLIENTE: RICARDO\" | 2026-05-04 | card repostado: \"REAPLICACAO TOTAL PISO INICIO: 08/07/2026\" | 2026-01-22 | Caroline Atendim: \"MARUJO: Recebemos as imagens referentes a ultima visita para os testes... afundamentos pontuais\" | 2026-02-28 | Vanessa Monofloor: \"foi resolvido o vazamento?\"",
+        "porque": "Msgs batem porque ha dois cards REAPLICACAO TOTAL PISO (24/04 e 04/05) com inicio programado 08/07/2026, silencio de 25 dias no grupo, marcos de equipe em campo so existem para a execucao original (out/2025), e sinais de friccao apontam laudo de VT enviado ao cliente sobre afundamentos (jan/fev-2026) antes do card de reaplicacao — o cliente era parte ativa da definicao do escopo, motivo cliente justificado."
+      },
+      {
+        "obra_id": "08b0d9bd-50d3-414e-a62a-e852259c4997",
+        "nome": "SR2 CASAS CONSTRUTORA LTDA - GOLF RESORT",
+        "veredito_anterior": "pre_obra | cliente | Zero Telegram, zero marcos. Kira 26/05: cliente pediu +2 semanas (instalando vidros), nova previsão 15/06.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pre_obra",
+        "motivo_corrigido": "cliente",
+        "ultimas_msgs": "Kira situacao_atual (2026-05-26): \"Obra nova - início previsto 01/06/2026 adiado — cliente pediu mais 2 semanas (instalando vidros). Nova previsão ~15/06.\" | tag_kira (2026-05-26): \"Encaixe agendado 24/06\" | WhatsApp (14/04, Thaísa): \"aprovação do aditivo é necessária até 16/04 para manter data de 11/05\" | WhatsApp (13/04): \"início postergado novamente para 11/05 por falta de aprovação do aditivo\"",
+        "porque": "Msgs batem porque: zero Telegram, obra em pré-obra aguardando cliente (3 adiamentos consecutivos por decisões do lado do cliente — esquadrias, aditivo, vidros). A única divergência é que o encaixe real ficou em 24/06 (não 15/06), mas isso é refinamento de data, não mudança de fase ou motivo. Fase pre_obra e motivo cliente permanecem corretos."
+      },
+      {
+        "obra_id": "6213aa79-f0cd-48e1-ae71-57bbb65b65ae",
+        "nome": "TAISA MENDONCA DE OLIVEIRA",
+        "veredito_anterior": "fase_real: pendente_de_reaplicacao | motivo: equipe | resumo: Card REAPLICAÇÃO postado 04/05 e reagendado 28/05 (APLICADOR a definir, início 08/06). 3 reprovações VT.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "pendente_de_reaplicacao",
+        "motivo_corrigido": "equipe",
+        "ultimas_msgs": "28/02/2026 | Caroline (Atendimento): \"Recebemos as imagens e informacoes da ultima visita de qualidade... reaplicacao da...\" [3a reprovacao VT, reaplicacao completa solicitada] | 20/05/2026 | Kira tag: \"Cronograma remocao ilhas aguardando\" | 20/05/2026 | WhatsApp summary: \"parado aguardando confirmacao de data da cliente (16/06)\" | 04/05/2026 | Card REAPLICACAO: \"APLICADOR: a definir SUPERVISAO: a definir INICIO: [16/06]\" | 28/05/2026 | Card atualizado: \"APLICADOR: a definir INICIO: [08/06]\"",
+        "porque": "Msgs batem porque o card REAPLICACAO esta ativo (postado 04/05, atualizado 28/05 com inicio 08/06), mas aplicador permanece indefinido em ambas as versoes — nenhuma equipe confirmada em campo desde fev/2026. TagKira e WhatsApp summary de 20/05 reforçam que a obra esta parada aguardando alinhamento com cliente e definicao de equipe, exatamente o perfil de pendente_de_reaplicacao por motivo equipe."
+      },
+      {
+        "obra_id": "9e05e9a7-e3a5-4506-991d-9ccbfcc2cd3f",
+        "nome": "UNKÊ ARQUITETURA E ENGENHARIA LTDA",
+        "veredito_anterior": "em_reaplicacao / qualidade — Card REAPLICAÇÃO 04/05. Equipe no campo desde 15/05. TERON+LILIT+STELION aplicados 19-25/05. Atividade hoje 29/05.",
+        "conclusao": "confirmado",
+        "fase_real_corrigida": "em_reaplicacao",
+        "motivo_corrigido": "qualidade",
+        "ultimas_msgs": "[2026-05-28 15:05] Marcelo Boer: \"aplicamos o Teron e a primeira de-mão de Stelion em toda a área. Após isso, o Engenheiro e a Arquiteta nos informou pra pararmos a aplicação da segunda de-mão porque a cor estava diferente da contratada.\"\n[2026-05-28 20:44] F.Silva: \"Relatório de hoje: Desbastar (Piso maior) - preenchimento (mancha) - Aplicação de Lilit em todas as paredes dos banheiros - limpeza e preparação da obra para aplicação geral de stelion.\"\n[2026-05-29 12:18] Marcelo Boer: \"Chegada\"\n[2026-05-29 12:24] Reinaldo: \"Chegada\"\n[2026-05-29 12:56] Reinaldo: \"Chegaram 6 kit stelion e 3 lilit\"",
+        "porque": "Msgs batem porque equipe (F.Silva, Marcelo Boer, Reinaldo) está ativa no campo em 28-29/05 com boletins diários de aplicação, e o motivo é inequivocamente qualidade — divergência de cor do Stelion em relação à amostra contratada, registrada múltiplas vezes por F.Silva (21/05, 25/05, 27/05) e confirmada por Marcelo Boer em 28/05."
+      }
+    ],
+    "total_pedidos": 16,
+    "total_validas": 16
+  }
+}

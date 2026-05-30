@@ -1,0 +1,240 @@
+{
+  "summary": "Auditar 21 obras filtro reparo · 1 sub-agente por obra",
+  "agentCount": 21,
+  "logs": [
+    "21/21 vereditos coletados"
+  ],
+  "result": {
+    "vereditos": [
+      {
+        "obra_id": "9eea6f22-56ac-439b-acf6-28b0a20c4aa7",
+        "nome": "MARIANA LOIACONO BUENO",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "details-snapshot (2026-04-10): status=finalizado. painel-snapshot (2026-05-15): status=reparo, faseAtual=OECT. Obra migrou finalizado→reparo em ~35 dias. 0 msgs Telegram, sem grupo vinculado. KIRA: situacaoAtual=null, tagKira=null. Ultima atualizacao painel: 14 dias atras. Nenhum marco ou fase de execucao capturado. Sem card REAPLICACAO.",
+        "coerencia_com_painel": "coerente",
+        "nota_curta": "Obra finalizada em abril, reaberta como reparo em 15/mai. Zero rastreamento (sem Telegram, sem KIRA). Painel bate com reparo mas sem evidencia de equipe atuando — aguardando agendamento do retoque."
+      },
+      {
+        "obra_id": "c5d7a12e-30d0-464d-97f8-74da1aaeae03",
+        "nome": "ANACA ESTUDIO DO MOVIMENTO DE TERAPIAS CORPORAIS LTDA",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": "2025-12-18",
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "2025-12-18 Maria Clara: \"Temos Reaplicação do piso que estava marcado há meses já.\" — card REAPLICAÇÃO PISO VESTIARIO FEMININO ativo. 2026-01-02 Braiam: \"Última camada de lilit aplicada.\" — execução encerrada. 2026-01-06 último msg operacional (Braiam). 2026-05-04 Mayara (atendimento): msg isolada, sem execução. 117d hibernação sem VT pós-reaplicação.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Reaplicação do vestiário feminino foi executada (dez/25–jan/26, 6d), equipe saiu em jan/26. Desde então 117d de silêncio. Status \"reparo\" + fase \"CLIENTE FINALIZADO\" é contradição: cliente aparentemente assinou comercialmente mas não há VT/aprovação de qualidade pós-reaplicação registrada. Obra ficou orphan — Wesley (consultor) não fechou o ciclo. Pendência é de VT e formalização, não de nova execução."
+      },
+      {
+        "obra_id": "5ebc1fc4-4c57-4075-96a7-53cf46970b61",
+        "nome": "ANDRE SCHECHTMAN",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "outro",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "details-snapshot 2026-04-17: status=reparo, label OBRA CONCLUIDA, tipo_de_obra_2=POS VENDAS, fase CLIENTE FINALIZADO, data_exec_prevista=2026-07-15. KIRA tag 2026-05-21: \"Francisco em obra clientes desde 11h\" (visita/VT, sem continuidade registrada). Painel.updatedAt=2026-04-17 (42d stale). sem Telegram, sem WhatsApp, situacaoAtual=null, metragem=null.",
+        "coerencia_com_painel": "coerente",
+        "nota_curta": "Reparo pós-entrega em pipe POS VENDAS. Execução agendada para 2026-07-15 (47d a partir de hoje). KIRA de 2026-05-21 indica visita de Francisco ao apartamento (provável VT/avaliação), sem evidência de equipe em campo após essa data. Zero Telegram, zero WhatsApp — visibilidade operacional nula. Painel frozen desde 2026-04-17. Fase real: aguardando data de reparo."
+      },
+      {
+        "obra_id": "cecc85af-d8bc-4874-969a-e4866c98611d",
+        "nome": "ANTONIO CARLOS CANTO PORTO NETO",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": "2026-02-13",
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "13/04 Wesley: \"Iremos realizar a reaplicação da área que já atuamos... troca do material do Leona para o Stelion.\" | 15/04 Henrique Bison cobra cronograma, obra pausada sem resposta. | 04-29 Escopo V1 e V2 anexados (revisão final). | 05-12 última msg Telegram (17d silêncio). | 05-28 ocorrência: \"Data 06/07 contestada proprietário muda 15/07\".",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Escopo de reaplicação definido (LEONA→STELION, OS 1559), mas equipe não voltou ao campo. Cliente ajustou data para 15/07. Painel marca \"OBRA PAUSADA/reparo\" — fase real é pendente_de_reaplicacao aguardando janela do proprietário."
+      },
+      {
+        "obra_id": "7acbd385-8ff7-4045-91f8-dc4a24404213",
+        "nome": "CARIOBA MEIRELES PARTICIPACOES LTDA",
+        "fase_real": "finalizada",
+        "motivo_espera": "",
+        "data_inicio_execucao": "2025-10-07",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "OS 1360 enviada em 2025-10-07 (LILIT Ash + STELION base). Finalizada 2025-10-27 com Lumina: \"obra ficou esteticamente bonita e casa foi vendida\". aprova_o_3=APROVADO, termo_entrega=ENVIADO, label OBRA CONCLUIDA, andamento=100%. Pipefy parou em 2026-01-23. 0 msgs Telegram, 65d inativo.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Obra executada e encerrada operacionalmente em out/2025. Reparo (rachaduras) foi resolvido com camada de Lumina como workaround — aceito pelo cliente (casa vendida, sem tempo para correcoes). Card preso em status reparo administrativamente; deveria estar em finalizado/concluido. Sem equipe em campo, sem Telegram, sem KIRA — nada indica atividade ativa."
+      },
+      {
+        "obra_id": "0b4d6460-270a-47fd-8594-065dd852f6b3",
+        "nome": "CAROLINA RODRIGUES GALINDO",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "Label \"REAPLICACAO\" presente no card (Painel, 2026-04-24). KIRA situacaoAtual: \"Trinca aparentemente por umidade ou retracao. Marcar visita do Nathan\" (2026-05-29). Obra original finalizada 02/10/2025 por Joao Carlos (todas etapas marcadas). 0 msgs Telegram. Painel updatedAt 2026-04-24 — sem atividade de campo ha 35+ dias.",
+        "coerencia_com_painel": "divergente"
+      },
+      {
+        "obra_id": "d73999fc-43a2-4c9d-9e54-ceb926c04fc0",
+        "nome": "GINACERCHI CREMA",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": "2026-06-08",
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "Card bot 2026-05-23 (Mayara): \"REAPLICAÇÃO APLICADOR: a definir SUPERVISÃO: a definir INÍCIO: 08/06\". Kira: \"Reaplicação adiada para 08/06\". Braiam VT 2026-04-27: fotos piso desplacado+rachaduras. Luana 2026-02-06: \"aguardar retirada da nossa aplicação — infiltração no contrapiso\". Escopo aprovado 2026-04-28: LILIT Mirage paredes.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Painel marca reparo+CLIENTE FINALIZADO mas há card REAPLICAÇÃO (escopo completo, não retoque) emitido em 23/05 com início 08/06 e aplicador ainda indefinido. Causa-raiz: infiltração no contrapiso forçou retirada da aplicação. Braiam fez VT em 27/04 documentando desplacamento. Equipe fora de campo desde fev/26 — pendente, não em execução."
+      },
+      {
+        "obra_id": "501b5b94-7185-4c88-a990-da23a069b7d5",
+        "nome": "GLAUCIA ALVES",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "Painel: reparo/ENTRADA, criado 2026-03-14, atualizado 2026-05-27. Escopo V2 criado 2026-05-25 com 15,11m2 pendente (Banho Suite STELION Kalahari inconclusos). Data exec prevista 2026-06-10 (agendamento recente). Zero msgs Telegram, KIRA nulo, zero marcos - sem equipe no campo confirmada. Equipe nomeada: Julio Miranda (lider) + 3 aplicadores.",
+        "coerencia_com_painel": "coerente",
+        "nota_curta": "Obra em reparo de 15m2 (Banho Suite, STELION Kalahari) com escopo aprovado e data agendada para 10/06. Nenhuma execucao fisica detectada - zero Telegram, zero marcos, KIRA nulo. Painel movimentado administrativamente em 27/05 (atualiz.) e 25/05 (Escopo V2). Aguardando entrada da equipe em campo. Risco critico por 74 dias inativa sem confirmacao de inicio."
+      },
+      {
+        "obra_id": "192ee017-933d-49ae-970c-89d15981e18b",
+        "nome": "GUILHERME WENTZ",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": "2025-11-12",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "2026-04-29 Wesley: \"aguardando visita no local com o Rodrigo para alinhar os próximos passos.\" | 2026-04-07 Wesley: \"Caroline temos retorno sobre o relatório desta visita?\" | 2026-02-12 Operações: \"Caroline temos retorno referente a este relatório.\" | tagKira: \"Pós-venda pendências abertas\" (29/04). Zero msgs de aplicador em toda jornada. 30 dias sem atividade.",
+        "coerencia_com_painel": "coerente",
+        "nota_curta": "Obra faseada: 118,84 m2 concluidos (BWC+Lavabo+Salao pav superior), 129,74 m2 pendentes (Salao+BWC contrapiso). Entrou em reparo mas sem equipe no campo — toda atividade Telegram é de coordenação/operações cobrando relatório de VT. Última msg registra espera por visita de alinhamento com responsável (Rodrigo). Painel \"OBRA PAUSADA\" coerente com pendente_de_reparo."
+      },
+      {
+        "obra_id": "e9f43227-bbad-41e5-947f-57c192c83f0f",
+        "nome": "JOSE ANTUNES SOBRINHO",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": "2026-03-16",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "13/03 (KIRA): \"Inicio 16/03 as 8h. Equipe: Odair, Ronaldo, Kauan.\" | 27/03 (WhatsApp/Roberto): \"equipe finalizando; materiais aguardando descarte.\" | 07/04 (KIRA oc. aberta): \"Defeito no revestimento reportado pelo cliente.\" | 09/04 (KIRA oc. aberta): \"Cliente reportou rachaduras aparecendo. Investigacao pendente.\" | tagKira 20/05: \"Pos-cronograma sem atividade recente.\" 45 dias sem atividade.",
+        "coerencia_com_painel": "divergente"
+      },
+      {
+        "obra_id": "e306a80c-d465-46e1-8530-54777ef90614",
+        "nome": "LESLE FATIMA MENOTTI TRINTIM",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": "2025-11-04",
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "2026-01-27 Caroline: \"precisamos que a equipe realize ajustes e reaplicação dos rodapés\" (escopo de reaplicação definido). 2026-02-05 cliente (áudio): \"todos vocês precisam refazer inteiro esse piso, está manchando, roda-pés horrorosos\". 2026-04-23 Mayara: \"iremos reaplicar as áreas previstas no relatório e cera. Data [prevista 2026-07-13]\". Última msg de aplicador: 2025-12-13 (Juninho). Nenhuma equipe no campo há 167+ dias.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Painel marca \"CLIENTE FINALIZADO\" mas cliente rejeitou o piso em fev/26 pedindo refazer tudo. Escopo de reaplicação confirmado em abr/26, data agendada para jul/26. Nenhum material de reaplicação enviado ainda. Fase real é pendente_de_reaplicacao, não reparo pontual."
+      },
+      {
+        "obra_id": "a3ed951f-616c-449a-b3ca-502615d4ba19",
+        "nome": "MARCELO ANDRE STEUER",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "equipe",
+        "data_inicio_execucao": "2026-06-08",
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "05/05 Juliana: \"vejam os escopos de reaplicação que o Rodrigo menciona no vídeo\" | 05/05 Thaísa: \"seria reaplicação total das áreas ou reparo?\" | Card operacional: \"REAPLICAÇÃO APLICADOR: A definir. Supervisão: Francisco Raylton INÍCIO: 01/10/2025\" | 05/14 Escopo V6 aprovado, concluido:false | 05/18 Caroline: indústria ajustando cor Sasha — silêncio desde então",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Painel marca reparo+CLIENTE FINALIZADO mas há card REAPLICAÇÃO explícito com escopo V6 aprovado em 14/05, aplicador ainda \"a definir\" e exec prevista 08/06. Nenhum aplicador no campo. O Telegram de 05/05-05/18 é todo coordenação interna discutindo escopo e cor Sasha — não execução. Fase real: pendente_de_reaplicacao aguardando definição de equipe."
+      },
+      {
+        "obra_id": "d51326f8-e34e-45dd-a355-669d10df3182",
+        "nome": "MAURICIO BATEMAN PELA",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "22/04 Mayara: \"fazer uma pequena abertura p/ engenheiro avaliar se fissura está no contrapiso\". 07/05 Clayton (vídeo): \"tem a trinca mesmo, saindo fácil essa parte\". 07/05 Francisco: \"deixar tudo limpinho, tirar o que a gente ocasionou\". 19/05 KIRA: fissura reportada pelo cliente. 20/05 tag KIRA: \"Teste gesso fissura aguarda resultado\". Última atividade: 07/05. Sem equipe no campo desde então.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Trinca no contrapiso detectada em 22/04. Equipe abriu fissura em 06-07/05 para inspeção. Desde então parada aguardando laudo de engenheiro (tag KIRA 20/05: \"aguarda resultado\"). Painel mostra fase ENTRADA sugerindo atividade em campo — não condiz. Nenhum aplicador no campo, zero materiais enviados, sem OS industria. Sem card REAPLICAÇÃO. Problema estrutural de contrapiso, não falha de acabamento pontual — escopo do reparo ainda indefinido."
+      },
+      {
+        "obra_id": "1a869e86-5caa-4b5a-89cb-dbbda0d104eb",
+        "nome": "MISCI BRASIL COMERCIO DE MODA LTDA",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": "2026-03-25",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "2026-02-28 Michael: \"Finalizado aplicação segunda camada verniz piso1 e 2 andar\" (última aplicação física). 2026-03-25 Wesley: \"Temos equipe em obra Ragno?\" (verificação, sem aplicação registrada). 2026-04-30 Kira: \"Cliente extremamente insatisfeito cobrando início · Angelo contratou tapume por conta própria\". 2026-05-04 Kira: \"Sem retorno há dias múltiplas pendências\". Fase Painel \"AGEND. VT - ENTRADA\" inalterada. Última msg 2026-05-14.",
+        "coerencia_com_painel": "coerente",
+        "nota_curta": "Reparo aguardando liberação do cliente. Última aplicação em 28/02 (91d atrás). Visita VT em 02/04 mas fase Painel travada em \"AGEND. VT - ENTRADA\". Pendências críticas: floreira fora do escopo sem orçamento fechado, cliente Gabriel insatisfeito, múltiplos pré-requisitos (drywall, umidade) abertos desde mar. Equipe Ragno saiu em 26/03 sem aplicação nova. Data exec prevista 04/06 improvável sem desbloqueio imediato."
+      },
+      {
+        "obra_id": "00b858b3-428e-4318-8e37-ad7f3638cbec",
+        "nome": "MONALISA PARTICIPACOES",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": true,
+        "evidencias_resumo": "Doc 2026-04-01: \"ESCOPOREPAROS-REAPLICAO.png\" (nome explícito de reaplicação). Escopo V1 2026-04-27: status=escopo_aprovado, concluido=false. KIRA snapshot: status=aguardando_clima (área gourmet Externo). Painel: fase=AGUARDANDO LIBERACAO. 0 msgs Telegram, 0 marcos, 0 OS, metragem pendente=59.79m² (100% não executado).",
+        "coerencia_com_painel": "divergente"
+      },
+      {
+        "obra_id": "8783b584-ce9e-4632-873f-bb2697b02f4a",
+        "nome": "MONTI MARE ADMINISTRACAO DE BENS PROPRIOS LTDA ADITIVO.",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": "2025-07-29",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "2025-11-11 Luana: \"manda registro do que me falou por telefone...oque precisamos reaplicar\" (VT revelou problemas). 2025-11-09/11 Geysson 45 msgs (maestro em campo). 2025-09-07 Francisco: \"OBRA FINALIZADA\". 2026-05-20 tag_kira: \"Fotos sobras aguardando retorno Thiago\". Exec reparo prevista 2026-07-15; sem Francisco no campo desde 2026-02-28.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Obra finalizada em set/2025, VT de nov/2025 identificou pendências. Hoje aguarda resposta do cliente (Thiago) para agendar reparo — exec prevista 2026-07-15. Fase CLIENTE FINALIZADO no Painel induz leitura de conclusão, mas reparo não foi executado. Sem equipe no campo há 90d+. Labels OBRA CONCLUÍDA + ADITIVO sem card REAPLICAÇÃO."
+      },
+      {
+        "obra_id": "e5452602-a71f-42a2-96a7-dea5a4d03f08",
+        "nome": "MSC 4º Pavimento",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "outro",
+        "data_inicio_execucao": null,
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "Status migrou concluido→reparo entre 2026-04-10 e 2026-05-07 (snapshot vs manifest). Label OBRA CONCLUIDA + fase CLIENTE FINALIZADO confirmam obra entregue. Zero msgs Telegram = nenhuma evidência de equipe ativa. KIRA: tagKira=null, situacaoAtual=null. Card parado 22 dias sem mudança. tipo_de_obra_2=RESERVA CANCELADA, data_finalizacao=2001 (corrompido/legacy).",
+        "coerencia_com_painel": "divergente"
+      },
+      {
+        "obra_id": "a869c12c-4f73-4602-89de-2fe639e43b1d",
+        "nome": "PHILIP ANDREAS KIENTZ",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "cliente",
+        "data_inicio_execucao": "2025-05-26",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "2025-06-06 Braiam: \"Obra Finalizada.\" | 2025-09-19 Egberto: \"1° camada do verniz aplicada\" + contaminação por vento detectada | 2026-01-28 Maria Clara: \"Para registro: temos um orçamento para reaplicar no Stelion.\" | 2026-02-28 Pedro: postergação por atraso no recebimento de bancadas (cliente) | Última msg: 2026-02-28 — 90 dias inativo, data exec prevista 2026-07-27.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Obra executada em jun/2025 (1ª fase) e set/2025 (sacada/verniz). Verniz da sacada com problema de contaminação por vento. Em jan/2026 registrou-se orçamento para reaplicar no Stelion. Nova postergação em fev/2026 por bancadas do cliente. Sem atividade há 90 dias. Painel em \"CLIENTE FINALIZADO\" mas há reaplicação pendente aguardando liberação de acesso. Motivo de espera é externo (cliente com obras bloqueando entrada)."
+      },
+      {
+        "obra_id": "1ad11198-a062-41a3-86e6-5f5a6cfd699c",
+        "nome": "PIERRE JULIEN CHAPRON",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": "2025-11-28",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "2026-05-22 Pedro|Monofloor: piso soltando líquido viscoso + desplacamento múltiplos banheiros [CRÍTICO]. 2026-05-23 Nathan (fiscal): vídeo vistoriando banheiro cinza e rosa — Nathan como fiscal, não aplicador. 2026-05-14 Wesley|Operações: cobra Nathan para gravar vídeos dos desplacamentos (pendência). Aplicador Welington: última msg 2025-12-05 — saiu há 5+ meses, sem sinal no campo.",
+        "coerencia_com_painel": "coerente",
+        "nota_curta": "Obra em estado crítico de qualidade: desplacamento em múltiplos banheiros + piso soltando líquido viscoso detectados em 22/05. Nathan visitou em 23/05 como fiscal para documentar — não há equipe aplicadora mobilizada. Painel \"PÓS VENDAS ACIONADO\" é coerente com a situação, mas não captura que o reparo ainda não foi mobilizado. Sem card REAPLICAÇÃO — problema restrito a banheiros (retoque pontual), não refazimento do escopo completo."
+      },
+      {
+        "obra_id": "aa3bff90-9312-43fc-80f2-c2f56ca52b91",
+        "nome": "RENATA KELLER OYANGUREN",
+        "fase_real": "pendente_de_reparo",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": "2026-02-24",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "05-26/Mayara: card emitido \"REPAROS SUPERVISOR: Francisco - Lider APLICADOR: Si... INÍCIO: 06-08\" — reparo agendado futuro. 05-08/friccao: \"Infiltração/vazamento detectado\" (ocorrência crítica). 03-04/Taquinho: \"lixamento verniz e nossa nova cera resolve\" — último marco de campo. 02-24/Maria: \"reaplicação da tampa\" — ciclo 2 iniciou. 02-28/Caroline: relatório VT reaplicação de verniz aprovado.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Ciclo 2 (reparo físico) encerrou ~03-05. Infiltração em 05-08 gerou nova pendência. Novo card \"REPAROS\" emitido em 05-26 com data 06-08. Hoje equipe fora do campo — aguardando data. Painel marca \"reparo\" mas obra está em pendente_de_reparo (trabalho físico não iniciou). Motivo espera: qualidade (dano por infiltração). Sem card REAPLICAÇÃO neste ciclo."
+      },
+      {
+        "obra_id": "e6b38375-4075-4f79-9319-f15566722963",
+        "nome": "TALLY FELDMAN SINGAL GROSS",
+        "fase_real": "pendente_de_reaplicacao",
+        "motivo_espera": "qualidade",
+        "data_inicio_execucao": "2026-04-13",
+        "tem_card_reaplicacao": false,
+        "evidencias_resumo": "27/05 KIRA: \"Material trincou — reaplicação total copa solicitada urgente\" (crítica). 25/05 KIRA: \"Copa rachou, cliente diz que precisa ser refeita\". 28/05 KIRA: \"Cliente contesta valor orçamento manutenção\". 12/05 Nathan: \"Fissura da copa, segue sem umidade\". Última msg Telegram: 19/05. Júlio (aplicador) saiu em 16/04. 20.89m² pendente.",
+        "coerencia_com_painel": "divergente",
+        "nota_curta": "Painel marca \"OBRA CONCLUIDA/reparo\" mas há reaplicação total da copa pendente (20.89m²). Equipe saiu em 16/04. Impasse ativo: cliente contesta responsabilidade pela trinca (retração vs umidade) e disputa o valor do orçamento. Nenhum aplicador no campo nos últimos 43 dias. Situação caminha para litígio — não é reparo pontual, é refazer copa do rooftop."
+      }
+    ],
+    "total_pedidos": 21,
+    "total_validos": 21
+  }
+}
