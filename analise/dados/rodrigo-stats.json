@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-05-30T00:12:24Z",
+  "atualizado_em": "2026-05-30T04:35:20Z",
   "fonte": "cliente.monofloor.cloud/api/projects (contagens + m²) + planejamento.monofloor.cloud/api/{orchestrator,analytics}/*",
   "totais": {
     "total": 1081,
@@ -80,7 +80,7 @@
         "type": "STAGE_DELAY",
         "severity": "HIGH",
         "message": "Projeto deveria estar em \"INFORMAÇÕES LOGÍSTICAS\" mas está em \"EM CONTRATO\"",
-        "daysUntilEntry": 3,
+        "daysUntilEntry": 2,
         "currentStage": "EM CONTRATO",
         "expectedStage": "INFORMAÇÕES LOGÍSTICAS"
       },
@@ -90,8 +90,8 @@
         "cidade": "Não informada",
         "type": "NO_TEAM",
         "severity": "HIGH",
-        "message": "Projeto sem equipe definida a 3 dias do início",
-        "daysUntilEntry": 3,
+        "message": "Projeto sem equipe definida a 2 dias do início",
+        "daysUntilEntry": 2,
         "currentStage": "EM CONTRATO",
         "expectedStage": "Com equipe alocada"
       },
@@ -102,7 +102,7 @@
         "type": "STAGE_DELAY",
         "severity": "MEDIUM",
         "message": "Projeto deveria estar em \"REVISÃO FINAL OP\" mas está em \"AGEND. VT - AFERIÇÃO/ORIENTAÇÃO\"",
-        "daysUntilEntry": 24,
+        "daysUntilEntry": 23,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "REVISÃO FINAL OP"
       },
@@ -113,7 +113,7 @@
         "type": "CAPACITY_RISK",
         "severity": "LOW",
         "message": "Projeto exige ~11 aplicadores (1008.65m² em 20 dias)",
-        "daysUntilEntry": 24,
+        "daysUntilEntry": 23,
         "currentStage": "AGEND. VT - AFERIÇÃO/ORIENTAÇÃO",
         "expectedStage": "Prazo adequado para 1008.65m²"
       }
@@ -4597,7 +4597,7 @@
         "clima": "Tenso",
         "n_alertas": 6,
         "dias_sem_evento": null,
-        "dias_desde_resumo": 46,
+        "dias_desde_resumo": 47,
         "alertas": [
           "CRÍTICO: Verniz PU entregue é acetinado — projeto exige acabamento 100% fosco. Risco de retrabalho total nas superfícies já aplicadas.",
           "CRÍTICO: Necessidade urgente de verificar e substituir o Lumina caso também seja acetinado.",
@@ -8184,7 +8184,7 @@
   "lw": {
     "luana": {
       "n": 76,
-      "mediana": 270,
+      "mediana": 271,
       "n180": 49,
       "n270": 39,
       "zumbi": 8,
@@ -8193,17 +8193,17 @@
     },
     "wesley": {
       "n": 80,
-      "mediana": 221,
-      "n180": 51,
+      "mediana": 222,
+      "n180": 52,
       "n270": 27,
       "zumbi": 14,
       "reparo": 10,
       "pausadas": 0
     },
     "total_ativas": 238,
-    "n_180_total": 113,
+    "n_180_total": 114,
     "concentracao_pct": 65.5,
-    "concentracao_180_pct": 88.5,
+    "concentracao_180_pct": 88.6,
     "fonte": "cliente.monofloor.cloud/api/projects (campo consultorNome)"
   }
 }
