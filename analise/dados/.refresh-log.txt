@@ -1,5 +1,20 @@
 ================================================
-RUN START: 2026-05-31T08:26:49Z (TZ=America/Sao_Paulo, TODAY=2026-05-31)
+RUN START: 2026-05-31T10:32:23Z (TZ=America/Sao_Paulo, TODAY=2026-05-31)
 ================================================
-[08:26:49] STEP 1: fetch listas
-[08:27:19]   /projects FAILED
+[10:32:23] STEP 1: fetch listas
+[10:32:26]   /projects OK (631838 bytes)
+[10:32:28]   /dashboard OK
+[10:32:30]   /analise OK
+[10:32:30]   /escalacao OK
+[10:32:33]   /equipes OK
+[10:32:33] STEP 1.1: validar projects.json
+[10:32:33]   projects.json válido
+[10:32:33] STEP 1.2: montar data.json
+[10:32:33]   data.json python exit_code=0 (744655 bytes)
+[10:32:33] STEP 1.5: bump headline.json
+[10:32:33]   headline bump exit=0
+[10:32:33] STEP 1.6: rehidrata Q1_PLAN_OBRAS
+[10:32:33] STEP 1.7: rehidrata Q2_OBRAS
+[10:32:33] STEP 2: modo PESADO — sem snapshot
+REFRESH_EXIT_CODE=0
+WORKFLOW STEP DONE at 2026-05-31T10:32:54Z
